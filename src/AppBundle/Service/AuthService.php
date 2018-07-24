@@ -3,12 +3,15 @@
 namespace AppBundle\Service;
 
 
-use ATS\UserBundle\Document\User;
-use ATS\UserBundle\Manager\UserManager;
+use AppBundle\Document\User;
+use AppBundle\Manager\UserManager;
+use Ramsey\Uuid\Uuid;
 use Firebase\JWT\ExpiredException;
 use \Firebase\JWT\JWT;
 use GuzzleHttp\Exception\GuzzleException;
+use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
 
 class AuthService
 {
@@ -30,7 +33,7 @@ class AuthService
         $client = new \GuzzleHttp\Client();
         try {
             $responseGithub = $client->request('GET', $githubAccessTokenUrl . '?' . http_build_query($params))->getBody();
-           // parse_str($responseGithub, $responseGithub);
+            // parse_str($responseGithub, $responseGithub);
             /* parse the response as array */
             $res = $client->request('GET', $githubUserAPI. '?' . $responseGithub, [
                 'headers' => [ 'User-Agent' => 'leadwire']])->getBody();
@@ -65,23 +68,35 @@ class AuthService
 
     public function decodeToken($jwt)
     {
-       $token = JWT::decode($jwt, $this->get('token_secret'), ['HS256']);
+        $token = JWT::decode($jwt, $this->get('token_secret'), ['HS256']);
 
-       if (!isset($token->host) || $token->host!= $this->get('app_domain'))
-           throw new ExpiredException('Invalide token');
+        if (!isset($token->host) || $token->host!= $this->get('app_domain'))
+            throw new ExpiredException('Invalide token');
 
-       return $token;
+        return $token;
     }
 
     protected function checkAndAdd(array $userData)
     {
-        $dbUser = $this->userManager->getOneBy(['username' => $userData['login']]);
-
-        if (!$dbUser)
+        try
         {
-            $this->userManager->create($userData['login'], "", [User::DEFAULT_ROLE], true);
-            return $this->userManager->getUserByUsername($userData['login']);
-        } else
-            return $dbUser;
+            $dbUser = $this->userManager->getOneBy(['username' => $userData['login']]);
+
+            if (!$dbUser) {
+                $uuid1 = Uuid::uuid1();
+                $this->userManager->create($userData['login'], $uuid1->toString(), [User::DEFAULT_ROLE], true);
+                $dbUser = $this->userManager->getUserByUsername($userData['login']);
+                return $dbUser;
+
+            } else
+                return $dbUser;
+
+        }
+        catch(UnsatisfiedDependencyException $e)
+        {
+            throw new Exception('Caught exception: ' . $e->getMessage());
+        } catch (\Exception $e)
+        {
+        }
     }
 }
