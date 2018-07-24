@@ -1,0 +1,16 @@
+imports:
+    - { resource: config.yml }
+
+monolog:
+    handlers:
+        main:
+            type: rotating_file
+            action_level: error
+            max_files: 10
+        nested:
+            type: stream
+            path: '%kernel.logs_dir%/%kernel.environment%.log'
+            level: error
+        console:
+            type: console
+            process_psr_3_messages: false

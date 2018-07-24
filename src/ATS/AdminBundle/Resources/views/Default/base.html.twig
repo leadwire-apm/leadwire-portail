@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <title>
+        {% block title %} Welcome to Admin! {% endblock %}
+    </title>
+
+    {% block stylesheets %}
+    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb"
+        crossorigin="anonymous"> -->
+        <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&amp;subset=latin,cyrillic-ext" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+            crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.9/css/all.css" integrity="sha384-5SOiIsAziJl6AWe0HWRKTXlfcSHKmYV4RBF18PPJ173Kzn7jzMyFuTtk8JA7QQG1"
+        crossorigin="anonymous">
+
+    {% stylesheets
+        'bundles/admin/css/skin.css'
+        'bundles/admin/css/materialize.css'
+        'bundles/admin/css/style.css'
+        'bundles/admin/css/themes/all-themes.css'
+         %}
+        <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+    {% endblock %}
+
+    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
+</head>
+
+<body class="theme-blue-grey">
+    <div class="row clearfix">
+        <div class="col-md-12" style="margin-top:20px;margin-bottom:20px;">
+             {% for flashMessagesLevel in app.session.flashbag.keys %}
+                {% for flashMessage in app.session.flashbag.get(flashMessagesLevel)%}
+                    <p class="text-dark bg-{{ flashMessagesLevel }}">
+                        {{ flashMessage }}
+                    </p>
+                {% endfor %}
+            {% endfor %}
+        </div>
+    </div>
+    <!-- Top Bar -->
+    <nav class="navbar">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a href="javascript:void(0);" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse" aria-expanded="false"></a>
+                <a href="javascript:void(0);" class="bars"></a>
+                <a class="navbar-brand" href="{{ path('app_default_index') }}">ATS - ADMINISTRATOR</a>
+            </div>
+        </div>
+    </nav>
+    <!-- #Top Bar -->
+
+    <section>
+        <!-- Left Sidebar -->
+        <aside id="leftsidebar" class="sidebar">
+            <!-- Menu -->
+            <div class="menu">
+                <ul class="list">
+                    <li class="header">MAIN NAVIGATION</li>
+                    <li class="active">
+                        <a href="{{path('ats_admin_admin_index')}}">
+                            <i class="material-icons">home</i>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                    {% for bundleDisplayName, documents in bundled %}
+                    <li>
+                        <a href="javascript:void(0);" class="menu-toggle">
+                            <i class="material-icons">folder</i>
+                            <span>{{bundleDisplayName}}</span>
+                        </a>
+                        <ul class="ml-menu">
+                            {% for documentInfo in documents %}
+                            <li>
+                                {% set p = ((admin_routes_prefix ~ '_list_' ~ documentInfo[0] ~ '\\Document\\' ~ documentInfo[1]) | replace({'\\': '_'})) | lower %}
+                                <a href="{{path(p)}}">
+                                    <i class="material-icons">assignment</i>
+                                    <span>{{documentInfo[1]}}</span>
+                                </a>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <!-- #Menu -->
+        </aside>
+        <!-- #END# Left Sidebar -->
+    </section>
+    {% block body %}
+    {% endblock %}
+
+    {% block javascripts %}
+    <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
+    <script src="{{ path('fos_js_routing_js', { callback: 'fos.Router.setData' }) }}"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
+    <script src="{{ asset('bundles/core/js/lib/angular.min.js') }}"></script>
+    <script src="{{ asset('bundles/core/js/lib/angular-route.min.js') }}"></script>
+    <script src="{{ asset('bundles/core/js/lib/angular-animate.min.js') }}"></script>
+    <script src="{{ asset('bundles/core/js/lib/ui-bootstrap-tpls.min.js') }}"></script>
+    <script src="{{ asset('bundles/admin/js/app/main.js') }}"></script>
+    <script src="{{ asset('bundles/admin/js/admin.js') }}"></script>
+    <script src="{{ asset('bundles/admin/js/demo.js') }}"></script>
+    <script src="{{ asset('bundles/admin/js/helpers.js') }}"></script>
+    <script src="{{ asset('bundles/admin/js/script.js') }}"></script>
+    <!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" -->
+        <!-- crossorigin="anonymous"></script> -->
+    {% endblock %}
+</body>
+
+</html>

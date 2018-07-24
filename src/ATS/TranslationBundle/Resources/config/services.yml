@@ -1,0 +1,8 @@
+services:
+    ATS\TranslationBundle\Cache\TranslationCacheWarmer:
+        tags:
+            - { name: kernel.cache_warmer, priority: 0 }
+
+    ATS\TranslationBundle\Service\TranslationEntryService:
+        arguments:
+            $locale: "%app_locale%"

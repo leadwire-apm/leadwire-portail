@@ -1,0 +1,14 @@
+core_rest_upload:
+    resource: "@CoreBundle/Controller/Rest/RestFileOperationController.php"
+    type: "rest"
+    prefix: "/core/%internal_api_prefix%"
+    host: "%app_domain%"
+    schemes: "%app_schemes%"
+
+core_rest_option:
+    resource: "@CoreBundle/Controller/Rest/OptionController.php"
+    type: "rest"
+    prefix: "/core/%internal_api_prefix%/option"
+    options:
+        expose: true
+

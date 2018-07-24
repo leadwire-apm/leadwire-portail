@@ -1,0 +1,104 @@
+{% extends 'AdminBundle:Default:base.html.twig' %}
+
+{% form_theme form _self %}
+
+{%- block checkbox_widget -%}
+<br><input type="checkbox" {{ block( 'widget_attributes') }} {% if value is defined %} value="{{ value }}"{% endif %}{% if checked
+    %} checked="checked" {% endif %} />
+    {% if label is null %}
+        <label for="{{id}}">{{name}}</label>
+    {% else %}
+        <label for="{{id}}">{{label}}</label>
+    {% endif %}
+{%- endblock checkbox_widget -%}
+
+{%- block datetime_widget -%}
+    {% if widget == 'single_text' %}
+        <input type="text" class="form-control date" {{ block( 'widget_attributes') }} placeholder="Ex: 2016-01-01">
+    {%- else -%}
+        <div {{ block('widget_container_attributes') }}>
+            {{- form_errors(form.date) -}}
+            {{- form_widget(form.date) -}}
+        </div>
+    {%- endif -%}
+{%- endblock datetime_widget -%}
+
+
+{% block body %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="block-header">
+            <!-- <h2> Administration</h2> -->
+        </div>
+        <div class="row clearfix">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="card">
+                    <div class="header">
+                        <h2>
+                            {{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')) }}
+                        </h2>
+                    </div>
+                    <div class="body">
+                        <div class="row clearfix">
+                            <div class="col-sm-12">
+                                {{ form_start(form, {'attr' : {'class': 'col-md-12' }}) }}
+                                    {% for field in form.children %}
+                                        {% if (field.vars.id) not in ['document_save', 'document_cancel', 'document_saveAndBackToList'] %}
+                                            {% if 'prototype' in field.vars | keys %}
+                                                <div class="form-group">
+                                                    {{ form_label(field) }}
+                                                    <div class="add-remove-field">
+                                                        <ul id="{{field.vars.id}}" class="list-unstyled field-container" data-prototype="{{ form_widget(field.vars.prototype)|e }}">
+                                                            {% for listItem in field %}
+                                                            <li>
+                                                                {{ form_widget(listItem) }}
+                                                                <a href="" class="remove-field">
+                                                                    <i class="material-icons">remove_circle</i>
+                                                                </a>
+                                                            </li>
+                                                            {% endfor %}
+                                                            <a href="" class="add-field ml-5">
+                                                                <i class="material-icons">add_circle</i>
+                                                            </a>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            {% else %}
+                                                {% if 'hidden' not in field.vars.block_prefixes %}
+                                                    <div class="form-group">
+                                                        {{ form_label(field) }}
+                                                        <div class="form-line">
+                                                            {{ form_widget(field, {'attr': {'class': 'form-control', 'style': 'height:auto !important'}}) }}
+                                                        </div>
+                                                    </div>
+                                                {% else %}
+                                                    {{ form_widget(field, {'attr': {'class': 'form-control'}}) }}
+                                                {% endif %}
+                                            {% endif %}
+                                        {% endif %}
+                                    {% endfor %}
+                            </div>
+                            <div class="col-sm-12">
+                                {{ form_widget(form.save, { 'attr' : {'class': 'btn btn-success'}}) }}
+                                {{ form_widget(form.saveAndBackToList, { 'attr' : {'class': 'btn btn-success'}}) }}
+                                {{ form_widget(form.cancel, { 'attr' : {'class': 'btn btn-danger'}}) }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+        $(document).ready(function() {
+            var form = new Form({
+            });
+            form.init()
+        })
+    </script>
+{% endblock %}

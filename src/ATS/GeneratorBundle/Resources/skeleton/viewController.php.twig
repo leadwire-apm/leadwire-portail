@@ -1,0 +1,30 @@
+<?php declare(strict_types=1);
+
+namespace {{ namespace }}\Controller\View;
+
+{% block use_statements %}
+use ATS\CoreBundle\Controller\Rest\BaseRestController;
+use FOS\RestBundle\Controller\Annotations\Route;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use {{ namespace }}\Service\{{ viewEntity }}ViewService;
+{% endblock use_statements %}
+
+{% block class_definition %}
+class {{ viewEntity }}ViewController extends BaseRestController
+{% endblock class_definition %}
+{
+{% block class_body %}
+    /**
+     * @Route("/", methods="GET")
+     *
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function get{{ viewEntity }}ViewAction(Request $request)
+    {
+        return $this->prepareJsonResponse("Hello World!");
+    }
+{% endblock class_body %}
+}

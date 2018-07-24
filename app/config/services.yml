@@ -1,0 +1,65 @@
+services:
+    # default configuration for services in *this* file
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        public: true
+
+    # Making the logger service public
+    logger:
+        alias: 'monolog.logger'
+        public: true
+
+    # makes classes in src/AppBundle available to be used as services
+    # this creates a service per class whose id is the fully-qualified class name
+    AppBundle\:
+        resource: '../../src/AppBundle/*'
+        # you can exclude directories or files
+        # but if a service is unused, it's removed anyway
+        exclude: '../../src/AppBundle/{Document,Repository}'
+
+    ATS\AdminBundle\:
+        resource: '../../src/ATS/AdminBundle/*'
+        exclude: '../../src/ATS/AdminBundle/{Document,Repository}'
+
+    ATS\CoreBundle\:
+        resource: '../../src/ATS/CoreBundle/*'
+        exclude: '../../src/ATS/CoreBundle/{Document,Repository}'
+
+    ATS\EmailBundle\:
+        resource: '../../src/ATS/EmailBundle/*'
+        exclude: '../../src/ATS/EmailBundle/{Document,Repository}'
+
+    ATS\AnalyticsBundle\:
+        resource: '../../src/ATS/AnalyticsBundle/*'
+        exclude: '../../src/ATS/AnalyticsBundle/{Document,Repository}'
+
+    ATS\UserBundle\:
+        resource: '../../src/ATS/UserBundle/*'
+        exclude: '../../src/ATS/UserBundle/{Document,Repository}'
+
+    ATS\TranslationBundle\:
+        resource: '../../src/ATS/TranslationBundle/*'
+        exclude: '../../src/ATS/TranslationBundle/{Document,Repository}'
+
+    ATS\ScheduledTaskBundle\:
+        resource: '../../src/ATS/ScheduledTaskBundle/*'
+        exclude: '../../src/ATS/ScheduledTaskBundle/{Document,Repository}'
+
+    ATS\ClientBootstrapperBundle\:
+        resource: '../../src/ATS/ClientBootstrapperBundle/*'
+        exclude: '../../src/ATS/ClientBootstrapperBundle/{Document,Repository}'
+
+    # controllers are imported separately to make sure they're public
+    # and have a tag that allows actions to type-hint services
+    AppBundle\Controller\:
+        resource: '../../src/AppBundle/Controller'
+        tags: ['controller.service_arguments']
+
+    ATS\UserBundle\Controller\:
+        resource: '../../src/ATS/UserBundle/Controller'
+        tags: ['controller.service_arguments']
+
+    ATS\ClientBootstrapperBundle\Controller\:
+        resource: '../../src/ATS/ClientBootstrapperBundle/Controller'
+        tags: ['controller.service_arguments']

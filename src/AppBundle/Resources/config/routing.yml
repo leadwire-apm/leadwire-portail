@@ -1,0 +1,31 @@
+app_default:
+    resource: "@AppBundle/Controller/DefaultController.php"
+    type: "annotation"
+    prefix: "/"
+
+app_rest_app:
+    resource: "@AppBundle/Controller/Rest/AppController.php"
+    type: "rest"
+    prefix: "/%internal_api_prefix%/app"
+    options:
+        expose: true
+
+app_rest_invitation:
+    resource: "@AppBundle/Controller/Rest/InvitationController.php"
+    type: "rest"
+    prefix: "/%internal_api_prefix%/invitation"
+    options:
+        expose: true
+
+app_rest_user:
+    resource: "@AppBundle/Controller/Rest/UserController.php"
+    type: "rest"
+    prefix: "/%internal_api_prefix%/user"
+    options:
+        expose: true
+app_rest_auth:
+    resource: "@AppBundle/Controller/Rest/AuthController.php"
+    type: "rest"
+    prefix: "/%internal_api_prefix%/auth"
+    options:
+        expose: true

@@ -1,0 +1,42 @@
+{% extends 'AdminBundle:Default:base.html.twig' %} {% block body %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="block-header">
+            <h2>ATS - ADMIN DASHBOARD</h2>
+        </div>
+
+        <div class="row clearfix">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <div class="card">
+                    <div class="header">
+                        <div class="row clearfix">
+                            <div class="col-xs-12 col-sm-6">
+                                <h2>Documents</h2>
+                            </div>
+                            <div class="col-xs-12 col-sm-6 align-right">
+                                <div class="switch panel-switch-btn">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="body table-responsive">
+                        <ul class="list-unstyled">
+                            {% for item in data %}
+                            <li>
+                                {% set p = ((admin_routes_prefix ~ '_list_' ~ item) | replace({'\\': '_'})) | lower %}
+                                <a class="col-md-6" href="{{path(p)}}">{{item}}</a>
+                                <div class="icon col-md-6">
+                                    <a href="new/{{ item | replace({'\\': '/'}) | lower }}">
+                                        <i class="material-icons">add_circle</i>
+                                    </a>
+                                </div>
+
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {% endblock %}

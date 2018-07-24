@@ -1,0 +1,9 @@
+body {
+    background-color: #fcfcfc;
+}
+
+td {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

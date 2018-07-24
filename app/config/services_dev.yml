@@ -1,0 +1,9 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        public: true
+    ATS\GeneratorBundle\:
+        resource: '../../src/ATS/GeneratorBundle/*'
+    ATS\DistributionBundle\:
+        resource: '../../src/ATS/DistributionBundle/*'

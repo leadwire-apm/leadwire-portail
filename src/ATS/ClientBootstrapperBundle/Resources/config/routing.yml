@@ -1,0 +1,6 @@
+client_bootstrapper:
+    resource: "@ClientBootstrapperBundle/Controller/ApplicationContextController.php"
+    type: "rest"
+    prefix:   "/client"
+    host:     "%app_domain%"
+    schemes: "%app_schemes%"

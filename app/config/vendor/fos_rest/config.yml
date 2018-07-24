@@ -1,0 +1,14 @@
+# FOSRestBundle Configuration
+fos_rest:
+    routing_loader:
+        default_format: json
+    view:
+        view_response_listener: true
+        formats:
+            xml: true
+            json: true
+            html: true
+            csv: true
+        failed_validation: HTTP_BAD_REQUEST
+    serializer:
+        serialize_null: true

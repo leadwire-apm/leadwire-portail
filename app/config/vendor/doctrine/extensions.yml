@@ -1,0 +1,20 @@
+# DoctrineExtensions Configuration
+services:
+    gedmo.listener.timestampable:
+        class: "Gedmo\\Timestampable\\TimestampableListener"
+        tags:
+            - { name: doctrine_mongodb.odm.event_subscriber, connection: default }
+        calls:
+            - [ setAnnotationReader, [ "@annotation_reader" ] ]
+    gedmo.listener.sluggable:
+        class: "Gedmo\\Sluggable\\SluggableListener"
+        tags:
+            - { name: doctrine_mongodb.odm.event_subscriber, connection: default }
+        calls:
+            - [ setAnnotationReader, [ "@annotation_reader" ] ]
+    gedmo.listener.tree:
+        class: "Gedmo\\Tree\\TreeListener"
+        tags:
+            - { name: doctrine_mongodb.odm.event_subscriber, connection: default }
+        calls:
+            - [ setAnnotationReader, [ "@annotation_reader" ] ]

@@ -1,0 +1,11 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        public: false
+
+    ATS\CoreBundle\Service\Parser:
+        public: true
+
+    ATS\CoreBundle\Service\Http\GuzzleClient:
+        public: true

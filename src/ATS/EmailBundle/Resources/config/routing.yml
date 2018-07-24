@@ -1,0 +1,6 @@
+email_rest:
+    resource: "@EmailBundle/Controller/Rest/EmailController.php"
+    type: "rest"
+    prefix: "/core/%internal_api_prefix%/email"
+    options:
+        expose: true
