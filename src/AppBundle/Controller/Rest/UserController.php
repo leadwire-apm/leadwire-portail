@@ -21,20 +21,11 @@ class UserController extends BaseRestController
         $session = new Session();
         $session->start();
         $data = $session->get('userData');
-        if ($data['timeout'] >= time())
-        return new JsonResponse($data);
-       /* return new JsonResponse([
-            "avatar"=> "https://avatars0.githubusercontent.com/u/4384554?v=4",
-            "displayName"=> "Anis Ksontini",
-            "email"=> "leadwire-apm-test",
-            "github"=> "4384554",
-            "id"=> 9,
-            "login"=>"ksontini",
-            "fname"=>"Anis Ksontini",
-            "password"=>"test-apm-leadwire",
-        ]);*/
-       else
-           return new JsonResponse(['result' => "Not authenticated"], 401);
+        if ($data['timeout'] >= time()) {
+            return new JsonResponse($data);
+        } else {
+            return new JsonResponse(['result' => "Not authenticated"], 401);
+        }
     }
 
     public function isNotPublic()

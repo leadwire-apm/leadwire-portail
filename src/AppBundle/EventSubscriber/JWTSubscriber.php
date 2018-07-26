@@ -42,16 +42,13 @@ class JWTSubscriber implements EventSubscriberInterface
                 throw new HttpException(401);
             }
 
-            try
-            {
+            try {
                 $token = $this->auth->decodeToken($headerParts[1]);
-            } catch (ExpiredException $e)
-            {
+            } catch (ExpiredException $e) {
                 throw new HttpException(401);
             }
         }
     }
-
 
     public static function getSubscribedEvents()
     {
@@ -59,5 +56,4 @@ class JWTSubscriber implements EventSubscriberInterface
             KernelEvents::CONTROLLER => 'onKernelController',
         );
     }
-
 }

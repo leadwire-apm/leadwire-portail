@@ -27,7 +27,7 @@ class AuthController extends BaseRestController
      */
     public function getAuthAction(Request $request, AuthService $authService, $provider)
     {
-        if (method_exists($this, $provider.'Action')){
+        if (method_exists($this, $provider.'Action')) {
             return $this->{$provider.'Action'}($request, $authService);
         } else {
             return new JsonResponse("Provider not found", 404);
@@ -45,7 +45,7 @@ class AuthController extends BaseRestController
             'client_secret'=> $this->getParameter("github_client_secret"),
             'code'=>  $data['code'],
         ];
-        $userData = $authService->githubProvider($params, $this->getParameter("github_access_token_url"),  $this->getParameter("github_users_api_url"));
+        $userData = $authService->githubProvider($params, $this->getParameter("github_access_token_url"), $this->getParameter("github_users_api_url"));
         $userData['timeout'] = time() + 1800;
 
         return new JsonResponse(["token" => $authService->generateToken($userData['_id'], $this->getParameter('token_secret'))]);

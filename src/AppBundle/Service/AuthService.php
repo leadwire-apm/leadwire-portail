@@ -2,7 +2,6 @@
 
 namespace AppBundle\Service;
 
-
 use AppBundle\Document\User;
 use AppBundle\Manager\UserManager;
 use Ramsey\Uuid\Uuid;
@@ -36,7 +35,9 @@ class AuthService
             // parse_str($responseGithub, $responseGithub);
             /* parse the response as array */
             $res = $client->request(
-                'GET', $githubUserAPI. '?' . $responseGithub, [
+                'GET',
+                $githubUserAPI. '?' . $responseGithub,
+                [
                 'headers' => [ 'User-Agent' => 'leadwire']]
             )->getBody();
 
@@ -45,11 +46,9 @@ class AuthService
             $user = $this->checkAndAdd($data);
             $data['_id'] = $user->getId();
             return $data;
-
         } catch (GuzzleException $e) {
             sd($e->getMessage());
         }
-
     }
 
 
@@ -81,8 +80,7 @@ class AuthService
 
     protected function checkAndAdd(array $userData)
     {
-        try
-        {
+        try {
             $dbUser = $this->userManager->getOneBy(['username' => $userData['login']]);
 
             if (!$dbUser) {
@@ -93,13 +91,9 @@ class AuthService
             } else {
                 return $dbUser;
             }
-
-        }
-        catch(UnsatisfiedDependencyException $e)
-        {
+        } catch (UnsatisfiedDependencyException $e) {
             throw new Exception('Caught exception: ' . $e->getMessage());
-        } catch (\Exception $e)
-        {
+        } catch (\Exception $e) {
         }
     }
 }
