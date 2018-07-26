@@ -27,18 +27,18 @@ phpcs:
         - php phpcs.phar --error-severity=1 --warning-severity=8 --extensions=php --standard=PSR2 --encoding=utf-8 ./src
         - ./vendor/bin/phpstan analyze -l1 src/ATS/AdminBundle src/ATS/AnalyticsBundle src/ATS/CoreBundle src/ATS/EmailBundle src/ATS/GeneratorBundle src/ATS/TranslationBundle src/ATS/UserBundle
 
-phpunit:
-    before_script:
-        - curl -sS https://getcomposer.org/installer | php
-        - curl -OL https://phar.phpunit.de/phpunit.phar
-        - php composer.phar install
-        - 'sed "s/database_host: .*/database_host: mongo/" -i app/config/parameters.yml'
-    image: aturki/php7.1
-    stage: test
-    tags:
-        - phpunit
-    script:
-        - php phpunit.phar --coverage-text --colors=never --strict-coverage --disallow-test-output -c phpunit.xml.dist tests/ATS/
+#phpunit:
+#    before_script:
+#        - curl -sS https://getcomposer.org/installer | php
+#        - curl -OL https://phar.phpunit.de/phpunit.phar
+#        - php composer.phar install
+#        - 'sed "s/database_host: .*/database_host: mongo/" -i app/config/parameters.yml'
+#    image: aturki/php7.1
+#    stage: test
+#    tags:
+#        - phpunit
+#    script:
+#        - php phpunit.phar --coverage-text --colors=never --strict-coverage --disallow-test-output -c phpunit.xml.dist tests/ATS/
 
 codequality:
     image: docker:stable
