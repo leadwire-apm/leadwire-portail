@@ -29,6 +29,17 @@ class User extends \ATS\UserBundle\Document\User
     /**
      * @var string
      *
+     * @ODM\Field(type="string", name="avatar")
+
+     * @JMS\Type("string")
+     * @JMS\Expose
+     * @JMS\Groups({})
+     */
+    private $avatar;
+
+    /**
+     * @var string
+     *
      * @ODM\Field(type="string", name="company")
 
      * @JMS\Type("string")
@@ -70,6 +81,30 @@ class User extends \ATS\UserBundle\Document\User
     public function getUuid()
     {
         return $this->uuid;
+    }
+
+    /**
+     * Set avatar
+     *
+     * @param string $avatar
+     *
+     * @return User
+     */
+    public function setAvatar($avatar)
+    {
+        $this->avatar = $avatar;
+
+        return $this;
+    }
+
+    /**
+     * Get avatar
+     *
+     * @return string
+     */
+    public function getAvatar()
+    {
+        return $this->avatar;
     }
 
     /**

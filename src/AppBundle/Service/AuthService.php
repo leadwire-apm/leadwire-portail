@@ -85,7 +85,7 @@ class AuthService
 
             if (!$dbUser) {
                 $uuid1 = Uuid::uuid1();
-                $this->userManager->create($userData['login'], $uuid1->toString(), [User::DEFAULT_ROLE], true);
+                $this->userManager->create($userData['login'], $uuid1->toString(), $userData['avatar_url'], [User::DEFAULT_ROLE], true);
                 $dbUser = $this->userManager->getUserByUsername($userData['login']);
                 return $dbUser;
             } else {
@@ -94,6 +94,7 @@ class AuthService
         } catch (UnsatisfiedDependencyException $e) {
             throw new Exception('Caught exception: ' . $e->getMessage());
         } catch (\Exception $e) {
+            throw $e;
         }
     }
 }
