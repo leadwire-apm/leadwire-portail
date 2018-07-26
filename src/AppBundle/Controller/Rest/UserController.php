@@ -2,12 +2,9 @@
 
 namespace AppBundle\Controller\Rest;
 
-
-use AppBundle\Service\AuthService;
 use ATS\CoreBundle\Controller\Rest\BaseRestController;
 use FOS\RestBundle\Controller\Annotations\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 
 class UserController extends BaseRestController
@@ -16,11 +13,9 @@ class UserController extends BaseRestController
     /**
      * @Route("/me", methods="GET")
      *
-     * @param Request $request
-     *
      * @return JsonResponse
      */
-    public function getMeAction(Request $request)
+    public function getMeAction()
     {
         //d(['foo' => 'bar']);
         $session = new Session();

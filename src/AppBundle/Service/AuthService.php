@@ -24,7 +24,7 @@ class AuthService
         $this->userManager = $userManager;
     }
 
-    private function get ($name)
+    private function get($name)
     {
         return $this->container->getParameter($name);
     }
@@ -35,8 +35,10 @@ class AuthService
             $responseGithub = $client->request('GET', $githubAccessTokenUrl . '?' . http_build_query($params))->getBody();
             // parse_str($responseGithub, $responseGithub);
             /* parse the response as array */
-            $res = $client->request('GET', $githubUserAPI. '?' . $responseGithub, [
-                'headers' => [ 'User-Agent' => 'leadwire']])->getBody();
+            $res = $client->request(
+                'GET', $githubUserAPI. '?' . $responseGithub, [
+                'headers' => [ 'User-Agent' => 'leadwire']]
+            )->getBody();
 
 
             $data = json_decode($res, true);
@@ -45,7 +47,7 @@ class AuthService
             return $data;
 
         } catch (GuzzleException $e) {
-            sd( $e->getMessage());
+            sd($e->getMessage());
         }
 
     }
@@ -70,8 +72,9 @@ class AuthService
     {
         $token = JWT::decode($jwt, $this->get('token_secret'), ['HS256']);
 
-        if (!isset($token->host) || $token->host!= $this->get('app_domain'))
+        if (!isset($token->host) || $token->host!= $this->get('app_domain')) {
             throw new ExpiredException('Invalide token');
+        }
 
         return $token;
     }
@@ -87,9 +90,9 @@ class AuthService
                 $this->userManager->create($userData['login'], $uuid1->toString(), [User::DEFAULT_ROLE], true);
                 $dbUser = $this->userManager->getUserByUsername($userData['login']);
                 return $dbUser;
-
-            } else
+            } else {
                 return $dbUser;
+            }
 
         }
         catch(UnsatisfiedDependencyException $e)
