@@ -28,6 +28,17 @@ class App
     /**
      * @var string
      *
+     * @ODM\Field(type="string", name="uuid")
+     * @ODM\Index(unique=true)
+     * @JMS\Type("string")
+     * @JMS\Expose
+     * @JMS\Groups({})
+     */
+    private $uuid;
+
+    /**
+     * @var string
+     *
      * @ODM\Field(type="string", name="name")
      * @JMS\Type("string")
      * @JMS\Expose
@@ -35,6 +46,15 @@ class App
      */
     private $name;
 
+    /**
+     * @var string
+     *
+     * @ODM\Field(type="string", name="type")
+     * @JMS\Type("string")
+     * @JMS\Expose
+     * @JMS\Groups({})
+     */
+    private $type;
     /**
      * @var string
      *
@@ -112,6 +132,31 @@ class App
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Set uuid
+     *
+     * @param string $uuid
+     *
+     * @return User
+     */
+    public function setUuid($uuid)
+    {
+        $this->uuid = $uuid;
+
+        return $this;
+    }
+
+
+    /**
+     * Get uuid
+     *
+     * @return string
+     */
+    public function getUuid()
+    {
+        return $this->uuid;
     }
 
     /**

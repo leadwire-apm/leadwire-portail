@@ -2,6 +2,8 @@
 
 namespace AppBundle\Controller\Rest;
 
+use AppBundle\Service\AuthService;
+use AppBundle\Service\UserService;
 use ATS\CoreBundle\Controller\Rest\BaseRestController;
 use FOS\RestBundle\Controller\Annotations\Route;
 use Symfony\Component\HttpFoundation\Request;
@@ -38,12 +40,20 @@ class AppController extends BaseRestController
      * @param Request $request
      * @param AppService $appService
      *
+     * @param AuthService $auth
+     * @param UserService $userService
      * @return Response
      */
-    public function listAppsAction(Request $request, AppService $appService)
+    public function listAppsAction(Request $request, AppService $appService, AuthService $auth, UserService $userService)
     {
         //$this->denyAccessUnlessGranted(AclVoter::VIEW_ALL, App::class);
-        $data = $appService->listApps();
+        $jwt = explode(' ', $request->headers->get('Authorization'));
+        $token = $auth->decodeToken($jwt[1]);
+        $user = $userService->getUser(
+            $token->user
+        );
+
+        $data = $appService->listApps($user->getId());
 
         return $this->prepareJsonResponse($data);
     }

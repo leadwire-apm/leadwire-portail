@@ -3,44 +3,18 @@
     <a href="javascript:;" class="close" quick-launch>×</a>
     <div class="css-table-xs">
 
-      <div class="col">
+      <div ng-repeat="app in applications" class="col">
         <a ui-sref="app.apps.calendar">
           <i class="fa fa-desktop"></i>
-          <span>App 1</span>
+          <span>{{ app.name }}</span>
         </a>
       </div>
-
-      <div class="col">
-        <a ui-sref="app.apps.calendar">
-          <i class="fa fa-desktop"></i>
-          <span>App 2</span>
+      <div class="col" ng-if="applications.length==0">
+        <a ui-sref="app.applicationsAdd">
+          <span>Create your first App</span>
         </a>
       </div>
-
-      <div class="col">
-        <a ui-sref="app.apps.calendar">
-          <i class="fa fa-desktop"></i>
-          <span>App 3</span>
-        </a>
-      </div>
-
-      <div class="col">
-        <a ui-sref="app.apps.calendar">
-          <i class="fa fa-desktop"></i>
-          <span>App 4</span>
-        </a>
-      </div>
-
-      <div class="col">
-        <a ui-sref="app.apps.calendar">
-          <i class="fa fa-desktop"></i>
-          <span>App 5</span>
-        </a>
-      </div>
-
     </div>
-
-
   </div>
 </div>
 </div>

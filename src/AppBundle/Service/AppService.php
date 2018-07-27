@@ -47,9 +47,9 @@ class AppService
      *
      * @return array
      */
-    public function listApps()
+    public function listApps($userId)
     {
-        return $this->appManager->getAll();
+        return $this->appManager->getBy(['owner' => $userId]);
     }
 
     /**

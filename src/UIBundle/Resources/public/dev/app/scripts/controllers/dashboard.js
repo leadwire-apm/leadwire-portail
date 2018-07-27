@@ -1,6 +1,6 @@
 'use strict';
 
-function dashboardCtrl($sce, ConfigService, Application,  $location, $localStorage) {
+function dashboardCtrl($sce, ConfigService, Application,  $location, $localStorage, $rootScope) {
 
     var ctrl = this;
     var connectedUser = $localStorage.user;
@@ -12,10 +12,10 @@ function dashboardCtrl($sce, ConfigService, Application,  $location, $localStora
 
     Application.findAll()
         .success(function(data) {
-            console.warn('application' , data);
-            if (!data.length )
+            $rootScope.applications = data;
+            if (data.length == 0)
             {
-                $location.path('/dashboards/add');
+                $location.path('/applications/add');
                 console.log("create one application");
             }
         })
@@ -25,11 +25,6 @@ function dashboardCtrl($sce, ConfigService, Application,  $location, $localStora
     ctrl.dashboardLink = $sce.trustAsResourceUrl(ConfigService.getUrl("app/kibana#/dashboard/0827af30-5895-11e8-a683-7fb93ba4982c"));
 };
 
-function formDashboardCtrl() {
-
-};
-
 angular
     .module('leadwireApp')
-    .controller('dashboardCtrl', ['$sce', 'ConfigService', 'Application', '$location', '$localStorage', dashboardCtrl])
-    .controller('formDashboardCtrl',[formDashboardCtrl ] );
+    .controller('dashboardCtrl', ['$sce', 'ConfigService', 'Application', '$location', '$localStorage', '$rootScope', dashboardCtrl])
