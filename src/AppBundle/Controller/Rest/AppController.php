@@ -15,11 +15,6 @@ use AppBundle\Service\AppService;
 class AppController extends BaseRestController
 {
 
-    public function isNotPublic()
-    {
-        return true;
-    }
-
     /**
      * @Route("/{id}/get", methods="GET")
      *

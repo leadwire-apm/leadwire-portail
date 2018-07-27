@@ -73,6 +73,7 @@ class User extends \ATS\UserBundle\Document\User
         return $this;
     }
 
+
     /**
      * Get uuid
      *
@@ -106,6 +107,16 @@ class User extends \ATS\UserBundle\Document\User
     {
         return $this->avatar;
     }
+
+    /**
+     * Get login
+     * @return string
+     */
+    public function getLogin()
+    {
+        return $this->getUsername();
+    }
+
 
     /**
      * Set company

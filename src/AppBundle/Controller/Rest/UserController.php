@@ -23,14 +23,45 @@ class UserController extends BaseRestController
     {
         $jwt = explode(' ', $request->headers->get('Authorization'));
         $token = $auth->decodeToken($jwt[1]);
-
-        return $this->prepareJsonResponse($userService->getUser(
+        $user = $userService->getUser(
             $token->user
-        ));
+        );
+        return $this->prepareJsonResponse([
+            "avatar" => $user->getAvatar(),
+            "login" => $user->getLogin(),
+            "email" => $user->getEmail(),
+            "id" => $user->getId(),
+            "uuid" => $user->getUuid(),
+            "fname" => $user->getUsername(),
+        ]);
     }
 
-    public function isNotPublic()
+
+    /**
+     * @Route("/{id}/update", methods="PUT")
+     *
+     * @param Request $request
+     * @param UserService $userService
+     *
+     * @return Response
+     */
+    public function updateUserAction(Request $request, UserService $userService)
     {
-        return true;
+        $data = $request->getContent();
+        $successful = $userService->updateUser($data);
+
+        return $this->prepareJsonResponse($successful);
+    }
+
+    /**
+     * @Route("/decode", methods="GET")
+     *
+     * @param Request $request
+     * @param AuthService $auth
+     */
+    public function decodeAction(Request $request, AuthService $auth)
+    {
+        // @todo: remove this before closing branch.
+        sd($auth->decodeToken($request->query->get('token')));
     }
 }

@@ -11,6 +11,8 @@ use GuzzleHttp\Exception\GuzzleException;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
+use Symfony\Component\Ldap\Entry;
+use Symfony\Component\Ldap\Ldap;
 
 class AuthService
 {
@@ -27,6 +29,7 @@ class AuthService
     {
         return $this->container->getParameter($name);
     }
+
     public function githubProvider(array $params, string $githubAccessTokenUrl, string $githubUserAPI)
     {
         $client = new \GuzzleHttp\Client();
@@ -38,19 +41,23 @@ class AuthService
                 'GET',
                 $githubUserAPI. '?' . $responseGithub,
                 [
-                'headers' => [ 'User-Agent' => 'leadwire']]
+                    'headers' => [ 'User-Agent' => 'leadwire']]
             )->getBody();
 
 
             $data = json_decode($res, true);
             $user = $this->checkAndAdd($data);
             $data['_id'] = $user->getId();
+            if (!$user->getEmail()) {
+                $this->createLdapEntry($user->getUsername());
+            }
             return $data;
         } catch (GuzzleException $e) {
             sd($e->getMessage());
+        } catch (\Exception $e) {
+            sd($e);
         }
     }
-
 
     public function generateToken($userId, $tokenSecret)
     {
@@ -69,7 +76,7 @@ class AuthService
 
     public function decodeToken($jwt)
     {
-        $token = JWT::decode($jwt, $this->get('token_secret'), ['HS256']);
+        $token = JWT::decode($jwt, $this->get('auth_providers')['settings']['token_secret'], ['HS256']);
 
         if (!isset($token->host) || $token->host!= $this->get('app_domain')) {
             throw new ExpiredException('Invalide token');
@@ -96,5 +103,30 @@ class AuthService
         } catch (\Exception $e) {
             throw $e;
         }
+    }
+
+    protected function createLdapEntry($username)
+    {
+
+        $ldapParameters = $this->get('ldap');
+
+        $ldap = Ldap::create('ext_ldap', [
+            'connection_string' => 'ldap://' . $ldapParameters['host'] . ':' . $ldapParameters['port'],
+        ]);
+
+        $ldap->bind($ldapParameters['dn_user'], $ldapParameters['mdp']);
+        $entry = new Entry(
+            "cn=application_name,ou=Group,dc=leadwire,dc=io",
+            [
+
+                'cn' => 'application_name',
+                'objectClass' => ['groupofnames'],
+                'member' => "cn=$username,ou=People,dc=leadwire,dc=io"
+            ]
+        );
+
+        $entryManager = $ldap->getEntryManager();
+
+        $entryManager->add($entry);
     }
 }

@@ -32,7 +32,7 @@ class JWTSubscriber implements EventSubscriberInterface
             return;
         }
 
-        if ($controller[0] instanceof BaseRestController && $controller[0]->isNotPublic()) {
+        if ($controller[0] instanceof BaseRestController && (!isset($controller[0]->public) || $controller[0]->public!=true)) {
             if (!$request->headers->has('Authorization')) {
                 throw new HttpException(401);
             }

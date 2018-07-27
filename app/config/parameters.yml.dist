@@ -10,7 +10,15 @@ parameters:
     mailer_user:      contact@ats-digital.com
     mailer_password:  ats-digital&1
     dev_delivery_address: someAddress@ats-digital.com
-    github_access_token_url: 'https://github.com/login/oauth/access_token'
-    github_users_api_url: 'https://api.github.com/user'
-    github_client_secret: 'ae8e9acbad66b745e4c04409a85c8b5a724cc878'
-    token_secret: 52e431f6ed5a80ed700c04986b6ddf
+    auth_providers:
+        github:
+            github_access_token_url: 'https://github.com/login/oauth/access_token'
+            github_users_api_url: 'https://api.github.com/user'
+            github_client_secret: 'ae8e9acbad66b745e4c04409a85c8b5a724cc878'
+        settings:
+            token_secret: 52e431f6ed5a80ed700c04986b6ddf
+    ldap:
+        host: '145.239.158.168'
+        port: '389'
+        dn_user: 'cn=ldapadm,dc=leadwire,dc=io'
+        mdp: 'ldppassword123'

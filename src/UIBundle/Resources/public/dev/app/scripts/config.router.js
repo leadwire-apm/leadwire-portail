@@ -65,7 +65,42 @@ angular
                     controller: 'LoginCtrl',
                     controllerAs: 'ctrl'
                 })
-
+                .state('app.user', {
+                    url: '/settings',
+                    templateUrl: baseUrl + 'views/profile.html',
+                    resolve: {
+                        loginRequired: loginRequired,
+                        deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                            return $ocLazyLoad.load({
+                                name: 'sbAdminApp',
+                                files: [baseUrl + 'scripts/controllers/settings.js']
+                            });
+                        }]
+                    },
+                    data: {
+                        title: 'Settings'
+                    },
+                    controller: 'settingsCtrl',
+                    controllerAs: 'ctrl'
+                })
+                .state('app.dashboard.add', {
+                    url: '/dashboards/add',
+                    templateUrl: baseUrl + 'views/dashboard/form.html',
+                    resolve: {
+                        loginRequired: loginRequired,
+                        deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                            return $ocLazyLoad.load({
+                                name: 'sbAdminApp',
+                                files: [baseUrl + 'scripts/controllers/dashbord.js']
+                            });
+                        }]
+                    },
+                    data: {
+                        title: 'Add Dashboard'
+                    },
+                    controller: 'formDashboardCtrl',
+                    controllerAs: 'ctrl'
+                })
                 .state('app.dashboard', {
                     url: '/',
                     templateUrl: baseUrl + 'views/dashboard.html',
@@ -299,8 +334,9 @@ angular
                     config.headers = config.headers || {};
                     return config;
                 },
-                response: function (response) {
+                responseError: function(response) {
                     console.log("status: ", response.status);
+
                     if (response.status == 401) {
                         console.log("response", response);
                         $location.path('/login');
