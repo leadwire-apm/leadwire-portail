@@ -121,10 +121,9 @@ class UserService
         $isSuccessful = false;
 
         try {
-
             $tmpUser = json_decode($json, true);
             $user = $this->getUser($id);
-            foreach ($tmpUser as $field => $value){
+            foreach ($tmpUser as $field => $value) {
                 $fn = 'set'.ucfirst($field);
                 if (method_exists($user, $fn)) {
                     $user->{$fn}($value);
@@ -138,7 +137,6 @@ class UserService
             $isSuccessful = true;
         } catch (\Exception $e) {
             $this->logger->error($e->getMessage());
-            sd($e->getMessage());
             $isSuccessful = false;
         }
 
