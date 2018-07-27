@@ -14,7 +14,7 @@ class DefaultController extends Controller
     public function indexAction()
     {
         //@todo fix this hack
-        return new Response( file_get_contents(__DIR__ . '/../Resources/public/index.html'));
+        return new Response(file_get_contents(__DIR__ . '/../Resources/public/index.html'));
         // return $this->render('@UIBundle/Resources/public/index.html');
     }
 }

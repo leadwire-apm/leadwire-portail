@@ -4,9 +4,7 @@ namespace AppBundle\EventSubscriber;
 
 use AppBundle\Service\AuthService;
 use ATS\CoreBundle\Controller\Rest\BaseRestController;
-use Doctrine\Common\EventSubscriber;
 use Firebase\JWT\ExpiredException;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -14,8 +12,10 @@ use Symfony\Component\HttpKernel\KernelEvents;
 
 class JWTSubscriber implements EventSubscriberInterface
 {
+    private $auth;
 
-    public function __construct(AuthService $auth) {
+    public function __construct(AuthService $auth)
+    {
         $this->auth = $auth;
     }
 
@@ -32,16 +32,17 @@ class JWTSubscriber implements EventSubscriberInterface
             return;
         }
 
-        if ($controller[0] instanceof BaseRestController && $controller[0]->isNotPublic()) {
+        if ($controller[0] instanceof BaseRestController && (!isset($controller[0]->public) || $controller[0]->public!=true)) {
             if (!$request->headers->has('Authorization')) {
-                throw new HttpException( 401);
+                throw new HttpException(401);
             }
 
             $headerParts = explode(' ', $request->headers->get('Authorization'));
             if (!(count($headerParts) === 2 && $headerParts[0] === 'Bearer')) {
                 throw new HttpException(401);
             }
-            try{
+
+            try {
                 $token = $this->auth->decodeToken($headerParts[1]);
             } catch (ExpiredException $e) {
                 throw new HttpException(401);
@@ -49,12 +50,10 @@ class JWTSubscriber implements EventSubscriberInterface
         }
     }
 
-
     public static function getSubscribedEvents()
     {
         return array(
             KernelEvents::CONTROLLER => 'onKernelController',
         );
     }
-
 }
