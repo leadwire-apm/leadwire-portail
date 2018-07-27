@@ -43,12 +43,13 @@ class UserController extends BaseRestController
      * @param Request $request
      * @param UserService $userService
      *
+     * @param $id
      * @return Response
      */
-    public function updateUserAction(Request $request, UserService $userService)
+    public function updateUserAction(Request $request, UserService $userService, $id)
     {
         $data = $request->getContent();
-        $successful = $userService->updateUser($data);
+        $successful = $userService->updateUser($data, $id);
 
         return $this->prepareJsonResponse($successful);
     }

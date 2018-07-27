@@ -2,6 +2,8 @@
 
 namespace AppBundle\Service;
 
+use ATS\EmailBundle\Document\Email;
+use ATS\EmailBundle\Service\SimpleMailerService;
 use Psr\Log\LoggerInterface;
 use JMS\Serializer\SerializerInterface;
 use AppBundle\Manager\UserManager;
@@ -35,11 +37,12 @@ class UserService
      * @param SerializerInterface $serializer
      * @param LoggerInterface $logger
      */
-    public function __construct(UserManager $userManager, SerializerInterface $serializer, LoggerInterface $logger)
+    public function __construct(UserManager $userManager, SerializerInterface $serializer, LoggerInterface $logger, SimpleMailerService $mailer)
     {
         $this->userManager = $userManager;
         $this->serializer = $serializer;
         $this->logger = $logger;
+        $this->mailer = $mailer;
     }
 
     /**
@@ -113,16 +116,29 @@ class UserService
      *
      * @return bool
      */
-    public function updateUser($json)
+    public function updateUser($json, $id)
     {
         $isSuccessful = false;
 
         try {
-            $user = $this->serializer->deserialize($json, User::class, 'json');
+
+            $tmpUser = json_decode($json, true);
+            $user = $this->getUser($id);
+            foreach ($tmpUser as $field => $value){
+                $fn = 'set'.ucfirst($field);
+                if (method_exists($user, $fn)) {
+                    $user->{$fn}($value);
+                }
+            }
+
             $this->userManager->update($user);
+            if ($tmpUser['email']) {
+                $this->sendVerifEmail($user);
+            }
             $isSuccessful = true;
         } catch (\Exception $e) {
             $this->logger->error($e->getMessage());
+            sd($e->getMessage());
             $isSuccessful = false;
         }
 
@@ -164,5 +180,21 @@ class UserService
     public function getAndGroupBy(array $searchCriteria, $groupFields = [], $valueProcessors = [])
     {
         return $this->userManager->getAndGroupBy($searchCriteria, $groupFields, $valueProcessors);
+    }
+
+    /**
+     * @param User $user
+     */
+    public function sendVerifEmail(User $user)
+    {
+        $mail = new Email();
+        $mail
+            ->setSubject("LeadWire: Email verification")
+            ->setSenderName("LeadWire")
+            ->setSenderAddress('aksontini@ats-digital.com')
+            ->setTemplate('AppBundle:Mail:verif.html.twig')
+            ->setRecipientAddress($user->getEmail())
+            ->setMessageParameters(['username' => $user->getUsername(), 'email' => $user->getEmail()]);
+        $this->mailer->send($mail, true);
     }
 }
