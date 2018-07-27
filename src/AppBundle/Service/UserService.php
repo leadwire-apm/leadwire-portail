@@ -8,6 +8,7 @@ use Psr\Log\LoggerInterface;
 use JMS\Serializer\SerializerInterface;
 use AppBundle\Manager\UserManager;
 use AppBundle\Document\User;
+use Symfony\Component\Routing\Router;
 
 /**
  * Service class for User entities
@@ -31,18 +32,31 @@ class UserService
     private $logger;
 
     /**
+     * @var SimpleMailerService
+     */
+    private $mailer;
+
+    /**
+     * @var Router
+     */
+    private $router;
+
+    /**
      * Constructor
      *
      * @param UserManager $userManager
      * @param SerializerInterface $serializer
      * @param LoggerInterface $logger
+     * @param SimpleMailerService $mailer
+     * @param Router $router
      */
-    public function __construct(UserManager $userManager, SerializerInterface $serializer, LoggerInterface $logger, SimpleMailerService $mailer)
+    public function __construct(UserManager $userManager, SerializerInterface $serializer, LoggerInterface $logger, SimpleMailerService $mailer, Router $router)
     {
         $this->userManager = $userManager;
         $this->serializer = $serializer;
         $this->logger = $logger;
         $this->mailer = $mailer;
+        $this->router = $router;
     }
 
     /**
@@ -192,7 +206,11 @@ class UserService
             ->setSenderAddress('aksontini@ats-digital.com')
             ->setTemplate('AppBundle:Mail:verif.html.twig')
             ->setRecipientAddress($user->getEmail())
-            ->setMessageParameters(['username' => $user->getUsername(), 'email' => $user->getEmail()]);
+            ->setMessageParameters([
+                'username' => $user->getUsername(),
+                'email' => $user->getEmail(),
+                'link' => $this->router->generate('verify_email', ['email' => $user->getEmail()])
+                ]);
         $this->mailer->send($mail, true);
     }
 }

@@ -17,4 +17,12 @@ class DefaultController extends Controller
     {
         return $this->render('AppBundle:Default:index.html.twig');
     }
+
+    /**
+     * @Route("/verify/{email}", methods="GET", name="verify_email")
+     */
+    public function verifAction()
+    {
+        return $this->redirect('/');
+    }
 }
