@@ -12,17 +12,20 @@ use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
 use Symfony\Component\Ldap\Entry;
+use Symfony\Component\Ldap\Exception\LdapException;
 use Symfony\Component\Ldap\Ldap;
 
 class AuthService
 {
     private $container;
     private $userManager;
+    private $ldapService;
 
-    public function __construct(ContainerInterface $container, UserManager $userManager)
+    public function __construct(ContainerInterface $container, UserManager $userManage, LdapService $ldapService)
     {
         $this->container = $container;
-        $this->userManager = $userManager;
+        $this->userManager = $userManage;
+        $this->ldapService = $ldapService;
     }
 
     private function get($name)
@@ -49,13 +52,17 @@ class AuthService
             $user = $this->checkAndAdd($data);
             $data['_id'] = $user->getId();
             if (!$user->getEmail()) {
-                $this->createLdapEntry($user->getUsername());
+                $this->ldapService->createLdapUserEntry($user->getUsername());
             }
             return $data;
         } catch (GuzzleException $e) {
             sd($e->getMessage());
+        } catch (LdapException $e) {
+            if (strpos($e->getMessage(), 'Already exists.') !== false) {
+                return $data;
+            }
         } catch (\Exception $e) {
-            sd($e);
+            sd($e->getMessage());
         }
     }
 
@@ -103,30 +110,5 @@ class AuthService
         } catch (\Exception $e) {
             throw $e;
         }
-    }
-
-    protected function createLdapEntry($username)
-    {
-
-        $ldapParameters = $this->get('ldap');
-
-        $ldap = Ldap::create('ext_ldap', [
-            'connection_string' => 'ldap://' . $ldapParameters['host'] . ':' . $ldapParameters['port'],
-        ]);
-
-        $ldap->bind($ldapParameters['dn_user'], $ldapParameters['mdp']);
-        $entry = new Entry(
-            "cn=application_name,ou=Group,dc=leadwire,dc=io",
-            [
-
-                'cn' => 'application_name',
-                'objectClass' => ['groupofnames'],
-                'member' => "cn=$username,ou=People,dc=leadwire,dc=io"
-            ]
-        );
-
-        $entryManager = $ldap->getEntryManager();
-
-        $entryManager->add($entry);
     }
 }
