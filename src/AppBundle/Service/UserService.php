@@ -8,6 +8,7 @@ use Psr\Log\LoggerInterface;
 use JMS\Serializer\SerializerInterface;
 use AppBundle\Manager\UserManager;
 use AppBundle\Document\User;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\Router;
 
 /**
@@ -209,7 +210,7 @@ class UserService
             ->setMessageParameters([
                 'username' => $user->getUsername(),
                 'email' => $user->getEmail(),
-                'link' => $this->router->generate('verify_email', ['email' => $user->getEmail()])
+                'link' => $this->router->generate('verify_email', ['email' => $user->getEmail()], UrlGeneratorInterface::ABSOLUTE_URL)
                 ]);
         $this->mailer->send($mail, true);
     }

@@ -11,6 +11,7 @@ use GuzzleHttp\Exception\GuzzleException;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Ldap\Entry;
 use Symfony\Component\Ldap\Exception\LdapException;
 use Symfony\Component\Ldap\Ldap;
@@ -99,7 +100,7 @@ class AuthService
 
             if (!$dbUser) {
                 $uuid1 = Uuid::uuid1();
-                $this->userManager->create($userData['login'], $uuid1->toString(), $userData['avatar_url'], [User::DEFAULT_ROLE], true);
+                $this->userManager->create($userData['login'], $uuid1->toString(), $userData['avatar_url'], [User::DEFAULT_ROLE], false);
                 $dbUser = $this->userManager->getUserByUsername($userData['login']);
                 return $dbUser;
             } else {
@@ -110,5 +111,14 @@ class AuthService
         } catch (\Exception $e) {
             throw $e;
         }
+    }
+
+    public function getUserFromToken($authorization)
+    {
+        $jwt = explode(' ', $authorization);
+        $token = $this->decodeToken($jwt[1]);
+        return $this->userManager->getUser(
+            $token->user
+        );
     }
 }
