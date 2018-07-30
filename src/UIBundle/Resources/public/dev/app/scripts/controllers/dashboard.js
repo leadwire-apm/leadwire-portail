@@ -1,6 +1,6 @@
 'use strict';
 
-function dashboardCtrl($sce, ConfigService, Application,  $location, $localStorage, $modal, $ocLazyLoad) {
+function dashboardCtrl($sce, ConfigService, Application,  $location, $localStorage) {
 
     var ctrl = this;
     var connectedUser = $localStorage.user;
@@ -28,10 +28,10 @@ function dashboardCtrl($sce, ConfigService, Application,  $location, $localStora
 
     Application.findAll()
         .success(function(data) {
-            console.warn('application' , data);
-            if (!data.length )
+            $rootScope.applications = data;
+            if (data.length == 0)
             {
-                $location.path('/dashboards/add');
+                $location.path('/applications/add');
                 console.log("create one application");
             }
         })

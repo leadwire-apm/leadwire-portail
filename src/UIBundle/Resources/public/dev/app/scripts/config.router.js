@@ -83,22 +83,22 @@ angular
                     controller: 'settingsCtrl',
                     controllerAs: 'ctrl'
                 })
-                .state('app.dashboard.add', {
-                    url: '/dashboards/add',
-                    templateUrl: baseUrl + 'views/dashboard/form.html',
+                .state('app.applicationsAdd', {
+                    url: '/applications/add',
+                    templateUrl: baseUrl + 'views/application/form.html',
                     resolve: {
                         loginRequired: loginRequired,
                         deps: ['$ocLazyLoad', function ($ocLazyLoad) {
                             return $ocLazyLoad.load({
                                 name: 'sbAdminApp',
-                                files: [baseUrl + 'scripts/controllers/dashbord.js']
+                                files: [baseUrl + 'scripts/controllers/application.js']
                             });
                         }]
                     },
                     data: {
-                        title: 'Add Dashboard'
+                        title: 'Add Application'
                     },
-                    controller: 'formDashboardCtrl',
+                    controller: 'formApplicationCtrl',
                     controllerAs: 'ctrl'
                 })
                 .state('app.dashboard', {
