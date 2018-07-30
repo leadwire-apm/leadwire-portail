@@ -258,5 +258,4 @@ class User extends \ATS\UserBundle\Document\User
     {
         return $this->contactPreference ;
     }
-
 }
