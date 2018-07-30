@@ -117,8 +117,6 @@ class AuthService
     {
         $jwt = explode(' ', $authorization);
         $token = $this->decodeToken($jwt[1]);
-        return $this->userManager->getUser(
-            $token->user
-        );
+        return $this->userManager->getOneBy(['id' => $token->user]);
     }
 }
