@@ -412,13 +412,13 @@ module.exports = function (grunt) {
                 command: 'cp -r app/images ../app/'
             },
             copy_index: {
-                command: 'mv ../app/index.html ..'
+                command: 'mv ../app/index.html ../../views/Default/index.html.twig'
             },
             replace_index_js: {
-                command: 'replace "scripts/" "bundles/ui/app/scripts/" -- ../index.html'
+                command: 'replace "scripts/" "bundles/ui/app/scripts/" -- ../../views/Default/index.html.twig'
             },
             replace_index_css: {
-                command: 'replace "styles/" "bundles/ui/app/styles/" -- ../index.html'
+                command: 'replace "styles/" "bundles/ui/app/styles/" -- ../../views/Default/index.html.twig'
             },
             copy_vendor: {
                 command: 'cp -r app/vendor/ ../app/'

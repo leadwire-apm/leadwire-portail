@@ -29,6 +29,7 @@
 .idea/
 *.log
 /src/UIBundle/Resources/public/app
+/src/UIBundle/Resources/views/Default/index.html.twig
 /src/UIBundle/Resources/public/dev/dist
 /src/UIBundle/Resources/public/dev/node_modules
 /src/UIBundle/Resources/public/dev/bower_components
