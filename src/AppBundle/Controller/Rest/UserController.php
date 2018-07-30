@@ -29,6 +29,10 @@ class UserController extends BaseRestController
             "id" => $user->getId(),
             "uuid" => $user->getUuid(),
             "fname" => $user->getUsername(),
+            "contact" => $user->getContact(),
+            "contactPreference" => $user->getContactPreference(),
+            "acceptNewsLetter" => $user->getAcceptNewsLetter(),
+            "company" => $user->getCompany(),
         ]);
     }
 

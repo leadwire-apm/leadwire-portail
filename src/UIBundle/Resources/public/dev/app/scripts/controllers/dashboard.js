@@ -15,7 +15,7 @@ function dashboardCtrl($sce, ConfigService, Application,  $location, $localStora
                 //ariaLabelledBy: 'modal-title',
                 //ariaDescribedBy: 'modal-body',
                 templateUrl: 'bundles/ui/app/views/profile.html',
-                controller: 'settingsCtrl',
+                controller: 'SettingsModal',
                 controllerAs: 'ctrl',
                 resolve: {
                     isModal: function () {

@@ -5,7 +5,7 @@ angular.module('leadwireApp')
         return $http.get('/api/user/me');
       },
       updateProfile: function (profileData) {
-        return $http.put('/api/user/' + profileData.id + '/update', {email: profileData.email, company: profileData.company} );
+        return $http.put('/api/user/' + profileData.id + '/update', profileData);
       }
     };
   })

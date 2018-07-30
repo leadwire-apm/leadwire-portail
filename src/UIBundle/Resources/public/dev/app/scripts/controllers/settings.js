@@ -2,40 +2,55 @@
 
 angular
     .module('leadwireApp')
-    .controller('settingsCtrl',
-        ['$localStorage', 'Account', '$location', '$scope', '$modalInstance', 'isModal',
-        function($localStorage, Account, $location, $scope, $modalInstance, isModal) {
+    .controller('SettingsModal', SettingsModal)
+    .controller('settingsCtrl', SettingsCtrl);
 
-            var ctrl = this;
-            ctrl.user = $localStorage.user ? $localStorage.user : Account.getProfile();
-            ctrl.showCheckBoxes = !!ctrl.email;
+function SettingsModal($localStorage, Account, $location, $scope, isModal, $modalInstance) {
+    var ctrl = this;
+    let _ctrl = new Ctrl(Account, $scope, $location, $localStorage, this, isModal, $modalInstance);
+    this.save = _ctrl.save;
+}
 
-            ctrl.save = function () {
-                if ($scope.userForm.$valid) {
-                    Account
-                        .updateProfile({
-                            id: ctrl.user.id,
-                            email: ctrl.user.email,
-                            company: ctrl.user.company,
-                        })
-                        .success(function (data) {
-                            if (data) {
-                                $localStorage.user = ctrl.user;
-                                console.log(isModal);
-                                if (isModal) {
-                                    $modalInstance.close();
-                                } else
-                                    $location.path('/');
-                            }
-                            else {
-                                alert('Failed update User');
-                                $location.path('/');
-                            }
-                        })
-                        .error(function (error) {
-                            console.log(error);
-                        });
-                }
-            };
+function SettingsCtrl ($localStorage, Account, $location, $scope) {
+
+    var ctrl = this;
+    let _ctrl = new Ctrl(Account, $scope, $location, $localStorage, this, false, false);
+    this.save = _ctrl.save;
+}
+
+function Ctrl(Account, $scope, $location, $localStorage, Controller, isModal,  $modalInstance) {
+
+    Controller.user = $localStorage.user ? $localStorage.user : Account.getProfile();
+    Controller.showCheckBoxes = !!Controller.email;
+
+    this.save = function save () {
+        if ($scope.userForm.$valid) {
+            Account
+                .updateProfile({
+                    id: Controller.user.id,
+                    email: Controller.user.email,
+                    company: Controller.user.company,
+                    acceptNewsLetter: Controller.user.acceptNewsLetter,
+                    contact: Controller.user.contact.trim(),
+                    contactPreference: Controller.user.contactPreference.trim()
+                })
+                .success(function (data) {
+                    if (data) {
+                        $localStorage.user = Controller.user;
+                        console.log(isModal);
+                        if (isModal) {
+                            $modalInstance.close();
+                        } else
+                            $location.path('/');
+                    }
+                    else {
+                        alert('Failed update User');
+                        $location.path('/');
+                    }
+                })
+                .error(function (error) {
+                    console.log(error);
+                });
         }
-    ]);
+    };
+}

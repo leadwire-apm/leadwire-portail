@@ -113,6 +113,10 @@ class AuthService
         }
     }
 
+    /**
+     * @param string $authorization
+     * @return User
+     */
     public function getUserFromToken($authorization)
     {
         $jwt = explode(' ', $authorization);

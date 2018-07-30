@@ -51,6 +51,21 @@ class User extends \ATS\UserBundle\Document\User
     /**
      * @var string
      *
+     * @ODM\Field(type="string", name="contact")
+     */
+    private $contact;
+
+
+    /**
+     * @var string
+     *
+     * @ODM\Field(type="string", name="contactPreference")
+     */
+    private $contactPreference;
+
+    /**
+     * @var string
+     *
      * @ODM\Field(type="string", name="email")
 
      * @JMS\Type("string")
@@ -58,6 +73,12 @@ class User extends \ATS\UserBundle\Document\User
      * @JMS\Groups({})
      */
     private $email;
+
+    /**
+     * @var boolean
+     * @ODM\Field(type="boolean", name="acceptNewsLetter")
+     */
+    private $acceptNewsLetter;
 
     /**
      * Set uuid
@@ -165,4 +186,77 @@ class User extends \ATS\UserBundle\Document\User
     {
         return $this->email;
     }
+
+    /**
+     * Set acceptNewsLetter
+     *
+     * @param bool $acceptNewsLetter
+     *
+     * @return User
+     */
+    public function setAcceptNewsLetter($acceptNewsLetter)
+    {
+        $this->acceptNewsLetter = $acceptNewsLetter;
+
+        return $this;
+    }
+
+    /**
+     * Get acceptNewsLetter
+     *
+     * @return bool
+     */
+    public function getAcceptNewsLetter()
+    {
+        return $this->acceptNewsLetter;
+    }
+
+    /**
+     * Set contact
+     *
+     * @param string $contact
+     *
+     * @return User
+     */
+    public function setContact($contact)
+    {
+        $this->contact = $contact ;
+
+        return $this;
+    }
+
+    /**
+     * Get contact
+     *
+     * @return string
+     */
+    public function getContact()
+    {
+        return $this->contact ;
+    }
+
+    /**
+     * Set contactPreference
+     *
+     * @param string $contact
+     *
+     * @return User
+     */
+    public function setContactPreference($contactPreference)
+    {
+        $this->contactPreference = $contactPreference ;
+
+        return $this;
+    }
+
+    /**
+     * Get contactPreference
+     *
+     * @return string
+     */
+    public function getContactPreference()
+    {
+        return $this->contactPreference ;
+    }
+
 }
