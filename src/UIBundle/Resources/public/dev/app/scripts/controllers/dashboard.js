@@ -1,6 +1,6 @@
 'use strict';
 
-function dashboardCtrl($sce, ConfigService, Application,  $location, $localStorage) {
+function dashboardCtrl($sce, ConfigService, Application,  $location, $localStorage, $modal, $ocLazyLoad, $rootScope) {
 
     var ctrl = this;
     var connectedUser = $localStorage.user;
@@ -47,5 +47,5 @@ function formDashboardCtrl() {
 
 angular
     .module('leadwireApp')
-    .controller('dashboardCtrl', ['$sce', 'ConfigService', 'Application', '$location', '$localStorage', '$modal', '$ocLazyLoad', dashboardCtrl])
+    .controller('dashboardCtrl', ['$sce', 'ConfigService', 'Application', '$location', '$localStorage', '$modal', '$ocLazyLoad', '$rootScope', dashboardCtrl])
     .controller('formDashboardCtrl',[formDashboardCtrl ] );
