@@ -2,11 +2,10 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Manager\UserManager;
 use Doctrine\Bundle\MongoDBBundle\Logger\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
 
 class DefaultController extends Controller
 {
@@ -16,5 +15,19 @@ class DefaultController extends Controller
     public function indexAction()
     {
         return $this->render('AppBundle:Default:index.html.twig');
+    }
+
+    /**
+     * @Route("/verify/{email}", methods="GET", name="verify_email")
+     * @param  UserManager $um
+     * @param $email
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function verifAction(UserManager $um, $email)
+    {
+        $user = $um->getOneBy(['email' => $email]);
+        $user->setActive(true);
+        $um->update($user);
+        return $this->redirect('/');
     }
 }

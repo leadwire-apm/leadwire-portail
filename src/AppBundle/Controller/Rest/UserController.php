@@ -21,11 +21,7 @@ class UserController extends BaseRestController
      */
     public function getMeAction(Request $request, AuthService $auth, UserService $userService)
     {
-        $jwt = explode(' ', $request->headers->get('Authorization'));
-        $token = $auth->decodeToken($jwt[1]);
-        $user = $userService->getUser(
-            $token->user
-        );
+        $user = $auth->getUserFromToken($request->headers->get('Authorization'));
         return $this->prepareJsonResponse([
             "avatar" => $user->getAvatar(),
             "login" => $user->getLogin(),
@@ -43,12 +39,13 @@ class UserController extends BaseRestController
      * @param Request $request
      * @param UserService $userService
      *
+     * @param $id
      * @return Response
      */
-    public function updateUserAction(Request $request, UserService $userService)
+    public function updateUserAction(Request $request, UserService $userService, $id)
     {
         $data = $request->getContent();
-        $successful = $userService->updateUser($data);
+        $successful = $userService->updateUser($data, $id);
 
         return $this->prepareJsonResponse($successful);
     }
