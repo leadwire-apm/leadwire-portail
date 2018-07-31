@@ -7,6 +7,7 @@ use Psr\Log\LoggerInterface;
 use JMS\Serializer\SerializerInterface;
 use AppBundle\Manager\AppManager;
 use AppBundle\Document\App;
+use Ramsey\Uuid\Uuid;
 
 /**
  * Service class for App entities
@@ -106,6 +107,7 @@ class AppService
      *
      * @param User $user
      * @return App
+     * @throws \Exception
      */
     public function newApp($json, User $user)
     {
@@ -113,6 +115,8 @@ class AppService
             ->serializer
             ->deserialize($json, App::class, 'json');
         $app->setOwner($user);
+        $uuid1 = Uuid::uuid1();
+        $app->setUuid($uuid1->toString());
         $app = $this->getApp($this->appManager->update($app));
         $this->ldapService->createLdapAppEntry($user->getUsername(), $app->getName());
         return $app;

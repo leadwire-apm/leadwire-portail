@@ -49,6 +49,20 @@ class LdapService
         $this->saveEntry($entry);
     }
 
+    public function createLdapInvitationEntry(string $application, string $uuid)
+    {
+        $entry = new Entry(
+            "cn=$application,ou=Group,dc=leadwire,dc=io",
+            [
+                "changetype" => "modify",
+                "add" =>  "$uuid",
+                "memberUid" => $uuid,
+            ]
+        );
+
+        $this->saveEntry($entry);
+    }
+
     protected function instantiateLdap()
     {
 
