@@ -18,13 +18,11 @@ function SettingsCtrl ($localStorage, Account, $location, $scope) {
     this.save = _ctrl.save;
 }
 
-function Ctrl(Account, $scope, $location, $localStorage, Controller,  $modalInstance) {
+function Ctrl(Account, $scope, $location, $localStorage, Controller, $modalInstance) {
 
-    Controller.user = $localStorage.user ? $localStorage.user : Account.getProfile().then(function () {
-        Controller.showCheckBoxes = Controller.user.email;
+    Controller.user = $localStorage.user ? $localStorage.user : Account.getProfile();
 
-    });
-        Controller.showCheckBoxes = Controller.user.email;
+    Controller.showCheckBoxes = !!$modalInstance;
 
     this.save = function save () {
         if ($scope.userForm.$valid) {
