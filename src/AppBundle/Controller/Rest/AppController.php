@@ -3,6 +3,7 @@
 namespace AppBundle\Controller\Rest;
 
 use AppBundle\Service\AuthService;
+use AppBundle\Service\LdapService;
 use AppBundle\Service\UserService;
 use ATS\CoreBundle\Controller\Rest\BaseRestController;
 use FOS\RestBundle\Controller\Annotations\Route;
@@ -90,13 +91,14 @@ class AppController extends BaseRestController
      * @param Request $request
      * @param AppService $appService
      *
+     * @param AuthService $authService
      * @return Response
      */
-    public function newAppAction(Request $request, AppService $appService)
+    public function newAppAction(Request $request, AppService $appService, AuthService $authService)
     {
-        $this->denyAccessUnlessGranted(AclVoter::CREATE, App::class);
+        //$this->denyAccessUnlessGranted(AclVoter::CREATE, App::class);
         $data = $request->getContent();
-        $successful = $appService->newApp($data);
+        $successful = $appService->newApp($data, $authService->getUserFromToken($request->headers->get('Authorization')));
 
         return $this->prepareJsonResponse($successful);
     }

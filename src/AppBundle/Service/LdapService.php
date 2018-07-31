@@ -4,6 +4,7 @@ namespace AppBundle\Service;
 
 use Psr\Container\ContainerInterface;
 use Symfony\Component\Ldap\Entry;
+use Symfony\Component\Ldap\Exception\LdapException;
 use Symfony\Component\Ldap\Ldap;
 
 /**
@@ -17,7 +18,7 @@ class LdapService
 
     public function __construct(ContainerInterface $container)
     {
-        $this->settings= $container->getParameter('ldap');
+        $this->settings = $container->getParameter('ldap');
     }
 
     public function createLdapUserEntry(string $username)
@@ -63,12 +64,22 @@ class LdapService
     /**
      * Save Ldap entry
      * @param Entry $entry
+     * @return bool
      */
     protected function saveEntry(Entry $entry)
     {
-        $ldap = $this->instantiateLdap();
-        $entryManager = $ldap->getEntryManager();
+        try {
+            $ldap = $this->instantiateLdap();
+            $entryManager = $ldap->getEntryManager();
 
-        $entryManager->add($entry);
+            $entryManager->add($entry);
+            return true;
+        } catch (LdapException $e) {
+            if (strpos($e->getMessage(), 'Already exists.') !== false) {
+                return true;
+            } else {
+                return false;
+            }
+        }
     }
 }

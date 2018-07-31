@@ -58,10 +58,6 @@ class AuthService
             return $data;
         } catch (GuzzleException $e) {
             sd($e->getMessage());
-        } catch (LdapException $e) {
-            if (strpos($e->getMessage(), 'Already exists.') !== false) {
-                return $data;
-            }
         } catch (\Exception $e) {
             sd($e->getMessage());
         }

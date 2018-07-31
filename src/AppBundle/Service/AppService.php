@@ -2,6 +2,7 @@
 
 namespace AppBundle\Service;
 
+use AppBundle\Document\User;
 use Psr\Log\LoggerInterface;
 use JMS\Serializer\SerializerInterface;
 use AppBundle\Manager\AppManager;
@@ -29,17 +30,24 @@ class AppService
     private $logger;
 
     /**
+     * @var LdapService
+     */
+    private $ldapService;
+
+    /**
      * Constructor
      *
      * @param AppManager $appManager
      * @param SerializerInterface $serializer
      * @param LoggerInterface $logger
+     * @param LdapService $ldapService
      */
-    public function __construct(AppManager $appManager, SerializerInterface $serializer, LoggerInterface $logger)
+    public function __construct(AppManager $appManager, SerializerInterface $serializer, LoggerInterface $logger, LdapService $ldapService)
     {
         $this->appManager = $appManager;
         $this->serializer = $serializer;
         $this->logger = $logger;
+        $this->ldapService = $ldapService;
     }
 
     /**
@@ -75,7 +83,7 @@ class AppService
      */
     public function getApp($id)
     {
-         return $this->appManager->getOneBy(['id' => $id]);
+        return $this->appManager->getOneBy(['id' => $id]);
     }
 
     /**
@@ -87,7 +95,7 @@ class AppService
      */
     public function getApps(array $criteria = [])
     {
-         return $this->appManager->getBy($criteria);
+        return $this->appManager->getBy($criteria);
     }
 
     /**
@@ -95,15 +103,18 @@ class AppService
      *
      * @param string $json
      *
-     * @return bool
+     * @param User $user
+     * @return App
      */
-    public function newApp($json)
+    public function newApp($json, User $user)
     {
         $app = $this
-                ->serializer
-                ->deserialize($json, App::class, 'json');
-
-        return $this->updateApp($json);
+            ->serializer
+            ->deserialize($json, App::class, 'json');
+        $app->setOwner($user);
+        $app = $this->getApp($this->appManager->update($app));
+        $this->ldapService->createLdapAppEntry($user->getUsername(), $app->getName());
+        return $app;
     }
 
     /**
@@ -138,17 +149,17 @@ class AppService
      */
     public function deleteApp($id)
     {
-         $this->appManager->deleteById($id);
+        $this->appManager->deleteById($id);
     }
 
-     /**
-      * Performs a full text search on  App
-      *
-      * @param string $term
-      * @param string $lang
-      *
-      * @return array
-      */
+    /**
+     * Performs a full text search on  App
+     *
+     * @param string $term
+     * @param string $lang
+     *
+     * @return array
+     */
     public function textSearch($term, $lang)
     {
         return $this->appManager->textSearch($term, $lang);
