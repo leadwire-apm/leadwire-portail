@@ -33,16 +33,14 @@ module.exports = function (grunt) {
         watch: {
             js: {
                 files: ['<%= config.app %>/scripts/{,*/}*.js'],
-                // tasks: ['newer:jshint:all'],
-                tasks: [],
+                tasks: ['newer:jshint:all'],
                 options: {
                     livereload: '<%= connect.options.livereload %>'
                 }
             },
             jsTest: {
                 files: ['test/spec/{,*/}*.js'],
-                // tasks: ['newer:jshint:test', 'karma']
-                tasks: [ 'karma']
+                tasks: ['newer:jshint:test', 'karma']
             },
             less: {
                 files: ['<%= config.app %>/styles/**/*.less'],
@@ -74,9 +72,9 @@ module.exports = function (grunt) {
                 // Change this to '0.0.0.0' to access the server from outside.
                 hostname: 'localhost',
                 // remove next from params
-                middleware: function(connect, options) {
+                middleware: function (connect, options) {
                     return [
-                        function(req, res, next) {
+                        function (req, res, next) {
                             res.setHeader('Access-Control-Allow-Origin', '*');
                             res.setHeader('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
                             res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
