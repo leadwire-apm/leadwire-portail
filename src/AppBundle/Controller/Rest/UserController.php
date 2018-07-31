@@ -24,8 +24,9 @@ class UserController extends BaseRestController
     public function getMeAction(Request $request, AuthService $auth)
     {
         $user = $auth->getUserFromToken($request->headers->get('Authorization'));
-        if (!$user)
+        if (!$user) {
             throw new HttpException("Non Authorized", 401);
+        }
         return $this->prepareJsonResponse([
             "avatar" => $user->getAvatar(),
             "login" => $user->getLogin(),
