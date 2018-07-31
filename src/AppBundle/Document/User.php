@@ -91,6 +91,17 @@ class User extends \ATS\UserBundle\Document\User
      */
     private $acceptNewsLetter;
 
+
+    /**
+     * Get id
+     *
+     * @return \MongoId
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
     /**
      * Set uuid
      *

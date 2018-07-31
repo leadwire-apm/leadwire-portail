@@ -6,6 +6,7 @@ use AppBundle\Service\AuthService;
 use AppBundle\Service\UserService;
 use ATS\CoreBundle\Controller\Rest\BaseRestController;
 use FOS\RestBundle\Controller\Annotations\Route;
+use SensioLabs\Security\Exception\HttpException;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -18,10 +19,13 @@ class UserController extends BaseRestController
      * @param Request $request
      * @param AuthService $auth
      * @return Response
+     * @throws \HttpException
      */
-    public function getMeAction(Request $request, AuthService $auth, UserService $userService)
+    public function getMeAction(Request $request, AuthService $auth)
     {
         $user = $auth->getUserFromToken($request->headers->get('Authorization'));
+        if (!$user)
+            throw new HttpException("Non Authorized", 401);
         return $this->prepareJsonResponse([
             "avatar" => $user->getAvatar(),
             "login" => $user->getLogin(),
