@@ -317,6 +317,22 @@ angular
                     controller: 'administrationReportsController',
                     controllerAs: 'ctrl'
                 })
+                .state('logout', {
+                    controller: 'logoutCtrl',
+                    controllerAs: 'ctrl',
+                    url: '/logout',
+                    resolve: {
+                        deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                            return $ocLazyLoad.load({
+                                name: 'sbAdminApp',
+                                files: [baseUrl + 'scripts/controllers/login.js']
+                            });
+                        }]
+                    },
+                    data: {
+                        title: 'login'
+                    },
+                })
 
         }
 
