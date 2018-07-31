@@ -2,7 +2,14 @@
  * Created by hamed on 02/06/17.
  */
 
-angular.module('leadwireApp').controller('LoginCtrl', LoginController);
+angular.module('leadwireApp')
+    .controller('LoginCtrl', LoginController)
+    .controller('logoutCtrl', logout);
+
+function logout($location, $localStorage) {
+    $localStorage.$reset();
+    $location.path('/login');
+}
 
 LoginController.$inject = ['$location', '$auth', '$timeout', 'User'];
 
