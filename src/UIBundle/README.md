@@ -6,5 +6,7 @@
 
 
 @todo check images path on dist avec build.
+
 @todo make all the build automatic with watcher.
-@todo fixes angularJS dependencies conflicts
+
+@todo fixes angularJS dependencies conflicts.
