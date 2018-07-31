@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller\Rest;
 
+use AppBundle\Service\AuthService;
 use ATS\CoreBundle\Controller\Rest\BaseRestController;
 use FOS\RestBundle\Controller\Annotations\Route;
 use Symfony\Component\HttpFoundation\Request;
@@ -81,11 +82,11 @@ class InvitationController extends BaseRestController
      *
      * @return Response
      */
-    public function newInvitationAction(Request $request, InvitationService $invitationService)
+    public function newInvitationAction(Request $request, InvitationService $invitationService, AuthService $authService)
     {
-        $this->denyAccessUnlessGranted(AclVoter::CREATE, Invitation::class);
+        //$this->denyAccessUnlessGranted(AclVoter::CREATE, Invitation::class);
         $data = $request->getContent();
-        $successful = $invitationService->newInvitation($data);
+        $successful = $invitationService->newInvitation($data, $authService->getUserFromToken($request->headers->get('Authorization')));
 
         return $this->prepareJsonResponse($successful);
     }

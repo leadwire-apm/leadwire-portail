@@ -28,7 +28,7 @@ class Invitation
     /**
      * @var App
      *
-     * @ODM\ReferenceOne(targetDocument="AppBundle\Document\App", name="app")
+     * @ODM\ReferenceOne(targetDocument="AppBundle\Document\App", name="app", cascade={"persist"})
      * @JMS\Type("AppBundle\Document\App")
      * @JMS\Expose
      * @JMS\Groups({})
@@ -63,7 +63,7 @@ class Invitation
      * @JMS\Expose
      * @JMS\Groups({})
      */
-    private $isPending;
+    private $isPending=true;
 
 
     /**

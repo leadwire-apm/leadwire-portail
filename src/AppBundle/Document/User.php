@@ -15,6 +15,17 @@ use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 class User extends \ATS\UserBundle\Document\User
 {
 
+
+    /**
+     * @var \MongoId
+     *
+     * @ODM\Id("strategy=auto")
+     * @JMS\Type("string")
+     * @JMS\Expose
+     */
+    private $id;
+
+
     /**
      * @var string
      *
@@ -79,6 +90,17 @@ class User extends \ATS\UserBundle\Document\User
      * @ODM\Field(type="boolean", name="acceptNewsLetter")
      */
     private $acceptNewsLetter;
+
+
+    /**
+     * Get id
+     *
+     * @return \MongoId
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
 
     /**
      * Set uuid
