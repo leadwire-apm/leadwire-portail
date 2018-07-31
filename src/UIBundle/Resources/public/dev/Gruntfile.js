@@ -33,14 +33,16 @@ module.exports = function (grunt) {
         watch: {
             js: {
                 files: ['<%= config.app %>/scripts/{,*/}*.js'],
-                tasks: ['newer:jshint:all'],
+                // tasks: ['newer:jshint:all'],
+                tasks: [],
                 options: {
                     livereload: '<%= connect.options.livereload %>'
                 }
             },
             jsTest: {
                 files: ['test/spec/{,*/}*.js'],
-                tasks: ['newer:jshint:test', 'karma']
+                // tasks: ['newer:jshint:test', 'karma']
+                tasks: [ 'karma']
             },
             less: {
                 files: ['<%= config.app %>/styles/**/*.less'],
@@ -218,7 +220,7 @@ module.exports = function (grunt) {
                 src: [
                     '<%= config.dist %>/scripts/{,*}*.js',
                     '<%= config.dist %>/styles/{,*/}*.css',
-                    '<%= config.dist %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}',
+                    // '<%= config.dist %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}',
                 ]
             }
         },
@@ -255,7 +257,7 @@ module.exports = function (grunt) {
                 ],
                 patterns: {
                     js: [
-                        [/(images\/.*?\.(?:png|jpg|jepg|gif|webp|svg))/gm, 'Update the JS to reference our revved images'],
+                        [/(images\/.*?\.(?:png|jpg|jpeg|gif|webp|svg))/gm, 'Update the JS to reference our revved images'],
                         [/(styles\/.*?\.css)/gm, 'Update the JS to reference our revved styles']
                     ]
                 }
@@ -408,9 +410,9 @@ module.exports = function (grunt) {
             copy_dist: {
                 command: 'mv dist ../app'
             },
-            copy_images: {
-                command: 'cp -r app/images ../app/'
-            },
+            // copy_images: {
+            //     command: 'cp -r app/images ../app/'
+            // },
             copy_index: {
                 command: 'mv ../app/index.html ../../views/Default/index.html.twig'
             },
@@ -476,7 +478,9 @@ module.exports = function (grunt) {
         'filerev',
         'usemin',
         'htmlmin',
-        'shell'
+        'shell',
+        'watch'
+
     ]);
 
     grunt.registerTask('default', [
