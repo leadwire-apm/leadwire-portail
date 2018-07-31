@@ -2,10 +2,15 @@
 
 namespace AppBundle\Service;
 
+use AppBundle\Document\User;
+use ATS\EmailBundle\Document\Email;
+use ATS\EmailBundle\Service\SimpleMailerService;
 use Psr\Log\LoggerInterface;
 use JMS\Serializer\SerializerInterface;
 use AppBundle\Manager\InvitationManager;
 use AppBundle\Document\Invitation;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Routing\Router;
 
 /**
  * Service class for Invitation entities
@@ -29,17 +34,31 @@ class InvitationService
     private $logger;
 
     /**
+     * @var SimpleMailerService
+     */
+    private $mailer;
+
+    /*
+     * @var
+     */
+    private $router;
+    /**
      * Constructor
      *
      * @param InvitationManager $invitationManager
      * @param SerializerInterface $serializer
      * @param LoggerInterface $logger
+     * @param SimpleMailerService $mailer
+     * @param Router $router
      */
-    public function __construct(InvitationManager $invitationManager, SerializerInterface $serializer, LoggerInterface $logger)
+    public function __construct(InvitationManager $invitationManager, SerializerInterface $serializer, LoggerInterface $logger, SimpleMailerService $mailer, Router $router)
     {
         $this->invitationManager = $invitationManager;
         $this->serializer = $serializer;
         $this->logger = $logger;
+        $this->mailer =
+        $this->mailer = $mailer;
+        $this->router = $router;
     }
 
     /**
@@ -95,15 +114,17 @@ class InvitationService
      *
      * @param string $json
      *
-     * @return bool
+     * @param User $user
+     * @return \MongoId
      */
-    public function newInvitation($json)
+    public function newInvitation($json, User $user)
     {
         $invitation = $this
                 ->serializer
                 ->deserialize($json, Invitation::class, 'json');
-
-        return $this->updateInvitation($json);
+        $id = $this->invitationManager->update($invitation);
+        $this->sendInvitationMail($this->getInvitation($id), $user);
+        return $id;
     }
 
     /**
@@ -164,5 +185,24 @@ class InvitationService
     public function getAndGroupBy(array $searchCriteria, $groupFields = [], $valueProcessors = [])
     {
         return $this->invitationManager->getAndGroupBy($searchCriteria, $groupFields, $valueProcessors);
+    }
+
+    public function sendInvitationMail(Invitation $invitation, User $user)
+    {
+        $mail = new Email();
+        $mail
+            ->setSubject("LeadWire: Invitation to access to an application")
+            ->setSenderName("LeadWire")
+            ->setSenderAddress('aksontini@ats-digital.com')
+            ->setTemplate('AppBundle:Mail:AppInvitation.html.twig')
+            ->setRecipientAddress($invitation->getEmail())
+            ->setMessageParameters([
+                'user' => $user,
+                'email' => $invitation->getEmail(),
+                'invitation' => $invitation->getId(),
+                'link' => $this->router->generate('angular_endPoint', [], UrlGeneratorInterface::ABSOLUTE_URL)
+            ]);
+
+        $this->mailer->send($mail, true);
     }
 }

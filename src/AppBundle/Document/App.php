@@ -5,7 +5,7 @@ namespace AppBundle\Document;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 use JMS\Serializer\Annotation as JMS;
 use ATS\CoreBundle\Annotation as ATS;
-use ATS\UserBundle\Document\User;
+use AppBundle\Document\User;
 
 /**
  * @ODM\Document(repositoryClass="AppBundle\Repository\AppRepository")
@@ -98,8 +98,8 @@ class App
     /**
      * @var User
      *
-     * @ODM\ReferenceOne(targetDocument="ATS\UserBundle\Document\User", name="owner")
-     * @JMS\Type("ATS\UserBundle\Document\User")
+     * @ODM\ReferenceOne(targetDocument="AppBundle\Document\User", name="owner", cascade={"persist"})
+     * @JMS\Type("AppBundle\Document\User")
      * @JMS\Expose
      * @JMS\Groups({})
      */
@@ -114,7 +114,6 @@ class App
      * @JMS\Groups({})
      */
     private $dashboards;
-
 
     /**
      * Constructor
@@ -139,7 +138,7 @@ class App
      *
      * @param string $uuid
      *
-     * @return User
+     * @return App
      */
     public function setUuid($uuid)
     {

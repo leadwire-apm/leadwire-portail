@@ -53,11 +53,12 @@ class AppService
     /**
      * List all apps
      *
+     * @param User $user
      * @return array
      */
-    public function listApps($userId)
+    public function listApps(User $user)
     {
-        return $this->appManager->getBy(['owner' => $userId]);
+        return $this->appManager->getBy(['owner' => $user]);
     }
 
     /**

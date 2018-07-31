@@ -48,13 +48,9 @@ class AppController extends BaseRestController
     public function listAppsAction(Request $request, AppService $appService, AuthService $auth, UserService $userService)
     {
         //$this->denyAccessUnlessGranted(AclVoter::VIEW_ALL, App::class);
-        $jwt = explode(' ', $request->headers->get('Authorization'));
-        $token = $auth->decodeToken($jwt[1]);
-        $user = $userService->getUser(
-            $token->user
-        );
 
-        $data = $appService->listApps($user->getId());
+        $user = $auth->getUserFromToken($request->headers->get('Authorization'));
+        $data = $appService->listApps($user);
 
         return $this->prepareJsonResponse($data);
     }

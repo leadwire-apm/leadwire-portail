@@ -15,6 +15,17 @@ use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 class User extends \ATS\UserBundle\Document\User
 {
 
+
+    /**
+     * @var \MongoId
+     *
+     * @ODM\Id("strategy=auto")
+     * @JMS\Type("string")
+     * @JMS\Expose
+     */
+    private $id;
+
+
     /**
      * @var string
      *
