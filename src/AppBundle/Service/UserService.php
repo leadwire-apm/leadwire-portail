@@ -8,6 +8,7 @@ use Psr\Log\LoggerInterface;
 use JMS\Serializer\SerializerInterface;
 use AppBundle\Manager\UserManager;
 use AppBundle\Document\User;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\Router;
 
@@ -43,6 +44,11 @@ class UserService
     private $router;
 
     /**
+     * @var string
+     */
+    private $sender;
+
+    /**
      * Constructor
      *
      * @param UserManager $userManager
@@ -51,13 +57,14 @@ class UserService
      * @param SimpleMailerService $mailer
      * @param Router $router
      */
-    public function __construct(UserManager $userManager, SerializerInterface $serializer, LoggerInterface $logger, SimpleMailerService $mailer, Router $router)
+    public function __construct(UserManager $userManager, SerializerInterface $serializer, LoggerInterface $logger, SimpleMailerService $mailer, Router $router, ContainerInterface $container)
     {
         $this->userManager = $userManager;
         $this->serializer = $serializer;
         $this->logger = $logger;
         $this->mailer = $mailer;
         $this->router = $router;
+        $this->sender = $container->getParameter('sender');
     }
 
     /**
@@ -204,7 +211,7 @@ class UserService
         $mail
             ->setSubject("LeadWire: Email verification")
             ->setSenderName("LeadWire")
-            ->setSenderAddress('aksontini@ats-digital.com')
+            ->setSenderAddress($this->sender)
             ->setTemplate('AppBundle:Mail:verif.html.twig')
             ->setRecipientAddress($user->getEmail())
             ->setMessageParameters([

@@ -9,6 +9,7 @@ parameters:
     mailer_transport: gmail
     mailer_user:      contact@ats-digital.com
     mailer_password:  ats-digital&1
+    sender: someAddress@ats-digital.com
     dev_delivery_address: someAddress@ats-digital.com
     auth_providers:
         github:

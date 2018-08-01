@@ -9,6 +9,7 @@ use Psr\Log\LoggerInterface;
 use JMS\Serializer\SerializerInterface;
 use AppBundle\Manager\InvitationManager;
 use AppBundle\Document\Invitation;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\Router;
 
@@ -38,10 +39,15 @@ class InvitationService
      */
     private $mailer;
 
-    /*
-     * @var
+    /**
+     * @var Router
      */
     private $router;
+
+    /**
+     * @var string
+     */
+    private $sender;
     /**
      * Constructor
      *
@@ -51,7 +57,7 @@ class InvitationService
      * @param SimpleMailerService $mailer
      * @param Router $router
      */
-    public function __construct(InvitationManager $invitationManager, SerializerInterface $serializer, LoggerInterface $logger, SimpleMailerService $mailer, Router $router)
+    public function __construct(InvitationManager $invitationManager, SerializerInterface $serializer, LoggerInterface $logger, SimpleMailerService $mailer, Router $router, ContainerInterface $container)
     {
         $this->invitationManager = $invitationManager;
         $this->serializer = $serializer;
@@ -59,6 +65,7 @@ class InvitationService
         $this->mailer =
         $this->mailer = $mailer;
         $this->router = $router;
+        $this->sender = $container->getParameter('sender');
     }
 
     /**
@@ -193,7 +200,7 @@ class InvitationService
         $mail
             ->setSubject("LeadWire: Invitation to access to an application")
             ->setSenderName("LeadWire")
-            ->setSenderAddress('aksontini@ats-digital.com')
+            ->setSenderAddress($this->sender)
             ->setTemplate('AppBundle:Mail:AppInvitation.html.twig')
             ->setRecipientAddress($invitation->getEmail())
             ->setMessageParameters([
