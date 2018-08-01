@@ -33,16 +33,16 @@ module.exports = function (grunt) {
         watch: {
             js: {
                 files: ['<%= config.app %>/scripts/{,*/}*.js'],
-                // tasks: ['newer:jshint:all'],
                 tasks: [],
+                // tasks: ['newer:jshint:all'],
                 options: {
                     livereload: '<%= connect.options.livereload %>'
                 }
             },
             jsTest: {
                 files: ['test/spec/{,*/}*.js'],
+                tasks: []
                 // tasks: ['newer:jshint:test', 'karma']
-                tasks: [ 'karma']
             },
             less: {
                 files: ['<%= config.app %>/styles/**/*.less'],
@@ -61,6 +61,7 @@ module.exports = function (grunt) {
                 },
                 files: [
                     '<%= config.app %>/{,*/}*.html',
+                    '<%= config.app %>/views/{,*/}*.html', //added by me
                     '.tmp/styles/{,*/}*.css',
                     '<%= config.app %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}'
                 ]
@@ -70,13 +71,13 @@ module.exports = function (grunt) {
         // The actual grunt server settings
         connect: {
             options: {
-                port: 9001,
+                port: 8000,
                 // Change this to '0.0.0.0' to access the server from outside.
                 hostname: 'localhost',
                 // remove next from params
-                middleware: function(connect, options) {
+                middleware: function (connect, options) {
                     return [
-                        function(req, res, next) {
+                        function (req, res, next) {
                             res.setHeader('Access-Control-Allow-Origin', '*');
                             res.setHeader('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
                             res.setHeader('Access-Control-Allow-Headers', 'Content-Type');

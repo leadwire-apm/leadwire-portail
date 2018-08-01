@@ -4,7 +4,9 @@ angular
     .module('leadwireApp')
     .config(['$stateProvider', '$urlRouterProvider', '$authProvider',
         function ($stateProvider, $urlRouterProvider, $authProvider) {
-            var baseUrl = 'bundles/ui/app/';
+            // var baseUrl = 'bundles/ui/app/';
+            var baseUrl = '/';
+
             // For unmatched routes
             $urlRouterProvider.otherwise('/');
 
@@ -14,9 +16,9 @@ angular
 
             $authProvider.github({
                 /*prod*/  //clientId: '5ae68ff984489a4ed647'
-                /*test*/   clientId: 'a5b3aee9593a1aaa5046',
-                /*local*/  // clientId: '094c2b7f0e14da4d0ca8',
-                url: '/api/auth/github'
+                /*test*/   //clientId: 'a5b3aee9593a1aaa5046',
+                /*local*/   clientId: '094c2b7f0e14da4d0ca8',
+                url: 'http://localhost:9000/api/auth/github'
 
             });
 
@@ -347,10 +349,12 @@ angular
         $httpProvider.interceptors.push(function($q, $location) {
             return {
                 request: function (config) {
+                    // console.log(config.headers)
                     config.headers = config.headers || {};
                     return config;
                 },
                 responseError: function(response) {
+                    // console.log(response)
                     console.log("status: ", response.status);
 
                     if (response.status == 401) {

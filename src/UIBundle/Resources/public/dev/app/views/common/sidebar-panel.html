@@ -1,165 +1,165 @@
 <div class="brand">
 
-  <!-- logo -->
-  <div class="brand-logo">
-    <img data-ng-src="bundles/ui/app/images/logo.png" height="30" alt="">
-  </div>
-  <!-- /logo -->
+    <!-- logo -->
+    <div class="brand-logo">
+        <img data-ng-src="images/logo.png" height="30" alt="">
+    </div>
+    <!-- /logo -->
 
-  <!-- toggle small sidebar menu -->
-  <a href="javascript:;" class="toggle-sidebar hidden-xs hamburger-icon v3"
-     data-ng-click="app.layout.isSmallSidebar = !app.layout.isSmallSidebar">
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-  </a>
-  <!-- /toggle small sidebar menu -->
+    <!-- toggle small sidebar menu -->
+    <a href="javascript:;" class="toggle-sidebar hidden-xs hamburger-icon v3"
+       data-ng-click="app.layout.isSmallSidebar = !app.layout.isSmallSidebar">
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+    </a>
+    <!-- /toggle small sidebar menu -->
 
 </div>
 
 <!-- main navigation -->
 <nav role="navigation" side-navigation>
 
-  <ul class="nav">
+    <ul class="nav">
 
-    <!-- dashboard -->
-    <li ui-sref-active="active">
-      <a href="#/">
-        <i class="fa fa-dashboard"></i>
-        <span>Dashboard</span>
-      </a>
-    </li>
-    <!-- /dashboard -->
-
-    <!-- real user monitoring -->
-    <li ui-sref-active="active">
-      <a ui-sref="app.realUserMonitoring">
-        <i class="fa fa-eye"></i>
-        <span>Real User Monitoring</span>
-      </a>
-    </li>
-    <!-- /real user monitoring -->
-
-    <!-- synthetic monitoring -->
-
-    <li ui-sref-active="active">
-      <a ui-sref="app.syntheticMonitoring">
-        <i class="fa fa-exchange"></i>
-        <span>Synthetic Monitoring</span>
-      </a>
-    </li>
-    <!-- /synthetic monitoring -->
-
-    <!-- infrastructure monitoring -->
-    <li ui-sref-active="active">
-      <a ui-sref="app.infrastructureMonitoring">
-        <i class="fa fa-search"></i>
-        <span>Infrastructure Monitoring</span>
-      </a>
-    </li>
-    <!-- /infrastructure monitoring -->
-
-    <!-- Custom Reports -->
-    <li ui-sref-active="active">
-      <a ui-sref="app.customReports ">
-        <i class="fa fa-file-text"></i>
-        <span>Custom Reports </span>
-      </a>
-    </li>
-    <!-- /Custom Reports -->
-
-    <!-- data-browser -->
-    <li ui-sref-active="active" ng-class="{'disabled': true}">
-      <a ui-sref="#">
-        <i class="fa fa-table"></i>
-        <span>Data Browser</span>
-      </a>
-    </li>
-    <!-- /data-browser -->
-
-    <!-- business transactions -->
-
-    <li ui-sref-active="active" ng-class="{'disabled': true}">
-      <a ui-sref="#">
-        <i class="fa fa-briefcase"></i>
-        <span>Business Transactions</span>
-      </a>
-    </li>
-
-    <!-- /business transactions -->
-
-    <!-- Architecture Discovery (Server Map) -->
-    <li ui-sref-active="active" ng-class="{'disabled': true}">
-      <a ui-sref="#">
-        <i class="fa fa-sitemap"></i>
-        <span>Architecture Discovery</span>
-      </a>
-    </li>
-    <!-- /Architecture Discovery (Server Map) -->
-
-    <!-- Alerts -->
-    <li ui-sref-active="active" ng-class="{'disabled': true}">
-      <a ui-sref="#">
-        <i class="fa fa-exclamation-triangle"></i>
-        <span>Alerts</span>
-      </a>
-    </li>
-    <!-- /Alerts -->
-
-    <li>
-      <a>
-      </a>
-    </li>
-
-    <!-- Documentation -->
-    <li ui-sref-active="active" ng-class="{'disabled': true}">
-      <a href="#">
-        <i class="fa fa-book"></i>
-        <span>Documentation</span>
-      </a>
-    </li>
-    <!-- /Documentation -->
-
-    <!--Support -->
-    <li ui-sref-active="active" ng-class="{'disabled': true}">
-      <a href="#">
-        <i class="fa fa-support"></i>
-        <span>Support</span>
-      </a>
-    </li>
-    <!-- /Support -->
-
-    <!--Administration -->
-    <li data-ng-class="{open: $state.includes('app.administration')}">
-      <a href="javascript:;">
-        <i class="fa fa-gears"></i>
-        <span>Administration</span>
-      </a>
-      <ul class="sub-menu">
+        <!-- dashboard -->
         <li ui-sref-active="active">
-          <a ui-sref="app.administration.visualisations">
-            <span>Visualisations</span>
-          </a>
+            <a href="#/">
+                <i class="fa fa-dashboard"></i>
+                <span>Dashboard</span> {{$state.current}}
+            </a>
         </li>
+        <!-- /dashboard -->
+
+        <!-- real user monitoring -->
         <li ui-sref-active="active">
-          <a ui-sref="app.administration.reports">
-            <span>Reports</span>
-          </a>
+            <a ui-sref="app.realUserMonitoring">
+                <i class="fa fa-eye"></i>
+                <span>Real User Monitoring</span>
+            </a>
         </li>
-      </ul>
-    </li>
-    <!-- /Administration -->
+        <!-- /real user monitoring -->
 
-    <!--Support -->
-    <li ui-sref-active="active">
-      <a href="#/login">
-        <i class="fa fa-sign-out"></i>
-        <span>Logout</span>
-      </a>
-    </li>
-    <!-- /Support -->
+        <!-- synthetic monitoring -->
 
-  </ul>
+        <li ui-sref-active="active">
+            <a ui-sref="app.syntheticMonitoring">
+                <i class="fa fa-exchange"></i>
+                <span>Synthetic Monitoring</span>
+            </a>
+        </li>
+        <!-- /synthetic monitoring -->
+
+        <!-- infrastructure monitoring -->
+        <li ui-sref-active="active">
+            <a ui-sref="app.infrastructureMonitoring">
+                <i class="fa fa-search"></i>
+                <span>Infrastructure Monitoring</span>
+            </a>
+        </li>
+        <!-- /infrastructure monitoring -->
+
+        <!-- Custom Reports -->
+        <li ui-sref-active="active">
+            <a ui-sref="app.customReports ">
+                <i class="fa fa-file-text"></i>
+                <span>Custom Reports </span>
+            </a>
+        </li>
+        <!-- /Custom Reports -->
+
+        <!-- data-browser -->
+        <li ui-sref-active="active" ng-class="{'disabled': true}">
+            <a ui-sref="#">
+                <i class="fa fa-table"></i>
+                <span>Data Browser</span>
+            </a>
+        </li>
+        <!-- /data-browser -->
+
+        <!-- business transactions -->
+
+        <li ui-sref-active="active" ng-class="{'disabled': true}">
+            <a ui-sref="#">
+                <i class="fa fa-briefcase"></i>
+                <span>Business Transactions</span>
+            </a>
+        </li>
+
+        <!-- /business transactions -->
+
+        <!-- Architecture Discovery (Server Map) -->
+        <li ui-sref-active="active" ng-class="{'disabled': true}">
+            <a ui-sref="#">
+                <i class="fa fa-sitemap"></i>
+                <span>Architecture Discovery</span>
+            </a>
+        </li>
+        <!-- /Architecture Discovery (Server Map) -->
+
+        <!-- Alerts -->
+        <li ui-sref-active="active" ng-class="{'disabled': true}">
+            <a ui-sref="#">
+                <i class="fa fa-exclamation-triangle"></i>
+                <span>Alerts</span>
+            </a>
+        </li>
+        <!-- /Alerts -->
+
+        <li>
+            <a>
+            </a>
+        </li>
+
+        <!-- Documentation -->
+        <li ui-sref-active="active" ng-class="{'disabled': true}">
+            <a href="#">
+                <i class="fa fa-book"></i>
+                <span>Documentation</span>
+            </a>
+        </li>
+        <!-- /Documentation -->
+
+        <!--Support -->
+        <li ui-sref-active="active" ng-class="{'disabled': true}">
+            <a href="#">
+                <i class="fa fa-support"></i>
+                <span>Support</span>
+            </a>
+        </li>
+        <!-- /Support -->
+
+        <!--Administration -->
+        <li data-ng-class="{open: $state.includes('app.administration')}">
+            <a href="javascript:;">
+                <i class="fa fa-gears"></i>
+                <span>Administration</span>
+            </a>
+            <ul class="sub-menu">
+                <li ui-sref-active="active">
+                    <a ui-sref="app.administration.visualisations">
+                        <span>Visualisations</span>
+                    </a>
+                </li>
+                <li ui-sref-active="active">
+                    <a ui-sref="app.administration.reports">
+                        <span>Reports</span>
+                    </a>
+                </li>
+            </ul>
+        </li>
+        <!-- /Administration -->
+
+        <!--Support -->
+        <li ui-sref-active="active">
+            <a href="#/login">
+                <i class="fa fa-sign-out"></i>
+                <span>Logout</span>
+            </a>
+        </li>
+        <!-- /Support -->
+
+    </ul>
 </nav>
 <!-- /main navigation -->

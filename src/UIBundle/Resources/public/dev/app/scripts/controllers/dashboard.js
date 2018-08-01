@@ -9,12 +9,12 @@ function dashboardCtrl($sce, ConfigService, Application,  $location, $localStora
     {
         $ocLazyLoad.load({
             name: 'sbAdminApp',
-            files: [ 'bundles/ui/app/scripts/controllers/settings.js']
+            files: [ 'scripts/controllers/settings.js']
         }).then(function() {
             $modal.open({
                 //ariaLabelledBy: 'modal-title',
                 //ariaDescribedBy: 'modal-body',
-                templateUrl: 'bundles/ui/app/views/profile.html',
+                templateUrl: 'views/profile.html',
                 controller: 'SettingsModal',
                 controllerAs: 'ctrl',
                 resolve: {
