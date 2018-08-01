@@ -30,8 +30,8 @@ function applicationListCtrlFN(
     Application
 ) {
     $rootScope.currentNav = 'settings';
-    Application.findAll().then(function(data) {
-        console.log(data)
-    })
+    // Application.findAll().then(function(data) {
+    //     console.log(data)
+    // })
 
 }
