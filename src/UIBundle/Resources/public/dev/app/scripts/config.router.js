@@ -85,24 +85,42 @@ angular
                     controller: 'settingsCtrl',
                     controllerAs: 'ctrl'
                 })
-                .state('app.applicationsAdd', {
-                    url: '/applications/add',
-                    templateUrl: baseUrl + 'views/application/form.html',
-                    resolve: {
-                        loginRequired: loginRequired,
-                        deps: ['$ocLazyLoad', function ($ocLazyLoad) {
-                            return $ocLazyLoad.load({
-                                name: 'sbAdminApp',
-                                files: [baseUrl + 'scripts/controllers/application.js']
-                            });
-                        }]
-                    },
-                    data: {
-                        title: 'Add Application'
-                    },
-                    controller: 'formApplicationCtrl',
-                    controllerAs: 'ctrl'
-                })
+            .state('app.applicationsAdd', {
+                url: '/applications/add',
+                templateUrl: baseUrl + 'views/application/form.html',
+                resolve: {
+                    loginRequired: loginRequired,
+                    deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                        return $ocLazyLoad.load({
+                            name: 'sbAdminApp',
+                            files: [baseUrl + 'scripts/controllers/application.js']
+                        });
+                    }]
+                },
+                data: {
+                    title: 'Add Application'
+                },
+                controller: 'formApplicationCtrl',
+                controllerAs: 'ctrl'
+            })
+            .state('app.applicationsList', {
+                url: '/applications/list',
+                templateUrl: baseUrl + 'views/application/list.html',
+                resolve: {
+                    loginRequired: loginRequired,
+                    deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                        return $ocLazyLoad.load({
+                            name: 'sbAdminApp',
+                            files: [baseUrl + 'scripts/controllers/application.js']
+                        });
+                    }]
+                },
+                data: {
+                    title: 'Application list'
+                },
+                controller: 'applicationListCtrl',
+                controllerAs: 'ctrl'
+            })
                 .state('app.dashboard', {
                     url: '/',
                     templateUrl: baseUrl + 'views/dashboard.html',
