@@ -42,10 +42,9 @@ class AppController extends BaseRestController
      * @param AppService $appService
      *
      * @param AuthService $auth
-     * @param UserService $userService
      * @return Response
      */
-    public function listAppsAction(Request $request, AppService $appService, AuthService $auth, UserService $userService)
+    public function listAppsAction(Request $request, AppService $appService, AuthService $auth)
     {
         //$this->denyAccessUnlessGranted(AclVoter::VIEW_ALL, App::class);
 

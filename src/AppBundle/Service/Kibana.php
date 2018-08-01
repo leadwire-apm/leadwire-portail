@@ -31,7 +31,7 @@ class Kibana
         try {
             $response = $client->request(
                 'POST',
-                $this->settings['inject_dashboards'],
+                str_replace('{{tenant}}', $app->getOwner()->getUuid(), $this->settings['inject_dashboards']),
                 [
                     'body' => $json_template,
                     'headers' => [

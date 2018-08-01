@@ -89,6 +89,7 @@ class App
 
     /**
      * @var boolean
+     * @JMS\Expose
      * @ODM\Field(type="boolean", name="isEnabled")
      */
     private $isEnabled=false;
@@ -339,7 +340,7 @@ class App
     {
         return $this->isDefault;
     }
-    
+
 
     /**
      * Returns string representation of the object
