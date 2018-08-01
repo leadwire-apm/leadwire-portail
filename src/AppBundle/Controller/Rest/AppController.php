@@ -42,15 +42,33 @@ class AppController extends BaseRestController
      * @param AppService $appService
      *
      * @param AuthService $auth
-     * @param UserService $userService
      * @return Response
      */
-    public function listAppsAction(Request $request, AppService $appService, AuthService $auth, UserService $userService)
+    public function listAppsAction(Request $request, AppService $appService, AuthService $auth)
     {
         //$this->denyAccessUnlessGranted(AclVoter::VIEW_ALL, App::class);
 
         $user = $auth->getUserFromToken($request->headers->get('Authorization'));
         $data = $appService->listApps($user);
+
+        return $this->prepareJsonResponse($data);
+    }
+
+    /**
+     * @Route("/invited/list", methods="GET")
+     *
+     * @param Request $request
+     * @param AppService $appService
+     *
+     * @param AuthService $auth
+     * @return Response
+     */
+    public function invitedListAppsAction(Request $request, AppService $appService, AuthService $auth)
+    {
+        //$this->denyAccessUnlessGranted(AclVoter::VIEW_ALL, App::class);
+
+        $user = $auth->getUserFromToken($request->headers->get('Authorization'));
+        $data = $appService->invitedListApps($user);
 
         return $this->prepareJsonResponse($data);
     }

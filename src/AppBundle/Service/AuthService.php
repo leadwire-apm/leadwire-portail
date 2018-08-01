@@ -111,7 +111,7 @@ class AuthService
 
     /**
      * @param string $authorization
-     * @return User
+     * @return array|User
      */
     public function getUserFromToken($authorization)
     {

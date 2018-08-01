@@ -91,6 +91,16 @@ class User extends \ATS\UserBundle\Document\User
      */
     private $acceptNewsLetter;
 
+    /**
+     * @ODM\ReferenceMany(targetDocument="Invitation", mappedBy="user")
+     * @JMS\Expose
+     */
+    public $invitations;
+
+    /**
+     * @ODM\ReferenceMany(targetDocument="App", mappedBy="owner")
+     */
+    public $myApps;
 
     /**
      * Get id

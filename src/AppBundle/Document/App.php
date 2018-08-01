@@ -55,6 +55,7 @@ class App
      * @JMS\Groups({})
      */
     private $type;
+
     /**
      * @var string
      *
@@ -65,15 +66,6 @@ class App
      */
     private $description;
 
-    /**
-     * @var integer
-     *
-     * @ODM\Field(type="integer", name="activationCode")
-     * @JMS\Type("integer")
-     * @JMS\Expose
-     * @JMS\Groups({})
-     */
-    private $activationCode;
 
     /**
      * @var string
@@ -96,31 +88,41 @@ class App
     private $paymentData;
 
     /**
+     * @var boolean
+     * @JMS\Expose
+     * @ODM\Field(type="boolean", name="isEnabled")
+     */
+    private $isEnabled=false;
+
+
+    /**
+     * @var boolean
+     * @JMS\Expose
+     * @ODM\Field(type="boolean", name="isDefault")
+     */
+    private $isDefault = false;
+
+    /**
      * @var User
      *
-     * @ODM\ReferenceOne(targetDocument="AppBundle\Document\User", name="owner", cascade={"persist"})
+     * @ODM\ReferenceOne(targetDocument="AppBundle\Document\User", name="owner", cascade={"persist"}, inversedBy="myApps")
      * @JMS\Type("AppBundle\Document\User")
      * @JMS\Expose
      * @JMS\Groups({})
      */
     private $owner;
 
-    /**
-     * @var array
-     *
-     * @ODM\Field(type="hash", name="dashboards")
-     * @JMS\Type("array")
+    /** @ODM\ReferenceMany(targetDocument="Invitation", mappedBy="app")
      * @JMS\Expose
-     * @JMS\Groups({})
      */
-    private $dashboards;
+    public $invitations;
 
     /**
      * Constructor
      */
     public function __construct()
     {
-        // auto-generated stub
+        $this->invitations = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
@@ -202,27 +204,6 @@ class App
         return $this;
     }
 
-    /**
-     * Get activationCode
-     *
-     * @return integer
-     */
-    public function getActivationCode()
-    {
-        return $this->activationCode;
-    }
-
-    /**
-     * Set activationCode
-     * @param integer
-     *
-     * @return App
-     */
-    public function setActivationCode($activationCode)
-    {
-        $this->activationCode = $activationCode;
-        return $this;
-    }
 
     /**
      * Get email
@@ -290,27 +271,77 @@ class App
         return $this;
     }
 
+
     /**
-     * Get dashboards
-     *
-     * @return array
+     * Get type
+     * @return string
      */
-    public function getDashboards()
+    public function getType()
     {
-        return $this->dashboards;
+        return $this->type;
     }
 
     /**
-     * Set dashboards
-     * @param array
-     *
-     * @return App
+     * Set type
+     * @param string $type
+     * @return $this
      */
-    public function setDashboards($dashboards)
+    public function setType(string $type)
     {
-        $this->dashboards = $dashboards;
+        $this->type = $type;
         return $this;
     }
+
+    /**
+     * Get isEnabled
+     * @return boolean
+     */
+    public function getIsEnabled()
+    {
+        return $this->isEnabled;
+    }
+
+    /**
+     * Set isEnabled
+     * @param boolean $isEnabled
+     * @return $this
+     */
+    public function setIsEnabled(bool $isEnabled)
+    {
+        $this->isEnabled = $isEnabled;
+        return $this;
+    }
+
+    public function isEnabled()
+    {
+        return $this->isEnabled;
+    }
+
+    /**
+     * Get isDefault
+     * @return boolean
+     */
+    public function getIsDefault()
+    {
+        return $this->isDefault;
+    }
+
+    /**
+     * Set type
+     * @param boolean $isDefault
+     * @return $this
+     */
+    public function setIsDefault(bool $isDefault)
+    {
+        $this->isDefault = $isDefault;
+        return $this;
+    }
+
+    public function isDefault()
+    {
+        return $this->isDefault;
+    }
+
 
     /**
      * Returns string representation of the object

@@ -36,6 +36,11 @@ class AppService
     private $ldapService;
 
     /**
+     * @var Kibana
+     */
+    private $kibana;
+
+    /**
      * Constructor
      *
      * @param AppManager $appManager
@@ -43,12 +48,18 @@ class AppService
      * @param LoggerInterface $logger
      * @param LdapService $ldapService
      */
-    public function __construct(AppManager $appManager, SerializerInterface $serializer, LoggerInterface $logger, LdapService $ldapService)
-    {
+    public function __construct(
+        AppManager $appManager,
+        SerializerInterface $serializer,
+        LoggerInterface $logger,
+        LdapService $ldapService,
+        Kibana $kibana
+    ) {
         $this->appManager = $appManager;
         $this->serializer = $serializer;
         $this->logger = $logger;
         $this->ldapService = $ldapService;
+        $this->kibana = $kibana;
     }
 
     /**
@@ -60,6 +71,15 @@ class AppService
     public function listApps(User $user)
     {
         return $this->appManager->getBy(['owner' => $user]);
+    }
+
+    public function invitedListApps(User $user)
+    {
+        $apps = [];
+        foreach ($user->invitations as $invitation) {
+            $apps[] = $invitation->getApp();
+        }
+        return $apps;
     }
 
     /**
@@ -119,6 +139,7 @@ class AppService
         $app->setUuid($uuid1->toString());
         $app = $this->getApp($this->appManager->update($app));
         $this->ldapService->createLdapAppEntry($user->getUsername(), $app->getName());
+        $this->kibana->createDashboards($app);
         return $app;
     }
 
