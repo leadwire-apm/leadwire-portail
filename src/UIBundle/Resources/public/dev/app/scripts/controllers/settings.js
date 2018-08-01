@@ -11,7 +11,7 @@ function SettingsModal($localStorage, Account, $location, $scope, isModal, $moda
     this.save = _ctrl.save;
 }
 
-function SettingsCtrl ($localStorage, Account, $location, $scope) {
+function SettingsCtrl ($localStorage, Account, $location, $scope,$state) {
 
     var ctrl = this;
     let _ctrl = new Ctrl(Account, $scope, $location, $localStorage, this, false);

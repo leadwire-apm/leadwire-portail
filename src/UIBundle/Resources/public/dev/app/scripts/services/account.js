@@ -2,10 +2,10 @@ angular.module('leadwireApp')
   .factory('Account', function ($http) {
     return {
       getProfile: function () {
-        return $http.get('/api/user/me');
+        return $http.get('http://localhost:9000/api/user/me');
       },
       updateProfile: function (profileData) {
-        return $http.put('/api/user/' + profileData.id + '/update', profileData);
+        return $http.put('http://localhost:9000/api/user/' + profileData.id + '/update', profileData);
       }
     };
   })

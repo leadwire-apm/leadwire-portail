@@ -9,7 +9,7 @@ function offscreen($rootScope, $timeout) {
     restrict: 'EA',
     replace: true,
     transclude: true,
-    templateUrl: 'bundles/ui/app/views/directives/toggle-offscreen.html',
+    templateUrl: 'views/directives/toggle-offscreen.html',
     link: function (scope, element, attrs) {
       scope.offscreenDirection = attrs.move;
     },
