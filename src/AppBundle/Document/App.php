@@ -93,6 +93,13 @@ class App
      */
     private $isEnabled=false;
 
+
+    /**
+     * @var boolean
+     * @JMS\Expose
+     * @ODM\Field(type="boolean", name="isDefault")
+     */
+    private $isDefault = false;
     /**
      * @var User
      *
@@ -103,12 +110,17 @@ class App
      */
     private $owner;
 
+    /** @ODM\ReferenceMany(targetDocument="Invitation", mappedBy="app")
+     * @JMS\Expose
+     */
+    public $invitations;
+
     /**
      * Constructor
      */
     public function __construct()
     {
-        // auto-generated stub
+        $this->invitations = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
@@ -288,7 +300,7 @@ class App
     }
 
     /**
-     * Set type
+     * Set isEnabled
      * @param boolean $isEnabled
      * @return $this
      */
@@ -302,6 +314,32 @@ class App
     {
         return $this->isEnabled;
     }
+
+    /**
+     * Get isDefault
+     * @return boolean
+     */
+    public function getIsDefault()
+    {
+        return $this->isDefault;
+    }
+
+    /**
+     * Set type
+     * @param boolean $isDefault
+     * @return $this
+     */
+    public function setIsDefault(bool $isDefault)
+    {
+        $this->isDefault = $isDefault;
+        return $this;
+    }
+
+    public function isDefault()
+    {
+        return $this->isDefault;
+    }
+    
 
     /**
      * Returns string representation of the object
