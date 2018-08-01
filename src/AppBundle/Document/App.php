@@ -101,10 +101,11 @@ class App
      * @ODM\Field(type="boolean", name="isDefault")
      */
     private $isDefault = false;
+
     /**
      * @var User
      *
-     * @ODM\ReferenceOne(targetDocument="AppBundle\Document\User", name="owner", cascade={"persist"})
+     * @ODM\ReferenceOne(targetDocument="AppBundle\Document\User", name="owner", cascade={"persist"}, inversedBy="myApps")
      * @JMS\Type("AppBundle\Document\User")
      * @JMS\Expose
      * @JMS\Groups({})

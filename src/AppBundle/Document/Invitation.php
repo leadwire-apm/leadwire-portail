@@ -56,6 +56,16 @@ class Invitation
     private $nonce;
 
     /**
+     * @var User
+     *
+     * @ODM\ReferenceOne(targetDocument="AppBundle\Document\User", name="user", cascade={"persist"}, inversedBy="otherApps")
+     * @JMS\Type("AppBundle\Document\User")
+     * @JMS\Expose
+     * @JMS\Groups({})
+     */
+    private $user = null;
+
+    /**
      * @var bool
      *
      * @ODM\Field(type="boolean", name="isPending")
@@ -63,7 +73,7 @@ class Invitation
      * @JMS\Expose
      * @JMS\Groups({})
      */
-    private $isPending=true;
+    private $isPending = true;
 
 
     /**

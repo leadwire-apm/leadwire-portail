@@ -48,8 +48,13 @@ class AppService
      * @param LoggerInterface $logger
      * @param LdapService $ldapService
      */
-    public function __construct(AppManager $appManager, SerializerInterface $serializer, LoggerInterface $logger, LdapService $ldapService, Kibana $kibana)
-    {
+    public function __construct(
+        AppManager $appManager,
+        SerializerInterface $serializer,
+        LoggerInterface $logger,
+        LdapService $ldapService,
+        Kibana $kibana
+    ) {
         $this->appManager = $appManager;
         $this->serializer = $serializer;
         $this->logger = $logger;
@@ -66,6 +71,15 @@ class AppService
     public function listApps(User $user)
     {
         return $this->appManager->getBy(['owner' => $user]);
+    }
+
+    public function invitedListApps(User $user)
+    {
+        $apps = [];
+        foreach ($user->invitations as $invitation) {
+            $apps[] = $invitation->getApp();
+        }
+        return $apps;
     }
 
     /**

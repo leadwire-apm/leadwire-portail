@@ -55,6 +55,25 @@ class AppController extends BaseRestController
     }
 
     /**
+     * @Route("/invited/list", methods="GET")
+     *
+     * @param Request $request
+     * @param AppService $appService
+     *
+     * @param AuthService $auth
+     * @return Response
+     */
+    public function invitedListAppsAction(Request $request, AppService $appService, AuthService $auth)
+    {
+        //$this->denyAccessUnlessGranted(AclVoter::VIEW_ALL, App::class);
+
+        $user = $auth->getUserFromToken($request->headers->get('Authorization'));
+        $data = $appService->invitedListApps($user);
+
+        return $this->prepareJsonResponse($data);
+    }
+
+    /**
      * @Route(
      *    "/paginate/{pageNumber}/{itemsPerPage}",
      *    methods="GET",
