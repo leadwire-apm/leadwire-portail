@@ -29,9 +29,10 @@ class Kibana
         $client = new \GuzzleHttp\Client(['defaults' => ['verify' => false]]);
         $json_template = file_get_contents($this->settings['template_folder'] . '/' . $app->getType() . '.json');
         try {
-            $response = $client->request('POST',
-                $this->settings['inject_dashboards']
-                , [
+            $response = $client->request(
+                'POST',
+                $this->settings['inject_dashboards'],
+                [
                     'body' => $json_template,
                     'headers' => [
                         'Content-type'  => 'application/json',
@@ -41,7 +42,8 @@ class Kibana
                         $this->settings['username'],
                         $this->settings['password']
                     ]
-                ]);
+                ]
+            );
             return true;
         } catch (GuzzleException $e) {
             $this->logger->error($e->getMessage());

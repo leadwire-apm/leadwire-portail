@@ -66,15 +66,6 @@ class App
      */
     private $description;
 
-    /**
-     * @var integer
-     *
-     * @ODM\Field(type="integer", name="activationCode")
-     * @JMS\Type("integer")
-     * @JMS\Expose
-     * @JMS\Groups({})
-     */
-    private $activationCode;
 
     /**
      * @var string
@@ -97,6 +88,12 @@ class App
     private $paymentData;
 
     /**
+     * @var boolean
+     * @ODM\Field(type="boolean", name="isEnabled")
+     */
+    private $isEnabled=false;
+
+    /**
      * @var User
      *
      * @ODM\ReferenceOne(targetDocument="AppBundle\Document\User", name="owner", cascade={"persist"})
@@ -105,16 +102,6 @@ class App
      * @JMS\Groups({})
      */
     private $owner;
-
-    /**
-     * @var array
-     *
-     * @ODM\Field(type="hash", name="dashboards")
-     * @JMS\Type("array")
-     * @JMS\Expose
-     * @JMS\Groups({})
-     */
-    private $dashboards;
 
     /**
      * Constructor
@@ -203,27 +190,6 @@ class App
         return $this;
     }
 
-    /**
-     * Get activationCode
-     *
-     * @return integer
-     */
-    public function getActivationCode()
-    {
-        return $this->activationCode;
-    }
-
-    /**
-     * Set activationCode
-     * @param integer
-     *
-     * @return App
-     */
-    public function setActivationCode($activationCode)
-    {
-        $this->activationCode = $activationCode;
-        return $this;
-    }
 
     /**
      * Get email
@@ -291,27 +257,6 @@ class App
         return $this;
     }
 
-    /**
-     * Get dashboards
-     *
-     * @return array
-     */
-    public function getDashboards()
-    {
-        return $this->dashboards;
-    }
-
-    /**
-     * Set dashboards
-     * @param array
-     *
-     * @return App
-     */
-    public function setDashboards($dashboards)
-    {
-        $this->dashboards = $dashboards;
-        return $this;
-    }
 
     /**
      * Get type
@@ -331,6 +276,31 @@ class App
     {
         $this->type = $type;
         return $this;
+    }
+
+    /**
+     * Get isEnabled
+     * @return boolean
+     */
+    public function getIsEnabled()
+    {
+        return $this->isEnabled;
+    }
+
+    /**
+     * Set type
+     * @param boolean $isEnabled
+     * @return $this
+     */
+    public function setIsEnabled(bool $isEnabled)
+    {
+        $this->isEnabled = $isEnabled;
+        return $this;
+    }
+
+    public function isEnabled()
+    {
+        return $this->isEnabled;
     }
 
     /**
