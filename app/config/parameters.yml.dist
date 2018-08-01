@@ -11,6 +11,7 @@ parameters:
     mailer_password:  ats-digital&1
     sender: someAddress@ats-digital.com
     dev_delivery_address: someAddress@ats-digital.com
+    uploads_dir: "%kernel.project_dir%/web/uploads/"
     auth_providers:
         github:
             github_access_token_url: 'https://github.com/login/oauth/access_token'
