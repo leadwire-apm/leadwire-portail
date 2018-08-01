@@ -23,3 +23,8 @@ parameters:
         port: '389'
         dn_user: 'cn=ldapadm,dc=leadwire,dc=io'
         mdp: 'ldppassword123'
+    kibana:
+        username: leadwire-apm-test
+        password: test-apm-leadwire
+        inject_dashboards: 'https://adm-kibana.leadwire.io/leadwire-apm-test/api/kibana/dashboards/import'
+        template_folder: '%kernel.project_dir%/app/Resources/Kibana'

@@ -55,6 +55,7 @@ class App
      * @JMS\Groups({})
      */
     private $type;
+
     /**
      * @var string
      *
@@ -309,6 +310,26 @@ class App
     public function setDashboards($dashboards)
     {
         $this->dashboards = $dashboards;
+        return $this;
+    }
+
+    /**
+     * Get type
+     * @return string
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    /**
+     * Set type
+     * @param string $type
+     * @return $this
+     */
+    public function setType(string $type)
+    {
+        $this->type = $type;
         return $this;
     }
 

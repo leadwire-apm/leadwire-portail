@@ -10,7 +10,7 @@ use Symfony\Component\Ldap\Ldap;
 /**
  * Class Ldap Service. Manage Ldap connexion and entries
  * @package AppBundle\Service
- * @author Anis Ksontini <aksontini@ats-digital.com
+ * @author Anis Ksontini <aksontini@ats-digital.com>
  */
 class LdapService
 {
