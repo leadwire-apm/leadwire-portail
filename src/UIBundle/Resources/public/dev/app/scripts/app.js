@@ -8,8 +8,7 @@
  *
  * Main module of the application.
  */
-angular
-  .module('leadwireApp', [
+angular.module('leadwireApp', [
     'ui.router',
     'ngAnimate',
     'ui.bootstrap',
@@ -19,9 +18,8 @@ angular
     'ui.utils',
     'ngTouch',
     'ngCookies',
-    'satellizer'
-  ])
-  .constant('COLORS', {
+    'satellizer',
+]).constant('COLORS', {
     'default': '#e2e2e2',
     primary: '#09c',
     success: '#2ECC71',
@@ -33,4 +31,9 @@ angular
     border: '#e4e4e4',
     bodyBg: '#e0e8f2',
     textColor: '#6B6B6B',
-  });
+}).constant('CONFIG', {
+    'BASE_URL': 'http://localhost:9000/',
+    'UPLOAD_URL': 'http://localhost:9000/uploads/',
+}).constant('MESSAGES_CONSTANTS', {
+    ERROR: 'Something went wrong,please try again',
+});

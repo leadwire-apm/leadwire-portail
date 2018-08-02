@@ -51,7 +51,7 @@
                                 <input type="file" file-model="ctrl.avatar">
                             </div>
                             <div class="col-sm-2">
-                                <img data-ng-src="{{user.avatar}}" width="50" height="50" class="header-avatar img-circle ml10" alt="user" title="user">
+                                <img data-ng-src="{{ctrl.user.avatar.indexOf('http')==-1 ? UPLOAD_URL+user.avatar : ctrl.user.avatar}}" width="50" height="50" class="header-avatar img-circle ml10" alt="user" title="user">
                             </div>
                         </div>
                     </div>

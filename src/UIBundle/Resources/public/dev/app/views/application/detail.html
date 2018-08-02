@@ -1,0 +1,71 @@
+<div class="panel mb25">
+    <div class="panel-heading border">
+        Application Detail
+    </div>
+    <div class="panel-body">
+
+        <div class="row mb25">
+            <div class="col-md-12">
+                <tabset justified="true" class="box-tab justified">
+                    <tab heading="Information">
+                        <div class="row no-margin">
+                            <div class="col-lg-12">
+                                {{ctrl.app.name}}
+                            </div>
+                        </div>
+
+                    </tab>
+                    <tab heading="Invited Users">
+                        <section class="widget bg-white post-comments">
+                            <div ng-repeat="invitation in ctrl.app.invitations">
+
+                                <div class="media">
+                                    <a class="pull-left" href="javascript:;">
+                                        <img class="media-object avatar avatar-sm"
+                                             data-ng-src="{{ctrl.UPLOAD_URL+invitation.user.avatar}}"
+                                             alt="">
+                                    </a>
+                                    <div class="comment">
+                                        <div class="comment-author h6 no-margin">
+                                            <div class="comment-meta small">May 2015, 19:20</div>
+                                            <a href="javascript:;"><strong>{{invitation.user.email}}</strong></a>
+                                            <p class="label label-info">
+                                                {{invitation.user.company}}
+                                            </p>
+                                            <p ng-if="invitation.is_pending">
+                                                <span class="label label-default">
+
+                                                Pending <i class="fa fa-clock-o"></i>
+                                                </span>
+                                            </p>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <hr>
+                            </div>
+                            <div class="media">
+                                <form name="inviteUserForm" class="form-horizontal bordered-group"
+                                      ng-submit="ctrl.handleInviteUser()" role="form">
+
+                                    <div class="input-group mb15">
+                                        <input type="email" class="form-control br0" placeholder="user email"
+                                               ng-model="ctrl.invitedUser.email" required>
+                                        <span class="input-group-btn">
+                                    <button class="btn btn-info" type="submit" ng-disabled="inviteUserForm.$invalid">Inviter user</button>
+                                </span>
+                                    </div>
+
+
+                                </form>
+                            </div>
+
+
+                        </section>
+                    </tab>
+                </tabset>
+            </div>
+        </div>
+    </div>
+</div>
+

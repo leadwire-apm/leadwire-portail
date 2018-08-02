@@ -36,8 +36,8 @@ function dashboardCtrl(
     }).error(function(error) {
         console.error(error);
     });
-    ctrl.dashboardLink = $sce.trustAsResourceUrl(ConfigService.getUrl(
-        'app/kibana#/dashboard/0827af30-5895-11e8-a683-7fb93ba4982c'));
+    ctrl.dashboardLink = $sce.trustAsResourceUrl(ConfigService.getDashboard(
+        '0827af30-5895-11e8-a683-7fb93ba4982c', false));
 };
 
 function formDashboardCtrl() {

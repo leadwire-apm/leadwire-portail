@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('leadwireApp').config([
-    '$stateProvider', '$urlRouterProvider', '$authProvider',
-    function($stateProvider, $urlRouterProvider, $authProvider) {
+    '$stateProvider', '$urlRouterProvider', '$authProvider', 'CONFIG',
+    function($stateProvider, $urlRouterProvider, $authProvider, CONFIG) {
         // var baseUrl = 'bundles/ui/app/';
         var baseUrl = '/';
 
@@ -17,7 +17,7 @@ angular.module('leadwireApp').config([
             /*prod*/  //clientId: '5ae68ff984489a4ed647'
             /*test*/   //clientId: 'a5b3aee9593a1aaa5046',
             /*local*/   clientId: '094c2b7f0e14da4d0ca8',
-            url: 'http://localhost:9000/api/auth/github',
+            url: CONFIG.BASE_URL + 'api/auth/github',
 
         });
 
@@ -43,7 +43,7 @@ angular.module('leadwireApp').config([
                 return deferred.promise;
             }];
 
-        // Application routes
+// Application routes
         $stateProvider.state('app', {
             abstract: true,
             templateUrl: baseUrl + 'views/common/layout.html',
@@ -73,7 +73,8 @@ angular.module('leadwireApp').config([
                     '$ocLazyLoad', function($ocLazyLoad) {
                         return $ocLazyLoad.load({
                             name: 'sbAdminApp',
-                            files: [baseUrl + 'scripts/controllers/settings.js'],
+                            files: [
+                                baseUrl + 'scripts/controllers/settings.js'],
                         });
                     }],
             },
@@ -84,17 +85,12 @@ angular.module('leadwireApp').config([
             controllerAs: 'ctrl',
         }).state('app.applicationsAdd', {
             url: '/applications/add',
-            templateUrl: baseUrl + 'views/application/form.html',
+            templateUrl: baseUrl + 'views/application/add.html',
             resolve: {
                 loginRequired: loginRequired,
-                deps: [
-                    '$ocLazyLoad', function($ocLazyLoad) {
-                        return $ocLazyLoad.load({
-                            name: 'sbAdminApp',
-                            files: [
-                                baseUrl + 'scripts/controllers/application.js'],
-                        });
-                    }],
+                deps: getNotyDeps([
+                    baseUrl +
+                    'scripts/controllers/application.js']),
             },
             data: {
                 title: 'Add Application',
@@ -120,7 +116,39 @@ angular.module('leadwireApp').config([
             },
             controller: 'applicationListCtrl',
             controllerAs: 'ctrl',
-        }).state('app.dashboard', {
+        }).state('app.applicationDetail', {
+            url: '/applications/{id}/detail',
+            templateUrl: baseUrl + 'views/application/detail.html',
+            resolve: {
+                loginRequired: loginRequired,
+                deps: getNotyDeps([
+                    baseUrl +
+                    'scripts/controllers/application.js']),
+
+            },
+            data: {
+                title: 'Application Detail',
+            },
+            controller: 'applicationDetailCtrl',
+            controllerAs: 'ctrl',
+        })
+        .state('app.applicationEdit', {
+            url: '/applications/{id}/edit',
+            templateUrl: baseUrl + 'views/application/edit.html',
+            resolve: {
+                loginRequired: loginRequired,
+                deps: getNotyDeps([
+                    baseUrl +
+                    'scripts/controllers/application.js']),
+
+            },
+            data: {
+                title: 'Edit Application',
+            },
+            controller: 'applicationEditCtrl',
+            controllerAs: 'ctrl',
+        })
+        .state('app.dashboard', {
             url: '/',
             templateUrl: baseUrl + 'views/dashboard.html',
             resolve: {
@@ -132,7 +160,8 @@ angular.module('leadwireApp').config([
                                 insertBefore: '#load_styles_before',
                                 files: [
                                     baseUrl + 'styles/climacons-font.css',
-                                    baseUrl + 'vendor/rickshaw/rickshaw.min.css',
+                                    baseUrl +
+                                    'vendor/rickshaw/rickshaw.min.css',
                                 ],
                             },
                             {
@@ -370,13 +399,39 @@ angular.module('leadwireApp').config([
             },
         });
 
+        function getNotyDeps(files) {
+            return [
+                '$ocLazyLoad', function($ocLazyLoad) {
+                    return $ocLazyLoad.load([
+                        {
+                            insertBefore: '#load_styles_before',
+                            files: ['vendor/chosen_v1.4.0/chosen.min.css'],
+                        },
+                        {
+                            serie: true,
+                            files: [
+                                'vendor/chosen_v1.4.0/chosen.jquery.min.js',
+                                'vendor/noty/js/noty/packaged/jquery.noty.packaged.min.js',
+                                'scripts/extentions/noty-defaults.js',
+                            ],
+                        }]).then(function() {
+                        return $ocLazyLoad.load(
+                            {
+                                name: 'sbAdminApp',
+                                files: files,
+                            });
+                    });
+                }];
+        }
+
     },
 
 ]).config([
     '$ocLazyLoadProvider',
     '$httpProvider',
     '$locationProvider',
-    function($ocLazyLoadProvider, $httpProvider, $locationProvider) {
+    'MESSAGES_CONSTANTS',
+    function($ocLazyLoadProvider, $httpProvider, $locationProvider, MSG) {
         $ocLazyLoadProvider.config({
             debug: false,
             events: false,
@@ -393,11 +448,26 @@ angular.module('leadwireApp').config([
                     // console.log(response)
                     console.log('status: ', response.status);
 
-                    if (response.status == 401) {
+                    if (response.status === 401) {
                         console.log('response', response);
+
                         $location.path('/login');
-                    }
-                    return response || $q.when(response);
+                    } else if (response.status === 500) {
+                        noty({
+                            theme: 'urban-noty',
+                            text: MSG.ERROR,
+                            type: 'error',
+                            timeout: 3000,
+                            layout: 'topRight',
+                            closeWith: ['button', 'click'],
+                            animation: {
+                                open: 'in',
+                                close: 'out',
+                                easing: 'swing',
+                            },
+                        });
+                    } else
+                        return response || $q.when(response);
                 },
             };
         });

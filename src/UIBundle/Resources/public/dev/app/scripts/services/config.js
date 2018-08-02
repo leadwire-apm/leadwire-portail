@@ -2,30 +2,33 @@
  * Created by hamed on 02/06/17.
  */
 
-(function () {
+(function() {
     'use strict';
 
-    angular
-        .module('leadwireApp')
-        .factory('ConfigService', ConfigService);
+    angular.module('leadwireApp').factory('ConfigService', ConfigService);
 
-    ConfigService.$inject = ['$http','$auth','$localStorage'];
+    ConfigService.$inject = ['$http', '$auth', '$localStorage'];
 
     function ConfigService($http, $auth, $localStorage) {
 
         var service = {};
 
-        service.baseUrl = "https://kibana.leadwire.io/";
+        service.baseUrl = 'https://kibana.leadwire.io/';
 
-        service.getUrl = function(dashboardId, hasParameters){
-            if(hasParameters === true){
-                return service.baseUrl + $localStorage.user.login + "/"+ dashboardId + "&token=" + $auth.getToken();
+        service.getUrl = function(dashboardId, hasParameters) {
+            if (hasParameters === true) {
+                return service.baseUrl + '/' + dashboardId + '&token=' +
+                    $auth.getToken();
             } else {
-                return service.baseUrl + $localStorage.user.login + "/"+ dashboardId + "?token=" + $auth.getToken();
+                return service.baseUrl + '/' + dashboardId + '?token=' +
+                    $auth.getToken();
             }
         };
 
+        service.getDashboard = function(dashboardId, hasParameter) {
+            this.getUrl('app/kibana#/dashboard/' + dashboardId, hasParameter);
+        };
         return service;
-   }
+    }
 
 })();
