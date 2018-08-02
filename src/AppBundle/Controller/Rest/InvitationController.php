@@ -82,11 +82,11 @@ class InvitationController extends BaseRestController
      *
      * @return Response
      */
-    public function newInvitationAction(Request $request, InvitationService $invitationService, AuthService $authService)
+    public function newInvitationAction(Request $request, InvitationService $invitationService)
     {
         //$this->denyAccessUnlessGranted(AclVoter::CREATE, Invitation::class);
         $data = $request->getContent();
-        $successful = $invitationService->newInvitation($data, $authService->getUserFromToken($request->headers->get('Authorization')));
+        $successful = $invitationService->newInvitation($data, $this->getUser());
 
         return $this->prepareJsonResponse($successful);
     }

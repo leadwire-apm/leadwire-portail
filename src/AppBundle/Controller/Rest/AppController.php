@@ -44,12 +44,11 @@ class AppController extends BaseRestController
      * @param AuthService $auth
      * @return Response
      */
-    public function listAppsAction(Request $request, AppService $appService, AuthService $auth)
+    public function listAppsAction(Request $request, AppService $appService)
     {
         //$this->denyAccessUnlessGranted(AclVoter::VIEW_ALL, App::class);
 
-        $user = $auth->getUserFromToken($request->headers->get('Authorization'));
-        $data = $appService->listApps($user);
+        $data = $appService->listApps($this->getUser());
 
         return $this->prepareJsonResponse($data);
     }
@@ -63,12 +62,11 @@ class AppController extends BaseRestController
      * @param AuthService $auth
      * @return Response
      */
-    public function invitedListAppsAction(Request $request, AppService $appService, AuthService $auth)
+    public function invitedListAppsAction(Request $request, AppService $appService)
     {
         //$this->denyAccessUnlessGranted(AclVoter::VIEW_ALL, App::class);
 
-        $user = $auth->getUserFromToken($request->headers->get('Authorization'));
-        $data = $appService->invitedListApps($user);
+        $data = $appService->invitedListApps($this->getUser());
 
         return $this->prepareJsonResponse($data);
     }
@@ -107,12 +105,13 @@ class AppController extends BaseRestController
      *
      * @param AuthService $authService
      * @return Response
+     * @throws \Exception
      */
-    public function newAppAction(Request $request, AppService $appService, AuthService $authService)
+    public function newAppAction(Request $request, AppService $appService)
     {
-        //$this->denyAccessUnlessGranted(AclVoter::CREATE, App::class);
+            //$this->denyAccessUnlessGranted(AclVoter::CREATE, App::class);
         $data = $request->getContent();
-        $successful = $appService->newApp($data, $authService->getUserFromToken($request->headers->get('Authorization')));
+        $successful = $appService->newApp( $data, $this->getUser());
 
         return $this->prepareJsonResponse($successful);
     }
@@ -144,7 +143,7 @@ class AppController extends BaseRestController
      */
     public function deleteAppAction(Request $request, AppService $appService, $id)
     {
-        $this->denyAccessUnlessGranted(AclVoter::DELETE, App::class);
+        //$this->denyAccessUnlessGranted(AclVoter::DELETE, App::class);
         $appService->deleteApp($id);
 
         return $this->prepareJsonResponse([]);

@@ -57,8 +57,14 @@ class UserService
      * @param SimpleMailerService $mailer
      * @param Router $router
      */
-    public function __construct(UserManager $userManager, SerializerInterface $serializer, LoggerInterface $logger, SimpleMailerService $mailer, Router $router, ContainerInterface $container)
-    {
+    public function __construct(
+        UserManager $userManager,
+        SerializerInterface $serializer,
+        LoggerInterface $logger,
+        SimpleMailerService $mailer,
+        Router $router,
+        ContainerInterface $container
+    ) {
         $this->userManager = $userManager;
         $this->serializer = $serializer;
         $this->logger = $logger;

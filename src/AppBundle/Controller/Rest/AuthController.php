@@ -4,18 +4,16 @@ namespace AppBundle\Controller\Rest;
 
 use AppBundle\Service\AuthService;
 use ATS\CoreBundle\Controller\Rest\BaseRestController;
-use Firebase\JWT\JWT;
 use FOS\RestBundle\Controller\Annotations\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class AuthController extends BaseRestController
 {
-    public $public=true;
     /**
-     * @Route("/{provider}", methods="POST")
-     *
+     * @Route("/{provider}", methods={"POST", "PATCH"})
      * @param Request $request
      * @param string $provider
      *
@@ -23,8 +21,8 @@ class AuthController extends BaseRestController
      */
     public function getAuthAction(Request $request, AuthService $authService, $provider)
     {
-        if (method_exists($this, $provider.'Action')) {
-            return $this->{$provider.'Action'}($request, $authService);
+        if (method_exists($this, $provider . 'Action')) {
+            return $this->{$provider . 'Action'}($request, $authService);
         } else {
             return new JsonResponse("Provider not found", 404);
         }
@@ -39,12 +37,20 @@ class AuthController extends BaseRestController
         $params = [
             'client_id' =>  $data ['clientId'],
             'redirect_uri' => $data['redirectUri'],
-            'client_secret'=>  $parameters["github_client_secret"],
-            'code'=>  $data['code'],
+            'client_secret' =>  $parameters["github_client_secret"],
+            'code' => $data['code'],
         ];
-        $userData = $authService->githubProvider($params, $parameters["github_access_token_url"], $parameters["github_users_api_url"]);
+        $userData = $authService->githubProvider(
+            $params,
+            $parameters["github_access_token_url"],
+            $parameters["github_users_api_url"]
+        );
         $userData['timeout'] = time() + 1800;
 
-        return new JsonResponse(["token" => $authService->generateToken($userData['_id'], $globalSettnigs['token_secret'])]);
+        return new JsonResponse(
+            [
+                "token" => $authService->generateToken($userData['_id'], $globalSettnigs['token_secret'])
+            ]
+        );
     }
 }

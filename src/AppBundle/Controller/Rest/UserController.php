@@ -21,9 +21,9 @@ class UserController extends BaseRestController
      * @return Response
      * @throws \HttpException
      */
-    public function getMeAction(Request $request, AuthService $auth)
+    public function getMeAction(Request $request)
     {
-        $user = $auth->getUserFromToken($request->headers->get('Authorization'));
+        $user = $this->getUser();
         if (!$user) {
             throw new HttpException("Non Authorized", 401);
         }
@@ -57,17 +57,5 @@ class UserController extends BaseRestController
         $successful = $userService->updateUser($data, $id);
 
         return $this->prepareJsonResponse($successful);
-    }
-
-    /**
-     * @Route("/decode", methods="GET")
-     *
-     * @param Request $request
-     * @param AuthService $auth
-     */
-    public function decodeAction(Request $request, AuthService $auth)
-    {
-        // @todo: remove this before closing branch.
-        sd($auth->decodeToken($request->query->get('token')));
     }
 }

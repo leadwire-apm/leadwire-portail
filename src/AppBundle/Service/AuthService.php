@@ -11,10 +11,6 @@ use GuzzleHttp\Exception\GuzzleException;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Ldap\Entry;
-use Symfony\Component\Ldap\Exception\LdapException;
-use Symfony\Component\Ldap\Ldap;
 
 class AuthService
 {
@@ -38,12 +34,15 @@ class AuthService
     {
         $client = new \GuzzleHttp\Client();
         try {
-            $responseGithub = $client->request('GET', $githubAccessTokenUrl . '?' . http_build_query($params))->getBody();
+            $responseGithub = $client->request(
+                'GET',
+                $githubAccessTokenUrl . '?' . http_build_query($params)
+            )->getBody();
             // parse_str($responseGithub, $responseGithub);
             /* parse the response as array */
             $res = $client->request(
                 'GET',
-                $githubUserAPI. '?' . $responseGithub,
+                $githubUserAPI . '?' . $responseGithub,
                 [
                     'headers' => [ 'User-Agent' => 'leadwire']]
             )->getBody();
@@ -57,7 +56,7 @@ class AuthService
             }
             return $data;
         } catch (GuzzleException $e) {
-            sd($e->getMessage());
+            sd($e);
         } catch (\Exception $e) {
             sd($e->getMessage());
         }
@@ -67,11 +66,11 @@ class AuthService
     {
         $token = [
             'host' => $this->get('app_domain'),
-            'user'=>  $userId,
-            'name'=>  "leadwire-apm-test",
-            'iat'=> time(),
-            'exp'=>  time() + 1800,
-            'nbf'=> time()
+            'user' =>  $userId,
+            'name' =>  "leadwire-apm-test",
+            'iat' => time(),
+            'exp' =>  time() + 1800,
+            'nbf' => time()
         ];
 
         return JWT::encode($token, $tokenSecret);
@@ -82,7 +81,7 @@ class AuthService
     {
         $token = JWT::decode($jwt, $this->get('auth_providers')['settings']['token_secret'], ['HS256']);
 
-        if (!isset($token->host) || $token->host!= $this->get('app_domain')) {
+        if (!isset($token->host) || $token->host != $this->get('app_domain')) {
             throw new ExpiredException('Invalide token');
         }
 
@@ -96,7 +95,13 @@ class AuthService
 
             if (!$dbUser) {
                 $uuid1 = Uuid::uuid1();
-                $this->userManager->create($userData['login'], $uuid1->toString(), $userData['avatar_url'], [User::DEFAULT_ROLE], false);
+                $this->userManager->create(
+                    $userData['login'],
+                    $uuid1->toString(),
+                    $userData['avatar_url'],
+                    [User::DEFAULT_ROLE],
+                    false
+                );
                 $dbUser = $this->userManager->getUserByUsername($userData['login']);
                 return $dbUser;
             } else {
