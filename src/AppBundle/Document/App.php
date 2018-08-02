@@ -115,6 +115,7 @@ class App
     private $owner;
 
     /** @ODM\ReferenceMany(targetDocument="Invitation", mappedBy="app")
+     * @JMS\Type("array<AppBundle\Document\Invitation>")
      * @JMS\Expose
      */
     public $invitations;
