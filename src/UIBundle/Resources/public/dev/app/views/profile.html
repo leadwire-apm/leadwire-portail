@@ -7,9 +7,9 @@
             <div class="col-lg-12">
                 <form class="form-horizontal bordered-group" name="userForm" ng-submit="ctrl.save()" role="form">
                     <div class="form-group">
-                        <label class="col-sm-2 control-label">Name</label>
+                        <label class="col-sm-2 control-label" for="login">Name</label>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control" ng-model="ctrl.user.login" disabled>
+                            <input type="text" id="login" class="form-control" ng-model="ctrl.user.login" disabled>
                         </div>
                     </div>
 
@@ -48,7 +48,7 @@
                         <div class="form-group">
                             <label class="col-sm-2 control-label">Avatar</label>
                             <div class="col-sm-4">
-                                <input type="file">
+                                <input type="file" file-model="ctrl.avatar">
                             </div>
                             <div class="col-sm-2">
                                 <img data-ng-src="{{user.avatar}}" width="50" height="50" class="header-avatar img-circle ml10" alt="user" title="user">

@@ -1,9 +1,37 @@
+angular.module('leadwireApp').
+    controller('formApplicationCtrl',
+        formApplicationCtrlFN).controller('applicationListCtrl',
+    applicationListCtrlFN);
 
-function formApplicationCtrl() {
+formApplicationCtrlFN.$inject = [
+    '$sce',
+    'ConfigService',
+    'Application',
+    '$location',
+    '$localStorage',
+    '$rootScope',
+];
 
-};
+function formApplicationCtrlFN(
+    $sce,
+    ConfigService,
+    Application,
+    $location,
+    $localStorage,
+    $rootScope,
+) {
+    this.title = 'Hello World';
+    $rootScope.currentNav = 'application';
 
+}
 
-angular
-    .module('leadwireApp')
-    .controller('formApplicationCtrl', ['$sce', 'ConfigService', 'Application', '$location', '$localStorage', formApplicationCtrl])
+function applicationListCtrlFN(
+    $rootScope,
+    Application
+) {
+    $rootScope.currentNav = 'settings';
+    // Application.findAll().then(function(data) {
+    //     console.log(data)
+    // })
+
+}
