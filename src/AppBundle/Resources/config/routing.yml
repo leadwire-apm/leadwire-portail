@@ -23,9 +23,10 @@ app_rest_user:
     prefix: "/%internal_api_prefix%/user"
     options:
         expose: true
+
 app_rest_auth:
     resource: "@AppBundle/Controller/Rest/AuthController.php"
     type: "rest"
-    prefix: "/%internal_api_prefix%/auth"
+    prefix: "/login"
     options:
         expose: true

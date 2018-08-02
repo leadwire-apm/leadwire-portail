@@ -15,7 +15,7 @@ security:
 
     firewalls:
         dev:
-            pattern:  ^/(_(profiler|wdt)|css|images|js)/
+            pattern:  ^/(_(profiler|wdt)|css|images|js|login)/
             security: false
         public_api:
             pattern: ^/%public_api_prefix%
@@ -23,7 +23,6 @@ security:
             simple_preauth:
                 authenticator: ATS\UserBundle\Security\ApiKeyAuthenticator
             provider: api_key_user_provider
-
         oauth_token:
             pattern:    ^/oauth/v2/token
             security:   false
@@ -47,8 +46,10 @@ security:
                always_remember_me: true
         api:
             pattern:    ^(/core)?/%internal_api_prefix%((?!/translation|/context))
-            security:   false
-
+            stateless: true
+            guard:
+                authenticators:
+                    - AppBundle\Security\TokenAuthenticator
 
     access_control:
     - { path: ^/login,                   roles: [ IS_AUTHENTICATED_ANONYMOUSLY ] }

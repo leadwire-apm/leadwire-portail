@@ -90,14 +90,16 @@ class App
     /**
      * @var boolean
      * @JMS\Expose
+     * @JMS\Type("boolean")
      * @ODM\Field(type="boolean", name="isEnabled")
      */
-    private $isEnabled=false;
+    private $isEnabled = false;
 
 
     /**
      * @var boolean
      * @JMS\Expose
+     * @JMS\Type("boolean")
      * @ODM\Field(type="boolean", name="isDefault")
      */
     private $isDefault = false;
