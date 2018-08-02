@@ -1,7 +1,7 @@
 'use strict';
 
 function dashboardCtrl(
-    $sce, ConfigService, Application, $location, $localStorage, $modal,
+    $sce, ConfigService, ApplicationFactory, $location, $localStorage, $modal,
     $ocLazyLoad, $rootScope) {
 
     var ctrl = this;
@@ -27,7 +27,7 @@ function dashboardCtrl(
         });
     }
 
-    Application.findAll().success(function(data) {
+    ApplicationFactory.findAll().success(function(data) {
         $rootScope.applications = data;
         if (data.length === 0) {
             $location.path('/applications/add');
@@ -48,7 +48,7 @@ angular.module('leadwireApp').
     controller('dashboardCtrl', [
         '$sce',
         'ConfigService',
-        'Application',
+        'ApplicationFactory',
         '$location',
         '$localStorage',
         '$modal',

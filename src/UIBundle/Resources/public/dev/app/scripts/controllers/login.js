@@ -15,14 +15,17 @@ LoginController.$inject = ['$location', '$auth', '$timeout', 'User'];
 
 /**
  * LoginController : le controlleur de l'écran de l'authentification
+ *
  * @param $location
+ * @param $auth
+ * @param $timeout
+ * @param User
  * @constructor
  */
 function LoginController($location, $auth, $timeout, User) {
-    var ctrl = this;
+    var vm = this;
 
-    ctrl.login = login;
-    ctrl.authenticate = authenticate;
+    vm.authenticate = authenticate;
 
     (function initController() {
         // reset login status
@@ -34,23 +37,20 @@ function LoginController($location, $auth, $timeout, User) {
             });
     })();
 
-    function login() {
-
-    };
 
     function authenticate(provider) {
-        ctrl.dataLoading = true;
+        vm.dataLoading = true;
         $auth.authenticate(provider)
             .then(function () {
                 // toastr.success('You have successfully signed in with ' + provider + '!');
                 User.getProfile();
                 $timeout(function () {
-                    ctrl.dataLoading = false;
+                    vm.dataLoading = false;
                     $location.path('/');
                 }, 200);
             })
             .catch(function (error) {
-                ctrl.dataLoading = false;
+                vm.dataLoading = false;
                 if (error.message) {
                     // toastr.error(error.message);
                 } else if (error.data) {

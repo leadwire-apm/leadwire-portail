@@ -95,7 +95,7 @@ angular.module('leadwireApp').config([
             data: {
                 title: 'Add Application',
             },
-            controller: 'formApplicationCtrl',
+            controller: 'addApplicationCtrl',
             controllerAs: 'ctrl',
         }).state('app.applicationsList', {
             url: '/applications/list',
@@ -131,8 +131,7 @@ angular.module('leadwireApp').config([
             },
             controller: 'applicationDetailCtrl',
             controllerAs: 'ctrl',
-        })
-        .state('app.applicationEdit', {
+        }).state('app.applicationEdit', {
             url: '/applications/{id}/edit',
             templateUrl: baseUrl + 'views/application/edit.html',
             resolve: {
@@ -147,8 +146,7 @@ angular.module('leadwireApp').config([
             },
             controller: 'applicationEditCtrl',
             controllerAs: 'ctrl',
-        })
-        .state('app.dashboard', {
+        }).state('app.dashboard', {
             url: '/',
             templateUrl: baseUrl + 'views/dashboard.html',
             resolve: {
