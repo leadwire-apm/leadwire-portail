@@ -6,6 +6,8 @@ use AppBundle\Service\AuthService;
 use AppBundle\Service\UserService;
 use ATS\CoreBundle\Controller\Rest\BaseRestController;
 use FOS\RestBundle\Controller\Annotations\Route;
+use JMS\Serializer\DeserializationContext;
+use JMS\Serializer\SerializationContext;
 use SensioLabs\Security\Exception\HttpException;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
@@ -27,18 +29,8 @@ class UserController extends BaseRestController
         if (!$user) {
             throw new HttpException("Non Authorized", 401);
         }
-        return $this->prepareJsonResponse([
-            "avatar" => $user->getAvatar(),
-            "login" => $user->getLogin(),
-            "email" => $user->getEmail(),
-            "id" => $user->getId(),
-            "uuid" => $user->getUuid(),
-            "fname" => $user->getUsername(),
-            "contact" => $user->getContact(),
-            "contactPreference" => $user->getContactPreference(),
-            "acceptNewsLetter" => $user->getAcceptNewsLetter(),
-            "company" => $user->getCompany(),
-        ]);
+
+        return $this->prepareJsonResponse($user, 200, "full");
     }
 
 

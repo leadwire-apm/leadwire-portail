@@ -46,7 +46,7 @@ class AppController extends BaseRestController
      */
     public function listAppsAction(Request $request, AppService $appService)
     {
-        //$this->denyAccessUnlessGranted(AclVoter::VIEW_ALL, App::class);
+        $this->denyAccessUnlessGranted(AclVoter::VIEW_ALL, App::class);
 
         $data = $appService->listApps($this->getUser());
 
@@ -64,7 +64,7 @@ class AppController extends BaseRestController
      */
     public function invitedListAppsAction(Request $request, AppService $appService)
     {
-        //$this->denyAccessUnlessGranted(AclVoter::VIEW_ALL, App::class);
+        $this->denyAccessUnlessGranted(AclVoter::VIEW_ALL, App::class);
 
         $data = $appService->invitedListApps($this->getUser());
 
@@ -109,25 +109,26 @@ class AppController extends BaseRestController
      */
     public function newAppAction(Request $request, AppService $appService)
     {
-            //$this->denyAccessUnlessGranted(AclVoter::CREATE, App::class);
+        $this->denyAccessUnlessGranted(AclVoter::CREATE, App::class);
         $data = $request->getContent();
-        $successful = $appService->newApp( $data, $this->getUser());
+        $successful = $appService->newApp($data, $this->getUser());
 
         return $this->prepareJsonResponse($successful);
     }
 
     /**
-    * @Route("/{id}/update", methods="PUT")
-    *
-    * @param Request $request
-    * @param AppService $appService
-    *
-    * @return Response
-    */
-    public function updateAppAction(Request $request, AppService $appService)
+     * @Route("/{id}/update", methods="PUT")
+     *
+     * @param Request $request
+     * @param AppService $appService
+     *
+     * @param string $id
+     * @return Response
+     */
+    public function updateAppAction(Request $request, AppService $appService, string $id)
     {
         $data = $request->getContent();
-        $successful = $appService->updateApp($data);
+        $successful = $appService->updateApp($data, $id);
 
         return $this->prepareJsonResponse($successful);
     }

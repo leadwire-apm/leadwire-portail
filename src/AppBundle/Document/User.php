@@ -33,7 +33,7 @@ class User extends \ATS\UserBundle\Document\User
      * @ODM\Index(unique=true)
      * @JMS\Type("string")
      * @JMS\Expose
-     * @JMS\Groups({})
+     * @JMS\Groups({"full"})
      */
     private $uuid;
 
@@ -44,9 +44,17 @@ class User extends \ATS\UserBundle\Document\User
 
      * @JMS\Type("string")
      * @JMS\Expose
-     * @JMS\Groups({})
+     * @JMS\Groups({"full"})
      */
     private $avatar;
+
+    /**
+     * @var string
+     * @JMS\Expose
+     * @JMS\Groups({"full"})
+     * @ODM\Field(type="string")
+     */
+    private $username;
 
     /**
      * @var string
@@ -55,7 +63,7 @@ class User extends \ATS\UserBundle\Document\User
 
      * @JMS\Type("string")
      * @JMS\Expose
-     * @JMS\Groups({})
+     * @JMS\Groups({"full"})
      */
     private $company;
 
@@ -63,6 +71,8 @@ class User extends \ATS\UserBundle\Document\User
      * @var string
      *
      * @ODM\Field(type="string", name="contact")
+     *
+     * @JMS\Groups({"full"})
      */
     private $contact;
 
@@ -71,6 +81,8 @@ class User extends \ATS\UserBundle\Document\User
      * @var string
      *
      * @ODM\Field(type="string", name="contactPreference")
+     *
+     * @JMS\Groups({"full"})
      */
     private $contactPreference;
 
@@ -81,7 +93,7 @@ class User extends \ATS\UserBundle\Document\User
 
      * @JMS\Type("string")
      * @JMS\Expose
-     * @JMS\Groups({})
+     * @JMS\Groups({"full"})
      */
     private $email;
 
@@ -94,11 +106,13 @@ class User extends \ATS\UserBundle\Document\User
     /**
      * @ODM\ReferenceMany(targetDocument="Invitation", mappedBy="user")
      * @JMS\Expose
+     * @JMS\Groups({"full"})
      */
     public $invitations;
 
     /**
      * @ODM\ReferenceMany(targetDocument="App", mappedBy="owner")
+     * @JMS\Groups({"full"})
      */
     public $myApps;
 
@@ -135,6 +149,23 @@ class User extends \ATS\UserBundle\Document\User
     public function getUuid()
     {
         return $this->uuid;
+    }
+
+    public function setUsername($username)
+    {
+        $this->username = $username;
+
+        return $this;
+    }
+
+    /**
+     * Get username
+     *
+     * @return string
+     */
+    public function getUsername()
+    {
+        return $this->username;
     }
 
     /**
