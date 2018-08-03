@@ -52,6 +52,7 @@ class User extends \ATS\UserBundle\Document\User
      * @var string
      * @JMS\Expose
      * @JMS\Groups({"full"})
+     * @JMS\Type("string")
      * @ODM\Field(type="string")
      */
     private $username;
@@ -60,6 +61,7 @@ class User extends \ATS\UserBundle\Document\User
      * @var string
      * @JMS\Expose
      * @JMS\Groups({"full"})
+     * @JMS\Type("string")
      * @ODM\Field(type="string")
      */
     private $name;
@@ -68,7 +70,6 @@ class User extends \ATS\UserBundle\Document\User
      * @var string
      *
      * @ODM\Field(type="string", name="company")
-
      * @JMS\Type("string")
      * @JMS\Expose
      * @JMS\Groups({"full"})
@@ -79,7 +80,7 @@ class User extends \ATS\UserBundle\Document\User
      * @var string
      *
      * @ODM\Field(type="string", name="contact")
-     *
+     * @JMS\Type("string")
      * @JMS\Groups({"full"})
      */
     private $contact;
@@ -89,7 +90,7 @@ class User extends \ATS\UserBundle\Document\User
      * @var string
      *
      * @ODM\Field(type="string", name="contactPreference")
-     *
+     * @JMS\Type("string")
      * @JMS\Groups({"full"})
      */
     private $contactPreference;
