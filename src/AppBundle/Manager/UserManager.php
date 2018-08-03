@@ -30,7 +30,7 @@ class UserManager extends AbstractManager
         return $this->getDocumentRepository()->getByUsername($username);
     }
 
-    public function create($username, $uuid, $avatar, $roles = [], $active = true)
+    public function create($username, $uuid, $avatar, $name, $roles = [], $active = true)
     {
         $user = (new User)
             ->setActive($active)
@@ -39,6 +39,7 @@ class UserManager extends AbstractManager
             ->setPassword("")
             ->setUuid($uuid)
             ->setAvatar($avatar)
+            ->setName($name)
         ;
 
 
