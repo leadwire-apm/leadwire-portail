@@ -15,6 +15,8 @@ angular.module('leadwireApp').
  * @param $location
  * @param $localStorage
  * @param $rootScope
+ * @param toastr
+ * @param MESSAGES_CONSTANTS
  */
 function addApplicationCtrlFN(
     $sce,
@@ -22,7 +24,7 @@ function addApplicationCtrlFN(
     ApplicationFactory,
     $location,
     $localStorage,
-    $rootScope,
+    $rootScope, toastr, MESSAGES_CONSTANTS,
 ) {
     var vm = this;
     vm.ui = {
@@ -30,11 +32,14 @@ function addApplicationCtrlFN(
     };
     $rootScope.currentNav = 'settings';
     vm.saveApp = function() {
-        // TODO
         vm.flipActivityIndicator();
         ApplicationFactory.save(vm.application).then(function(res) {
+            toastr.success(MESSAGES_CONSTANTS.ADD_APP_SUCCESS);
             vm.flipActivityIndicator();
         }).catch(function(error) {
+            toastr.error(
+                error.message || MESSAGES_CONSTANTS.ADD_APP_FAILURE ||
+                MESSAGES_CONSTANTS.ERROR);
             vm.flipActivityIndicator();
         });
     };
@@ -46,8 +51,7 @@ function addApplicationCtrlFN(
 }
 
 function applicationListCtrlFN(
-    $rootScope,
-    ApplicationFactory,
+    $rootScope, ApplicationFactory, toastr, MESSAGES_CONSTANTS,
 ) {
     $rootScope.currentNav = 'settings';
 
@@ -56,7 +60,6 @@ function applicationListCtrlFN(
         isDeleting: false,
     };
 
-    $rootScope.currentNav = 'settings';
     ApplicationFactory.findMyApps().then(function(response) {
         vm.apps = response.data;
     });
@@ -64,10 +67,12 @@ function applicationListCtrlFN(
     vm.deleteApp = function(id) {
         vm.flipActivityIndicator(id);
         ApplicationFactory.remove(id).then(function(res) {
-            // TODO : Handle delete success
+            toastr.success(MESSAGES_CONSTANTS.DELETE_APP_SUCCESS);
             vm.flipActivityIndicator(id);
         }).catch(function(error) {
-            //TODO Handle delete error
+            toastr.error(
+                error.message || MESSAGES_CONSTANTS.DELETE_APP_SUCCESS ||
+                MESSAGES_CONSTANTS.ERROR);
             vm.flipActivityIndicator(id);
         });
     };
@@ -80,7 +85,8 @@ function applicationListCtrlFN(
 }
 
 function applicationDetailCtrlFN(
-    ApplicationFactory, Invitation, $stateParams, $rootScope, CONFIG) {
+    ApplicationFactory, Invitation, $stateParams, $rootScope, CONFIG, toastr,
+    MESSAGES_CONSTANTS) {
     var vm = this;
     init();
     ApplicationFactory.get($stateParams.id).then(function(res) {
@@ -93,12 +99,15 @@ function applicationDetailCtrlFN(
             email: vm.invitedUser.email,
             app: vm.app,
         }).then(function(res) {
+            toastr.success(MESSAGES_CONSTANTS.INVITE_USER_SUCCESS);
             vm.flipActivityIndicator();
 
             //TODO Handle success and failure
         }).catch(function(error) {
             vm.flipActivityIndicator();
-            //TODO
+            toastr.error(
+                error.message || MESSAGES_CONSTANTS.INVITE_USER_FAILURE ||
+                MESSAGES_CONSTANTS.ERROR);
             console.log(error);
         });
     };
@@ -118,7 +127,8 @@ function applicationDetailCtrlFN(
 
 }
 
-function applicationEditCtrlFN(ApplicationFactory, $stateParams, $rootScope) {
+function applicationEditCtrlFN(
+    ApplicationFactory, $stateParams, $rootScope, toastr, MESSAGES_CONSTANTS) {
     var vm = this;
     $rootScope.currentNav = 'settings';
     vm.ui = {
@@ -134,11 +144,13 @@ function applicationEditCtrlFN(ApplicationFactory, $stateParams, $rootScope) {
         ApplicationFactory.update(vm.application.id, vm.application).
             then(function(res) {
                 vm.flipActivityIndicator();
-                // TODO handle on edit
+                toastr.success(MESSAGES_CONSTANTS.EDIT_APP_SUCCESS);
             }).
             catch(function(error) {
                 vm.flipActivityIndicator();
-                //TODO
+                toastr.error(
+                    error.message || MESSAGES_CONSTANTS.EDIT_APP_FAILURE ||
+                    MESSAGES_CONSTANTS.ERROR);
             });
     };
 

@@ -11,7 +11,12 @@ function logout($location, $localStorage) {
     $location.path('/login');
 }
 
-LoginController.$inject = ['$location', '$auth', '$timeout', 'User'];
+LoginController.$inject = [
+    '$location',
+    '$auth',
+    '$timeout',
+    'User',
+    '$localStorage'];
 
 /**
  * LoginController : le controlleur de l'écran de l'authentification
@@ -20,6 +25,7 @@ LoginController.$inject = ['$location', '$auth', '$timeout', 'User'];
  * @param $auth
  * @param $timeout
  * @param User
+ * @param $localStorage
  * @constructor
  */
 function LoginController($location, $auth, $timeout, User, $localStorage) {
@@ -32,9 +38,9 @@ function LoginController($location, $auth, $timeout, User, $localStorage) {
         if (!$auth.isAuthenticated()) {
             return;
         }
+        delete $localStorage.user;
         $auth.logout().then(function() {
             // toastr.info('You have been logged out');
-            $localStorage.user = null;
             $location.path('/');
         });
     })();
