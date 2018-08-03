@@ -3,8 +3,8 @@
 angular.module('leadwireApp').run(function($rootScope) {
     $rootScope.currentNav = 'application';
 }).controller('AppCtrl', [
-    '$scope', '$http', '$localStorage', 'User', 'CONFIG',
-    function AppCtrl($scope, $http, $localStorage, User, CONFIG) {
+    '$scope', '$http', '$localStorage', 'CONFIG',
+    function AppCtrl($scope, $http, $localStorage, CONFIG) {
 
         $scope.mobileView = 767;
 

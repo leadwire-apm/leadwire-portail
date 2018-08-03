@@ -16,6 +16,7 @@ function SettingsCtrl(
     $localStorage, Account, $location, $rootScope, FileService, toastr) {
 
     var vm = this;
+    $rootScope.currentNav = 'settings';
     let _ctrl = new UserCtrl(Account, $location, $localStorage, vm,
         false, $rootScope, FileService, toastr);
     this.save = _ctrl.save;
@@ -38,12 +39,13 @@ function UserCtrl(
                 acceptNewsLetter: Controller.user.acceptNewsLetter,
                 contact: Controller.user.contact,
                 contactPreference: Controller.user.contactPreference,
+                username: Controller.user.username,
+                name: Controller.user.name,
             }).success(function(data) {
                 if (data) {
                     if (Controller.avatar) {
                         FileService.upload(Controller.avatar, 'user').
                             then(function(response) {
-                                console.log(response);
                                 Account.updateProfile({
                                     id: Controller.user.id,
                                     avatar: response.data.name,
@@ -54,14 +56,15 @@ function UserCtrl(
                     } else {
                         Controller.handleSuccessForm();
                     }
-
                 }
                 else {
-                    alert('Failed update User');
+                    toastr.error('Failed update User');
                     // $location.path('/');
                 }
             }).error(function(error) {
                 console.log(error);
+                toastr.error('Failed update User');
+
             });
 
         }
@@ -69,7 +72,7 @@ function UserCtrl(
 
     Controller.handleSuccessForm = function handleSuccess() {
         $localStorage.user = Controller.user;
-        toastr.success('Success', 'User has been updated successfully');
+        toastr.success('User has been updated successfully');
         if (!!$modalInstance) {
             $modalInstance.close();
         } else {

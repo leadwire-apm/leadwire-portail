@@ -97,8 +97,12 @@ function applicationDetailCtrlFN(
         vm.flipActivityIndicator();
         Invitation.save({
             email: vm.invitedUser.email,
-            app: vm.app,
+            app: {
+                id: vm.app.id,
+            },
         }).then(function(res) {
+            console.log('here');
+
             toastr.success(MESSAGES_CONSTANTS.INVITE_USER_SUCCESS);
             vm.flipActivityIndicator();
 
@@ -108,7 +112,6 @@ function applicationDetailCtrlFN(
             toastr.error(
                 error.message || MESSAGES_CONSTANTS.INVITE_USER_FAILURE ||
                 MESSAGES_CONSTANTS.ERROR);
-            console.log(error);
         });
     };
 
@@ -123,7 +126,7 @@ function applicationDetailCtrlFN(
             isSaving: false,
         };
         vm.UPLOAD_URL = CONFIG.UPLOAD_URL;
-    };
+    }
 
 }
 

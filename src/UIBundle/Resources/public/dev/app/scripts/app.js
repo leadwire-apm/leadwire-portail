@@ -37,8 +37,12 @@ angular.module('leadwireApp', [
     'UPLOAD_URL': 'http://localhost:9000/uploads/',
 }).constant('MESSAGES_CONSTANTS', {
     ERROR: 'Something went wrong,please try again',
-    EDIT_APP_SUCCESS:'Your app has been updated successfully',
-    INVITE_USER_SUCCESS:'The invitation has been sent successfully',
-    DELETE_APP_SUCCESS:'The app has been deleted',
-    ADD_APP_SUCCESS:'Your app has been added successfully'
+    EDIT_APP_SUCCESS: 'Your app has been updated successfully',
+    INVITE_USER_SUCCESS: 'The invitation has been sent successfully',
+    DELETE_APP_SUCCESS: 'The app has been deleted',
+    ADD_APP_SUCCESS: 'Your app has been added successfully',
+    LOGIN_SUCCESS: function(provider) {
+        return 'You have successfully signed in with ' + provider;
+    },
+    LOGOUT_SUCCESS: 'You have been logged out',
 });

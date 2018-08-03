@@ -8,9 +8,9 @@
                 <h2 class="text-center">Log in </h2>
                 <button id="github-button" class="btn btn-block btn-social btn-github"
                         ng-click="ctrl.authenticate('github')">
-                    <spinner is-loading="ctrl.dataLoading"></spinner>
+                    <spinner is-loading="ctrl.isChecking"></spinner>
 
-                    <i ng-if="!ctrl.dataLoading" class="fa fa-github"></i> Sign in with GitHub
+                    <i ng-if="!ctrl.isChecking" class="fa fa-github"></i> Sign in with GitHub
                 </button>
 
             </div>

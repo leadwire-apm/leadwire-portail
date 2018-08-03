@@ -4,36 +4,74 @@ angular.module('leadwireApp').factory('Account', function($http, CONFIG) {
             return $http.get(CONFIG.BASE_URL + 'api/user/me');
         },
         updateProfile: function(profileData) {
+            console.log(profileData)
             return $http.put(
                 CONFIG.BASE_URL + 'api/user/' + profileData.id + '/update',
                 profileData);
         },
     };
-}).service('User', [
+}).service('UserService', [
     'Account',
     '$rootScope',
     '$localStorage',
-    function(Account, $rootScope, $localStorage) {
+    'Invitation',
+    function(Account, $rootScope, $localStorage, Invitation) {
 
-        this.getProfile = function() {
-            if (angular.isUndefined($localStorage.user) ||
-                $localStorage.user === null) {
-                Account.getProfile().then(function(response) {
-                    this.informations = response.data;
-                    this.informations.fname = response.data.login;
-                    if (angular.isDefined(response.data.displayName) &&
-                        response.data.displayName !== null) {
-                        this.informations.fname = response.data.displayName;
-                    }
-                    this.informations.avatar = response.data.avatar;
-                    $localStorage.user = this.informations;
-                    $rootScope.$broadcast('user:updated', this.informations);
-                }).catch(function(response) {
-                    //toastr.error(response.data.message, response.status);
-                });
-            } else {
-                this.informations = $localStorage.user;
-            }
+        var service = {};
+        service.setProfile = function() {
+            return new Promise(function(resolve, reject) {
+                if (angular.isUndefined($localStorage.user) ||
+                    $localStorage.user === null) {
+                    Account.getProfile().then(function(response) {
+                        var userInfo = response.data;
+                        userInfo.fname = response.data.login;
+                        if (angular.isDefined(response.data.displayName) &&
+                            response.data.displayName !== null) {
+                            userInfo.fname = response.data.displayName;
+                        }
+                        userInfo.avatar = response.data.avatar;
+                        $localStorage.user = userInfo;
+                        $rootScope.$broadcast('user:updated', userInfo);
+                        resolve(userInfo);
+                    }).catch(function(response) {
+                        //toastr.error(response.data.message, response.status);
+                    });
+                } else {
+                    this.informations = $localStorage.user;
+                }
+            });
 
         };
+
+        service.handleOnSuccessLogin = function(invitationId) {
+            return new Promise(function(resolve, reject) {
+                service.setProfile().then(function(user) {
+                    if (invitationId !== undefined) {
+                        Invitation.get(invitationId).then(function(res) {
+                            console.log(res);
+                            if (!res.data.user) {
+                                var invitToUpdate = {
+                                    id: invitationId,
+                                    is_pending: false,
+                                    user: {
+                                        id: user.id,
+                                    },
+                                };
+                                Invitation.update(invitationId, invitToUpdate);
+                                console.log('here');
+                            }
+                            resolve();
+                        });
+                    }
+                    else {
+                        resolve();
+                    }
+                }).catch(function(error) {
+                    reject({error: error.message});
+                });
+
+            });
+        };
+
+        return service;
     }]);

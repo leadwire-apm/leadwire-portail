@@ -11,12 +11,13 @@ function logout($location, $localStorage) {
     $location.path('/login');
 }
 
-LoginController.$inject = [
-    '$location',
-    '$auth',
-    '$timeout',
-    'User',
-    '$localStorage'];
+//
+// LoginController.$inject = [
+//     '$location',
+//     '$auth',
+//     '$timeout',
+//     'User',
+//     '$localStorage'];
 
 /**
  * LoginController : le controlleur de l'écran de l'authentification
@@ -24,45 +25,59 @@ LoginController.$inject = [
  * @param $location
  * @param $auth
  * @param $timeout
- * @param User
+ * @param UserService
+ * @param Invitation
  * @param $localStorage
+ * @param toastr
+ * @param MESSAGES_CONSTANTS
  * @constructor
  */
-function LoginController($location, $auth, $timeout, User, $localStorage) {
+function LoginController(
+    $location, $auth, $timeout, UserService, Invitation, $localStorage,
+    toastr, MESSAGES_CONSTANTS) {
     var vm = this;
-
+    initController();
     vm.authenticate = authenticate;
+    var invitationId = $location.$$search && $location.$$search.invitation ?
+        $location.$$search.invitation : undefined;
 
-    (function initController() {
+    function authenticate(provider) {
+        vm.isChecking = true;
+        $auth.authenticate(provider).then(function() {
+            UserService.handleOnSuccessLogin(invitationId).then(function() {
+                toastr.success(MESSAGES_CONSTANTS.LOGIN_SUCCESS(provider));
+                vm.isChecking = false;
+                $location.search({});
+                $location.path('/');
+
+            });
+        }).catch(function(error) {
+            handleLoginFailure(error);
+        });
+    }
+
+    function handleLoginFailure(error) {
+        vm.isChecking = false;
+        var message = null;
+        if (error.message) {
+            message = error.message;
+        } else if (error.data) {
+            message = error.data.message;
+        } else {
+            message = error;
+        }
+        toastr.error(message);
+    }
+
+    function initController() {
         // reset login status
         if (!$auth.isAuthenticated()) {
             return;
         }
         delete $localStorage.user;
         $auth.logout().then(function() {
-            // toastr.info('You have been logged out');
-            $location.path('/');
+            toastr.info(MESSAGES_CONSTANTS.LOGOUT_SUCCESS);
+            $location.path('/login');
         });
-    })();
-
-    function authenticate(provider) {
-        vm.dataLoading = true;
-        $auth.authenticate(provider).then(function() {
-            // toastr.success('You have successfully signed in with ' + provider + '!');
-            User.getProfile();
-            $timeout(function() {
-                vm.dataLoading = false;
-                $location.path('/');
-            }, 200);
-        }).catch(function(error) {
-            vm.dataLoading = false;
-            if (error.message) {
-                // toastr.error(error.message);
-            } else if (error.data) {
-                // toastr.error(error.data.message, error.status);
-            } else {
-                //toastr.error(error);
-            }
-        });
-    };
+    }
 }
