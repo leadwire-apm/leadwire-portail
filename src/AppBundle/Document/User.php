@@ -15,7 +15,6 @@ use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 class User extends \ATS\UserBundle\Document\User
 {
 
-
     /**
      * @var \MongoId
      *
@@ -105,6 +104,7 @@ class User extends \ATS\UserBundle\Document\User
 
     /**
      * @ODM\ReferenceMany(targetDocument="Invitation", mappedBy="user")
+     * @JMS\Type("array<AppBundle\Document\Invitation>")
      * @JMS\Expose
      * @JMS\Groups({"full"})
      */

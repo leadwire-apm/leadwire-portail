@@ -1,78 +1,149 @@
 angular.module('leadwireApp').
-    controller('formApplicationCtrl',
-        formApplicationCtrlFN).
+    controller('addApplicationCtrl',
+        addApplicationCtrlFN).
     controller('applicationListCtrl',
         applicationListCtrlFN).
     controller('applicationDetailCtrl', applicationDetailCtrlFN).
     controller('applicationEditCtrl', applicationEditCtrlFN);
 
-function formApplicationCtrlFN(
+/**
+ * Handle add new application logic
+ *
+ * @param $sce
+ * @param ConfigService
+ * @param ApplicationFactory
+ * @param $location
+ * @param $localStorage
+ * @param $rootScope
+ */
+function addApplicationCtrlFN(
     $sce,
     ConfigService,
-    Application,
+    ApplicationFactory,
     $location,
     $localStorage,
     $rootScope,
 ) {
     var vm = this;
-    $rootScope.currentNav = 'application';
+    vm.ui = {
+        isSaving: false,
+    };
+    $rootScope.currentNav = 'settings';
     vm.saveApp = function() {
         // TODO
-        Application.save(vm.application).then(function(res) {
-            console.log();
+        vm.flipActivityIndicator();
+        ApplicationFactory.save(vm.application).then(function(res) {
+            vm.flipActivityIndicator();
+        }).catch(function(error) {
+            vm.flipActivityIndicator();
         });
+    };
+
+    vm.flipActivityIndicator = function() {
+        vm.ui.isSaving = !vm.ui.isSaving;
     };
 
 }
 
 function applicationListCtrlFN(
     $rootScope,
-    Application,
+    ApplicationFactory,
 ) {
-    var vm = this;
     $rootScope.currentNav = 'settings';
-    Application.findMyApps().then(function(response) {
-        console.log(response.data);
+
+    var vm = this;
+    vm.ui = {
+        isDeleting: false,
+    };
+
+    $rootScope.currentNav = 'settings';
+    ApplicationFactory.findMyApps().then(function(response) {
         vm.apps = response.data;
     });
+
+    vm.deleteApp = function(id) {
+        vm.flipActivityIndicator(id);
+        ApplicationFactory.remove(id).then(function(res) {
+            // TODO : Handle delete success
+            vm.flipActivityIndicator(id);
+        }).catch(function(error) {
+            //TODO Handle delete error
+            vm.flipActivityIndicator(id);
+        });
+    };
+
+    vm.flipActivityIndicator = function(suffix) {
+        var suffix = (typeof suffix !== 'undefined') ? suffix : '';
+        vm.ui['isDeleting' + suffix] = !vm.ui['isDeleting' + suffix];
+    };
 
 }
 
 function applicationDetailCtrlFN(
-    Application, Invitation, $stateParams, CONFIG) {
-    //Application.get()
+    ApplicationFactory, Invitation, $stateParams, $rootScope, CONFIG) {
     var vm = this;
-    vm.UPLOAD_URL = CONFIG.UPLOAD_URL;
-    Application.get($stateParams.id).then(function(res) {
-        console.log(res.data);
+    init();
+    ApplicationFactory.get($stateParams.id).then(function(res) {
         vm.app = res.data;
     });
 
     vm.handleInviteUser = function() {
+        vm.flipActivityIndicator();
         Invitation.save({
             email: vm.invitedUser.email,
             app: vm.app,
         }).then(function(res) {
+            vm.flipActivityIndicator();
+
             //TODO Handle success and failure
-            console.log(res);
         }).catch(function(error) {
+            vm.flipActivityIndicator();
+            //TODO
             console.log(error);
         });
     };
+
+    vm.flipActivityIndicator = function(suffix) {
+        var suffix = (typeof suffix !== 'undefined') ? suffix : '';
+        vm.ui['isSaving' + suffix] = !vm.ui['isSaving' + suffix];
+    };
+
+    function init() {
+        $rootScope.currentNav = 'settings';
+        vm.ui = {
+            isSaving: false,
+        };
+        vm.UPLOAD_URL = CONFIG.UPLOAD_URL;
+    };
+
 }
 
-function applicationEditCtrlFN(Application, $stateParams) {
+function applicationEditCtrlFN(ApplicationFactory, $stateParams, $rootScope) {
     var vm = this;
+    $rootScope.currentNav = 'settings';
+    vm.ui = {
+        isSaving: false,
+    };
 
-    Application.get($stateParams.id).then(function(res) {
+    ApplicationFactory.get($stateParams.id).then(function(res) {
         vm.application = res.data;
     });
 
     vm.editApp = function() {
-        Application.update(vm.application.id, vm.application).
+        vm.flipActivityIndicator();
+        ApplicationFactory.update(vm.application.id, vm.application).
             then(function(res) {
-                console.log(res);
+                vm.flipActivityIndicator();
+                // TODO handle on edit
+            }).
+            catch(function(error) {
+                vm.flipActivityIndicator();
+                //TODO
             });
+    };
+
+    vm.flipActivityIndicator = function() {
+        vm.ui.isSaving = !vm.ui.isSaving;
     };
 
 }

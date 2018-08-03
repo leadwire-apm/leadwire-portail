@@ -1,4 +1,4 @@
-angular.module('leadwireApp').factory('Application', function($http, CONFIG) {
+angular.module('leadwireApp').factory('ApplicationFactory', function($http, CONFIG) {
     return {
         findAll: function() {
             return $http.get(CONFIG.BASE_URL + 'api/app/list');
@@ -15,6 +15,9 @@ angular.module('leadwireApp').factory('Application', function($http, CONFIG) {
         update: function(id, body) {
             return $http.put(CONFIG.BASE_URL + 'api/app/' + id + '/update',
                 body);
+        },
+        remove: function(id) {
+            return $http.delete(CONFIG.BASE_URL + 'api/app/' + id + '/delete');
         },
 
     };
