@@ -21,6 +21,7 @@ class User extends \ATS\UserBundle\Document\User
      * @ODM\Id("strategy=auto")
      * @JMS\Type("string")
      * @JMS\Expose
+     * @JMS\Groups({"full"})
      */
     private $id;
 
