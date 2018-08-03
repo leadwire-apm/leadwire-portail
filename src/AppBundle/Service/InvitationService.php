@@ -130,7 +130,8 @@ class InvitationService
                 ->serializer
                 ->deserialize($json, Invitation::class, 'json');
         $id = $this->invitationManager->update($invitation);
-        $this->sendInvitationMail($this->getInvitation($id), $user);
+//        $this->sendInvitationMail($this->getInvitation($id), $user); //the reason of the DISASTER
+// DONT UNCOMMENT IT EVER AGAIN =D
         return $id;
     }
 

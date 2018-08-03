@@ -53,13 +53,13 @@ function addApplicationCtrlFN(
 function applicationListCtrlFN(
     $rootScope, ApplicationFactory, toastr, MESSAGES_CONSTANTS,
 ) {
-    $rootScope.currentNav = 'settings';
-
     var vm = this;
+    $rootScope.currentNav = 'settings';
     vm.ui = {
         isDeleting: false,
     };
 
+    // get all
     ApplicationFactory.findAll().then(function(response) {
         vm.apps = response.data;
     });
@@ -100,14 +100,11 @@ function applicationDetailCtrlFN(
             app: {
                 id: vm.app.id,
             },
-        }).then(function(res) {
-            console.log('here');
-
-            toastr.success(MESSAGES_CONSTANTS.INVITE_USER_SUCCESS);
-            vm.flipActivityIndicator();
-
-            //TODO Handle success and failure
-        }).catch(function(error) {
+        }).
+            then(function(res) {
+                toastr.success(MESSAGES_CONSTANTS.INVITE_USER_SUCCESS);
+                vm.flipActivityIndicator();
+            }).catch(function(error) {
             vm.flipActivityIndicator();
             toastr.error(
                 error.message || MESSAGES_CONSTANTS.INVITE_USER_FAILURE ||
