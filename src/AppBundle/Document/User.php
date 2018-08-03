@@ -99,6 +99,9 @@ class User extends \ATS\UserBundle\Document\User
     /**
      * @var boolean
      * @ODM\Field(type="boolean", name="acceptNewsLetter")
+     * @JMS\Type("boolean")
+     * @JMS\Expose
+     * @JMS\Groups({"full"})
      */
     private $acceptNewsLetter;
 
