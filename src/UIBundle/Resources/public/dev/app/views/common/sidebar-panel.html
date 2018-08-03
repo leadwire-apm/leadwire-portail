@@ -19,7 +19,13 @@
 </div>
 <!-- main navigation -->
 <nav role="navigation" side-navigation>
-    <ul class="nav" data-ng-include="'views/common/'+currentNav+'-sidebar.html'">
+    <ul class="nav">
+        <li ng-repeat="menu in menus" ui-sref-active="active">
+            <a ui-sref="{{menu.route}}">
+                <i class="{{menu.icon}}"></i>
+                <span>{{menu.label}}</span>
+            </a>
+        </li>
     </ul>
 </nav>
 <!-- main navigation -->

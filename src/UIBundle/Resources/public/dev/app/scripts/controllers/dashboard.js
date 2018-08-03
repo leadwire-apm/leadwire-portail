@@ -42,7 +42,7 @@ function dashboardCtrl(
 
 function formDashboardCtrl() {
 
-};
+}
 
 angular.module('leadwireApp').
     controller('dashboardCtrl', [

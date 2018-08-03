@@ -48,8 +48,10 @@ function addApplicationCtrlFN(
 function applicationListCtrlFN(
     $rootScope,
     ApplicationFactory,
+    MenuFactory
 ) {
     $rootScope.currentNav = 'settings';
+    $rootScope.menus = MenuFactory.get('SETTINGS')
 
     var vm = this;
     vm.ui = {
