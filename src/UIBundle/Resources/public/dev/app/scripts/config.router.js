@@ -1,8 +1,12 @@
 'use strict';
 
 angular.module('leadwireApp').config([
-    '$stateProvider', '$urlRouterProvider', '$authProvider', 'CONFIG',
-    function($stateProvider, $urlRouterProvider, $authProvider, CONFIG) {
+    '$stateProvider',
+    '$urlRouterProvider',
+    '$authProvider',
+    'CONFIG',
+    function(
+        $stateProvider, $urlRouterProvider, $authProvider, CONFIG) {
         // var baseUrl = 'bundles/ui/app/';
         var baseUrl = '/';
 
@@ -429,12 +433,20 @@ angular.module('leadwireApp').config([
     '$httpProvider',
     '$locationProvider',
     'MESSAGES_CONSTANTS',
+    'toastrConfig',
     function(
-        $ocLazyLoadProvider, $httpProvider, $locationProvider, MSG) {
+        $ocLazyLoadProvider, $httpProvider, $locationProvider, MSG,
+        toastrConfig) {
         $ocLazyLoadProvider.config({
             debug: false,
             events: false,
         });
         $httpProvider.interceptors.push('HttpInterceptor');
+        angular.extend(toastrConfig, {
+            allowHtml: false,
+            closeButton: true,
+            closeHtml: '<button>&times;</button>',
+            progressBar: true,
+        });
 
     }]);

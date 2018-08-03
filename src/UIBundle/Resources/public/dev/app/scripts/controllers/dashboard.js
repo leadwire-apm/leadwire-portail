@@ -28,8 +28,9 @@ function dashboardCtrl(
     }
 
     ApplicationFactory.findAll().success(function(data) {
-        $rootScope.applications = data;
-        $localStorage.applications = $rootScope.applications;
+        delete $localStorage.applications;
+        $localStorage.applications = data;
+        $rootScope.applications = $localStorage.applications;
         if (data.length === 0) {
             $location.path('/applications/add');
             console.log('create one application');

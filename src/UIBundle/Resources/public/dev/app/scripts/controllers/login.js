@@ -49,7 +49,6 @@ function LoginController(
                 vm.isChecking = false;
                 $location.search({});
                 $location.path('/');
-
             });
         }).catch(function(error) {
             handleLoginFailure(error);
@@ -72,6 +71,7 @@ function LoginController(
     function initController() {
         // reset login status
         if (!$auth.isAuthenticated()) {
+            console.log('WTF');
             return;
         }
         delete $localStorage.user;
