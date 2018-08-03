@@ -57,6 +57,14 @@ class User extends \ATS\UserBundle\Document\User
 
     /**
      * @var string
+     * @JMS\Expose
+     * @JMS\Groups({"full"})
+     * @ODM\Field(type="string")
+     */
+    private $name;
+
+    /**
+     * @var string
      *
      * @ODM\Field(type="string", name="company")
 
@@ -169,6 +177,23 @@ class User extends \ATS\UserBundle\Document\User
     public function getUsername()
     {
         return $this->username;
+    }
+
+    public function setName($name)
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    /**
+     * Get name
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
     }
 
     /**
