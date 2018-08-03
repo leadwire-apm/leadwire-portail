@@ -60,7 +60,7 @@ function applicationListCtrlFN(
         isDeleting: false,
     };
 
-    ApplicationFactory.findMyApps().then(function(response) {
+    ApplicationFactory.findAll().then(function(response) {
         vm.apps = response.data;
     });
 
