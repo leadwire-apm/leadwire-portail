@@ -34,6 +34,6 @@ app_rest_auth:
 app_rest_applicationtype:
     resource: "@AppBundle/Controller/Rest/ApplicationTypeController.php"
     type: "rest"
-    prefix: "/%internal_api_prefix%/applicationtype"
+    prefix: "/%internal_api_prefix%/applicationType"
     options:
         expose: true
