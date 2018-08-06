@@ -51,36 +51,62 @@ function addApplicationCtrlFN(
 }
 
 function applicationListCtrlFN(
-    $rootScope, ApplicationFactory, toastr, MESSAGES_CONSTANTS,
+    $rootScope, ApplicationFactory, toastr, MESSAGES_CONSTANTS, $localStorage,
 ) {
     var vm = this;
-    $rootScope.currentNav = 'settings';
-    vm.ui = {
-        isDeleting: false,
-    };
-
-    // get all
-    ApplicationFactory.findAll().then(function(response) {
-        vm.apps = response.data;
-    });
+    init();
 
     vm.deleteApp = function(id) {
-        vm.flipActivityIndicator(id);
-        ApplicationFactory.remove(id).then(function(res) {
-            toastr.success(MESSAGES_CONSTANTS.DELETE_APP_SUCCESS);
-            vm.flipActivityIndicator(id);
-        }).catch(function(error) {
-            toastr.error(
-                error.message || MESSAGES_CONSTANTS.DELETE_APP_SUCCESS ||
-                MESSAGES_CONSTANTS.ERROR);
-            vm.flipActivityIndicator(id);
+        swal({
+            title: 'Are you sure?',
+            text: 'Once deleted, you will not be able to recover this App!',
+            icon: 'warning',
+            buttons: true,
+            dangerMode: true,
+        }).then((willDelete) => {
+            if (willDelete) {
+                ApplicationFactory.remove(id).then(function(res) {
+                    getApps();
+                    swal.close();
+                    toastr.success(MESSAGES_CONSTANTS.DELETE_APP_SUCCESS);
+                }).catch(function(error) {
+                    swal.close();
+
+                    toastr.error(
+                        error.message ||
+                        MESSAGES_CONSTANTS.DELETE_APP_FAILURE ||
+                        MESSAGES_CONSTANTS.ERROR);
+                });
+
+            } else {
+                swal('Your App is safe!');
+            }
         });
+
     };
 
     vm.flipActivityIndicator = function(suffix) {
         var suffix = (typeof suffix !== 'undefined') ? suffix : '';
         vm.ui['isDeleting' + suffix] = !vm.ui['isDeleting' + suffix];
     };
+
+    function getApps() {
+        // get all
+        ApplicationFactory.findAll().then(function(response) {
+            vm.apps = response.data;
+            $localStorage.applications = response.data;
+        });
+
+    }
+
+    function init() {
+        $rootScope.currentNav = 'settings';
+        vm.ui = {
+            isDeleting: false,
+        };
+        getApps();
+
+    }
 
 }
 
@@ -89,9 +115,6 @@ function applicationDetailCtrlFN(
     MESSAGES_CONSTANTS) {
     var vm = this;
     init();
-    ApplicationFactory.get($stateParams.id).then(function(res) {
-        vm.app = res.data;
-    });
 
     vm.handleInviteUser = function() {
         vm.flipActivityIndicator();
@@ -112,10 +135,48 @@ function applicationDetailCtrlFN(
         });
     };
 
+    vm.deleteInvitation = function(id) {
+        swal({
+            title: 'Are you sure?',
+            text: 'Once deleted, you will not be able to recover this Invitation!',
+            icon: 'warning',
+            buttons: true,
+            dangerMode: true,
+        }).then((willDelete) => {
+            if (willDelete) {
+                Invitation.remove(id).then(function(res) {
+                    swal.close();
+                    toastr.success(
+                        MESSAGES_CONSTANTS.DELETE_INVITATION_SUCCESS);
+                    getApp();
+
+                }).catch(function(error) {
+                    swal.close();
+
+                    toastr.error(
+                        error.message ||
+                        MESSAGES_CONSTANTS.DELETE_INVITATION_FAILURE ||
+                        MESSAGES_CONSTANTS.ERROR);
+                });
+
+            } else {
+                swal('Your Invitation is safe!');
+            }
+        });
+
+    };
+
     vm.flipActivityIndicator = function(suffix) {
         var suffix = (typeof suffix !== 'undefined') ? suffix : '';
         vm.ui['isSaving' + suffix] = !vm.ui['isSaving' + suffix];
     };
+
+    function getApp() {
+        ApplicationFactory.get($stateParams.id).then(function(res) {
+            vm.app = res.data;
+        });
+
+    }
 
     function init() {
         $rootScope.currentNav = 'settings';
@@ -123,6 +184,8 @@ function applicationDetailCtrlFN(
             isSaving: false,
         };
         vm.UPLOAD_URL = CONFIG.UPLOAD_URL;
+        console.log(vm);
+        getApp();
     }
 
 }

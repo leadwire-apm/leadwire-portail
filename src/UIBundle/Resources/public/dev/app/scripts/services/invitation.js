@@ -10,6 +10,10 @@ angular.module('leadwireApp').factory('Invitation', function($http, CONFIG) {
             return $http.put(
                 CONFIG.BASE_URL + 'api/invitation/' + id + '/update', body);
         },
+        remove: function(id) {
+            return $http.delete(
+                CONFIG.BASE_URL + 'api/invitation/' + id + '/delete');
+        },
 
     };
 });
