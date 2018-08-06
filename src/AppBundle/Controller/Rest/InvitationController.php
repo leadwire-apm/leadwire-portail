@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller\Rest;
 
+use AppBundle\Document\Invitation;
 use AppBundle\Service\AuthService;
 use ATS\CoreBundle\Controller\Rest\BaseRestController;
 use FOS\RestBundle\Controller\Annotations\Route;
@@ -84,7 +85,7 @@ class InvitationController extends BaseRestController
      */
     public function newInvitationAction(Request $request, InvitationService $invitationService)
     {
-        //$this->denyAccessUnlessGranted(AclVoter::CREATE, Invitation::class);
+        $this->denyAccessUnlessGranted(AclVoter::CREATE, Invitation::class);
         $data = $request->getContent();
         $successful = $invitationService->newInvitation($data, $this->getUser());
 
