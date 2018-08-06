@@ -98,6 +98,15 @@ class User extends \ATS\UserBundle\Document\User
     /**
      * @var string
      *
+     * @ODM\Field(type="string", name="isEmailValid")
+     * @JMS\Type("boolean")
+     * @JMS\Groups({"full"})
+     */
+    private $isEmailValid=false;
+
+    /**
+     * @var string
+     *
      * @ODM\Field(type="string", name="email")
 
      * @JMS\Type("string")
@@ -302,6 +311,30 @@ class User extends \ATS\UserBundle\Document\User
     public function getAcceptNewsLetter()
     {
         return $this->acceptNewsLetter;
+    }
+
+    /**
+     * Set isEmailValid
+     *
+     * @param bool isEmailValid
+     *
+     * @return User
+     */
+    public function setIsEmailValid($isEmailValid)
+    {
+        $this->isEmailValid = $isEmailValid;
+
+        return $this;
+    }
+
+    /**
+     * Get isEmailValid
+     *
+     * @return bool
+     */
+    public function getIsEmailValid()
+    {
+        return $this->isEmailValid;
     }
 
     /**
