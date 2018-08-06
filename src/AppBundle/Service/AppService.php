@@ -71,14 +71,17 @@ class AppService
      */
     public function listApps(User $user)
     {
-        return $this->appManager->getBy(['owner' => $user]);
+        return $this->appManager->getBy(['owner' => $user, 'isRemoved' => false]);
     }
 
     public function invitedListApps(User $user)
     {
         $apps = [];
         foreach ($user->invitations as $invitation) {
-            $apps[] = $invitation->getApp();
+            $app = $invitation->getApp();
+            if (!$app->getIsRemoved()) {
+                $apps[] = $app;
+            }
         }
         return $apps;
     }
@@ -106,7 +109,7 @@ class AppService
      */
     public function getApp($id)
     {
-        return $this->appManager->getOneBy(['id' => $id]);
+        return $this->appManager->getOneBy(['id' => $id, 'isRemoved' => false]);
     }
 
     /**
@@ -182,7 +185,7 @@ class AppService
      */
     public function deleteApp($id)
     {
-        $this->appManager->deleteById($id);
+        $this->appManager->update($this->appManager->getOneBy(['id' => $id])->setIsRemoved(true));
     }
 
     /**

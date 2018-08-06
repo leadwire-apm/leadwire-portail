@@ -95,7 +95,6 @@ class App
      */
     private $isEnabled = false;
 
-
     /**
      * @var boolean
      * @JMS\Groups({"Default"})
@@ -104,6 +103,15 @@ class App
      * @ODM\Field(type="boolean", name="isDefault")
      */
     private $isDefault = false;
+
+    /**
+     * @var boolean
+     * @JMS\Groups({"never"})
+     * @JMS\Expose
+     * @JMS\Type("boolean")
+     * @ODM\Field(type="boolean", name="isRemoved")
+     */
+    private $isRemoved = false;
 
     /**
      * @var User
@@ -347,6 +355,26 @@ class App
         return $this->isDefault;
     }
 
+
+    /**
+     * Get isRemoved
+     * @return boolean
+     */
+    public function getIsRemoved()
+    {
+        return $this->isRemoved;
+    }
+
+    /**
+     * Set type
+     * @param boolean $isRemoved
+     * @return $this
+     */
+    public function setIsRemoved(bool $isRemoved)
+    {
+        $this->isRemoved = $isRemoved;
+        return $this;
+    }
 
     /**
      * Returns string representation of the object

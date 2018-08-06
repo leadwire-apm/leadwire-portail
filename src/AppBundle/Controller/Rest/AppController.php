@@ -41,7 +41,6 @@ class AppController extends BaseRestController
      * @param Request $request
      * @param AppService $appService
      *
-     * @param AuthService $auth
      * @return Response
      */
     public function listAppsAction(Request $request, AppService $appService)
@@ -50,7 +49,7 @@ class AppController extends BaseRestController
 
         $data = $appService->listApps($this->getUser());
 
-        return $this->prepareJsonResponse($data);
+        return $this->prepareJsonResponse($data, 200, "Default");
     }
 
     /**
@@ -144,7 +143,7 @@ class AppController extends BaseRestController
      */
     public function deleteAppAction(Request $request, AppService $appService, $id)
     {
-        //$this->denyAccessUnlessGranted(AclVoter::DELETE, App::class);
+        $this->denyAccessUnlessGranted(AclVoter::DELETE, App::class);
         $appService->deleteApp($id);
 
         return $this->prepareJsonResponse([]);
