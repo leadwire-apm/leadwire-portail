@@ -71,7 +71,6 @@ function LoginController(
     function initController() {
         // reset login status
         if (!$auth.isAuthenticated()) {
-            console.log('WTF');
             return;
         }
         delete $localStorage.user;
