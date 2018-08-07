@@ -70,10 +70,11 @@ function LoginController(
 
     function initController() {
         // reset login status
+        delete $localStorage.user;
         if (!$auth.isAuthenticated()) {
             return;
         }
-        delete $localStorage.user;
+
         $auth.logout().then(function() {
             toastr.info(MESSAGES_CONSTANTS.LOGOUT_SUCCESS);
             $location.path('/login');
