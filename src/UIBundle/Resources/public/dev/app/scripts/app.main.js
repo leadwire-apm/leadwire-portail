@@ -39,9 +39,9 @@ angular.module('leadwireApp').run(function($rootScope, MenuFactory) {
 
         $scope.user = $localStorage.user;
         $scope.applications = $localStorage.applications;
-        $localStorage.selectedApp =
+        //$localStorage.selectedApp =
 
-            $scope.UPLOAD_URL = CONFIG.UPLOAD_URL;
+        $scope.DOWNLOAD_URL = CONFIG.DOWNLOAD_URL;
 
         $scope.$on('user:updated', function(event, data) {
             $scope.user = data;

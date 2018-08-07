@@ -183,7 +183,7 @@ function applicationDetailCtrlFN(
         vm.ui = {
             isSaving: false,
         };
-        vm.UPLOAD_URL = CONFIG.UPLOAD_URL;
+        vm.DOWNLOAD_URL = CONFIG.DOWNLOAD_URL;
         console.log(vm);
         getApp();
     }

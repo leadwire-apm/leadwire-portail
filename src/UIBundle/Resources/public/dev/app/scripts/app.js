@@ -35,6 +35,7 @@ angular.module('leadwireApp', [
 }).constant('CONFIG', {
     'BASE_URL': 'http://localhost:9000/',
     'UPLOAD_URL': 'http://localhost:9000/uploads/',
+    'DOWNLOAD_URL': 'http://localhost:9000/core/api/resource/',
     'SWEETALERT_DANGER_MODE':{},
 }).constant('MESSAGES_CONSTANTS', {
     ERROR: 'Something went wrong,please try again',

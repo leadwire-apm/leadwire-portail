@@ -36,4 +36,6 @@
 /src/UIBundle/Resources/public/dev/app/vendor
 /web/uploads/*
 !/web/uploads/.gitkeep
+/uploads/*
+!/uploads/.gitkeep
 .tmp
