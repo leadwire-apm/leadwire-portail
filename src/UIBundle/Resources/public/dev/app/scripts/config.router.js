@@ -1,8 +1,12 @@
 'use strict';
 
 angular.module('leadwireApp').config([
-    '$stateProvider', '$urlRouterProvider', '$authProvider', 'CONFIG',
-    function($stateProvider, $urlRouterProvider, $authProvider, CONFIG) {
+    '$stateProvider',
+    '$urlRouterProvider',
+    '$authProvider',
+    'CONFIG',
+    function(
+        $stateProvider, $urlRouterProvider, $authProvider, CONFIG) {
         // var baseUrl = 'bundles/ui/app/';
         var baseUrl = '/';
 
@@ -429,45 +433,20 @@ angular.module('leadwireApp').config([
     '$httpProvider',
     '$locationProvider',
     'MESSAGES_CONSTANTS',
-    function($ocLazyLoadProvider, $httpProvider, $locationProvider, MSG) {
+    'toastrConfig',
+    function(
+        $ocLazyLoadProvider, $httpProvider, $locationProvider, MSG,
+        toastrConfig) {
         $ocLazyLoadProvider.config({
             debug: false,
             events: false,
         });
-
-        $httpProvider.interceptors.push(function($q, $location) {
-            return {
-                request: function(config) {
-                    // console.log(config.headers)
-                    config.headers = config.headers || {};
-                    return config;
-                },
-                responseError: function(response) {
-                    // console.log(response)
-                    console.log('status: ', response.status);
-
-                    if (response.status === 401) {
-                        console.log('response', response);
-
-                        $location.path('/login');
-                    } else if (response.status === 500) {
-                        noty({
-                            theme: 'urban-noty',
-                            text: MSG.ERROR,
-                            type: 'error',
-                            timeout: 3000,
-                            layout: 'topRight',
-                            closeWith: ['button', 'click'],
-                            animation: {
-                                open: 'in',
-                                close: 'out',
-                                easing: 'swing',
-                            },
-                        });
-                    } else
-                        return response || $q.when(response);
-                },
-            };
+        $httpProvider.interceptors.push('HttpInterceptor');
+        angular.extend(toastrConfig, {
+            allowHtml: false,
+            closeButton: true,
+            closeHtml: '<button>&times;</button>',
+            progressBar: true,
         });
 
     }]);

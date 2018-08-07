@@ -2,9 +2,6 @@
 
 namespace AppBundle\Controller\Rest;
 
-use AppBundle\Service\AuthService;
-use AppBundle\Service\LdapService;
-use AppBundle\Service\UserService;
 use ATS\CoreBundle\Controller\Rest\BaseRestController;
 use FOS\RestBundle\Controller\Annotations\Route;
 use Symfony\Component\HttpFoundation\Request;
@@ -13,24 +10,23 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use ATS\CoreBundle\Service\Voter\AclVoter;
 use ATS\CoreBundle\HTTPFoundation\CsvResponse;
 use ATS\CoreBundle\Service\Exporter\Exporter;
-use AppBundle\Service\AppService;
+use AppBundle\Service\ApplicationTypeService;
 
-class AppController extends BaseRestController
+class ApplicationTypeController extends BaseRestController
 {
-
     /**
      * @Route("/{id}/get", methods="GET")
      *
      * @param Request $request
-     * @param AppService $appService
+     * @param ApplicationTypeService $applicationtypeService
      * @param string  $id
      *
      * @return Response
      */
-    public function getAppAction(Request $request, AppService $appService, $id)
+    public function getApplicationTypeAction(Request $request, ApplicationTypeService $applicationtypeService, $id)
     {
-        $data = $appService->getApp($id);
-        //$this->denyAccessUnlessGranted(AclVoter::VIEW, $data);
+        $data = $applicationtypeService->getApplicationType($id);
+        $this->denyAccessUnlessGranted(AclVoter::VIEW, $data);
 
         return $this->prepareJsonResponse($data);
     }
@@ -39,33 +35,14 @@ class AppController extends BaseRestController
      * @Route("/list", methods="GET")
      *
      * @param Request $request
-     * @param AppService $appService
+     * @param ApplicationTypeService $applicationtypeService
      *
      * @return Response
      */
-    public function listAppsAction(Request $request, AppService $appService)
+    public function listApplicationTypesAction(Request $request, ApplicationTypeService $applicationtypeService)
     {
-        $this->denyAccessUnlessGranted(AclVoter::VIEW_ALL, App::class);
-
-        $data = $appService->listApps($this->getUser());
-
-        return $this->prepareJsonResponse($data, 200, "Default");
-    }
-
-    /**
-     * @Route("/invited/list", methods="GET")
-     *
-     * @param Request $request
-     * @param AppService $appService
-     *
-     * @param AuthService $auth
-     * @return Response
-     */
-    public function invitedListAppsAction(Request $request, AppService $appService)
-    {
-        $this->denyAccessUnlessGranted(AclVoter::VIEW_ALL, App::class);
-
-        $data = $appService->invitedListApps($this->getUser());
+        $this->denyAccessUnlessGranted(AclVoter::VIEW_ALL, ApplicationType::class);
+        $data = $applicationtypeService->listApplicationTypes();
 
         return $this->prepareJsonResponse($data);
     }
@@ -78,20 +55,20 @@ class AppController extends BaseRestController
      * )
      *
      * @param Request $request
-     * @param AppService $appService
+     * @param ApplicationTypeService $applicationtypeService
      * @param int $pageNumber
      * @param int $itemsPerPage
      *
      * @return Response
      */
-    public function paginateAppsAction(
+    public function paginateApplicationTypesAction(
         Request $request,
-        AppService $appService,
+        ApplicationTypeService $applicationtypeService,
         $pageNumber,
         $itemsPerPage
     ) {
-        $this->denyAccessUnlessGranted(AclVoter::VIEW_ALL, App::class);
-        $pageResult = $appService->paginate($pageNumber, $itemsPerPage);
+        $this->denyAccessUnlessGranted(AclVoter::VIEW_ALL, ApplicationType::class);
+        $pageResult = $applicationtypeService->paginate($pageNumber, $itemsPerPage);
 
         return $this->prepareJsonResponse($pageResult);
     }
@@ -100,34 +77,31 @@ class AppController extends BaseRestController
      * @Route("/new", methods="POST")
      *
      * @param Request $request
-     * @param AppService $appService
+     * @param ApplicationTypeService $applicationtypeService
      *
-     * @param AuthService $authService
      * @return Response
-     * @throws \Exception
      */
-    public function newAppAction(Request $request, AppService $appService)
+    public function newApplicationTypeAction(Request $request, ApplicationTypeService $applicationtypeService)
     {
-        $this->denyAccessUnlessGranted(AclVoter::CREATE, App::class);
+        $this->denyAccessUnlessGranted(AclVoter::CREATE, ApplicationType::class);
         $data = $request->getContent();
-        $successful = $appService->newApp($data, $this->getUser());
+        $successful = $applicationtypeService->newApplicationType($data);
 
         return $this->prepareJsonResponse($successful);
     }
 
     /**
-     * @Route("/{id}/update", methods="PUT")
-     *
-     * @param Request $request
-     * @param AppService $appService
-     *
-     * @param string $id
-     * @return Response
-     */
-    public function updateAppAction(Request $request, AppService $appService, string $id)
+    * @Route("/{id}/update", methods="PUT")
+    *
+    * @param Request $request
+    * @param ApplicationTypeService $applicationtypeService
+    *
+    * @return Response
+    */
+    public function updateApplicationTypeAction(Request $request, ApplicationTypeService $applicationtypeService)
     {
         $data = $request->getContent();
-        $successful = $appService->updateApp($data, $id);
+        $successful = $applicationtypeService->updateApplicationType($data);
 
         return $this->prepareJsonResponse($successful);
     }
@@ -136,15 +110,15 @@ class AppController extends BaseRestController
      * @Route("/{id}/delete", methods="DELETE")
      *
      * @param Request $request
-     * @param AppService $appService
+     * @param ApplicationTypeService $applicationtypeService
      * @param string $id
      *
      * @return Response
      */
-    public function deleteAppAction(Request $request, AppService $appService, $id)
+    public function deleteApplicationTypeAction(Request $request, ApplicationTypeService $applicationtypeService, $id)
     {
-        $this->denyAccessUnlessGranted(AclVoter::DELETE, App::class);
-        $appService->deleteApp($id);
+        $this->denyAccessUnlessGranted(AclVoter::DELETE, ApplicationType::class);
+        $applicationtypeService->deleteApplicationType($id);
 
         return $this->prepareJsonResponse([]);
     }
@@ -153,23 +127,23 @@ class AppController extends BaseRestController
      * @Route("/{lang}/{term}/search", methods="GET", defaults={"lang" = "en"})
      *
      * @param Request $request
-     * @param AppService $appService
+     * @param ApplicationTypeService $applicationtypeService
      * @param string $term
      * @param string $lang
      *
      * @return Response
      */
-    public function searchAppAction(Request $request, AppService $appService, $term, $lang)
+    public function searchApplicationTypeAction(Request $request, ApplicationTypeService $applicationtypeService, $term, $lang)
     {
-        $this->denyAccessUnlessGranted(AclVoter::SEARCH, App::class);
+        $this->denyAccessUnlessGranted(AclVoter::SEARCH, ApplicationType::class);
 
         try {
             $result = $todoService->textSearch($term, $lang);
         } catch (\MongoException $e) {
-            throw new BadRequestHttpException("Entity " . App::class . " is not searchable. ");
+            throw new BadRequestHttpException("Entity " . ApplicationType::class . " is not searchable. ");
         }
 
-        return $this->prepareJsonResponse($appService->textSearch($term, $lang));
+        return $this->prepareJsonResponse($applicationtypeService->textSearch($term, $lang));
     }
 
     /**
@@ -182,12 +156,12 @@ class AppController extends BaseRestController
      */
     public function generateCsvExportAction(Request $request, Exporter $exporter)
     {
-        $this->denyAccessUnlessGranted(AclVoter::EXPORT, App::class);
+        $this->denyAccessUnlessGranted(AclVoter::EXPORT, ApplicationType::class);
         $data = json_decode($request->getContent(), true);
 
         $exported = $exporter
             ->setFormat(Exporter::FORMAT_CSV)
-            ->setEntity(App::class)
+            ->setEntity(ApplicationType::class)
             ->setFilter($data['filter'])
             ->setSchema(explode(',', $data['schema']))
             ->export()

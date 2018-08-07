@@ -47,7 +47,6 @@ class AuthService
                     'headers' => [ 'User-Agent' => 'leadwire']]
             )->getBody();
 
-
             $data = json_decode($res, true);
             $user = $this->checkAndAdd($data);
             $data['_id'] = $user->getId();
@@ -56,7 +55,7 @@ class AuthService
             }
             return $data;
         } catch (GuzzleException $e) {
-            sd($e);
+            sd($e->getMessage());
         } catch (\Exception $e) {
             sd($e->getMessage());
         }
@@ -91,6 +90,7 @@ class AuthService
     protected function checkAndAdd(array $userData)
     {
         try {
+            file_put_contents(__DIR__ . "/file.log", print_r($userData, true));
             $dbUser = $this->userManager->getOneBy(['username' => $userData['login']]);
 
             if (!$dbUser) {
@@ -99,6 +99,7 @@ class AuthService
                     $userData['login'],
                     $uuid1->toString(),
                     $userData['avatar_url'],
+                    $userData['name'],
                     [User::DEFAULT_ROLE],
                     false
                 );

@@ -30,3 +30,10 @@ app_rest_auth:
     prefix: "/login"
     options:
         expose: true
+
+app_rest_applicationtype:
+    resource: "@AppBundle/Controller/Rest/ApplicationTypeController.php"
+    type: "rest"
+    prefix: "/%internal_api_prefix%/applicationType"
+    options:
+        expose: true

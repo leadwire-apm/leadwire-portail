@@ -32,7 +32,7 @@ class App
      * @ODM\Index(unique=true)
      * @JMS\Type("string")
      * @JMS\Expose
-     * @JMS\Groups({})
+     * @JMS\Groups({"Default"})
      */
     private $uuid;
 
@@ -42,7 +42,7 @@ class App
      * @ODM\Field(type="string", name="name")
      * @JMS\Type("string")
      * @JMS\Expose
-     * @JMS\Groups({})
+     * @JMS\Groups({"Default"})
      */
     private $name;
 
@@ -52,7 +52,7 @@ class App
      * @ODM\Field(type="string", name="type")
      * @JMS\Type("string")
      * @JMS\Expose
-     * @JMS\Groups({})
+     * @JMS\Groups({"Default"})
      */
     private $type;
 
@@ -62,7 +62,7 @@ class App
      * @ODM\Field(type="string", name="description")
      * @JMS\Type("string")
      * @JMS\Expose
-     * @JMS\Groups({})
+     * @JMS\Groups({"Default"})
      */
     private $description;
 
@@ -73,7 +73,7 @@ class App
      * @ODM\Field(type="string", name="email")
      * @JMS\Type("string")
      * @JMS\Expose
-     * @JMS\Groups({})
+     * @JMS\Groups({"Default"})
      */
     private $email;
 
@@ -83,7 +83,7 @@ class App
      * @ODM\Field(type="string", name="paymentData")
      * @JMS\Type("string")
      * @JMS\Expose
-     * @JMS\Groups({})
+     * @JMS\Groups({"Default"})
      */
     private $paymentData;
 
@@ -95,9 +95,9 @@ class App
      */
     private $isEnabled = false;
 
-
     /**
      * @var boolean
+     * @JMS\Groups({"Default"})
      * @JMS\Expose
      * @JMS\Type("boolean")
      * @ODM\Field(type="boolean", name="isDefault")
@@ -105,18 +105,28 @@ class App
     private $isDefault = false;
 
     /**
+     * @var boolean
+     * @JMS\Groups({"never"})
+     * @JMS\Expose
+     * @JMS\Type("boolean")
+     * @ODM\Field(type="boolean", name="isRemoved")
+     */
+    private $isRemoved = false;
+
+    /**
      * @var User
      *
      * @ODM\ReferenceOne(targetDocument="AppBundle\Document\User", name="owner", cascade={"persist"}, inversedBy="myApps")
      * @JMS\Type("AppBundle\Document\User")
      * @JMS\Expose
-     * @JMS\Groups({})
+     * @JMS\Groups({"full"})
      */
     private $owner;
 
     /** @ODM\ReferenceMany(targetDocument="Invitation", mappedBy="app")
      * @JMS\Type("array<AppBundle\Document\Invitation>")
      * @JMS\Expose
+     * @JMS\Groups({"full"})
      */
     public $invitations;
 
@@ -345,6 +355,26 @@ class App
         return $this->isDefault;
     }
 
+
+    /**
+     * Get isRemoved
+     * @return boolean
+     */
+    public function getIsRemoved()
+    {
+        return $this->isRemoved;
+    }
+
+    /**
+     * Set type
+     * @param boolean $isRemoved
+     * @return $this
+     */
+    public function setIsRemoved(bool $isRemoved)
+    {
+        $this->isRemoved = $isRemoved;
+        return $this;
+    }
 
     /**
      * Returns string representation of the object

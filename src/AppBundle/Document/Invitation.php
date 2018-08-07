@@ -31,7 +31,7 @@ class Invitation
      * @ODM\ReferenceOne(targetDocument="AppBundle\Document\App", name="app", cascade={"persist"}, inversedBy="invitations")
      * @JMS\Type("AppBundle\Document\App")
      * @JMS\Expose
-     * @JMS\Groups({})
+     * @JMS\Groups({"Default"})
      */
     private $app;
 
@@ -41,19 +41,10 @@ class Invitation
      * @ODM\Field(type="string", name="email")
      * @JMS\Type("string")
      * @JMS\Expose
-     * @JMS\Groups({})
+     * @JMS\Groups({"Default"})
      */
     private $email;
 
-    /**
-     * @var string
-     *
-     * @ODM\Field(type="string", name="nonce")
-     * @JMS\Type("string")
-     * @JMS\Expose
-     * @JMS\Groups({})
-     */
-    private $nonce;
 
     /**
      * @var User
@@ -61,7 +52,7 @@ class Invitation
      * @ODM\ReferenceOne(targetDocument="AppBundle\Document\User", name="user", cascade={"persist"}, inversedBy="otherApps")
      * @JMS\Type("AppBundle\Document\User")
      * @JMS\Expose
-     * @JMS\Groups({})
+     * @JMS\Groups({"full"})
      */
     private $user = null;
 
@@ -71,7 +62,7 @@ class Invitation
      * @ODM\Field(type="boolean", name="isPending")
      * @JMS\Type("boolean")
      * @JMS\Expose
-     * @JMS\Groups({})
+     * @JMS\Groups({"Default"})
      */
     private $isPending = true;
 
@@ -135,28 +126,6 @@ class Invitation
     public function setEmail($email)
     {
         $this->email = $email;
-        return $this;
-    }
-
-    /**
-     * Get nonce
-     *
-     * @return string
-     */
-    public function getNonce()
-    {
-        return $this->nonce;
-    }
-
-    /**
-     * Set nonce
-     * @param string
-     *
-     * @return Invitation
-     */
-    public function setNonce($nonce)
-    {
-        $this->nonce = $nonce;
         return $this;
     }
 

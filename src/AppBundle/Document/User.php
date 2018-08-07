@@ -21,6 +21,7 @@ class User extends \ATS\UserBundle\Document\User
      * @ODM\Id("strategy=auto")
      * @JMS\Type("string")
      * @JMS\Expose
+     * @JMS\Groups({"full"})
      */
     private $id;
 
@@ -32,7 +33,7 @@ class User extends \ATS\UserBundle\Document\User
      * @ODM\Index(unique=true)
      * @JMS\Type("string")
      * @JMS\Expose
-     * @JMS\Groups({})
+     * @JMS\Groups({"full"})
      */
     private $uuid;
 
@@ -43,18 +44,35 @@ class User extends \ATS\UserBundle\Document\User
 
      * @JMS\Type("string")
      * @JMS\Expose
-     * @JMS\Groups({})
+     * @JMS\Groups({"full"})
      */
     private $avatar;
 
     /**
      * @var string
+     * @JMS\Expose
+     * @JMS\Groups({"full"})
+     * @JMS\Type("string")
+     * @ODM\Field(type="string")
+     */
+    private $username;
+
+    /**
+     * @var string
+     * @JMS\Expose
+     * @JMS\Groups({"full"})
+     * @JMS\Type("string")
+     * @ODM\Field(type="string")
+     */
+    private $name;
+
+    /**
+     * @var string
      *
      * @ODM\Field(type="string", name="company")
-
      * @JMS\Type("string")
      * @JMS\Expose
-     * @JMS\Groups({})
+     * @JMS\Groups({"full"})
      */
     private $company;
 
@@ -62,6 +80,8 @@ class User extends \ATS\UserBundle\Document\User
      * @var string
      *
      * @ODM\Field(type="string", name="contact")
+     * @JMS\Type("string")
+     * @JMS\Groups({"full"})
      */
     private $contact;
 
@@ -70,8 +90,19 @@ class User extends \ATS\UserBundle\Document\User
      * @var string
      *
      * @ODM\Field(type="string", name="contactPreference")
+     * @JMS\Type("string")
+     * @JMS\Groups({"full"})
      */
     private $contactPreference;
+
+    /**
+     * @var string
+     *
+     * @ODM\Field(type="string", name="isEmailValid")
+     * @JMS\Type("boolean")
+     * @JMS\Groups({"full"})
+     */
+    private $isEmailValid=false;
 
     /**
      * @var string
@@ -80,13 +111,16 @@ class User extends \ATS\UserBundle\Document\User
 
      * @JMS\Type("string")
      * @JMS\Expose
-     * @JMS\Groups({})
+     * @JMS\Groups({"full"})
      */
     private $email;
 
     /**
      * @var boolean
      * @ODM\Field(type="boolean", name="acceptNewsLetter")
+     * @JMS\Type("boolean")
+     * @JMS\Expose
+     * @JMS\Groups({"full"})
      */
     private $acceptNewsLetter;
 
@@ -94,11 +128,13 @@ class User extends \ATS\UserBundle\Document\User
      * @ODM\ReferenceMany(targetDocument="Invitation", mappedBy="user")
      * @JMS\Type("array<AppBundle\Document\Invitation>")
      * @JMS\Expose
+     * @JMS\Groups({"full"})
      */
     public $invitations;
 
     /**
      * @ODM\ReferenceMany(targetDocument="App", mappedBy="owner")
+     * @JMS\Groups({"full"})
      */
     public $myApps;
 
@@ -135,6 +171,40 @@ class User extends \ATS\UserBundle\Document\User
     public function getUuid()
     {
         return $this->uuid;
+    }
+
+    public function setUsername($username)
+    {
+        $this->username = $username;
+
+        return $this;
+    }
+
+    /**
+     * Get username
+     *
+     * @return string
+     */
+    public function getUsername()
+    {
+        return $this->username;
+    }
+
+    public function setName($name)
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    /**
+     * Get name
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
     }
 
     /**
@@ -241,6 +311,30 @@ class User extends \ATS\UserBundle\Document\User
     public function getAcceptNewsLetter()
     {
         return $this->acceptNewsLetter;
+    }
+
+    /**
+     * Set isEmailValid
+     *
+     * @param bool isEmailValid
+     *
+     * @return User
+     */
+    public function setIsEmailValid($isEmailValid)
+    {
+        $this->isEmailValid = $isEmailValid;
+
+        return $this;
+    }
+
+    /**
+     * Get isEmailValid
+     *
+     * @return bool
+     */
+    public function getIsEmailValid()
+    {
+        return $this->isEmailValid;
     }
 
     /**

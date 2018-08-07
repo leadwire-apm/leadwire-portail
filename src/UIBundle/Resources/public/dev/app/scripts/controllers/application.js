@@ -15,6 +15,8 @@ angular.module('leadwireApp').
  * @param $location
  * @param $localStorage
  * @param $rootScope
+ * @param toastr
+ * @param MESSAGES_CONSTANTS
  */
 function addApplicationCtrlFN(
     $sce,
@@ -22,7 +24,7 @@ function addApplicationCtrlFN(
     ApplicationFactory,
     $location,
     $localStorage,
-    $rootScope,
+    $rootScope, toastr, MESSAGES_CONSTANTS,
 ) {
     var vm = this;
     vm.ui = {
@@ -30,11 +32,14 @@ function addApplicationCtrlFN(
     };
     $rootScope.currentNav = 'settings';
     vm.saveApp = function() {
-        // TODO
         vm.flipActivityIndicator();
         ApplicationFactory.save(vm.application).then(function(res) {
+            toastr.success(MESSAGES_CONSTANTS.ADD_APP_SUCCESS);
             vm.flipActivityIndicator();
         }).catch(function(error) {
+            toastr.error(
+                error.message || MESSAGES_CONSTANTS.ADD_APP_FAILURE ||
+                MESSAGES_CONSTANTS.ERROR);
             vm.flipActivityIndicator();
         });
     };
@@ -46,32 +51,38 @@ function addApplicationCtrlFN(
 }
 
 function applicationListCtrlFN(
-    $rootScope,
-    ApplicationFactory,
-    MenuFactory
+    $rootScope, ApplicationFactory, toastr, MESSAGES_CONSTANTS, $localStorage,
 ) {
-    $rootScope.currentNav = 'settings';
-    $rootScope.menus = MenuFactory.get('SETTINGS')
-
     var vm = this;
-    vm.ui = {
-        isDeleting: false,
-    };
-
-    $rootScope.currentNav = 'settings';
-    ApplicationFactory.findMyApps().then(function(response) {
-        vm.apps = response.data;
-    });
+    init();
 
     vm.deleteApp = function(id) {
-        vm.flipActivityIndicator(id);
-        ApplicationFactory.remove(id).then(function(res) {
-            // TODO : Handle delete success
-            vm.flipActivityIndicator(id);
-        }).catch(function(error) {
-            //TODO Handle delete error
-            vm.flipActivityIndicator(id);
+        swal({
+            title: 'Are you sure?',
+            text: 'Once deleted, you will not be able to recover this App!',
+            icon: 'warning',
+            buttons: true,
+            dangerMode: true,
+        }).then((willDelete) => {
+            if (willDelete) {
+                ApplicationFactory.remove(id).then(function(res) {
+                    getApps();
+                    swal.close();
+                    toastr.success(MESSAGES_CONSTANTS.DELETE_APP_SUCCESS);
+                }).catch(function(error) {
+                    swal.close();
+
+                    toastr.error(
+                        error.message ||
+                        MESSAGES_CONSTANTS.DELETE_APP_FAILURE ||
+                        MESSAGES_CONSTANTS.ERROR);
+                });
+
+            } else {
+                swal('Your App is safe!');
+            }
         });
+
     };
 
     vm.flipActivityIndicator = function(suffix) {
@@ -79,30 +90,80 @@ function applicationListCtrlFN(
         vm.ui['isDeleting' + suffix] = !vm.ui['isDeleting' + suffix];
     };
 
+    function getApps() {
+        // get all
+        ApplicationFactory.findAll().then(function(response) {
+            vm.apps = response.data;
+            $localStorage.applications = response.data;
+        });
+
+    }
+
+    function init() {
+        $rootScope.currentNav = 'settings';
+        vm.ui = {
+            isDeleting: false,
+        };
+        getApps();
+
+    }
+
 }
 
 function applicationDetailCtrlFN(
-    ApplicationFactory, Invitation, $stateParams, $rootScope, CONFIG) {
+    ApplicationFactory, Invitation, $stateParams, $rootScope, CONFIG, toastr,
+    MESSAGES_CONSTANTS) {
     var vm = this;
     init();
-    ApplicationFactory.get($stateParams.id).then(function(res) {
-        vm.app = res.data;
-    });
 
     vm.handleInviteUser = function() {
         vm.flipActivityIndicator();
         Invitation.save({
             email: vm.invitedUser.email,
-            app: vm.app,
-        }).then(function(res) {
+            app: {
+                id: vm.app.id,
+            },
+        }).
+            then(function(res) {
+                toastr.success(MESSAGES_CONSTANTS.INVITE_USER_SUCCESS);
+                vm.flipActivityIndicator();
+            }).catch(function(error) {
             vm.flipActivityIndicator();
-
-            //TODO Handle success and failure
-        }).catch(function(error) {
-            vm.flipActivityIndicator();
-            //TODO
-            console.log(error);
+            toastr.error(
+                error.message || MESSAGES_CONSTANTS.INVITE_USER_FAILURE ||
+                MESSAGES_CONSTANTS.ERROR);
         });
+    };
+
+    vm.deleteInvitation = function(id) {
+        swal({
+            title: 'Are you sure?',
+            text: 'Once deleted, you will not be able to recover this Invitation!',
+            icon: 'warning',
+            buttons: true,
+            dangerMode: true,
+        }).then((willDelete) => {
+            if (willDelete) {
+                Invitation.remove(id).then(function(res) {
+                    swal.close();
+                    toastr.success(
+                        MESSAGES_CONSTANTS.DELETE_INVITATION_SUCCESS);
+                    getApp();
+
+                }).catch(function(error) {
+                    swal.close();
+
+                    toastr.error(
+                        error.message ||
+                        MESSAGES_CONSTANTS.DELETE_INVITATION_FAILURE ||
+                        MESSAGES_CONSTANTS.ERROR);
+                });
+
+            } else {
+                swal('Your Invitation is safe!');
+            }
+        });
+
     };
 
     vm.flipActivityIndicator = function(suffix) {
@@ -110,17 +171,27 @@ function applicationDetailCtrlFN(
         vm.ui['isSaving' + suffix] = !vm.ui['isSaving' + suffix];
     };
 
+    function getApp() {
+        ApplicationFactory.get($stateParams.id).then(function(res) {
+            vm.app = res.data;
+        });
+
+    }
+
     function init() {
         $rootScope.currentNav = 'settings';
         vm.ui = {
             isSaving: false,
         };
         vm.UPLOAD_URL = CONFIG.UPLOAD_URL;
-    };
+        console.log(vm);
+        getApp();
+    }
 
 }
 
-function applicationEditCtrlFN(ApplicationFactory, $stateParams, $rootScope) {
+function applicationEditCtrlFN(
+    ApplicationFactory, $stateParams, $rootScope, toastr, MESSAGES_CONSTANTS) {
     var vm = this;
     $rootScope.currentNav = 'settings';
     vm.ui = {
@@ -136,11 +207,13 @@ function applicationEditCtrlFN(ApplicationFactory, $stateParams, $rootScope) {
         ApplicationFactory.update(vm.application.id, vm.application).
             then(function(res) {
                 vm.flipActivityIndicator();
-                // TODO handle on edit
+                toastr.success(MESSAGES_CONSTANTS.EDIT_APP_SUCCESS);
             }).
             catch(function(error) {
                 vm.flipActivityIndicator();
-                //TODO
+                toastr.error(
+                    error.message || MESSAGES_CONSTANTS.EDIT_APP_FAILURE ||
+                    MESSAGES_CONSTANTS.ERROR);
             });
     };
 

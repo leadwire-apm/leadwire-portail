@@ -1,13 +1,8 @@
-<div>
-    <h4>Application Detail</h4>
-    <hr>
-</div>
-
 <div class="row">
     <div class="col-md-12">
 
         <tabset justified="true" class="box-tab justified ">
-            <tab heading="Information">
+            <tab heading="Detail Application">
                 <div class="row no-margin">
                     <div class="col-lg-12 ">
                         <p><span class="bold text-bluegrey">Name : </span> {{ctrl.app.name}}</p>
@@ -41,9 +36,16 @@
                             </a>
                             <div class="comment">
                                 <div class="comment-author h6 no-margin">
-                                    <div class="comment-meta small">May 2015, 19:20</div>
-                                    <a href="javascript:;"><strong>{{invitation.user.email}}</strong></a>
-                                    <p class="label label-info">
+                                    <div class="comment-meta small">
+                                        <button class="btn btn-danger"
+                                                ng-click="ctrl.deleteInvitation(invitation.id)">
+                                            <i ng-if="!ctrl.ui.isDeleting" class="fa fa-trash"></i>
+                                            <spinner is-loading="ctrl.ui.isDeleting"></spinner>
+
+                                        </button>
+                                    </div>
+                                    <a href="javascript:;"><strong>{{invitation.user ? invitation.user.email :invitation.email}}</strong></a>
+                                    <p ng-if="invitation.user" class="label label-info">
                                         {{invitation.user.company}}
                                     </p>
                                     <p ng-if="invitation.is_pending">

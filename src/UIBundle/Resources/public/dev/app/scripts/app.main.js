@@ -3,11 +3,17 @@
 angular.module('leadwireApp').run(function($rootScope, MenuFactory) {
     $rootScope.menus = MenuFactory.get('DASHBOARD');
 }).controller('AppCtrl', [
-    '$scope', '$http', '$localStorage', 'User', 'CONFIG',
-    function AppCtrl($scope, $http, $localStorage, User, CONFIG) {
+    '$scope',
+    '$rootScope',
+    '$http',
+    '$localStorage',
+    'ApplicationService',
+    'CONFIG',
+    function AppCtrl(
+        $scope, $rootScope, $http, $localStorage, AppService, CONFIG) {
 
         $scope.mobileView = 767;
-
+        $rootScope.currentNav = 'application';
         $scope.app = {
             name: 'leadwire',
             author: 'Nyasha',
@@ -32,7 +38,10 @@ angular.module('leadwireApp').run(function($rootScope, MenuFactory) {
         };
 
         $scope.user = $localStorage.user;
-        $scope.UPLOAD_URL = CONFIG.UPLOAD_URL;
+        $scope.applications = $localStorage.applications;
+        $localStorage.selectedApp =
+
+            $scope.UPLOAD_URL = CONFIG.UPLOAD_URL;
 
         $scope.$on('user:updated', function(event, data) {
             $scope.user = data;
@@ -51,5 +60,10 @@ angular.module('leadwireApp').run(function($rootScope, MenuFactory) {
         $scope.getRandomArbitrary = function() {
             return Math.round(Math.random() * 100);
         };
+
+        $scope.setDefaultApp = function(app) {
+            AppService.setAppAsDefault(app);
+        };
+
     },
 ]);

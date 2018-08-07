@@ -1,39 +1,37 @@
 'use strict';
 
 angular.module('leadwireApp').
-    controller('SettingsModal', SettingsModal).
+    controller('SettingsModalCtrl', SettingsModalCtrl).
     controller('settingsCtrl', SettingsCtrl);
 
-function SettingsModal(
-    $localStorage, Account, $location, $scope, isModal, $modalInstance) {
-    var ctrl = this;
-    let _ctrl = new Ctrl(Account, $scope, $location, $localStorage, this,
-        $modalInstance);
+function SettingsModalCtrl(
+    $localStorage, Account, $location, isModal, $modalInstance, toastr) {
+    var vm = this;
+    let _ctrl = new UserCtrl(Account, $location, $localStorage, vm,
+        $modalInstance, toastr);
     this.save = _ctrl.save;
 }
 
 function SettingsCtrl(
-    $localStorage, Account, $location, $scope, $rootScope, FileService) {
+    $localStorage, Account, $location, $rootScope, FileService, toastr) {
 
-    var ctrl = this;
-    let _ctrl = new Ctrl(Account, $scope, $location, $localStorage, this,
-        false, $rootScope, FileService);
+    var vm = this;
+    $rootScope.currentNav = 'settings';
+    let _ctrl = new UserCtrl(Account, $location, $localStorage, vm,
+        false, $rootScope, FileService, toastr);
     this.save = _ctrl.save;
 }
 
-function Ctrl(
-    Account, $scope, $location, $localStorage, Controller, $modalInstance,
-    $rootScope, FileService) {
+function UserCtrl(
+    Account, $location, $localStorage, Controller, $modalInstance,
+    $rootScope, FileService, toastr) {
 
     Controller.user = $localStorage.user ?
         $localStorage.user :
         Account.getProfile();
     Controller.showCheckBoxes = !!$modalInstance;
-    $rootScope.currentNav = 'settings';
-
-
     this.save = function save() {
-        if ($scope.userForm.$valid) {
+        if (Controller.userForm.$valid) {
             Account.updateProfile({
                 id: Controller.user.id,
                 email: Controller.user.email,
@@ -41,12 +39,13 @@ function Ctrl(
                 acceptNewsLetter: Controller.user.acceptNewsLetter,
                 contact: Controller.user.contact,
                 contactPreference: Controller.user.contactPreference,
+                username: Controller.user.username,
+                name: Controller.user.name,
             }).success(function(data) {
                 if (data) {
                     if (Controller.avatar) {
                         FileService.upload(Controller.avatar, 'user').
                             then(function(response) {
-                                console.log(response);
                                 Account.updateProfile({
                                     id: Controller.user.id,
                                     avatar: response.data.name,
@@ -57,14 +56,15 @@ function Ctrl(
                     } else {
                         Controller.handleSuccessForm();
                     }
-
                 }
                 else {
-                    alert('Failed update User');
-                    $location.path('/');
+                    toastr.error('Failed update User');
+                    // $location.path('/');
                 }
             }).error(function(error) {
                 console.log(error);
+                toastr.error('Failed update User');
+
             });
 
         }
@@ -72,6 +72,7 @@ function Ctrl(
 
     Controller.handleSuccessForm = function handleSuccess() {
         $localStorage.user = Controller.user;
+        toastr.success('User has been updated successfully');
         if (!!$modalInstance) {
             $modalInstance.close();
         } else {

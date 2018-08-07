@@ -16,7 +16,7 @@ function dashboardCtrl(
                 //ariaLabelledBy: 'modal-title',
                 //ariaDescribedBy: 'modal-body',
                 templateUrl: 'views/profile.html',
-                controller: 'SettingsModal',
+                controller: 'SettingsModalCtrl',
                 controllerAs: 'ctrl',
                 resolve: {
                     isModal: function() {
@@ -28,7 +28,9 @@ function dashboardCtrl(
     }
 
     ApplicationFactory.findAll().success(function(data) {
-        $rootScope.applications = data;
+        delete $localStorage.applications;
+        $localStorage.applications = data;
+        $rootScope.applications = $localStorage.applications;
         if (data.length === 0) {
             $location.path('/applications/add');
             console.log('create one application');
@@ -38,7 +40,7 @@ function dashboardCtrl(
     });
     ctrl.dashboardLink = $sce.trustAsResourceUrl(ConfigService.getDashboard(
         '0827af30-5895-11e8-a683-7fb93ba4982c', false));
-};
+}
 
 function formDashboardCtrl() {
 
