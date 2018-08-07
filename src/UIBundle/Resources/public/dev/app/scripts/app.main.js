@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('leadwireApp').run(function($rootScope) {
-    $rootScope.currentNav = 'application';
+angular.module('leadwireApp').run(function($rootScope, MenuFactory) {
+    $rootScope.menus = MenuFactory.get('DASHBOARD');
 }).controller('AppCtrl', [
     '$scope',
     '$rootScope',

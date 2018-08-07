@@ -16,7 +16,6 @@ function SettingsCtrl(
     $localStorage, Account, $location, $rootScope, FileService, toastr) {
 
     var vm = this;
-    $rootScope.currentNav = 'settings';
     let _ctrl = new UserCtrl(Account, $location, $localStorage, vm,
         false, $rootScope, FileService, toastr);
     this.save = _ctrl.save;

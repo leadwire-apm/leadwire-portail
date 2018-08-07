@@ -50,7 +50,7 @@ angular.module('leadwireApp').config([
 // Application routes
         $stateProvider.state('app', {
             abstract: true,
-            templateUrl: baseUrl + 'views/common/layout.html',
+             templateUrl: baseUrl + 'views/common/layout.html'
         }).state('login', {
             url: '/login',
             templateUrl: baseUrl + 'views/extras-signin.html',
@@ -74,13 +74,14 @@ angular.module('leadwireApp').config([
             resolve: {
                 loginRequired: loginRequired,
                 deps: [
-                    '$ocLazyLoad', function($ocLazyLoad) {
+                    '$ocLazyLoad', 'MenuFactory', '$rootScope', function($ocLazyLoad, MenuFactory, $rootScope) {
+                        $rootScope.menus = MenuFactory.get('SETTINGS');
                         return $ocLazyLoad.load({
                             name: 'sbAdminApp',
                             files: [
                                 baseUrl + 'scripts/controllers/settings.js'],
                         });
-                    }],
+                    }]
             },
             data: {
                 title: 'Settings',
@@ -92,6 +93,9 @@ angular.module('leadwireApp').config([
             templateUrl: baseUrl + 'views/application/add.html',
             resolve: {
                 loginRequired: loginRequired,
+                menu: function(MenuFactory, $rootScope) {
+                    $rootScope.menus = MenuFactory.get('SETTINGS');
+                },
                 deps: getNotyDeps([
                     baseUrl +
                     'scripts/controllers/application.js']),
@@ -106,6 +110,9 @@ angular.module('leadwireApp').config([
             templateUrl: baseUrl + 'views/application/list.html',
             resolve: {
                 loginRequired: loginRequired,
+                menu: function(MenuFactory, $rootScope) {
+                    $rootScope.menus = MenuFactory.get('SETTINGS');
+                },
                 deps: [
                     '$ocLazyLoad', function($ocLazyLoad) {
                         return $ocLazyLoad.load({
@@ -155,8 +162,8 @@ angular.module('leadwireApp').config([
             templateUrl: baseUrl + 'views/dashboard.html',
             resolve: {
                 loginRequired: loginRequired,
-                deps: [
-                    '$ocLazyLoad', function($ocLazyLoad) {
+                deps: function($ocLazyLoad, MenuFactory, $rootScope) {
+                        $rootScope.menus = MenuFactory.get('DASHBOARD');
                         return $ocLazyLoad.load([
                             {
                                 insertBefore: '#load_styles_before',
@@ -189,7 +196,7 @@ angular.module('leadwireApp').config([
                             return $ocLazyLoad.load(
                                 baseUrl + 'scripts/controllers/dashboard.js');
                         });
-                    }],
+                    },
             },
             data: {
                 title: 'Dashboard',
