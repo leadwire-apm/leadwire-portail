@@ -201,8 +201,7 @@ angular.module('leadwireApp').config([
             data: {
                 title: 'Dashboard',
             },
-            controller: 'dashboardCtrl',
-            controllerAs: 'ctrl',
+            controller: 'dashboardCtrl'
         }).state('app.infrastructureMonitoring', {
             url: '/infrastructureMonitoring',
             templateUrl: baseUrl + 'views/infrastructureMonitoring.html',

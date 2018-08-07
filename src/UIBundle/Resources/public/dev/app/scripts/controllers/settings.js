@@ -5,25 +5,24 @@ angular.module('leadwireApp').
     controller('settingsCtrl', SettingsCtrl);
 
 function SettingsModalCtrl(
-    $localStorage, Account, $location, isModal, $modalInstance, toastr) {
+    $localStorage, Account, $location, isModal, $modalInstance, FileService, toastr) {
     var vm = this;
     let _ctrl = new UserCtrl(Account, $location, $localStorage, vm,
-        $modalInstance, toastr);
+        $modalInstance, FileService, toastr);
     this.save = _ctrl.save;
 }
 
 function SettingsCtrl(
-    $localStorage, Account, $location, $rootScope, FileService, toastr) {
+    $localStorage, Account, $location, FileService, toastr) {
 
     var vm = this;
     let _ctrl = new UserCtrl(Account, $location, $localStorage, vm,
-        false, $rootScope, FileService, toastr);
+        false, FileService, toastr);
     this.save = _ctrl.save;
 }
 
 function UserCtrl(
-    Account, $location, $localStorage, Controller, $modalInstance,
-    $rootScope, FileService, toastr) {
+    Account, $location, $localStorage, Controller, $modalInstance, FileService, toastr) {
 
     Controller.user = $localStorage.user ?
         $localStorage.user :
@@ -72,7 +71,7 @@ function UserCtrl(
     Controller.handleSuccessForm = function handleSuccess() {
         $localStorage.user = Controller.user;
         toastr.success('User has been updated successfully');
-        if (!!$modalInstance) {
+        if ($modalInstance !== false) {
             $modalInstance.close();
         } else {
             $location.path('/');

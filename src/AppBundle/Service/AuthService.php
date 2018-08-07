@@ -101,7 +101,7 @@ class AuthService
                     $userData['avatar_url'],
                     $userData['name'],
                     [User::DEFAULT_ROLE],
-                    false
+                    true
                 );
                 $dbUser = $this->userManager->getUserByUsername($userData['login']);
                 return $dbUser;

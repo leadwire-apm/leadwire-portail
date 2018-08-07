@@ -8,6 +8,7 @@ function dashboardCtrl(
     var connectedUser = $localStorage.user;
 
     if (!connectedUser || !connectedUser.email) {
+        console.log("i was here");
         $ocLazyLoad.load({
             name: 'sbAdminApp',
             files: ['scripts/controllers/settings.js'],
@@ -47,14 +48,5 @@ function formDashboardCtrl() {
 }
 
 angular.module('leadwireApp').
-    controller('dashboardCtrl', [
-        '$sce',
-        'ConfigService',
-        'ApplicationFactory',
-        '$location',
-        '$localStorage',
-        '$modal',
-        '$ocLazyLoad',
-        '$rootScope',
-        dashboardCtrl]).
-    controller('formDashboardCtrl', [formDashboardCtrl]);
+    controller('dashboardCtrl', dashboardCtrl).
+    controller('formDashboardCtrl', formDashboardCtrl);

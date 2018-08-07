@@ -40,6 +40,7 @@ class UserManager extends AbstractManager
             ->setUuid($uuid)
             ->setAvatar($avatar)
             ->setName($name)
+            ->setIsEmailValid(false)
         ;
 
 
