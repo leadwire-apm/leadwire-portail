@@ -4,6 +4,8 @@ core_rest_upload:
     prefix: "/core/%internal_api_prefix%"
     host: "%app_domain%"
     schemes: "%app_schemes%"
+    options:
+        expose: true
 
 core_rest_option:
     resource: "@CoreBundle/Controller/Rest/OptionController.php"

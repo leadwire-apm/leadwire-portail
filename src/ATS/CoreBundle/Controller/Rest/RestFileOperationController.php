@@ -4,7 +4,8 @@ namespace ATS\CoreBundle\Controller\Rest;
 
 use ATS\CoreBundle\Event\FileUploadedEvent;
 use FOS\RestBundle\Controller\Annotations\Route;
-use Nette\Utils\FileSystem;
+
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
