@@ -9,6 +9,9 @@ fos_rest:
             json: true
             html: true
             csv: true
+            jpeg: true
+            jpg: true
+            png: true
         failed_validation: HTTP_BAD_REQUEST
     serializer:
         serialize_null: true
