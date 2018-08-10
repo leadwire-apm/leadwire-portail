@@ -184,7 +184,6 @@ function applicationDetailCtrlFN(
             isSaving: false,
         };
         vm.DOWNLOAD_URL = CONFIG.DOWNLOAD_URL;
-        console.log(vm);
         getApp();
     }
 

@@ -8,15 +8,16 @@ function dashboardCtrl(
     var connectedUser = $localStorage.user;
 
     if (!connectedUser || !connectedUser.email) {
-        console.log("i was here");
+        console.log('i was here');
         $ocLazyLoad.load({
             name: 'sbAdminApp',
-            files: ['scripts/controllers/settings.js'],
+            files: [
+                $rootScope.ASSETS_BASE_URL + 'scripts/controllers/settings.js'],
         }).then(function() {
             $modal.open({
                 //ariaLabelledBy: 'modal-title',
                 //ariaDescribedBy: 'modal-body',
-                templateUrl: 'views/profile.html',
+                templateUrl: $rootScope.ASSETS_BASE_URL + 'views/profile.html',
                 controller: 'SettingsModalCtrl',
                 controllerAs: 'ctrl',
                 resolve: {
@@ -34,7 +35,6 @@ function dashboardCtrl(
         $rootScope.applications = $localStorage.applications;
         if (data.length === 0) {
             $location.path('/applications/add');
-            console.log('create one application');
         }
     }).error(function(error) {
         console.error(error);

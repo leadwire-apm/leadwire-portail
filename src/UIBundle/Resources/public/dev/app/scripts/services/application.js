@@ -24,7 +24,7 @@ angular.module('leadwireApp').
 
         };
     }).
-    service('ApplicationService', function(ApplicationFactory) {
+    service('ApplicationService', function(ApplicationFactory,toastr) {
         var service = {};
 
         service.setAppAsDefault = function(app) {
@@ -34,7 +34,7 @@ angular.module('leadwireApp').
             };
 
             ApplicationFactory.update(app.id, updatedApp).then(function(response) {
-                console.log()
+                toastr.success('Application Updated')
             });
         };
 

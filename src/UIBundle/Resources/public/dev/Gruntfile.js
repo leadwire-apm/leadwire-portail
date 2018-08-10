@@ -480,7 +480,7 @@ module.exports = function (grunt) {
         'usemin',
         'htmlmin',
         'shell',
-        'watch'
+        // 'watch'
 
     ]);
 

@@ -34,9 +34,10 @@ angular.module('leadwireApp', [
     textColor: '#6B6B6B',
 }).constant('CONFIG', {
     'BASE_URL': 'http://localhost:9000/',
+    'ASSETS_BASE_URL': '/', // PROD BECOME : bundles/ui/app/
     'UPLOAD_URL': 'http://localhost:9000/uploads/',
     'DOWNLOAD_URL': 'http://localhost:9000/core/api/resource/',
-    'SWEETALERT_DANGER_MODE':{},
+    'SWEETALERT_DANGER_MODE': {},
 }).constant('MESSAGES_CONSTANTS', {
     ERROR: 'Something went wrong,please try again',
     EDIT_APP_SUCCESS: 'Your app has been updated successfully',
@@ -48,9 +49,4 @@ angular.module('leadwireApp', [
         return 'You have successfully signed in with ' + provider;
     },
     LOGOUT_SUCCESS: 'You have been logged out',
-}).run([
-    '$rootScope','$localStorage', function($rootScope,$localStorage) {
-        $rootScope.$watch('applications', function(newVal,oldVal) {
-            $localStorage.applications = newVal;
-        });
-    }]);
+})

@@ -7,8 +7,6 @@ angular.module('leadwireApp').config([
     'CONFIG',
     function(
         $stateProvider, $urlRouterProvider, $authProvider, CONFIG) {
-        // var baseUrl = 'bundles/ui/app/';
-        var baseUrl = '/';
 
         // For unmatched routes
         $urlRouterProvider.otherwise('/');
@@ -47,19 +45,21 @@ angular.module('leadwireApp').config([
                 return deferred.promise;
             }];
 
-// Application routes
+        // Application routes
         $stateProvider.state('app', {
             abstract: true,
-             templateUrl: baseUrl + 'views/common/layout.html'
+            templateUrl: CONFIG.ASSETS_BASE_URL + 'views/common/layout.html',
         }).state('login', {
             url: '/login',
-            templateUrl: baseUrl + 'views/extras-signin.html',
+            templateUrl: CONFIG.ASSETS_BASE_URL + 'views/extras-signin.html',
             resolve: {
                 deps: [
                     '$ocLazyLoad', function($ocLazyLoad) {
                         return $ocLazyLoad.load({
                             name: 'sbAdminApp',
-                            files: [baseUrl + 'scripts/controllers/login.js'],
+                            files: [
+                                CONFIG.ASSETS_BASE_URL +
+                                'scripts/controllers/login.js'],
                         });
                     }],
             },
@@ -70,18 +70,22 @@ angular.module('leadwireApp').config([
             controllerAs: 'ctrl',
         }).state('app.user', {
             url: '/settings',
-            templateUrl: baseUrl + 'views/profile.html',
+            templateUrl: CONFIG.ASSETS_BASE_URL + 'views/profile.html',
             resolve: {
                 loginRequired: loginRequired,
                 deps: [
-                    '$ocLazyLoad', 'MenuFactory', '$rootScope', function($ocLazyLoad, MenuFactory, $rootScope) {
+                    '$ocLazyLoad',
+                    'MenuFactory',
+                    '$rootScope',
+                    function($ocLazyLoad, MenuFactory, $rootScope) {
                         $rootScope.menus = MenuFactory.get('SETTINGS');
                         return $ocLazyLoad.load({
                             name: 'sbAdminApp',
                             files: [
-                                baseUrl + 'scripts/controllers/settings.js'],
+                                CONFIG.ASSETS_BASE_URL +
+                                'scripts/controllers/settings.js'],
                         });
-                    }]
+                    }],
             },
             data: {
                 title: 'Settings',
@@ -90,14 +94,14 @@ angular.module('leadwireApp').config([
             controllerAs: 'ctrl',
         }).state('app.applicationsAdd', {
             url: '/applications/add',
-            templateUrl: baseUrl + 'views/application/add.html',
+            templateUrl: CONFIG.ASSETS_BASE_URL + 'views/application/add.html',
             resolve: {
                 loginRequired: loginRequired,
                 menu: function(MenuFactory, $rootScope) {
                     $rootScope.menus = MenuFactory.get('SETTINGS');
                 },
                 deps: getNotyDeps([
-                    baseUrl +
+                    CONFIG.ASSETS_BASE_URL +
                     'scripts/controllers/application.js']),
             },
             data: {
@@ -107,7 +111,7 @@ angular.module('leadwireApp').config([
             controllerAs: 'ctrl',
         }).state('app.applicationsList', {
             url: '/applications/list',
-            templateUrl: baseUrl + 'views/application/list.html',
+            templateUrl: CONFIG.ASSETS_BASE_URL + 'views/application/list.html',
             resolve: {
                 loginRequired: loginRequired,
                 menu: function(MenuFactory, $rootScope) {
@@ -118,7 +122,8 @@ angular.module('leadwireApp').config([
                         return $ocLazyLoad.load({
                             name: 'sbAdminApp',
                             files: [
-                                baseUrl + 'scripts/controllers/application.js'],
+                                CONFIG.ASSETS_BASE_URL +
+                                'scripts/controllers/application.js'],
                         });
                     }],
             },
@@ -129,11 +134,12 @@ angular.module('leadwireApp').config([
             controllerAs: 'ctrl',
         }).state('app.applicationDetail', {
             url: '/applications/{id}/detail',
-            templateUrl: baseUrl + 'views/application/detail.html',
+            templateUrl: CONFIG.ASSETS_BASE_URL +
+                'views/application/detail.html',
             resolve: {
                 loginRequired: loginRequired,
                 deps: getNotyDeps([
-                    baseUrl +
+                    CONFIG.ASSETS_BASE_URL +
                     'scripts/controllers/application.js']),
 
             },
@@ -144,11 +150,11 @@ angular.module('leadwireApp').config([
             controllerAs: 'ctrl',
         }).state('app.applicationEdit', {
             url: '/applications/{id}/edit',
-            templateUrl: baseUrl + 'views/application/edit.html',
+            templateUrl: CONFIG.ASSETS_BASE_URL + 'views/application/edit.html',
             resolve: {
                 loginRequired: loginRequired,
                 deps: getNotyDeps([
-                    baseUrl +
+                    CONFIG.ASSETS_BASE_URL +
                     'scripts/controllers/application.js']),
 
             },
@@ -159,57 +165,63 @@ angular.module('leadwireApp').config([
             controllerAs: 'ctrl',
         }).state('app.dashboard', {
             url: '/',
-            templateUrl: baseUrl + 'views/dashboard.html',
+            templateUrl: CONFIG.ASSETS_BASE_URL + 'views/dashboard.html',
             resolve: {
                 loginRequired: loginRequired,
                 deps: function($ocLazyLoad, MenuFactory, $rootScope) {
-                        $rootScope.menus = MenuFactory.get('DASHBOARD');
-                        return $ocLazyLoad.load([
-                            {
-                                insertBefore: '#load_styles_before',
-                                files: [
-                                    baseUrl + 'styles/climacons-font.css',
-                                    baseUrl +
-                                    'vendor/rickshaw/rickshaw.min.css',
-                                ],
-                            },
-                            {
-                                serie: true,
-                                files: [
-                                    baseUrl + 'vendor/d3/d3.min.js',
-                                    baseUrl + 'vendor/rickshaw/rickshaw.min.js',
-                                    baseUrl + 'vendor/flot/jquery.flot.js',
-                                    baseUrl +
-                                    'vendor/flot/jquery.flot.resize.js',
-                                    baseUrl + 'vendor/flot/jquery.flot.pie.js',
-                                    baseUrl +
-                                    'vendor/flot/jquery.flot.categories.js',
-                                ],
-                            },
-                            {
-                                name: 'angular-flot',
-                                files: [
-                                    baseUrl +
-                                    'vendor/angular-flot/angular-flot.js',
-                                ],
-                            }]).then(function() {
-                            return $ocLazyLoad.load(
-                                baseUrl + 'scripts/controllers/dashboard.js');
-                        });
-                    },
+                    $rootScope.menus = MenuFactory.get('DASHBOARD');
+                    return $ocLazyLoad.load([
+                        {
+                            insertBefore: '#load_styles_before',
+                            files: [
+                                CONFIG.ASSETS_BASE_URL +
+                                'styles/climacons-font.css',
+                                CONFIG.ASSETS_BASE_URL +
+                                'vendor/rickshaw/rickshaw.min.css',
+                            ],
+                        },
+                        {
+                            serie: true,
+                            files: [
+                                CONFIG.ASSETS_BASE_URL + 'vendor/d3/d3.min.js',
+                                CONFIG.ASSETS_BASE_URL +
+                                'vendor/rickshaw/rickshaw.min.js',
+                                CONFIG.ASSETS_BASE_URL +
+                                'vendor/flot/jquery.flot.js',
+                                CONFIG.ASSETS_BASE_URL +
+                                'vendor/flot/jquery.flot.resize.js',
+                                CONFIG.ASSETS_BASE_URL +
+                                'vendor/flot/jquery.flot.pie.js',
+                                CONFIG.ASSETS_BASE_URL +
+                                'vendor/flot/jquery.flot.categories.js',
+                            ],
+                        },
+                        {
+                            name: 'angular-flot',
+                            files: [
+                                CONFIG.ASSETS_BASE_URL +
+                                'vendor/angular-flot/angular-flot.js',
+                            ],
+                        }]).then(function() {
+                        return $ocLazyLoad.load(
+                            CONFIG.ASSETS_BASE_URL +
+                            'scripts/controllers/dashboard.js');
+                    });
+                },
             },
             data: {
                 title: 'Dashboard',
             },
-            controller: 'dashboardCtrl'
+            controller: 'dashboardCtrl',
         }).state('app.infrastructureMonitoring', {
             url: '/infrastructureMonitoring',
-            templateUrl: baseUrl + 'views/infrastructureMonitoring.html',
+            templateUrl: CONFIG.ASSETS_BASE_URL +
+                'views/infrastructureMonitoring.html',
             resolve: {
                 loginRequired: loginRequired,
                 deps: [
                     '$ocLazyLoad', function($ocLazyLoad) {
-                        return $ocLazyLoad.load(baseUrl +
+                        return $ocLazyLoad.load(CONFIG.ASSETS_BASE_URL +
                             'scripts/controllers/infrastructureMonitoring.js');
                     }],
             },
@@ -220,12 +232,13 @@ angular.module('leadwireApp').config([
             controllerAs: 'ctrl',
         }).state('app.architectureDiscovery', {
             url: '/architectureDiscovery',
-            templateUrl: baseUrl + 'views/architectureDiscovery.html',
+            templateUrl: CONFIG.ASSETS_BASE_URL +
+                'views/architectureDiscovery.html',
             resolve: {
                 loginRequired: loginRequired,
                 deps: [
                     '$ocLazyLoad', function($ocLazyLoad) {
-                        return $ocLazyLoad.load(baseUrl +
+                        return $ocLazyLoad.load(CONFIG.ASSETS_BASE_URL +
                             'scripts/controllers/architectureDiscovery.js');
                     }],
             },
@@ -239,13 +252,14 @@ angular.module('leadwireApp').config([
         // Data Browser
             .state('app.dataBrowser', {
                 url: '/dataBrowser',
-                templateUrl: baseUrl + 'views/dataBrowser.html',
+                templateUrl: CONFIG.ASSETS_BASE_URL + 'views/dataBrowser.html',
                 resolve: {
                     loginRequired: loginRequired,
                     deps: [
                         '$ocLazyLoad', function($ocLazyLoad) {
                             return $ocLazyLoad.load(
-                                baseUrl + 'scripts/controllers/dataBrowser.js');
+                                CONFIG.ASSETS_BASE_URL +
+                                'scripts/controllers/dataBrowser.js');
                         }],
                 },
                 data: {
@@ -259,12 +273,13 @@ angular.module('leadwireApp').config([
             // custom Reports
             .state('app.customReports', {
                 url: '/customReports',
-                templateUrl: baseUrl + 'views/customReports.html',
+                templateUrl: CONFIG.ASSETS_BASE_URL +
+                    'views/customReports.html',
                 resolve: {
                     loginRequired: loginRequired,
                     deps: [
                         '$ocLazyLoad', function($ocLazyLoad) {
-                            return $ocLazyLoad.load(baseUrl +
+                            return $ocLazyLoad.load(CONFIG.ASSETS_BASE_URL +
                                 'scripts/controllers/customReports.js');
                         }],
                 },
@@ -279,12 +294,13 @@ angular.module('leadwireApp').config([
 
             .state('app.syntheticMonitoring', {
                 url: '/syntheticMonitoring',
-                templateUrl: baseUrl + 'views/syntheticMonitoring.html',
+                templateUrl: CONFIG.ASSETS_BASE_URL +
+                    'views/syntheticMonitoring.html',
                 resolve: {
                     loginRequired: loginRequired,
                     deps: [
                         '$ocLazyLoad', function($ocLazyLoad) {
-                            return $ocLazyLoad.load(baseUrl +
+                            return $ocLazyLoad.load(CONFIG.ASSETS_BASE_URL +
                                 'scripts/controllers/syntheticMonitoring.js');
                         }],
                 },
@@ -298,13 +314,14 @@ angular.module('leadwireApp').config([
             // Alerts
             .state('app.alerts', {
                 url: '/alerts',
-                templateUrl: baseUrl + 'views/alerts.html',
+                templateUrl: CONFIG.ASSETS_BASE_URL + 'views/alerts.html',
                 resolve: {
                     loginRequired: loginRequired,
                     deps: [
                         '$ocLazyLoad', function($ocLazyLoad) {
                             return $ocLazyLoad.load(
-                                baseUrl + 'scripts/controllers/alerts.js');
+                                CONFIG.ASSETS_BASE_URL +
+                                'scripts/controllers/alerts.js');
                         }],
                 },
                 data: {
@@ -317,12 +334,13 @@ angular.module('leadwireApp').config([
             // Business Transactions
             .state('app.businessTransactions', {
                 url: '/businessTransactions',
-                templateUrl: baseUrl + 'views/businessTransactions.html',
+                templateUrl: CONFIG.ASSETS_BASE_URL +
+                    'views/businessTransactions.html',
                 resolve: {
                     loginRequired: loginRequired,
                     deps: [
                         '$ocLazyLoad', function($ocLazyLoad) {
-                            return $ocLazyLoad.load(baseUrl +
+                            return $ocLazyLoad.load(CONFIG.ASSETS_BASE_URL +
                                 'scripts/controllers/businessTransactions.js');
                         }],
                 },
@@ -336,12 +354,13 @@ angular.module('leadwireApp').config([
             // real User Monitoring
             .state('app.realUserMonitoring', {
                 url: '/realUserMonitoring',
-                templateUrl: baseUrl + 'views/realUserMonitoring.html',
+                templateUrl: CONFIG.ASSETS_BASE_URL +
+                    'views/realUserMonitoring.html',
                 resolve: {
                     loginRequired: loginRequired,
                     deps: [
                         '$ocLazyLoad', function($ocLazyLoad) {
-                            return $ocLazyLoad.load(baseUrl +
+                            return $ocLazyLoad.load(CONFIG.ASSETS_BASE_URL +
                                 'scripts/controllers/realUserMonitoring.js');
                         }],
                 },
@@ -359,12 +378,13 @@ angular.module('leadwireApp').config([
                 url: '/administration',
             }).state('app.administration.visualisations', {
             url: '/visualisations',
-            templateUrl: baseUrl + 'views/administration/visualisations.html',
+            templateUrl: CONFIG.ASSETS_BASE_URL +
+                'views/administration/visualisations.html',
             resolve: {
                 loginRequired: loginRequired,
                 deps: [
                     '$ocLazyLoad', function($ocLazyLoad) {
-                        return $ocLazyLoad.load(baseUrl +
+                        return $ocLazyLoad.load(CONFIG.ASSETS_BASE_URL +
                             'scripts/controllers/administration.visualisations.js');
                     }],
             },
@@ -375,12 +395,13 @@ angular.module('leadwireApp').config([
             controllerAs: 'ctrl',
         }).state('app.administration.reports', {
             url: '/reports',
-            templateUrl: baseUrl + 'views/administration/reports.html',
+            templateUrl: CONFIG.ASSETS_BASE_URL +
+                'views/administration/reports.html',
             resolve: {
                 loginRequired: loginRequired,
                 deps: [
                     '$ocLazyLoad', function($ocLazyLoad) {
-                        return $ocLazyLoad.load(baseUrl +
+                        return $ocLazyLoad.load(CONFIG.ASSETS_BASE_URL +
                             'scripts/controllers/administration.reports.js');
                     }],
             },
@@ -398,7 +419,9 @@ angular.module('leadwireApp').config([
                     '$ocLazyLoad', function($ocLazyLoad) {
                         return $ocLazyLoad.load({
                             name: 'sbAdminApp',
-                            files: [baseUrl + 'scripts/controllers/login.js'],
+                            files: [
+                                CONFIG.ASSETS_BASE_URL +
+                                'scripts/controllers/login.js'],
                         });
                     }],
             },
@@ -413,13 +436,18 @@ angular.module('leadwireApp').config([
                     return $ocLazyLoad.load([
                         {
                             insertBefore: '#load_styles_before',
-                            files: ['vendor/chosen_v1.4.0/chosen.min.css'],
+                            files: [
+                                CONFIG.ASSETS_BASE_URL +
+                                'vendor/chosen_v1.4.0/chosen.min.css'],
                         },
                         {
                             serie: true,
                             files: [
+                                CONFIG.ASSETS_BASE_URL +
                                 'vendor/chosen_v1.4.0/chosen.jquery.min.js',
+                                CONFIG.ASSETS_BASE_URL +
                                 'vendor/noty/js/noty/packaged/jquery.noty.packaged.min.js',
+                                CONFIG.ASSETS_BASE_URL +
                                 'scripts/extentions/noty-defaults.js',
                             ],
                         }]).then(function() {
@@ -455,4 +483,12 @@ angular.module('leadwireApp').config([
             progressBar: true,
         });
 
-    }]);
+    }]).run(function($rootScope, CONFIG, $localStorage) {
+    $rootScope.ASSETS_BASE_URL = CONFIG.ASSETS_BASE_URL;
+    $rootScope.DOWNLOAD_URL = CONFIG.DOWNLOAD_URL;
+    $rootScope.UPLOAD_URL = CONFIG.UPLOAD_URL;
+    $rootScope.$watch('applications', function(newVal, oldVal) {
+        $localStorage.applications = newVal;
+    });
+
+});

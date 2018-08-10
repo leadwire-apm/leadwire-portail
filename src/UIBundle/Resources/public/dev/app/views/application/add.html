@@ -8,7 +8,7 @@
                 <form class="form-horizontal bordered-group" name="applicationForm" ng-submit="ctrl.saveApp()"
                       role="form"
                 >
-                    <div ng-include="'views/application/form.html'"></div>
+                    <div ng-include="ASSETS_BASE_URL+'views/application/form.html'"></div>
                     <button type="submit" ng-disabled="applicationForm.$invalid"
                             class="btn btn-primary">
                         <spinner is-loading="ctrl.ui.isSaving"></spinner>

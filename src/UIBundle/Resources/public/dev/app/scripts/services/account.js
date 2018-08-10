@@ -4,7 +4,6 @@ angular.module('leadwireApp').factory('Account', function($http, CONFIG) {
             return $http.get(CONFIG.BASE_URL + 'api/user/me');
         },
         updateProfile: function(profileData) {
-            console.log(profileData)
             return $http.put(
                 CONFIG.BASE_URL + 'api/user/' + profileData.id + '/update',
                 profileData);
@@ -17,7 +16,7 @@ angular.module('leadwireApp').factory('Account', function($http, CONFIG) {
     'Invitation',
     function(Account, $rootScope, $localStorage, Invitation) {
 
-        var service = {};
+        var service = this;
         service.setProfile = function() {
             return new Promise(function(resolve, reject) {
                 if (angular.isUndefined($localStorage.user) ||
@@ -29,15 +28,18 @@ angular.module('leadwireApp').factory('Account', function($http, CONFIG) {
                             response.data.displayName !== null) {
                             userInfo.fname = response.data.displayName;
                         }
+
                         userInfo.avatar = response.data.avatar;
                         $localStorage.user = userInfo;
                         $rootScope.$broadcast('user:updated', userInfo);
                         resolve(userInfo);
-                    }).catch(function(response) {
-                        //toastr.error(response.data.message, response.status);
+
+                    }).catch(function(error) {
+                        $localStorage.clear();
+                        reject(error.message);
                     });
                 } else {
-                    this.informations = $localStorage.user;
+                    resolve();
                 }
             });
 
@@ -48,7 +50,6 @@ angular.module('leadwireApp').factory('Account', function($http, CONFIG) {
                 service.setProfile().then(function(user) {
                     if (invitationId !== undefined) {
                         Invitation.get(invitationId).then(function(res) {
-                            console.log(res);
                             if (!res.data.user) {
                                 var invitToUpdate = {
                                     id: invitationId,
@@ -58,7 +59,6 @@ angular.module('leadwireApp').factory('Account', function($http, CONFIG) {
                                     },
                                 };
                                 Invitation.update(invitationId, invitToUpdate);
-                                console.log('here');
                             }
                             resolve();
                         });
@@ -72,6 +72,4 @@ angular.module('leadwireApp').factory('Account', function($http, CONFIG) {
 
             });
         };
-
-        return service;
     }]);

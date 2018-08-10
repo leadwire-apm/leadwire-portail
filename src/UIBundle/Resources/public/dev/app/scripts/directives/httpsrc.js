@@ -14,7 +14,6 @@ angular.module('leadwireApp')
                 responseType: 'arraybuffer',
                 cache: 'true'
             };
-            console.log(attrs.httpSrc);
             $http(requestConfig)
                 .then(function(response) {
                     var arr = new Uint8Array(response.data);

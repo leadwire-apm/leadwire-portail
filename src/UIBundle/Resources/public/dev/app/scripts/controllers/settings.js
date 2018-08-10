@@ -5,7 +5,8 @@ angular.module('leadwireApp').
     controller('settingsCtrl', SettingsCtrl);
 
 function SettingsModalCtrl(
-    $localStorage, Account, $location, isModal, $modalInstance, FileService, toastr) {
+    $localStorage, Account, $location, isModal, $modalInstance, FileService,
+    toastr, CONFIG, $rootScope) {
     var vm = this;
     let _ctrl = new UserCtrl(Account, $location, $localStorage, vm,
         $modalInstance, FileService, toastr);
@@ -22,7 +23,8 @@ function SettingsCtrl(
 }
 
 function UserCtrl(
-    Account, $location, $localStorage, Controller, $modalInstance, FileService, toastr) {
+    Account, $location, $localStorage, Controller, $modalInstance, FileService,
+    toastr) {
 
     Controller.user = $localStorage.user ?
         $localStorage.user :
@@ -48,6 +50,9 @@ function UserCtrl(
                                     id: Controller.user.id,
                                     avatar: response.data.name,
                                 });
+                                $localStorage.user = angular.extend(
+                                    $localStorage.user,
+                                    {avatar: response.data.name});
                                 Controller.handleSuccessForm();
                             });
 
@@ -57,7 +62,6 @@ function UserCtrl(
                 }
                 else {
                     toastr.error('Failed update User');
-                    // $location.path('/');
                 }
             }).error(function(error) {
                 console.log(error);

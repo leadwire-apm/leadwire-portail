@@ -5,15 +5,22 @@ angular.module('leadwireApp').run(function($rootScope, MenuFactory) {
 }).controller('AppCtrl', [
     '$scope',
     '$rootScope',
+    '$auth',
+    '$location',
     '$http',
     '$localStorage',
     'ApplicationService',
     'CONFIG',
+    'MESSAGES_CONSTANTS',
+    'toastr',
     function AppCtrl(
-        $scope, $rootScope, $http, $localStorage, AppService, CONFIG) {
+        $scope, $rootScope, $auth, $location, $http, $localStorage, AppService,
+        CONFIG,
+        MESSAGES_CONSTANTS,
+        toastr) {
 
         $scope.mobileView = 767;
-        $rootScope.currentNav = 'application';
+
         $scope.app = {
             name: 'leadwire',
             author: 'Nyasha',
@@ -63,6 +70,14 @@ angular.module('leadwireApp').run(function($rootScope, MenuFactory) {
 
         $scope.setDefaultApp = function(app) {
             AppService.setAppAsDefault(app);
+        };
+
+        $scope.logout = function() {
+            delete $localStorage.user;
+            $auth.logout().then(function() {
+                toastr.info(MESSAGES_CONSTANTS.LOGOUT_SUCCESS);
+                $location.path('/login');
+            });
         };
 
     },

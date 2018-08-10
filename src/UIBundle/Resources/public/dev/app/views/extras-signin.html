@@ -1,11 +1,11 @@
 <div class="container">
     <div class="row">
         <div class="brand-logo">
-            <img data-ng-src="images/logo-dark.png" height="30" alt="">
+            <img data-ng-src="{{ASSETS_BASE_URL}}images/logo-dark.png" height="30" alt="">
         </div>
         <div class="center-form panel">
             <div class="panel-body">
-                <h2 class="text-center">Log in </h2>
+                <h2 class="text-center">Log in</h2>
                 <button id="github-button" class="btn btn-block btn-social btn-github"
                         ng-click="ctrl.authenticate('github')">
                     <spinner is-loading="ctrl.isChecking"></spinner>

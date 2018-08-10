@@ -43,12 +43,17 @@ function LoginController(
 
     function authenticate(provider) {
         vm.isChecking = true;
-        $auth.authenticate(provider).then(function() {
+
+        $auth.authenticate(provider).then(function(data) {
             UserService.handleOnSuccessLogin(invitationId).then(function() {
                 toastr.success(MESSAGES_CONSTANTS.LOGIN_SUCCESS(provider));
                 vm.isChecking = false;
                 $location.search({});
                 $location.path('/');
+            }).catch(function(error) {
+                vm.isChecking = false;
+                console.log('Error handleOnSucc', error);
+                handleLoginFailure(error);
             });
         }).catch(function(error) {
             handleLoginFailure(error);
@@ -70,13 +75,8 @@ function LoginController(
 
     function initController() {
         // reset login status
-        if (!$auth.isAuthenticated()) {
-            return;
+        if ($auth.isAuthenticated()) {
+            $location.path('/');
         }
-        delete $localStorage.user;
-        $auth.logout().then(function() {
-            toastr.info(MESSAGES_CONSTANTS.LOGOUT_SUCCESS);
-            $location.path('/login');
-        });
     }
 }
