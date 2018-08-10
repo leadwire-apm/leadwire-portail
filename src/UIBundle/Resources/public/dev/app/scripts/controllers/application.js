@@ -36,6 +36,7 @@ function addApplicationCtrlFN(
         ApplicationFactory.save(vm.application).then(function(res) {
             toastr.success(MESSAGES_CONSTANTS.ADD_APP_SUCCESS);
             vm.flipActivityIndicator();
+            $location.path('/');
         }).catch(function(error) {
             toastr.error(
                 error.message || MESSAGES_CONSTANTS.ADD_APP_FAILURE ||

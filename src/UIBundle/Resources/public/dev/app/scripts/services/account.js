@@ -36,7 +36,7 @@ angular.module('leadwireApp').factory('Account', function($http, CONFIG) {
 
                     }).catch(function(error) {
                         $localStorage.clear();
-                        reject(error.message);
+                        reject(error);
                     });
                 } else {
                     resolve();
@@ -67,7 +67,7 @@ angular.module('leadwireApp').factory('Account', function($http, CONFIG) {
                         resolve();
                     }
                 }).catch(function(error) {
-                    reject({error: error.message});
+                    reject(error);
                 });
 
             });
