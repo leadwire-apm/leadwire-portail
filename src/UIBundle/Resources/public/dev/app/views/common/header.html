@@ -41,7 +41,8 @@
     </li>
 
     <li class="dropdown" dropdown>
-        <a href="javascript:;" class="dropdown-toggle" dropdown-toggle>
+
+        <a href="javascript:;" class="dropdown-toggle isDisabled" > <!--dropdown-toggle-->
             <i class="fa fa-bell-o"></i>
             <div class="status bg-danger border-danger animated bounce"></div>
         </a>
@@ -126,11 +127,19 @@
 
     </li>
 
-    <li>
-        <a href="javascript:;" class="hamburger-icon v2" data-ng-click="app.layout.isChatOpen = !app.layout.isChatOpen">
-            <span></span>
-            <span></span>
-            <span></span>
-        </a>
-    </li>
+    <!--<li>-->
+        <!--<a href="javascript:;" class="hamburger-icon v2" data-ng-click="app.layout.isChatOpen = !app.layout.isChatOpen">-->
+            <!--<span></span>-->
+            <!--<span></span>-->
+            <!--<span></span>-->
+        <!--</a>-->
+    <!--</li>-->
 </ul>
+<style>
+    .isDisabled {
+        color: currentColor;
+        cursor: not-allowed;
+        opacity: 0.5;
+        text-decoration: none;
+    }
+</style>

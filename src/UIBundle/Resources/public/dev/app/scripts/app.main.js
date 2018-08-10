@@ -50,8 +50,11 @@ angular.module('leadwireApp').run(function($rootScope, MenuFactory) {
             $rootScope.user = data;
         });
         $scope.$on('update-image', function(event, data) {
-            console.log('sasasa', data);
             $scope.$broadcast('reload-src', data);
+        });
+
+        $scope.$on('new-application', function(event, newApp) {
+            $scope.$broadcast('add-application', newApp);
         });
 
         if (angular.isDefined($localStorage.layout)) {

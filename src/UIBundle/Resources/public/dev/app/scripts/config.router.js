@@ -16,9 +16,7 @@ angular.module('leadwireApp').config([
          */
 
         $authProvider.github({
-            /*prod*/  //clientId: '5ae68ff984489a4ed647'
-            /*test*/   //clientId: 'a5b3aee9593a1aaa5046',
-            /*local*/   clientId: '094c2b7f0e14da4d0ca8',
+            clientId: CONFIG.GITHUB_CLIENT_ID,
             url: CONFIG.BASE_URL + 'login/github',
 
         });

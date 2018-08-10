@@ -24,7 +24,10 @@ function addApplicationCtrlFN(
     ApplicationFactory,
     $location,
     $localStorage,
-    $rootScope, toastr, MESSAGES_CONSTANTS,
+    $scope,
+    $rootScope,
+    toastr,
+    MESSAGES_CONSTANTS,
 ) {
     var vm = this;
     vm.ui = {
@@ -34,8 +37,9 @@ function addApplicationCtrlFN(
     vm.saveApp = function() {
         vm.flipActivityIndicator();
         ApplicationFactory.save(vm.application).then(function(res) {
-            toastr.success(MESSAGES_CONSTANTS.ADD_APP_SUCCESS);
+            $scope.$emit('new-application', vm.application);
             vm.flipActivityIndicator();
+            toastr.success(MESSAGES_CONSTANTS.ADD_APP_SUCCESS);
             $location.path('/');
         }).catch(function(error) {
             toastr.error(

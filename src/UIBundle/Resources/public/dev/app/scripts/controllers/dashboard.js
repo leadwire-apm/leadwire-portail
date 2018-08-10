@@ -1,7 +1,8 @@
 'use strict';
 
 function dashboardCtrl(
-    $sce, ConfigService, ApplicationFactory, $location, $localStorage, $modal,
+    $sce, $scope, ConfigService, ApplicationFactory, $location, $localStorage,
+    $modal,
     $ocLazyLoad, $rootScope) {
 
     var ctrl = this;
@@ -29,13 +30,20 @@ function dashboardCtrl(
         });
     }
 
+    $scope.$on('add-application', function(event, newApp) {
+        console.log("sassa")
+        if ($localStorage.application === undefined) {
+            $localStorage.applications = [];
+        }
+        $localStorage.applications.push(newApp);
+        $rootScope.applications.push(newApp);
+    });
+
     ApplicationFactory.findAll().success(function(data) {
         delete $localStorage.applications;
         $localStorage.applications = data;
         $rootScope.applications = $localStorage.applications;
-        if (data.length === 0) {
-            $location.path('/applications/add');
-        }
+
     }).error(function(error) {
         console.error(error);
     });
