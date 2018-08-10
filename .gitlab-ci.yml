@@ -1,0 +1,58 @@
+variables:
+    DOCKER_DRIVER: overlay2
+
+services:
+    - mongo:3.4
+
+stages:
+    - build
+    - test
+    - deploy
+
+cache:
+    key: ${CI_COMMIT_REF_SLUG}
+    paths:
+        - vendor/
+phpcs:
+    before_script:
+        - curl -sS https://getcomposer.org/installer | php
+        - curl -OL https://squizlabs.github.io/PHP_CodeSniffer/phpcs.phar
+        - php composer.phar require phpstan/phpstan
+        - 'sed "s/database_host: .*/database_host: mongo/" -i app/config/parameters.yml'
+    image: aturki/php7.1
+    stage: build
+    tags:
+        - phpcs
+    script:
+        - php phpcs.phar --error-severity=1 --warning-severity=8 --extensions=php --standard=PSR2 --encoding=utf-8 ./src
+        - ./vendor/bin/phpstan analyze -l1 src/ATS/AdminBundle src/ATS/AnalyticsBundle src/ATS/CoreBundle src/ATS/EmailBundle src/ATS/GeneratorBundle src/ATS/TranslationBundle src/ATS/UserBundle
+
+#phpunit:
+#    before_script:
+#        - curl -sS https://getcomposer.org/installer | php
+#        - curl -OL https://phar.phpunit.de/phpunit.phar
+#        - php composer.phar install
+#        - 'sed "s/database_host: .*/database_host: mongo/" -i app/config/parameters.yml'
+#    image: aturki/php7.1
+#    stage: test
+#    tags:
+#        - phpunit
+#    script:
+#        - php phpunit.phar --coverage-text --colors=never --strict-coverage --disallow-test-output -c phpunit.xml.dist tests/ATS/
+
+codequality:
+    image: docker:stable
+    variables:
+        DOCKER_DRIVER: overlay2
+    allow_failure: true
+    services:
+        - docker:stable-dind
+    script:
+        - export SP_VERSION=$(echo "$CI_SERVER_VERSION" | sed 's/^\([0-9]*\)\.\([0-9]*\).*/\1-\2-stable/')
+        - docker run
+            --env SOURCE_CODE="$PWD"
+            --volume "$PWD":/code
+            --volume /var/run/docker.sock:/var/run/docker.sock
+            "registry.gitlab.com/gitlab-org/security-products/codequality:$SP_VERSION" /code
+    artifacts:
+        paths: [codeclimate.json]

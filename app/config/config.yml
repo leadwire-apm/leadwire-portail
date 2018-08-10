@@ -1,0 +1,93 @@
+imports:
+    - { resource: parameters.yml }
+    - { resource: security.yml }
+    - { resource: services.yml }
+    - { resource: vendor/config.yml}
+    - { resource: "@AppBundle/Resources/config/config.yml" }
+    - { resource: "@AnalyticsBundle/Resources/config/config.yml" }
+    - { resource: "@CoreBundle/Resources/config/config.yml" }
+    - { resource: "@ClientBootstrapperBundle/Resources/config/services.yml" }
+    - { resource: "@UIBundle/Resources/config/services.yml" }
+
+# Parameters Configuration
+parameters:
+    locale: '%app_locale%'
+
+# Framework Configuration
+framework:
+    translator:              { fallbacks: ['%locale%'] }
+    secret:                  '%secret%'
+    router:
+        resource:            '%kernel.root_dir%/config/routing.yml'
+        strict_requirements: ~
+        http_port:           3000
+        https_port:          8443
+    form:
+        enabled:             true
+    csrf_protection:
+        enabled:             true
+    validation:              { enable_annotations: true }
+    templating:
+        engines:             ['twig']
+    default_locale:          '%locale%'
+    trusted_hosts:           ~
+    session:
+        cookie_lifetime:     31536000
+        save_path:           '%kernel.project_dir%/var/sessions/app/%kernel.environment%'
+        cookie_domain:       '%app_domain%'
+        name:                '%app_id%_%kernel.environment%'
+        use_cookies:         true
+    fragments:    ~
+    http_method_override:    true
+
+# Twig Configuration
+twig:
+    debug:            '%kernel.debug%'
+    strict_variables: '%kernel.debug%'
+    globals:
+        app_version:  '%app_version%'
+
+# Assetic Configuration
+assetic:
+    debug:          '%kernel.debug%'
+    use_controller: false
+    bundles:
+        - CoreBundle
+        - AppBundle
+        - UserBundle
+        - AdminBundle
+        - TranslationBundle
+    filters:
+        cssrewrite: ~
+
+doctrine_mongodb:
+    auto_generate_hydrator_classes: true
+    default_database: '%database_name%'
+    default_connection: default
+    default_document_manager: default
+    connections:
+        default:
+            server: 'mongodb://%database_host%:%database_port%'
+            options:
+                username: '%database_user%'
+                password: '%database_pass%'
+                connect: true
+                db: '%database_name%'
+    document_managers:
+        default:
+            connection: default
+            database: '%database_name%'
+            auto_mapping: true
+            logging: false
+
+fos_oauth_server:
+    db_driver: mongodb
+    client_class:        ATS\UserBundle\Document\Client
+    access_token_class:  ATS\UserBundle\Document\AccessToken
+    refresh_token_class: ATS\UserBundle\Document\RefreshToken
+    auth_code_class:     ATS\UserBundle\Document\AuthCode
+    service:
+        user_provider: ATS\UserBundle\Provider\SimpleUserProvider
+        options:
+            supported_scopes: user
+            access_token_lifetime: 3600 # 1 hour in seconds

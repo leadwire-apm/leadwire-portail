@@ -1,0 +1,37 @@
+<?php declare(strict_types=1);
+
+namespace {{ namespace }}\ViewEntity;
+
+use JMS\Serializer\Annotation as JMS;
+use ATS\CoreBundle\Annotation as ATS;
+{% for field in fields %}
+use {{ field['namespacedType'] }};
+{% endfor %}
+
+/**
+ * @ATS\ApplicationView
+ */
+class {{ viewEntity }}View
+{
+{% for field in fields %}
+    /**
+     * @var {{ field['shortType'] }}
+     */
+    public ${{ field['fieldName'] }};
+
+{% endfor %}
+
+    /**
+     * Consttructor
+     *
+{% for field in fields %}
+     * @param {{ field['shortType'] }} {{ field['fieldName'] }}
+{% endfor %}
+     */
+    public function __construct({{ fields | parametersList }})
+    {
+{% for field in fields %}
+        $this->{{ field['fieldName'] }} = ${{ field['fieldName'] }};
+{% endfor %}
+    }
+}

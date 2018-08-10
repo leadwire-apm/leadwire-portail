@@ -1,0 +1,20 @@
+<div class="container">
+    <div class="row">
+        <div class="col-sm-5 col-sm-offset-4 center-form panel panel-danger" style="margin-top: 20%;border-radius: 7px">
+            <div class="brand-logo text-center" style="margin-top: 20px">
+                <img data-ng-src="{{ASSETS_BASE_URL}}images/logo-dark.png" height="30" alt="">
+            </div>
+
+            <div class="panel-body text-center mt20">
+                <button id="github-button" style="font-size: larger" class="btn btn-block btn-social btn-github"
+                        ng-click="ctrl.authenticate('github')">
+                    <spinner is-loading="ctrl.isChecking"></spinner>
+
+                    <i ng-if="!ctrl.isChecking" class="fa fa-github"></i> <span >Sign in with GitHub</span>
+                </button>
+
+            </div>
+        </div>
+    </div>
+</div>
+

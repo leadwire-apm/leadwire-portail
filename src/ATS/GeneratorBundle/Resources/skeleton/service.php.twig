@@ -1,0 +1,174 @@
+<?php declare(strict_types=1);
+
+namespace {{ namespace }}\Service;
+
+{% block use_statements %}
+use Psr\Log\LoggerInterface;
+use JMS\Serializer\SerializerInterface;
+use {{ namespace }}\Manager\{{ document }}Manager;
+use {{ namespace }}\Document\{{ document }};
+{% endblock use_statements %}
+
+/**
+ * Service class for {{ document }} entities
+ *
+ */
+{% block class_definition %}
+class {{ document }}Service
+{% endblock class_definition %}
+{
+{% block class_body %}
+    /**
+     * @var {{ document }}Manager
+     */
+    private ${{ document | lcfirst }}Manager;
+
+    /**
+     * @var SerializerInterface
+     */
+    private $serializer;
+
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    /**
+     * Constructor
+     *
+     * @param {{ document }}Manager ${{ document | lcfirst }}Manager
+     * @param SerializerInterface $serializer
+     * @param LoggerInterface $logger
+     */
+    public function __construct({{ document }}Manager ${{ document | lcfirst }}Manager, SerializerInterface $serializer, LoggerInterface $logger)
+    {
+        $this->{{ document | lcfirst }}Manager = ${{ document | lcfirst }}Manager;
+        $this->serializer = $serializer;
+        $this->logger = $logger;
+    }
+
+    /**
+     * List all {{ document | lcfirst }}s
+     *
+     * @return array
+     */
+    public function list{{ document }}s()
+    {
+        return $this->{{ document | lcfirst }}Manager->getAll();
+    }
+
+    /**
+     * Paginates through {{ document }}s
+     *
+     * @param int $pageNumber
+     * @param int $itemsPerPage
+     * @param array $criteria
+     *
+     * @return array
+     */
+    public function paginate($pageNumber = 1, $itemsPerPage = 20, array $criteria = [])
+    {
+        return $this->{{ document | lcfirst }}Manager->paginate($criteria, $pageNumber, $itemsPerPage);
+    }
+
+    /**
+     * Get a specific {{ document | lcfirst }}
+     *
+     * @param string $id
+     *
+     * @return {{ document }}
+     */
+    public function get{{ document }}($id)
+    {
+         return $this->{{ document | lcfirst }}Manager->getOneBy(['id' => $id]);
+    }
+
+    /**
+     * Get specific {{ document | lcfirst }}s
+     *
+     * @param string $criteria
+     *
+     * @return array
+     */
+    public function get{{ document }}s(array $criteria = [])
+    {
+         return $this->{{ document | lcfirst }}Manager->getBy($criteria);
+    }
+
+    /**
+     * Creates a new {{ document | lcfirst }} from JSON data
+     *
+     * @param string $json
+     *
+     * @return bool
+     */
+    public function new{{ document }}($json)
+    {
+        ${{document | lcfirst }} = $this
+                ->serializer
+                ->deserialize($json, {{ document }}::class, 'json');
+
+        return $this->update{{ document }}($json);
+    }
+
+    /**
+     * Updates a specific {{ document | lcfirst }} from JSON data
+     *
+     * @param string $json
+     *
+     * @return bool
+     */
+    public function update{{ document }}($json)
+    {
+        $isSuccessful = false;
+
+        try {
+            ${{ document | lcfirst }} = $this->serializer->deserialize($json, {{ document }}::class, 'json');
+            $this->{{ document | lcfirst }}Manager->update(${{ document | lcfirst }});
+            $isSuccessful = true;
+        } catch (\Exception $e) {
+            $this->logger->error($e->getMessage());
+            $isSuccessful = false;
+        }
+
+        return $isSuccessful;
+    }
+
+    /**
+     * Deletes a specific {{ document | lcfirst }} from JSON data
+     *
+     * @param string $id
+     *
+     * @return void
+     */
+    public function delete{{ document }}($id)
+    {
+         $this->{{ document | lcfirst }}Manager->deleteById($id);
+    }
+
+     /**
+      * Performs a full text search on  {{ document }}
+      *
+      * @param string $term
+      * @param string $lang
+      *
+      * @return array
+      */
+    public function textSearch($term, $lang)
+    {
+        return $this->{{ document | lcfirst }}Manager->textSearch($term, $lang);
+    }
+
+    /**
+     * Performs multi-field grouped query on {{ document }}
+     * @param array $searchCriteria
+     * @param string $groupField
+     * @param \Closure $groupValueProcessor
+     * @return array
+     */
+    public function getAndGroupBy(array $searchCriteria, $groupFields = [], $valueProcessors = [])
+    {
+        return $this->{{ document | lcfirst }}Manager->getAndGroupBy($searchCriteria, $groupFields, $valueProcessors);
+    }
+{% endblock class_body %}
+}

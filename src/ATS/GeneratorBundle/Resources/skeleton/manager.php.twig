@@ -1,0 +1,26 @@
+<?php declare(strict_types=1);
+
+namespace {{ namespace }}\Manager;
+
+{% block use_statements %}
+use ATS\CoreBundle\Manager\AbstractManager;
+use Doctrine\Bundle\MongoDBBundle\ManagerRegistry;
+use {{ namespace }}\Document\{{ document }};
+{% endblock use_statements %}
+
+/**
+ * Manager class for {{ document }} entities
+ *
+ * @see \ATS\CoreBundle\Manager\AbstractManager
+ */
+{% block class_definition %}
+class {{ document }}Manager extends AbstractManager
+{% endblock class_definition %}
+{
+{% block class_body %}
+    public function __construct(ManagerRegistry $managerRegistry, $managerName = null)
+    {
+        parent::__construct($managerRegistry, {{ document }}::class, $managerName);
+    }
+{% endblock class_body %}
+}

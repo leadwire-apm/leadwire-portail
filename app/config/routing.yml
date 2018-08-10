@@ -1,0 +1,55 @@
+ui:
+    resource: "@UIBundle/Controller/"
+    type:     annotation
+    prefix:   /
+
+app:
+    resource: "@AppBundle/Resources/config/routing.yml"
+    prefix:   "/"
+    host:     "%app_domain%"
+    schemes: "%app_schemes%"
+
+core:
+    resource: "@CoreBundle/Resources/config/routing.yml"
+    prefix:   "/"
+    host:     "%app_domain%"
+    schemes:  "%app_schemes%"
+
+email:
+    resource: "@EmailBundle/Resources/config/routing.yml"
+    prefix:   "/"
+    host:     "%app_domain%"
+    schemes:  "%app_schemes%"
+
+translation:
+    resource: "@TranslationBundle/Resources/config/routing.yml"
+    prefix:   "/"
+    host:     "%app_domain%"
+    schemes:  "%app_schemes%"
+
+user:
+    resource: "@UserBundle/Resources/config/routing.yml"
+    prefix:   "/"
+    host:     "%app_domain%"
+    schemes:  "%app_schemes%"
+
+admin:
+    resource: "@AdminBundle/Resources/config/routing.yml"
+    prefix:   "/"
+    host:     "%app_domain%"
+    schemes:  "%app_schemes%"
+
+app_routes:
+    resource: .
+    type: admin
+
+fos_js_routing:
+    resource: "@FOSJsRoutingBundle/Resources/config/routing/routing.xml"
+    host:     "%app_domain%"
+    schemes:  "%app_schemes%"
+
+fos_oauth_server_token:
+    resource: "@FOSOAuthServerBundle/Resources/config/routing/token.xml"
+
+fos_oauth_server_authorize:
+    resource: "@FOSOAuthServerBundle/Resources/config/routing/authorize.xml"

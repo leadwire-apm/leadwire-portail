@@ -1,0 +1,14 @@
+{
+  "name": "blueimp-bootstrap-image-gallery",
+  "homepage": "https://github.com/blueimp/Bootstrap-Image-Gallery",
+  "version": "3.1.5",
+  "_release": "3.1.5",
+  "_resolution": {
+    "type": "version",
+    "tag": "v3.1.5",
+    "commit": "db43c6fc24f280d2b2652cf7fc57e97a44667c50"
+  },
+  "_source": "https://github.com/blueimp/Bootstrap-Image-Gallery.git",
+  "_target": "~3.1.1",
+  "_originalSource": "blueimp-bootstrap-image-gallery"
+}

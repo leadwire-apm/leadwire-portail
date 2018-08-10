@@ -1,0 +1,36 @@
+<div class="brand">
+
+    <!-- logo -->
+    <a class="brand-logo" ui-sref="app.dashboard">
+        <img data-ng-src="{{ASSETS_BASE_URL}}images/logo.png" height="30" alt="">
+    </a>
+    <!-- /logo -->
+
+    <!-- toggle small sidebar menu -->
+    <a href="javascript:;" class="toggle-sidebar hidden-xs hamburger-icon v3"
+       data-ng-click="app.layout.isSmallSidebar = !app.layout.isSmallSidebar">
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+    </a>
+    <!-- /toggle small sidebar menu -->
+
+</div>
+<!-- main navigation -->
+<nav role="navigation" side-navigation>
+    <ul class="nav">
+        <li ng-repeat="menu in menus" ng-switch on="menu.children!=undefined" ui-sref-active="active">
+            <a ng-switch-when="true" ui-sref="menu.children[0].route">
+                <i class="{{menu.icon}}"></i>
+                <span>{{menu.label}}</span>
+            </a>
+            <a ng-switch-when="false" ui-sref="{{menu.route}}">
+                <i class="{{menu.icon}}"></i>
+                <span>{{menu.label}}</span>
+            </a>
+        </li>
+    </ul>
+</nav>
+<!-- main navigation -->
+<!-- /main navigation -->

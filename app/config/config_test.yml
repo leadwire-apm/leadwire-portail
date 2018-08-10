@@ -1,0 +1,76 @@
+imports:
+    - { resource: config.yml }
+    - { resource: services_dev.yml }
+
+framework:
+    router:
+        resource: '%kernel.root_dir%/config/routing_dev.yml'
+    test: ~
+    session:
+        storage_id: session.storage.mock_file
+    profiler:
+        collect: false
+
+web_profiler:
+    toolbar: false
+    intercept_redirects: false
+
+swiftmailer:
+    disable_delivery: true
+
+security:
+    firewalls:
+        dev:
+            pattern: ^/
+            security: false
+
+doctrine_mongodb:
+    auto_generate_hydrator_classes: true
+    default_database: 'ATSBoilerPlateTestDB'
+    default_connection: default
+    default_document_manager: default
+    connections:
+        default:
+            server: 'mongodb://mongo:27017'
+            options:
+                username: '%database_user%'
+                password: '%database_pass%'
+                connect: true
+                db: 'ATSBoilerPlateTestDB'
+    document_managers:
+        default:
+            connection: default
+            database: 'ATSBoilerPlateTestDB'
+            auto_mapping: true
+            logging: false
+
+# Making services public as per https://github.com/symfony/symfony/issues/24543
+services:
+    test_alias.Symfony\Component\Security\Core\Encoder\EncoderFactory:
+        alias: "Symfony\\Component\\Security\\Core\\Encoder\\EncoderFactoryInterface"
+        public: true
+    test_alias.Doctrine\Common\Annotations\CachedReader:
+        alias: "Doctrine\\Common\\Annotations\\Reader"
+        public: true
+    test_alias.FOS\OAuthServerBundle\Model\ClientManagerInterface:
+        alias: fos_oauth_server.client_manager.default
+        public: true
+    test_alias.FOS\OAuthServerBundle\Model\AccessTokenManagerInterface:
+        alias: fos_oauth_server.access_token_manager.default
+        public: true
+
+    test_alias.annotation.reader:
+        alias: "annotations.reader"
+        public: true
+
+    Doctrine\Bundle\MongoDBBundle\Command\GenerateRepositoriesDoctrineODMCommand:
+        tags:
+            - { name: 'console.command', command: 'doctrine:mongodb:generate:repositories' }
+
+    Symfony\Bundle\AsseticBundle\Command\DumpCommand:
+        tags:
+            - { name: 'console.command', command: 'assetic:dump' }
+
+    Symfony\Bundle\AsseticBundle\Command\WatchCommand:
+        tags:
+            - { name: 'console.command', command: 'assetic:watch' }

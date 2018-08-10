@@ -1,0 +1,13 @@
+{
+  "name": "checkbo",
+  "homepage": "https://github.com/elmahdim/checkbo",
+  "_release": "cf425c945a",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "cf425c945a849dd2c66c7375a6c11f12259b588b"
+  },
+  "_source": "https://github.com/elmahdim/checkbo.git",
+  "_target": "*",
+  "_originalSource": "checkbo"
+}

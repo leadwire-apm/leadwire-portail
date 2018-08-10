@@ -1,0 +1,17 @@
+# This file is a "template" of what your application.yml file should look like
+parameters:
+    app_domain:     somedomainename.com
+    app_schemes:    http
+    app_locale:     fr
+
+    public_api_prefix: public-api
+    internal_api_prefix: api
+    # A secret key that's used to generate certain security-related tokens: http://nux.net/secret
+    secret:         ThisTokenIsNotSoSecretChangeIt
+
+    app_version:    1.0.0
+    app_id:         SOMEAPPIDENTIFIER
+    app_title: Symfony BoilerPlate
+    app_description: Symfony on steroids
+
+    acl_rules: []

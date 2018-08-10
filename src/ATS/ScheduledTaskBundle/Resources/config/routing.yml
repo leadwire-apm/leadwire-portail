@@ -1,0 +1,7 @@
+
+scheduledtask_rest_task:
+    resource: "@ScheduledTaskBundle/Controller/Rest/TaskController.php"
+    type: "rest"
+    prefix: "/%internal_api_prefix%/task"
+    options:
+        expose: true

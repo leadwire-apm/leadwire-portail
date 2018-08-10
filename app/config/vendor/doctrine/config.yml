@@ -1,0 +1,15 @@
+# Doctrine Configuration
+doctrine_mongodb:
+    default_database: "%database_name%"
+    default_connection: "default"
+    default_document_manager: "default"
+    auto_generate_hydrator_classes: true
+    connections:
+        default:
+            server: mongodb://%database_host%:%database_port%
+            options: {}
+    document_managers:
+        default:
+            connection: "default"
+            auto_mapping: true
+            logging: false
