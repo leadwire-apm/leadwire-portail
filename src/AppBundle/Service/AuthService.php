@@ -56,7 +56,6 @@ class AuthService
             return $data;
         } catch (GuzzleException $e) {
             sd($e->getMessage());
-
         } catch (\Exception $e) {
             sd($e->getMessage());
         }
