@@ -74,7 +74,6 @@ function LoginController(
     }
 
     function initController() {
-        // reset login status
         if ($auth.isAuthenticated()) {
             $location.path('/');
         }

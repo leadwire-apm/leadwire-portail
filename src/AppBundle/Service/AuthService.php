@@ -90,7 +90,6 @@ class AuthService
     protected function checkAndAdd(array $userData)
     {
         try {
-            file_put_contents(__DIR__ . "/file.log", print_r($userData, true));
             $dbUser = $this->userManager->getOneBy(['username' => $userData['login']]);
 
             if (!$dbUser) {

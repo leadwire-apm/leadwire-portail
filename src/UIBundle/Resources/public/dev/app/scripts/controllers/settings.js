@@ -6,25 +6,26 @@ angular.module('leadwireApp').
 
 function SettingsModalCtrl(
     $localStorage, Account, $location, isModal, $modalInstance, FileService,
-    toastr, CONFIG, $rootScope) {
+    toastr, CONFIG, $rootScope, $scope) {
     var vm = this;
     let _ctrl = new UserCtrl(Account, $location, $localStorage, vm,
-        $modalInstance, FileService, toastr);
+        $modalInstance, FileService, toastr, $rootScope, $scope);
     this.save = _ctrl.save;
 }
 
 function SettingsCtrl(
-    $localStorage, Account, $location, FileService, toastr) {
+    $localStorage, Account, $location, FileService, toastr, $rootScope,
+    $scope) {
 
     var vm = this;
     let _ctrl = new UserCtrl(Account, $location, $localStorage, vm,
-        false, FileService, toastr);
+        false, FileService, toastr, $rootScope, $scope);
     this.save = _ctrl.save;
 }
 
 function UserCtrl(
     Account, $location, $localStorage, Controller, $modalInstance, FileService,
-    toastr) {
+    toastr, $rootScope, $scope) {
 
     Controller.user = $localStorage.user ?
         $localStorage.user :
@@ -53,7 +54,8 @@ function UserCtrl(
                                 $localStorage.user = angular.extend(
                                     $localStorage.user,
                                     {avatar: response.data.name});
-                                Controller.handleSuccessForm();
+                                Controller.handleSuccessForm(
+                                    response.data.name);
                             });
 
                     } else {
@@ -72,12 +74,15 @@ function UserCtrl(
         }
     };
 
-    Controller.handleSuccessForm = function handleSuccess() {
+    Controller.handleSuccessForm = function handleSuccess(newImage) {
         $localStorage.user = Controller.user;
         toastr.success('User has been updated successfully');
         if ($modalInstance !== false) {
             $modalInstance.close();
         } else {
+            if (newImage) {
+                $scope.$emit('update-image', newImage);
+            }
             $location.path('/');
         }
     };

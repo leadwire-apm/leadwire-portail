@@ -54,14 +54,14 @@
 
                         <div class="form-group">
                             <label class="col-sm-2 control-label">Avatar</label>
-                            <div class="col-sm-4">
+                            <div class="col-sm-6">
                                 <input type="file" file-model="ctrl.avatar">
                             </div>
                             <div class="col-sm-2">
-                                <img data-ng-src="{{ctrl.user.avatar.indexOf('http')==-1 ? DOWNLOAD_URL+ctrl.user.avatar.replace('.','-') : ctrl.user.avatar}}"
-                                     width="50" height="50"
-                                     class="header-avatar img-circle ml10" alt="{{ctrl.user.name}}" title="{{ctrl.user.name}}">
-                            </div>
+                                <img
+                                     http-src="{{ctrl.user.avatar}}"
+                                     class="m-r--30 pull-right" width="50" height="50" alt="{{ctrl.user.name}}"
+                                     title="{{ctrl.user.name}}"></div>
                         </div>
                     </div>
 

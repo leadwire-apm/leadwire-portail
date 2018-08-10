@@ -10,12 +10,10 @@ angular.module('leadwireApp').run(function($rootScope, MenuFactory) {
     '$http',
     '$localStorage',
     'ApplicationService',
-    'CONFIG',
     'MESSAGES_CONSTANTS',
     'toastr',
     function AppCtrl(
         $scope, $rootScope, $auth, $location, $http, $localStorage, AppService,
-        CONFIG,
         MESSAGES_CONSTANTS,
         toastr) {
 
@@ -44,14 +42,16 @@ angular.module('leadwireApp').run(function($rootScope, MenuFactory) {
             isConfigOpen: false,
         };
 
-        $scope.user = $localStorage.user;
+        $rootScope.user = $localStorage.user;
         $scope.applications = $localStorage.applications;
         //$localStorage.selectedApp =
 
-        $scope.DOWNLOAD_URL = CONFIG.DOWNLOAD_URL;
-
         $scope.$on('user:updated', function(event, data) {
-            $scope.user = data;
+            $rootScope.user = data;
+        });
+        $scope.$on('update-image', function(event, data) {
+            console.log('sasasa', data);
+            $scope.$broadcast('reload-src', data);
         });
 
         if (angular.isDefined($localStorage.layout)) {

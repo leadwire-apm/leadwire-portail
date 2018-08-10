@@ -1,21 +1,37 @@
-angular.module('leadwireApp')
-.directive('httpSrc', [
-    '$http', function ($http) {
+angular.module('leadwireApp').directive('httpSrc', [
+    '$http', '$rootScope', function($http, $rootScope) {
         var directive = {
             link: link,
-            restrict: 'A'
+            restrict: 'A',
         };
+
         return directive;
 
         function link(scope, element, attrs) {
-            var requestConfig = {
-                method: 'Get',
-                url: attrs.httpSrc,
-                responseType: 'arraybuffer',
-                cache: 'true'
-            };
-            $http(requestConfig)
-                .then(function(response) {
+
+            if (attrs.httpSrc.indexOf('http') !== -1) {
+                attrs.$set('src', attrs.httpSrc);
+            } else {
+                loadImageFromServer(attrs.httpSrc);
+            }
+
+            //on change url
+            scope.$on("reload-src", function (event, newImageName) {
+                loadImageFromServer(newImageName);
+            });
+
+
+
+            function loadImageFromServer(src) {
+                var url = $rootScope.DOWNLOAD_URL +
+                    src.replace('.', '-');
+                var requestConfig = {
+                    method: 'Get',
+                    url: url,
+                    responseType: 'arraybuffer',
+                    cache: 'true',
+                };
+                $http(requestConfig).then(function(response) {
                     var arr = new Uint8Array(response.data);
 
                     var raw = '';
@@ -27,9 +43,12 @@ angular.module('leadwireApp')
 
                     var b64 = btoa(raw);
 
-                    attrs.$set('src', "data:image/jpeg;base64," + b64);
+                    attrs.$set('src', 'data:image/jpeg;base64,' + b64);
                 });
+            }
+
+
         }
 
-    }
+    },
 ]);

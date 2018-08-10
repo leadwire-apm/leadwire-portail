@@ -97,10 +97,7 @@
 
     <li class="dropdown" dropdown>
         <a href="javascript:;" class="dropdown-toggle" dropdown-toggle>
-
-            <img ng-if="user.avatar.indexOf('http')!==-1" src="{{user.avatar}}" class="header-avatar img-circle ml10"
-                 alt="{{user.name}}" title="{{user.name}}"/>
-            <img ng-if="user.avatar.indexOf('http')==-1" http-src="{{DOWNLOAD_URL + user.avatar.replace('.','-')}}"
+            <img http-src="{{user.avatar}}"
                  class="header-avatar img-circle ml10" alt="{{user.name}}" title="{{user.name}}">
             <span class="pull-left">
         {{user.fname}}

@@ -1,7 +1,9 @@
 ## install
 
 1. npm install
-3. grunt build
+2. CHANGE YOUR CONFIG IN : src/UIBundle/Resources/public/dev/app/scripts/app.js
+3. UNCOMMENT verbatime tags in : src/UIBundle/Resources/public/dev/app/index.html
+4. grunt build
 5. assets:install --symlink
 
 
