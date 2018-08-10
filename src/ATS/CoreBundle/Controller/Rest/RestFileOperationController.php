@@ -85,6 +85,7 @@ class RestFileOperationController extends BaseRestController
      */
     public function secureAction(Request $request, $resourceName)
     {
+        $resourceName = str_replace('-', '.', $resourceName);
         $downloadsRoot = $this->container->getParameter('uploads_dir');
         $filePath = "$downloadsRoot/$resourceName";
 

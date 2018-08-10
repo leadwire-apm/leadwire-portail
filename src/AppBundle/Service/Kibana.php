@@ -47,7 +47,6 @@ class Kibana
             return true;
         } catch (GuzzleException $e) {
             $this->logger->error($e->getMessage());
-            sd($e->getMessage());
             return false;
         }
     }
