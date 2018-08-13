@@ -14,6 +14,7 @@ angular.module('leadwireApp').
  * @param ApplicationFactory
  * @param $location
  * @param $localStorage
+ * @param $scope
  * @param $rootScope
  * @param toastr
  * @param MESSAGES_CONSTANTS
@@ -22,6 +23,7 @@ function addApplicationCtrlFN(
     $sce,
     ConfigService,
     ApplicationFactory,
+    ApplicationTypeFactory,
     $location,
     $localStorage,
     $scope,
@@ -30,28 +32,38 @@ function addApplicationCtrlFN(
     MESSAGES_CONSTANTS,
 ) {
     var vm = this;
-    vm.ui = {
-        isSaving: false,
-    };
-    $rootScope.currentNav = 'settings';
+    init();
+
     vm.saveApp = function() {
-        vm.flipActivityIndicator();
-        ApplicationFactory.save(vm.application).then(function(res) {
-            $scope.$emit('new-application', vm.application);
-            vm.flipActivityIndicator();
-            toastr.success(MESSAGES_CONSTANTS.ADD_APP_SUCCESS);
-            $location.path('/');
-        }).catch(function(error) {
-            toastr.error(
-                error.message || MESSAGES_CONSTANTS.ADD_APP_FAILURE ||
-                MESSAGES_CONSTANTS.ERROR);
-            vm.flipActivityIndicator();
-        });
+        console.log(vm.application);
+        // vm.flipActivityIndicator();
+        // ApplicationFactory.save(vm.application).then(function(res) {
+        //     $scope.$emit('new-application', vm.application);
+        //     vm.flipActivityIndicator();
+        //     toastr.success(MESSAGES_CONSTANTS.ADD_APP_SUCCESS);
+        //     $location.path('/');
+        // }).catch(function(error) {
+        //     toastr.error(
+        //         error.message || MESSAGES_CONSTANTS.ADD_APP_FAILURE ||
+        //         MESSAGES_CONSTANTS.ERROR);
+        //     vm.flipActivityIndicator();
+        // });
     };
 
     vm.flipActivityIndicator = function() {
         vm.ui.isSaving = !vm.ui.isSaving;
     };
+
+    function init() {
+        vm.ui = {
+            isSaving: false,
+        };
+
+        ApplicationTypeFactory.findAll().then(function(response) {
+            vm.applicationTypes = response.data;
+        });
+
+    }
 
 }
 
@@ -200,6 +212,7 @@ function applicationEditCtrlFN(
     $rootScope.currentNav = 'settings';
     vm.ui = {
         isSaving: false,
+        isEditing: true,
     };
 
     ApplicationFactory.get($stateParams.id).then(function(res) {
