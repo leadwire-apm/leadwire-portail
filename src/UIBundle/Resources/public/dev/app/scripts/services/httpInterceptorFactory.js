@@ -10,7 +10,6 @@ angular.module('leadwireApp').
                     return config;
                 },
                 responseError: function(response) {
-                    // console.log('Error From the interceptor: ', response);
                     console.log('status: ', response.status);
                     if (response.status === 401) {
                         delete $localStorage.user;

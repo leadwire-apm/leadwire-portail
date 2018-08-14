@@ -85,11 +85,11 @@ angular.module('leadwireApp').constant('Menus', {
             icon: 'fa fa-user',
             label: 'Profile',
         },
-        // {
-        //     route: 'app.applicationsList',
-        //     icon: 'fa fa-desktop',
-        //     label: 'Applications',
-        // },
+        {
+            route: 'app.applicationsList',
+            icon: 'fa fa-desktop',
+            label: 'Applications',
+        },
 
     ],
 });

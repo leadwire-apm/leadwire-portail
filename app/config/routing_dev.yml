@@ -15,7 +15,7 @@ _main:
 
 #    /%internal_api_prefix%/doc/{area}
 app.swagger_ui:
-    path: /%internal_api_prefix%/doc/{area}
+    path: /doc/{area}
     methods: GET
     defaults: { _controller: nelmio_api_doc.controller.swagger_ui, area: default }
 
