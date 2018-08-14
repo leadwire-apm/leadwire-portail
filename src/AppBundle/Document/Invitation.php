@@ -31,7 +31,7 @@ class Invitation
      * @ODM\ReferenceOne(targetDocument="AppBundle\Document\App", name="app", cascade={"persist"}, inversedBy="invitations")
      * @JMS\Type("AppBundle\Document\App")
      * @JMS\Expose
-     * @JMS\Groups({"Default"})
+     * @JMS\Groups({"Default", "full"})
      */
     private $app;
 

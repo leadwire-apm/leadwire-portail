@@ -64,7 +64,7 @@ class User extends \ATS\UserBundle\Document\User
     /**
      * @var string
      * @JMS\Expose
-     * @JMS\Groups({"full"})
+     * @JMS\Groups({"full", "Default"})
      * @JMS\Type("string")
      * @ODM\Field(type="string")
      */
@@ -132,7 +132,7 @@ class User extends \ATS\UserBundle\Document\User
      * @ODM\ReferenceMany(targetDocument="Invitation", mappedBy="user")
      * @JMS\Type("array<AppBundle\Document\Invitation>")
      * @JMS\Expose
-     * @JMS\Groups({"full"})
+     * @JMS\Groups({"full", "Default"})
      */
     public $invitations;
 

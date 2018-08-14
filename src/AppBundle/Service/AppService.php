@@ -160,7 +160,8 @@ class AppService
         $app->setOwner($user);
         $uuid1 = Uuid::uuid1();
         $app->setUuid($uuid1->toString());
-        $ap = $this->apService->getApplicationType($app->getType()->getId());
+        $applicationTypeId = $app->getType()->getId();
+        $ap = $this->apService->getApplicationType($applicationTypeId);
         $app->setType($ap);
         $this->appManager->update($app);
         if ($this->ldapService->createLdapAppEntry($user->getUuid(), $app->getName()) &&

@@ -114,7 +114,7 @@ class App
      * @ODM\ReferenceOne(targetDocument="AppBundle\Document\User", name="owner", cascade={"persist"}, inversedBy="myApps")
      * @JMS\Type("AppBundle\Document\User")
      * @JMS\Expose
-     * @JMS\Groups({"full"})
+     * @JMS\Groups({"full", "Default"})
      */
     private $owner;
 
@@ -122,10 +122,10 @@ class App
     /**
      * @var ApplicationType
      *
-     * @ODM\ReferenceOne(targetDocument="AppBundle\Document\ApplicationType", name="type", cascade={"persist"}, mappedBy="apps")
+     * @ODM\ReferenceOne(targetDocument="AppBundle\Document\ApplicationType", name="type", cascade={"persist"})
      * @JMS\Type("AppBundle\Document\ApplicationType")
      * @JMS\Expose
-     * @JMS\Groups({"Default", "full"})
+     * @JMS\Groups({"full", "Default"})
      */
     private $type;
 
@@ -136,12 +136,7 @@ class App
      * @JMS\Groups({"full"})
      */
     public $invitations;
-
-    /**
-     * @JMS\Type("array")
-     * @JMS\Expose
-     * @JMS\Groups({"full", "Default"})
-     */
+    
     public $dashboards;
 
     /**

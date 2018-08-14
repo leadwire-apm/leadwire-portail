@@ -48,8 +48,7 @@ class AppController extends BaseRestController
      */
     public function getDashboardsAction(Request $request, AppService $appService, ElasticSearch $elastic, $id)
     {
-        $dashboards = $elastic->getDashboads($appService->getApp($id));
-        return $this->json($dashboards);
+        return $this->json($elastic->getDashboads($appService->getApp($id)));
     }
 
     /**
