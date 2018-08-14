@@ -81,6 +81,7 @@ class User extends \ATS\UserBundle\Document\User
      *
      * @ODM\Field(type="string", name="contact")
      * @JMS\Type("string")
+     * @JMS\Expose
      * @JMS\Groups({"full"})
      */
     private $contact;

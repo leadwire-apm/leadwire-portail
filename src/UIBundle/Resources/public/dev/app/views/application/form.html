@@ -1,6 +1,7 @@
 <div class="form-group">
     <label class="col-sm-2 control-label">Name</label>
     <div class="col-sm-10">
+
         <input name="name" placeholder="Application name" type="text" class="form-control"
                data-ng-model="ctrl.application.name"
                ng-maxlength="32"
@@ -8,7 +9,8 @@
                lowercase-only
                required>
         <span class="text-red" ng-show="applicationForm.name.$error.blacklist">
-      The word {{ctrl.application.name}} is blacklisted</span>
+            The word {{ctrl.blackWord}} is blacklisted
+        </span>
         <span class="text-red" ng-show="applicationForm.name.$error.required">This field is required</span>
         <span class="text-red" ng-show="applicationForm.name.$error.maxlength">The text entered exceeds the maximum length</span>
     </div>
@@ -17,10 +19,11 @@
 <div class="form-group">
     <label class="col-sm-2 control-label" for="type">Type</label>
     <div class="col-sm-10">
-        <select name="type" id="type" class="form-control" data-ng-model="ctrl.application.type.id">
+        <select name="type" id="type" class="form-control" data-ng-model="ctrl.application.type.id" required>
             <option value="">Select a type</option>
             <option ng-repeat="type in ctrl.applicationTypes" value="{{type.id}}">{{type.name}}</option>
         </select>
+        <span class="text-red" ng-show="applicationForm.type.$error.required">This field is required</span>
     </div>
 </div>
 
@@ -35,7 +38,10 @@
 <div class="form-group" ng-if="!ctrl.ui.isEditing">
     <label class="col-sm-2 control-label">Email</label>
     <div class="col-sm-10">
-        <input type="email" class="form-control" data-ng-model="ctrl.application.email"
+        <input type="email" name="email" class="form-control" data-ng-model="ctrl.application.email"
                placeholder="Email" required>
+        <span class="text-red" ng-show="applicationForm.email.$error.required">This field is required</span>
+        <span class="text-red" ng-show="applicationForm.email.$error.email">This field should be a valid email</span>
+
     </div>
 </div>

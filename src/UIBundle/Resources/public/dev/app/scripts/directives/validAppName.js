@@ -3,15 +3,19 @@ angular.module('leadwireApp').directive('blacklist', function() {
         require: 'ngModel',
         link: function(scope, elem, attr, ngModel) {
             var blacklist = attr.blacklist.split(',');
-            console.log(blacklist);
             //For DOM -> model validation
             ngModel.$parsers.unshift(function(value) {
                 var valid = true;
                 blacklist.forEach(function(blackWord) {
-                    if (value.indexOf(blackWord) !== -1)
+                    if (value.indexOf(blackWord) !== -1) {
                         valid = false;
+                        scope.$parent.ctrl.blackWord = blackWord;
+                    }
                 });
                 ngModel.$setValidity('blacklist', valid);
+                if (valid)
+                    scope.$parent.ctrl.blackWord = undefined;
+
                 return valid ? value : undefined;
             });
 
@@ -20,11 +24,15 @@ angular.module('leadwireApp').directive('blacklist', function() {
                 var valid = true;
                 if (value) {
                     blacklist.forEach(function(blackWord) {
-                        if (value.indexOf(blackWord) !== -1)
+                        if (value.indexOf(blackWord) !== -1) {
                             valid = false;
+                            scope.$parent.ctrl.blackWord = blackWord;
+                        }
                     });
                 }
                 ngModel.$setValidity('blacklist', valid);
+                if (valid)
+                    scope.$parent.ctrl.blackWord = undefined;
                 return value;
             });
         },

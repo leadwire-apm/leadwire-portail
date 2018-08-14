@@ -81,14 +81,14 @@ angular.module('leadwireApp').config([
                             name: 'sbAdminApp',
                             files: [
                                 CONFIG.ASSETS_BASE_URL +
-                                'scripts/controllers/settings.js'],
+                                'scripts/controllers/profile.js'],
                         });
                     }],
             },
             data: {
                 title: 'Settings',
             },
-            controller: 'settingsCtrl',
+            controller: 'profileCtrl',
             controllerAs: 'ctrl',
         }).state('app.applicationsAdd', {
             url: '/applications/add',

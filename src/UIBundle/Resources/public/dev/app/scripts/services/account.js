@@ -23,6 +23,14 @@ angular.module('leadwireApp').factory('Account', function($http, CONFIG) {
                     $localStorage.user === null) {
                     Account.getProfile().then(function(response) {
                         var userInfo = response.data;
+                        var sep = '###';
+                        var contactInfos = response.data.contact ?
+                            response.data.contact.split(sep) :
+                            [];
+                        if (contactInfos.length) {
+                            userInfo.contactPrefix = contactInfos[0];
+                            userInfo.contact = contactInfos[1];
+                        }
                         userInfo.fname = response.data.login;
                         if (angular.isDefined(response.data.displayName) &&
                             response.data.displayName !== null) {

@@ -42,7 +42,7 @@
 
     <li class="dropdown" dropdown>
 
-        <a href="javascript:;" class="dropdown-toggle isDisabled" > <!--dropdown-toggle-->
+        <a href="javascript:;" class="dropdown-toggle isDisabled"> <!--dropdown-toggle-->
             <i class="fa fa-bell-o"></i>
             <div class="status bg-danger border-danger animated bounce"></div>
         </a>
@@ -55,7 +55,9 @@
                     <li>
                         <a href="javascript:;">
               <span class="pull-left mt2 mr15">
-                <img data-ng-src="{{ASSETS_BASE_URL}}images/avatar.jpg" class="avatar avatar-xs img-circle" alt="">
+                  <span class="img-circle">
+                <img data-ng-src="{{ASSETS_BASE_URL}}images/avatar.jpg" class="avatar avatar-xs" alt="">
+                      </span>
               </span>
                             <div class="overflow-hidden">
                                 <span>Sean launched a new application</span>
@@ -98,8 +100,10 @@
 
     <li class="dropdown" dropdown>
         <a href="javascript:;" class="dropdown-toggle" dropdown-toggle>
-            <img http-src="{{user.avatar}}"
-                 class="header-avatar img-circle ml10" alt="{{user.name}}" title="{{user.name}}">
+            <span class="img-circle ml10">
+                <img http-src="{{user.avatar}}"
+                     class="header-avatar " alt="{{user.name}}" title="{{user.name}}">
+            </span>
             <span class="pull-left">
         {{user.fname}}
       </span>
@@ -128,11 +132,11 @@
     </li>
 
     <!--<li>-->
-        <!--<a href="javascript:;" class="hamburger-icon v2" data-ng-click="app.layout.isChatOpen = !app.layout.isChatOpen">-->
-            <!--<span></span>-->
-            <!--<span></span>-->
-            <!--<span></span>-->
-        <!--</a>-->
+    <!--<a href="javascript:;" class="hamburger-icon v2" data-ng-click="app.layout.isChatOpen = !app.layout.isChatOpen">-->
+    <!--<span></span>-->
+    <!--<span></span>-->
+    <!--<span></span>-->
+    <!--</a>-->
     <!--</li>-->
 </ul>
 <style>

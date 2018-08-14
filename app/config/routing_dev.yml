@@ -13,6 +13,7 @@ _errors:
 _main:
     resource: routing.yml
 
+#    /%internal_api_prefix%/doc/{area}
 app.swagger_ui:
     path: /%internal_api_prefix%/doc/{area}
     methods: GET

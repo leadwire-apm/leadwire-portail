@@ -51,8 +51,7 @@
     "angular-sanitize": "*",
     "angular-touch": "*",
     "ocLazyLoad": "*",
-    "fastclick": "*",
-    "ng-intl-tel-input": "^2.0.0"
+    "fastclick": "*"
   },
   "appPath": "app",
   "moduleName": "leadwireApp",

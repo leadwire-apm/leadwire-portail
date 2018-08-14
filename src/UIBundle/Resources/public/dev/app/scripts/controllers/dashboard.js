@@ -13,13 +13,13 @@ function dashboardCtrl(
         $ocLazyLoad.load({
             name: 'sbAdminApp',
             files: [
-                $rootScope.ASSETS_BASE_URL + 'scripts/controllers/settings.js'],
+                $rootScope.ASSETS_BASE_URL + 'scripts/controllers/profile.js'],
         }).then(function() {
             $modal.open({
                 //ariaLabelledBy: 'modal-title',
                 //ariaDescribedBy: 'modal-body',
                 templateUrl: $rootScope.ASSETS_BASE_URL + 'views/profile.html',
-                controller: 'SettingsModalCtrl',
+                controller: 'profileModalCtrl',
                 controllerAs: 'ctrl',
                 resolve: {
                     isModal: function() {
@@ -31,7 +31,6 @@ function dashboardCtrl(
     }
 
     $scope.$on('add-application', function(event, newApp) {
-        console.log("sassa")
         if ($localStorage.application === undefined) {
             $localStorage.applications = [];
         }

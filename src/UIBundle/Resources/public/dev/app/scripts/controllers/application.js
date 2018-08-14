@@ -12,6 +12,8 @@ angular.module('leadwireApp').
  * @param $sce
  * @param ConfigService
  * @param ApplicationFactory
+ * @param ApplicationTypeFactory
+ * @param CountryApi
  * @param $location
  * @param $localStorage
  * @param $scope
@@ -24,6 +26,7 @@ function addApplicationCtrlFN(
     ConfigService,
     ApplicationFactory,
     ApplicationTypeFactory,
+    CountryApi,
     $location,
     $localStorage,
     $scope,
@@ -62,6 +65,7 @@ function addApplicationCtrlFN(
         ApplicationTypeFactory.findAll().then(function(response) {
             vm.applicationTypes = response.data;
         });
+
 
     }
 
