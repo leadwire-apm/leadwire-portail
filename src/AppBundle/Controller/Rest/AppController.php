@@ -3,10 +3,12 @@
 namespace AppBundle\Controller\Rest;
 
 use AppBundle\Service\AuthService;
+use AppBundle\Service\ElasticSearch;
 use AppBundle\Service\LdapService;
 use AppBundle\Service\UserService;
 use ATS\CoreBundle\Controller\Rest\BaseRestController;
 use FOS\RestBundle\Controller\Annotations\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
@@ -30,9 +32,24 @@ class AppController extends BaseRestController
     public function getAppAction(Request $request, AppService $appService, $id)
     {
         $data = $appService->getApp($id);
-        //$this->denyAccessUnlessGranted(AclVoter::VIEW, $data);
+        $this->denyAccessUnlessGranted(AclVoter::VIEW, $data);
 
-        return $this->prepareJsonResponse($data);
+        return $this->prepareJsonResponse($data, 200, "Default");
+    }
+
+    /**
+     * @Route("/{id}/dashboards", methods="GET")
+     *
+     * @param Request $request
+     * @param AppService $appService
+     * @param string  $id
+     *
+     * @return Response
+     */
+    public function getDashboardsAction(Request $request, AppService $appService, ElasticSearch $elastic, $id)
+    {
+        $dashboards = $elastic->getDashboads($appService->getApp($id));
+        return $this->json($dashboards);
     }
 
     /**
@@ -111,7 +128,7 @@ class AppController extends BaseRestController
         $data = $request->getContent();
         $successful = $appService->newApp($data, $this->getUser());
 
-        return $this->prepareJsonResponse($successful!=null ? $successful : false);
+        return $this->prepareJsonResponse($successful != null ? $successful : false);
     }
 
     /**
@@ -148,28 +165,28 @@ class AppController extends BaseRestController
         return $this->prepareJsonResponse([]);
     }
 
-    /**
-     * @Route("/{lang}/{term}/search", methods="GET", defaults={"lang" = "en"})
-     *
-     * @param Request $request
-     * @param AppService $appService
-     * @param string $term
-     * @param string $lang
-     *
-     * @return Response
-     */
-    public function searchAppAction(Request $request, AppService $appService, $term, $lang)
-    {
-        $this->denyAccessUnlessGranted(AclVoter::SEARCH, App::class);
-
-        try {
-            $result = $todoService->textSearch($term, $lang);
-        } catch (\MongoException $e) {
-            throw new BadRequestHttpException("Entity " . App::class . " is not searchable. ");
-        }
-
-        return $this->prepareJsonResponse($appService->textSearch($term, $lang));
-    }
+//    /**
+//     * @Route("/{lang}/{term}/search", methods="GET", defaults={"lang" = "en"})
+//     *
+//     * @param Request $request
+//     * @param AppService $appService
+//     * @param string $term
+//     * @param string $lang
+//     *
+//     * @return Response
+//     */
+//    public function searchAppAction(Request $request, AppService $appService, $term, $lang)
+//    {
+//        $this->denyAccessUnlessGranted(AclVoter::SEARCH, App::class);
+//
+//        try {
+//            $result = $todoService->textSearch($term, $lang);
+//        } catch (\MongoException $e) {
+//            throw new BadRequestHttpException("Entity " . App::class . " is not searchable. ");
+//        }
+//
+//        return $this->prepareJsonResponse($appService->textSearch($term, $lang));
+//    }
 
     /**
      * @Route("/csv-export", methods="POST")

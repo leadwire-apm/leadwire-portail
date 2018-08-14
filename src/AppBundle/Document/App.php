@@ -138,6 +138,13 @@ class App
     public $invitations;
 
     /**
+     * @JMS\Type("array")
+     * @JMS\Expose
+     * @JMS\Groups({"full", "Default"})
+     */
+    public $dashboards;
+
+    /**
      * Constructor
      */
     public function __construct()
