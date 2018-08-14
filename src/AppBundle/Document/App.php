@@ -88,16 +88,8 @@ class App
      * @JMS\Type("boolean")
      * @ODM\Field(type="boolean", name="isEnabled")
      */
-    private $isEnabled = false;
+    private $isEnabled;
 
-    /**
-     * @var boolean
-     * @JMS\Groups({"Default"})
-     * @JMS\Expose
-     * @JMS\Type("boolean")
-     * @ODM\Field(type="boolean", name="isDefault")
-     */
-    private $isDefault = false;
 
     /**
      * @var boolean
@@ -106,7 +98,7 @@ class App
      * @JMS\Type("boolean")
      * @ODM\Field(type="boolean", name="isRemoved")
      */
-    private $isRemoved = false;
+    private $isRemoved;
 
     /**
      * @var User
@@ -136,7 +128,8 @@ class App
      * @JMS\Groups({"full"})
      */
     public $invitations;
-    
+
+
     public $dashboards;
 
     /**
@@ -338,32 +331,6 @@ class App
     {
         return $this->isEnabled;
     }
-
-    /**
-     * Get isDefault
-     * @return boolean
-     */
-    public function getIsDefault()
-    {
-        return $this->isDefault;
-    }
-
-    /**
-     * Set type
-     * @param boolean $isDefault
-     * @return $this
-     */
-    public function setIsDefault(bool $isDefault)
-    {
-        $this->isDefault = $isDefault;
-        return $this;
-    }
-
-    public function isDefault()
-    {
-        return $this->isDefault;
-    }
-
 
     /**
      * Get isRemoved

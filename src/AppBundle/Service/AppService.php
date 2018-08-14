@@ -157,9 +157,14 @@ class AppService
             ->serializer
             ->deserialize($json, App::class, 'json', $context);
 
-        $app->setOwner($user);
         $uuid1 = Uuid::uuid1();
-        $app->setUuid($uuid1->toString());
+        $app
+            ->setOwner($user)
+            ->setIsEnabled(false)
+            ->setUuid($uuid1->toString())
+            ->setIsRemoved(false)
+        ;
+
         $applicationTypeId = $app->getType()->getId();
         $ap = $this->apService->getApplicationType($applicationTypeId);
         $app->setType($ap);
