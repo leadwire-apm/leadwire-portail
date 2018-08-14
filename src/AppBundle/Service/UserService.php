@@ -149,17 +149,12 @@ class UserService
         $isSuccessful = false;
 
         try {
-            $tmpUser = json_decode($json, true);
-            $user = $this->getUser($id);
-            foreach ($tmpUser as $field => $value) {
-                $fn = 'set' . ucfirst($field);
-                if (method_exists($user, $fn)) {
-                    $user->{$fn}($value);
-                }
-            }
+            $user = $this
+                ->serializer
+                ->deserialize($json, User::class, 'json');
 
             $this->userManager->update($user);
-            if ($tmpUser['email']) {
+            if (!$user->getIsEmailValid()) {
                 $this->sendVerifEmail($user);
             }
             $isSuccessful = true;

@@ -55,6 +55,11 @@ class InvitationService
     private $ldap;
 
     /**
+     * @var AppService
+     */
+    private $appService;
+
+    /**
      * Constructor
      *
      * @param InvitationManager $invitationManager
@@ -64,8 +69,9 @@ class InvitationService
      * @param Router $router
      * @param ContainerInterface $container
      * @param LdapService $ldap
+     * @param AppService $appService
      */
-    public function __construct(InvitationManager $invitationManager, SerializerInterface $serializer, LoggerInterface $logger, SimpleMailerService $mailer, Router $router, ContainerInterface $container, LdapService $ldap)
+    public function __construct(InvitationManager $invitationManager, SerializerInterface $serializer, LoggerInterface $logger, SimpleMailerService $mailer, Router $router, ContainerInterface $container, LdapService $ldap, AppService $appService)
     {
         $this->invitationManager = $invitationManager;
         $this->serializer = $serializer;
@@ -75,6 +81,7 @@ class InvitationService
         $this->router = $router;
         $this->sender = $container->getParameter('sender');
         $this->ldap = $ldap;
+        $this->appService = $appService;
     }
 
     /**
@@ -156,6 +163,7 @@ class InvitationService
 
         try {
             $invitation = $this->serializer->deserialize($json, Invitation::class, 'json');
+            $invitation->setApp($this->appService->getApp($invitation->getApp()->getId()));
             $this->invitationManager->update($invitation);
             $this->ldap->createLdapInvitationEntry($invitation);
             $isSuccessful = true;

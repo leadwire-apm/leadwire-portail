@@ -47,6 +47,10 @@ class AppService
     private $apService;
 
     /**
+     * @var ElasticSearch
+     */
+    private $elastic;
+    /**
      * Constructor
      *
      * @param AppManager $appManager
@@ -55,6 +59,7 @@ class AppService
      * @param LdapService $ldapService
      * @param Kibana $kibana
      * @param ApplicationTypeService $apService
+     * @param ElasticSearch $elastic
      */
     public function __construct(
         AppManager $appManager,
@@ -62,7 +67,8 @@ class AppService
         LoggerInterface $logger,
         LdapService $ldapService,
         Kibana $kibana,
-        ApplicationTypeService $apService
+        ApplicationTypeService $apService,
+        ElasticSearch $elastic
     ) {
         $this->appManager = $appManager;
         $this->serializer = $serializer;
@@ -70,6 +76,7 @@ class AppService
         $this->ldapService = $ldapService;
         $this->kibana = $kibana;
         $this->apService = $apService;
+        $this->elastic = $elastic;
     }
 
     /**
@@ -150,14 +157,20 @@ class AppService
             ->serializer
             ->deserialize($json, App::class, 'json', $context);
 
-        $app->setOwner($user);
         $uuid1 = Uuid::uuid1();
-        $app->setUuid($uuid1->toString());
-        $ap = $this->apService->getApplicationType($app->getType()->getId());
+        $app
+            ->setOwner($user)
+            ->setIsEnabled(false)
+            ->setUuid($uuid1->toString())
+            ->setIsRemoved(false)
+        ;
+
+        $applicationTypeId = $app->getType()->getId();
+        $ap = $this->apService->getApplicationType($applicationTypeId);
         $app->setType($ap);
         $this->appManager->update($app);
         if ($this->ldapService->createLdapAppEntry($user->getUuid(), $app->getName()) &&
-            $this->kibana->createDashboards($app)) {
+            !$this->kibana->createDashboards($app)) {
             return $app;
         } else {
             $this->appManager->delete($app);

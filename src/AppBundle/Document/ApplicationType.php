@@ -55,12 +55,13 @@ class ApplicationType
      * @ODM\Field(type="string", name="agent")
      * @JMS\Type("string")
      * @JMS\Expose
-     * @JMS\Groups({"Default"})
+     * @JMS\Groups({"Default", "full"})
      */
     private $agent;
 
     /**
      * @ODM\ReferenceMany(targetDocument="App", inversedBy="type")
+     * @JMS\Groups({"full"})
      */
     public $apps;
 
