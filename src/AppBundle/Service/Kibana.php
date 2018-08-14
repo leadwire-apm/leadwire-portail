@@ -5,6 +5,7 @@ use AppBundle\Document\App;
 use GuzzleHttp\Exception\GuzzleException;
 
 use Psr\Log\LoggerInterface;
+use Ramsey\Uuid\Uuid;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -26,8 +27,11 @@ class Kibana
 
     public function createDashboards(App $app)
     {
+        $this->logger->error("start of debgging kibanaaa");
         $client = new \GuzzleHttp\Client(['defaults' => ['verify' => false]]);
-        $json_template = file_get_contents($this->settings['template_folder'] . '/' . $app->getType() . '.json');
+        $json_template = $this->prepareTemplate($app->getType());
+        $this->logger->error("this is the template");
+       dump($app->getType()->getTemplate());exit;
         try {
             $response = $client->request(
                 'POST',
@@ -49,5 +53,16 @@ class Kibana
             $this->logger->error($e->getMessage());
             return false;
         }
+    }
+
+    private function prepareTemplate($template)
+    {
+        $this->logger->error(print_r($template, true));
+
+        $template = preg_replace_callback('/__uuid__/', function($maches) {
+            $uuid = Uuid::uuid1();
+            return $uuid->toString();
+        }, json_encode($template));
+        return $template;
     }
 }

@@ -112,7 +112,7 @@ class AppController extends BaseRestController
         $data = $request->getContent();
         $successful = $appService->newApp($data, $this->getUser());
 
-        return $this->prepareJsonResponse($successful);
+        return $this->prepareJsonResponse($successful!=null ? $successful : false);
     }
 
     /**

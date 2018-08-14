@@ -6,6 +6,8 @@ use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 use JMS\Serializer\Annotation as JMS;
 use ATS\CoreBundle\Annotation as ATS;
 use AppBundle\Document\User;
+use Symfony\Component\Validator\Constraints as Assert;
+use Doctrine\Bundle\MongoDBBundle\Validator\Constraints\Unique;
 
 /**
  * @ODM\Document(repositoryClass="AppBundle\Repository\AppRepository")
@@ -13,6 +15,8 @@ use AppBundle\Document\User;
  * @ODM\ChangeTrackingPolicy("DEFERRED_EXPLICIT")
  * @JMS\ExclusionPolicy("all")
  * @ATS\ApplicationView
+ * @Unique(fields={"name"})
+
  */
 class App
 {
@@ -40,21 +44,12 @@ class App
      * @var string
      *
      * @ODM\Field(type="string", name="name")
+     * @Assert\Length(min=5, max=32)
      * @JMS\Type("string")
      * @JMS\Expose
      * @JMS\Groups({"Default"})
      */
     private $name;
-
-    /**
-     * @var string
-     *
-     * @ODM\Field(type="string", name="type")
-     * @JMS\Type("string")
-     * @JMS\Expose
-     * @JMS\Groups({"Default"})
-     */
-    private $type;
 
     /**
      * @var string
@@ -122,6 +117,18 @@ class App
      * @JMS\Groups({"full"})
      */
     private $owner;
+
+
+    /**
+     * @var ApplicationType
+     *
+     * @ODM\ReferenceOne(targetDocument="AppBundle\Document\ApplicationType", name="type", cascade={"persist"}, inversedBy="apps")
+     * @JMS\Type("AppBundle\Document\ApplicationType")
+     * @JMS\Expose
+     * @JMS\Groups({"Default", "full"})
+     */
+    private $type;
+
 
     /** @ODM\ReferenceMany(targetDocument="Invitation", mappedBy="app")
      * @JMS\Type("array<AppBundle\Document\Invitation>")
@@ -287,7 +294,7 @@ class App
 
     /**
      * Get type
-     * @return string
+     * @return ApplicationType
      */
     public function getType()
     {
@@ -296,10 +303,10 @@ class App
 
     /**
      * Set type
-     * @param string $type
+     * @param ApplicationType $type
      * @return $this
      */
-    public function setType(string $type)
+    public function setType( ApplicationType $type)
     {
         $this->type = $type;
         return $this;

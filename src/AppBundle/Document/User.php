@@ -5,11 +5,15 @@ namespace AppBundle\Document;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
+use Doctrine\Bundle\MongoDBBundle\Validator\Constraints\Unique;
 
 /**
  * @ODM\Document(repositoryClass="ATS\UserBundle\Repository\UserRepository")
  * @ODM\HasLifecycleCallbacks
  * @JMS\ExclusionPolicy("all")
+ * @Unique(fields={"username"})
+ * @Unique(fields={"email"})
  */
 
 class User extends \ATS\UserBundle\Document\User
@@ -138,6 +142,18 @@ class User extends \ATS\UserBundle\Document\User
      * @JMS\Groups({"full"})
      */
     public $myApps;
+
+
+    /**
+     * @var App
+     *
+     * @ODM\ReferenceOne(targetDocument="AppBundle\Document\App", name="defaultApp", cascade={"persist"})
+     * @JMS\Type("AppBundle\Document\App")
+     * @JMS\Expose
+     * @JMS\Groups({"Default", "full"})
+     */
+    private $defaultApp = null;
+
 
     /**
      * Get id
@@ -384,5 +400,23 @@ class User extends \ATS\UserBundle\Document\User
     public function getContactPreference()
     {
         return $this->contactPreference ;
+    }
+
+    /**
+     * @return App
+     */
+    public function getDefaultApp(): App
+    {
+        return $this->defaultApp;
+    }
+
+    /**
+     * @param App $defaultApp
+     * @return User
+     */
+    public function setDefaultApp(App $defaultApp)
+    {
+        $this->defaultApp = $defaultApp;
+        return $this;
     }
 }
