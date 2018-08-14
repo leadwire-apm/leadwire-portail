@@ -10,7 +10,6 @@ use AppBundle\Document\App;
 /**
  * @ODM\Document(repositoryClass="AppBundle\Repository\ApplicationTypeRepository")
  * @ODM\HasLifecycleCallbacks
- * @ODM\ChangeTrackingPolicy("DEFERRED_EXPLICIT")
  * @JMS\ExclusionPolicy("all")
  * @ATS\ApplicationView
  */
@@ -31,6 +30,7 @@ class ApplicationType
      * @ODM\Field(type="string", name="name")
      * @JMS\Type("string")
      * @JMS\Expose
+     * @JMS\Groups({"Default"})
      */
     private $name;
 
@@ -60,7 +60,7 @@ class ApplicationType
     private $agent;
 
     /**
-     * @ODM\ReferenceMany(targetDocument="App", mappedBy="type")
+     * @ODM\ReferenceMany(targetDocument="App", inversedBy="type")
      */
     public $apps;
 

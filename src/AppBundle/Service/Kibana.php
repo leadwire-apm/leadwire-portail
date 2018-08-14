@@ -25,17 +25,18 @@ class Kibana
         $this->logger = $logger;
     }
 
+    /**
+     * @param App $app
+     * @return bool
+     */
     public function createDashboards(App $app)
     {
-        $this->logger->error("start of debgging kibanaaa");
         $client = new \GuzzleHttp\Client(['defaults' => ['verify' => false]]);
         $json_template = $this->prepareTemplate($app->getType());
-        $this->logger->error("this is the template");
-       dump($app->getType()->getTemplate());exit;
         try {
             $response = $client->request(
                 'POST',
-                str_replace('{{tenant}}', $app->getOwner()->getUuid(), $this->settings['inject_dashboards']),
+                str_replace('{{tenant}}', $app->getUuid(), $this->settings['inject_dashboards']),
                 [
                     'body' => $json_template,
                     'headers' => [
@@ -57,9 +58,7 @@ class Kibana
 
     private function prepareTemplate($template)
     {
-        $this->logger->error(print_r($template, true));
-
-        $template = preg_replace_callback('/__uuid__/', function($maches) {
+        $template = preg_replace_callback('/__uuid__/', function ($maches) {
             $uuid = Uuid::uuid1();
             return $uuid->toString();
         }, json_encode($template));
