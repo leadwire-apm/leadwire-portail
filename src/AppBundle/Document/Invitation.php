@@ -152,6 +152,28 @@ class Invitation
     }
 
     /**
+     * Get user
+     *
+     * @return User
+     */
+    public function getUser()
+    {
+        return $this->user;
+    }
+
+    /**
+     * Set user
+     * @param User
+     *
+     * @return Invitation
+     */
+    public function setUser(User $user)
+    {
+        $this->user = $user;
+        return $this;
+    }
+
+    /**
      * Returns string representation of the object
      *
      * @return string

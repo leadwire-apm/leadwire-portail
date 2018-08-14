@@ -5,6 +5,7 @@ namespace AppBundle\Document;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 use JMS\Serializer\Annotation as JMS;
 use ATS\CoreBundle\Annotation as ATS;
+use AppBundle\Document\App;
 
 /**
  * @ODM\Document(repositoryClass="AppBundle\Repository\ApplicationTypeRepository")
@@ -30,7 +31,6 @@ class ApplicationType
      * @ODM\Field(type="string", name="name")
      * @JMS\Type("string")
      * @JMS\Expose
-     * @JMS\Groups({})
      */
     private $name;
 
@@ -40,18 +40,14 @@ class ApplicationType
      * @ODM\Field(type="string", name="installation")
      * @JMS\Type("string")
      * @JMS\Expose
-     * @JMS\Groups({})
+     * @JMS\Groups({"Default"})
      */
     private $installation;
 
     /**
-     * @ODM\Hash
-     *
-     * @ODM\Field(type="hash", name="template")
-     * @JMS\Expose
-     * @JMS\Groups({})
+     * @ODM\Field(type="raw", name="template")
      */
-    private $template = array();
+    private $template;
 
     /**
      * @var string
@@ -59,9 +55,14 @@ class ApplicationType
      * @ODM\Field(type="string", name="agent")
      * @JMS\Type("string")
      * @JMS\Expose
-     * @JMS\Groups({})
+     * @JMS\Groups({"Default"})
      */
     private $agent;
+
+    /**
+     * @ODM\ReferenceMany(targetDocument="App", mappedBy="type")
+     */
+    public $apps;
 
 
     /**
@@ -129,7 +130,6 @@ class ApplicationType
     /**
      * Get template
      *
-     * @return hash
      */
     public function getTemplate()
     {
@@ -138,7 +138,6 @@ class ApplicationType
 
     /**
      * Set template
-     * @param hash
      *
      * @return ApplicationType
      */

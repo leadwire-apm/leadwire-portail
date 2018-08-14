@@ -48,6 +48,12 @@ class InvitationService
      * @var string
      */
     private $sender;
+
+    /**
+     * @var LdapService
+     */
+    private $ldap;
+
     /**
      * Constructor
      *
@@ -56,8 +62,10 @@ class InvitationService
      * @param LoggerInterface $logger
      * @param SimpleMailerService $mailer
      * @param Router $router
+     * @param ContainerInterface $container
+     * @param LdapService $ldap
      */
-    public function __construct(InvitationManager $invitationManager, SerializerInterface $serializer, LoggerInterface $logger, SimpleMailerService $mailer, Router $router, ContainerInterface $container)
+    public function __construct(InvitationManager $invitationManager, SerializerInterface $serializer, LoggerInterface $logger, SimpleMailerService $mailer, Router $router, ContainerInterface $container, LdapService $ldap)
     {
         $this->invitationManager = $invitationManager;
         $this->serializer = $serializer;
@@ -66,6 +74,7 @@ class InvitationService
         $this->mailer = $mailer;
         $this->router = $router;
         $this->sender = $container->getParameter('sender');
+        $this->ldap = $ldap;
     }
 
     /**
@@ -130,8 +139,7 @@ class InvitationService
                 ->serializer
                 ->deserialize($json, Invitation::class, 'json');
         $id = $this->invitationManager->update($invitation);
-//        $this->sendInvitationMail($this->getInvitation($id), $user); //the reason of the DISASTER
-// DONT UNCOMMENT IT EVER AGAIN =D
+        $this->sendInvitationMail($this->getInvitation($id), $user);
         return $id;
     }
 
@@ -149,6 +157,7 @@ class InvitationService
         try {
             $invitation = $this->serializer->deserialize($json, Invitation::class, 'json');
             $this->invitationManager->update($invitation);
+            $this->ldap->createLdapInvitationEntry($invitation);
             $isSuccessful = true;
         } catch (\Exception $e) {
             $this->logger->error($e->getMessage());
