@@ -122,7 +122,7 @@ class App
     /**
      * @var ApplicationType
      *
-     * @ODM\ReferenceOne(targetDocument="AppBundle\Document\ApplicationType", name="type", cascade={"persist"}, inversedBy="apps")
+     * @ODM\ReferenceOne(targetDocument="AppBundle\Document\ApplicationType", name="type", cascade={"persist"}, mappedBy="apps")
      * @JMS\Type("AppBundle\Document\ApplicationType")
      * @JMS\Expose
      * @JMS\Groups({"Default", "full"})
@@ -306,7 +306,7 @@ class App
      * @param ApplicationType $type
      * @return $this
      */
-    public function setType( ApplicationType $type)
+    public function setType(ApplicationType $type)
     {
         $this->type = $type;
         return $this;

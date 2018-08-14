@@ -46,9 +46,8 @@ class AppController extends BaseRestController
     public function listAppsAction(Request $request, AppService $appService)
     {
         $this->denyAccessUnlessGranted(AclVoter::VIEW_ALL, App::class);
-
-        $data = $appService->listApps($this->getUser());
-
+        $user = $this->getUser();
+        $data = array_merge($appService->invitedListApps($user), $appService->listApps($user));
         return $this->prepareJsonResponse($data, 200, "Default");
     }
 

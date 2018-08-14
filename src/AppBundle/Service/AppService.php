@@ -42,25 +42,34 @@ class AppService
     private $kibana;
 
     /**
+     * @var ApplicationTypeService
+     */
+    private $apService;
+
+    /**
      * Constructor
      *
      * @param AppManager $appManager
      * @param SerializerInterface $serializer
      * @param LoggerInterface $logger
      * @param LdapService $ldapService
+     * @param Kibana $kibana
+     * @param ApplicationTypeService $apService
      */
     public function __construct(
         AppManager $appManager,
         SerializerInterface $serializer,
         LoggerInterface $logger,
         LdapService $ldapService,
-        Kibana $kibana
+        Kibana $kibana,
+        ApplicationTypeService $apService
     ) {
         $this->appManager = $appManager;
         $this->serializer = $serializer;
         $this->logger = $logger;
         $this->ldapService = $ldapService;
         $this->kibana = $kibana;
+        $this->apService = $apService;
     }
 
     /**
@@ -109,7 +118,7 @@ class AppService
      */
     public function getApp($id)
     {
-        return $this->appManager->getOneBy(['id' => $id, 'isRemoved' => false]);
+        return $this->appManager->getOneBy(['_id' => $id, 'isRemoved' => false]);
     }
 
     /**
@@ -135,16 +144,25 @@ class AppService
      */
     public function newApp($json, User $user)
     {
+        $context = new DeserializationContext();
+        $context->setGroups(['Default']);
         $app = $this
             ->serializer
-            ->deserialize($json, App::class, 'json');
+            ->deserialize($json, App::class, 'json', $context);
+
         $app->setOwner($user);
         $uuid1 = Uuid::uuid1();
         $app->setUuid($uuid1->toString());
-        $app = $this->getApp($this->appManager->update($app));
-        $this->ldapService->createLdapAppEntry($user->getUsername(), $app->getName());
-        $this->kibana->createDashboards($app);
-        return $app;
+        $ap = $this->apService->getApplicationType($app->getType()->getId());
+        $app->setType($ap);
+        $this->appManager->update($app);
+        if ($this->ldapService->createLdapAppEntry($user->getUuid(), $app->getName()) &&
+            $this->kibana->createDashboards($app)) {
+            return $app;
+        } else {
+            $this->appManager->delete($app);
+            return null;
+        }
     }
 
     /**

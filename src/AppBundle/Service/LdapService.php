@@ -61,7 +61,6 @@ class LdapService
             ]
         );
         return $this->saveEntry($entry);
-
     }
 
     public function createLdapInvitationEntry(Invitation $invitation)
