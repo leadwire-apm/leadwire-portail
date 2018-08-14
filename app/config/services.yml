@@ -4,7 +4,8 @@ services:
         autowire: true
         autoconfigure: true
         public: true
-
+    jms_serializer.naming_strategy:
+        alias: jms_serializer.identical_property_naming_strategy
     # Making the logger service public
     logger:
         alias: 'monolog.logger'

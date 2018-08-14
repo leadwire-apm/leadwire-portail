@@ -28,8 +28,12 @@ angular.module('leadwireApp').factory('Account', function($http, CONFIG) {
                             response.data.contact.split(sep) :
                             [];
                         if (contactInfos.length) {
-                            userInfo.contactPrefix = contactInfos[0];
+                            userInfo.phoneCode = contactInfos[0];
                             userInfo.contact = contactInfos[1];
+                        } else {
+                            userInfo.phoneCode = null;
+                            userInfo.contact = null;
+
                         }
                         userInfo.fname = response.data.login;
                         if (angular.isDefined(response.data.displayName) &&

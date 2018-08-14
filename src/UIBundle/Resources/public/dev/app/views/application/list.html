@@ -38,11 +38,11 @@
                         </a>
                     </td>
                     <td>
-                        <a class="btn btn-warning" data-ng-disabled="!app.is_enabled"
+                        <a class="btn btn-warning" data-ng-disabled="!app.is_enabled && app.owner.id != user.id"
                            ui-sref="app.applicationEdit({id:app.id})"><i class="fa fa-pencil"></i></a>
                     </td>
                     <td>
-                        <button class="btn btn-danger" data-ng-disabled="!app.is_enabled"
+                        <button class="btn btn-danger" data-ng-disabled="!app.is_enabled && app.owner.id != user.id"
                                 ng-click="ctrl.deleteApp(app.id)">
                             <i ng-if="!ctrl.ui.isDeleting" class="fa fa-trash"></i>
                             <spinner is-loading="ctrl.ui.isDeleting"></spinner>

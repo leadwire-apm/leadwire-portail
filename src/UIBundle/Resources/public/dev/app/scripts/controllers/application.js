@@ -80,7 +80,6 @@ function applicationListCtrlFN(
 ) {
   var vm = this;
   init();
-
   vm.deleteApp = function(id) {
     swal({
       title: "Are you sure?",
