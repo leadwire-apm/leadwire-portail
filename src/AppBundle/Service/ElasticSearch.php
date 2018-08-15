@@ -5,6 +5,7 @@ namespace AppBundle\Service;
 use AppBundle\Document\App;
 use GuzzleHttp\Exception\GuzzleException;
 use Psr\Log\LoggerInterface;
+use SensioLabs\Security\Exception\HttpException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -37,15 +38,15 @@ class ElasticSearch
 
     public function getDashboads(App $app)
     {
-        $client = new \GuzzleHttp\Client(['defaults' => ['verify' => false]]);
-        //$uuid = $app->getUuid();
-        $uuid = "apptest";
+
         try {
+            $client = new \GuzzleHttp\Client(['defaults' => ['verify' => false]]);//$uuid = $app->getUuid();
+            $uuid = "apptest";
             $response = $client->get(
                 $this->settings['host'] . ".kibana_$uuid" . "/_search?pretty",
                 [
                     'headers' => [
-                        'Content-type'  => 'application/json',
+                        'Content-type' => 'application/json',
                     ],
                     'auth' => [
                         $this->settings['username'],
@@ -53,10 +54,20 @@ class ElasticSearch
                     ]
                 ]
             );
-            return json_decode($response->getBody());
-        } catch (GuzzleException $e) {
-            $this->logger->error($e->getMessage());
-            return false;
+            $body = json_decode($response->getBody())->hits->hits;
+            $res = [];
+            foreach ($body as $element) {
+                if (strpos($element->_id, "dashboard:") !== false) {
+                    $res [] = [
+                        "id" => str_replace("dashboard:", "", $element->_id),
+                        "name" => $element->_source->dashboard->title,
+                    ];
+                }
+            }
+            return $res;
+        } catch (\GuzzleHttp\Exception\ClientException $e) {
+                $this->logger->error($e->getMessage());
+                throw new HttpException("An error has occured while executing your request.", 500);
         }
     }
 }

@@ -2,7 +2,7 @@
     "name": "ats-digital/symfony-boilerplate",
     "license": "MIT",
     "type": "project",
-    "description": "The \"ATS DIGITAL\" Symfony bolierplate.",
+    "description": "Leadwire portal",
     "autoload": {
         "psr-4": {
             "": "src/"
@@ -10,7 +10,8 @@
         "classmap": [ "app/AppKernel.php", "app/AppCache.php" ]
     },
     "provide": {
-        "ext-mongo": "*"
+        "ext-mongo": "*",
+        "ext-json" : "*"
     },
     "require": {
         "php": ">=7.0",
