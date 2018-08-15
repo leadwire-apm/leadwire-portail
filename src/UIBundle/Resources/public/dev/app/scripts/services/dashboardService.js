@@ -1,5 +1,4 @@
 angular
-
     .module('leadwireApp')
     .service('DashboardService', function(
         ApplicationFactory,
@@ -10,32 +9,30 @@ angular
     ) {
         var service = this;
 
-        service.handleAfterRedirect = function(connectedUser) {
+        service.fetchDashboardsByAppId = function(appId) {
             return new Promise(function(resolve, reject) {
-                if (connectedUser.defaultApp) {
-                    ApplicationFactory.findMyDashboard(
-                        connectedUser.defaultApp.id
-                    )
-                        .then(function(response) {
-                            $localStorage.currentMenu = MenuFactory.set(
-                                response.data,
-                                function(menu) {
-                                    return menu['name'];
-                                },
-                                function(menu) {
-                                    return $state.href("app.dashboard",{id:menu.id});
-                                },
-                                function(menu) {
-                                    return menu.icon || 'fa fa-dashboard';
-                                }
-                            );
-                            $rootScope.menus = $localStorage.currentMenu;
-                            resolve(connectedUser.defaultApp.id);
-                        })
-                        .catch(function(error) {
-                            reject(error);
-                        });
-                }
+                ApplicationFactory.findMyDashboard(appId)
+                    .then(function(response) {
+                        $localStorage.currentMenu = MenuFactory.set(
+                            response.data,
+                            function(menu) {
+                                return menu['name'];
+                            },
+                            function(menu) {
+                                return $state.href('app.dashboard', {
+                                    id: menu.id
+                                });
+                            },
+                            function(menu) {
+                                return menu.icon || 'fa fa-dashboard';
+                            }
+                        );
+                        $rootScope.menus = $localStorage.currentMenu;
+                        resolve(appId);
+                    })
+                    .catch(function(error) {
+                        reject(error);
+                    });
             });
         };
     });

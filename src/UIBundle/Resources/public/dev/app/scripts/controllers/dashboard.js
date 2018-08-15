@@ -30,7 +30,7 @@ function dashboardCtrl(
                     templateUrl:
                         $rootScope.ASSETS_BASE_URL + 'views/profile.html',
                     controller: 'profileModalCtrl',
-                    controllerAs: 'vm',
+                    controllerAs: 'ctrl',
                     resolve: {
                         isModal: function() {
                             return true;
@@ -40,21 +40,10 @@ function dashboardCtrl(
             });
     }
 
-    ApplicationFactory.findAll()
-        .success(function(data) {
-            delete $localStorage.applications;
-            $localStorage.applications = data;
-            $rootScope.applications = $localStorage.applications;
-        })
-        .error(function(error) {
-            console.error(error);
-        });
-    vm.dashboardLink = $sce.trustAsResourceUrl(
-        ConfigService.getDashboard(
-            $state.params.id,
-            false
-        )
-    );
+    if (!!$state.params.id)
+        vm.dashboardLink = $sce.trustAsResourceUrl(
+            ConfigService.getDashboard($state.params.id, false)
+        );
 }
 
 function formDashboardCtrl() {}

@@ -1,9 +1,8 @@
 'use strict';
 
-angular
-    .module('leadwireApp')
-    .controller('profileModalCtrl', ProfileModalCtrl)
-    .controller('profileCtrl', ProfileCtrl);
+angular.module('leadwireApp').
+    controller('profileModalCtrl', ProfileModalCtrl).
+    controller('profileCtrl', ProfileCtrl);
 
 function ProfileModalCtrl(
     $localStorage,
@@ -16,7 +15,7 @@ function ProfileModalCtrl(
     CONFIG,
     $rootScope,
     CountryApi,
-    $scope
+    $scope,
 ) {
     var vm = this;
     let _ctrl = new UserCtrl(
@@ -29,7 +28,7 @@ function ProfileModalCtrl(
         $rootScope,
         $scope,
         CountryApi,
-        $modalInstance
+        $modalInstance,
     );
     this.save = _ctrl.save;
 }
@@ -42,7 +41,8 @@ function ProfileCtrl(
     toastr,
     $rootScope,
     CountryApi,
-    $scope
+    ApplicationFactory,
+    $scope,
 ) {
     var vm = this;
     let _ctrl = new UserCtrl(
@@ -56,10 +56,9 @@ function ProfileCtrl(
         $scope,
         CountryApi,
 
-        false
+        false,
     );
     this.save = _ctrl.save;
-
 }
 
 function UserCtrl(
@@ -72,7 +71,7 @@ function UserCtrl(
     $rootScope,
     $scope,
     CountryApi,
-    $modalInstance
+    $modalInstance,
 ) {
     Controller.user = angular.extend({}, $localStorage.user);
     var sep = '###';
@@ -89,51 +88,54 @@ function UserCtrl(
                 acceptNewsLetter: Controller.user.acceptNewsLetter,
                 contact: phone,
                 contactPreference: Controller.user.contactPreference,
-                defaultApp: Controller.user.defaultApp, //TODO UNCOMMENT ME WHEN ITS FIXED
-                username: Controller.user.username,
-                name: Controller.user.name
-            };
-            Account.updateProfile(updatedInfo)
-                .success(function(data) {
-                    $localStorage.user = angular.extend(
-                        $localStorage.user,
-                        updatedInfo,
-                        {
-                            contact: Controller.user.contact,
-                            phoneCode: Controller.user.phoneCode
-                        }
-                    );
+                defaultApp: Controller.user.defaultApp &&
+                Controller.user.defaultApp.id
+                    ? {id: Controller.user.defaultApp.id}
+                    : null,
 
-                    if (data) {
-                        if (Controller.avatar) {
-                            FileService.upload(Controller.avatar, 'user').then(
-                                function(response) {
-                                    Account.updateProfile({
-                                        id: Controller.user.id,
-                                        avatar: response.data.name
-                                    });
-                                    $localStorage.user = angular.extend(
-                                        $localStorage.user,
-                                        {
-                                            avatar: response.data.name
-                                        }
-                                    );
-                                    Controller.handleSuccessForm(
-                                        response.data.name
-                                    );
-                                }
-                            );
-                        } else {
-                            Controller.handleSuccessForm();
-                        }
+                username: Controller.user.username,
+                name: Controller.user.name,
+            };
+            console.log(updatedInfo);
+            Account.updateProfile(updatedInfo).then(function(data) {
+                $localStorage.user = angular.extend(
+                    $localStorage.user,
+                    updatedInfo,
+                    {
+                        contact: Controller.user.contact,
+                        phoneCode: Controller.user.phoneCode,
+                    },
+                );
+
+                if (data) {
+                    if (Controller.avatar) {
+                        FileService.upload(Controller.avatar, 'user').then(
+                            function(response) {
+                                Account.updateProfile({
+                                    id: Controller.user.id,
+                                    avatar: response.data.name,
+                                });
+                                $localStorage.user = angular.extend(
+                                    $localStorage.user,
+                                    {
+                                        avatar: response.data.name,
+                                    },
+                                );
+                                Controller.handleSuccessForm(
+                                    response.data.name,
+                                );
+                            },
+                        );
                     } else {
-                        toastr.error('Failed update User');
+                        Controller.handleSuccessForm();
                     }
-                })
-                .error(function(error) {
-                    console.log(error);
+                } else {
                     toastr.error('Failed update User');
-                });
+                }
+            }).catch(function(error) {
+                console.log(error);
+                toastr.error('Failed update User');
+            });
         }
     };
 
@@ -155,7 +157,7 @@ function UserCtrl(
             $localStorage.countries = res.data.map(function(country) {
                 return angular.extend(country, {
                     phoneCode: country.callingCodes[0],
-                    label: country.alpha2Code + ' ' + country.callingCodes[0]
+                    label: country.alpha2Code + ' ' + country.callingCodes[0],
                 });
             });
             $rootScope.countries = $localStorage.countries;
@@ -163,5 +165,4 @@ function UserCtrl(
     } else {
         $rootScope.countries = $localStorage.countries;
     }
-
 }

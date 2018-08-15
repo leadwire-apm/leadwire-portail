@@ -20,12 +20,13 @@
 <!-- main navigation -->
 <nav role="navigation" side-navigation>
     <ul class="nav">
-        <li ng-repeat="menu in menus" ng-switch on="menu.children!=undefined" ui-sref-active="active">
+        <li ng-repeat="menu in menus track by menu.route" ui-sref-active="active"
+            >
             <!--<a ng-switch-when="true" ui-sref="menu.children[0].route">-->
-                <!--<i class="{{menu.icon}}"></i>-->
-                <!--<span>{{menu.label}}</span>-->
+            <!--<i class="{{menu.icon}}"></i>-->
+            <!--<span>{{menu.label}}</span>-->
             <!--</a>-->
-            <a ng-switch-when="false" ng-href="{{menu.route}}" >
+            <a  ng-href="{{menu.route}}">
                 <i class="{{menu.icon}}"></i>
                 <span>{{menu.label}}</span>
             </a>

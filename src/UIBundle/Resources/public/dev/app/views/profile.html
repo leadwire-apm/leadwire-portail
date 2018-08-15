@@ -19,7 +19,7 @@
                             <input type="text" id="name" name="name" class="form-control" ng-model="ctrl.user.name"
                                    required>
                             <span class="text-red"
-                                  ng-show="ctrl.userForm.name.$error.required">This field is required</span>
+                                  ng-show="ctrl.userForm.name.$error.required && !ctrl.userForm.name.$pristine">This field is required</span>
 
                         </div>
                     </div>
@@ -30,8 +30,8 @@
                             <input type="email" class="form-control" autocomplete='email' ng-model="ctrl.user.email"
                                    name="email" placeholder="Your Email" required>
                             <span class="text-red"
-                                  ng-show="ctrl.userForm.email.$error.required">This field is required</span>
-                            <span class="text-red" ng-show="ctrl.userForm.email.$error.email">This field should be a valid email</span>
+                                  ng-show="ctrl.userForm.email.$error.required && !ctrl.userForm.email.$pristine">This field is required</span>
+                            <span class="text-red" ng-show="ctrl.userForm.email.$error.email && !ctrl.userForm.email.$pristine">This field should be a valid email</span>
 
                         </div>
 
@@ -61,7 +61,7 @@
                             </select>
                         </div>
                         <div class="col-sm-8">
-                            <input type="tel" name="contact" class="form-control" placeholder="Contact"
+                            <input type="tel" name="contact" class="form-control" placeholder="Your phone number"
                                    ng-model="ctrl.user.contact">
                         </div>
                     </div>
@@ -74,7 +74,7 @@
                                 <option>Phone</option>
                             </select>
                             <span class="text-red"
-                                  ng-show="ctrl.userForm.contactPreference.$error.required">This field is required</span>
+                                  ng-show="ctrl.userForm.contactPreference.$error.required && !ctrl.userForm.contactPreference.$pristine">This field is required</span>
 
                         </div>
                     </div>
@@ -104,7 +104,7 @@
                                 <option value=""></option>
                             </select>
                             <span class="text-red"
-                                  ng-show="ctrl.userForm.defaultApp.$error.required">This field is required</span>
+                                  ng-show="ctrl.userForm.defaultApp.$error.required && !ctrl.userForm.defaultApp.$pristine">This field is required</span>
 
                         </div>
                     </div>
@@ -120,7 +120,7 @@
                                         class="fa fa-external-link"></i></a>
                                 </label>
                                 <span class="text-red"
-                                      ng-show="ctrl.userForm.TOC.$error.required">This field is required</span>
+                                      ng-show="ctrl.userForm.TOC.$error.required && !ctrl.userForm.TOC.$pristine">This field is required</span>
 
                             </div>
 
@@ -131,7 +131,7 @@
                                         class="fa fa-external-link"></i></a>
                                 </label>
                                 <span class="text-red"
-                                      ng-show="ctrl.userForm.TOS.$error.required">This field is required</span>
+                                      ng-show="ctrl.userForm.TOS.$error.required && !ctrl.userForm.TOS.$pristine">This field is required</span>
 
                             </div>
                             <div class="checkbox">
