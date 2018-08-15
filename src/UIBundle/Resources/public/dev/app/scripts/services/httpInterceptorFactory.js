@@ -3,12 +3,13 @@ angular.module('leadwireApp').
         function($q, $location, MESSAGES_CONSTANTS, $localStorage) {
             return {
                 request: function(config) {
-                    // console.log(config.headers)
+                    if (config.noheaders && config.headers && config.headers.Authorization){
+                        delete config.headers.Authorization;
+                    }
                     config.headers = config.headers || {};
                     return config;
                 },
                 responseError: function(response) {
-                    // console.log('Error From the interceptor: ', response);
                     console.log('status: ', response.status);
                     if (response.status === 401) {
                         delete $localStorage.user;

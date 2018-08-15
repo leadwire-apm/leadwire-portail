@@ -1,9 +1,19 @@
-angular.module('leadwireApp').factory('MenuFactory', function(Menus) {
+angular.module('leadwireApp').factory('MenuFactory', function(Menus,$state) {
     return {
         get: function(menuKey) {
-            return Menus[menuKey];
+            return Menus[menuKey] ? Menus[menuKey].map(function(menu) {
+                return angular.extend(menu,{route:$state.href(menu.route)})
+            }) : [];
         },
-
+        set: function(menus, labelCallback, routeCallback, iconCallback) {
+            return menus.map(function(menu) {
+                return {
+                    label: labelCallback(menu),
+                    route: routeCallback(menu),
+                    icon: iconCallback(menu),
+                };
+            });
+        },
     };
 });
 
@@ -12,57 +22,57 @@ angular.module('leadwireApp').constant('Menus', {
         {
             icon: 'fa fa-dashboard',
             label: 'Dashboard',
-            route: 'app.realUserMonitoring'
+            route: 'app.realUserMonitoring',
         },
         {
             icon: 'fa fa-eye',
             label: 'Real User Monitoring',
-            route: 'app.syntheticMonitoring'
+            route: 'app.syntheticMonitoring',
         },
         {
             icon: 'fa fa-exchange',
             label: 'Synthetic Monitoring',
-            route: 'app.infrastructureMonitoring'
+            route: 'app.infrastructureMonitoring',
         },
         {
             icon: 'fa fa-search',
             label: 'Infrastructure Monitoring',
-            route: 'app.customReports '
+            route: 'app.customReports ',
         },
         {
             icon: 'fa fa-file-text',
             label: 'Custom Reports ',
-            route: 'app.realUserMonitoring'
+            route: 'app.realUserMonitoring',
         },
         {
             icon: 'fa fa-table',
             label: 'Data Browser',
-            route: 'app.realUserMonitoring'
+            route: 'app.realUserMonitoring',
         },
         {
             icon: 'fa fa-briefcase',
             label: 'Business Transactions',
-            route: 'app.realUserMonitoring'
+            route: 'app.realUserMonitoring',
         },
         {
             icon: 'fa fa-sitemap',
             label: 'Architecture Discovery',
-            route: 'app.realUserMonitoring'
+            route: 'app.realUserMonitoring',
         },
         {
             icon: 'fa fa-exclamation-triangle',
             label: 'Alerts',
-            route: 'app.realUserMonitoring'
+            route: 'app.realUserMonitoring',
         },
         {
             icon: 'fa fa-book',
             label: 'Documentation',
-            route: 'app.realUserMonitoring'
+            route: 'app.realUserMonitoring',
         },
         {
             icon: 'fa fa-support',
             label: 'Support',
-            route: 'app.realUserMonitoring'
+            route: 'app.realUserMonitoring',
         },
         {
             icon: 'fa fa-gears',
@@ -85,11 +95,11 @@ angular.module('leadwireApp').constant('Menus', {
             icon: 'fa fa-user',
             label: 'Profile',
         },
-        // {
-        //     route: 'app.applicationsList',
-        //     icon: 'fa fa-desktop',
-        //     label: 'Applications',
-        // },
+        {
+            route: 'app.applicationsList',
+            icon: 'fa fa-desktop',
+            label: 'Applications',
+        },
 
     ],
 });

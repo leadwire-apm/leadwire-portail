@@ -30,7 +30,7 @@ class UserController extends BaseRestController
             throw new HttpException("Non Authorized", 401);
         }
 
-        return $this->prepareJsonResponse($user, 200, "full");
+        return $this->prepareJsonResponse($user, 200, "Default");
     }
 
 

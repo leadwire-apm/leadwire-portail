@@ -36,7 +36,6 @@
     "clockpicker": "~0.0.7",
     "blueimp-bootstrap-image-gallery": "~3.1.1",
     "bootstrap-timepicker": "~0.2.6",
-    "intl-tel-input": "~5.8.7",
     "c3": "~0.4.10",
     "chosen_v1.4.0": "https://github.com/harvesthq/chosen/releases/download/v1.4.0/chosen_v1.4.0.zip",
     "sortable": "~0.6.0",
@@ -53,7 +52,6 @@
     "angular-touch": "*",
     "ocLazyLoad": "*",
     "fastclick": "*"
-
   },
   "appPath": "app",
   "moduleName": "leadwireApp",

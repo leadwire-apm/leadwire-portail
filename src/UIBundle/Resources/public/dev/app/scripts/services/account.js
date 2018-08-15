@@ -1,5 +1,9 @@
 angular.module('leadwireApp').factory('Account', function($http, CONFIG) {
     return {
+        /**
+         *
+         * @returns {Promise}
+         */
         getProfile: function() {
             return $http.get(CONFIG.BASE_URL + 'api/user/me');
         },
@@ -23,6 +27,18 @@ angular.module('leadwireApp').factory('Account', function($http, CONFIG) {
                     $localStorage.user === null) {
                     Account.getProfile().then(function(response) {
                         var userInfo = response.data;
+                        var sep = '###';
+                        var contactInfos = response.data.contact ?
+                            response.data.contact.split(sep) :
+                            [];
+                        if (contactInfos.length) {
+                            userInfo.phoneCode = contactInfos[0];
+                            userInfo.contact = contactInfos[1];
+                        } else {
+                            userInfo.phoneCode = null;
+                            userInfo.contact = null;
+
+                        }
                         userInfo.fname = response.data.login;
                         if (angular.isDefined(response.data.displayName) &&
                             response.data.displayName !== null) {
@@ -32,20 +48,20 @@ angular.module('leadwireApp').factory('Account', function($http, CONFIG) {
                         userInfo.avatar = response.data.avatar;
                         $localStorage.user = userInfo;
                         $rootScope.$broadcast('user:updated', userInfo);
-                        resolve(userInfo);
+                        resolve($localStorage.user);
 
                     }).catch(function(error) {
                         $localStorage.clear();
                         reject(error);
                     });
                 } else {
-                    resolve();
+                    resolve($localStorage.user);
                 }
             });
 
         };
 
-        service.handleOnSuccessLogin = function(invitationId) {
+        service.handleBeforeRedirect = function(invitationId) {
             return new Promise(function(resolve, reject) {
                 service.setProfile().then(function(user) {
                     if (invitationId !== undefined) {
@@ -60,11 +76,11 @@ angular.module('leadwireApp').factory('Account', function($http, CONFIG) {
                                 };
                                 Invitation.update(invitationId, invitToUpdate);
                             }
-                            resolve();
+                            resolve($localStorage.user);
                         });
                     }
                     else {
-                        resolve();
+                        resolve($localStorage.user);
                     }
                 }).catch(function(error) {
                     reject(error);
