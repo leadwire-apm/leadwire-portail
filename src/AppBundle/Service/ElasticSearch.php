@@ -68,6 +68,9 @@ class ElasticSearch
         } catch (\GuzzleHttp\Exception\ClientException $e) {
                 $this->logger->error($e->getMessage());
                 throw new HttpException("An error has occured while executing your request.", 500);
+        } catch (\Exception $e) {
+                $this->logger->error($e->getMessage());
+                throw new HttpException("An error has occured while executing your request.", 500);
         }
     }
 }

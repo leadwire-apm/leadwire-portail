@@ -170,7 +170,7 @@ class AppService
         $app->setType($ap);
         $this->appManager->update($app);
         if ($this->ldapService->createLdapAppEntry($user->getUuid(), $app->getName()) &&
-            !$this->kibana->createDashboards($app)) {
+            $this->kibana->createDashboards($app)) {
             return $app;
         } else {
             $this->appManager->delete($app);
