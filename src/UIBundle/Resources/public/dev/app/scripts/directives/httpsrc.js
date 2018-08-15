@@ -53,7 +53,7 @@ angular.module("leadwireApp").directive("httpSrc", [
           })
           .catch(function(error) {
             attrs.$set("src", null);
-            console.log(error);
+            console.log("Cant find image resource ... doesnt matter");
           });
       }
     }

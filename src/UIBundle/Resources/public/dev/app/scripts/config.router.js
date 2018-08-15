@@ -54,14 +54,12 @@ angular
                 .state('app', {
                     abstract: true,
                     templateUrl:
-                        CONFIG.ASSETS_BASE_URL +
-                        'views/common/layout.html'
+                        CONFIG.ASSETS_BASE_URL + 'views/common/layout.html'
                 })
                 .state('login', {
                     url: '/login',
                     templateUrl:
-                        CONFIG.ASSETS_BASE_URL +
-                        'views/extras-signin.html',
+                        CONFIG.ASSETS_BASE_URL + 'views/extras-signin.html',
                     resolve: {
                         deps: [
                             '$ocLazyLoad',
@@ -84,23 +82,15 @@ angular
                 })
                 .state('app.user', {
                     url: '/settings',
-                    templateUrl:
-                        CONFIG.ASSETS_BASE_URL +
-                        'views/profile.html',
+                    templateUrl: CONFIG.ASSETS_BASE_URL + 'views/profile.html',
                     resolve: {
                         loginRequired: loginRequired,
                         deps: [
                             '$ocLazyLoad',
                             'MenuFactory',
                             '$rootScope',
-                            function(
-                                $ocLazyLoad,
-                                MenuFactory,
-                                $rootScope
-                            ) {
-                                $rootScope.menus = MenuFactory.get(
-                                    'SETTINGS'
-                                );
+                            function($ocLazyLoad, MenuFactory, $rootScope) {
+                                $rootScope.menus = MenuFactory.get('SETTINGS');
                                 return $ocLazyLoad.load({
                                     name: 'sbAdminApp',
                                     files: [
@@ -120,15 +110,9 @@ angular
                 .state('app.applicationsAdd', {
                     url: '/applications/add',
                     templateUrl:
-                        CONFIG.ASSETS_BASE_URL +
-                        'views/application/add.html',
+                        CONFIG.ASSETS_BASE_URL + 'views/application/add.html',
                     resolve: {
                         loginRequired: loginRequired,
-                        menu: function(MenuFactory, $rootScope) {
-                            $rootScope.menus = MenuFactory.get(
-                                'SETTINGS'
-                            );
-                        },
                         deps: getNotyDeps([
                             CONFIG.ASSETS_BASE_URL +
                                 'scripts/controllers/application.js'
@@ -143,18 +127,16 @@ angular
                 .state('app.applicationsList', {
                     url: '/applications/list',
                     templateUrl:
-                        CONFIG.ASSETS_BASE_URL +
-                        'views/application/list.html',
+                        CONFIG.ASSETS_BASE_URL + 'views/application/list.html',
                     resolve: {
                         loginRequired: loginRequired,
-                        menu: function(MenuFactory, $rootScope) {
-                            $rootScope.menus = MenuFactory.get(
-                                'SETTINGS'
-                            );
-                        },
                         deps: [
                             '$ocLazyLoad',
-                            function($ocLazyLoad) {
+                            '$rootScope',
+                            'MenuFactory',
+                            function($ocLazyLoad, $rootScope, MenuFactory) {
+                                $rootScope.menus = MenuFactory.get('SETTINGS');
+
                                 return $ocLazyLoad.load({
                                     name: 'sbAdminApp',
                                     files: [
@@ -178,11 +160,6 @@ angular
                         'views/application/detail.html',
                     resolve: {
                         loginRequired: loginRequired,
-                        menu: function(MenuFactory, $rootScope) {
-                            $rootScope.menus = MenuFactory.get(
-                                'SETTINGS'
-                            );
-                        },
                         deps: getNotyDeps([
                             CONFIG.ASSETS_BASE_URL +
                                 'scripts/controllers/application.js'
@@ -197,8 +174,7 @@ angular
                 .state('app.applicationEdit', {
                     url: '/applications/{id}/edit',
                     templateUrl:
-                        CONFIG.ASSETS_BASE_URL +
-                        'views/application/edit.html',
+                        CONFIG.ASSETS_BASE_URL + 'views/application/edit.html',
                     resolve: {
                         loginRequired: loginRequired,
                         deps: getNotyDeps([
@@ -215,61 +191,78 @@ angular
                 .state('app.dashboard', {
                     url: '/{id}',
                     templateUrl:
-                        CONFIG.ASSETS_BASE_URL +
-                        'views/dashboard.html',
+                        CONFIG.ASSETS_BASE_URL + 'views/dashboard.html',
                     resolve: {
                         loginRequired: loginRequired,
                         deps: function(
                             $ocLazyLoad,
                             MenuFactory,
                             $rootScope,
-                            $localStorage
+                            $localStorage,
+                            ApplicationFactory
                         ) {
-                            $rootScope.menus =
-                                $localStorage.currentMenu;
+                            $rootScope.menus = $localStorage.currentMenu;
                             return $ocLazyLoad
-                                .load([
-                                    {
-                                        insertBefore:
-                                            '#load_styles_before',
-                                        files: [
-                                            CONFIG.ASSETS_BASE_URL +
-                                                'styles/climacons-font.css',
-                                            CONFIG.ASSETS_BASE_URL +
-                                                'vendor/rickshaw/rickshaw.min.css'
-                                        ]
-                                    },
-                                    {
-                                        serie: true,
-                                        files: [
-                                            CONFIG.ASSETS_BASE_URL +
-                                                'vendor/d3/d3.min.js',
-                                            CONFIG.ASSETS_BASE_URL +
-                                                'vendor/rickshaw/rickshaw.min.js',
-                                            CONFIG.ASSETS_BASE_URL +
-                                                'vendor/flot/jquery.flot.js',
-                                            CONFIG.ASSETS_BASE_URL +
-                                                'vendor/flot/jquery.flot.resize.js',
-                                            CONFIG.ASSETS_BASE_URL +
-                                                'vendor/flot/jquery.flot.pie.js',
-                                            CONFIG.ASSETS_BASE_URL +
-                                                'vendor/flot/jquery.flot.categories.js'
-                                        ]
-                                    },
-                                    {
-                                        name: 'angular-flot',
-                                        files: [
-                                            CONFIG.ASSETS_BASE_URL +
-                                                'vendor/angular-flot/angular-flot.js'
-                                        ]
-                                    }
-                                ])
-                                .then(function() {
-                                    return $ocLazyLoad.load(
+                            .load([
+                                {
+                                    insertBefore: '#load_styles_before',
+                                    files: [
                                         CONFIG.ASSETS_BASE_URL +
-                                            'scripts/controllers/dashboard.js'
-                                    );
+                                        'styles/climacons-font.css',
+                                        CONFIG.ASSETS_BASE_URL +
+                                        'vendor/rickshaw/rickshaw.min.css'
+                                    ]
+                                },
+                                {
+                                    serie: true,
+                                    files: [
+                                        CONFIG.ASSETS_BASE_URL +
+                                        'vendor/d3/d3.min.js',
+                                        CONFIG.ASSETS_BASE_URL +
+                                        'vendor/rickshaw/rickshaw.min.js',
+                                        CONFIG.ASSETS_BASE_URL +
+                                        'vendor/flot/jquery.flot.js',
+                                        CONFIG.ASSETS_BASE_URL +
+                                        'vendor/flot/jquery.flot.resize.js',
+                                        CONFIG.ASSETS_BASE_URL +
+                                        'vendor/flot/jquery.flot.pie.js',
+                                        CONFIG.ASSETS_BASE_URL +
+                                        'vendor/flot/jquery.flot.categories.js'
+                                    ]
+                                },
+                                {
+                                    name: 'angular-flot',
+                                    files: [
+                                        CONFIG.ASSETS_BASE_URL +
+                                        'vendor/angular-flot/angular-flot.js'
+                                    ]
+                                }
+                            ])
+                            .then(function() {
+                                ApplicationFactory.findAll()
+                                .then(function(response) {
+                                    delete $localStorage.applications;
+                                    if(response){
+
+                                        $localStorage.applications = response.data;
+                                        $rootScope.applications =
+                                            $localStorage.applications;
+                                        return true;
+                                    }
+                                })
+                                .catch(function(error) {
+                                    console.error(error);
                                 });
+
+                            })
+                            .then(function() {
+                                return $ocLazyLoad.load(
+                                    CONFIG.ASSETS_BASE_URL +
+                                    'scripts/controllers/dashboard.js'
+                                );
+                            });
+
+
                         }
                     },
                     data: {
@@ -298,8 +291,7 @@ angular
                     data: {
                         title: 'Infrastructure Monitoring'
                     },
-                    controller:
-                        'infrastructureMonitoringController',
+                    controller: 'infrastructureMonitoringController',
                     controllerAs: 'ctrl'
                 })
                 .state('app.architectureDiscovery', {
@@ -330,8 +322,7 @@ angular
                 .state('app.dataBrowser', {
                     url: '/dataBrowser',
                     templateUrl:
-                        CONFIG.ASSETS_BASE_URL +
-                        'views/dataBrowser.html',
+                        CONFIG.ASSETS_BASE_URL + 'views/dataBrowser.html',
                     resolve: {
                         loginRequired: loginRequired,
                         deps: [
@@ -355,8 +346,7 @@ angular
                 .state('app.customReports', {
                     url: '/customReports',
                     templateUrl:
-                        CONFIG.ASSETS_BASE_URL +
-                        'views/customReports.html',
+                        CONFIG.ASSETS_BASE_URL + 'views/customReports.html',
                     resolve: {
                         loginRequired: loginRequired,
                         deps: [
@@ -405,9 +395,7 @@ angular
                 // Alerts
                 .state('app.alerts', {
                     url: '/alerts',
-                    templateUrl:
-                        CONFIG.ASSETS_BASE_URL +
-                        'views/alerts.html',
+                    templateUrl: CONFIG.ASSETS_BASE_URL + 'views/alerts.html',
                     resolve: {
                         loginRequired: loginRequired,
                         deps: [
@@ -503,8 +491,7 @@ angular
                     data: {
                         title: 'Administration / Visualisations'
                     },
-                    controller:
-                        'administrationVisualisationsController',
+                    controller: 'administrationVisualisationsController',
                     controllerAs: 'ctrl'
                 })
                 .state('app.administration.reports', {
@@ -556,7 +543,10 @@ angular
             function getNotyDeps(files) {
                 return [
                     '$ocLazyLoad',
-                    function($ocLazyLoad) {
+                    'MenuFactory',
+                    '$rootScope',
+                    function($ocLazyLoad, MenuFactory, $rootScope) {
+                        $rootScope.menus = MenuFactory.get('SETTINGS');
                         return $ocLazyLoad
                             .load([
                                 {

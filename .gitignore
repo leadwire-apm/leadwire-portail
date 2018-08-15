@@ -33,6 +33,7 @@
 /src/UIBundle/Resources/public/dev/dist
 /src/UIBundle/Resources/public/dev/node_modules
 /src/UIBundle/Resources/public/dev/bower_components
+/src/UIBundle/Resources/public/dev/app/vendor/*
 /web/uploads/*
 !/web/uploads/.gitkeep
 /uploads/*

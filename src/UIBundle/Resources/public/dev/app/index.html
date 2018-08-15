@@ -15,7 +15,6 @@
 
     <!-- build:css({.tmp,app}) styles/app.min.css -->
     <link rel="stylesheet" href="vendor/bootstrap/dist/css/bootstrap.css">
-    <link rel="stylesheet" href="styles/angular-toastr.css" />
     <link rel="stylesheet" href="vendor/perfect-scrollbar/css/perfect-scrollbar.css">
     <link rel="stylesheet" href="styles/roboto.css">
     <link rel="stylesheet" href="styles/font-awesome.css">
@@ -24,6 +23,7 @@
     <link rel="stylesheet" href="styles/animate.css">
     <link rel="stylesheet" href="styles/leadwire.css">
     <link rel="stylesheet" href="styles/leadwire.skins.css">
+    <link rel="stylesheet" href="styles/angular-toastr.css" />
     <!-- endbuild -->
 
   </head>
@@ -41,7 +41,7 @@
 
     <!-- build:js({.tmp,app}) scripts/app.min.js -->
     <script src="scripts/extentions/modernizr.js"></script>
-    <script src="vendor/jquery/dist/jquery.js"></script>
+    <script src="vendor/jquery/jquery.min.js"></script>
     <script src="vendor/angular/angular.js"></script>
     <script src="vendor/bootstrap/dist/js/bootstrap.min.js"></script>
     <script src="vendor/angular-bootstrap/ui-bootstrap-tpls.js"></script>
@@ -55,7 +55,8 @@
     <script src="vendor/perfect-scrollbar/js/perfect-scrollbar.jquery.js"></script>
     <script src="scripts/extentions/lib.js"></script>
     <script src="vendor/fastclick/lib/fastclick.js"></script>
-    <script src="vendor/angular-cookies.js"></script>
+
+    <script src="vendor/angular-cookies/angular-cookies.js"></script>
     <script src="scripts/extentions/angular-toastr.js"></script>
     <script async src="scripts/extentions/sweetalert.js"></script>
     <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.1/angular.min.js"></script>-->
@@ -94,7 +95,7 @@
 
     <!-- Custom -->
     <script src="scripts/services/config.js"></script>
-    <script src="./vendor/satellizer.js"></script>
+    <script src="vendor/satellizer/dist/satellizer.min.js"></script>
     <script src="scripts/directives/fileModel.js"></script>
     <script src="scripts/directives/spinner.js"></script>
     <script src="scripts/directives/showtab.js"></script>

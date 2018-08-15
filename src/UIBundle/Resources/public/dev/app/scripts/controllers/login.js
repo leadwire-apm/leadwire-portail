@@ -53,7 +53,7 @@ function LoginController(
                 return invitationId;
             })
             .then(UserService.handleBeforeRedirect)
-            .then(DashboardService.handleAfterRedirect)
+            .then(handleAfterRedirect)
             .then(handleLoginSuccess(provider))
             .catch(handleLoginFailure);
     }
@@ -63,7 +63,7 @@ function LoginController(
             toastr.success(MESSAGES_CONSTANTS.LOGIN_SUCCESS(provider));
             vm.isChecking = false;
             $location.search({});
-            $location.path('/' + dashboardId);
+            $location.path('/' + dashboardId !== null ? dashboardId : '');
         };
     }
 
@@ -78,6 +78,14 @@ function LoginController(
             message = error;
         }
         toastr.error(message);
+    }
+
+    function handleAfterRedirect(user) {
+        if (user.defaultApp && user.defaultApp.id) {
+            return DashboardService.fetchDashboardsByAppId(user.defaultApp.id);
+        } else {
+            return null;
+        }
     }
 
     function initController() {

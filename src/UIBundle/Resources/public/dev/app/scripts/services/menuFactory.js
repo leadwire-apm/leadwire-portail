@@ -2,7 +2,7 @@ angular.module('leadwireApp').factory('MenuFactory', function(Menus,$state) {
     return {
         get: function(menuKey) {
             return Menus[menuKey] ? Menus[menuKey].map(function(menu) {
-                return angular.extend(menu,{route:$state.href(menu.route)})
+                return angular.extend({},menu,{route:$state.href(menu.route)})
             }) : [];
         },
         set: function(menus, labelCallback, routeCallback, iconCallback) {
@@ -99,7 +99,7 @@ angular.module('leadwireApp').constant('Menus', {
             route: 'app.applicationsList',
             icon: 'fa fa-desktop',
             label: 'Applications',
-        },
+        }
 
     ],
 });
