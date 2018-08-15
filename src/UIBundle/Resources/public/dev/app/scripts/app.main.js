@@ -1,10 +1,10 @@
 'use strict';
 
-angular
-    .module('leadwireApp')
-    .run(function($rootScope, MenuFactory, $localStorage, CONFIG) {
+angular.module('leadwireApp').
+    run(function($rootScope, MenuFactory, $localStorage, CONFIG) {
         $rootScope.menus = $localStorage.currentMenu;
         $rootScope.applications = $localStorage.applications;
+        $rootScope.dashboards = $localStorage.dashboards;
         $rootScope.ASSETS_BASE_URL = CONFIG.ASSETS_BASE_URL;
         $rootScope.DOWNLOAD_URL = CONFIG.DOWNLOAD_URL;
         $rootScope.UPLOAD_URL = CONFIG.UPLOAD_URL;
@@ -20,8 +20,8 @@ angular
         //         $state.p(to.redirectTo, params, { location: 'replace' });
         //     }
         // });
-    })
-    .controller('AppCtrl', [
+    }).
+    controller('AppCtrl', [
         '$scope',
         '$rootScope',
         '$auth',
@@ -40,7 +40,7 @@ angular
             $localStorage,
             AppService,
             MESSAGES_CONSTANTS,
-            toastr
+            toastr,
         ) {
             $scope.mobileView = 767;
 
@@ -61,10 +61,10 @@ angular
                     isConversationOpen: false,
                     isQuickLaunch: false,
                     sidebarTheme: '',
-                    headerTheme: ''
+                    headerTheme: '',
                 },
                 isMessageOpen: false,
-                isConfigOpen: false
+                isConfigOpen: false,
             };
 
             $rootScope.user = $localStorage.user;
@@ -98,7 +98,7 @@ angular
                 function() {
                     $localStorage.layout = $scope.app.layout;
                 },
-                true
+                true,
             );
 
             $scope.getRandomArbitrary = function() {
@@ -116,5 +116,5 @@ angular
                     $location.path('/login');
                 });
             };
-        }
+        },
     ]);

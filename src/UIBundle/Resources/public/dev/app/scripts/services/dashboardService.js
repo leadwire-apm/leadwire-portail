@@ -13,6 +13,7 @@ angular
             return new Promise(function(resolve, reject) {
                 ApplicationFactory.findMyDashboard(appId)
                     .then(function(response) {
+                        $localStorage.dashboards = response.data;
                         $localStorage.currentMenu = MenuFactory.set(
                             response.data,
                             function(menu) {
