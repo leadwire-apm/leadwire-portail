@@ -1,5 +1,9 @@
 angular.module('leadwireApp').factory('Account', function($http, CONFIG) {
     return {
+        /**
+         *
+         * @returns {Promise}
+         */
         getProfile: function() {
             return $http.get(CONFIG.BASE_URL + 'api/user/me');
         },

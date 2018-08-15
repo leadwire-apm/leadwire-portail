@@ -1,8 +1,9 @@
 'use strict';
 
-angular.module('leadwireApp').
-    controller('profileModalCtrl', ProfileModalCtrl).
-    controller('profileCtrl', ProfileCtrl);
+angular
+    .module('leadwireApp')
+    .controller('profileModalCtrl', ProfileModalCtrl)
+    .controller('profileCtrl', ProfileCtrl);
 
 function ProfileModalCtrl(
     $localStorage,
@@ -14,7 +15,8 @@ function ProfileModalCtrl(
     toastr,
     CONFIG,
     $rootScope,
-    $scope,
+    CountryApi,
+    $scope
 ) {
     var vm = this;
     let _ctrl = new UserCtrl(
@@ -26,7 +28,8 @@ function ProfileModalCtrl(
         toastr,
         $rootScope,
         $scope,
-        $modalInstance,
+        CountryApi,
+        $modalInstance
     );
     this.save = _ctrl.save;
 }
@@ -34,12 +37,12 @@ function ProfileModalCtrl(
 function ProfileCtrl(
     $localStorage,
     Account,
-    CountryApi,
     $location,
     FileService,
     toastr,
     $rootScope,
-    $scope,
+    CountryApi,
+    $scope
 ) {
     var vm = this;
     let _ctrl = new UserCtrl(
@@ -51,24 +54,12 @@ function ProfileCtrl(
         toastr,
         $rootScope,
         $scope,
-        false,
+        CountryApi,
+
+        false
     );
     this.save = _ctrl.save;
 
-    if (!$localStorage.countries) {
-        CountryApi.getAll().then(function(res) {
-            $localStorage.countries = res.data.map(function(country) {
-                return angular.extend(country, {
-                    phoneCode: country.callingCodes[0],
-                    label: country.alpha2Code + ' ' + country.callingCodes[0],
-                });
-            });
-            $rootScope.countries = $localStorage.countries;
-            console.log(vm.user);
-        });
-    } else {
-        $rootScope.countries = $localStorage.countries;
-    }
 }
 
 function UserCtrl(
@@ -80,11 +71,12 @@ function UserCtrl(
     toastr,
     $rootScope,
     $scope,
-    $modalInstance,
+    CountryApi,
+    $modalInstance
 ) {
-    Controller.user = $localStorage.user
-        ? $localStorage.user
-        : Account.getProfile();
+    Controller.user = angular.extend({}, $localStorage.user);
+    console.log(Controller.user);
+    console.log(Controller);
     var sep = '###';
     Controller.showCheckBoxes = !!$modalInstance;
     this.save = function save() {
@@ -99,44 +91,52 @@ function UserCtrl(
                 acceptNewsLetter: Controller.user.acceptNewsLetter,
                 contact: phone,
                 contactPreference: Controller.user.contactPreference,
-                // defaultApp: Controller.user.defaultApp, //TODO UNCOMMENT ME WHEN ITS FIXED
+                defaultApp: Controller.user.defaultApp, //TODO UNCOMMENT ME WHEN ITS FIXED
                 username: Controller.user.username,
-                name: Controller.user.name,
+                name: Controller.user.name
             };
-            Account.updateProfile(updatedInfo).success(function(data) {
-                $localStorage.user = angular.extend($localStorage.user,
-                    updatedInfo, {
-                        contact: Controller.user.contact,
-                        phoneCode: Controller.user.phoneCode,
-                    });
+            console.log(updatedInfo);
+            Account.updateProfile(updatedInfo)
+                .success(function(data) {
+                    $localStorage.user = angular.extend(
+                        $localStorage.user,
+                        updatedInfo,
+                        {
+                            contact: Controller.user.contact,
+                            phoneCode: Controller.user.phoneCode
+                        }
+                    );
 
-                if (data) {
-                    if (Controller.avatar) {
-                        FileService.upload(Controller.avatar, 'user').
-                            then(function(
-                                response,
-                            ) {
-                                Account.updateProfile({
-                                    id: Controller.user.id,
-                                    avatar: response.data.name,
-                                });
-                                $localStorage.user = angular.extend(
-                                    $localStorage.user, {
-                                        avatar: response.data.name,
+                    if (data) {
+                        if (Controller.avatar) {
+                            FileService.upload(Controller.avatar, 'user').then(
+                                function(response) {
+                                    Account.updateProfile({
+                                        id: Controller.user.id,
+                                        avatar: response.data.name
                                     });
-                                Controller.handleSuccessForm(
-                                    response.data.name);
-                            });
+                                    $localStorage.user = angular.extend(
+                                        $localStorage.user,
+                                        {
+                                            avatar: response.data.name
+                                        }
+                                    );
+                                    Controller.handleSuccessForm(
+                                        response.data.name
+                                    );
+                                }
+                            );
+                        } else {
+                            Controller.handleSuccessForm();
+                        }
                     } else {
-                        Controller.handleSuccessForm();
+                        toastr.error('Failed update User');
                     }
-                } else {
+                })
+                .error(function(error) {
+                    console.log(error);
                     toastr.error('Failed update User');
-                }
-            }).error(function(error) {
-                console.log(error);
-                toastr.error('Failed update User');
-            });
+                });
         }
     };
 
@@ -153,7 +153,19 @@ function UserCtrl(
         }
     };
 
-    Controller.handleChange = function() {
-        Controller.user.phoneCode = Controller._user.phoneCode;
-    };
+    if (!$localStorage.countries) {
+        CountryApi.getAll().then(function(res) {
+            $localStorage.countries = res.data.map(function(country) {
+                return angular.extend(country, {
+                    phoneCode: country.callingCodes[0],
+                    label: country.alpha2Code + ' ' + country.callingCodes[0]
+                });
+            });
+            $rootScope.countries = $localStorage.countries;
+            console.log(vm.user);
+        });
+    } else {
+        $rootScope.countries = $localStorage.countries;
+    }
+
 }

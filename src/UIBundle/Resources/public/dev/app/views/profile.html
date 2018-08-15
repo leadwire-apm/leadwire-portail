@@ -52,9 +52,9 @@
 
                             <select name="phoneCode" class="form-control"
                                     ng-init="ctrl._user={phoneCode:ctrl.user.phoneCode}"
-                                    ng-change="ctrl.handleChange()"
+                                    ng-change="ctrl.user.phoneCode = ctrl._user.phoneCode"
                                     ng-model="ctrl._user"
-                                    ng-options="country.phoneCode for country in countries track by country.phoneCode"
+                                    ng-options="country.alpha2Code+ '-' +country.phoneCode for country in countries track by country.phoneCode"
                                     data-ng-disabled="!countries.length"
                             >
                                 <option value="">Choose one</option>
@@ -96,11 +96,12 @@
                         <label class="col-sm-2 control-label" for="defaultApp">Default Application</label>
                         <div class="col-sm-10">
                             <select id="defaultApp" name="defaultApp" class="form-control"
-                                    ng-model="ctrl.user.defaultApp.id">
+                                    ng-init="ctrl._application={id:ctrl.user.defaultApp.id}"
+                                    ng-change="ctrl.user.defaultApp.id = ctrl._application.id"
+                                    ng-model="ctrl._application"
+                                    ng-options="application.name for application in applications track by application.id"
+                            >
                                 <option value=""></option>
-                                <option ng-repeat="application in applications" value="{{application.id}}">
-                                    {{application.name}}
-                                </option>
                             </select>
                             <span class="text-red"
                                   ng-show="ctrl.userForm.defaultApp.$error.required">This field is required</span>
