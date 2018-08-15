@@ -2,8 +2,8 @@
 
 angular
   .module("leadwireApp")
-  .run(function($rootScope, MenuFactory, $localStorage, CONFIG) {
-    $rootScope.menus = MenuFactory.get("DASHBOARD");
+  .run(function($rootScope, MenuFactory, $localStorage, CONFIG,$state) {
+    $rootScope.menus = $localStorage.currentMenu;
     $rootScope.applications = $localStorage.applications;
     $rootScope.ASSETS_BASE_URL = CONFIG.ASSETS_BASE_URL;
     $rootScope.DOWNLOAD_URL = CONFIG.DOWNLOAD_URL;
@@ -12,7 +12,16 @@ angular
       $localStorage.applications = newVal;
       $rootScope.applications = newVal;
     });
-  })
+
+    // $rootScope.$on('$stateChangeStart', function(evt, to, params) {
+    //     if (to.redirectTo) {
+    //         evt.preventDefault();
+    //         console.log(to)
+    //         $state.p(to.redirectTo, params, { location: 'replace' });
+    //     }
+    // });
+
+})
   .controller("AppCtrl", [
     "$scope",
     "$rootScope",

@@ -75,8 +75,6 @@ function UserCtrl(
     $modalInstance
 ) {
     Controller.user = angular.extend({}, $localStorage.user);
-    console.log(Controller.user);
-    console.log(Controller);
     var sep = '###';
     Controller.showCheckBoxes = !!$modalInstance;
     this.save = function save() {
@@ -95,7 +93,6 @@ function UserCtrl(
                 username: Controller.user.username,
                 name: Controller.user.name
             };
-            console.log(updatedInfo);
             Account.updateProfile(updatedInfo)
                 .success(function(data) {
                     $localStorage.user = angular.extend(
@@ -162,7 +159,6 @@ function UserCtrl(
                 });
             });
             $rootScope.countries = $localStorage.countries;
-            console.log(vm.user);
         });
     } else {
         $rootScope.countries = $localStorage.countries;

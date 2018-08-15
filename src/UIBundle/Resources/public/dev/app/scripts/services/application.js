@@ -4,7 +4,11 @@ angular.module('leadwireApp').
             findAll: function() {
                 return $http.get(CONFIG.BASE_URL + 'api/app/list');
             },
-            findMyApps: function() {
+            findMyDashboard: function(id) {
+                return $http.get(
+                    CONFIG.BASE_URL + 'api/app/' + id + '/dashboards');
+            },
+            findInvitedApps: function() {
                 return $http.get(CONFIG.BASE_URL + 'api/app/invited/list');
             },
             save: function(body) {
@@ -24,7 +28,7 @@ angular.module('leadwireApp').
 
         };
     }).
-    service('ApplicationService', function(ApplicationFactory,toastr) {
+    service('ApplicationService', function(ApplicationFactory, toastr) {
         var service = {};
 
         service.setAppAsDefault = function(app) {
@@ -33,10 +37,11 @@ angular.module('leadwireApp').
                 is_default: true,
             };
 
-            ApplicationFactory.update(app.id, updatedApp).then(function(response) {
-                toastr.success('Application Updated')
-            });
+            ApplicationFactory.update(app.id, updatedApp).
+                then(function(response) {
+                    toastr.success('Application Updated');
+                });
         };
 
-        return service
+        return service;
     });
