@@ -81,7 +81,7 @@ function LoginController(
     }
 
     function handleAfterRedirect(user) {
-        if (user.defaultApp && user.defaultApp.id) {
+        if (user.defaultApp && user.defaultApp.id && user.defaultApp.isEnabled) {
             return DashboardService.fetchDashboardsByAppId(user.defaultApp.id);
         } else {
             return null;

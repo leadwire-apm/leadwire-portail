@@ -4,7 +4,7 @@
     <div class="css-table-xs">
 
       <div ng-repeat="app in applications" class="col">
-        <a  ng-click="setDefaultApp(app)">
+        <a  ng-if="app.isEnabled" ng-click="setDefaultApp(app)">
           <i ng-class="app.is_default ? 'fa fa-desktop text-amber' : 'fa fa-desktop'"></i>
           <span ng-class="app.is_default ? 'text-amber' : ''">{{ app.name }}</span>
         </a>
