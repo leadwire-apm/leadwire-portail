@@ -125,7 +125,7 @@ class App
     /** @ODM\ReferenceMany(targetDocument="Invitation", mappedBy="app")
      * @JMS\Type("array<AppBundle\Document\Invitation>")
      * @JMS\Expose
-     * @JMS\Groups({"full"})
+     * @JMS\Groups({"full", "Default"})
      */
     public $invitations;
 

@@ -10,15 +10,7 @@
                         <p><span class="bold text-bluegrey">Email : </span> {{ctrl.app.email}}</p>
                         <p><span class="bold text-bluegrey">Owner : </span> {{ctrl.app.owner.email}}</p>
                         <p><span class="bold text-bluegrey">State : </span>
-                            <span ng-class="ctrl.app.is_enabled ? 'label label-success' : 'label label-default'">{{ctrl.app.is_enabled ? 'Enabled' :'Disabled'}}</span>
-                        </p>
-                        <p>
-                            <span class="bold text-bluegrey">Default : </span> <span
-                                ng-class="ctrl.app.is_default ? 'label label-success' : 'label label-default'">
-                                    <i ng-if="ctrl.app.is_default" class="fa fa-check"></i>
-                                    <i ng-if="!ctrl.app.is_default" class="fa fa-remove"></i>
-                                </span>
-
+                            <span ng-class="ctrl.app.isEnabled ? 'label label-success' : 'label label-default'">{{ctrl.app.isEnabled ? 'Enabled' :'Disabled'}}</span>
                         </p>
                     </div>
                 </div>
