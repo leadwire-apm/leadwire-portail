@@ -32,7 +32,6 @@
                 .then(ApplicationService.handleSaveOnSuccess)
                 .then(function() {
                     vm.flipActivityIndicator();
-                    toastr.success(MESSAGES_CONSTANTS.ADD_APP_SUCCESS);
                     $state.go('app.applicationsList');
                 })
                 .catch(handleOnFailure);

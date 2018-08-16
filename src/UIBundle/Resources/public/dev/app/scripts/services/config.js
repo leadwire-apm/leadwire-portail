@@ -17,10 +17,10 @@
 
         service.getUrl = function(dashboardId, hasParameters) {
             if (hasParameters === true) {
-                return service.baseUrl + dashboardId + '&token=' +
+                return service.baseUrl + $localStorage.user.uuid + '/' + dashboardId + '&token=' +
                     $auth.getToken();
             } else {
-                return service.baseUrl + dashboardId + '?token=' +
+                return service.baseUrl + $localStorage.user.uuid + '/' + dashboardId + '?token=' +
                     $auth.getToken();
             }
         };

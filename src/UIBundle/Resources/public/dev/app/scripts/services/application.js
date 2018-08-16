@@ -64,7 +64,15 @@
                 // if (noAppsYet) {
                 //     DashboardService.fetchDashboardsByAppId(response.data.id);
                 // }
-                $rootScope.applications.push(response.data);
+                if (response.data !== false) {
+                    $rootScope.applications.push(response.data);
+                    toastr.success(MESSAGES_CONSTANTS.ADD_APP_SUCCESS);
+                } else {
+                    toastr.error(MESSAGES_CONSTANTS.ADD_APP_FAILURE ||
+                        MESSAGES_CONSTANTS.ERROR);
+                }
+                //console.log(response.data);
+
                 // $scope.$emit('new-application', vm.application);
             };
 

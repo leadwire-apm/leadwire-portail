@@ -29,6 +29,7 @@ angular
         '$http',
         '$localStorage',
         'ApplicationService',
+        'DashboardService',
         'MESSAGES_CONSTANTS',
         'toastr',
         function AppCtrl(
@@ -39,6 +40,7 @@ angular
             $http,
             $localStorage,
             AppService,
+            DashboardService,
             MESSAGES_CONSTANTS,
             toastr
         ) {
@@ -105,8 +107,8 @@ angular
                 return Math.round(Math.random() * 100);
             };
 
-            $scope.setDefaultApp = function(app) {
-                AppService.setAppAsDefault(app);
+            $scope.getApp = function(app) {
+                DashboardService.fetchDashboardsByAppId(app.id);
             };
 
             $scope.logout = function() {

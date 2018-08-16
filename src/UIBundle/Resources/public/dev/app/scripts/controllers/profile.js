@@ -96,7 +96,6 @@ function UserCtrl(
                 username: Controller.user.username,
                 name: Controller.user.name,
             };
-            console.log(updatedInfo);
             Account.updateProfile(updatedInfo).then(function(data) {
                 $localStorage.user = angular.extend(
                     $localStorage.user,

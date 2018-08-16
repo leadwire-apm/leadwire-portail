@@ -54,7 +54,7 @@
                                     ng-init="ctrl._user={phoneCode:ctrl.user.phoneCode}"
                                     ng-change="ctrl.user.phoneCode = ctrl._user.phoneCode"
                                     ng-model="ctrl._user"
-                                    ng-options="country.alpha2Code+ '-' +country.phoneCode for country in countries track by country.phoneCode"
+                                    ng-options="country.alpha2Code+ ' +' +country.phoneCode for country in countries track by country.phoneCode"
                                     data-ng-disabled="!countries.length"
                             >
                                 <option value="">Choose one</option>
