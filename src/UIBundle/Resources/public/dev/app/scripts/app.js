@@ -45,6 +45,7 @@ angular.module('leadwireApp', [
 }).constant('MESSAGES_CONSTANTS', {
     ERROR: 'Something went wrong,please try again',
     EDIT_APP_SUCCESS: 'Your app has been updated successfully',
+    ACTIVATE_APP_SUCCESS: 'Your app has been activated successfully',
     INVITE_USER_SUCCESS: 'The invitation has been sent successfully',
     DELETE_APP_SUCCESS: 'The app has been deleted',
     DELETE_INVITATION_SUCCESS: 'The invitation has been deleted',

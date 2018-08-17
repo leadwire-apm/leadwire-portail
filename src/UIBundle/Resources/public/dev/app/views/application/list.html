@@ -27,22 +27,29 @@
                     <td>{{app.type.name}}</td>
                     <td>{{app.email}}</td>
                     <td class="align-middle">
-                            <span data-ng-class="app.is_enabled ? 'label label-success' : 'label label-default'">
-                                {{app.is_enabled ? 'Enabled' : 'Disabled'}}
+                            <span data-ng-class="app.isEnabled ? 'label label-success' : 'label label-default'">
+                                {{app.isEnabled ? 'Enabled' : 'Disabled'}}
                             </span>
 
                     </td>
                     <td>
-                        <a class="btn btn-info" ui-sref="app.applicationDetail({id:app.id})">
+                        <a class="btn btn-info"
+                           ng-disabled="!app.isEnabled" ui-sref="app.applicationDetail({id:app.id})">
                             <i class="fa fa-info"></i>
                         </a>
                     </td>
                     <td>
-                        <a class="btn btn-warning" data-ng-disabled="!app.is_enabled && app.owner.id != user.id"
+
+                        <a class="btn btn-primary"
+                          ng-click="ctrl.enableApp(app)"
+                           ng-if="!app.isEnabled && app.owner.id == user.id">
+                            <i class="fa fa-key"></i>
+                        </a>
+                        <a class="btn btn-warning"  ng-if="app.isEnabled && app.owner.id == user.id"
                            ui-sref="app.applicationEdit({id:app.id})"><i class="fa fa-pencil"></i></a>
                     </td>
                     <td>
-                        <button class="btn btn-danger" data-ng-disabled="!app.is_enabled && app.owner.id != user.id"
+                        <button class="btn btn-danger"
                                 ng-click="ctrl.deleteApp(app.id)">
                             <i ng-if="!ctrl.ui.isDeleting" class="fa fa-trash"></i>
                             <spinner is-loading="ctrl.ui.isDeleting"></spinner>

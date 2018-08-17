@@ -32,6 +32,11 @@
                     return $http.delete(
                         CONFIG.BASE_URL + 'api/app/' + id + '/delete'
                     );
+                },
+                activate: function (id, code) {
+                    return $http.post(
+                        CONFIG.BASE_URL + 'api/app/' + id + '/activate', {code: code}
+                    );
                 }
             };
         })

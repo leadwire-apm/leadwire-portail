@@ -66,14 +66,13 @@ class AuthService
         $token = [
             'host' => $this->get('app_domain'),
             'user' =>  $userId,
-            //'name' =>  "leadwire-apm-test",
+            'name' =>  "leadwire-apm-test",
             'iat' => time(),
             'exp' =>  time() + 1800,
             'nbf' => time()
         ];
 
         return JWT::encode($token, $tokenSecret);
-        //
     }
 
     public function decodeToken($jwt)

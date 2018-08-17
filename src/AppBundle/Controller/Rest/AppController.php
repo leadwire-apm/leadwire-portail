@@ -51,6 +51,25 @@ class AppController extends BaseRestController
         return $this->json($elastic->getDashboads($appService->getApp($id)));
     }
 
+
+    /**
+     * @Route("/{id}/activate", methods="POST")
+     *
+     * @param Request $request
+     * @param AppService $appService
+     * @param string  $id
+     *
+     * @return Response
+     */
+    public function activationAppAction(Request $request, AppService $appService, $id)
+    {
+        $app = $appService->activateApp($id, $request->getContent());
+        $this->denyAccessUnlessGranted(AclVoter::VIEW, $app);
+
+        return $this->prepareJsonResponse(true, 200, "Default");
+    }
+
+
     /**
      * @Route("/list", methods="GET")
      *

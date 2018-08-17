@@ -129,6 +129,20 @@ class AppService
     }
 
     /**
+     * Activate Disabled App
+     * @param $id
+     * @param $code
+     * @return App
+     */
+    public function activateApp($id, $code)
+    {
+        $app = $this->getApp($id);
+        $app->setIsEnabled(true);
+        $this->appManager->update($app);
+        return $app;
+    }
+
+    /**
      * Get specific apps
      *
      * @param string $criteria

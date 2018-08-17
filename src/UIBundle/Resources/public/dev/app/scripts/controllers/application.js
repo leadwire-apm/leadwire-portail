@@ -4,7 +4,8 @@
         .controller('addApplicationCtrl', addApplicationCtrlFN)
         .controller('applicationListCtrl', applicationListCtrlFN)
         .controller('applicationDetailCtrl', applicationDetailCtrlFN)
-        .controller('applicationEditCtrl', applicationEditCtrlFN);
+        .controller('applicationEditCtrl', applicationEditCtrlFN)
+        .controller('activationModalCtrl', activationModalCtrl);
 
     /**
      * Handle add new application logic
@@ -66,7 +67,8 @@
         ApplicationFactory,
         toastr,
         MESSAGES_CONSTANTS,
-        $localStorage
+        $localStorage,
+        $modal
     ) {
         var vm = this;
         init();
@@ -122,6 +124,26 @@
             };
             getApps();
         }
+
+        vm.enableApp = function(app) {
+            $modal.open({
+                templateUrl:
+                    $rootScope.ASSETS_BASE_URL + 'views/application/enable.html',
+                controller: 'activationModalCtrl',
+                controllerAs: 'ctrl',
+                resolve: {
+                    app: function() {
+                        return app;
+                    },
+                    vm: function () {
+                        return vm;
+                    },
+                    getApps: function() {
+                      return getApps;
+                    }
+                }
+            });
+        };
     }
 
     function applicationDetailCtrlFN(
@@ -251,4 +273,28 @@
             vm.ui.isSaving = !vm.ui.isSaving;
         };
     }
+
+
+    function activationModalCtrl(toastr, ApplicationFactory, $modalInstance, MESSAGES_CONSTANTS, app, vm, getApps)
+    {
+        let ctrl = this;
+        ctrl.enable = function () {
+            console.log("hallaluia");
+            ApplicationFactory.activate(app.id, ctrl.activationForm.activationCode)
+                .then(function() {
+                    toastr.success(MESSAGES_CONSTANTS.ACTIVATE_APP_SUCCESS);
+                    $modalInstance.close();
+                    getApps();
+                })
+                .catch(function(error) {
+                    toastr.error(
+                        error.message ||
+                        MESSAGES_CONSTANTS.EDIT_APP_FAILURE ||
+                        MESSAGES_CONSTANTS.ERROR
+                    );
+                });
+        };
+
+    }
+
 })(window.angular, window.swal);
