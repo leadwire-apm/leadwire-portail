@@ -124,6 +124,26 @@ angular
                     controller: 'addApplicationCtrl',
                     controllerAs: 'ctrl'
                 })
+                .state('app.toc', {
+                    url: "/term-of-contract",
+                    templateUrl: CONFIG.ASSETS_BASE_URL + 'views/toc.html',
+                    resolve: {
+                        loginRequired: loginRequired,
+                    },
+                    data: {
+                        title: 'Term of Contract'
+                    },
+                })
+                .state('app.tos', {
+                    url: "/term-of-service",
+                    templateUrl: CONFIG.ASSETS_BASE_URL + 'views/tos.html',
+                    resolve: {
+                        loginRequired: loginRequired,
+                    },
+                    data: {
+                        title: 'Term of Service'
+                    },
+                })
                 .state('app.applicationsList', {
                     url: '/applications/list',
                     templateUrl:

@@ -26,8 +26,10 @@
         };
 
         service.getDashboard = function(dashboardId, hasParameter) {
-            return this.getUrl('app/kibana#/dashboard/' + dashboardId,
+           var url = this.getUrl('app/kibana#/dashboard/' + dashboardId,
                 hasParameter);
+           console.log(url);
+           return url;
         };
         return service;
     }
