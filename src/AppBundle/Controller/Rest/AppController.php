@@ -63,10 +63,13 @@ class AppController extends BaseRestController
      */
     public function activationAppAction(Request $request, AppService $appService, $id)
     {
-        $app = $appService->activateApp($id, $request->getContent());
-        $this->denyAccessUnlessGranted(AclVoter::VIEW, $app);
-
-        return $this->prepareJsonResponse(true, 200, "Default");
+        $app = $appService->activateApp($id, json_decode($request->getContent()));
+        //$this->denyAccessUnlessGranted(AclVoter::VIEW, $app);
+        if (!!$app) {
+            return $this->prepareJsonResponse($app, 200, "Default");
+        } else {
+            return $this->prepareJsonResponse($app, 400, "Default");
+        }
     }
 
 
