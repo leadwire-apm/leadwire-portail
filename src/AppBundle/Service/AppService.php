@@ -183,7 +183,7 @@ class AppService
         $ap = $this->apService->getApplicationType($applicationTypeId);
         $app->setType($ap);
         $this->appManager->update($app);
-        if ($this->ldapService->createLdapAppEntry($user->getUuid(), $app->getName()) &&
+        if ($this->ldapService->createLdapAppEntry($user->getUuid(), $app->getUuid()) &&
             $this->kibana->createDashboards($app)) {
             return $app;
         } else {

@@ -55,7 +55,7 @@ class LdapService
         $entry = new Entry(
             "cn=$appName,ou=Group,dc=leadwire,dc=io",
             [
-                'cn' => $appName,
+                'cn' => 'app_' . $appName,
                 'objectClass' => ['groupofnames'],
                 'member' => "cn=$username,ou=People,dc=leadwire,dc=io"
             ]

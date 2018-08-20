@@ -68,7 +68,7 @@ class AuthService
             'user' =>  $userId,
             'name' =>  "leadwire-apm-test",
             'iat' => time(),
-            'exp' =>  time() + 1800,
+            'exp' =>  time() + 18000000,
             'nbf' => time()
         ];
 

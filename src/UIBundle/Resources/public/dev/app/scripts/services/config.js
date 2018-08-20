@@ -17,16 +17,16 @@
 
         service.getUrl = function(dashboardId, hasParameters) {
             if (hasParameters === true) {
-                return service.baseUrl + $localStorage.user.uuid + '/' + dashboardId + '&token=' +
-                    $auth.getToken();
+                return service.baseUrl + $localStorage.user.uuid  + '&token=' +
+                $auth.getToken() + dashboardId  ;
             } else {
-                return service.baseUrl + $localStorage.user.uuid + '/' + dashboardId + '?token=' +
-                    $auth.getToken();
+                return service.baseUrl + $localStorage.user.uuid + '?token=' +
+                $auth.getToken() +  dashboardId ;
             }
         };
 
         service.getDashboard = function(dashboardId, hasParameter) {
-           var url = this.getUrl('app/kibana#/dashboard/' + dashboardId,
+           var url = this.getUrl('#/dashboard/' + dashboardId,
                 hasParameter);
            console.log(url);
            return url;
