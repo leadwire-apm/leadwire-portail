@@ -30,15 +30,12 @@
         $state
     ) {
         var vm = this;
-        init();
+        onLoad();
         vm.saveApp = function() {
             vm.flipActivityIndicator();
             ApplicationFactory.save(vm.application)
                 .then(ApplicationService.handleSaveOnSuccess)
-                .then(function() {
-                    vm.flipActivityIndicator();
-                    $state.go('app.applicationsList');
-                })
+                .then(handleAfterSuccess)
                 .catch(handleOnFailure);
         };
 
@@ -46,7 +43,7 @@
             vm.ui.isSaving = !vm.ui.isSaving;
         };
 
-        function init() {
+        function onLoad() {
             vm.ui = {
                 isSaving: false
             };
@@ -56,6 +53,10 @@
             });
         }
 
+        function handleAfterSuccess() {
+            vm.flipActivityIndicator();
+            $state.go('app.applicationsList');
+        }
         function handleOnFailure(error) {
             toastr.error(
                 error.message ||

@@ -1,6 +1,26 @@
-angular
-    .module('leadwireApp')
-    .service('DashboardService', function(
+(function(angular) {
+    angular
+        .module('leadwireApp')
+        .service('DashboardService', [
+            'ApplicationFactory',
+            'MenuFactory',
+            '$rootScope',
+            '$localStorage',
+            '$state',
+            DashboardServiceFN
+        ]);
+
+    /**
+     * Handle Dashboard Logic
+     *
+     * @param ApplicationFactory
+     * @param MenuFactory
+     * @param $rootScope
+     * @param $localStorage
+     * @param $state
+     * @constructor
+     */
+    function DashboardServiceFN(
         ApplicationFactory,
         MenuFactory,
         $rootScope,
@@ -14,6 +34,7 @@ angular
                 ApplicationFactory.findMyDashboard(appId)
                     .then(function(response) {
                         $localStorage.dashboards = response.data;
+                        $localStorage.selectedAppId = appId;
                         $localStorage.currentMenu = MenuFactory.set(
                             response.data,
                             function(menu) {
@@ -36,4 +57,5 @@ angular
                     });
             });
         };
-    });
+    }
+})(window.angular);

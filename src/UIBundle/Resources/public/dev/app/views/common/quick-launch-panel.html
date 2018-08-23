@@ -4,9 +4,9 @@
         <div class="css-table-xs">
 
             <div ng-repeat="app in applications" ng-if="app.isEnabled" class="col">
-                <a ng-click="getApp(app)">
-                    <i ng-class="app.is_default ? 'fa fa-desktop text-amber' : 'fa fa-desktop'"></i>
-                    <span ng-class="app.is_default ? 'text-amber' : ''">{{ app.name }}</span>
+                <a ng-click="changeContextApp(app)">
+                    <i ng-class="app.id == selectedAppId ? 'fa fa-desktop text-amber' : 'fa fa-desktop'"></i>
+                    <span ng-class="app.id == selectedAppId ? 'text-amber' : ''">{{ app.name }}</span>
                 </a>
             </div>
             <div class="col" ng-if="applications.length==0">
