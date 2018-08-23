@@ -115,7 +115,7 @@ angular
                         loginRequired: loginRequired,
                         deps: getNotyDeps([
                             CONFIG.ASSETS_BASE_URL +
-                                'scripts/controllers/application.js'
+                                'scripts/controllers/addApplication.js'
                         ])
                     },
                     data: {
@@ -125,24 +125,24 @@ angular
                     controllerAs: 'ctrl'
                 })
                 .state('app.toc', {
-                    url: "/term-of-contract",
+                    url: '/term-of-contract',
                     templateUrl: CONFIG.ASSETS_BASE_URL + 'views/toc.html',
                     resolve: {
-                        loginRequired: loginRequired,
+                        loginRequired: loginRequired
                     },
                     data: {
                         title: 'Term of Contract'
-                    },
+                    }
                 })
                 .state('app.tos', {
-                    url: "/term-of-service",
+                    url: '/term-of-service',
                     templateUrl: CONFIG.ASSETS_BASE_URL + 'views/tos.html',
                     resolve: {
-                        loginRequired: loginRequired,
+                        loginRequired: loginRequired
                     },
                     data: {
                         title: 'Term of Service'
-                    },
+                    }
                 })
                 .state('app.applicationsList', {
                     url: '/applications/list',
@@ -182,7 +182,7 @@ angular
                         loginRequired: loginRequired,
                         deps: getNotyDeps([
                             CONFIG.ASSETS_BASE_URL +
-                                'scripts/controllers/application.js'
+                                'scripts/controllers/detailApplication.js'
                         ])
                     },
                     data: {
@@ -199,7 +199,7 @@ angular
                         loginRequired: loginRequired,
                         deps: getNotyDeps([
                             CONFIG.ASSETS_BASE_URL +
-                                'scripts/controllers/application.js'
+                                'scripts/controllers/editApplication.js'
                         ])
                     },
                     data: {
@@ -218,71 +218,51 @@ angular
                             $ocLazyLoad,
                             MenuFactory,
                             $rootScope,
-                            $localStorage,
-                            ApplicationFactory
+                            $localStorage
                         ) {
                             $rootScope.menus = $localStorage.currentMenu;
                             return $ocLazyLoad
-                            .load([
-                                {
-                                    insertBefore: '#load_styles_before',
-                                    files: [
-                                        CONFIG.ASSETS_BASE_URL +
-                                        'styles/climacons-font.css',
-                                        CONFIG.ASSETS_BASE_URL +
-                                        'vendor/rickshaw/rickshaw.min.css'
-                                    ]
-                                },
-                                {
-                                    serie: true,
-                                    files: [
-                                        CONFIG.ASSETS_BASE_URL +
-                                        'vendor/d3/d3.min.js',
-                                        CONFIG.ASSETS_BASE_URL +
-                                        'vendor/rickshaw/rickshaw.min.js',
-                                        CONFIG.ASSETS_BASE_URL +
-                                        'vendor/flot/jquery.flot.js',
-                                        CONFIG.ASSETS_BASE_URL +
-                                        'vendor/flot/jquery.flot.resize.js',
-                                        CONFIG.ASSETS_BASE_URL +
-                                        'vendor/flot/jquery.flot.pie.js',
-                                        CONFIG.ASSETS_BASE_URL +
-                                        'vendor/flot/jquery.flot.categories.js'
-                                    ]
-                                },
-                                {
-                                    name: 'angular-flot',
-                                    files: [
-                                        CONFIG.ASSETS_BASE_URL +
-                                        'vendor/angular-flot/angular-flot.js'
-                                    ]
-                                }
-                            ])
-                            .then(function() {
-                                ApplicationFactory.findAll()
-                                .then(function(response) {
-                                    delete $localStorage.applications;
-                                    if(response){
-
-                                        $localStorage.applications = response.data;
-                                        $rootScope.applications =
-                                            $localStorage.applications;
-                                        return true;
+                                .load([
+                                    {
+                                        insertBefore: '#load_styles_before',
+                                        files: [
+                                            CONFIG.ASSETS_BASE_URL +
+                                                'styles/climacons-font.css',
+                                            CONFIG.ASSETS_BASE_URL +
+                                                'vendor/rickshaw/rickshaw.min.css'
+                                        ]
+                                    },
+                                    {
+                                        serie: true,
+                                        files: [
+                                            CONFIG.ASSETS_BASE_URL +
+                                                'vendor/d3/d3.min.js',
+                                            CONFIG.ASSETS_BASE_URL +
+                                                'vendor/rickshaw/rickshaw.min.js',
+                                            CONFIG.ASSETS_BASE_URL +
+                                                'vendor/flot/jquery.flot.js',
+                                            CONFIG.ASSETS_BASE_URL +
+                                                'vendor/flot/jquery.flot.resize.js',
+                                            CONFIG.ASSETS_BASE_URL +
+                                                'vendor/flot/jquery.flot.pie.js',
+                                            CONFIG.ASSETS_BASE_URL +
+                                                'vendor/flot/jquery.flot.categories.js'
+                                        ]
+                                    },
+                                    {
+                                        name: 'angular-flot',
+                                        files: [
+                                            CONFIG.ASSETS_BASE_URL +
+                                                'vendor/angular-flot/angular-flot.js'
+                                        ]
                                     }
-                                })
-                                .catch(function(error) {
-                                    console.error(error);
+                                ])
+                                .then(function() {
+                                    return $ocLazyLoad.load(
+                                        CONFIG.ASSETS_BASE_URL +
+                                            'scripts/controllers/dashboard.js'
+                                    );
                                 });
-
-                            })
-                            .then(function() {
-                                return $ocLazyLoad.load(
-                                    CONFIG.ASSETS_BASE_URL +
-                                    'scripts/controllers/dashboard.js'
-                                );
-                            });
-
-
                         }
                     },
                     data: {

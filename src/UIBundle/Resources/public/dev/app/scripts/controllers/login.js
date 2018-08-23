@@ -23,6 +23,7 @@ function logout($location, $localStorage) {
  * @param $localStorage
  * @param toastr
  * @param MESSAGES_CONSTANTS
+ * @param DashboardService
  * @constructor
  */
 function LoginController(
@@ -34,7 +35,10 @@ function LoginController(
     $localStorage,
     toastr,
     MESSAGES_CONSTANTS,
-    DashboardService
+    DashboardService,
+    ApplicationFactory,
+    $rootScope,
+    $state
 ) {
     var vm = this;
     initController();
@@ -60,10 +64,25 @@ function LoginController(
 
     function handleLoginSuccess(provider) {
         return function(dashboardId) {
-            toastr.success(MESSAGES_CONSTANTS.LOGIN_SUCCESS(provider));
-            vm.isChecking = false;
-            $location.search({});
-            $location.path('/' + dashboardId !== null ? dashboardId : '');
+            ApplicationFactory.findAll()
+                .then(function(response) {
+                    if (response) {
+                        $localStorage.applications = response.data;
+                        $rootScope.applications = response.data;
+                        toastr.success(
+                            MESSAGES_CONSTANTS.LOGIN_SUCCESS(provider)
+                        );
+                        vm.isChecking = false;
+                        $location.search({});
+                        $state.go('app.dashboard', {
+                            id: dashboardId !== null ? dashboardId : ''
+                        });
+                        return true;
+                    }
+                })
+                .catch(function(error) {
+                    console.error(error);
+                });
         };
     }
 
@@ -81,9 +100,14 @@ function LoginController(
     }
 
     function handleAfterRedirect(user) {
-        if (user.defaultApp && user.defaultApp.id && user.defaultApp.isEnabled) {
+        if (
+            user.defaultApp &&
+            user.defaultApp.id &&
+            user.defaultApp.isEnabled
+        ) {
             return DashboardService.fetchDashboardsByAppId(user.defaultApp.id);
         } else {
+            // no default app
             return null;
         }
     }
