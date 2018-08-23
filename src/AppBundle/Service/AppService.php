@@ -131,15 +131,23 @@ class AppService
     /**
      * Activate Disabled App
      * @param $id
-     * @param $code
+     * @param $body
      * @return App
      */
-    public function activateApp($id, $code)
+    public function activateApp($id, $body)
     {
-        $app = $this->getApp($id);
-        $app->setIsEnabled(true);
-        $this->appManager->update($app);
-        return $app;
+        $code = $body->code;
+
+        if (strlen($code) == 6 && substr($code, 1, 1) == 'B' &&
+            substr($code, 4, 1) == 7 &&
+            strtoupper($code) == $code) {
+            $app = $this->getApp($id);
+            $app->setIsEnabled(true);
+            $this->appManager->update($app);
+            return $app;
+        } else {
+            return null;
+        }
     }
 
     /**
