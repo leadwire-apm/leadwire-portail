@@ -1,7 +1,7 @@
 (function(angular) {
-
-    angular.module('leadwireApp').
-        run(function($rootScope, MenuFactory, $localStorage, CONFIG) {
+    angular
+        .module('leadwireApp')
+        .run(function($rootScope, MenuFactory, $localStorage, CONFIG) {
             $rootScope.menus = $localStorage.currentMenu;
             $rootScope.applications = $localStorage.applications;
             $rootScope.dashboards = $localStorage.dashboards;
@@ -19,8 +19,8 @@
             //         $state.p(to.redirectTo, params, { location: 'replace' });
             //     }
             // });
-        }).
-        controller('AppCtrl', [
+        })
+        .controller('AppCtrl', [
             '$scope',
             '$rootScope',
             '$auth',
@@ -41,7 +41,7 @@
                 AppService,
                 DashboardService,
                 MESSAGES_CONSTANTS,
-                toastr,
+                toastr
             ) {
                 $scope.mobileView = 767;
 
@@ -62,10 +62,10 @@
                         isConversationOpen: false,
                         isQuickLaunch: false,
                         sidebarTheme: '',
-                        headerTheme: '',
+                        headerTheme: ''
                     },
                     isMessageOpen: false,
-                    isConfigOpen: false,
+                    isConfigOpen: false
                 };
 
                 $rootScope.user = $localStorage.user;
@@ -80,10 +80,10 @@
                     $localStorage.applications = $localStorage.applications.filter(
                         function(currentApp) {
                             return currentApp.id !== app.id;
-                        });
+                        }
+                    );
                     $localStorage.applications.push(app);
                     $scope.applications = $localStorage.applications;
-
                 });
 
                 $scope.$on('new-application', function(event, newApp) {
@@ -106,7 +106,7 @@
                     function() {
                         $localStorage.layout = $scope.app.layout;
                     },
-                    true,
+                    true
                 );
 
                 $scope.getRandomArbitrary = function() {
@@ -117,6 +117,18 @@
                     DashboardService.fetchDashboardsByAppId(app.id);
                 };
 
+                $scope.brandRedirectTo = function() {
+                    if (
+                        $localStorage.dashboards &&
+                        $localStorage.dashboards.length
+                    ) {
+                        return $location.path(
+                            '/' + $localStorage.dashboards[0].id
+                        );
+                    } else {
+                        return $location.path('applications/list');
+                    }
+                };
                 $scope.logout = function() {
                     delete $localStorage.user;
                     delete $localStorage.currentMenu;
@@ -126,7 +138,6 @@
                         $location.path('/login');
                     });
                 };
-            },
+            }
         ]);
-
-})(window.angular)
+})(window.angular);

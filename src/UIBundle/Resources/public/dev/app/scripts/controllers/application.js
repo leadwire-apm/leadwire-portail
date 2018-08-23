@@ -76,22 +76,40 @@
                     modalVM.enable = function() {
                         ApplicationFactory.activate(
                             selectedApp.id,
-                            modalVM.activationForm.activationCode
+                            modalVM.activationCode
                         )
-                            .then(function() {
-                                toastr.success(
-                                    MESSAGES_CONSTANTS.ACTIVATE_APP_SUCCESS
-                                );
-                                var updatedApp = angular.extend(selectedApp, {
-                                    isEnabled: true
-                                });
-                                $scope.$emit('activate-app', updatedApp);
-                                $modalInstance.close();
-                                vm.apps = vm.apps.filter(function(currentApp) {
-                                    return currentApp.id !== selectedApp.id;
-                                });
-                                vm.apps.push(updatedApp);
-                            })
+                            .then(
+                                function(response) {
+                                    if (response.data) {
+                                        toastr.success(
+                                            MESSAGES_CONSTANTS.ACTIVATE_APP_SUCCESS
+                                        );
+                                        var updatedApp = angular.extend(
+                                            selectedApp,
+                                            {
+                                                isEnabled: true
+                                            }
+                                        );
+                                        $scope.$emit(
+                                            'activate-app',
+                                            updatedApp
+                                        );
+                                        $modalInstance.close();
+                                        vm.apps = vm.apps.map(function(
+                                            currentApp
+                                        ) {
+                                            return currentApp.id !==
+                                                selectedApp.id
+                                                ? currentApp
+                                                : updatedApp;
+                                        });
+                                    } else {
+                                        toastr.error(
+                                            MESSAGES_CONSTANTS.ACTIVATE_APP_FAILURE
+                                        );
+                                    }
+                                }
+                            )
                             .catch(function(error) {
                                 toastr.error(
                                     error.message ||

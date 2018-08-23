@@ -84,6 +84,9 @@ angular
                     url: '/settings',
                     templateUrl: CONFIG.ASSETS_BASE_URL + 'views/profile.html',
                     resolve: {
+                        isModal:function(){
+                            return false;
+                        },
                         loginRequired: loginRequired,
                         deps: [
                             '$ocLazyLoad',

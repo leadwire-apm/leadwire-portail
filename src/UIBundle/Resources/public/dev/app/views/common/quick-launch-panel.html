@@ -7,7 +7,6 @@
                 <a ng-click="getApp(app)">
                     <i ng-class="app.is_default ? 'fa fa-desktop text-amber' : 'fa fa-desktop'"></i>
                     <span ng-class="app.is_default ? 'text-amber' : ''">{{ app.name }}</span>
-                    <span>{{user.defaultApp}}</span>
                 </a>
             </div>
             <div class="col" ng-if="applications.length==0">
