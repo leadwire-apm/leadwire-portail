@@ -1,9 +1,12 @@
 (function(angular) {
-    angular.module('leadwireApp').controller('profileCtrl', ProfileCtrl);
+    angular
+        .module('leadwireApp')
+        .controller('profileModalCtrl', ProfileModalCtrl);
 
-    function ProfileCtrl(
+    function ProfileModalCtrl(
         $localStorage,
         $location,
+        $modalInstance,
         toastr,
         $scope,
         UserService,
@@ -11,7 +14,6 @@
     ) {
         var vm = this;
         onLoad();
-
         vm.save = function() {
             if (vm.userForm.$valid) {
                 UserService.saveUser(vm.user, vm.avatar)
@@ -26,16 +28,17 @@
 
         vm.handleSuccessForm = function handleSuccess(fileName) {
             $localStorage.user = vm.user;
+            toastr.success('User has been updated successfully');
             if (fileName) {
                 $scope.$emit('update-image', fileName);
             }
-            toastr.success('User has been updated successfully');
-            $location.path('/');
+            $modalInstance.close();
         };
 
         function onLoad() {
             vm.user = angular.extend({}, $localStorage.user);
-            vm.showCheckBoxes = false;
+            vm.showCheckBoxes = true;
+
             CountryService.loadCountries();
         }
     }
