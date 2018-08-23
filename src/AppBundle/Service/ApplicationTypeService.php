@@ -178,7 +178,7 @@ class ApplicationTypeService
         $defaultType = new ApplicationType();
         $defaultType->setName("Java");
         $defaultType->setInstallation($response->getBody()->read(10000));
-        $defaultType->setTemplate(file_get_contents(__DIR__ . "/../../../app/Resources/Kibana/apm-dashboards.json"));
+        $defaultType->setTemplate(json_decode(file_get_contents(__DIR__ . "/../../../app/Resources/Kibana/apm-dashboards.json")));
         $defaultType->setAgent($url);
         $this->applicationTypeManager->update($defaultType);
         return $defaultType;
