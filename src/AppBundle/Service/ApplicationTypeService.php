@@ -2,6 +2,7 @@
 
 namespace AppBundle\Service;
 
+use ATS\CoreBundle\Service\Http\GuzzleClient;
 use Psr\Log\LoggerInterface;
 use JMS\Serializer\SerializerInterface;
 use AppBundle\Manager\ApplicationTypeManager;
@@ -164,5 +165,22 @@ class ApplicationTypeService
     public function getAndGroupBy(array $searchCriteria, $groupFields = [], $valueProcessors = [])
     {
         return $this->applicationTypeManager->getAndGroupBy($searchCriteria, $groupFields, $valueProcessors);
+    }
+
+    /**
+     * @return ApplicationType
+     */
+    public function createDefaultType()
+    {
+        $client = new GuzzleClient();
+        $url = "https://github.com/leadwire-apm/leadwire-javaagent";
+        $response = $client->get($url . "/raw/stable/README.md", ['stream' => true]);
+        $defaultType = new ApplicationType();
+        $defaultType->setName("Java");
+        $defaultType->setInstallation($response->getBody()->read(10000));
+        $defaultType->setTemplate(file_get_contents(__DIR__ . "/../../../app/Resources/Kibana/apm-dashboards.json"));
+        $defaultType->setAgent($url);
+        $this->applicationTypeManager->update($defaultType);
+        return $defaultType;
     }
 }
