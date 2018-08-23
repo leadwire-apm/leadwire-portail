@@ -479,9 +479,7 @@ module.exports = function (grunt) {
         'filerev',
         'usemin',
         'htmlmin',
-        'shell',
-        // 'watch'
-
+        'shell'
     ]);
 
     grunt.registerTask('default', [

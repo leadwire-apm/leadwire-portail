@@ -13,6 +13,7 @@ function dashboardCtrl(
     $state
 ) {
     var vm = this;
+    vm.applications = $localStorage.applications;
     var connectedUser = angular.extend({}, $localStorage.user);
     if (!connectedUser || !connectedUser.email) {
         $ocLazyLoad

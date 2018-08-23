@@ -1,20 +1,20 @@
 <div class="container">
-  <div class="quick-launcher-inner">
-    <a href="javascript:;" class="close" quick-launch>×</a>
-    <div class="css-table-xs">
+    <div class="quick-launcher-inner">
+        <a href="javascript:;" class="close" quick-launch>×</a>
+        <div class="css-table-xs">
 
-      <div ng-repeat="app in applications" class="col">
-        <a  ng-if="app.isEnabled" ng-click="getApp(app)">
-          <i ng-class="app.is_default ? 'fa fa-desktop text-amber' : 'fa fa-desktop'"></i>
-          <span ng-class="app.is_default ? 'text-amber' : ''">{{ app.name }}</span>
-        </a>
-      </div>
-      <div class="col" ng-if="applications.length==0">
-        <a ui-sref="app.applicationsAdd">
-          <span >Create your first App</span>
-        </a>
-      </div>
+            <div ng-repeat="app in applications" ng-if="app.isEnabled" class="col">
+                <a ng-click="getApp(app)">
+                    <i ng-class="app.is_default ? 'fa fa-desktop text-amber' : 'fa fa-desktop'"></i>
+                    <span ng-class="app.is_default ? 'text-amber' : ''">{{ app.name }}</span>
+                    <span>{{user.defaultApp}}</span>
+                </a>
+            </div>
+            <div class="col" ng-if="applications.length==0">
+                <a ui-sref="app.applicationsAdd">
+                    <span>Create your first App</span>
+                </a>
+            </div>
+        </div>
     </div>
-  </div>
-</div>
 </div>

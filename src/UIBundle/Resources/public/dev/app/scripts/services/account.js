@@ -51,7 +51,8 @@ angular.module('leadwireApp').factory('Account', function($http, CONFIG) {
                         resolve($localStorage.user);
 
                     }).catch(function(error) {
-                        $localStorage.clear();
+                        $localStorage.$reset();
+                        console.log(error)
                         reject(error);
                     });
                 } else {
