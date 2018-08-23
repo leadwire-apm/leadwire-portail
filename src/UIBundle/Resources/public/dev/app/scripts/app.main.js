@@ -88,12 +88,13 @@
                 });
 
                 $scope.$on('new-application', function(event, newApp) {
-                    if (angular.isUndefined($localStorage.applications)) {
-                        $localStorage.applications = [];
-                        $scope.applications = [];
-                    }
-                    $localStorage.applications.push(newApp);
-                    $scope.applications.push(newApp);
+                    (
+                        $localStorage.applications ||
+                        ($localStorage.applications = [])
+                    ).push(newApp);
+                    ($scope.applications || ($scope.applications = [])).push(
+                        newApp
+                    );
                 });
 
                 if (angular.isDefined($localStorage.layout)) {

@@ -2,7 +2,7 @@
     angular
         .module('leadwireApp')
         .controller('applicationListCtrl', [
-            $scope,
+            '$scope',
             '$rootScope',
             'ApplicationFactory',
             'toastr',
