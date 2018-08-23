@@ -84,7 +84,7 @@ angular
                     url: '/settings',
                     templateUrl: CONFIG.ASSETS_BASE_URL + 'views/profile.html',
                     resolve: {
-                        isModal:function(){
+                        isModal: function() {
                             return false;
                         },
                         loginRequired: loginRequired,
@@ -541,6 +541,40 @@ angular
                     data: {
                         title: 'login'
                     }
+                })
+                .state('static', {
+                    abstract: true,
+                    templateUrl:
+                        CONFIG.ASSETS_BASE_URL + 'views/static/layout.html'
+                })
+
+                .state('static.privacyPolicy', {
+                    url: '/page/privacy-policy',
+                    templateUrl:
+                        CONFIG.ASSETS_BASE_URL +
+                        'views/static/privacyPolicy.html'
+                })
+                .state('static.termsOfService', {
+                    url: '/page/terms-of-Service',
+                    templateUrl:
+                        CONFIG.ASSETS_BASE_URL +
+                        'views/static/termsOfService.html'
+                })
+                .state('static.termsOfContacts', {
+                    url: '/page/terms-of-Contract',
+                    templateUrl:
+                        CONFIG.ASSETS_BASE_URL +
+                        'views/static/termsOfContract.html'
+                })
+                .state('static.help', {
+                    url: '/page/help',
+                    templateUrl:
+                        CONFIG.ASSETS_BASE_URL + 'views/static/help.html'
+                })
+                .state('static.aboutUs', {
+                    url: '/page/about-us',
+                    templateUrl:
+                        CONFIG.ASSETS_BASE_URL + 'views/static/aboutUs.html'
                 });
 
             function getNotyDeps(files) {

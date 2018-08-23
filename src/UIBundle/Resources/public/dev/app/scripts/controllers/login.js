@@ -1,8 +1,24 @@
 (function(angular) {
-    angular.module('leadwireApp').controller('LoginCtrl', LoginController);
+    angular
+        .module('leadwireApp')
+        .controller('LoginCtrl', [
+            '$location',
+            '$auth',
+            '$timeout',
+            'UserService',
+            'Invitation',
+            '$localStorage',
+            'toastr',
+            'MESSAGES_CONSTANTS',
+            'DashboardService',
+            'ApplicationFactory',
+            '$rootScope',
+            '$state',
+            LoginControllerFN
+        ]);
 
     /**
-     * LoginController : le controlleur de l'écran de l'authentification
+     * LoginControllerFN : le controlleur de l'écran de l'authentification
      *
      * @param $location
      * @param $auth
@@ -13,9 +29,12 @@
      * @param toastr
      * @param MESSAGES_CONSTANTS
      * @param DashboardService
+     * @param ApplicationFactory
+     * @param $rootScope
+     * @param $state
      * @constructor
      */
-    function LoginController(
+    function LoginControllerFN(
         $location,
         $auth,
         $timeout,

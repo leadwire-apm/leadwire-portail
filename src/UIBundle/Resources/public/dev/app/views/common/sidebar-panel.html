@@ -20,7 +20,10 @@
 <!-- main navigation -->
 <nav role="navigation" side-navigation>
     <ul class="nav">
-        <li ng-repeat="menu in menus track by menu.route" ui-sref-active="active"
+        <li class="text-center" ng-if="isChangingContext">
+            <spinner is-loading="true" size="32" color="'antiquewhite'"></spinner>
+        </li>
+        <li ng-if="!isChangingContext" ng-repeat="menu in menus track by menu.route" ui-sref-active="active"
             >
             <!--<a ng-switch-when="true" ui-sref="menu.children[0].route">-->
             <!--<i class="{{menu.icon}}"></i>-->

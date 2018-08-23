@@ -1,6 +1,7 @@
 <div class="container">
     <div class="row">
-        <div class="col-sm-5 col-sm-offset-4 center-form panel panel-danger" style="margin-top: 20%;border-radius: 7px">
+        <div class="col-sm-5 col-xs-12 col-sm-offset-4 center-form panel panel-danger"
+             style="margin-top: 20%;border-radius: 7px;   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.22), 0 14px 56px rgba(0, 0, 0, 0.25);">
             <div class="brand-logo text-center" style="margin-top: 20px">
                 <img data-ng-src="{{ASSETS_BASE_URL}}images/logo01 ft.png" height="60" alt="">
             </div>
@@ -10,26 +11,44 @@
                         ng-click="ctrl.authenticate('github')">
                     <spinner is-loading="ctrl.isChecking"></spinner>
 
-                    <i ng-if="!ctrl.isChecking" class="fa fa-github"></i> <span >Sign in with GitHub</span>
+                    <i ng-if="!ctrl.isChecking" class="fa fa-github"></i> <span>Sign in with GitHub</span>
                 </button>
 
             </div>
         </div>
     </div>
-    <div style="background-color: #ffffff;bottom: 0;position: fixed;left: 0;right: 0;padding: 5px;color:black;border-radius: 2px">
+    <div class="login-footer">
         <div class="container" style="display: flex;justify-content: space-around">
-            <a href="#" target="_blank" class="btn btn-link btn-sm" >About</a>
-            <a href="#" target="_blank" class="btn btn-link btn-sm" >Help</a>
-            <a href="#" target="_blank" class="btn btn-link btn-sm" >Terms of service</a>
-            <a href="#" target="_blank" class="btn btn-link btn-sm" >Privacy Policy</a>
+            <a ui-sref="static.aboutUs" target="_blank" class="btn btn-link btn-sm">About</a>
+            <a ui-sref="static.help" target="_blank" class="btn btn-link btn-sm">Help</a>
+            <a ui-sref="static.termsOfContacts" target="_blank" class="btn btn-link btn-sm">Terms of service</a>
+            <a ui-sref="static.privacyPolicy" target="_blank" class="btn btn-link btn-sm">Privacy Policy</a>
 
         </div>
     </div>
 </div>
 
 <style>
-    .app{
-        background-image: linear-gradient(to top,#009cbf, #21535f);
+    .app {
+        background-image: linear-gradient(to top, #009cbf, #21535f);
+    }
+
+    .login-footer {
+        background-color: rgb(55, 55, 55);
+        bottom: 0;
+        position: fixed;
+        left: 0;
+        right: 0;
+        padding: 5px;
+        border-radius: 2px
+    }
+
+    .login-footer a {
+        color: white;
+    }
+
+    .login-footer a:hover {
+        color: #8DB9ED;
     }
 </style>
 

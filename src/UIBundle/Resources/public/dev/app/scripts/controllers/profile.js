@@ -1,7 +1,17 @@
 (function(angular) {
-    angular.module('leadwireApp').controller('profileCtrl', ProfileCtrl);
+    angular
+        .module('leadwireApp')
+        .controller('profileCtrl', [
+            '$localStorage',
+            '$location',
+            'toastr',
+            '$scope',
+            'UserService',
+            'CountryService',
+            ProfileCtrlFN
+        ]);
 
-    function ProfileCtrl(
+    function ProfileCtrlFN(
         $localStorage,
         $location,
         toastr,

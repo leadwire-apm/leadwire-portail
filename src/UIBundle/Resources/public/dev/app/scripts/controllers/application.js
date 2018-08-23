@@ -1,7 +1,16 @@
 (function(angular, swal) {
     angular
         .module('leadwireApp')
-        .controller('applicationListCtrl', applicationListCtrlFN);
+        .controller('applicationListCtrl', [
+            $scope,
+            '$rootScope',
+            'ApplicationFactory',
+            'toastr',
+            'MESSAGES_CONSTANTS',
+            '$localStorage',
+            '$modal',
+            applicationListCtrlFN
+        ]);
 
     function applicationListCtrlFN(
         $scope,
@@ -78,38 +87,30 @@
                             selectedApp.id,
                             modalVM.activationCode
                         )
-                            .then(
-                                function(response) {
-                                    if (response.data) {
-                                        toastr.success(
-                                            MESSAGES_CONSTANTS.ACTIVATE_APP_SUCCESS
-                                        );
-                                        var updatedApp = angular.extend(
-                                            selectedApp,
-                                            {
-                                                isEnabled: true
-                                            }
-                                        );
-                                        $scope.$emit(
-                                            'activate-app',
-                                            updatedApp
-                                        );
-                                        $modalInstance.close();
-                                        vm.apps = vm.apps.map(function(
-                                            currentApp
-                                        ) {
-                                            return currentApp.id !==
-                                                selectedApp.id
-                                                ? currentApp
-                                                : updatedApp;
-                                        });
-                                    } else {
-                                        toastr.error(
-                                            MESSAGES_CONSTANTS.ACTIVATE_APP_FAILURE
-                                        );
-                                    }
+                            .then(function(response) {
+                                if (response.data) {
+                                    toastr.success(
+                                        MESSAGES_CONSTANTS.ACTIVATE_APP_SUCCESS
+                                    );
+                                    var updatedApp = angular.extend(
+                                        selectedApp,
+                                        {
+                                            isEnabled: true
+                                        }
+                                    );
+                                    $scope.$emit('activate-app', updatedApp);
+                                    $modalInstance.close();
+                                    vm.apps = vm.apps.map(function(currentApp) {
+                                        return currentApp.id !== selectedApp.id
+                                            ? currentApp
+                                            : updatedApp;
+                                    });
+                                } else {
+                                    toastr.error(
+                                        MESSAGES_CONSTANTS.ACTIVATE_APP_FAILURE
+                                    );
                                 }
-                            )
+                            })
                             .catch(function(error) {
                                 toastr.error(
                                     error.message ||

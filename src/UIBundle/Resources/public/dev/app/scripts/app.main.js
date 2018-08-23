@@ -70,6 +70,7 @@
 
                 $rootScope.user = $localStorage.user;
                 $scope.applications = $localStorage.applications;
+                $scope.selectedAppId = $localStorage.selectedAppId;
                 $scope.$on('user:updated', function(event, data) {
                     $rootScope.user = data;
                 });
@@ -113,8 +114,20 @@
                     return Math.round(Math.random() * 100);
                 };
 
-                $scope.getApp = function(app) {
-                    DashboardService.fetchDashboardsByAppId(app.id);
+                $scope.changeContextApp = function(app) {
+                    $scope.isChangingContext = true;
+                    DashboardService.fetchDashboardsByAppId(app.id)
+                        .then(function(appId) {
+                            $scope.isChangingContext = false;
+                            $scope.selectedAppId = appId;
+                            $scope.$apply();
+                        })
+                        .catch(function() {
+                            $scope.$apply(function() {
+                                $scope.isChangingContext = false;
+                            });
+                            toastr.error(MESSAGES_CONSTANTS.ERROR);
+                        });
                 };
 
                 $scope.brandRedirectTo = function() {
@@ -129,10 +142,14 @@
                         return $location.path('applications/list');
                     }
                 };
+
                 $scope.logout = function() {
                     delete $localStorage.user;
                     delete $localStorage.currentMenu;
                     delete $localStorage.applications;
+                    delete $localStorage.dashboards;
+                    delete $localStorage.selectedAppId;
+
                     $auth.logout().then(function() {
                         toastr.info(MESSAGES_CONSTANTS.LOGOUT_SUCCESS);
                         $location.path('/login');

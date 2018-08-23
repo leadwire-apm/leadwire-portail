@@ -1,5 +1,19 @@
 (function(angular) {
-    angular.module('leadwireApp').controller('dashboardCtrl', dashboardCtrl);
+    angular
+        .module('leadwireApp')
+        .controller('dashboardCtrl', [
+            '$sce',
+            '$scope',
+            'ConfigService',
+            'ApplicationFactory',
+            '$location',
+            '$localStorage',
+            '$modal',
+            '$ocLazyLoad',
+            '$rootScope',
+            '$state',
+            dashboardCtrl
+        ]);
 
     function dashboardCtrl(
         $sce,
