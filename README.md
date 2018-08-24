@@ -35,6 +35,7 @@ The command should ask at the end for the parameters of the instances (Database,
 * ```npm install```
 * ```bower install```
 * Uncomment the first and last line from `src/UIBundle/Resources/public/dev/app/index.html`
+* Update parameters in `src/UIBundle/Resources/public/dev/app/scripts/app.js`
 * ```grunt build```
 * Go root directory
 * ```bin/console leadwire:install```
