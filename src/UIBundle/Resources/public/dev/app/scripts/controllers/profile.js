@@ -37,7 +37,7 @@
         vm.handleSuccessForm = function handleSuccess(fileName) {
             $localStorage.user = vm.user;
             if (fileName) {
-                $scope.$emit('update-image', fileName);
+                $scope.$emit('update:image', fileName);
             }
             toastr.success('User has been updated successfully');
             $location.path('/');

@@ -2,6 +2,7 @@
     angular
         .module('leadwireApp')
         .controller('LoginCtrl', [
+            '$scope',
             '$location',
             '$auth',
             '$timeout',
@@ -20,6 +21,7 @@
     /**
      * LoginControllerFN : le controlleur de l'écran de l'authentification
      *
+     * @param $scope
      * @param $location
      * @param $auth
      * @param $timeout
@@ -35,6 +37,7 @@
      * @constructor
      */
     function LoginControllerFN(
+        $scope,
         $location,
         $auth,
         $timeout,
@@ -72,10 +75,9 @@
 
         function handleLoginSuccess(provider) {
             return function(dashboardId) {
-                vm.isChecking = false;
                 toastr.success(MESSAGES_CONSTANTS.LOGIN_SUCCESS(provider));
-
                 $location.search({});
+                vm.isChecking = false;
                 if (dashboardId !== null) {
                     $state.go('app.dashboard', {
                         id: dashboardId
@@ -106,6 +108,8 @@
                 user.defaultApp.id &&
                 user.defaultApp.isEnabled
             ) {
+                $scope.$emit('set:contextApp',user.defaultApp.id);
+
                 //take the default app
                 return DashboardService.fetchDashboardsByAppId(
                     user.defaultApp.id
@@ -115,14 +119,15 @@
                 return ApplicationFactory.findAll()
                     .then(function(response) {
                         if (response.data && response.data.length) {
-                            $localStorage.applications = response.data;
-                            $rootScope.applications = response.data;
+                            $scope.$emit('set:apps',response.data);
                             var firstEnabled = response.data.filter(function(
                                 app
                             ) {
                                 return app.isEnabled;
                             })[0];
                             if (firstEnabled) {
+                                $scope.$emit('set:contextApp', firstEnabled.id);
+
                                 return DashboardService.fetchDashboardsByAppId(
                                     firstEnabled.id
                                 );

@@ -39,7 +39,7 @@
             $localStorage.user = vm.user;
             toastr.success('User has been updated successfully');
             if (fileName) {
-                $scope.$emit('update-image', fileName);
+                $scope.$emit('update:image', fileName);
             }
             $modalInstance.close();
         };

@@ -1,16 +1,14 @@
 <div class="container">
     <div class="row">
-        <div class="col-sm-5 col-xs-12 col-sm-offset-4 center-form panel panel-danger"
-             style="margin-top: 20%;border-radius: 7px;   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.22), 0 14px 56px rgba(0, 0, 0, 0.25);">
+        <div class="col-sm-5 col-xs-12 col-sm-offset-4 center-form panel login-panel"
+        >
             <div class="brand-logo text-center" style="margin-top: 20px">
                 <img data-ng-src="{{ASSETS_BASE_URL}}images/logo01 ft.png" height="60" alt="">
             </div>
-
             <div class="panel-body text-center mt20">
                 <button id="github-button" style="font-size: larger" class="btn btn-block btn-social btn-github"
                         ng-click="ctrl.authenticate('github')">
                     <spinner is-loading="ctrl.isChecking"></spinner>
-
                     <i ng-if="!ctrl.isChecking" class="fa fa-github"></i> <span>Sign in with GitHub</span>
                 </button>
 
@@ -30,7 +28,7 @@
 
 <style>
     .app {
-        background-image: linear-gradient(to top, #009cbf, #21535f);
+        background-image: linear-gradient(to left, #009cbf, #21535f);
     }
 
     .login-footer {
@@ -41,6 +39,12 @@
         right: 0;
         padding: 5px;
         border-radius: 2px
+    }
+
+    .login-panel {
+        margin-top: 20%;
+        border-radius: 7px;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.22), 0 14px 56px rgba(0, 0, 0, 0.25);
     }
 
     .login-footer a {

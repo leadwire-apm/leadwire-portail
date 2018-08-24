@@ -1,5 +1,5 @@
 <div class="row">
-    <div class="col-md-12">
+    <mar class="col-md-12">
 
         <tabset justified="true" class="box-tab justified ">
             <tab heading="Detail Application">
@@ -36,7 +36,8 @@
 
                                         </button>
                                     </div>
-                                    <a href="javascript:;"><strong>{{invitation.user ? invitation.user.email :invitation.email}}</strong></a>
+                                    <a href="javascript:;"><strong>{{invitation.user ? invitation.user.email
+                                        :invitation.email}}</strong></a>
                                     <p ng-if="invitation.user" class="label label-info">
                                         {{invitation.user.company}}
                                     </p>
@@ -60,7 +61,7 @@
                                        ng-model="ctrl.invitedUser.email" required>
                                 <span class="input-group-btn">
                                      <button class="btn btn-primary" type="submit"
-                                            ng-disabled="inviteUserForm.$invalid">
+                                             ng-disabled="inviteUserForm.$invalid">
                                             <spinner is-loading="ctrl.ui.isSaving"></spinner>
                                             <i ng-if="!ctrl.ui.isSaving" class="fa fa-user-plus">
                                             </i> Inviter user
@@ -71,8 +72,32 @@
                     </div>
                 </section>
             </tab>
+            <tab heading="Installation" ng-if="user.id == ctrl.app.owner.id">
+                <div class="container">
+
+
+                    <div class="col-md-10 col-sm-10 col-xs-10">
+
+                        <h2><i
+                                style="font-size: smaller;"
+                                class="fa fa-external-link"></i> Agent : </h2>
+                        <p style="border: 1px solid black;padding: 10px">
+                            <a href="{{ctrl.app.type.agent}}" target="_blank"> {{ctrl.app.type.agent}} </a>
+                        </p>
+                    </div>
+
+                    <div class="col-md-10 col-sm-10 col-xs-10">
+                        <h2><i
+                                style="font-size: smaller;"
+                                class="fa fa-cogs"></i> Installation : </h2>
+                        <div style="border: 1px solid black;padding: 10px" markdown="ctrl.app.type.installation">
+                        </div>
+                    </div>
+                </div>
+
+            </tab>
         </tabset>
-    </div>
+</div>
 </div>
 
 

@@ -17,7 +17,7 @@ angular.module("leadwireApp").directive("httpSrc", [
       }
 
       //on change url
-      scope.$on("reload-src", function(event, newImageName) {
+      scope.$on("reload:src", function(event, newImageName) {
         loadImageFromServer(newImageName);
       });
 

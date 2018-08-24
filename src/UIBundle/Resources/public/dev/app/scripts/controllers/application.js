@@ -98,7 +98,7 @@
                                             isEnabled: true
                                         }
                                     );
-                                    $scope.$emit('activate-app', updatedApp);
+                                    $scope.$emit('activate:app', updatedApp);
                                     $modalInstance.close();
                                     vm.apps = vm.apps.map(function(currentApp) {
                                         return currentApp.id !== selectedApp.id
