@@ -32,15 +32,22 @@ class Kibana
     public function createDashboards(App $app)
     {
         $client = new \GuzzleHttp\Client(['defaults' => ['verify' => false]]);
-        $json_template = $this->prepareTemplate($app->getType());
+        //$json_template = $this->prepareTemplate($app->getType());
+        $json_template = json_encode($app->getType()->getTemplate());
+
+        $url = str_replace(
+            '{{tenant}}',
+            'app_' . $app->getUuid(),
+            $this->settings['inject_dashboards']
+        );
+
         try {
-            $response = $client->request(
-                'POST',
-                str_replace('{{tenant}}', $app->getUuid(), $this->settings['inject_dashboards']),
+            $response = $client->post(
+                $url,
                 [
                     'body' => $json_template,
                     'headers' => [
-                        'Content-type'  => 'application/json',
+                        //'Content-type'  => 'application/json',
                         'kbn-xsrf' => 'true',
                     ],
                     'auth' => [
@@ -50,7 +57,7 @@ class Kibana
                 ]
             );
             return true;
-        } catch (GuzzleException $e) {
+        } catch (\GuzzleHttp\Exception\ClientException $e) {
             $this->logger->error($e->getMessage());
             return false;
         }

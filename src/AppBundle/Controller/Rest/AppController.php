@@ -16,6 +16,7 @@ use ATS\CoreBundle\Service\Voter\AclVoter;
 use ATS\CoreBundle\HTTPFoundation\CsvResponse;
 use ATS\CoreBundle\Service\Exporter\Exporter;
 use AppBundle\Service\AppService;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class AppController extends BaseRestController
 {
@@ -48,7 +49,12 @@ class AppController extends BaseRestController
      */
     public function getDashboardsAction(Request $request, AppService $appService, ElasticSearch $elastic, $id)
     {
-        return $this->json($elastic->getDashboads($appService->getApp($id)));
+        $app = $appService->getApp($id);
+        if (!$app) {
+            throw new HttpException(404, "App not Found");
+        } else {
+            return $this->json($elastic->getDashboads($app));
+        }
     }
 
 
