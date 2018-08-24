@@ -33,10 +33,10 @@
             return new Promise(function(resolve, reject) {
                 ApplicationFactory.findMyDashboard(appId)
                     .then(function(response) {
-                        $localStorage.dashboards = response.data;
+                        $localStorage.dashboards = response.data.Default;
                         $localStorage.selectedAppId = appId;
                         $localStorage.currentMenu = MenuFactory.set(
-                            response.data,
+                            response.data.Default,
                             function(menu) {
                                 return menu['name'];
                             },
