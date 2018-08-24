@@ -38,39 +38,101 @@ class ElasticSearch
 
     public function getDashboads(App $app)
     {
-
         try {
-            $client = new \GuzzleHttp\Client(['defaults' => ['verify' => false]]);//$uuid = $app->getUuid();
-            $uuid = "apptest";
-            $response = $client->get(
-                $this->settings['host'] . ".kibana_$uuid" . "/_search?pretty",
-                [
-                    'headers' => [
-                        'Content-type' => 'application/json',
-                    ],
-                    'auth' => [
-                        $this->settings['username'],
-                        $this->settings['password']
-                    ]
-                ]
-            );
-            $body = json_decode($response->getBody())->hits->hits;
-            $res = [];
-            foreach ($body as $element) {
-                if (strpos($element->_id, "dashboard:") !== false) {
-                    $res [] = [
-                        "id" => str_replace("dashboard:", "", $element->_id),
-                        "name" => $element->_source->dashboard->title,
-                    ];
-                }
-            }
-            return $res;
-        } catch (\GuzzleHttp\Exception\ClientException $e) {
-                $this->logger->error($e->getMessage());
-                throw new HttpException("An error has occured while executing your request.", 500);
+            return $this->filter($this->getRawDashboards($app));
         } catch (\Exception $e) {
+            $this->logger->error($e->getMessage());
+            throw new HttpException("An error has occurred while executing your request.", 500);
+        }
+    }
+
+    protected function filter($dashboards)
+    {
+        $custom = [];
+        foreach ($dashboards['Custom'] as $item) {
+                preg_match_all('/[(.*)]/', $item['name'], $out);
+                $theme = isset($out[1][0]) ? $out[1][0] : 'Musc';
+                $custom[$theme][] = $item;
+        }
+        return [
+            "Default" => $dashboards['Default'],
+            "Custom" => $custom,
+        ];
+    }
+
+    protected function getRawDashboards(App $app)
+    {
+        $client = new \GuzzleHttp\Client(['defaults' => ['verify' => false]]);
+        //$uuid = "test";
+        $userUuid = $app->getOwner()->getUuid();
+        $appUuid = $app->getUuid();
+        // for prod use only
+        $tenants = ["default" => "app_$appUuid", "user" => "user_$userUuid", "shared" => "share_$appUuid"];
+        // for dev use only
+        //$tenants = ["default" => "apptest", "user" => "user_$userUuid", "shared" => "share_$appUuid"];
+        $res = [];
+        $this->resetIndex($app);
+        foreach ($tenants as $name => $tenant) {
+            try {
+                $key = $name == "default" ? "Default" : "Custom";
+                $res[$key] = isset($res[$key]) ? $res[$key] : [];
+                $response = $client->get(
+                    $this->settings['host'] . ".kibana_$tenant" . "/_search?pretty",
+                    [
+                        'headers' => [
+                            'Content-type' => 'application/json',
+                        ],
+                        'auth' => [
+                            $this->settings['username'],
+                            $this->settings['password']
+                        ]
+                    ]
+                );
+                $body = json_decode($response->getBody())->hits->hits;
+                foreach ($body as $element) {
+                    if (strpos($element->_id, "dashboard:") !== false) {
+                        $res [$key][] = [
+                            "id" => str_replace("dashboard:", "", $element->_id),
+                            "name" => $element->_source->dashboard->title,
+                            "private" => ($key == "user" || $key == "default"),
+                        ];
+                    }
+                }
+            } catch (\GuzzleHttp\Exception\ClientException $e) {
                 $this->logger->error($e->getMessage());
-                throw new HttpException("An error has occured while executing your request.", 500);
+                //throw new HttpException("An error has occurred while executing your request.", 500);
+            }
+        }
+        return $res;
+    }
+
+    /**
+     * @param App $app
+     */
+    public function resetIndex(App $app)
+    {
+        $client = new \GuzzleHttp\Client(['defaults' => ['verify' => false]]);
+        $userUuid = $app->getOwner()->getUuid();
+        $appUuid = $app->getUuid();
+        $tenants = ["default" => "app_$appUuid", "user" => "user_$userUuid", "shared" => "share_$appUuid"];
+        try {
+            foreach ($tenants as $name => $tenant) {
+                $client->put(
+                    $this->settings['host'] . ".kibana_$tenant",
+                    [
+                        'headers' => [
+                            'Content-type' => 'application/json',
+                        ],
+                        'auth' => [
+                            $this->settings['username'],
+                            $this->settings['password']
+                        ]
+                    ]
+                );
+            }
+        } catch (\GuzzleHttp\Exception\ClientException $e) {
+            $this->logger->error($e->getMessage());
+            //throw new HttpException("An error has occurred while executing your request.", 500);
         }
     }
 }
