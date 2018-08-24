@@ -21,13 +21,17 @@
                         routeCallback,
                         iconCallback
                     ) {
-                        return menus.map(function(menu) {
-                            return {
-                                label: labelCallback(menu),
-                                route: routeCallback(menu),
-                                icon: iconCallback(menu)
-                            };
-                        });
+                        try {
+                            return menus.map(function(menu) {
+                                return {
+                                    label: labelCallback(menu),
+                                    route: routeCallback(menu),
+                                    icon: iconCallback(menu)
+                                };
+                            });
+                        } catch (e) {
+                            return [];
+                        }
                     }
                 };
             }

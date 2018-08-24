@@ -62,10 +62,7 @@
             isMessageOpen: false,
             isConfigOpen: false
         };
-
-        $rootScope.user = $localStorage.user;
-        $scope.applications = $localStorage.applications;
-        $scope.selectedAppId = $localStorage.selectedAppId;
+        // onLoad();
 
         $scope.$on('user:updated', function(event, data) {
             $rootScope.user = data;
@@ -75,24 +72,25 @@
         });
 
         $scope.$on('set:apps', function(event, apps) {
-            $localStorage.applications = apps;
-            $scope.applications = $localStorage.applications;
+            $scope.applications = $localStorage.applications = apps;
         });
 
         $scope.$on('set:contextApp', function(event, appId) {
-            $localStorage.selectedAppId = appId;
-            $scope.selectedAppId = $localStorage.selectedAppId;
+            $scope.selectedAppId = $localStorage.selectedAppId = appId;
+        });
+        $scope.$on('set:customMenus', function(event, customMenus) {
+            $localStorage.customMenus = customMenus ;
+            $scope.withCustom = $localStorage.customMenus.withCustom;
         });
 
         $scope.$on('activate:app', function(event, activatedApp) {
-            $localStorage.applications = (
+            $scope.applications = $localStorage.applications = (
                 $localStorage.applications || ($localStorage.applications = [])
             ).map(function(currentApp) {
                 return currentApp.id !== activatedApp.id
                     ? currentApp
                     : activatedApp;
             });
-            $scope.applications = $localStorage.applications;
         });
 
         $scope.$on('new-application', function(event, newApp) {
@@ -161,5 +159,15 @@
                 $location.path('/login');
             });
         };
+        $rootScope.user = $localStorage.user;
+        $scope.applications = $localStorage.applications;
+        $scope.selectedAppId = $localStorage.selectedAppId;
+        $scope.withCustom = (
+            $localStorage.customMenus || ($localStorage.customMenus = {})
+        ).withCustom;
+
+        // function onLoad() {
+        //     console.log("called")
+        // }
     }
 })(window.angular);
