@@ -76,7 +76,7 @@ class ApplicationTypeService
      */
     public function getApplicationType($id)
     {
-         return $this->applicationTypeManager->getOneBy(['id' => $id]);
+        return $this->applicationTypeManager->getOneBy(['id' => $id]);
     }
 
     /**
@@ -88,7 +88,7 @@ class ApplicationTypeService
      */
     public function getApplicationTypes(array $criteria = [])
     {
-         return $this->applicationTypeManager->getBy($criteria);
+        return $this->applicationTypeManager->getBy($criteria);
     }
 
     /**
@@ -101,8 +101,8 @@ class ApplicationTypeService
     public function newApplicationType($json)
     {
         $applicationType = $this
-                ->serializer
-                ->deserialize($json, ApplicationType::class, 'json');
+            ->serializer
+            ->deserialize($json, ApplicationType::class, 'json');
 
         return $this->updateApplicationType($json);
     }
@@ -139,17 +139,17 @@ class ApplicationTypeService
      */
     public function deleteApplicationType($id)
     {
-         $this->applicationTypeManager->deleteById($id);
+        $this->applicationTypeManager->deleteById($id);
     }
 
-     /**
-      * Performs a full text search on  ApplicationType
-      *
-      * @param string $term
-      * @param string $lang
-      *
-      * @return array
-      */
+    /**
+     * Performs a full text search on  ApplicationType
+     *
+     * @param string $term
+     * @param string $lang
+     *
+     * @return array
+     */
     public function textSearch($term, $lang)
     {
         return $this->applicationTypeManager->textSearch($term, $lang);
@@ -172,15 +172,21 @@ class ApplicationTypeService
      */
     public function createDefaultType()
     {
-        $client = new GuzzleClient();
-        $url = "https://github.com/leadwire-apm/leadwire-javaagent";
-        $response = $client->get($url . "/raw/stable/README.md", ['stream' => true]);
-        $defaultType = new ApplicationType();
-        $defaultType->setName("Java");
-        $defaultType->setInstallation($response->getBody()->read(10000));
-        $defaultType->setTemplate(json_decode(file_get_contents(__DIR__ . "/../../../app/Resources/Kibana/apm-dashboards.json")));
-        $defaultType->setAgent($url);
-        $this->applicationTypeManager->update($defaultType);
+        $defaultType = $this->applicationTypeManager->getOneBy(['name' => "Java"]);
+        if (!$defaultType) {
+            $client = new GuzzleClient();
+            $url = "https://github.com/leadwire-apm/leadwire-javaagent";
+            $response = $client->get($url . "/raw/stable/README.md", ['stream' => true]);
+            $defaultType = new ApplicationType();
+            $defaultType->setName("Java");
+            $defaultType->setInstallation($response->getBody()->read(10000));
+            $defaultType->setTemplate(json_decode(file_get_contents(
+                __DIR__ . "/../../../app/Resources/Kibana/apm-dashboards.json"
+            )));
+            $defaultType->setAgent($url);
+            $this->applicationTypeManager->update($defaultType);
+        }
+
         return $defaultType;
     }
 }
