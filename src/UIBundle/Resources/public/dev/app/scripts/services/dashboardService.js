@@ -34,7 +34,12 @@
                 ApplicationFactory.findMyDashboard(appId)
                     .then(function(response) {
                         $localStorage.dashboards = response.data.Default;
-                        $localStorage.selectedAppId = appId;
+                        $rootScope.$broadcast('set:contextApp', appId);
+                        $rootScope.$broadcast('set:customMenus', {
+                            withCustom: !!Object.keys(response.data.Custom || {})
+                                .length,
+                            list: response.data.Custom || {}
+                        });
                         $localStorage.currentMenu = MenuFactory.set(
                             response.data.Default,
                             function(menu) {

@@ -274,7 +274,29 @@ angular
                     controller: 'dashboardCtrl',
                     controllerAs: 'ctrl'
                 })
-                .state('app.infrastructureMonitoring', {
+            .state('app.customDashboard', {
+                url: '/dashboard/custom',
+                templateUrl:
+                    CONFIG.ASSETS_BASE_URL +
+                    'views/customDashboards.html',
+                controller: 'customDashboardsCtrl',
+                controllerAs: 'ctrl',
+                resolve: {
+                    loginRequired: loginRequired,
+                    deps: [
+                        '$ocLazyLoad',
+                        function($ocLazyLoad) {
+                            return $ocLazyLoad.load(
+                                CONFIG.ASSETS_BASE_URL +
+                                'scripts/controllers/customDashboards.js'
+                            );
+                        }
+                    ]
+                },
+
+
+            })
+            .state('app.infrastructureMonitoring', {
                     url: '/infrastructureMonitoring',
                     templateUrl:
                         CONFIG.ASSETS_BASE_URL +
