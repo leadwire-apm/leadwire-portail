@@ -1,6 +1,6 @@
 # Install Leadwire
 
-1. Requirements
+## Requirements
 
 mongo 3.4
 
@@ -24,11 +24,16 @@ php -r "unlink('composer-setup.php');"
 ```
 
 node / npm
+
 npm install -g grunt-cli
+
 npm install -g bower
 
-2. Installation
-* composer install
+
+## Installation
+
+* ```composer install```
+
 The command should ask at the end for the parameters of the instances (Database, email, ldap...)
 
 * ```cd src/UIBundle/Resources/public/dev```
