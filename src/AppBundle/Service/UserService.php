@@ -220,6 +220,6 @@ class UserService
                 'email' => $user->getEmail(),
                 'link' => $this->router->generate('verify_email', ['email' => $user->getEmail()], UrlGeneratorInterface::ABSOLUTE_URL)
                 ]);
-        $this->mailer->send($mail, true);
+        $this->mailer->send($mail, false);
     }
 }
