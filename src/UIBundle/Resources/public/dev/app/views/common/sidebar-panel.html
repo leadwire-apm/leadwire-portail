@@ -34,8 +34,8 @@
                 <span>{{menu.label}}</span>
             </a>
         </li>
-        <li ng-if="withCustom">
-            <a  ui-sref="app.customDashboard">
+        <li ng-if="withCustom && !isChangingContext && state.includes('app.dashboard')">
+            <a  ui-sref="app.dashboard.customDashboard">
                 <i class="fa fa-file-text"></i>
                 <span>Custom</span>
             </a>

@@ -73,7 +73,7 @@
                 $location.search({});
                 vm.isChecking = false;
                 if (dashboardId !== null) {
-                    $state.go('app.dashboard', {
+                    $state.go('app.dashboard.home', {
                         id: dashboardId
                     });
                 } else {
@@ -112,11 +112,11 @@
                     .then(function(response) {
                         if (response.data && response.data.length) {
                             $rootScope.$broadcast('set:apps',response.data);
-                            var firstEnabled = response.data.filter(function(
+                            var firstEnabled = response.data.find(function(
                                 app
                             ) {
                                 return app.isEnabled;
-                            })[0];
+                            });
                             if (firstEnabled) {
                                 return DashboardService.fetchDashboardsByAppId(
                                     firstEnabled.id

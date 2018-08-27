@@ -14,6 +14,7 @@
         })
         .controller('AppCtrl', [
             '$scope',
+            '$state',
             '$rootScope',
             '$auth',
             '$location',
@@ -28,6 +29,7 @@
 
     function AppCtrlFN(
         $scope,
+        $state,
         $rootScope,
         $auth,
         $location,
@@ -38,31 +40,7 @@
         MESSAGES_CONSTANTS,
         toastr
     ) {
-        $scope.mobileView = 767;
-
-        $scope.app = {
-            name: 'leadwire',
-            author: 'Nyasha',
-            version: '1.0.0',
-            year: new Date().getFullYear(),
-            layout: {
-                isSmallSidebar: false,
-                isChatOpen: false,
-                isFixedHeader: true,
-                isFixedFooter: false,
-                isBoxed: false,
-                isStaticSidebar: false,
-                isRightSidebar: false,
-                isOffscreenOpen: false,
-                isConversationOpen: false,
-                isQuickLaunch: false,
-                sidebarTheme: '',
-                headerTheme: ''
-            },
-            isMessageOpen: false,
-            isConfigOpen: false
-        };
-        // onLoad();
+        onLoad();
 
         $scope.$on('user:updated', function(event, data) {
             $rootScope.user = data;
@@ -77,9 +55,15 @@
 
         $scope.$on('set:contextApp', function(event, appId) {
             $scope.selectedAppId = $localStorage.selectedAppId = appId;
+            $localStorage.selectedApp = $localStorage.applications.find(
+                function(currApp) {
+                    return currApp.id === appId;
+                }
+            );
+            $scope.$emit('context:updated');
         });
         $scope.$on('set:customMenus', function(event, customMenus) {
-            $localStorage.customMenus = customMenus ;
+            $localStorage.customMenus = customMenus;
             $scope.withCustom = $localStorage.customMenus.withCustom;
         });
 
@@ -141,9 +125,12 @@
 
         $scope.brandRedirectTo = function() {
             if ($localStorage.dashboards && $localStorage.dashboards.length) {
-                return $location.path('/' + $localStorage.dashboards[0].id);
+                return $state.go('app.dashboard.home', {
+                    id: $localStorage.dashboards[0].id
+                });
+
             } else {
-                return $location.path('applications/list');
+                return $location.go('app.applicationList');
             }
         };
 
@@ -159,15 +146,39 @@
                 $location.path('/login');
             });
         };
-        $rootScope.user = $localStorage.user;
-        $scope.applications = $localStorage.applications;
-        $scope.selectedAppId = $localStorage.selectedAppId;
-        $scope.withCustom = (
-            $localStorage.customMenus || ($localStorage.customMenus = {})
-        ).withCustom;
 
-        // function onLoad() {
-        //     console.log("called")
-        // }
+        function onLoad() {
+            $scope.mobileView = 767;
+            $scope.state = $state;
+            $scope.app = {
+                name: 'leadwire',
+                author: 'Nyasha',
+                version: '1.0.0',
+                year: new Date().getFullYear(),
+                layout: {
+                    isSmallSidebar: false,
+                    isChatOpen: false,
+                    isFixedHeader: true,
+                    isFixedFooter: false,
+                    isBoxed: false,
+                    isStaticSidebar: false,
+                    isRightSidebar: false,
+                    isOffscreenOpen: false,
+                    isConversationOpen: false,
+                    isQuickLaunch: false,
+                    sidebarTheme: '',
+                    headerTheme: ''
+                },
+                isMessageOpen: false,
+                isConfigOpen: false
+            };
+
+            $rootScope.user = $localStorage.user;
+            $scope.applications = $localStorage.applications;
+            $scope.selectedAppId = $localStorage.selectedAppId;
+            $scope.withCustom = (
+                $localStorage.customMenus || ($localStorage.customMenus = {})
+            ).withCustom;
+        }
     }
 })(window.angular);

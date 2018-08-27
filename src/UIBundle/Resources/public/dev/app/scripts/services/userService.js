@@ -79,6 +79,7 @@
                         );
 
                         if (data) {
+                            //if he updated his avatar we need to make another request
                             if (avatar) {
                                 FileService.upload(avatar, 'user').then(
                                     function(response) {
@@ -99,7 +100,7 @@
                                 resolve();
                             }
                         } else {
-                            reject('Failed update User');
+                            throw new Error(data);
                         }
                     })
                     .catch(function(error) {

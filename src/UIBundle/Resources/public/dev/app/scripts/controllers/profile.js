@@ -35,7 +35,8 @@
         };
 
         vm.handleSuccessForm = function handleSuccess(fileName) {
-            $localStorage.user = vm.user;
+
+            // $localStorage.user = vm.user;
             if (fileName) {
                 $scope.$emit('update:image', fileName);
             }

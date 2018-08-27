@@ -51,9 +51,10 @@
                 });
         }
 
-        if (!!$state.params.id)
+        if (!!$state.params.id){
             vm.dashboardLink = $sce.trustAsResourceUrl(
                 ConfigService.getDashboard($state.params.id, false)
             );
+        }
     }
 })(window.angular);

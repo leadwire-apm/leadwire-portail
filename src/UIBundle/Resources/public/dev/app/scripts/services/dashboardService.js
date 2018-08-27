@@ -46,7 +46,7 @@
                                 return menu['name'];
                             },
                             function(menu) {
-                                return $state.href('app.dashboard', {
+                                return $state.href('app.dashboard.home', {
                                     id: menu.id
                                 });
                             },

@@ -9,7 +9,7 @@ angular
         'CONFIG',
         function($stateProvider, $urlRouterProvider, $authProvider, CONFIG) {
             // For unmatched routes
-            $urlRouterProvider.otherwise('/');
+            $urlRouterProvider.otherwise('/applications/list');
 
             /**
              *  Satellizer config
@@ -212,7 +212,10 @@ angular
                     controllerAs: 'ctrl'
                 })
                 .state('app.dashboard', {
-                    url: '/{id}',
+                    abstract: true
+                })
+                .state('app.dashboard.home', {
+                    url: '/dashboard/{id}',
                     templateUrl:
                         CONFIG.ASSETS_BASE_URL + 'views/dashboard.html',
                     resolve: {
@@ -268,35 +271,48 @@ angular
                                 });
                         }
                     },
-                    data: {
-                        title: 'Dashboard'
-                    },
                     controller: 'dashboardCtrl',
                     controllerAs: 'ctrl'
                 })
-            .state('app.customDashboard', {
-                url: '/dashboard/custom',
-                templateUrl:
-                    CONFIG.ASSETS_BASE_URL +
-                    'views/customDashboards.html',
-                controller: 'customDashboardsCtrl',
-                controllerAs: 'ctrl',
-                resolve: {
-                    loginRequired: loginRequired,
-                    deps: [
-                        '$ocLazyLoad',
-                        function($ocLazyLoad) {
-                            return $ocLazyLoad.load(
-                                CONFIG.ASSETS_BASE_URL +
-                                'scripts/controllers/customDashboards.js'
-                            );
-                        }
-                    ]
-                },
-
-
-            })
-            .state('app.infrastructureMonitoring', {
+                .state('app.dashboard.customDashboard', {
+                    url: '/dashboard/custom',
+                    templateUrl:
+                        CONFIG.ASSETS_BASE_URL + 'views/customDashboards.html',
+                    controller: 'customDashboardsCtrl',
+                    controllerAs: 'ctrl',
+                    resolve: {
+                        loginRequired: loginRequired,
+                        deps: [
+                            '$ocLazyLoad',
+                            function($ocLazyLoad) {
+                                return $ocLazyLoad.load(
+                                    CONFIG.ASSETS_BASE_URL +
+                                        'scripts/controllers/customDashboards.js'
+                                );
+                            }
+                        ]
+                    }
+                })
+                .state('app.dashboard.manageDashboard', {
+                    url: '/dashboard/manage/{tenant}',
+                    templateUrl:
+                        CONFIG.ASSETS_BASE_URL + 'views/manageDashboards.html',
+                    controller: 'manageDashboardsCtrl',
+                    controllerAs: 'ctrl',
+                    resolve: {
+                        loginRequired: loginRequired,
+                        deps: [
+                            '$ocLazyLoad',
+                            function($ocLazyLoad) {
+                                return $ocLazyLoad.load(
+                                    CONFIG.ASSETS_BASE_URL +
+                                        'scripts/controllers/manageDashboards.js'
+                                );
+                            }
+                        ]
+                    }
+                })
+                .state('app.infrastructureMonitoring', {
                     url: '/infrastructureMonitoring',
                     templateUrl:
                         CONFIG.ASSETS_BASE_URL +
