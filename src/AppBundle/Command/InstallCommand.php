@@ -6,6 +6,7 @@ use AppBundle\Service\ApplicationTypeService;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Input\ArrayInput;
 
 class InstallCommand extends Command
 {
@@ -25,13 +26,31 @@ class InstallCommand extends Command
             ->setName('leadwire:install')
             ->setDescription('Creates files and data required by the app.')
             ->setHelp('Creates files and data required by the app.
-            load default Application Type. Insert template for Kibana and more..')
+Load default Application Type. Insert template for Kibana and more..')
         ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $output->writeln("Create Application Type");
+
+        $commands = [
+            "Install Assets" => [
+                'command' => "assets:install",
+                '--symlink' => true,
+            ] ,
+            "Assetic Dump" => [
+                'command' => "assetic:dump",
+            ]
+        ];
+
+        foreach ($commands as $step => $arguments) {
+            $output->writeln($step);
+            $command = $this->getApplication()->find($arguments['command']);
+            $greetInput = new ArrayInput($arguments);
+            $command->run($greetInput, $output);
+        }
+
+        $output->writeln("Create Application Type if not set yet");
 
         try {
             $defaultType = $this->applicationTypeService->createDefaultType();

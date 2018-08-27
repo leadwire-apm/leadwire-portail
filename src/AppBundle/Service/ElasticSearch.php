@@ -46,20 +46,6 @@ class ElasticSearch
         }
     }
 
-    protected function filter($dashboards)
-    {
-        $custom = [];
-        foreach ($dashboards['Custom'] as $item) {
-                preg_match_all('/[(.*)]/', $item['name'], $out);
-                $theme = isset($out[1][0]) ? $out[1][0] : 'Musc';
-                $custom[$theme][] = $item;
-        }
-        return [
-            "Default" => $dashboards['Default'],
-            "Custom" => $custom,
-        ];
-    }
-
     protected function getRawDashboards(App $app)
     {
         $client = new \GuzzleHttp\Client(['defaults' => ['verify' => false]]);
@@ -90,10 +76,12 @@ class ElasticSearch
                 );
                 $body = json_decode($response->getBody())->hits->hits;
                 foreach ($body as $element) {
-                    if (strpos($element->_id, "dashboard:") !== false) {
+                    if (in_array($element->_source->type, array("dashboard"/*, "visualization"*/))) {
+                        $title = $element->_source->{$element->_source->type}->title;
+
                         $res [$key][] = [
-                            "id" => str_replace("dashboard:", "", $element->_id),
-                            "name" => $element->_source->dashboard->title,
+                            "id" => $this->transformeId($element->_id),
+                            "name" => $title,
                             "private" => ($key == "user" || $key == "default"),
                         ];
                     }
@@ -104,6 +92,24 @@ class ElasticSearch
             }
         }
         return $res;
+    }
+
+    protected function filter($dashboards)
+    {
+        $custom = [];
+        foreach ($dashboards['Custom'] as $item) {
+            preg_match_all('/\[([^]]+)\]/', $item['name'], $out);
+            $theme = isset($out[1][0]) ? $out[1][0] : 'Musc';
+            $custom[$theme][] = [
+                "private" => $item['private'],
+                "id" => $item['id'],
+                "name" => str_replace("[$theme] ", "", $item['name']),
+            ];
+        }
+        return [
+            "Default" => $dashboards['Default'],
+            "Custom" => $custom,
+        ];
     }
 
     /**
@@ -134,5 +140,14 @@ class ElasticSearch
             $this->logger->error($e->getMessage());
             //throw new HttpException("An error has occurred while executing your request.", 500);
         }
+    }
+
+    protected function transformeId($id)
+    {
+        $searchs = ['dashboard:', 'visualization:'];
+        foreach ($searchs as $search) {
+            $id = str_replace($search, "", $id);
+        }
+        return $id ;
     }
 }
