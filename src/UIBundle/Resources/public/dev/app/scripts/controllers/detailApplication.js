@@ -1,4 +1,4 @@
-(function(angular) {
+(function(angular, swal) {
     angular
         .module('leadwireApp')
         .controller('applicationDetailCtrl', [
@@ -22,6 +22,11 @@
         MESSAGES_CONSTANTS
     ) {
         var vm = this;
+        vm.getApp = function() {
+            ApplicationFactory.get($stateParams.id).then(function(res) {
+                vm.app = res.data;
+            });
+        };
         init();
 
         vm.handleInviteUser = function() {
@@ -34,8 +39,9 @@
             })
                 .then(function() {
                     toastr.success(MESSAGES_CONSTANTS.INVITE_USER_SUCCESS);
-                    getApp();
+                    vm.getApp();
                     vm.flipActivityIndicator();
+                    vm.invitedUser.email = '';
                 })
                 .catch(function(error) {
                     vm.flipActivityIndicator();
@@ -48,10 +54,15 @@
         };
 
         vm.deleteInvitation = function(id) {
+            var body = document.createElement('h5');
+            body.innerText =
+                'Once deleted, you will not be able to recover this Invitation!';
+            body.className = 'text-center';
+
             swal({
                 title: 'Are you sure?',
-                text:
-                    'Once deleted, you will not be able to recover this Invitation!',
+                className: 'text-center',
+                content: body,
                 icon: 'warning',
                 buttons: true,
                 dangerMode: true
@@ -63,7 +74,7 @@
                             toastr.success(
                                 MESSAGES_CONSTANTS.DELETE_INVITATION_SUCCESS
                             );
-                            getApp();
+                            vm.getApp();
                         })
                         .catch(function(error) {
                             swal.close();
@@ -84,19 +95,14 @@
             vm.ui['isSaving' + suffix] = !vm.ui['isSaving' + suffix];
         };
 
-        function getApp() {
-            ApplicationFactory.get($stateParams.id).then(function(res) {
-                vm.app = res.data;
-            });
-        }
-
         function init() {
             $rootScope.currentNav = 'settings';
             vm.ui = {
                 isSaving: false
             };
+            vm.invitedUser = {};
             vm.DOWNLOAD_URL = CONFIG.DOWNLOAD_URL;
-            getApp();
+            vm.getApp();
         }
     }
-})(window.angular);
+})(window.angular, window.swal);
