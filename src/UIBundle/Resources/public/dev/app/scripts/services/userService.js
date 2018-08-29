@@ -123,6 +123,9 @@
                                         isPending: false,
                                         user: {
                                             id: user.id
+                                        },
+                                        app: {
+                                            id: res.data.app.id
                                         }
                                     };
                                     Invitation.update(
