@@ -41,7 +41,7 @@ Load default Application Type. Insert template for Kibana and more..')
             /**
              * Create Build of assets first.
              */
-            $output->writeln("<fg=yellow>Dev mode off ignoring grunt build...</>");
+            $output->writeln("<fg=yellow>Dev mode off, executing grunt build...</>");
 
             $outputGrunt = shell_exec("cd src/UIBundle/Resources/public/dev && grunt build");
             $output->writeln($outputGrunt);
