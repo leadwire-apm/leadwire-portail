@@ -51,6 +51,10 @@ services:
         resource: '../../src/ATS/ClientBootstrapperBundle/*'
         exclude: '../../src/ATS/ClientBootstrapperBundle/{Document,Repository}'
 
+    ATS\PaymentBundle\:
+        resource: '../../src/ATS/PaymentBundle/*'
+        exclude: '../../src/ATS/PaymentBundle/{Document,Repository}'
+
     # controllers are imported separately to make sure they're public
     # and have a tag that allows actions to type-hint services
     AppBundle\Controller\:
