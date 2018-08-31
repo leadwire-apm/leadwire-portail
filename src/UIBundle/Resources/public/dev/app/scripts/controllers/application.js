@@ -10,6 +10,7 @@
             'MESSAGES_CONSTANTS',
             '$localStorage',
             '$modal',
+            '$state',
             applicationListCtrlFN
         ]);
 
@@ -21,7 +22,8 @@
         toastr,
         MESSAGES_CONSTANTS,
         $localStorage,
-        $modal
+        $modal,
+        $state
     ) {
         var vm = this;
         init();
@@ -83,7 +85,7 @@
                 templateUrl:
                     $rootScope.ASSETS_BASE_URL +
                     'views/application/enable.html',
-                controller: function($modalInstance) {
+                controller: function($modalInstance, $state) {
                     var modalVM = this;
                     modalVM.enable = function() {
                         ApplicationFactory.activate(
@@ -108,6 +110,7 @@
                                             ? currentApp
                                             : updatedApp;
                                     });
+                                    $state.go('app.applicationDetail', {id: selectedApp.id});
                                 } else {
                                     toastr.error(
                                         MESSAGES_CONSTANTS.ACTIVATE_APP_FAILURE

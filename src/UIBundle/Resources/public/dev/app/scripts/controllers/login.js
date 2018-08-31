@@ -102,7 +102,13 @@
                 user.defaultApp.id &&
                 user.defaultApp.isEnabled
             ) {
-                //take the default app
+                ApplicationFactory.findAll()
+                    .then(function(response) {
+                        if (response.data && response.data.length) {
+                            $rootScope.$broadcast('set:apps', response.data);
+                        }
+                    });
+                            //take the default app
                 return DashboardService.fetchDashboardsByAppId(
                     user.defaultApp.id
                 );

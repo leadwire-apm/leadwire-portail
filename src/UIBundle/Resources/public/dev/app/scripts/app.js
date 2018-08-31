@@ -54,7 +54,7 @@ angular
         INVITE_USER_SUCCESS: 'The invitation has been sent successfully.',
         DELETE_APP_SUCCESS: 'The app has been deleted.',
         DELETE_INVITATION_SUCCESS: 'The invitation has been deleted.',
-        ADD_APP_SUCCESS: 'Your app has been added successfully.',
+        ADD_APP_SUCCESS: 'Your app has been added successfully. You need to activate your app first',
         LOGIN_SUCCESS: function(provider) {
             return 'You have successfully signed in with ' + provider;
         },
