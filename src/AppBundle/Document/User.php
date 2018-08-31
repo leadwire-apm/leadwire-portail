@@ -104,7 +104,7 @@ class User extends \ATS\UserBundle\Document\User
     /**
      * @var boolean
      *
-     * @ODM\Field(type="string", name="isEmailValid")
+     * @ODM\Field(type="boolean", name="isEmailValid")
      * @JMS\Type("boolean")
      * @JMS\Groups({"full","Default"})
      */
