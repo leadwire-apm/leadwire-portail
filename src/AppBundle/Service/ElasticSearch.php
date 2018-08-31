@@ -97,6 +97,7 @@ class ElasticSearch
     protected function filter($dashboards)
     {
         $custom = [];
+        $default = [];
         foreach ($dashboards['Custom'] as $item) {
             preg_match_all('/\[([^]]+)\]/', $item['name'], $out);
             $theme = isset($out[1][0]) ? $out[1][0] : 'Musc';
@@ -106,8 +107,19 @@ class ElasticSearch
                 "name" => str_replace("[$theme] ", "", $item['name']),
             ];
         }
+
+        foreach ($dashboards['Default'] as $item) {
+            preg_match_all('/\[([^]]+)\]/', $item['name'], $out);
+            $theme = isset($out[1][0]) ? $out[1][0] : 'Musc';
+            $default[] = [
+                "private" => $item['private'],
+                "id" => $item['id'],
+                "name" => str_replace("[$theme] ", "", $item['name']),
+            ];
+        }
+
         return [
-            "Default" => $dashboards['Default'],
+            "Default" => $default,
             "Custom" => $custom,
         ];
     }
