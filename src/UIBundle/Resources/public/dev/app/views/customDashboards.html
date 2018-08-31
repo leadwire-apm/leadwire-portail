@@ -8,6 +8,10 @@
 </div>
 
 <div class="col-sm-12 col-md-12 col-xs-12">
+    <div ng-if="!ctrl.themeList.length" class="alert alert-info">
+        No Dashboard yet.
+    </div>
+
     <div ng-repeat="theme in ctrl.themeList" class="col-md-6 col-sm-6 col-xs-12">
         <h3>{{theme.name}}</h3>
         <ul>
