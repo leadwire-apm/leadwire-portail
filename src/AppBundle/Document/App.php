@@ -352,10 +352,15 @@ class App
         return $this;
     }
 
+    /**
+     * Get elastic index
+     * @return string
+     */
     public function getIndex()
     {
         return 'app_' . $this->getUuid();
     }
+
     /**
      * Returns string representation of the object
      *

@@ -33,17 +33,11 @@ class Kibana
      */
     public function createDashboards(App $app)
     {
-        //$this->elastic->deleteIndex();
+        $this->elastic->deleteIndex();
 
         $client = new \GuzzleHttp\Client(['defaults' => ['verify' => false]]);
-        //$json_template = $this->prepareTemplate($app->getType());
         $json_template = json_encode($app->getType()->getTemplate());
-        $url = $this->settings['base_url'] . $app->getIndex() . "/api/kibana/dashboards/import";
-//        $url = str_replace(
-//            '{{tenant}}',
-//            ',
-//            $this->settings['inject_dashboards']
-//        );
+        $url = $this->settings['host'] . "/api/kibana/dashboards/import";
 
         try {
             $response = $client->post(
@@ -51,26 +45,20 @@ class Kibana
                 [
                     'body' => $json_template,
                     'headers' => [
-                        //'Content-type'  => 'application/json',
+                        'Content-type'  => 'application/json',
                         'kbn-xsrf' => 'true',
+                        'x-tenants-enabled' => true
                     ],
                     'auth' => $this->getAuth()
                 ]
             );
+
+            //$this->elastic->resetIndex($app);
             return $this->elastic->copyIndex($app->getIndex());
-        } catch (\GuzzleHttp\Exception\ClientException $e) {
-            $this->logger->error($e->getMessage());
+        } catch (\Exception $e) {
+            $this->logger->error("error on import", ["exception" => $e]);
             return false;
         }
-    }
-
-    private function prepareTemplate($template)
-    {
-        $template = preg_replace_callback('/__uuid__/', function ($maches) {
-            $uuid = Uuid::uuid1();
-            return $uuid->toString();
-        }, json_encode($template));
-        return $template;
     }
 
     private function getAuth()

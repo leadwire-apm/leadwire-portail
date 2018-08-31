@@ -134,8 +134,7 @@ class ElasticSearch
                 );
             }
         } catch (\GuzzleHttp\Exception\ClientException $e) {
-            $this->logger->error($e->getMessage());
-            //throw new HttpException("An error has occurred while executing your request.", 500);
+            $this->logger->error("Error on reset index", ['exception' => $e ]);
         }
     }
 
@@ -156,8 +155,9 @@ class ElasticSearch
                 'auth' => $this->getAuth()
             ]);
             return true;
-        } catch (\GuzzleHttp\Exception\ClientException $e) {
-            $this->logger->error($e->getMessage());
+        } catch (\Exception $e) {
+            $this->logger->warning("Error when deleting index", ['exception' => $e ]);
+
             return false;
         }
     }
@@ -172,21 +172,18 @@ class ElasticSearch
                         "index" => ".kibana_adm-portail"
                     ],
                     'dest' => [
-                        "index" => $index
+                        "index" => ".kibana_$index"
                     ]
                 ]),
                 'headers' => [
-                    //'Content-type'  => 'application/json',
-                    'kbn-xsrf' => 'true',
+                    'Content-type'  => 'application/json',
+
                 ],
                 'auth' => $this->getAuth()
             ]);
             return true;
-        } catch (\GuzzleHttp\Exception\ClientException $e) {
-            $this->logger->error($e->getMessage());
-            return false;
         } catch (\Exception $e) {
-            $this->logger->error($e->getMessage());
+            $this->logger->error("Error when replacing indexes", ['exception' => $e ]);
             return false;
         }
     }
