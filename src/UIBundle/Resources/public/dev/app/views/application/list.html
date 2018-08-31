@@ -35,6 +35,9 @@
                         </td>
                         <td>
                             <a class="btn btn-info"
+                               title="Details"
+                               data-placement="left"
+                               data-toggle="tooltip"
                                ng-disabled="!app.isEnabled" ui-sref="app.applicationDetail({id:app.id})">
                                 <i class="fa fa-info"></i>
                             </a>
@@ -42,15 +45,28 @@
                         <td>
 
                             <a class="btn btn-primary"
+                               title="Activate application"
+                               data-placement="left"
+                               data-toggle="tooltip"
+
                                ng-click="ctrl.enableApp(app)"
                                ng-if="!app.isEnabled && app.owner.id == user.id">
                                 <i class="fa fa-key"></i>
                             </a>
-                            <a class="btn btn-warning"  ng-if="app.isEnabled && app.owner.id == user.id"
+                            <a class="btn btn-warning"
+                               title="Edit application"
+                               data-placement="left"
+                               data-toggle="tooltip"
+
+                               ng-if="app.isEnabled && app.owner.id == user.id"
                                ui-sref="app.applicationEdit({id:app.id})"><i class="fa fa-pencil"></i></a>
                         </td>
                         <td>
                             <button class="btn btn-danger"
+                                    title="Delete application"
+                                    data-placement="left"
+                                    data-toggle="tooltip"
+
                                     ng-click="ctrl.deleteApp(app.id)">
                                 <i ng-if="!ctrl.ui.isDeleting" class="fa fa-trash"></i>
                                 <spinner is-loading="ctrl.ui.isDeleting"></spinner>
@@ -66,5 +82,6 @@
         </div>
     </div>
 </div>
+
 
 
