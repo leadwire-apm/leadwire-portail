@@ -5,6 +5,7 @@
             '$scope',
             '$rootScope',
             'ApplicationFactory',
+            'UserService',
             'toastr',
             'MESSAGES_CONSTANTS',
             '$localStorage',
@@ -16,6 +17,7 @@
         $scope,
         $rootScope,
         ApplicationFactory,
+        UserService,
         toastr,
         MESSAGES_CONSTANTS,
         $localStorage,
@@ -72,6 +74,7 @@
             vm.ui = {
                 isDeleting: false
             };
+            UserService.handleFirstLogin();
             getApps();
         }
 
