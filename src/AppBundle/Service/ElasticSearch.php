@@ -53,11 +53,11 @@ class ElasticSearch
         $userUuid = $app->getOwner()->getUuid();
         $appUuid = $app->getUuid();
         // for prod use only
-//        $tenants = ["default" => "app_$appUuid", "user" => "user_$userUuid", "shared" => "share_$appUuid"];
+        $tenants = ["default" => "app_$appUuid", "user" => "user_$userUuid", "shared" => "share_$appUuid"];
         // for dev use only
-        $tenants = ["default" => "apptest", 'user' => "adm-portail", "shared" => "share_$appUuid"];
+//        $tenants = ["default" => "apptest", 'user' => "adm-portail", "shared" => "share_$appUuid"];
         $res = [];
-        $this->resetIndex($app);
+        //$this->resetIndex($app);
         foreach ($tenants as $name => $tenant) {
             try {
                 $key = $name == "default" ? "Default" : "Custom";
@@ -129,10 +129,7 @@ class ElasticSearch
                         'headers' => [
                             'Content-type' => 'application/json',
                         ],
-                        'auth' => [
-                            $this->settings['username'],
-                            $this->settings['password']
-                        ]
+                        'auth' => $this->getAuth()
                     ]
                 );
             }
@@ -149,5 +146,56 @@ class ElasticSearch
             $id = str_replace($search, "", $id);
         }
         return $id ;
+    }
+
+    public function deleteIndex()
+    {
+        try {
+            $client = new \GuzzleHttp\Client(['defaults' => ['verify' => false]]);
+            $response = $client->delete($this->settings['host'] . ".kibana_adm-portail", [
+                'auth' => $this->getAuth()
+            ]);
+            return true;
+        } catch (\GuzzleHttp\Exception\ClientException $e) {
+            $this->logger->error($e->getMessage());
+            return false;
+        }
+    }
+
+    public function copyIndex($index)
+    {
+        try {
+            $client = new \GuzzleHttp\Client(['defaults' => ['verify' => false]]);
+            $response = $client->post($this->settings['host']  . "_reindex", [
+                'body' => json_encode([
+                    'source' => [
+                        "index" => ".kibana_adm-portail"
+                    ],
+                    'dest' => [
+                        "index" => $index
+                    ]
+                ]),
+                'headers' => [
+                    //'Content-type'  => 'application/json',
+                    'kbn-xsrf' => 'true',
+                ],
+                'auth' => $this->getAuth()
+            ]);
+            return true;
+        } catch (\GuzzleHttp\Exception\ClientException $e) {
+            $this->logger->error($e->getMessage());
+            return false;
+        } catch (\Exception $e) {
+            $this->logger->error($e->getMessage());
+            return false;
+        }
+    }
+
+    public function getAuth()
+    {
+        return  [
+            $this->settings['username'],
+            $this->settings['password']
+        ];
     }
 }

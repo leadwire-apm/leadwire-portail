@@ -196,6 +196,7 @@ class AppService
             return $app;
         } else {
             $this->appManager->delete($app);
+            $this->logger->critical("Application was removed due to error in Ldap/Kibana or Elastic search");
             return null;
         }
     }

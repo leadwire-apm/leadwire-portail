@@ -352,6 +352,10 @@ class App
         return $this;
     }
 
+    public function getIndex()
+    {
+        return 'app_' . $this->getUuid();
+    }
     /**
      * Returns string representation of the object
      *

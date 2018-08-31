@@ -18,11 +18,13 @@ class Kibana
 
     private $settings;
     private $logger;
+    private $elastic;
 
-    public function __construct(ContainerInterface $container, LoggerInterface $logger)
+    public function __construct(ContainerInterface $container, LoggerInterface $logger, ElasticSearch $elastic)
     {
         $this->settings = $container->getParameter('kibana');
         $this->logger = $logger;
+        $this->elastic = $elastic;
     }
 
     /**
@@ -31,15 +33,17 @@ class Kibana
      */
     public function createDashboards(App $app)
     {
+        //$this->elastic->deleteIndex();
+
         $client = new \GuzzleHttp\Client(['defaults' => ['verify' => false]]);
         //$json_template = $this->prepareTemplate($app->getType());
         $json_template = json_encode($app->getType()->getTemplate());
-
-        $url = str_replace(
-            '{{tenant}}',
-            'app_' . $app->getUuid(),
-            $this->settings['inject_dashboards']
-        );
+        $url = $this->settings['base_url'] . $app->getIndex() . "/api/kibana/dashboards/import";
+//        $url = str_replace(
+//            '{{tenant}}',
+//            ',
+//            $this->settings['inject_dashboards']
+//        );
 
         try {
             $response = $client->post(
@@ -50,13 +54,10 @@ class Kibana
                         //'Content-type'  => 'application/json',
                         'kbn-xsrf' => 'true',
                     ],
-                    'auth' => [
-                        $this->settings['username'],
-                        $this->settings['password']
-                    ]
+                    'auth' => $this->getAuth()
                 ]
             );
-            return true;
+            return $this->elastic->copyIndex($app->getIndex());
         } catch (\GuzzleHttp\Exception\ClientException $e) {
             $this->logger->error($e->getMessage());
             return false;
@@ -70,5 +71,13 @@ class Kibana
             return $uuid->toString();
         }, json_encode($template));
         return $template;
+    }
+
+    private function getAuth()
+    {
+        return  [
+            $this->settings['username'],
+            $this->settings['password']
+        ];
     }
 }
