@@ -5,7 +5,7 @@
             'Account',
             '$rootScope',
             '$localStorage',
-            'Invitation',
+            'InvitationService',
             '$ocLazyLoad',
             '$modal',
             'FileService',
@@ -16,7 +16,7 @@
         Account,
         $rootScope,
         $localStorage,
-        Invitation,
+        InvitationService,
         $ocLazyLoad,
         $modal,
         FileService
@@ -120,25 +120,16 @@
                     .setProfile()
                     .then(function(user) {
                         if (invitationId !== undefined) {
-                            Invitation.get(invitationId).then(function(res) {
-                                if (!res.data.user) {
-                                    var invitToUpdate = {
-                                        id: invitationId,
-                                        isPending: false,
-                                        user: {
-                                            id: user.id
-                                        },
-                                        app: {
-                                            id: res.data.app.id
-                                        }
-                                    };
-                                    Invitation.update(
-                                        invitationId,
-                                        invitToUpdate
-                                    );
-                                }
-                                resolve($localStorage.user);
-                            });
+                            InvitationService.acceptInvitation(
+                                invitationId,
+                                user.id
+                            )
+                                .then(function() {
+                                    resolve($localStorage.user);
+                                })
+                                .catch(function() {
+                                    resolve($localStorage.user);
+                                });
                         } else {
                             resolve($localStorage.user);
                         }
@@ -175,24 +166,25 @@
             var connectedUser = angular.extend({}, $localStorage.user);
             if (!connectedUser || !connectedUser.email) {
                 $ocLazyLoad
-                .load({
-                    name: 'sbAdminApp',
-                    files: [
-                        $rootScope.ASSETS_BASE_URL +
-                        'scripts/controllers/profileModal.js'
-                    ]
-                })
-                .then(function() {
-                    $modal.open({
-                        ariaLabelledBy: 'User-form',
-                        ariaDescribedBy: 'User-form',
-                        templateUrl:
-                            $rootScope.ASSETS_BASE_URL + 'views/profile.html',
-                        controller: 'profileModalCtrl',
-                        controllerAs: 'ctrl'
+                    .load({
+                        name: 'sbAdminApp',
+                        files: [
+                            $rootScope.ASSETS_BASE_URL +
+                                'scripts/controllers/profileModal.js'
+                        ]
+                    })
+                    .then(function() {
+                        $modal.open({
+                            ariaLabelledBy: 'User-form',
+                            ariaDescribedBy: 'User-form',
+                            templateUrl:
+                                $rootScope.ASSETS_BASE_URL +
+                                'views/profile.html',
+                            controller: 'profileModalCtrl',
+                            controllerAs: 'ctrl'
+                        });
                     });
-                });
             }
-        }
+        };
     }
 })(window.angular);

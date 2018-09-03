@@ -30,27 +30,36 @@
         init();
 
         vm.handleInviteUser = function() {
-            vm.flipActivityIndicator();
-            Invitation.save({
-                email: vm.invitedUser.email,
-                app: {
-                    id: vm.app.id
-                }
-            })
-                .then(function() {
-                    toastr.success(MESSAGES_CONSTANTS.INVITE_USER_SUCCESS);
-                    vm.getApp();
-                    vm.flipActivityIndicator();
-                    vm.invitedUser.email = '';
+            var invitedEmails = vm.app.invitations.map(function(invitation) {
+                return invitation.email ? invitation.email.toLowerCase() : null;
+            });
+            if (
+                invitedEmails.indexOf(vm.invitedUser.email.toLowerCase()) === -1
+            ) {
+                vm.flipActivityIndicator();
+                Invitation.save({
+                    email: vm.invitedUser.email,
+                    app: {
+                        id: vm.app.id
+                    }
                 })
-                .catch(function(error) {
-                    vm.flipActivityIndicator();
-                    toastr.error(
-                        error.message ||
-                            MESSAGES_CONSTANTS.INVITE_USER_FAILURE ||
-                            MESSAGES_CONSTANTS.ERROR
-                    );
-                });
+                    .then(function() {
+                        toastr.success(MESSAGES_CONSTANTS.INVITE_USER_SUCCESS);
+                        vm.getApp();
+                        vm.flipActivityIndicator();
+                        vm.invitedUser.email = '';
+                    })
+                    .catch(function(error) {
+                        vm.flipActivityIndicator();
+                        toastr.error(
+                            error.message ||
+                                MESSAGES_CONSTANTS.INVITE_USER_FAILURE ||
+                                MESSAGES_CONSTANTS.ERROR
+                        );
+                    });
+            } else {
+                toastr.error(MESSAGES_CONSTANTS.INVITE_USER_VALIDATION);
+            }
         };
 
         vm.deleteInvitation = function(id) {
@@ -100,7 +109,9 @@
             vm.ui = {
                 isSaving: false
             };
-            vm.invitedUser = {};
+            vm.invitedUser = {
+                email: ''
+            };
             vm.DOWNLOAD_URL = CONFIG.DOWNLOAD_URL;
             vm.getApp();
         }

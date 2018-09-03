@@ -4,9 +4,9 @@
         .controller('LoginCtrl', [
             '$location',
             '$auth',
-            '$timeout',
+            'InvitationService',
             'UserService',
-            'Invitation',
+            '$localStorage',
             'toastr',
             'MESSAGES_CONSTANTS',
             'DashboardService',
@@ -21,9 +21,9 @@
      *
      * @param $location
      * @param $auth
-     * @param $timeout
+     * @param InvitationService
      * @param UserService
-     * @param Invitation
+     * @param $localStorage
      * @param toastr
      * @param MESSAGES_CONSTANTS
      * @param DashboardService
@@ -35,9 +35,9 @@
     function LoginControllerFN(
         $location,
         $auth,
-        $timeout,
+        InvitationService,
         UserService,
-        Invitation,
+        $localStorage,
         toastr,
         MESSAGES_CONSTANTS,
         DashboardService,
@@ -46,12 +46,12 @@
         $state
     ) {
         var vm = this;
-        onLoad();
-        vm.authenticate = authenticate;
         var invitationId =
             $location.$$search && $location.$$search.invitation
                 ? $location.$$search.invitation
                 : undefined;
+        onLoad();
+        vm.authenticate = authenticate;
 
         function authenticate(provider) {
             vm.isChecking = true;
@@ -102,13 +102,12 @@
                 user.defaultApp.id &&
                 user.defaultApp.isEnabled
             ) {
-                ApplicationFactory.findAll()
-                    .then(function(response) {
-                        if (response.data && response.data.length) {
-                            $rootScope.$broadcast('set:apps', response.data);
-                        }
-                    });
-                            //take the default app
+                ApplicationFactory.findAll().then(function(response) {
+                    if (response.data && response.data.length) {
+                        $rootScope.$broadcast('set:apps', response.data);
+                    }
+                });
+                //take the default app
                 return DashboardService.fetchDashboardsByAppId(
                     user.defaultApp.id
                 );
@@ -117,7 +116,7 @@
                 return ApplicationFactory.findAll()
                     .then(function(response) {
                         if (response.data && response.data.length) {
-                            $rootScope.$broadcast('set:apps',response.data);
+                            $rootScope.$broadcast('set:apps', response.data);
                             var firstEnabled = response.data.find(function(
                                 app
                             ) {
@@ -143,7 +142,24 @@
 
         function onLoad() {
             if ($auth.isAuthenticated()) {
-                $location.path('/');
+                if (invitationId !== undefined) {
+                    InvitationService.acceptInvitation(
+                        invitationId,
+                        $localStorage.user.id
+                    )
+                        .then(function() {
+                            toastr.success(
+                                MESSAGES_CONSTANTS.INVITATION_ACCEPTED
+                            );
+                            $state.go('app.applicationsList');
+                        })
+                        .catch(function() {
+                            toastr.error(MESSAGES_CONSTANTS.ERROR);
+                            console.log(error);
+                        });
+                } else {
+                    $state.go('app.applicationsList');
+                }
             }
         }
     }
