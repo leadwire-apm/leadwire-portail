@@ -93,6 +93,7 @@
                             modalVM.activationCode
                         )
                             .then(function(response) {
+                                console.log(response)
                                 if (response.data) {
                                     toastr.success(
                                         MESSAGES_CONSTANTS.ACTIVATE_APP_SUCCESS
@@ -104,13 +105,13 @@
                                         }
                                     );
                                     $scope.$emit('activate:app', updatedApp);
-                                    $modalInstance.close();
                                     vm.apps = vm.apps.map(function(currentApp) {
                                         return currentApp.id !== selectedApp.id
                                             ? currentApp
                                             : updatedApp;
                                     });
                                     $state.go('app.applicationDetail', {id: selectedApp.id});
+                                    $modalInstance.close();
                                 } else {
                                     toastr.error(
                                         MESSAGES_CONSTANTS.ACTIVATE_APP_FAILURE
