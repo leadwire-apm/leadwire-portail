@@ -127,7 +127,11 @@
                                 .then(function() {
                                     resolve($localStorage.user);
                                 })
-                                .catch(function() {
+                                .catch(function(error) {
+                                    console.log(
+                                        'service.handleBeforeRedirect 1',
+                                        error
+                                    );
                                     resolve($localStorage.user);
                                 });
                         } else {
@@ -135,6 +139,7 @@
                         }
                     })
                     .catch(function(error) {
+                        console.log('service.handleBeforeRedirect 2', error);
                         reject(error);
                     });
             });

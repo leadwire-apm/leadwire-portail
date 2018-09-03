@@ -142,7 +142,8 @@
 
         function onLoad() {
             if ($auth.isAuthenticated()) {
-                if (invitationId !== undefined) {
+                console.log('Connected User', $localStorage.user);
+                if (invitationId !== undefined && $localStorage.user) {
                     InvitationService.acceptInvitation(
                         invitationId,
                         $localStorage.user.id
@@ -153,9 +154,9 @@
                             );
                             $state.go('app.applicationsList');
                         })
-                        .catch(function() {
+                        .catch(function(error) {
                             toastr.error(MESSAGES_CONSTANTS.ERROR);
-                            console.log(error);
+                            console.log('onLoad Login', error);
                         });
                 } else {
                     $state.go('app.applicationsList');
