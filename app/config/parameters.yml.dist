@@ -24,9 +24,9 @@ parameters:
         dn_user: 'cn=ldapadm,dc=leadwire,dc=io'
         mdp: 'ldppassword123'
     kibana:
-        username: leadwire-apm-test
-        password: test-apm-leadwire
-        inject_dashboards: 'https://adm-kibana.leadwire.io/{{tenant}}/api/kibana/dashboards/import'
+        username: adm-portail
+        password: portail-adm
+        host: 'https://adm-kibana.leadwire.io'
         template_folder: '%kernel.project_dir%/app/Resources/Kibana'
     elastic:
         username: adm-portail
