@@ -43,5 +43,10 @@
   },
   "scripts": {
     "test": "grunt test"
+  },
+  "prettier":{
+    "singleQuote": true,
+    "tabWidth": 4,
+    "bracketSpacing": true
   }
 }

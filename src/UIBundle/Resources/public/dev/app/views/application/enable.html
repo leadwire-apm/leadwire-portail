@@ -1,0 +1,20 @@
+<div class="panel mb25">
+    <div class="panel-heading border">
+        Application Activation
+    </div>
+    <div class="panel-body">
+        <div class="row no-margin">
+            <div class="col-lg-12">
+                <form class="form-horizontal bordered-group" name="ctrl.activationForm" ng-submit="ctrl.enable()" role="form">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label" for="code">Code</label>
+                        <div class="col-sm-10">
+                            <input type="text" id="code" class="form-control" ng-model="ctrl.activationCode" required>
+                        </div>
+                    </div>
+                    <button data-ng-disabled="!ctrl.activationForm.$valid" type="submit" class="btn btn-primary pull-right">send</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

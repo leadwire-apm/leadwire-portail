@@ -31,7 +31,7 @@ class Invitation
      * @ODM\ReferenceOne(targetDocument="AppBundle\Document\App", name="app", cascade={"persist"}, inversedBy="invitations")
      * @JMS\Type("AppBundle\Document\App")
      * @JMS\Expose
-     * @JMS\Groups({"Default"})
+     * @JMS\Groups({"Default", "full"})
      */
     private $app;
 
@@ -148,6 +148,28 @@ class Invitation
     public function setIsPending($isPending)
     {
         $this->isPending = $isPending;
+        return $this;
+    }
+
+    /**
+     * Get user
+     *
+     * @return User
+     */
+    public function getUser()
+    {
+        return $this->user;
+    }
+
+    /**
+     * Set user
+     * @param User
+     *
+     * @return Invitation
+     */
+    public function setUser(User $user)
+    {
+        $this->user = $user;
         return $this;
     }
 

@@ -42,25 +42,41 @@ class AppService
     private $kibana;
 
     /**
+     * @var ApplicationTypeService
+     */
+    private $apService;
+
+    /**
+     * @var ElasticSearch
+     */
+    private $elastic;
+    /**
      * Constructor
      *
      * @param AppManager $appManager
      * @param SerializerInterface $serializer
      * @param LoggerInterface $logger
      * @param LdapService $ldapService
+     * @param Kibana $kibana
+     * @param ApplicationTypeService $apService
+     * @param ElasticSearch $elastic
      */
     public function __construct(
         AppManager $appManager,
         SerializerInterface $serializer,
         LoggerInterface $logger,
         LdapService $ldapService,
-        Kibana $kibana
+        Kibana $kibana,
+        ApplicationTypeService $apService,
+        ElasticSearch $elastic
     ) {
         $this->appManager = $appManager;
         $this->serializer = $serializer;
         $this->logger = $logger;
         $this->ldapService = $ldapService;
         $this->kibana = $kibana;
+        $this->apService = $apService;
+        $this->elastic = $elastic;
     }
 
     /**
@@ -109,7 +125,29 @@ class AppService
      */
     public function getApp($id)
     {
-        return $this->appManager->getOneBy(['id' => $id, 'isRemoved' => false]);
+        return $this->appManager->getOneBy(['_id' => $id, 'isRemoved' => false]);
+    }
+
+    /**
+     * Activate Disabled App
+     * @param $id
+     * @param $body
+     * @return App
+     */
+    public function activateApp($id, $body)
+    {
+        $code = $body->code;
+
+        if (strlen($code) == 6 && substr($code, 1, 1) == 'B' &&
+            substr($code, 4, 1) == 7 &&
+            strtoupper($code) == $code) {
+            $app = $this->getApp($id);
+            $app->setIsEnabled(true);
+            $this->appManager->update($app);
+            return $app;
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -135,16 +173,32 @@ class AppService
      */
     public function newApp($json, User $user)
     {
+        $context = new DeserializationContext();
+        $context->setGroups(['Default']);
         $app = $this
             ->serializer
-            ->deserialize($json, App::class, 'json');
-        $app->setOwner($user);
+            ->deserialize($json, App::class, 'json', $context);
+
         $uuid1 = Uuid::uuid1();
-        $app->setUuid($uuid1->toString());
-        $app = $this->getApp($this->appManager->update($app));
-        $this->ldapService->createLdapAppEntry($user->getUsername(), $app->getName());
-        $this->kibana->createDashboards($app);
-        return $app;
+        $app
+            ->setOwner($user)
+            ->setIsEnabled(false)
+            ->setUuid($uuid1->toString())
+            ->setIsRemoved(false)
+        ;
+
+        $applicationTypeId = $app->getType()->getId();
+        $ap = $this->apService->getApplicationType($applicationTypeId);
+        $app->setType($ap);
+        $this->appManager->update($app);
+        if ($this->ldapService->createLdapAppEntry($user->getUuid(), $app->getUuid()) &&
+            $this->kibana->createDashboards($app)) {
+            return $app;
+        } else {
+            $this->appManager->delete($app);
+            $this->logger->critical("Application was removed due to error in Ldap/Kibana or Elastic search");
+            return null;
+        }
     }
 
     /**

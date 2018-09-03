@@ -125,7 +125,7 @@ body {
   line-height: 1.53846154;
   direction: ltr;
   -webkit-font-smoothing: antialiased;
-  font-family: "Helvetica Neue", Helvetica, Arial, "Roboto", sans-serif, sans-serif;
+  font-family: "Century Gothic", Helvetica, Arial, "Roboto", sans-serif, sans-serif;
   -ms-overflow-style: -ms-autohiding-scrollbar;
 }
 body.stop-scrolling {
@@ -171,6 +171,12 @@ img {
   -webkit-border-radius: 50%;
   -moz-border-radius: 50%;
   border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  overflow: hidden;
+  display: inline-block;
+  margin-top: -7px;
+
 }
 ol {
   list-style-position: outside;
@@ -992,7 +998,7 @@ blockquote p {
 }
 .main-panel > .header .header-avatar {
   width: 32px;
-  margin-top: -6px;
+  /*margin-top: -6px;*/
 }
 @media screen and (min-width: 768px) {
   .header {

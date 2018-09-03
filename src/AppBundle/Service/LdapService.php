@@ -2,7 +2,9 @@
 
 namespace AppBundle\Service;
 
+use AppBundle\Document\Invitation;
 use Psr\Container\ContainerInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Ldap\Entry;
 use Symfony\Component\Ldap\Exception\LdapException;
 use Symfony\Component\Ldap\Ldap;
@@ -14,11 +16,24 @@ use Symfony\Component\Ldap\Ldap;
  */
 class LdapService
 {
+    /**
+     * @var array
+     */
     private $settings;
 
-    public function __construct(ContainerInterface $container)
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
+    /**
+     * LdapService constructor.
+     * @param ContainerInterface $container
+     * @param LoggerInterface $logger
+     */
+    public function __construct(ContainerInterface $container, LoggerInterface $logger)
     {
         $this->settings = $container->getParameter('ldap');
+        $this->logger = $logger;
     }
 
     public function createLdapUserEntry(string $username)
@@ -40,19 +55,19 @@ class LdapService
         $entry = new Entry(
             "cn=$appName,ou=Group,dc=leadwire,dc=io",
             [
-                'cn' => $appName,
+                'cn' => 'app_' . $appName,
                 'objectClass' => ['groupofnames'],
                 'member' => "cn=$username,ou=People,dc=leadwire,dc=io"
             ]
         );
-
-        $this->saveEntry($entry);
+        return $this->saveEntry($entry);
     }
 
-    public function createLdapInvitationEntry(string $application, string $uuid)
+    public function createLdapInvitationEntry(Invitation $invitation)
     {
+        $uuid = $invitation->getUser()->getUuid();
         $entry = new Entry(
-            "cn=$application,ou=Group,dc=leadwire,dc=io",
+            "cn={$invitation->getApp()->getName()},ou=Group,dc=leadwire,dc=io",
             [
                 "changetype" => "modify",
                 "add" =>  "$uuid",
@@ -90,8 +105,10 @@ class LdapService
             return true;
         } catch (LdapException $e) {
             if (strpos($e->getMessage(), 'Already exists.') !== false) {
+                $this->logger->warning($e->getMessage());
                 return true;
             } else {
+                $this->logger->error($e->getMessage());
                 return false;
             }
         }

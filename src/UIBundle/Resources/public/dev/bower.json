@@ -36,7 +36,6 @@
     "clockpicker": "~0.0.7",
     "blueimp-bootstrap-image-gallery": "~3.1.1",
     "bootstrap-timepicker": "~0.2.6",
-    "intl-tel-input": "~5.8.7",
     "c3": "~0.4.10",
     "chosen_v1.4.0": "https://github.com/harvesthq/chosen/releases/download/v1.4.0/chosen_v1.4.0.zip",
     "sortable": "~0.6.0",
@@ -44,23 +43,23 @@
     "fullcalendar": "~2.3.1",
     "jquery.easy-pie-chart": "~2.1.6",
     "d3": "~3.5.5",
-    "angular-cookies": "^1.6.5",
+    "angular-cookies": "1.3.*",
     "ngstorage": "*",
     "angular-ui-router": "*",
-    "angular-animate": "*",
-    "angular-bootstrap": "*",
-    "angular-sanitize": "*",
-    "angular-touch": "*",
+    "angular-animate": "1.3.*",
+    "angular-bootstrap": "0.12.1",
+    "angular-sanitize": "1.3.*",
+    "angular-touch": "1.3.*",
     "ocLazyLoad": "*",
-    "fastclick": "*"
-
+    "fastclick": "*",
+    "satellizer": "0.15.5"
   },
   "appPath": "app",
   "moduleName": "leadwireApp",
   "resolutions": {
     "fullcalendar": "~2.3.1",
     "d3": "~3.5.5",
-    "angular": "1.x",
+    "angular": "1.3.x",
     "jquery": "1.x",
     "bootstrap": ">= 3.0.1"
   }

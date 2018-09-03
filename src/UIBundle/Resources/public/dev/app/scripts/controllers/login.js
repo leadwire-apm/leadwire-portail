@@ -1,81 +1,168 @@
-/**
- * Created by hamed on 02/06/17.
- */
+(function(angular) {
+    angular
+        .module('leadwireApp')
+        .controller('LoginCtrl', [
+            '$location',
+            '$auth',
+            'InvitationService',
+            'UserService',
+            '$localStorage',
+            'toastr',
+            'MESSAGES_CONSTANTS',
+            'DashboardService',
+            'ApplicationFactory',
+            '$rootScope',
+            '$state',
+            LoginControllerFN
+        ]);
 
-angular.module('leadwireApp').
-    controller('LoginCtrl', LoginController).
-    controller('logoutCtrl', logout);
+    /**
+     * LoginControllerFN : le controlleur de l'écran de l'authentification
+     *
+     * @param $location
+     * @param $auth
+     * @param InvitationService
+     * @param UserService
+     * @param $localStorage
+     * @param toastr
+     * @param MESSAGES_CONSTANTS
+     * @param DashboardService
+     * @param ApplicationFactory
+     * @param $rootScope
+     * @param $state
+     * @constructor
+     */
+    function LoginControllerFN(
+        $location,
+        $auth,
+        InvitationService,
+        UserService,
+        $localStorage,
+        toastr,
+        MESSAGES_CONSTANTS,
+        DashboardService,
+        ApplicationFactory,
+        $rootScope,
+        $state
+    ) {
+        var vm = this;
+        var invitationId =
+            $location.$$search && $location.$$search.invitation
+                ? $location.$$search.invitation
+                : undefined;
+        onLoad();
+        vm.authenticate = authenticate;
 
-function logout($location, $localStorage) {
-    $localStorage.$reset();
-    $location.path('/login');
-}
+        function authenticate(provider) {
+            vm.isChecking = true;
 
-//
-// LoginController.$inject = [
-//     '$location',
-//     '$auth',
-//     '$timeout',
-//     'User',
-//     '$localStorage'];
+            $auth
+                .authenticate(provider)
+                .then(function() {
+                    return invitationId;
+                })
+                .then(UserService.handleBeforeRedirect)
+                .then(handleAfterRedirect)
+                .then(handleLoginSuccess(provider))
+                .catch(handleLoginFailure);
+        }
 
-/**
- * LoginController : le controlleur de l'écran de l'authentification
- *
- * @param $location
- * @param $auth
- * @param $timeout
- * @param UserService
- * @param Invitation
- * @param $localStorage
- * @param toastr
- * @param MESSAGES_CONSTANTS
- * @constructor
- */
-function LoginController(
-    $location, $auth, $timeout, UserService, Invitation, $localStorage,
-    toastr, MESSAGES_CONSTANTS) {
-    var vm = this;
-    initController();
-    vm.authenticate = authenticate;
-    var invitationId = $location.$$search && $location.$$search.invitation ?
-        $location.$$search.invitation : undefined;
-
-    function authenticate(provider) {
-        vm.isChecking = true;
-
-        $auth.authenticate(provider).then(function(data) {
-            UserService.handleOnSuccessLogin(invitationId).then(function() {
+        function handleLoginSuccess(provider) {
+            return function(dashboardId) {
                 toastr.success(MESSAGES_CONSTANTS.LOGIN_SUCCESS(provider));
-                vm.isChecking = false;
                 $location.search({});
-                $location.path('/');
-            }).catch(function(error) {
                 vm.isChecking = false;
-                console.log('Error handleOnSucc', error);
-                handleLoginFailure(error);
-            });
-        }).catch(function(error) {
-            handleLoginFailure(error);
-        });
-    }
-
-    function handleLoginFailure(error) {
-        vm.isChecking = false;
-        var message = null;
-        if (error.message) {
-            message = error.message;
-        } else if (error.data) {
-            message = error.data.message;
-        } else {
-            message = error;
+                if (dashboardId !== null) {
+                    $state.go('app.dashboard.home', {
+                        id: dashboardId
+                    });
+                } else {
+                    $state.go('app.applicationsList');
+                }
+                return true;
+            };
         }
-        toastr.error(message);
-    }
 
-    function initController() {
-        if ($auth.isAuthenticated()) {
-            $location.path('/');
+        function handleLoginFailure(error) {
+            vm.isChecking = false;
+            var message = null;
+            if (error.message) {
+                message = error.message;
+            } else if (error.data) {
+                message = error.data.message;
+            } else {
+                message = error;
+            }
+            toastr.error(message);
+        }
+
+        function handleAfterRedirect(user) {
+            if (
+                user.defaultApp &&
+                user.defaultApp.id &&
+                user.defaultApp.isEnabled
+            ) {
+                ApplicationFactory.findAll().then(function(response) {
+                    if (response.data && response.data.length) {
+                        $rootScope.$broadcast('set:apps', response.data);
+                    }
+                });
+                //take the default app
+                return DashboardService.fetchDashboardsByAppId(
+                    user.defaultApp.id
+                );
+            } else {
+                // else take the first enabled app
+                return ApplicationFactory.findAll()
+                    .then(function(response) {
+                        if (response.data && response.data.length) {
+                            $rootScope.$broadcast('set:apps', response.data);
+                            var firstEnabled = response.data.find(function(
+                                app
+                            ) {
+                                return app.isEnabled;
+                            });
+                            if (firstEnabled) {
+                                return DashboardService.fetchDashboardsByAppId(
+                                    firstEnabled.id
+                                );
+                            } else {
+                                return null;
+                            }
+                        }
+                        return null;
+                    })
+                    .catch(function(error) {
+                        console.log('HandleAfterRedirect', error);
+                        return null;
+                    });
+                // no default app
+            }
+        }
+
+        function onLoad() {
+            if ($auth.isAuthenticated()) {
+                console.log('Connected User', $localStorage.user);
+                if (invitationId !== undefined && $localStorage.user) {
+                    InvitationService.acceptInvitation(
+                        invitationId,
+                        $localStorage.user.id
+                    )
+                        .then(function(app) {
+                            toastr.success(
+                                MESSAGES_CONSTANTS.INVITATION_ACCEPTED
+                            );
+                        ($localStorage.applications || ($localStorage.applications = [])).push(app);
+                            $state.go('app.applicationsList');
+                        })
+                        .catch(function(error) {
+                            toastr.error(MESSAGES_CONSTANTS.ERROR);
+                            console.log('onLoad Login', error);
+                        });
+                } else {
+                    $state.go('app.applicationsList');
+                }
+            }
         }
     }
-}
+})(window.angular);

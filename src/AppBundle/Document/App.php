@@ -6,6 +6,8 @@ use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 use JMS\Serializer\Annotation as JMS;
 use ATS\CoreBundle\Annotation as ATS;
 use AppBundle\Document\User;
+use Symfony\Component\Validator\Constraints as Assert;
+use Doctrine\Bundle\MongoDBBundle\Validator\Constraints\Unique;
 
 /**
  * @ODM\Document(repositoryClass="AppBundle\Repository\AppRepository")
@@ -13,6 +15,8 @@ use AppBundle\Document\User;
  * @ODM\ChangeTrackingPolicy("DEFERRED_EXPLICIT")
  * @JMS\ExclusionPolicy("all")
  * @ATS\ApplicationView
+ * @Unique(fields={"name"})
+
  */
 class App
 {
@@ -40,21 +44,12 @@ class App
      * @var string
      *
      * @ODM\Field(type="string", name="name")
+     * @Assert\Length(min=5, max=32)
      * @JMS\Type("string")
      * @JMS\Expose
      * @JMS\Groups({"Default"})
      */
     private $name;
-
-    /**
-     * @var string
-     *
-     * @ODM\Field(type="string", name="type")
-     * @JMS\Type("string")
-     * @JMS\Expose
-     * @JMS\Groups({"Default"})
-     */
-    private $type;
 
     /**
      * @var string
@@ -93,16 +88,8 @@ class App
      * @JMS\Type("boolean")
      * @ODM\Field(type="boolean", name="isEnabled")
      */
-    private $isEnabled = false;
+    private $isEnabled;
 
-    /**
-     * @var boolean
-     * @JMS\Groups({"Default"})
-     * @JMS\Expose
-     * @JMS\Type("boolean")
-     * @ODM\Field(type="boolean", name="isDefault")
-     */
-    private $isDefault = false;
 
     /**
      * @var boolean
@@ -111,7 +98,7 @@ class App
      * @JMS\Type("boolean")
      * @ODM\Field(type="boolean", name="isRemoved")
      */
-    private $isRemoved = false;
+    private $isRemoved;
 
     /**
      * @var User
@@ -119,16 +106,31 @@ class App
      * @ODM\ReferenceOne(targetDocument="AppBundle\Document\User", name="owner", cascade={"persist"}, inversedBy="myApps")
      * @JMS\Type("AppBundle\Document\User")
      * @JMS\Expose
-     * @JMS\Groups({"full"})
+     * @JMS\Groups({"full", "Default"})
      */
     private $owner;
+
+
+    /**
+     * @var ApplicationType
+     *
+     * @ODM\ReferenceOne(targetDocument="AppBundle\Document\ApplicationType", name="type", cascade={"persist"})
+     * @JMS\Type("AppBundle\Document\ApplicationType")
+     * @JMS\Expose
+     * @JMS\Groups({"full", "Default"})
+     */
+    private $type;
+
 
     /** @ODM\ReferenceMany(targetDocument="Invitation", mappedBy="app")
      * @JMS\Type("array<AppBundle\Document\Invitation>")
      * @JMS\Expose
-     * @JMS\Groups({"full"})
+     * @JMS\Groups({"full", "Default"})
      */
     public $invitations;
+
+
+    public $dashboards;
 
     /**
      * Constructor
@@ -287,7 +289,7 @@ class App
 
     /**
      * Get type
-     * @return string
+     * @return ApplicationType
      */
     public function getType()
     {
@@ -296,10 +298,10 @@ class App
 
     /**
      * Set type
-     * @param string $type
+     * @param ApplicationType $type
      * @return $this
      */
-    public function setType(string $type)
+    public function setType(ApplicationType $type)
     {
         $this->type = $type;
         return $this;
@@ -331,32 +333,6 @@ class App
     }
 
     /**
-     * Get isDefault
-     * @return boolean
-     */
-    public function getIsDefault()
-    {
-        return $this->isDefault;
-    }
-
-    /**
-     * Set type
-     * @param boolean $isDefault
-     * @return $this
-     */
-    public function setIsDefault(bool $isDefault)
-    {
-        $this->isDefault = $isDefault;
-        return $this;
-    }
-
-    public function isDefault()
-    {
-        return $this->isDefault;
-    }
-
-
-    /**
      * Get isRemoved
      * @return boolean
      */
@@ -374,6 +350,15 @@ class App
     {
         $this->isRemoved = $isRemoved;
         return $this;
+    }
+
+    /**
+     * Get elastic index
+     * @return string
+     */
+    public function getIndex()
+    {
+        return 'app_' . $this->getUuid();
     }
 
     /**

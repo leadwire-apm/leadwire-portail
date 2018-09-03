@@ -1,7 +1,7 @@
 <div class="brand">
 
     <!-- logo -->
-    <a class="brand-logo" ui-sref="app.dashboard">
+    <a class="brand-logo" data-ng-click="brandRedirectTo()">
         <img data-ng-src="{{ASSETS_BASE_URL}}images/logo.png" height="30" alt="">
     </a>
     <!-- /logo -->
@@ -20,14 +20,24 @@
 <!-- main navigation -->
 <nav role="navigation" side-navigation>
     <ul class="nav">
-        <li ng-repeat="menu in menus" ng-switch on="menu.children!=undefined" ui-sref-active="active">
-            <a ng-switch-when="true" ui-sref="menu.children[0].route">
+        <li class="text-center" ng-if="isChangingContext">
+            <spinner is-loading="true" size="32" color="'antiquewhite'"></spinner>
+        </li>
+        <li ng-if="!isChangingContext" ng-repeat="menu in menus track by menu.route" ui-sref-active="active"
+            >
+            <!--<a ng-switch-when="true" ui-sref="menu.children[0].route">-->
+            <!--<i class="{{menu.icon}}"></i>-->
+            <!--<span>{{menu.label}}</span>-->
+            <!--</a>-->
+            <a  ng-href="{{menu.route}}">
                 <i class="{{menu.icon}}"></i>
                 <span>{{menu.label}}</span>
             </a>
-            <a ng-switch-when="false" ui-sref="{{menu.route}}">
-                <i class="{{menu.icon}}"></i>
-                <span>{{menu.label}}</span>
+        </li>
+        <li ng-if="!isChangingContext && state.includes('app.dashboard')">
+            <a  ui-sref="app.dashboard.customDashboard">
+                <i class="fa fa-file-text"></i>
+                <span>Custom</span>
             </a>
         </li>
     </ul>

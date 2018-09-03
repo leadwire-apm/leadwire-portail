@@ -53,7 +53,7 @@ a {
 }
 
 .touch {
-  li:hover, li:focus, a:hover, a:focus, {
+  li:hover, li:focus, a:hover, a:focus{
     background-color: transparent!important;
   }
 }
@@ -76,7 +76,14 @@ img {
 }
 
 .img-circle {
-  .rounded(50%);
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  overflow: hidden;
+  display: inline-block;
+  margin-top: -7px;
 }
 
 ol {

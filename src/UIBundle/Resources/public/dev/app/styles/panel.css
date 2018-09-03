@@ -51,3 +51,6 @@
 	content: "\e606";
 }
 
+.modal-open {
+	overflow: visible;
+}

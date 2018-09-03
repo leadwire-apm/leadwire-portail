@@ -1,60 +1,33 @@
-'use strict';
+(function(angular) {
+    angular
+        .module('leadwireApp')
+        .controller('dashboardCtrl', [
+            '$sce',
+            '$scope',
+            'ConfigService',
+            '$localStorage',
+            '$state',
+            'UserService',
+            dashboardCtrl
+        ]);
 
-function dashboardCtrl(
-    $sce, $scope, ConfigService, ApplicationFactory, $location, $localStorage,
-    $modal,
-    $ocLazyLoad, $rootScope) {
+    function dashboardCtrl(
+        $sce,
+        $scope,
+        ConfigService,
+        $localStorage,
+        $state,
+        UserService
+    ) {
+        var vm = this;
+        vm.applications = $localStorage.applications;
+        UserService.handleFirstLogin();
 
-    var ctrl = this;
-    var connectedUser = $localStorage.user;
 
-    if (!connectedUser || !connectedUser.email) {
-        console.log('i was here');
-        $ocLazyLoad.load({
-            name: 'sbAdminApp',
-            files: [
-                $rootScope.ASSETS_BASE_URL + 'scripts/controllers/settings.js'],
-        }).then(function() {
-            $modal.open({
-                //ariaLabelledBy: 'modal-title',
-                //ariaDescribedBy: 'modal-body',
-                templateUrl: $rootScope.ASSETS_BASE_URL + 'views/profile.html',
-                controller: 'SettingsModalCtrl',
-                controllerAs: 'ctrl',
-                resolve: {
-                    isModal: function() {
-                        return true;
-                    },
-                },
-            });
-        });
-    }
-
-    $scope.$on('add-application', function(event, newApp) {
-        console.log("sassa")
-        if ($localStorage.application === undefined) {
-            $localStorage.applications = [];
+        if (!!$state.params.id){
+            vm.dashboardLink = $sce.trustAsResourceUrl(
+                ConfigService.getDashboard($state.params.id, false)
+            );
         }
-        $localStorage.applications.push(newApp);
-        $rootScope.applications.push(newApp);
-    });
-
-    ApplicationFactory.findAll().success(function(data) {
-        delete $localStorage.applications;
-        $localStorage.applications = data;
-        $rootScope.applications = $localStorage.applications;
-
-    }).error(function(error) {
-        console.error(error);
-    });
-    ctrl.dashboardLink = $sce.trustAsResourceUrl(ConfigService.getDashboard(
-        '0827af30-5895-11e8-a683-7fb93ba4982c', false));
-}
-
-function formDashboardCtrl() {
-
-}
-
-angular.module('leadwireApp').
-    controller('dashboardCtrl', dashboardCtrl).
-    controller('formDashboardCtrl', formDashboardCtrl);
+    }
+})(window.angular);

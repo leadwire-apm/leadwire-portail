@@ -5,11 +5,15 @@ namespace AppBundle\Document;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
+use Doctrine\Bundle\MongoDBBundle\Validator\Constraints\Unique;
 
 /**
  * @ODM\Document(repositoryClass="ATS\UserBundle\Repository\UserRepository")
  * @ODM\HasLifecycleCallbacks
  * @JMS\ExclusionPolicy("all")
+ * @Unique(fields={"username"})
+ * @Unique(fields={"email"})
  */
 
 class User extends \ATS\UserBundle\Document\User
@@ -21,7 +25,7 @@ class User extends \ATS\UserBundle\Document\User
      * @ODM\Id("strategy=auto")
      * @JMS\Type("string")
      * @JMS\Expose
-     * @JMS\Groups({"full"})
+     * @JMS\Groups({"full","Default"})
      */
     private $id;
 
@@ -33,7 +37,7 @@ class User extends \ATS\UserBundle\Document\User
      * @ODM\Index(unique=true)
      * @JMS\Type("string")
      * @JMS\Expose
-     * @JMS\Groups({"full"})
+     * @JMS\Groups({"full","Default"})
      */
     private $uuid;
 
@@ -44,14 +48,14 @@ class User extends \ATS\UserBundle\Document\User
 
      * @JMS\Type("string")
      * @JMS\Expose
-     * @JMS\Groups({"full"})
+     * @JMS\Groups({"full","Default"})
      */
     private $avatar;
 
     /**
      * @var string
      * @JMS\Expose
-     * @JMS\Groups({"full"})
+     * @JMS\Groups({"full","Default"})
      * @JMS\Type("string")
      * @ODM\Field(type="string")
      */
@@ -60,7 +64,7 @@ class User extends \ATS\UserBundle\Document\User
     /**
      * @var string
      * @JMS\Expose
-     * @JMS\Groups({"full"})
+     * @JMS\Groups({"full", "Default"})
      * @JMS\Type("string")
      * @ODM\Field(type="string")
      */
@@ -72,7 +76,7 @@ class User extends \ATS\UserBundle\Document\User
      * @ODM\Field(type="string", name="company")
      * @JMS\Type("string")
      * @JMS\Expose
-     * @JMS\Groups({"full"})
+     * @JMS\Groups({"full","Default"})
      */
     private $company;
 
@@ -81,7 +85,8 @@ class User extends \ATS\UserBundle\Document\User
      *
      * @ODM\Field(type="string", name="contact")
      * @JMS\Type("string")
-     * @JMS\Groups({"full"})
+     * @JMS\Expose
+     * @JMS\Groups({"full","Default"})
      */
     private $contact;
 
@@ -91,16 +96,17 @@ class User extends \ATS\UserBundle\Document\User
      *
      * @ODM\Field(type="string", name="contactPreference")
      * @JMS\Type("string")
-     * @JMS\Groups({"full"})
+     * @JMS\Expose
+     * @JMS\Groups({"full","Default"})
      */
     private $contactPreference;
 
     /**
      * @var boolean
      *
-     * @ODM\Field(type="string", name="isEmailValid")
+     * @ODM\Field(type="boolean", name="isEmailValid")
      * @JMS\Type("boolean")
-     * @JMS\Groups({"full"})
+     * @JMS\Groups({"full","Default"})
      */
     private $isEmailValid = false;
 
@@ -111,7 +117,7 @@ class User extends \ATS\UserBundle\Document\User
 
      * @JMS\Type("string")
      * @JMS\Expose
-     * @JMS\Groups({"full"})
+     * @JMS\Groups({"full","Default"})
      */
     private $email;
 
@@ -120,7 +126,7 @@ class User extends \ATS\UserBundle\Document\User
      * @ODM\Field(type="boolean", name="acceptNewsLetter")
      * @JMS\Type("boolean")
      * @JMS\Expose
-     * @JMS\Groups({"full"})
+     * @JMS\Groups({"full","Default"})
      */
     private $acceptNewsLetter;
 
@@ -128,15 +134,27 @@ class User extends \ATS\UserBundle\Document\User
      * @ODM\ReferenceMany(targetDocument="Invitation", mappedBy="user")
      * @JMS\Type("array<AppBundle\Document\Invitation>")
      * @JMS\Expose
-     * @JMS\Groups({"full"})
+     * @JMS\Groups({"full", "Default"})
      */
     public $invitations;
 
     /**
      * @ODM\ReferenceMany(targetDocument="App", mappedBy="owner")
-     * @JMS\Groups({"full"})
+     * @JMS\Groups({"full","Default"})
      */
     public $myApps;
+
+
+    /**
+     * @var App
+     *
+     * @ODM\ReferenceOne(targetDocument="AppBundle\Document\App", name="defaultApp", cascade={"persist"})
+     * @JMS\Type("AppBundle\Document\App")
+     * @JMS\Expose
+     * @JMS\Groups({"Default", "full"})
+     */
+    private $defaultApp = null;
+
 
     /**
      * Get id
@@ -383,5 +401,23 @@ class User extends \ATS\UserBundle\Document\User
     public function getContactPreference()
     {
         return $this->contactPreference ;
+    }
+
+    /**
+     * @return App
+     */
+    public function getDefaultApp(): App
+    {
+        return $this->defaultApp;
+    }
+
+    /**
+     * @param App $defaultApp
+     * @return User
+     */
+    public function setDefaultApp(App $defaultApp)
+    {
+        $this->defaultApp = $defaultApp;
+        return $this;
     }
 }

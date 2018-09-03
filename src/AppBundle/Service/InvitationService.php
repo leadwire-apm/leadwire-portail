@@ -48,6 +48,17 @@ class InvitationService
      * @var string
      */
     private $sender;
+
+    /**
+     * @var LdapService
+     */
+    private $ldap;
+
+    /**
+     * @var AppService
+     */
+    private $appService;
+
     /**
      * Constructor
      *
@@ -56,8 +67,11 @@ class InvitationService
      * @param LoggerInterface $logger
      * @param SimpleMailerService $mailer
      * @param Router $router
+     * @param ContainerInterface $container
+     * @param LdapService $ldap
+     * @param AppService $appService
      */
-    public function __construct(InvitationManager $invitationManager, SerializerInterface $serializer, LoggerInterface $logger, SimpleMailerService $mailer, Router $router, ContainerInterface $container)
+    public function __construct(InvitationManager $invitationManager, SerializerInterface $serializer, LoggerInterface $logger, SimpleMailerService $mailer, Router $router, ContainerInterface $container, LdapService $ldap, AppService $appService)
     {
         $this->invitationManager = $invitationManager;
         $this->serializer = $serializer;
@@ -66,6 +80,8 @@ class InvitationService
         $this->mailer = $mailer;
         $this->router = $router;
         $this->sender = $container->getParameter('sender');
+        $this->ldap = $ldap;
+        $this->appService = $appService;
     }
 
     /**
@@ -130,8 +146,7 @@ class InvitationService
                 ->serializer
                 ->deserialize($json, Invitation::class, 'json');
         $id = $this->invitationManager->update($invitation);
-//        $this->sendInvitationMail($this->getInvitation($id), $user); //the reason of the DISASTER
-// DONT UNCOMMENT IT EVER AGAIN =D
+        $this->sendInvitationMail($this->getInvitation($id), $user);
         return $id;
     }
 
@@ -148,7 +163,9 @@ class InvitationService
 
         try {
             $invitation = $this->serializer->deserialize($json, Invitation::class, 'json');
+            $invitation->setApp($this->appService->getApp($invitation->getApp()->getId()));
             $this->invitationManager->update($invitation);
+            $this->ldap->createLdapInvitationEntry($invitation);
             $isSuccessful = true;
         } catch (\Exception $e) {
             $this->logger->error($e->getMessage());
@@ -211,6 +228,6 @@ class InvitationService
                 'link' => $this->router->generate('angular_endPoint', [], UrlGeneratorInterface::ABSOLUTE_URL)
             ]);
 
-        $this->mailer->send($mail, true);
+        $this->mailer->send($mail, false);
     }
 }

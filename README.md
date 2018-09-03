@@ -1,39 +1,45 @@
-[![pipeline status](https://gitlab.ats-digital.com/ats/symfony-boilerplate/badges/develop/pipeline.svg)](https://gitlab.ats-digital.com/ats/symfony-boilerplate/commits/develop)
-[![coverage report](https://gitlab.ats-digital.com/ats/symfony-boilerplate/badges/develop/coverage.svg)](https://gitlab.ats-digital.com/ats/symfony-boilerplate/commits/develop)
+# Install Leadwire
 
-🚀 Web App BoilerPlate
+## Requirements
 
-# Available Bundles:
+mongo 3.4
 
-## [AdminBundle](./src/ATS/AdminBundle/README.md):
-- 0-conf Documents administration
+nginx
 
-## [AnalyticsBundle](./src/ATS/AnalyticsBundle/README.md):
-- Boilerplate for Events tracking in SF apps
+Nginx should be installed and ssl configured.
 
-## [CoreBundle](./src/ATS/CoreBundle/README.md):
-- Core utilities & classes that extend Symfony capabilities
-- Generic exports generation
-- Generic ACL capabilities based on [Symfony expression language](https://symfony.com/doc/3.4/components/expression_language.html)
+PHP 7.* (php-fpm)
 
-## [EmailBundle](./src/ATS/EmailBundle/README.md):
-- Email notifications & sending utilities
+ext-json / ext-ldap / ext-mongodb
 
-## [GeneratorBundle](./src/ATS/GeneratorBundle/README.md):
-- Document & ReST endpoints generation with Symfony commands
 
-## [ScheduledTaskBundle](./src/ATS/ScheduledTaskBundle/README.md):
-- Scheduled Jobs via DB configuration
+composer
 
-## [TranslationBundle](./src/ATS/TranslationBundle/README.md):
-- Exposes translation keys & values via ReST API from the database
+```
+php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+php -r "if (hash_file('SHA384', 'composer-setup.php') === '544e09ee996cdf60ece3804abc52599c22b1f40f4323403c44d44fdfdd586475ca9813a858088ffbc1f233e9b180f061') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"
+php composer-setup.php
+php -r "unlink('composer-setup.php');"
 
-## [UserBundle](./src/ATS/UserBundle/README.md):
-- User management
-- OAuth based authentication
+```
 
-## [UIBundle](./src/UIBundle/README.md)
-- AngularJS app source files.
+node / npm
 
-# Wish list
-- New features and wish list are available in the issues list of the project
+npm install -g grunt-cli
+
+npm install -g bower
+
+
+## Installation
+
+* ```composer install```
+
+The command should ask at the end for the parameters of the instances (Database, email, ldap...)
+
+* ```cd src/UIBundle/Resources/public/dev```
+* ```npm install```
+* ```bower install```
+* Uncomment the first and last line from `src/UIBundle/Resources/public/dev/app/index.html`
+* Update parameters in `src/UIBundle/Resources/public/dev/app/scripts/app.js`
+* Go root directory
+* ```bin/console leadwire:install```

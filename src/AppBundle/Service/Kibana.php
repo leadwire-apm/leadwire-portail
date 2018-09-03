@@ -5,6 +5,7 @@ use AppBundle\Document\App;
 use GuzzleHttp\Exception\GuzzleException;
 
 use Psr\Log\LoggerInterface;
+use Ramsey\Uuid\Uuid;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -17,37 +18,54 @@ class Kibana
 
     private $settings;
     private $logger;
+    private $elastic;
 
-    public function __construct(ContainerInterface $container, LoggerInterface $logger)
+    public function __construct(ContainerInterface $container, LoggerInterface $logger, ElasticSearch $elastic)
     {
         $this->settings = $container->getParameter('kibana');
         $this->logger = $logger;
+        $this->elastic = $elastic;
     }
 
+    /**
+     * @param App $app
+     * @return bool
+     */
     public function createDashboards(App $app)
     {
+        $this->elastic->deleteIndex();
+
         $client = new \GuzzleHttp\Client(['defaults' => ['verify' => false]]);
-        $json_template = file_get_contents($this->settings['template_folder'] . '/' . $app->getType() . '.json');
+        $json_template = json_encode($app->getType()->getTemplate());
+        $url = $this->settings['host'] . "/api/kibana/dashboards/import";
+
         try {
-            $response = $client->request(
-                'POST',
-                str_replace('{{tenant}}', $app->getOwner()->getUuid(), $this->settings['inject_dashboards']),
+            $response = $client->post(
+                $url,
                 [
                     'body' => $json_template,
                     'headers' => [
                         'Content-type'  => 'application/json',
                         'kbn-xsrf' => 'true',
+                        'x-tenants-enabled' => true
                     ],
-                    'auth' => [
-                        $this->settings['username'],
-                        $this->settings['password']
-                    ]
+                    'auth' => $this->getAuth()
                 ]
             );
-            return true;
-        } catch (GuzzleException $e) {
-            $this->logger->error($e->getMessage());
+
+            //$this->elastic->resetIndex($app);
+            return $this->elastic->copyIndex($app->getIndex());
+        } catch (\Exception $e) {
+            $this->logger->error("error on import", ["exception" => $e]);
             return false;
         }
+    }
+
+    private function getAuth()
+    {
+        return  [
+            $this->settings['username'],
+            $this->settings['password']
+        ];
     }
 }
