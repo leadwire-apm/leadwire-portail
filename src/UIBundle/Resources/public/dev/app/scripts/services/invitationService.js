@@ -24,7 +24,7 @@
                                     invitToUpdate
                                 );
                             }
-                            resolve();
+                            resolve(response.data.app);
                         })
                         .catch(function(error) {
                             console.log('service.acceptInvitation', error);

@@ -148,10 +148,11 @@
                         invitationId,
                         $localStorage.user.id
                     )
-                        .then(function() {
+                        .then(function(app) {
                             toastr.success(
                                 MESSAGES_CONSTANTS.INVITATION_ACCEPTED
                             );
+                        ($localStorage.applications || ($localStorage.applications = [])).push(app);
                             $state.go('app.applicationsList');
                         })
                         .catch(function(error) {
