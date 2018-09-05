@@ -129,7 +129,7 @@ class UserService
     {
         $json = json_encode(["name" => $user->getName(), "email" => $user->getEmail()]);
         $data = json_decode($data);
-        $plan = $this->planService->getPlan($data->planId);
+        $plan = $this->planService->getPlan($data->plan);
         $customer = $this->customerService->newCustomer($json, $data);
         if ($customer) {
             if ($subscriptionId = $this->paymentService->createSubscription(
