@@ -3,6 +3,7 @@
         .module('leadwireApp')
         .service('UserService', [
             'Account',
+            'PlanFactory',
             '$rootScope',
             '$localStorage',
             'InvitationService',
@@ -14,6 +15,7 @@
 
     function UserServiceFN(
         Account,
+        PlanFactory,
         $rootScope,
         $localStorage,
         InvitationService,
@@ -168,7 +170,9 @@
         };
 
         service.handleFirstLogin = function() {
-            var connectedUser = angular.extend({}, $localStorage.user);
+            //TODO UNCOMMENT TJIS
+            // var connectedUser = angular.extend({}, $localStorage.user);
+            var connectedUser = null;
             if (!connectedUser || !connectedUser.email) {
                 $ocLazyLoad
                     .load({
@@ -179,12 +183,18 @@
                         ]
                     })
                     .then(function() {
+                        return PlanFactory.findAll(function(response) {
+                            console.log(response);
+                        });
+                    })
+                    .then(function() {
                         $modal.open({
                             ariaLabelledBy: 'User-form',
+                            size: 'lg',
                             ariaDescribedBy: 'User-form',
                             templateUrl:
                                 $rootScope.ASSETS_BASE_URL +
-                                'views/profile.html',
+                                'views/wizard.html',
                             controller: 'profileModalCtrl',
                             controllerAs: 'ctrl'
                         });

@@ -34,6 +34,33 @@
                     });
             }
         };
+        vm.nextStep = function() {
+            vm.step.number++;
+            vm.changeTitle();
+        };
+        vm.previousStep = function() {
+            vm.step.number++;
+            vm.changeTitle();
+        };
+        vm.changeTitle = function() {
+            console.log(vm.step.number);
+            switch (vm.step.number) {
+                case 1: {
+                    vm.step.title = 'User Settings';
+                    break;
+                }
+                case 2: {
+                    vm.step.title = 'Pricing Plans';
+                    break;
+                }
+                case 3: {
+                    vm.step.title = 'Billing';
+                    break;
+                }
+            }
+        };
+
+        // $modalInstance.close();
 
         vm.handleSuccessForm = function handleSuccess(fileName) {
             $localStorage.user = vm.user;
@@ -41,11 +68,15 @@
             if (fileName) {
                 $scope.$emit('update:image', fileName);
             }
-            $modalInstance.close();
+            vm.nextStep();
         };
 
         function onLoad() {
             vm.user = angular.extend({}, $localStorage.user);
+            vm.step = {
+                number: 2, //TODO CHANGE THIS ONE
+                title: 'User Settings'
+            };
             vm.showCheckBoxes = true;
 
             CountryService.loadCountries();
