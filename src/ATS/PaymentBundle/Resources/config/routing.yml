@@ -1,0 +1,7 @@
+
+payment_rest_plan:
+    resource: "@PaymentBundle/Controller/Rest/PlanController.php"
+    type: "rest"
+    prefix: "/%internal_api_prefix%/plan"
+    options:
+        expose: true
