@@ -33,6 +33,8 @@ class AppKernel extends Kernel
             new ATS\ClientBootstrapperBundle\ClientBootstrapperBundle(),
             new AppBundle\AppBundle(),
             new UIBundle\UIBundle(),
+            new ATS\PaymentBundle\PaymentBundle(),
+
         ];
 
         if (in_array($this->getEnvironment(), ['dev', 'test'], true)) {

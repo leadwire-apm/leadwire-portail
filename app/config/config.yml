@@ -8,6 +8,7 @@ imports:
     - { resource: "@CoreBundle/Resources/config/config.yml" }
     - { resource: "@ClientBootstrapperBundle/Resources/config/services.yml" }
     - { resource: "@UIBundle/Resources/config/services.yml" }
+    - { resource: "@PaymentBundle/Resources/config/services.yml" }
 
 # Parameters Configuration
 parameters:

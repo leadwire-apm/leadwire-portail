@@ -3,6 +3,7 @@
 namespace AppBundle\Command;
 
 use AppBundle\Service\ApplicationTypeService;
+use ATS\PaymentBundle\Service\PlanService;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -13,10 +14,12 @@ use Symfony\Component\Console\Input\ArrayInput;
 class InstallCommand extends Command
 {
     private $applicationTypeService;
+    private $planService;
 
-    public function __construct(ApplicationTypeService $applicationTypeService)
+    public function __construct(ApplicationTypeService $applicationTypeService, PlanService $planService)
     {
         $this->applicationTypeService = $applicationTypeService;
+        $this->planService = $planService;
 
         parent::__construct();
     }
@@ -78,8 +81,18 @@ Load default Application Type. Insert template for Kibana and more..')
             $output->writeln("<fg=red>" . $e->getMessage() . "</>");
             return;
         }
-
         $output->writeln("<fg=green>Application Type: " . $defaultType->getName() . "</>");
+
+        $output->writeln("Create Plans if not set");
+
+        try {
+            $this->planService->createDefaulPlans();
+            $output->writeln("<fg=green> 3 Plans  are created !</>");
+        } catch (\Exception $e) {
+            $output->writeln("<fg=red>" . $e->getMessage() . "</>");
+            return;
+        }
+
         $output->writeln("<fg=green>It's done!</>");
     }
 }

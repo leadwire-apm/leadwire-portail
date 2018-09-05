@@ -4,6 +4,9 @@ namespace AppBundle\Service;
 
 use ATS\EmailBundle\Document\Email;
 use ATS\EmailBundle\Service\SimpleMailerService;
+use ATS\PaymentBundle\Service\CustomerService;
+use ATS\PaymentBundle\Service\PaymentService;
+use ATS\PaymentBundle\Service\PlanService;
 use Psr\Log\LoggerInterface;
 use JMS\Serializer\SerializerInterface;
 use AppBundle\Manager\UserManager;
@@ -49,6 +52,21 @@ class UserService
     private $sender;
 
     /**
+     * @var CustomerService
+     */
+    private $customerService;
+
+    /**
+     * @var PaymentService
+     */
+    private $paymentService;
+
+    /**
+     * @var PlanService
+     */
+    private $planService;
+
+    /**
      * Constructor
      *
      * @param UserManager $userManager
@@ -56,6 +74,10 @@ class UserService
      * @param LoggerInterface $logger
      * @param SimpleMailerService $mailer
      * @param Router $router
+     * @param ContainerInterface $container
+     * @param CustomerService $customerService
+     * @param PaymentService $paymentService
+     * @param PlanService $planService
      */
     public function __construct(
         UserManager $userManager,
@@ -63,7 +85,10 @@ class UserService
         LoggerInterface $logger,
         SimpleMailerService $mailer,
         Router $router,
-        ContainerInterface $container
+        ContainerInterface $container,
+        CustomerService $customerService,
+        PaymentService $paymentService,
+        PlanService $planService
     ) {
         $this->userManager = $userManager;
         $this->serializer = $serializer;
@@ -71,6 +96,9 @@ class UserService
         $this->mailer = $mailer;
         $this->router = $router;
         $this->sender = $container->getParameter('sender');
+        $this->customerService = $customerService;
+        $this->paymentService = $paymentService;
+        $this->planService = $planService;
     }
 
     /**
@@ -97,6 +125,36 @@ class UserService
         return $this->userManager->paginate($criteria, $pageNumber, $itemsPerPage);
     }
 
+    public function subscribe($data, User $user)
+    {
+        $json = json_encode(["name" => $user->getName(), "email" => $user->getEmail()]);
+        $data = json_decode($data);
+        $plan = $this->planService->getPlan($data->planId);
+        $customer = $this->customerService->newCustomer($json, $data);
+        if ($customer) {
+            if ($subscriptionId = $this->paymentService->createSubscription(
+                $plan->getToken(),
+                $customer,
+                $data->card
+            )
+            ) {
+                $user->setSubscriptionId($subscriptionId);
+                $user->setPlan($plan);
+                $this->userManager->update($user);
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+
+    public function getSubscription(User $user)
+    {
+        return $this->paymentService->fetchSubscription($user->getSubscriptionId());
+    }
+
     /**
      * Get a specific user
      *
@@ -106,7 +164,7 @@ class UserService
      */
     public function getUser($id)
     {
-         return $this->userManager->getOneBy(['id' => $id]);
+        return $this->userManager->getOneBy(['id' => $id]);
     }
 
     /**
@@ -118,7 +176,7 @@ class UserService
      */
     public function getUsers(array $criteria = [])
     {
-         return $this->userManager->getBy($criteria);
+        return $this->userManager->getBy($criteria);
     }
 
     /**
@@ -131,8 +189,8 @@ class UserService
     public function newUser($json)
     {
         $user = $this
-                ->serializer
-                ->deserialize($json, User::class, 'json');
+            ->serializer
+            ->deserialize($json, User::class, 'json');
 
         return $this->updateUser($json);
     }
@@ -175,17 +233,17 @@ class UserService
      */
     public function deleteUser($id)
     {
-         $this->userManager->deleteById($id);
+        $this->userManager->deleteById($id);
     }
 
-     /**
-      * Performs a full text search on  User
-      *
-      * @param string $term
-      * @param string $lang
-      *
-      * @return array
-      */
+    /**
+     * Performs a full text search on  User
+     *
+     * @param string $term
+     * @param string $lang
+     *
+     * @return array
+     */
     public function textSearch($term, $lang)
     {
         return $this->userManager->textSearch($term, $lang);
@@ -219,7 +277,7 @@ class UserService
                 'username' => $user->getUsername(),
                 'email' => $user->getEmail(),
                 'link' => $this->router->generate('verify_email', ['email' => $user->getEmail()], UrlGeneratorInterface::ABSOLUTE_URL)
-                ]);
+            ]);
         $this->mailer->send($mail, false);
     }
 }
