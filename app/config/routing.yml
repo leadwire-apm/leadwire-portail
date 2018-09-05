@@ -9,6 +9,12 @@ app:
     host:     "%app_domain%"
     schemes: "%app_schemes%"
 
+payment:
+    resource: "@PaymentBundle/Resources/config/routing.yml"
+    prefix:   "/"
+    host:     "%app_domain%"
+    schemes: "%app_schemes%"
+
 core:
     resource: "@CoreBundle/Resources/config/routing.yml"
     prefix:   "/"
