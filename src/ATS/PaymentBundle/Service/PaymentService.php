@@ -95,7 +95,12 @@ class PaymentService
         }
     }
 
-    public function createSubscription($subscriptionName, Customer $customer, $creditCardData)
+    /**
+     * @param $subscriptionName
+     * @param Customer $customer
+     * @return string | bool
+     */
+    public function createSubscription($subscriptionName, Customer $customer)
     {
         $response = $this->gateway->createSubscription([
             'plan' => $subscriptionName,
@@ -106,8 +111,26 @@ class PaymentService
             $this->logger->critical($response->getMessage());
             return false;
         } else {
-            return true;
+            return $response->getData()['id'];
         }
     }
 
+    /**
+     * @param string $sub
+     * @param Customer $customer
+     * @return array | bool
+     */
+    public function fetchSubscription(string $sub, Customer $customer)
+    {
+        $response = $this->gateway->fetchSubscription(
+            ['subscriptionReference' => $sub, 'customerReference' =>  $customer->getGatewayToken()]
+        )->send();
+
+        if ($response->isSuccessful()) {
+            return $response->getData();
+        } else {
+            $this->logger->error($response->getMessage());
+            return false;
+        }
+    }
 }

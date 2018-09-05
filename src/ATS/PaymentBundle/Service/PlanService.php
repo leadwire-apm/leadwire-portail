@@ -29,17 +29,28 @@ class PlanService
     private $logger;
 
     /**
+     * @var GateWay
+     */
+    private $gateway;
+
+    /**
      * Constructor
      *
      * @param PlanManager $planManager
      * @param SerializerInterface $serializer
      * @param LoggerInterface $logger
+     * @param GateWay $gateway
      */
-    public function __construct(PlanManager $planManager, SerializerInterface $serializer, LoggerInterface $logger)
-    {
+    public function __construct(
+        PlanManager $planManager,
+        SerializerInterface $serializer,
+        LoggerInterface $logger,
+        GateWay $gateway
+    ) {
         $this->planManager = $planManager;
         $this->serializer = $serializer;
         $this->logger = $logger;
+        $this->gateway = $gateway;
     }
 
     /**
@@ -75,7 +86,7 @@ class PlanService
      */
     public function getPlan($id)
     {
-         return $this->planManager->getOneBy(['id' => $id]);
+        return $this->planManager->getOneBy(['id' => $id]);
     }
 
     /**
@@ -87,7 +98,7 @@ class PlanService
      */
     public function getPlans(array $criteria = [])
     {
-         return $this->planManager->getBy($criteria);
+        return $this->planManager->getBy($criteria);
     }
 
     /**
@@ -100,8 +111,8 @@ class PlanService
     public function newPlan($json)
     {
         $plan = $this
-                ->serializer
-                ->deserialize($json, Plan::class, 'json');
+            ->serializer
+            ->deserialize($json, Plan::class, 'json');
 
         return $this->updatePlan($json);
     }
@@ -138,17 +149,17 @@ class PlanService
      */
     public function deletePlan($id)
     {
-         $this->planManager->deleteById($id);
+        $this->planManager->deleteById($id);
     }
 
-     /**
-      * Performs a full text search on  Plan
-      *
-      * @param string $term
-      * @param string $lang
-      *
-      * @return array
-      */
+    /**
+     * Performs a full text search on  Plan
+     *
+     * @param string $term
+     * @param string $lang
+     *
+     * @return array
+     */
     public function textSearch($term, $lang)
     {
         return $this->planManager->textSearch($term, $lang);
@@ -164,5 +175,65 @@ class PlanService
     public function getAndGroupBy(array $searchCriteria, $groupFields = [], $valueProcessors = [])
     {
         return $this->planManager->getAndGroupBy($searchCriteria, $groupFields, $valueProcessors);
+    }
+
+    public function createDefaulPlans()
+    {
+        $first = $this->planManager->getOneBy(['name' => "BASIC"]);
+        if (!$first) {
+            $first = new Plan();
+            $first->setName("BASIC")
+                ->setIsCreditCard(false)
+                ->setDiscount(0)
+                ->setPrice(0)
+                ->setMaxTransactionPerDay(10000)
+                ->setRetention(1);
+            $this->planManager->update($first);
+        }
+
+        $second = $this->planManager->getOneBy(['name' => "STANDARD"]);
+        if (!$second) {
+            $second = new Plan();
+            $second->setName("STANDARD")
+                ->setIsCreditCard(true)
+                ->setDiscount(15)
+                ->setPrice(71)
+                ->setMaxTransactionPerDay(100000)
+                ->setRetention(7);
+
+            $token = $this->gateway->createPlan([
+                "interval" => 'month',
+                "name" => $second->getName(),
+                "currency" => "eur",
+                "amount" => $second->getPrice(),
+                "id" => $second->getName(),
+            ])->send()->getData()['id'];
+
+            $second->setToken($token);
+            dump($token);
+            $this->planManager->update($second);
+        }
+
+        $third = $this->planManager->getOneBy(['name' => "PREMIUM"]);
+        if (!$third) {
+            $third  = new Plan();
+            $third ->setName("PREMIUM")
+                ->setIsCreditCard(true)
+                ->setDiscount(15)
+                ->setPrice(640)
+                ->setMaxTransactionPerDay(1000000)
+                ->setRetention(15);
+
+            $token = $this->gateway->createPlan([
+                "interval" => 'month',
+                "name" => $third->getName(),
+                "currency" => "eur",
+                "amount" => $third->getPrice(),
+                "id" => $third->getName()
+            ])->send()->getData()['id'];
+            $third->setToken($token);
+
+            $this->planManager->update($third);
+        }
     }
 }

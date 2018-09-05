@@ -7,6 +7,7 @@ use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Bundle\MongoDBBundle\Validator\Constraints\Unique;
+use ATS\PaymentBundle\Document\Plan;
 
 /**
  * @ODM\Document(repositoryClass="ATS\UserBundle\Repository\UserRepository")
@@ -102,6 +103,16 @@ class User extends \ATS\UserBundle\Document\User
     private $contactPreference;
 
     /**
+     * @var string
+     *
+     * @ODM\Field(type="string", name="subscriptionId")
+     * @JMS\Type("string")
+     * @JMS\Expose
+     * @JMS\Groups({"full","Default"})
+     */
+    private $subscriptionId;
+
+    /**
      * @var boolean
      *
      * @ODM\Field(type="boolean", name="isEmailValid")
@@ -144,7 +155,6 @@ class User extends \ATS\UserBundle\Document\User
      */
     public $myApps;
 
-
     /**
      * @var App
      *
@@ -154,6 +164,16 @@ class User extends \ATS\UserBundle\Document\User
      * @JMS\Groups({"Default", "full"})
      */
     private $defaultApp = null;
+
+    /**
+     * @var Plan
+     *
+     * @ODM\ReferenceOne(targetDocument="ATS\PaymentBundle\Document\Plan", name="plan", cascade={"persist"})
+     * @JMS\Type("ATS\PaymentBundle\Document\Plan")
+     * @JMS\Expose
+     * @JMS\Groups({"Default", "full"})
+     */
+    private $plan = null;
 
 
     /**
@@ -404,6 +424,26 @@ class User extends \ATS\UserBundle\Document\User
     }
 
     /**
+     * Get subscriptionId
+     * @return string
+     */
+    public function getSubscriptionId()
+    {
+        return $this->subscriptionId;
+    }
+
+    /**
+     * Set subscriptionId
+     * @param string $subscriptionId
+     * @return $this
+     */
+    public function setSubscriptionId(string $subscriptionId)
+    {
+        $this->subscriptionId = $subscriptionId;
+        return $this;
+    }
+
+    /**
      * @return App
      */
     public function getDefaultApp(): App
@@ -418,6 +458,17 @@ class User extends \ATS\UserBundle\Document\User
     public function setDefaultApp(App $defaultApp)
     {
         $this->defaultApp = $defaultApp;
+        return $this;
+    }
+
+    public function getPlan() : Plan
+    {
+        return $this->plan;
+    }
+
+    public function setPlan(Plan $plan): User
+    {
+        $this->plan = $plan;
         return $this;
     }
 }

@@ -54,7 +54,7 @@ class PaymentCommand extends BaseCommand
             $data
         )
         ) {
-            dump($response);
+            dump($this->paymentService->fetchSubscription($response, $customer));
             $this->info("hell yeah");
         } else {
             $this->error("could not be executed");

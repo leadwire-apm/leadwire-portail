@@ -85,6 +85,13 @@ class Plan
     private $isCreditCard;
 
     /**
+     * @var string
+     * @var string
+     * @ODM\Field(type="string", name="token")
+     */
+    private $token;
+
+    /**
      * @var \DateTime
      *
      * @ODM\Field(type="date", name="createdAt")
@@ -252,6 +259,26 @@ class Plan
     public function setIsCreditCard($isCreditCard)
     {
         $this->isCreditCard = $isCreditCard;
+        return $this;
+    }
+
+    /**
+     * Get token
+     * @return string
+     */
+    public function getToken()
+    {
+        return $this->token;
+    }
+
+    /**
+     * Set token
+     * @param $token
+     * @return Plan
+     */
+    public function setToken($token)
+    {
+        $this->token = $token;
         return $this;
     }
 
