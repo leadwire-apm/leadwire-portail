@@ -3,13 +3,12 @@
 namespace ATS\PaymentBundle\Service;
 
 use Monolog\Logger;
-use  ATS\PaymentBundle\Service\GateWay;
+use ATS\PaymentBundle\Service\GateWay;
 use Omnipay\Common\CreditCard;
 use ATS\PaymentBundle\Document\Customer;
 use ATS\PaymentBundle\Service\CustomerService;
 use ATS\PaymentBundle\Exception\CustomerNotRecognizedException;
 use Psr\Log\LoggerInterface;
-
 
 class PaymentService
 {
