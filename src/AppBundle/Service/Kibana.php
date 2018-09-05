@@ -18,11 +18,13 @@ class Kibana
 
     private $settings;
     private $logger;
+    private $elastic;
 
-    public function __construct(ContainerInterface $container, LoggerInterface $logger)
+    public function __construct(ContainerInterface $container, LoggerInterface $logger, ElasticSearch $elastic)
     {
         $this->settings = $container->getParameter('kibana');
         $this->logger = $logger;
+        $this->elastic = $elastic;
     }
 
     /**
@@ -31,15 +33,11 @@ class Kibana
      */
     public function createDashboards(App $app)
     {
-        $client = new \GuzzleHttp\Client(['defaults' => ['verify' => false]]);
-        //$json_template = $this->prepareTemplate($app->getType());
-        $json_template = json_encode($app->getType()->getTemplate());
+        $this->elastic->deleteIndex();
 
-        $url = str_replace(
-            '{{tenant}}',
-            'app_' . $app->getUuid(),
-            $this->settings['inject_dashboards']
-        );
+        $client = new \GuzzleHttp\Client(['defaults' => ['verify' => false]]);
+        $json_template = json_encode($app->getType()->getTemplate());
+        $url = $this->settings['host'] . "/api/kibana/dashboards/import";
 
         try {
             $response = $client->post(
@@ -47,28 +45,27 @@ class Kibana
                 [
                     'body' => $json_template,
                     'headers' => [
-                        //'Content-type'  => 'application/json',
+                        'Content-type'  => 'application/json',
                         'kbn-xsrf' => 'true',
+                        'x-tenants-enabled' => true
                     ],
-                    'auth' => [
-                        $this->settings['username'],
-                        $this->settings['password']
-                    ]
+                    'auth' => $this->getAuth()
                 ]
             );
-            return true;
-        } catch (\GuzzleHttp\Exception\ClientException $e) {
-            $this->logger->error($e->getMessage());
+
+            //$this->elastic->resetIndex($app);
+            return $this->elastic->copyIndex($app->getIndex());
+        } catch (\Exception $e) {
+            $this->logger->error("error on import", ["exception" => $e]);
             return false;
         }
     }
 
-    private function prepareTemplate($template)
+    private function getAuth()
     {
-        $template = preg_replace_callback('/__uuid__/', function ($maches) {
-            $uuid = Uuid::uuid1();
-            return $uuid->toString();
-        }, json_encode($template));
-        return $template;
+        return  [
+            $this->settings['username'],
+            $this->settings['password']
+        ];
     }
 }

@@ -116,9 +116,10 @@
 
                             <div class="checkbox" ng-if="ctrl.showCheckBoxes">
                                 <label>
-                                    <input name="TOC" type="checkbox" required> Terms of contract <a
-                                        ui-sref="static.terms-of-contacts"
-                                        target="_blank"><i
+                                    <input name="TOC" type="checkbox" required> Terms of contract
+                                    <a
+                                        ui-sref="static.termsOfContacts"
+                                        target="_blank" class="btn-link"><i
                                         class="fa fa-external-link"></i></a>
                                 </label>
                                 <span class="text-red"
@@ -128,9 +129,9 @@
 
                             <div class="checkbox" ng-if="ctrl.showCheckBoxes">
                                 <label>
-                                    <input name="TOS" type="checkbox" required> Terms of service <a
-                                        ui-sref="static.terms-of-service"
-                                        target="_blank"><i
+                                    <input name="TOS" type="checkbox" required> Terms of service
+                                    <a ui-sref="static.termsOfService"
+                                        target="_blank" class="btn-link"><i
                                         class="fa fa-external-link"></i></a>
                                 </label>
                                 <span class="text-red"
@@ -142,11 +143,9 @@
                                     <input type="checkbox" ng-model="ctrl.user.acceptNewsLetter">Newsletter
                                 </label>
                             </div>
-
                         </div>
                     </div>
-
-                    <button data-ng-disabled="!ctrl.userForm.$valid" type="submit" class="btn btn-primary">Save</button>
+                    <button data-ng-disabled="!ctrl.userForm.$valid" type="submit" class="btn btn-primary pull-right">Save</button>
                 </form>
             </div>
         </div>

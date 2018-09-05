@@ -105,15 +105,19 @@
         $scope.changeContextApp = function(app) {
             $scope.isChangingContext = true;
             DashboardService.fetchDashboardsByAppId(app.id)
-                .then(function(appId) {
+                .then(function(response) {
+                    console.log(response)
+                    debugger;
+
                     $scope.isChangingContext = false;
-                    $scope.selectedAppId = appId;
-                    $scope.$apply();
-                    if ($localStorage.dashboards.length) {
+                    $scope.selectedAppId = response.appId;
+                    if (response.dashboards && response.dashboards.length) {
                         var firstDashboardLink =
-                            '/' + $localStorage.dashboards[0].id;
+                            '/dashboard/' + response.dashboards[0].id;
+                        debugger
                         $location.path(firstDashboardLink);
                     }
+                    $scope.$apply();
                 })
                 .catch(function() {
                     $scope.$apply(function() {
@@ -128,7 +132,6 @@
                 return $state.go('app.dashboard.home', {
                     id: $localStorage.dashboards[0].id
                 });
-
             } else {
                 return $location.go('app.applicationList');
             }

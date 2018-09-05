@@ -53,11 +53,11 @@ class ElasticSearch
         $userUuid = $app->getOwner()->getUuid();
         $appUuid = $app->getUuid();
         // for prod use only
-//        $tenants = ["default" => "app_$appUuid", "user" => "user_$userUuid", "shared" => "share_$appUuid"];
+        $tenants = ["default" => "app_$appUuid", "user" => "user_$userUuid", "shared" => "share_$appUuid"];
         // for dev use only
-        $tenants = ["default" => "apptest", 'user' => "adm-portail", "shared" => "share_$appUuid"];
+//        $tenants = ["default" => "apptest", 'user' => "adm-portail", "shared" => "share_$appUuid"];
         $res = [];
-        $this->resetIndex($app);
+        //$this->resetIndex($app);
         foreach ($tenants as $name => $tenant) {
             try {
                 $key = $name == "default" ? "Default" : "Custom";
@@ -97,6 +97,7 @@ class ElasticSearch
     protected function filter($dashboards)
     {
         $custom = [];
+        $default = [];
         foreach ($dashboards['Custom'] as $item) {
             preg_match_all('/\[([^]]+)\]/', $item['name'], $out);
             $theme = isset($out[1][0]) ? $out[1][0] : 'Musc';
@@ -106,8 +107,19 @@ class ElasticSearch
                 "name" => str_replace("[$theme] ", "", $item['name']),
             ];
         }
+
+        foreach ($dashboards['Default'] as $item) {
+            preg_match_all('/\[([^]]+)\]/', $item['name'], $out);
+            $theme = isset($out[1][0]) ? $out[1][0] : 'Musc';
+            $default[] = [
+                "private" => $item['private'],
+                "id" => $item['id'],
+                "name" => str_replace("[$theme] ", "", $item['name']),
+            ];
+        }
+
         return [
-            "Default" => $dashboards['Default'],
+            "Default" => $default,
             "Custom" => $custom,
         ];
     }
@@ -129,16 +141,12 @@ class ElasticSearch
                         'headers' => [
                             'Content-type' => 'application/json',
                         ],
-                        'auth' => [
-                            $this->settings['username'],
-                            $this->settings['password']
-                        ]
+                        'auth' => $this->getAuth()
                     ]
                 );
             }
         } catch (\GuzzleHttp\Exception\ClientException $e) {
-            $this->logger->error($e->getMessage());
-            //throw new HttpException("An error has occurred while executing your request.", 500);
+            $this->logger->error("Error on reset index", ['exception' => $e ]);
         }
     }
 
@@ -149,5 +157,54 @@ class ElasticSearch
             $id = str_replace($search, "", $id);
         }
         return $id ;
+    }
+
+    public function deleteIndex()
+    {
+        try {
+            $client = new \GuzzleHttp\Client(['defaults' => ['verify' => false]]);
+            $response = $client->delete($this->settings['host'] . ".kibana_adm-portail", [
+                'auth' => $this->getAuth()
+            ]);
+            return true;
+        } catch (\Exception $e) {
+            $this->logger->warning("Error when deleting index", ['exception' => $e ]);
+
+            return false;
+        }
+    }
+
+    public function copyIndex($index)
+    {
+        try {
+            $client = new \GuzzleHttp\Client(['defaults' => ['verify' => false]]);
+            $response = $client->post($this->settings['host']  . "_reindex", [
+                'body' => json_encode([
+                    'source' => [
+                        "index" => ".kibana_adm-portail"
+                    ],
+                    'dest' => [
+                        "index" => ".kibana_$index"
+                    ]
+                ]),
+                'headers' => [
+                    'Content-type'  => 'application/json',
+
+                ],
+                'auth' => $this->getAuth()
+            ]);
+            return true;
+        } catch (\Exception $e) {
+            $this->logger->error("Error when replacing indexes", ['exception' => $e ]);
+            return false;
+        }
+    }
+
+    public function getAuth()
+    {
+        return  [
+            $this->settings['username'],
+            $this->settings['password']
+        ];
     }
 }

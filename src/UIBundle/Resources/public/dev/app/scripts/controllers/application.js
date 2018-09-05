@@ -5,10 +5,12 @@
             '$scope',
             '$rootScope',
             'ApplicationFactory',
+            'UserService',
             'toastr',
             'MESSAGES_CONSTANTS',
             '$localStorage',
             '$modal',
+            '$state',
             applicationListCtrlFN
         ]);
 
@@ -16,10 +18,12 @@
         $scope,
         $rootScope,
         ApplicationFactory,
+        UserService,
         toastr,
         MESSAGES_CONSTANTS,
         $localStorage,
-        $modal
+        $modal,
+        $state
     ) {
         var vm = this;
         init();
@@ -72,6 +76,7 @@
             vm.ui = {
                 isDeleting: false
             };
+            UserService.handleFirstLogin();
             getApps();
         }
 
@@ -80,7 +85,7 @@
                 templateUrl:
                     $rootScope.ASSETS_BASE_URL +
                     'views/application/enable.html',
-                controller: function($modalInstance) {
+                controller: function($modalInstance, $state) {
                     var modalVM = this;
                     modalVM.enable = function() {
                         ApplicationFactory.activate(
@@ -88,6 +93,7 @@
                             modalVM.activationCode
                         )
                             .then(function(response) {
+                                console.log(response)
                                 if (response.data) {
                                     toastr.success(
                                         MESSAGES_CONSTANTS.ACTIVATE_APP_SUCCESS
@@ -99,12 +105,13 @@
                                         }
                                     );
                                     $scope.$emit('activate:app', updatedApp);
-                                    $modalInstance.close();
                                     vm.apps = vm.apps.map(function(currentApp) {
                                         return currentApp.id !== selectedApp.id
                                             ? currentApp
                                             : updatedApp;
                                     });
+                                    $state.go('app.applicationDetail', {id: selectedApp.id});
+                                    $modalInstance.close();
                                 } else {
                                     toastr.error(
                                         MESSAGES_CONSTANTS.ACTIVATE_APP_FAILURE

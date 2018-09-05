@@ -52,9 +52,12 @@ angular
         ACTIVATE_APP_FAILURE:
             'You have entered an invalid Code, your app has not been activated.',
         INVITE_USER_SUCCESS: 'The invitation has been sent successfully.',
+        INVITE_USER_VALIDATION: 'This email has been already invited.',
+        INVITATION_ACCEPTED: 'The invitation has been accepted',
         DELETE_APP_SUCCESS: 'The app has been deleted.',
         DELETE_INVITATION_SUCCESS: 'The invitation has been deleted.',
-        ADD_APP_SUCCESS: 'Your app has been added successfully.',
+        ADD_APP_SUCCESS:
+            'Your app has been added successfully. You need to activate your app first',
         LOGIN_SUCCESS: function(provider) {
             return 'You have successfully signed in with ' + provider;
         },
