@@ -128,21 +128,20 @@ class UserService
     public function subscribe($data, User $user)
     {
         $json = json_encode(["name" => $user->getName(), "email" => $user->getEmail()]);
-        $data = json_decode($data);
-        $plan = $this->planService->getPlan($data->plan);
+        $data = json_decode($data, true);
+        $plan = $this->planService->getPlan($data['plan']);
         $token = null;
         if (!$token) {
             foreach ($plan->getPrices() as $pricingPlan) {
-                if ($pricingPlan->getName() == $data->billingType) {
+                if ($pricingPlan->getName() == $data['billingType']) {
                     $token = $pricingPlan->getToken();
                 }
             }
-            $customer = $this->customerService->newCustomer($json, $data);
+            $customer = $this->customerService->newCustomer($json, $data['card']);
             if ($customer) {
                 if ($subscriptionId = $this->paymentService->createSubscription(
                     $token,
-                    $customer,
-                    $data->card
+                    $customer
                 )
                 ) {
                     $user->setSubscriptionId($subscriptionId);
