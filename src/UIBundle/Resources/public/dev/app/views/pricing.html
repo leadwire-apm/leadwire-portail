@@ -49,7 +49,7 @@
             </div><!--.pricing-table-->
         </div>
         <div class="row mt25 mb25">
-            <button class="btn btn-primary pull-right" data-ng-click="ctrl.nextStep()">Validate</button>
+            <button class="btn btn-primary pull-right" data-ng-disabled="!ctrl.billingInformation.plan" data-ng-click="ctrl.nextStep()">Validate</button>
         </div>
         <p style="font-size: smaller;">Free accounts are not required to provide payment account information.<br>• When
             switching to a paid plan

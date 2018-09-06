@@ -22,7 +22,7 @@
             },
             subscriptions: function(userId) {
                 return $http.get(
-                    CONFIG.BASE_URL + 'api/user/' + userId + '/subscribe'
+                    CONFIG.BASE_URL + 'api/user/' + userId + '/invoices'
                 );
             }
         };

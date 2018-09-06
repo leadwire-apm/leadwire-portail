@@ -62,8 +62,6 @@
             }
         };
 
-        // $modalInstance.close();
-
         vm.handleSuccessForm = function handleSuccess(fileName) {
             $localStorage.user = vm.user;
             toastr.success('User has been updated successfully');
@@ -85,8 +83,11 @@
                 UserService.subscribe(vm.billingInformation, vm.user.id)
                     .then(function(response) {
                         console.log(response);
+                        $modalInstance.close();
                     })
-                    .catch(function(error) {});
+                    .catch(function(error) {
+                        toastr.error(error.message);
+                    });
             }
         };
 

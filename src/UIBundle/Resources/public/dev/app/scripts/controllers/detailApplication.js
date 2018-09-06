@@ -30,6 +30,18 @@
         vm.loadStats = function() {
             ApplicationFactory.stats($stateParams.id).then(function(response) {
                 vm.appStats = response.data;
+                vm.appStats = [
+                    {day:'12-11-2012',nbr:15},
+                    {day:'12-11-2011',nbr:16},
+                    {day:'12-11-2013',nbr:17},
+                    {day:'12-11-2014',nbr:18},
+                    {day:'12-11-2015',nbr:19},
+                    {day:'12-11-2016',nbr:22},
+                    {day:'12-11-2017',nbr:23},
+                    {day:'12-11-2018',nbr:25},
+                    {day:'12-11-2019',nbr:26},
+                    {day:'12-11-2020',nbr:27},
+                ];
             });
         };
 
@@ -118,6 +130,8 @@
             vm.invitedUser = {
                 email: ''
             };
+
+            vm.retention = 7;
             vm.DOWNLOAD_URL = CONFIG.DOWNLOAD_URL;
             vm.getApp();
             vm.loadStats();
