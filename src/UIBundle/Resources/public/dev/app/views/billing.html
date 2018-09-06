@@ -11,12 +11,12 @@
                         </div>
                         <div class="small">/month</div>
                     </div>
-                    <p class="pt5 text-muted small">
-                    <ul class="details">
-                        <li>{{ctrl.selectedPlan.retention}} days<strong> Retention </strong></li>
-                        <li>{{ctrl.selectedPlan.maxTransactionPerDay}}<strong> Transaction/day </strong></li>
-                    </ul>
-                    </p>
+                    <div class="pt5 text-muted small">
+                        <ul class="details">
+                            <li>{{ctrl.selectedPlan.retention}} days<strong> Retention </strong></li>
+                            <li>{{ctrl.selectedPlan.maxTransactionPerDay}}<strong> Transaction/day </strong></li>
+                        </ul>
+                    </div>
                 </div>
 
             </div>
@@ -36,22 +36,21 @@
                 <hr>
                 <div>
                     <p>
-                        monthly bill total :
+                        {{ctrl.ui.billText}} (excl tax) :
                         <span class="pull-right" style="font-size: medium">
-                           <span ng-if="ctrl.billingInformation.billingType=='yearly'" class="text-red"
-                                 style="font-size: small">
+                           <span class="text-red" ng-if="ctrl.billingInformation.billingType=='yearly'">
                                (-{{ctrl.selectedPlan.discount}} %)
-                           </span> {{ ctrl.discountedPrice}} €
+                           </span> {{ ctrl.exclTaxPrice }} €
                         </span>
                     </p>
                     <hr>
                     <p>
-                        Yearly bill total :
+                        {{ctrl.ui.billText}} (incl tax) :
                         <span class="pull-right" style="font-size: medium">
-                            {{ ctrl.discountedPrice * 12}} €
+                            {{ ctrl.inclTaxPrice }} €
                         </span>
-
                     </p>
+
                 </div>
 
             </div>
@@ -105,7 +104,9 @@
                 <button type="button" class="btn btn-primary pull-right ml15" ng-disabled="ctrl.billingForm.$invalid"
                         data-ng-click="ctrl.validateBilling()">Validate
                 </button>
-                <button type="button" class="btn btn-primary pull-right ml15" data-ng-click="ctrl.previousStep()">Previous</button>
+                <button type="button" class="btn btn-primary pull-right ml15" data-ng-click="ctrl.previousStep()">
+                    Previous
+                </button>
             </div>
         </form>
     </div>

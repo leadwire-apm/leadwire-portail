@@ -142,7 +142,6 @@
 
         function onLoad() {
             if ($auth.isAuthenticated()) {
-                console.log('Connected User', $localStorage.user);
                 if (invitationId !== undefined && $localStorage.user) {
                     InvitationService.acceptInvitation(
                         invitationId,

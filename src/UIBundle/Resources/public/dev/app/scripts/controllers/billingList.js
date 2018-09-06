@@ -6,12 +6,22 @@
     function controller(UserService, CONSTANTS) {
         var vm = this;
 
-        function loadSubscriptions() {
-            vm.flipActivityIndicator();
-            UserService.getSubscriptions()
+        function loadSubscription() {
+            UserService.getSubscription()
                 .then(function(response) {
+                    console.log(response);
+                    vm.subscription = response.data;
+                })
+                .catch(function() {});
+        }
+
+        function loadInvoices() {
+            vm.flipActivityIndicator();
+            UserService.getInvoices()
+                .then(function(response) {
+                    console.log(response);
                     vm.flipActivityIndicator();
-                    vm.invoices = response.data.data;
+                    vm.invoices = response.data;
                 })
                 .catch(function() {
                     vm.flipActivityIndicator();
@@ -28,9 +38,11 @@
                 ui: {}
             });
             vm.flipActivityIndicator = flipActivityIndicator;
-            vm.loadSubscriptions = loadSubscriptions;
+            vm.loadInvoices = loadInvoices;
+            vm.loadSubscription = loadSubscription;
 
-            vm.loadSubscriptions();
-        }
+            vm.loadInvoices();
+            vm.loadSubscription();
+        };
     }
 })(window.angular, window.moment);

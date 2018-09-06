@@ -14,7 +14,7 @@
                 <tr ng-repeat="stat in ctrl.appStats"
                     ng-class="{'text-blue':$index < ctrl.retention,'bg-grey-f':$index >= ctrl.retention}">
                     <td class="text-center">
-                        {{ctrl.moment(stat.day,ctrl.CONSTANTS.DEFAULT_DATE_FORMAT).format(CONSTANTS.EN_DATE_FORMAT)}}
+                        {{ctrl.moment(stat.day,ctrl.CONSTANTS.DEFAULT_DATE_FORMAT).format(ctrl.CONSTANTS.EN_DATE_FORMAT)}}
                     </td>
                     <td class="text-center">{{stat.nbr}}</td>
                 </tr>

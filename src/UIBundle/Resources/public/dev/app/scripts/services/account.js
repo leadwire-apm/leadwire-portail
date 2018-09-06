@@ -20,9 +20,20 @@
                     body
                 );
             },
-            subscriptions: function(userId) {
+            invoices: function(userId) {
                 return $http.get(
                     CONFIG.BASE_URL + 'api/user/' + userId + '/invoices'
+                );
+            },
+            subscription: function(userId) {
+                return $http.get(
+                    CONFIG.BASE_URL + 'api/user/' + userId + '/subscription'
+                );
+            },
+            updateSubscription: function(body, userId) {
+                return $http.put(
+                    CONFIG.BASE_URL + 'api/user/' + userId + '/subscribe',
+                    body
                 );
             }
         };

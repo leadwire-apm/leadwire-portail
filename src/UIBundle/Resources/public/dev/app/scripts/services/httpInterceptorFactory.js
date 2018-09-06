@@ -35,4 +35,10 @@
             };
         }
     ]);
+    // .service('HttpErrorHandler',function() {
+    //     var service = this;
+    //     service.handleError = function(response,cbOnSuccess) {
+    //
+    //     };
+    // });
 })(window.angular);

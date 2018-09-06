@@ -29,11 +29,18 @@
     </div>
     <hr>
 </div>
+<div ng-if="!ctrl.app.invitations.length">
+    <h4 class="text-center">No invited user yet</h4>
+    <hr>
+</div>
+
 <div class="media mt30">
     <form name="inviteUserForm" class="form-horizontal bordered-group"
           ng-submit="ctrl.handleInviteUser()" role="form">
         <div class="input-group mb15">
-            <input type="email" class="form-control br0" placeholder="user email"
+            <input id="email"
+                   name="inviteUserForm"
+                   type="email" class="form-control br0" placeholder="user email"
                    ng-model="ctrl.invitedUser.email" required>
             <span class="input-group-btn">
                                      <button class="btn btn-primary" type="submit"

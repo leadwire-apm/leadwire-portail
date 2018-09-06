@@ -1,14 +1,16 @@
 (function(angular) {
-    angular.module('leadwireApp').service('UserService', [
-        'Account',
-        '$rootScope',
-        '$localStorage',
-        'InvitationService',
-        '$ocLazyLoad',
-        '$modal',
-        'FileService',
-        UserServiceFN,
-    ]);
+    angular
+        .module('leadwireApp')
+        .service('UserService', [
+            'Account',
+            '$rootScope',
+            '$localStorage',
+            'InvitationService',
+            '$ocLazyLoad',
+            '$modal',
+            'FileService',
+            UserServiceFN
+        ]);
 
     function UserServiceFN(
         Account,
@@ -17,7 +19,7 @@
         InvitationService,
         $ocLazyLoad,
         $modal,
-        FileService,
+        FileService
     ) {
         var service = this;
         var sep = '###';
@@ -28,36 +30,38 @@
                     angular.isUndefined($localStorage.user) ||
                     $localStorage.user === null
                 ) {
-                    Account.getProfile().then(function(response) {
-                        var userInfo = response.data;
-                        var sep = '###';
-                        var contactInfos = response.data.contact
-                            ? response.data.contact.split(sep)
-                            : [];
-                        if (contactInfos.length) {
-                            userInfo.phoneCode = contactInfos[0];
-                            userInfo.contact = contactInfos[1];
-                        } else {
-                            userInfo.phoneCode = null;
-                            userInfo.contact = null;
-                        }
-                        userInfo.fname = response.data.login;
-                        if (
-                            angular.isDefined(response.data.displayName) &&
-                            response.data.displayName !== null
-                        ) {
-                            userInfo.fname = response.data.displayName;
-                        }
+                    Account.getProfile()
+                        .then(function(response) {
+                            var userInfo = response.data;
+                            var sep = '###';
+                            var contactInfos = response.data.contact
+                                ? response.data.contact.split(sep)
+                                : [];
+                            if (contactInfos.length) {
+                                userInfo.phoneCode = contactInfos[0];
+                                userInfo.contact = contactInfos[1];
+                            } else {
+                                userInfo.phoneCode = null;
+                                userInfo.contact = null;
+                            }
+                            userInfo.fname = response.data.login;
+                            if (
+                                angular.isDefined(response.data.displayName) &&
+                                response.data.displayName !== null
+                            ) {
+                                userInfo.fname = response.data.displayName;
+                            }
 
-                        userInfo.avatar = response.data.avatar;
-                        $localStorage.user = userInfo;
-                        $rootScope.$broadcast('user:updated', userInfo);
-                        resolve($localStorage.user);
-                    }).catch(function(error) {
-                        $localStorage.$reset();
-                        console.log(error);
-                        reject(error);
-                    });
+                            userInfo.avatar = response.data.avatar;
+                            $localStorage.user = userInfo;
+                            $rootScope.$broadcast('user:updated', userInfo);
+                            resolve($localStorage.user);
+                        })
+                        .catch(function(error) {
+                            $localStorage.$reset();
+                            console.log(error);
+                            reject(error);
+                        });
                 } else {
                     resolve($localStorage.user);
                 }
@@ -67,70 +71,77 @@
         service.saveUser = function(user, avatar) {
             return new Promise(function(resolve, reject) {
                 var updatedInfo = service.transformUser(user);
-                Account.updateProfile(updatedInfo).then(function(data) {
-                    $localStorage.user = angular.extend(
-                        $localStorage.user,
-                        updatedInfo,
-                        {
-                            contact: user.contact,
-                            phoneCode: user.phoneCode,
-                        },
-                    );
+                Account.updateProfile(updatedInfo)
+                    .then(function(data) {
+                        $localStorage.user = angular.extend(
+                            $localStorage.user,
+                            updatedInfo,
+                            {
+                                contact: user.contact,
+                                phoneCode: user.phoneCode
+                            }
+                        );
 
-                    if (data) {
-                        //if he updated his avatar we need to make another request
-                        if (avatar) {
-                            FileService.upload(avatar, 'user').then(
-                                function(response) {
-                                    Account.updateProfile({
-                                        id: user.id,
-                                        avatar: response.data.name,
-                                    });
-                                    $localStorage.user = angular.extend(
-                                        $localStorage.user,
-                                        {
-                                            avatar: response.data.name,
-                                        },
-                                    );
-                                    resolve(response.data.name);
-                                },
-                            );
+                        if (data) {
+                            //if he updated his avatar we need to make another request
+                            if (avatar) {
+                                FileService.upload(avatar, 'user').then(
+                                    function(response) {
+                                        Account.updateProfile({
+                                            id: user.id,
+                                            avatar: response.data.name
+                                        });
+                                        $localStorage.user = angular.extend(
+                                            $localStorage.user,
+                                            {
+                                                avatar: response.data.name
+                                            }
+                                        );
+                                        resolve(response.data.name);
+                                    }
+                                );
+                            } else {
+                                resolve();
+                            }
                         } else {
-                            resolve();
+                            throw new Error(data);
                         }
-                    } else {
-                        throw new Error(data);
-                    }
-                }).catch(function(error) {
-                    console.log(error);
-                    reject('Failed update User');
-                });
+                    })
+                    .catch(function(error) {
+                        console.log(error);
+                        reject('Failed update User');
+                    });
             });
         };
 
         service.handleBeforeRedirect = function(invitationId) {
             return new Promise(function(resolve, reject) {
-                service.setProfile().then(function(user) {
-                    if (invitationId !== undefined) {
-                        InvitationService.acceptInvitation(
-                            invitationId,
-                            user.id,
-                        ).then(function() {
+                service
+                    .setProfile()
+                    .then(function(user) {
+                        if (invitationId !== undefined) {
+                            InvitationService.acceptInvitation(
+                                invitationId,
+                                user.id
+                            )
+                                .then(function() {
+                                    resolve($localStorage.user);
+                                })
+                                .catch(function(error) {
+                                    console.log(
+                                        'service.handleBeforeRedirect 1',
+                                        error
+                                    );
+                                    resolve($localStorage.user);
+                                });
+                        } else {
                             resolve($localStorage.user);
-                        }).catch(function(error) {
-                            console.log(
-                                'service.handleBeforeRedirect 1',
-                                error,
-                            );
-                            resolve($localStorage.user);
-                        });
-                    } else {
-                        resolve($localStorage.user);
-                    }
-                }).catch(function(error) {
-                    console.log('service.handleBeforeRedirect 2', error);
-                    reject(error);
-                });
+                        }
+                    })
+                    .catch(function(error) {
+                        console.log('service.handleBeforeRedirect 2', error);
+                        reject(error);
+                    });
             });
         };
 
@@ -147,11 +158,11 @@
                 contactPreference: user.contactPreference,
                 defaultApp:
                     user.defaultApp && user.defaultApp.id
-                        ? {id: user.defaultApp.id}
+                        ? { id: user.defaultApp.id }
                         : null,
 
                 username: user.username,
-                name: user.name,
+                name: user.name
             };
             return updatedInfo;
         };
@@ -167,49 +178,60 @@
         };
 
         service.handleFirstLogin = function() {
-            //TODO UNCOMMENT TJIS
             var connectedUser = angular.extend({}, $localStorage.user);
             // var connectedUser = null;
-            if (!connectedUser || !connectedUser.email) {
-                $ocLazyLoad.load({
-                    insertBefore: '#load_styles_before',
-                    files: [
-                        $rootScope.ASSETS_BASE_URL +
-                        'vendor/chosen_v1.4.0/chosen.min.css',
-                        $rootScope.ASSETS_BASE_URL +
-                        'vendor/chosen_v1.4.0/chosen.jquery.min.js',
-                        $rootScope.ASSETS_BASE_URL +
-                        'vendor/card/lib/js/jquery.card.js',
-                        $rootScope.ASSETS_BASE_URL +
-                        'vendor/jquery-validation/dist/jquery.validate.min.js',
-                        $rootScope.ASSETS_BASE_URL +
-                        'vendor/twitter-bootstrap-wizard/jquery.bootstrap.wizard.min.js',
-                    ],
-                }).then(function() {
-                    $ocLazyLoad.load({
-                        name: 'sbAdminApp',
+            if (!connectedUser || !connectedUser.email || !connectedUser.plan) {
+                $ocLazyLoad
+                    .load({
+                        insertBefore: '#load_styles_before',
                         files: [
                             $rootScope.ASSETS_BASE_URL +
-                            'scripts/controllers/profileModal.js',
-                        ],
-                    }).then(function() {
-                        $modal.open({
-                            ariaLabelledBy: 'User-form',
-                            size: 'lg',
-                            ariaDescribedBy: 'User-form',
-                            templateUrl:
-                                $rootScope.ASSETS_BASE_URL +
-                                'views/wizard.html',
-                            controller: 'profileModalCtrl',
-                            controllerAs: 'ctrl',
-                        });
+                                'vendor/chosen_v1.4.0/chosen.min.css',
+                            $rootScope.ASSETS_BASE_URL +
+                                'vendor/chosen_v1.4.0/chosen.jquery.min.js',
+                            $rootScope.ASSETS_BASE_URL +
+                                'vendor/card/lib/js/jquery.card.js',
+                            $rootScope.ASSETS_BASE_URL +
+                                'vendor/jquery-validation/dist/jquery.validate.min.js',
+                            $rootScope.ASSETS_BASE_URL +
+                                'vendor/twitter-bootstrap-wizard/jquery.bootstrap.wizard.min.js'
+                        ]
+                    })
+                    .then(function() {
+                        $ocLazyLoad
+                            .load({
+                                name: 'sbAdminApp',
+                                files: [
+                                    $rootScope.ASSETS_BASE_URL +
+                                        'scripts/controllers/profileModal.js'
+                                ]
+                            })
+                            .then(function() {
+                                $modal.open({
+                                    ariaLabelledBy: 'User-form',
+                                    size: 'lg',
+                                    keyboard: false,
+                                    backdrop: 'static',
+                                    ariaDescribedBy: 'User-form',
+                                    templateUrl:
+                                        $rootScope.ASSETS_BASE_URL +
+                                        'views/wizard.html',
+                                    controller: 'profileModalCtrl',
+                                    controllerAs: 'ctrl'
+                                });
+                            });
                     });
-                });
             }
         };
 
-        service.getSubscriptions = function() {
-            return Account.subscriptions($localStorage.user.id);
+        service.getInvoices = function() {
+            return Account.invoices($localStorage.user.id);
+        };
+        service.getSubscription = function() {
+            return Account.subscription($localStorage.user.id);
+        };
+        service.updateSubscription = function(body) {
+            return Account.updateSubscription(body, $localStorage.user.id);
         };
     }
 })(window.angular);

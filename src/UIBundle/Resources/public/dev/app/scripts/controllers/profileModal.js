@@ -10,6 +10,8 @@
             '$scope',
             'UserService',
             'CountryService',
+            'MESSAGES_CONSTANTS',
+            'CONFIG',
             ProfileModalCtrlFN
         ]);
 
@@ -21,9 +23,13 @@
         toastr,
         $scope,
         UserService,
-        CountryService
+        CountryService,
+        MESSAGES_CONSTANTS,
+        CONSTANTS
     ) {
         var vm = this;
+        var YEARLY_MONTH_TEXT = 'Yearly bill total';
+        var MONTHLY_MONTH_TEXT = 'Monthly bill total';
         onLoad();
         vm.save = function() {
             if (vm.userForm.$valid) {
@@ -75,15 +81,39 @@
             vm.billingInformation.plan = selectedPlan.id;
             vm.billingInformation.card.name = vm.user.name;
             vm.selectedPlan = selectedPlan;
-            vm.discountedPrice = selectedPlan.price;
+            vm.exclTaxPrice = selectedPlan.price;
+            vm.inclTaxPrice = calculatePriceInclTax(selectedPlan.price);
+        };
+
+        vm.validatePlan = function() {
+            if (vm.selectedPlan.price == 0) {
+                toastr.success(MESSAGES_CONSTANTS.SUCCESS);
+                $modalInstance.close();
+            } else {
+                vm.nextStep();
+            }
         };
 
         vm.validateBilling = function() {
             if (!vm.billingForm.$invalid) {
                 UserService.subscribe(vm.billingInformation, vm.user.id)
                     .then(function(response) {
-                        console.log(response);
-                        $modalInstance.close();
+                        if (response.status === 200) {
+                            toastr.success(MESSAGES_CONSTANTS.SUCCESS);
+                            $modalInstance.close();
+                        } else {
+                            if (
+                                response.data.error &&
+                                response.data.error.exception &&
+                                response.data.error.exception.length
+                            ) {
+                                toastr.error(
+                                    response.data.error.exception[0].message
+                                );
+                            } else {
+                                toastr.error(MESSAGES_CONSTANTS.ERROR);
+                            }
+                        }
                     })
                     .catch(function(error) {
                         toastr.error(error.message);
@@ -92,16 +122,22 @@
         };
 
         function onLoad() {
-            vm.user = angular.extend({}, $localStorage.user);
-            vm.step = {
-                number: 1,
-                title: 'User Settings'
-            };
-            vm.billingInformation = {
-                card: {},
-                billingType: 'monthly'
-            };
-            vm.showCheckBoxes = true;
+            vm = angular.extend(vm, {
+                user: angular.extend({}, $localStorage.user),
+                step: {
+                    number: 1,
+                    title: 'User Settings'
+                },
+                billingInformation: {
+                    card: {},
+                    billingType: 'monthly'
+                },
+                ui: {
+                    billText: MONTHLY_MONTH_TEXT
+                },
+                showCheckBoxes: true,
+                isAdding:true,
+            });
 
             $scope.$watch(
                 function() {
@@ -110,12 +146,18 @@
                 function(newValue) {
                     if (vm.selectedPlan && vm.selectedPlan.price) {
                         if (newValue === 'monthly') {
-                            vm.discountedPrice = vm.selectedPlan.price;
+                            vm.exclTaxPrice = vm.selectedPlan.price;
+                            vm.ui.billText = MONTHLY_MONTH_TEXT;
                         } else {
-                            vm.discountedPrice =
+                            vm.exclTaxPrice =
                                 vm.selectedPlan.price *
-                                (1 - vm.selectedPlan.discount / 100);
+                                (1 - vm.selectedPlan.discount / 100) *
+                                12;
+                            vm.ui.billText = YEARLY_MONTH_TEXT;
                         }
+                        vm.inclTaxPrice = calculatePriceInclTax(
+                            vm.exclTaxPrice
+                        );
                     }
                 }
             );
@@ -124,6 +166,11 @@
                 vm.plans = response.data;
             });
             CountryService.loadCountries();
+        }
+
+        function calculatePriceInclTax(price) {
+            var inclPrice = price * (1 + CONSTANTS.TAX / 100);
+            return inclPrice.toFixed(2);
         }
     }
 })(window.angular);

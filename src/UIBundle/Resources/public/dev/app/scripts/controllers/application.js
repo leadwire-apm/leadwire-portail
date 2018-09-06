@@ -5,12 +5,10 @@
             '$scope',
             '$rootScope',
             'ApplicationFactory',
-            'UserService',
             'toastr',
             'MESSAGES_CONSTANTS',
             '$localStorage',
             '$modal',
-            '$state',
             applicationListCtrlFN
         ]);
 
@@ -18,23 +16,17 @@
         $scope,
         $rootScope,
         ApplicationFactory,
-        UserService,
         toastr,
         MESSAGES_CONSTANTS,
         $localStorage,
-        $modal,
-        $state
+        $modal
     ) {
         var vm = this;
         init();
         vm.deleteApp = function(id) {
-            swal({
-                title: 'Are you sure?',
-                text: 'Once deleted, you will not be able to recover this App!',
-                icon: 'warning',
-                buttons: true,
-                dangerMode: true
-            }).then(function(willDelete) {
+            swal(MESSAGES_CONSTANTS.SWEET_ALERT_DELETE_MODE).then(function(
+                willDelete
+            ) {
                 if (willDelete) {
                     ApplicationFactory.remove(id)
                         .then(function() {
@@ -76,7 +68,6 @@
             vm.ui = {
                 isDeleting: false
             };
-            UserService.handleFirstLogin();
             getApps();
         }
 
@@ -93,7 +84,7 @@
                             modalVM.activationCode
                         )
                             .then(function(response) {
-                                console.log(response)
+                                console.log(response);
                                 if (response.data) {
                                     toastr.success(
                                         MESSAGES_CONSTANTS.ACTIVATE_APP_SUCCESS
@@ -110,7 +101,9 @@
                                             ? currentApp
                                             : updatedApp;
                                     });
-                                    $state.go('app.applicationDetail', {id: selectedApp.id});
+                                    $state.go('app.applicationDetail', {
+                                        id: selectedApp.id
+                                    });
                                     $modalInstance.close();
                                 } else {
                                     toastr.error(
