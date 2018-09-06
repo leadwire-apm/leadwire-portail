@@ -130,18 +130,28 @@ class UserService
         $json = json_encode(["name" => $user->getName(), "email" => $user->getEmail()]);
         $data = json_decode($data);
         $plan = $this->planService->getPlan($data->plan);
-        $customer = $this->customerService->newCustomer($json, $data);
-        if ($customer) {
-            if ($subscriptionId = $this->paymentService->createSubscription(
-                $plan->getToken(),
-                $customer,
-                $data->card
-            )
-            ) {
-                $user->setSubscriptionId($subscriptionId);
-                $user->setPlan($plan);
-                $this->userManager->update($user);
-                return true;
+        $token = null;
+        if (!$token) {
+            foreach ($plan->getPrices() as $pricingPlan) {
+                if ($pricingPlan->getName() == $data->billingType) {
+                    $token = $pricingPlan->getToken();
+                }
+            }
+            $customer = $this->customerService->newCustomer($json, $data);
+            if ($customer) {
+                if ($subscriptionId = $this->paymentService->createSubscription(
+                    $token,
+                    $customer,
+                    $data->card
+                )
+                ) {
+                    $user->setSubscriptionId($subscriptionId);
+                    $user->setPlan($plan);
+                    $this->userManager->update($user);
+                    return true;
+                } else {
+                    return false;
+                }
             } else {
                 return false;
             }

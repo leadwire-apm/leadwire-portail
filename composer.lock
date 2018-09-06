@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "72703a3e612c48fd52f06f817a1578a1",
+    "content-hash": "28e1ed59e453b770735d3c23e9d7397f",
     "packages": [
         {
             "name": "alcaeus/mongo-php-adapter",
@@ -3127,17 +3127,11 @@
         },
         {
             "name": "omnipay/stripe",
-            "version": "v3.0.1",
+            "version": "dev-patch-1",
             "source": {
                 "type": "git",
-                "url": "https://github.com/thephpleague/omnipay-stripe.git",
-                "reference": "234c3ed149780ccda78aade17e8368b92e6c2428"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/omnipay-stripe/zipball/234c3ed149780ccda78aade17e8368b92e6c2428",
-                "reference": "234c3ed149780ccda78aade17e8368b92e6c2428",
-                "shasum": ""
+                "url": "https://github.com/aksontini/omnipay-stripe",
+                "reference": "5e172532e5f800a94878bf2082629263bf5fb43f"
             },
             "require": {
                 "omnipay/common": "^3"
@@ -3158,7 +3152,6 @@
                     "Omnipay\\Stripe\\": "src/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -3182,7 +3175,7 @@
                 "payment",
                 "stripe"
             ],
-            "time": "2018-05-15T08:30:49+00:00"
+            "time": "2018-09-05T14:10:36+00:00"
         },
         {
             "name": "paragonie/random_compat",
@@ -7092,7 +7085,8 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "friendsofsymfony/oauth-server-bundle": 20
+        "friendsofsymfony/oauth-server-bundle": 20,
+        "omnipay/stripe": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

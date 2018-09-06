@@ -30,7 +30,7 @@
         "jms/serializer-bundle": "~2.3",
         "league/omnipay": "^3.0",
         "nelmio/cors-bundle": "^1.5",
-        "omnipay/stripe": "^3.0",
+        "omnipay/stripe": "dev-patch-1",
         "phramz/doctrine-annotation-scanner": "^1.0",
         "ramsey/uuid": "^3.8",
         "sensio/distribution-bundle": "^5.0.19",
@@ -96,5 +96,11 @@
                 "file": "app/config/vendor/application.yml"
             }
         ]
-    }
+    },
+    "repositories": [
+        {
+            "type": "git",
+            "url": "https://github.com/aksontini/omnipay-stripe"
+        }
+    ]
 }
