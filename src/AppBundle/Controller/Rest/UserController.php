@@ -5,6 +5,7 @@ namespace AppBundle\Controller\Rest;
 use AppBundle\Service\AuthService;
 use AppBundle\Service\UserService;
 use ATS\CoreBundle\Controller\Rest\BaseRestController;
+use ATS\PaymentBundle\Exception\OmnipayException;
 use FOS\RestBundle\Controller\Annotations\Route;
 use JMS\Serializer\DeserializationContext;
 use JMS\Serializer\SerializationContext;
@@ -100,10 +101,15 @@ class UserController extends BaseRestController
      * @param Request $request
      * @param UserService $userService
      * @return Response
+     * @throws HttpException
      */
     public function updateSubscriptionAction(Request $request, UserService $userService)
     {
-        /*$data = $userService->updateSubscription($this->getUser());
-        return $this->json($data);*/
+        try {
+            $data = $userService->updateSubscription($this->getUser(), json_decode($request->getContent(), true));
+            return $this->json($data);
+        } catch (\Exception $e) {
+            throw new \Symfony\Component\HttpKernel\Exception\HttpException(400, $e->getMessage());
+        }
     }
 }

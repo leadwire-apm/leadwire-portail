@@ -2,6 +2,7 @@
 
 namespace ATS\PaymentBundle\Service;
 
+use ATS\PaymentBundle\Exception\OmnipayException;
 use Monolog\Logger;
 use ATS\PaymentBundle\Service\GateWay;
 use Omnipay\Common\CreditCard;
@@ -130,6 +131,29 @@ class PaymentService
         } else {
             $this->logger->error($response->getMessage());
             return false;
+        }
+    }
+
+    /**
+     * @param string $customerReference
+     * @param string $subscriptionReference
+     * @param string $planReference
+     * @return mixed
+     * @throws OmnipayException
+     */
+    public function updateSubscription(string $customerReference, string $subscriptionReference, string $planReference)
+    {
+        $response = $this->gateway->updateSubscription([
+            'customerReference' => $customerReference,
+            'subscriptionReference' => $subscriptionReference,
+            'plan' => $planReference
+        ])->send();
+
+        if ($response->isSuccessful()) {
+            return $response->getData();
+        } else {
+            $this->logger->error($response->getMessage());
+            throw new OmnipayException($response->getMessage());
         }
     }
 }

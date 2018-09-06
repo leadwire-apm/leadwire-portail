@@ -170,6 +170,32 @@ class UserService
         return $this->customerService->getInvoices($user->getCustomer()->getGatewayToken());
     }
 
+    public function updateSubscription(User $user, $data)
+    {
+        $plan = $this->planService->getPlan($data['plan']);
+        $token = false;
+
+        if ($plan) {
+            foreach ($plan->getPrices() as $billingType) {
+                if ($billingType->getName() == $data['billingType']) {
+                    $token = $billingType->getToken();
+                }
+            }
+
+            if ($token) {
+                return $this->paymentService->updateSubscription(
+                    $user->getCustomer()->getGatewayToken(),
+                    $user->getSubscriptionId(),
+                    $token
+                );
+            } else {
+                throw new \Exception("Plan was ot found");
+            }
+        } else {
+            throw new \Exception("Plan was ot found");
+        }
+    }
+
     /**
      * Get a specific user
      *
