@@ -37,7 +37,12 @@
                     return $http.post(
                         CONFIG.BASE_URL + 'api/app/' + id + '/activate', {code: code}
                     );
-                }
+                },
+                stats: function (id) {
+                    return $http.get(
+                        CONFIG.BASE_URL + 'api/app/' + id + '/stats'
+                    );
+                },
             };
         })
 })(window.angular);

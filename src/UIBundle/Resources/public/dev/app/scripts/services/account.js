@@ -13,6 +13,17 @@
                     CONFIG.BASE_URL + 'api/user/' + profileData.id + '/update',
                     profileData
                 );
+            },
+            subscribe: function(body, userId) {
+                return $http.post(
+                    CONFIG.BASE_URL + 'api/user/' + userId + '/subscribe',
+                    body
+                );
+            },
+            subscriptions: function(userId) {
+                return $http.get(
+                    CONFIG.BASE_URL + 'api/user/' + userId + '/subscribe'
+                );
             }
         };
     }

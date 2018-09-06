@@ -1,52 +1,70 @@
-<div class="wrap">
-    <div class="pricing-table">
-        <div class="plan">
-            <h3 class="name">Basic</h3>
-            <h4 class="price">$10<span>/month</span></h4>
+<div class="row no-margin">
+    <div class="col-lg-12">
 
-            <ul class="details">
-                <li><strong>1</strong> Database</li>
-                <li><strong>10GB</strong> file storage</li>
-                <li><strong>100GB</strong> bandwidth</li>
-            </ul>
+        <div class="wrap">
+            <div class="pricing-table">
+                <div class="plan">
+                    <h3 class="name">{{ctrl.plans[0].name}}</h3>
+                    <h4 class="price">{{ctrl.plans[0].price}} €<span>/month</span></h4>
+                    <ul class="details">
+                        <li>{{ctrl.plans[0].retention}}<strong> Retention </strong></li>
+                        <li>{{ctrl.plans[0].maxTransactionPerDay}}<strong> Transaction/day </strong></li>
+                    </ul>
 
-            <h5 class="order"><a href="#">Order Now</a></h5>
-        </div><!--.plan-->
+                    <h5 class="order">
+                        <button ng-class="{'btn-success':ctrl.billingInformation.plan==ctrl.plans[0].id}"
+                                ng-click="ctrl.choosePlan(ctrl.plans[0])" class="btn">Order
+                        </button>
+                    </h5>
+                </div><!--.plan-->
 
-        <div class="plan">
-            <h3 class="name">Standard</h3>
-            <h4 class="price">$20<span>/month</span></h4>
+                <div class="plan">
+                    <h3 class="name">{{ctrl.plans[1].name}}</h3>
+                    <h4 class="price">{{ctrl.plans[1].price}} €<span>/month</span></h4>
 
-            <ul class="details">
-                <li><strong>2</strong> Databases</li>
-                <li><strong>20GB</strong> file storage</li>
-                <li><strong>150GB</strong> bandwidth</li>
-            </ul>
+                    <ul class="details">
+                        <li>{{ctrl.plans[1].retention}}<strong> Retention </strong></li>
+                        <li>{{ctrl.plans[1].maxTransactionPerDay}}<strong> Transaction/day </strong></li>
+                    </ul>
 
-            <h5 class="order"><a href="#">Order Now</a></h5>
-        </div><!--.plan-->
+                    <h5 class="order">
+                        <button ng-class="{'btn-success':ctrl.billingInformation.plan==ctrl.plans[1].id}" ng-click="ctrl.choosePlan(ctrl.plans[1])" class="btn">Order</button>
+                    </h5>
+                </div><!--.plan-->
 
-        <div class="plan">
-            <h3 class="name">Premium</h3>
-            <h4 class="price">$30<span>/month</span></h4>
+                <div class="plan">
+                    <h3 class="name">{{ctrl.plans[2].name}}</h3>
+                    <h4 class="price">{{ctrl.plans[2].price}} €<span>/month</span></h4>
 
-            <ul class="details">
-                <li><strong>5</strong> Databases</li>
-                <li><strong>50GB</strong> file storage</li>
-                <li><strong>500GB</strong> bandwidth</li>
-            </ul>
+                    <ul class="details">
+                        <li>{{ctrl.plans[2].retention}}<strong> Retention </strong></li>
+                        <li>{{ctrl.plans[2].maxTransactionPerDay}}<strong> Transaction/day </strong></li>
+                    </ul>
 
-            <h5 class="order"><a href="#">Order Now</a></h5>
-        </div><!--.plan-->
-    </div><!--.pricing-table-->
+                    <h5 class="order">
+                        <button ng-class="{'btn-success':ctrl.billingInformation.plan==ctrl.plans[2].id}"
+                                ng-click="ctrl.choosePlan(ctrl.plans[2])" class="btn">Order</button>
+                    </h5>
+                </div><!--.plan-->
+            </div><!--.pricing-table-->
+        </div>
+        <div class="row mt25 mb25">
+            <button class="btn btn-primary pull-right" data-ng-click="ctrl.nextStep()">Validate</button>
+        </div>
+        <p style="font-size: smaller;">Free accounts are not required to provide payment account information.<br>• When
+            switching to a paid plan
+            you will be asked to put valid payment information.<br>An upgrade from the free plan to any paying plan
+            will immediately bill you.<br>• For monthly payment plans, the Service is billed in advance on a monthly
+            basis and is non-refundable.<br>• There will be no refunds or credits for partial months of service,
+            upgrade/downgrade refunds, or refunds for months unused with an open account. In order to treat<br>everyone
+            equally, no exceptions will be made.<br>• All fees are exclusive of all taxes, levies, or duties imposed
+            by taxing authorities, and you shall be responsible for payment of all such taxes, levies, or duties,
+            excluding only French taxes.<br>• The credit card that you provided will automatically be charged the
+            new rate on your next billing cycle when your billing status changes.</p>
+    </div>
 </div>
 <!--.wrap-->
 <style>
-    * {
-        margin: 0;
-        padding: 0;
-    }
-
     .cf:before, .pricing-table:before,
     .cf:after,
     .pricing-table:after {
@@ -66,7 +84,7 @@
 
     .wrap {
         width: 100%;
-        margin: 70px auto;
+        margin: 30px auto;
         color: #607d8b;
         box-shadow: 1px 1px 10px #424242;
     }

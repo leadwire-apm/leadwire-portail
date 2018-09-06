@@ -1,0 +1,112 @@
+<div class="row no-margin">
+    <div class="col-lg-12" ui-jq="card" ui-options="{container: '.card'}">
+        <div class="row">
+            <div class="col-sm-6 mb25">
+                <div class="widget bg-dark-dark" style="border-radius: 2px">
+                    <div class="text-info h5 mt0 mb0">Selected plan</div>
+                    <div class="small text-uppercase">{{ctrl.selectedPlan.name}}</div>
+                    <div class="absolute tp rt pt15 pr15">
+                        <div class="text-success">
+                            <span>{{ctrl.selectedPlan.price}} €</span> (excl tax)
+                        </div>
+                        <div class="small">/month</div>
+                    </div>
+                    <p class="pt5 text-muted small">
+                    <ul class="details">
+                        <li>{{ctrl.selectedPlan.retention}} days<strong> Retention </strong></li>
+                        <li>{{ctrl.selectedPlan.maxTransactionPerDay}}<strong> Transaction/day </strong></li>
+                    </ul>
+                    </p>
+                </div>
+
+            </div>
+            <div class="col-sm-6 mb25">
+                <div class="text-center">
+                    <label class="cb-radio ml10">
+                        <input type="radio" name="billingType" ng-model="ctrl.billingInformation.billingType"
+                               value="monthly"/>
+                        monthly engagement
+                    </label>
+                    <label class="cb-radio ml10">
+                        <input type="radio" name="billingType" ng-model="ctrl.billingInformation.billingType"
+                               value="yearly"/>
+                        yearly engagement
+                    </label>
+                </div>
+                <hr>
+                <div>
+                    <p>
+                        monthly bill total :
+                        <span class="pull-right" style="font-size: medium">
+                           <span ng-if="ctrl.billingInformation.billingType=='yearly'" class="text-red"
+                                 style="font-size: small">
+                               (-{{ctrl.selectedPlan.discount}} %)
+                           </span> {{ ctrl.discountedPrice}} €
+                        </span>
+                    </p>
+                    <hr>
+                    <p>
+                        Yearly bill total :
+                        <span class="pull-right" style="font-size: medium">
+                            {{ ctrl.discountedPrice * 12}} €
+                        </span>
+
+                    </p>
+                </div>
+
+            </div>
+
+        </div>
+        <hr>
+        <form class="form-horizontal bordered-group" name="ctrl.billingForm" ng-submit="ctrl.validateBilling()"
+              role="form"
+        >
+
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label">Card number *</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" name="number"
+                                   required
+                                   ng-model="ctrl.billingInformation.card.number">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label">Full name *</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" name="name"
+                                   required
+                                   ng-model="ctrl.billingInformation.card.name">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label">Expiration date *</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" name="expiry"
+                                   required
+                                   ng-model="ctrl.billingInformation.card.expiry">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label">CVC number *</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" name="cvc"
+                                   required
+                                   ng-model="ctrl.billingInformation.card.cvc">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="card"></div>
+                </div>
+            </div>
+            <div class="row mt25">
+                <button type="button" class="btn btn-primary pull-right ml15" ng-disabled="ctrl.billingForm.$invalid"
+                        data-ng-click="ctrl.validateBilling()">Validate
+                </button>
+                <button type="button" class="btn btn-primary pull-right ml15" data-ng-click="ctrl.previousStep()">Previous</button>
+            </div>
+        </form>
+    </div>
+</div>

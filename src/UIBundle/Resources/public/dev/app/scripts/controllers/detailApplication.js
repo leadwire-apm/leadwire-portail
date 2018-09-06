@@ -27,6 +27,12 @@
                 vm.app = res.data;
             });
         };
+        vm.loadStats = function() {
+            ApplicationFactory.stats($stateParams.id).then(function(response) {
+                vm.appStats = response.data;
+            });
+        };
+
         init();
 
         vm.handleInviteUser = function() {
@@ -114,6 +120,7 @@
             };
             vm.DOWNLOAD_URL = CONFIG.DOWNLOAD_URL;
             vm.getApp();
+            vm.loadStats();
         }
     }
 })(window.angular, window.swal);

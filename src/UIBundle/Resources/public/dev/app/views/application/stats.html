@@ -1,0 +1,27 @@
+<div class="panel mb25">
+    <div class="panel-heading border">
+        Stats
+    </div>
+    <div class="panel-body">
+        <div class="table-responsive">
+            <table class="table table-striped mb0">
+                <thead>
+                <tr>
+                    <th class="col-md-5 text-center">
+                        <span></span>Date
+                    </th>
+                    <th class="col-md-5 text-center">Number</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="stat in ctrl.appStats">
+                    <td>
+                        {{stat.day}}
+                    </td>
+                    <td>{{stat.nbr}}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

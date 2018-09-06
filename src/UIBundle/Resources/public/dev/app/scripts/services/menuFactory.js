@@ -118,7 +118,13 @@
                     route: 'app.applicationsList',
                     icon: 'fa fa-desktop',
                     label: 'Applications'
+                },
+                {
+                    route: 'app.billingList',
+                    icon: 'fa fa-money',
+                    label: 'Billing'
                 }
+
             ]
         });
 })(window.angular);

@@ -211,6 +211,26 @@ angular
                     controller: 'applicationEditCtrl',
                     controllerAs: 'ctrl'
                 })
+            .state('app.billingList',{
+                url: '/billing/list',
+                templateUrl:
+                    CONFIG.ASSETS_BASE_URL + 'views/billingList.html',
+                controller: 'billingListCtrl',
+                controllerAs: 'ctrl',
+                resolve: {
+                    loginRequired: loginRequired,
+                    deps: [
+                        '$ocLazyLoad',
+                        function($ocLazyLoad) {
+                            return $ocLazyLoad.load(
+                                CONFIG.ASSETS_BASE_URL +
+                                'scripts/controllers/billingList.js'
+                            );
+                        }
+                    ]
+                }
+
+            })
                 .state('app.dashboard', {
                     abstract: true
                 })

@@ -17,6 +17,10 @@
                 <div class="container" data-ng-include="ASSETS_BASE_URL + 'views/application/installation.html'">
                 </div>
             </tab>
+            <tab heading="Stats" ng-if="user.id == ctrl.app.owner.id">
+                <div class="container" data-ng-include="ASSETS_BASE_URL + 'views/application/stats.html'">
+                </div>
+            </tab>
         </tabset>
 </div>
 </div>
