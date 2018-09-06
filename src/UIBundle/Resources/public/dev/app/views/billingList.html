@@ -1,4 +1,4 @@
-<div class="panel mb25">
+<div class="panel mb25" ng-init="ctrl.onLoad()">
     <div class="panel-heading border">
         Billing List
     </div>
@@ -7,14 +7,32 @@
             <table class="table table-striped mb0">
                 <thead>
                 <tr>
-                    <th class="col-md-5 text-center">
-                        <span></span>Date
-                    </th>
-                    <th class="col-md-5 text-center">Number</th>
+                    <th class="text-center"></th>
+                    <th class="text-center">ID</th>
+                    <th class="text-center">Date</th>
+                    <th class="text-center">Amount</th>
+                    <th class="text-center">Receipt</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr >
+                <tr ng-if="ctrl.ui.isLoading">
+                    <td colspan="5" class="text-center">
+                        <spinner is-loading="ctrl.ui.isLoading"></spinner>
+                    </td>
+                </tr>
+                <tr ng-repeat="invoice in ctrl.invoices" >
+                    <th class="text-center">
+                        <i ng-if="invoice.paid" class="fa fa-check text-green"></i>
+                        <i ng-if="!invoice.paid" class="fa fa-remove text-red"></i>
+                    </th>
+                    <th class="text-center">{{invoice.id}}</th>
+                    <th class="text-center">{{ctrl.moment(invoice.date * 1000).format(ctrl.CONSTANTS.EN_DATE_FORMAT)}}</th>
+                    <th class="text-center">{{invoice.total}}</th>
+                    <th class="text-center">
+                        <a href="{{invoice.invoice_pdf}}">
+                            <i class="fa fa-download"></i>
+                        </a>
+                    </th>
 
                 </tr>
                 </tbody>

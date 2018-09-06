@@ -1,11 +1,10 @@
-<div class="row">
-    <mar class="col-md-12">
+<div class="row" ng-init="ctrl.onLoad()">
+    <div class="col-md-12">
 
         <tabset justified="true" class="box-tab justified ">
             <tab heading="Detail Application">
                 <div class="row no-margin" data-ng-include="ASSETS_BASE_URL + 'views/application/applicationInfo.html'">
                 </div>
-
             </tab>
             <tab heading="Invited Users" ng-if="user.id == ctrl.app.owner.id"
             >
@@ -22,7 +21,7 @@
                 </div>
             </tab>
         </tabset>
-</div>
+    </div>
 </div>
 
 

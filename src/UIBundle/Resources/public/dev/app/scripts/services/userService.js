@@ -168,8 +168,8 @@
 
         service.handleFirstLogin = function() {
             //TODO UNCOMMENT TJIS
-            // var connectedUser = angular.extend({}, $localStorage.user);
-            var connectedUser = null;
+            var connectedUser = angular.extend({}, $localStorage.user);
+            // var connectedUser = null;
             if (!connectedUser || !connectedUser.email) {
                 $ocLazyLoad.load({
                     insertBefore: '#load_styles_before',

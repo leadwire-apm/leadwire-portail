@@ -1,8 +1,5 @@
 <div class="col-md-10 col-sm-10 col-xs-10">
-        <h4>Stats</h4>
-    <hr>
     <div>
-        <button class="btn btn-block">Upgrade to see more available data</button>
         <div class="table-responsive">
             <table class="table mb0">
                 <thead>
@@ -17,12 +14,14 @@
                 <tr ng-repeat="stat in ctrl.appStats"
                     ng-class="{'text-blue':$index < ctrl.retention,'bg-grey-f':$index >= ctrl.retention}">
                     <td class="text-center">
-                        {{ctrl.moment(stat.day,ctrl.DEFAULT_DATE_FORMAT).format('DD/MM/YYYY')}}
+                        {{ctrl.moment(stat.day,ctrl.CONSTANTS.DEFAULT_DATE_FORMAT).format(CONSTANTS.EN_DATE_FORMAT)}}
                     </td>
                     <td class="text-center">{{stat.nbr}}</td>
                 </tr>
                 </tbody>
             </table>
         </div>
+        <a ui-sref="app.billingList" class="btn btn-block">Upgrade to see more available data</a>
+
     </div>
 </div>

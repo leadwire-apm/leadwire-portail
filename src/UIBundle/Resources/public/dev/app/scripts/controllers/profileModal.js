@@ -94,7 +94,7 @@
         function onLoad() {
             vm.user = angular.extend({}, $localStorage.user);
             vm.step = {
-                number: 1, //TODO CHANGE THIS ONE
+                number: 1,
                 title: 'User Settings'
             };
             vm.billingInformation = {

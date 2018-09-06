@@ -44,7 +44,9 @@ angular
         GITHUB_CLIENT_ID: '094c2b7f0e14da4d0ca8' /*local*/,
         //'GITHUB_CLIENT_ID': '5ae68ff984489a4ed647' /*prod*/
         //'GITHUB_CLIENT_ID': 'a5b3aee9593a1aaa5046', /*test*/
-        DATE_DEFAULT_FORMAT: 'YYYY-MM-DD[T]HH:mm:ssZZ'
+        DATE_DEFAULT_FORMAT: 'YYYY-MM-DD[T]HH:mm:ssZZ',
+        EN_DATE_FORMAT: 'YYYY-DD-MM',
+        FR_DATE_FORMAT: 'DD-MM-YYYY'
     })
     .constant('MESSAGES_CONSTANTS', {
         ERROR: 'Something went wrong,please try again.',

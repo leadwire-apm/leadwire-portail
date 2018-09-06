@@ -60,7 +60,6 @@
                             list: response.data.Custom || {}
                         });
                         updateSidebarMenus(response.data.Default);
-                        debugger;
                         resolve({
                             appId: appId,
                             dashboards: response.data.Default
