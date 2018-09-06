@@ -54,11 +54,6 @@ class PaymentService
         $this->gateway = $gateWay;
     }
 
-//    public function useProvider($providerName)
-//    {
-//        $this->gateway = Omnipay::create($providerName);
-//        $this->gateway->setApiKey($this->secretKey);
-//    }
 
     public function purchase($creditCardData, $customerEmail, $amount, $currency)
     {
@@ -89,9 +84,10 @@ class PaymentService
                 return true;
             } else {
                 $this->logger->error($response->getMessage());
-                return false;
+                throw new OmnipayException($response->getMessage());
             }
         } else {
+            return false;
         }
     }
 
@@ -99,6 +95,8 @@ class PaymentService
      * @param $subscriptionName
      * @param Customer $customer
      * @return string | bool
+     *
+     * @throws OmnipayException
      */
     public function createSubscription($subscriptionName, Customer $customer)
     {
@@ -109,7 +107,7 @@ class PaymentService
 
         if (!$response->isSuccessful()) {
             $this->logger->critical($response->getMessage());
-            return false;
+            throw new OmnipayException($response->getMessage());
         } else {
             return $response->getData()['id'];
         }
@@ -119,6 +117,7 @@ class PaymentService
      * @param string $sub
      * @param Customer $customer
      * @return array | bool
+     * @throws OmnipayException
      */
     public function fetchSubscription(string $sub, Customer $customer)
     {
@@ -130,7 +129,7 @@ class PaymentService
             return $response->getData();
         } else {
             $this->logger->error($response->getMessage());
-            return false;
+            throw new OmnipayException($response->getMessage());
         }
     }
 

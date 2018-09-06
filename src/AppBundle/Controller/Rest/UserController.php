@@ -9,10 +9,10 @@ use ATS\PaymentBundle\Exception\OmnipayException;
 use FOS\RestBundle\Controller\Annotations\Route;
 use JMS\Serializer\DeserializationContext;
 use JMS\Serializer\SerializationContext;
-use SensioLabs\Security\Exception\HttpException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class UserController extends BaseRestController
 {
@@ -64,10 +64,14 @@ class UserController extends BaseRestController
      */
     public function subscribeAction(Request $request, UserService $userService, $id)
     {
-        $data = $request->getContent();
-        $successful = $userService->subscribe($data, $this->getUser());
+        try {
+            $data = $request->getContent();
+            $successful = $userService->subscribe($data, $this->getUser());
 
-        return $this->prepareJsonResponse($successful);
+            return $this->prepareJsonResponse($successful);
+        } catch (OmnipayException $e) {
+            throw new HttpException(400, $e->getMessage());
+        }
     }
 
     /**
@@ -78,9 +82,13 @@ class UserController extends BaseRestController
      */
     public function getInvoicesAction(UserService $userService)
     {
-        $data = $userService->getInvoices($this->getUser());
+        try {
+            $data = $userService->getInvoices($this->getUser());
 
-        return $this->prepareJsonResponse($data);
+            return $this->prepareJsonResponse($data);
+        } catch (OmnipayException $e) {
+            throw new HttpException(400, $e->getMessage());
+        }
     }
 
     /**
@@ -91,8 +99,12 @@ class UserController extends BaseRestController
      */
     public function getSubscriptionAction(UserService $userService)
     {
-        $data = $userService->getSubscription($this->getUser());
-        return new JsonResponse($data, 200);
+        try {
+            $data = $userService->getSubscription($this->getUser());
+            return new JsonResponse($data, 200);
+        } catch (OmnipayException $e) {
+            throw new HttpException(400, $e->getMessage());
+        }
     }
 
     /**
@@ -106,10 +118,14 @@ class UserController extends BaseRestController
     public function updateSubscriptionAction(Request $request, UserService $userService)
     {
         try {
-            $data = $userService->updateSubscription($this->getUser(), json_decode($request->getContent(), true));
+            $data = $userService->updateSubscription(
+                $this->getUser(),
+                json_decode($request->getContent(),
+                    true
+                ));
             return $this->json($data);
         } catch (\Exception $e) {
-            throw new \Symfony\Component\HttpKernel\Exception\HttpException(400, $e->getMessage());
+            throw new HttpException(400, $e->getMessage());
         }
     }
 }

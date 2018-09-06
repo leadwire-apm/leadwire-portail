@@ -3,6 +3,7 @@
 namespace ATS\PaymentBundle\Service;
 
 use ATS\PaymentBundle\Document\Customer;
+use ATS\PaymentBundle\Exception\OmnipayException;
 use ATS\PaymentBundle\Manager\CustomerManager;
 use JMS\Serializer\SerializerInterface;
 use Omnipay\Common\CreditCard;
@@ -96,6 +97,7 @@ class CustomerService
      * @param string $json
      * @param array $card
      * @return Customer
+     * @throws OmnipayException
      */
     public function newCustomer($json, $card)
     {
@@ -116,12 +118,17 @@ class CustomerService
             ->serializer
             ->deserialize($json, Customer::class, 'json');
 
-        $stripeCustomer = $this->gateway->createCustomer(
+        $response = $this->gateway->createCustomer(
             ['description' => $customer->getName(), 'email' => $customer->getEmail(), 'source' => $id ]
-        )->send()->getData();
-        $customer->setGatewayToken($stripeCustomer['id']);
-        $this->customerManager->update($customer);
-        return $customer;
+        )->send();
+        if ($response->isSuccessful()) {
+            $stripeCustomer = $response->getData();
+            $customer->setGatewayToken($stripeCustomer['id']);
+            $this->customerManager->update($customer);
+            return $customer;
+        } else {
+            throw new OmnipayException($response->getMessage);
+        }
     }
 
     /**
@@ -162,6 +169,12 @@ class CustomerService
 
     public function getInvoices($customerRef)
     {
-        return $this->gateway->listInvoices(array('customerReference' => $customerRef))->send()->getData();
+        $response = $this->gateway->listInvoices(array('customerReference' => $customerRef))->send();
+
+        if ($response->isSuccessful()) {
+            return $response->getData()['data'];
+        } else {
+            throw new OmnipayException($response->getMessage());
+        }
     }
 }
