@@ -162,7 +162,7 @@ class UserService
 
     public function getSubscription(User $user)
     {
-        //return $this->paymentService->fetchSubscription($user->getSubscriptionId());
+        return $this->paymentService->fetchSubscription($user->getSubscriptionId());
     }
 
     public function getInvoices(User $user)

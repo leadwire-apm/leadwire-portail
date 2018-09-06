@@ -80,4 +80,16 @@ class UserController extends BaseRestController
 
         return $this->prepareJsonResponse($data);
     }
+
+    /**
+     * @Route("/{id}/subscription", methods="GET")
+     *
+     * @param UserService $userService
+     * @return Response
+     */
+    public function getSubscription(UserService $userService)
+    {
+        $data = $userService->getSubscription($this->getUser());
+        return $this->json($data);
+    }
 }
