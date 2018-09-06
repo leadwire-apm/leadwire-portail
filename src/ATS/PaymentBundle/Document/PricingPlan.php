@@ -1,8 +1,10 @@
 <?php
 namespace ATS\PaymentBundle\Document;
+
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 use JMS\Serializer\Annotation as JMS;
 use ATS\CoreBundle\Annotation as ATS;
+
 /**
  * @ODM\EmbeddedDocument
  * @ATS\ApplicationView
