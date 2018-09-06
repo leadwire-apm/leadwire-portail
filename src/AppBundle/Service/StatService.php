@@ -87,7 +87,7 @@ class StatService
      */
     public function getStats(array $criteria = [])
     {
-         return $this->statManager->getBy($criteria);
+         return $this->statManager->getBy($criteria, array("day" => "DESC"), 15);
     }
 
     /**

@@ -30,7 +30,7 @@ class Stat
      * @ODM\Field(type="date", name="day")
      * @JMS\Type("DateTime")
      * @JMS\Expose
-     * @JMS\Groups({})
+     * @JMS\Groups({"Default"})
      */
     private $day;
 
@@ -40,7 +40,7 @@ class Stat
      * @ODM\Field(type="integer", name="nbr")
      * @JMS\Type("integer")
      * @JMS\Expose
-     * @JMS\Groups({})
+     * @JMS\Groups({"Default"})
      */
     private $nbr;
 
