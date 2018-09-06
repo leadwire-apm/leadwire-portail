@@ -69,7 +69,7 @@ class UserController extends BaseRestController
             $successful = $userService->subscribe($data, $this->getUser());
 
             return $this->prepareJsonResponse($successful);
-        } catch (OmnipayException $e) {
+        } catch (\Exception $e) {
             throw new HttpException(400, $e->getMessage());
         }
     }
@@ -86,7 +86,7 @@ class UserController extends BaseRestController
             $data = $userService->getInvoices($this->getUser());
 
             return $this->prepareJsonResponse($data);
-        } catch (OmnipayException $e) {
+        } catch (\Exception $e) {
             throw new HttpException(400, $e->getMessage());
         }
     }
@@ -102,7 +102,7 @@ class UserController extends BaseRestController
         try {
             $data = $userService->getSubscription($this->getUser());
             return new JsonResponse($data, 200);
-        } catch (OmnipayException $e) {
+        } catch (\Exception $e) {
             throw new HttpException(400, $e->getMessage());
         }
     }
