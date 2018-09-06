@@ -2,6 +2,7 @@
 
 namespace ATS\PaymentBundle\Service;
 
+use ATS\PaymentBundle\Document\PricingPlan;
 use Psr\Log\LoggerInterface;
 use JMS\Serializer\SerializerInterface;
 use ATS\PaymentBundle\Manager\PlanManager;
@@ -209,8 +210,11 @@ class PlanService
                 "id" => $second->getName(),
             ])->send()->getData()['id'];
 
-            $second->setToken($token);
-            dump($token);
+            $pricing = new PricingPlan();
+            $pricing->setName("monthly");
+            $pricing->setToken($token);
+            $second->addPrices($pricing);
+
             $this->planManager->update($second);
         }
 
@@ -232,6 +236,11 @@ class PlanService
                 "id" => $third->getName()
             ])->send()->getData()['id'];
             $third->setToken($token);
+
+            $pricing = new PricingPlan();
+            $pricing->setName("monthly");
+            $pricing->setToken($token);
+            $second->addPrices($pricing);
 
             $this->planManager->update($third);
         }
