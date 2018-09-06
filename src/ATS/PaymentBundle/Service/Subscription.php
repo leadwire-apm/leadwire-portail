@@ -1,6 +1,5 @@
-<?php
+<?php declare (strict_types = 1);
 namespace ATS\PaymentBundle\Service;
-
 
 use ATS\PaymentBundle\Document\Customer;
 use ATS\PaymentBundle\Exception\OmnipayException;
