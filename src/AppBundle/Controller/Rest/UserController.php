@@ -120,9 +120,8 @@ class UserController extends BaseRestController
         try {
             $data = $userService->updateSubscription(
                 $this->getUser(),
-                json_decode($request->getContent(),
-                    true
-                ));
+                json_decode($request->getContent(), true)
+            );
             return $this->json($data);
         } catch (\Exception $e) {
             throw new HttpException(400, $e->getMessage());
