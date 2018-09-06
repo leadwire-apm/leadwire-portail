@@ -111,6 +111,13 @@ class Plan
      */
     private $updatedAt;
 
+    /**
+     * @ODM\EmbedMany(targetDocument="PricingPlan")
+     * @JMS\Type("array<ATS\PaymentBundle\Document\PricingPlan>")
+     * @JMS\Expose
+     * @JMS\Groups({})
+     */
+    private $prices = array();
 
     /**
      * Constructor
@@ -323,6 +330,24 @@ class Plan
     public function setUpdatedAt($updatedAt)
     {
         $this->updatedAt = $updatedAt;
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getPrices()
+    {
+        return $this->prices;
+    }
+
+    /**
+     * @param PricingPlan $price
+     * @return $this
+     */
+    public function addPrices(PricingPlan $price)
+    {
+        $this->prices[] = $price;
         return $this;
     }
 
