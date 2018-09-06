@@ -70,7 +70,16 @@ class AppController extends BaseRestController
     public function getStatsAction(StatService $statService, AppService $appService, $id)
     {
         $app = $appService->getApp($id);
-        return $this->json($statService->getStats(['app' => $app]));
+
+        if (!$app) {
+            throw new HttpException(404);
+        }
+
+        return $this->prepareJsonResponse(
+            $statService->getStats(['app' => $app]),
+            200,
+            "Default"
+        );
     }
 
     /**

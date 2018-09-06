@@ -158,4 +158,10 @@ class CustomerService
     {
         $this->customerManager->deleteById($id);
     }
+
+
+    public function getInvoices($customerRef)
+    {
+        return $this->gateway->listInvoices(array('customerReference' => $customerRef))->send()->getData();
+    }
 }
