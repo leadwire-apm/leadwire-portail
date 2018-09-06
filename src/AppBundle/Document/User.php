@@ -3,6 +3,7 @@
 namespace AppBundle\Document;
 
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
+use ATS\PaymentBundle\Document\Customer;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -174,6 +175,16 @@ class User extends \ATS\UserBundle\Document\User
      * @JMS\Groups({"Default", "full"})
      */
     private $plan = null;
+
+    /**
+     * @var Customer
+     *
+     * @ODM\ReferenceOne(targetDocument="ATS\PaymentBundle\Document\Customer", name="customer", cascade={"persist"})
+     * @JMS\Type("ATS\PaymentBundle\Document\Customer")
+     * @JMS\Expose
+     * @JMS\Groups({"Default", "full"})
+     */
+    private $customer = null;
 
 
     /**
@@ -469,6 +480,17 @@ class User extends \ATS\UserBundle\Document\User
     public function setPlan(Plan $plan): User
     {
         $this->plan = $plan;
+        return $this;
+    }
+
+    public function getCustomer() : Customer
+    {
+        return $this->customer;
+    }
+
+    public function setCustomer(Customer $customer): User
+    {
+        $this->customer = $customer;
         return $this;
     }
 }

@@ -138,6 +138,7 @@ class UserService
                 }
             }
             $customer = $this->customerService->newCustomer($json, $data['card']);
+            $user->setCustomer($customer);
             if ($customer) {
                 if ($subscriptionId = $this->paymentService->createSubscription(
                     $token,
@@ -161,7 +162,12 @@ class UserService
 
     public function getSubscription(User $user)
     {
-        return $this->paymentService->fetchSubscription($user->getSubscriptionId());
+        //return $this->paymentService->fetchSubscription($user->getSubscriptionId());
+    }
+
+    public function getInvoices(User $user)
+    {
+        return $this->customerService->getInvoices($user->getCustomer()->getGatewayToken());
     }
 
     /**

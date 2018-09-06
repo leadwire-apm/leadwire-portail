@@ -69,15 +69,14 @@ class UserController extends BaseRestController
     }
 
     /**
-     * @Route("/{id}/subscribe", methods="GET")
+     * @Route("/{id}/invoices", methods="GET")
      *
-     * @param Request $request
      * @param UserService $userService
      * @return Response
      */
-    public function getSubscriptionAction(Request $request, UserService $userService)
+    public function getInvoicesAction(UserService $userService)
     {
-        $data = $userService->getSubscription($this->getUser());
+        $data = $userService->getInvoices($this->getUser());
 
         return $this->prepareJsonResponse($data);
     }
