@@ -9,6 +9,7 @@ use FOS\RestBundle\Controller\Annotations\Route;
 use JMS\Serializer\DeserializationContext;
 use JMS\Serializer\SerializationContext;
 use SensioLabs\Security\Exception\HttpException;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -79,5 +80,30 @@ class UserController extends BaseRestController
         $data = $userService->getInvoices($this->getUser());
 
         return $this->prepareJsonResponse($data);
+    }
+
+    /**
+     * @Route("/{id}/subscription", methods="GET")
+     *
+     * @param UserService $userService
+     * @return Response
+     */
+    public function getSubscriptionAction(UserService $userService)
+    {
+        $data = $userService->getSubscription($this->getUser());
+        return new JsonResponse($data, 200);
+    }
+
+    /**
+     * @Route("/{id}/subscribe", methods="PUT")
+     *
+     * @param Request $request
+     * @param UserService $userService
+     * @return Response
+     */
+    public function updateSubscriptionAction(Request $request, UserService $userService)
+    {
+        /*$data = $userService->updateSubscription($this->getUser());
+        return $this->json($data);*/
     }
 }
