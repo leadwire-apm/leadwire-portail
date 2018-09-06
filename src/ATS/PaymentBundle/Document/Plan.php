@@ -213,6 +213,10 @@ class Plan
         return $this->price;
     }
 
+    public function getYearlyPrice()
+    {
+        return (($this->getPrice() * 12 * 85) / 100);
+    }
     /**
      * Set price
      * @param float
@@ -345,7 +349,7 @@ class Plan
      * @param PricingPlan $price
      * @return $this
      */
-    public function addPrices(PricingPlan $price)
+    public function addPrice(PricingPlan $price)
     {
         $this->prices[] = $price;
         return $this;

@@ -2,6 +2,7 @@
 
 namespace ATS\PaymentBundle\Service;
 
+use ATS\PaymentBundle\Document\PricingPlan;
 use Psr\Log\LoggerInterface;
 use JMS\Serializer\SerializerInterface;
 use ATS\PaymentBundle\Manager\PlanManager;
@@ -168,8 +169,8 @@ class PlanService
     /**
      * Performs multi-field grouped query on Plan
      * @param array $searchCriteria
-     * @param string $groupField
-     * @param \Closure $groupValueProcessor
+     * @param array $groupFields
+     * @param array $valueProcessors
      * @return array
      */
     public function getAndGroupBy(array $searchCriteria, $groupFields = [], $valueProcessors = [])
@@ -201,16 +202,38 @@ class PlanService
                 ->setMaxTransactionPerDay(100000)
                 ->setRetention(7);
 
+            /**
+             * Monthly Plan
+             */
             $token = $this->gateway->createPlan([
                 "interval" => 'month',
                 "name" => $second->getName(),
                 "currency" => "eur",
                 "amount" => $second->getPrice(),
-                "id" => $second->getName(),
+                "id" => $second->getName() . "-month",
             ])->send()->getData()['id'];
 
-            $second->setToken($token);
-            dump($token);
+            $pricing = new PricingPlan();
+            $pricing->setName("monthly");
+            $pricing->setToken($token);
+            $second->addPrice($pricing);
+
+            /**
+             * Yearly Plan
+             */
+            $token = $this->gateway->createPlan([
+                "interval" => 'year',
+                "name" => $second->getName(),
+                "currency" => "eur",
+                "amount" => $second->getYearlyPrice(),
+                "id" => $second->getName() . "-year",
+            ])->send()->getData()['id'];
+
+            $pricing = new PricingPlan();
+            $pricing->setName("yearly");
+            $pricing->setToken($token);
+            $second->addPrice($pricing);
+
             $this->planManager->update($second);
         }
 
@@ -224,14 +247,37 @@ class PlanService
                 ->setMaxTransactionPerDay(1000000)
                 ->setRetention(15);
 
+            /**
+             * monthly plan
+             */
             $token = $this->gateway->createPlan([
                 "interval" => 'month',
                 "name" => $third->getName(),
                 "currency" => "eur",
                 "amount" => $third->getPrice(),
-                "id" => $third->getName()
+                "id" => $third->getName() . "-month"
             ])->send()->getData()['id'];
-            $third->setToken($token);
+
+            $pricing = new PricingPlan();
+            $pricing->setName("Monthly");
+            $pricing->setToken($token);
+            $third->addPrice($pricing);
+
+            /**
+             * Yearly plan
+             */
+            $token = $this->gateway->createPlan([
+                "interval" => 'year',
+                "name" => $third->getName(),
+                "currency" => "eur",
+                "amount" => $third->getYearlyPrice(),
+                "id" => $third->getName() . "-year"
+            ])->send()->getData()['id'];
+
+            $pricing = new PricingPlan();
+            $pricing->setName("Yearly");
+            $pricing->setToken($token);
+            $third->addPrice($pricing);
 
             $this->planManager->update($third);
         }

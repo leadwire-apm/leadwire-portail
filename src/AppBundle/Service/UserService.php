@@ -5,7 +5,7 @@ namespace AppBundle\Service;
 use ATS\EmailBundle\Document\Email;
 use ATS\EmailBundle\Service\SimpleMailerService;
 use ATS\PaymentBundle\Service\CustomerService;
-use ATS\PaymentBundle\Service\PaymentService;
+use ATS\PaymentBundle\Service\Subscription;
 use ATS\PaymentBundle\Service\PlanService;
 use Psr\Log\LoggerInterface;
 use JMS\Serializer\SerializerInterface;
@@ -57,9 +57,9 @@ class UserService
     private $customerService;
 
     /**
-     * @var PaymentService
+     * @var Subscription
      */
-    private $paymentService;
+    private $subscriptionService;
 
     /**
      * @var PlanService
@@ -76,7 +76,7 @@ class UserService
      * @param Router $router
      * @param ContainerInterface $container
      * @param CustomerService $customerService
-     * @param PaymentService $paymentService
+     * @param Subscription $subscriptionService
      * @param PlanService $planService
      */
     public function __construct(
@@ -87,7 +87,7 @@ class UserService
         Router $router,
         ContainerInterface $container,
         CustomerService $customerService,
-        PaymentService $paymentService,
+        Subscription $subscriptionService,
         PlanService $planService
     ) {
         $this->userManager = $userManager;
@@ -97,7 +97,7 @@ class UserService
         $this->router = $router;
         $this->sender = $container->getParameter('sender');
         $this->customerService = $customerService;
-        $this->paymentService = $paymentService;
+        $this->subscriptionService = $subscriptionService;
         $this->planService = $planService;
     }
 
@@ -140,7 +140,7 @@ class UserService
             $customer = $this->customerService->newCustomer($json, $data['card']);
             $user->setCustomer($customer);
             if ($customer) {
-                if ($subscriptionId = $this->paymentService->createSubscription(
+                if ($subscriptionId = $this->subscriptionService->create(
                     $token,
                     $customer
                 )
@@ -162,7 +162,7 @@ class UserService
 
     public function getSubscription(User $user)
     {
-        return $this->paymentService->fetchSubscription($user->getSubscriptionId(), $user->getCustomer());
+        return $this->subscriptionService->get($user->getSubscriptionId(), $user->getCustomer());
     }
 
     public function getInvoices(User $user)
@@ -176,20 +176,33 @@ class UserService
         $token = false;
 
         if ($plan) {
-            foreach ($plan->getPrices() as $billingType) {
-                if ($billingType->getName() == $data['billingType']) {
-                    $token = $billingType->getToken();
-                }
-            }
-
-            if ($token) {
-                return $this->paymentService->updateSubscription(
-                    $user->getCustomer()->getGatewayToken(),
+            if ($plan->getPrice() == 0) {
+                $this->subscriptionService->delete(
                     $user->getSubscriptionId(),
-                    $token
+                    $user->getCustomer()->getGatewayToken()
                 );
+                $user->setPlan($plan);
+                $this->userManager->update($user);
+                return true;
             } else {
-                throw new \Exception("Plan was ot found");
+                foreach ($plan->getPrices() as $billingType) {
+                    if ($billingType->getName() == $data['billingType']) {
+                        $token = $billingType->getToken();
+                    }
+                }
+
+                if (is_string($token)) {
+                    $data = $this->subscriptionService->update(
+                        $user->getCustomer()->getGatewayToken(),
+                        $user->getSubscriptionId(),
+                        $token
+                    );
+                    $user->setPlan($plan);
+                    $this->userManager->update($user);
+                    return $data;
+                } else {
+                    throw new \Exception("Plan was ot found");
+                }
             }
         } else {
             throw new \Exception("Plan was ot found");

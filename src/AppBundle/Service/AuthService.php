@@ -51,7 +51,7 @@ class AuthService
             $user = $this->checkAndAdd($data);
             $data['_id'] = $user->getId();
             if (!$user->getEmail()) {
-                $this->ldapService->createLdapUserEntry($user->getUsername());
+                $this->ldapService->createLdapUserEntry($user->getUuid());
             }
             return $data;
         } catch (GuzzleException $e) {
