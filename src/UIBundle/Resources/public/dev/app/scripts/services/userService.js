@@ -28,8 +28,8 @@
             return new Promise(function(resolve, reject) {
                 if (
                     angular.isUndefined($localStorage.user) ||
-                    $localStorage.user === null
-                    || force
+                    $localStorage.user === null ||
+                    force
                 ) {
                     Account.getProfile()
                         .then(function(response) {
@@ -170,12 +170,12 @@
 
         service.subscribe = function(billingInfo) {
             var payload = angular.copy(billingInfo);
-            if(payload.card && payload.card.expiry){
+            if (payload.card && payload.card.expiry) {
                 var expiryInfos = payload.card.expiry.split('/');
                 payload.card.expiryMonth = expiryInfos[0].trim();
                 payload.card.expiryYear = expiryInfos[1].trim();
                 delete payload.card.expiry;
-            }else{
+            } else {
                 delete payload.card;
             }
 
@@ -185,7 +185,10 @@
         service.handleFirstLogin = function() {
             var connectedUser = angular.extend({}, $localStorage.user);
             // var connectedUser = null;
-            if (connectedUser.id && (!connectedUser.email || !connectedUser.plan)) {
+            if (
+                connectedUser.id &&
+                (!connectedUser.email || !connectedUser.plan)
+            ) {
                 $ocLazyLoad
                     .load({
                         insertBefore: '#load_styles_before',
@@ -236,7 +239,17 @@
             return Account.subscription($localStorage.user.id);
         };
         service.updateSubscription = function(body) {
-            return Account.updateSubscription(body, $localStorage.user.id);
+            return Account.updateSubscription(body, $localStorage.user.id).then(
+                function(updateResponse) {
+                    if (updateResponse.status === 200) {
+                        return service.setProfile(true).then(function() {
+                            return updateResponse;
+                        });
+                    } else {
+                        return updateResponse;
+                    }
+                }
+            );
         };
     }
 })(window.angular);

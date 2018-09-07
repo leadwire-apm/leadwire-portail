@@ -12,7 +12,7 @@
                 </thead>
                 <tbody>
                 <tr ng-repeat="stat in ctrl.appStats"
-                    ng-class="{'text-blue':$index < ctrl.retention,'bg-grey-f':$index >= ctrl.retention}">
+                    ng-class="{'bg-blue':$index < ctrl.retention,'bg-grey-f':$index >= ctrl.retention}">
                     <td class="text-center">
                         {{ctrl.moment(stat.day,ctrl.CONSTANTS.DEFAULT_DATE_FORMAT).format(ctrl.CONSTANTS.EN_DATE_FORMAT)}}
                     </td>
@@ -21,7 +21,7 @@
                 </tbody>
             </table>
         </div>
-        <a ui-sref="app.billingList" class="btn btn-block">Upgrade to see more available data</a>
+        <a ui-sref="app.updateSubscription({action:'upgrade'})" class="btn btn-block">Upgrade to see more available data</a>
 
     </div>
 </div>

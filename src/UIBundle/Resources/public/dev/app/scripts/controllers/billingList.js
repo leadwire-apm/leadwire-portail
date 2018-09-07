@@ -1,15 +1,13 @@
 (function(angular, moment) {
     angular
         .module('leadwireApp')
-        .controller('billingListCtrl', ['UserService', 'CONFIG', controller]);
+        .controller('billingListCtrl', ['UserService','$rootScope', 'CONFIG', controller]);
 
-    function controller(UserService, CONSTANTS) {
+    function controller(UserService,$rootScope, PlanFactory,CONSTANTS) {
         var vm = this;
-
         function loadSubscription() {
             UserService.getSubscription()
                 .then(function(response) {
-                    console.log(response);
                     vm.subscription = response.data;
                 })
                 .catch(function() {});
@@ -19,7 +17,6 @@
             vm.flipActivityIndicator();
             UserService.getInvoices()
                 .then(function(response) {
-                    console.log(response);
                     vm.flipActivityIndicator();
                     vm.invoices = response.data;
                 })
@@ -31,6 +28,7 @@
         function flipActivityIndicator() {
             vm.ui.isLoading = !vm.ui.isLoading;
         }
+
         vm.onLoad = function() {
             vm = angular.extend(vm, {
                 moment: moment,
@@ -40,7 +38,6 @@
             vm.flipActivityIndicator = flipActivityIndicator;
             vm.loadInvoices = loadInvoices;
             vm.loadSubscription = loadSubscription;
-
             vm.loadInvoices();
             vm.loadSubscription();
         };
