@@ -107,18 +107,14 @@ class CustomerService
         $customer = $this
             ->serializer
             ->deserialize($json, Customer::class, 'json');
-
-        $response = $this->gateway->createCustomer(
+        $stripeCustomer  = $this->request(
+            'createCustomer',
             ['description' => $customer->getName(), 'email' => $customer->getEmail(), 'source' => $id ]
-        )->send();
-        if ($response->isSuccessful()) {
-            $stripeCustomer = $response->getData();
-            $customer->setGatewayToken($stripeCustomer['id']);
-            $this->customerManager->update($customer);
-            return $customer;
-        } else {
-            throw new OmnipayException($response->getMessage);
-        }
+        );
+
+        $customer->setGatewayToken($stripeCustomer['id']);
+        $this->customerManager->update($customer);
+        return $customer;
     }
 
     public function updateCard(Customer $customer, $data)
