@@ -149,14 +149,8 @@ class UserService
                             $token = $pricingPlan->getToken();
                         }
                     }
-                    if ($user->getCustomer()) {
-                        $customer = $user->getCustomer();
-                        if (isset($data['card']) && count($data['card']) > 0) {
-                            $this->customerService->updateCard($customer, $data['card']);
-                        }
-                    } else {
-                        $customer = $this->customerService->newCustomer($json, $data['card']);
-                    }
+
+                    $customer = $this->customerService->newCustomer($json, $data['card']);
 
                     $user->setCustomer($customer);
                     if ($customer) {
