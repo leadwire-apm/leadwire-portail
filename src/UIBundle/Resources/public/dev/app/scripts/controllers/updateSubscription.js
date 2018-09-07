@@ -60,11 +60,13 @@
                 if (!vm.billingForm.$invalid) {
                     // if he has an old basic account we need to subscribe first before update
                     if ($rootScope.user.plan.price === 0) {
+                        vm.flipActivityIndicator('isSaving');
                         UserService.subscribe(
                             vm.billingInformation,
                             $rootScope.user.id
                         )
                             .then(function(response) {
+                                vm.flipActivityIndicator('isSaving');
                                 if (response.status === 200) {
                                     vm.updateSubscription();
                                 } else {
@@ -72,6 +74,7 @@
                                 }
                             })
                             .catch(function(error) {
+                                vm.flipActivityIndicator('isSaving');
                                 toastr.error(error.message);
                             });
                     } else {
@@ -183,8 +186,8 @@
                 CONSTANTS: CONSTANTS,
                 ui: {
                     billText: MONTHLY_MONTH_TEXT,
-                    isSaving:false,
-                    isLoading:false
+                    isSaving: false,
+                    isLoading: false
                 },
                 billingInformation: {
                     plan: null,

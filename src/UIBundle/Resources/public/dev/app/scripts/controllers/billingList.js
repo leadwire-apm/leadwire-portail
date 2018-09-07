@@ -35,7 +35,6 @@
         }
 
         vm.onLoad = function() {
-            console.log(CONSTANTS.EN_DATE_FORMAT);
             vm = angular.extend(vm, {
                 moment: moment,
                 CONSTANTS: CONSTANTS,
