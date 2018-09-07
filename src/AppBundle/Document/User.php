@@ -483,7 +483,11 @@ class User extends \ATS\UserBundle\Document\User
         return $this;
     }
 
-    public function getCustomer() : Customer
+    /**
+     * Get Customer
+     * @return Customer | null
+     */
+    public function getCustomer()
     {
         return $this->customer;
     }
