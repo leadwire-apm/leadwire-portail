@@ -101,8 +101,10 @@
                 </div>
             </div>
             <div class="row mt25">
-                <button type="button" class="btn btn-primary pull-right ml15" ng-disabled="ctrl.billingForm.$invalid"
-                        data-ng-click="ctrl.validateBilling()">Validate
+                <button type="button" class="btn btn-primary pull-right ml15" ng-disabled="ctrl.billingForm.$invalid || ctrl.ui.isSaving"
+                        data-ng-click="ctrl.validateBilling()">
+                    <spinner is-loading="ctrl.ui.isSaving"></spinner> Validate
+
                 </button>
                 <button type="button" class="btn btn-primary pull-right ml15" data-ng-click="ctrl.previousStep()">
                     Previous
