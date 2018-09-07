@@ -235,6 +235,11 @@ class UserService
         }
     }
 
+    public function updateCreditCard(User $user, $data)
+    {
+        return $this->customerService->updateCard($user->getCustomer(), $data);
+    }
+
     /**
      * Get a specific user
      *
