@@ -180,7 +180,7 @@
         service.handleFirstLogin = function() {
             var connectedUser = angular.extend({}, $localStorage.user);
             // var connectedUser = null;
-            if (!connectedUser || !connectedUser.email || !connectedUser.plan) {
+            if (connectedUser.id && (!connectedUser.email || !connectedUser.plan)) {
                 $ocLazyLoad
                     .load({
                         insertBefore: '#load_styles_before',
