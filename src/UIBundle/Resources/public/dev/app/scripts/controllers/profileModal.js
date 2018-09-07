@@ -121,14 +121,8 @@
                         UserService.setProfile(true);
                         $modalInstance.close();
                     } else {
-                        if (
-                            response.data.error &&
-                            response.data.error.exception &&
-                            response.data.error.exception.length
-                        ) {
-                            toastr.error(
-                                response.data.error.exception[0].message
-                            );
+                        if (response.data.message) {
+                            toastr.error(response.data.message);
                         } else {
                             toastr.error(MESSAGES_CONSTANTS.ERROR);
                         }
@@ -144,7 +138,7 @@
             vm = angular.extend(vm, {
                 user: angular.extend({}, $localStorage.user),
                 step: {
-                    number: 1,
+                    number: 2,
                     title: 'User Settings'
                 },
                 billingInformation: {
@@ -154,7 +148,7 @@
                 ui: {
                     billText: MONTHLY_MONTH_TEXT
                 },
-                showCheckBoxes: true,
+                showCheckBoxes: true
             });
 
             $scope.$watch(

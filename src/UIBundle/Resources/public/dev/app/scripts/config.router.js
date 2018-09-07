@@ -241,6 +241,47 @@ angular
                         ]
                     }
                 })
+                .state('app.editPaymentMethod', {
+                    url: '/payment/edit',
+                    templateUrl:
+                        CONFIG.ASSETS_BASE_URL + 'views/editPaymentMethod.html',
+                    controller: 'editPaymentMethodCtrl',
+                    controllerAs: 'ctrl',
+                    resolve: {
+                        loginRequired: loginRequired,
+                        deps: [
+                            '$ocLazyLoad',
+                            '$rootScope',
+                            'MenuFactory',
+                            function($ocLazyLoad, $rootScope, MenuFactory) {
+                                $rootScope.menus = MenuFactory.get('SETTINGS');
+
+                                return $ocLazyLoad
+                                    .load({
+                                        insertBefore: '#load_styles_before',
+                                        files: [
+                                            $rootScope.ASSETS_BASE_URL +
+                                                'vendor/chosen_v1.4.0/chosen.min.css',
+                                            $rootScope.ASSETS_BASE_URL +
+                                                'vendor/chosen_v1.4.0/chosen.jquery.min.js',
+                                            $rootScope.ASSETS_BASE_URL +
+                                                'vendor/card/lib/js/jquery.card.js',
+                                            $rootScope.ASSETS_BASE_URL +
+                                                'vendor/jquery-validation/dist/jquery.validate.min.js',
+                                            $rootScope.ASSETS_BASE_URL +
+                                                'vendor/twitter-bootstrap-wizard/jquery.bootstrap.wizard.min.js'
+                                        ]
+                                    })
+                                    .then(function() {
+                                        return $ocLazyLoad.load(
+                                            CONFIG.ASSETS_BASE_URL +
+                                                'scripts/controllers/editPaymentMethod.js'
+                                        );
+                                    });
+                            }
+                        ]
+                    }
+                })
                 .state('app.updateSubscription', {
                     url: '/subscription/{action}',
                     templateUrl:

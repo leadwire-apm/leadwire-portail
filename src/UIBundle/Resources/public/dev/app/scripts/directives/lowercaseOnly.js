@@ -7,13 +7,17 @@ angular.module('leadwireApp').directive('lowercaseOnly', [
                 //
                 element.on('keypress', function(e) {
                     var char = e.char || String.fromCharCode(e.charCode);
-                    if (!/^[a-z0-9._]$/i.test(char)) {
-                        e.preventDefault();
-                        return false;
+                    var keyCode = e.charCode || e.which || e.key;
+                    if(keyCode !== 8){
+                        if (!/^[a-z0-9._]$/i.test(char) ) {
+                            e.preventDefault();
+                            return false;
+                        }
                     }
                 });
 
                 function parser(value) {
+                    // console.log(value)
                     if (ctrl.$isEmpty(value)) {
                         return value;
                     }
@@ -34,7 +38,7 @@ angular.module('leadwireApp').directive('lowercaseOnly', [
 
                 ctrl.$formatters.push(formatter);
                 ctrl.$parsers.push(parser);
-            },
+            }
         };
-    },
+    }
 ]);

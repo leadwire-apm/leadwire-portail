@@ -19,7 +19,7 @@
                 },
                 responseError: function(response) {
                     console.log('status: ', response.status);
-                    if (response.status === 401) {
+                    if (response.status === 401 || response.status === 403) {
                         delete $localStorage.user;
                         $location.path('/login');
                     } else if (response.status === 500) {

@@ -118,12 +118,9 @@
 
         function handleError(response) {
             if (
-                response.data &&
-                response.data.error &&
-                response.data.error.exception &&
-                response.data.error.exception.length
+                response.data.message
             ) {
-                toastr.error(response.data.error.exception[0].message);
+                toastr.error(response.data.message);
             } else {
                 toastr.error(MESSAGES_CONSTANTS.ERROR);
             }

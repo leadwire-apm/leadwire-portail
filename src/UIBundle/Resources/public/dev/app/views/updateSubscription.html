@@ -32,9 +32,11 @@
                 <div data-ng-include="ASSETS_BASE_URL + 'views/pricingTable.html'"></div>
                 <hr>
             </div>
-            <div></div>
+            <div class="col-sm-12 text-center" ng-if="ctrl.ui.isLoading">
+                <spinner is-loading="ctrl.ui.isLoading" size="24"/>
+            </div>
             <div class="text-center bg-default widget border border-primary"
-                 ng-if="user.plan.price==0 && ctrl.billingInformation.plan">
+                 ng-if="ctrl.billingInformation.plan && ctrl.selectedPlan.price > 0">
                 <div class="col-sm-6" data-ng-include="ASSETS_BASE_URL + 'views/billingEngagementChoices.html'"></div>
                 <div class="col-sm-6" ng-if="ctrl.exclTaxPrice"
                      data-ng-include="ASSETS_BASE_URL + 'views/billingTotals.html'"></div>
@@ -58,9 +60,6 @@
 
                 </div>
             </form>
-        </div>
-        <div class="col-sm-12 text-center">
-            <spinner is-loading="ctrl.ui.isLoading" size="24"/>
         </div>
 
     </div>
