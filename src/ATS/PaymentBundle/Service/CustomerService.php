@@ -102,17 +102,7 @@ class CustomerService
     public function newCustomer($json, $card)
     {
         $card = new CreditCard($card);
-
-        $response = $this
-            ->gateway
-            ->createToken(
-                [
-                    'card' => $card,
-                ]
-            )
-            ->send();
-
-        $id = $response->getData()['id'];
+        $id = $this->request('createToken', ['card' => $card])['id'];
 
         $customer = $this
             ->serializer
@@ -129,6 +119,15 @@ class CustomerService
         } else {
             throw new OmnipayException($response->getMessage);
         }
+    }
+
+    public function updateCard(Customer $customer, $data)
+    {
+        $card = new CreditCard($data);
+        $id = $this->request('createToken', ['card' => $card])['id'];
+        $customer->setGatewayToken($id);
+        $this->customerManager->update($customer);
+        return $customer;
     }
 
     /**
@@ -174,6 +173,24 @@ class CustomerService
         if ($response->isSuccessful()) {
             return $response->getData()['data'];
         } else {
+            throw new OmnipayException($response->getMessage());
+        }
+    }
+
+    /**
+     * @param $functionName
+     * @param $parameters
+     * @return array
+     * @throws OmnipayException
+     */
+    private function request($functionName, $parameters)
+    {
+        $response = $this->gateway->{$functionName}($parameters)->send();
+
+        if ($response->isSuccessful()) {
+            return $response->getData();
+        } else {
+            $this->logger->error($response->getMessage());
             throw new OmnipayException($response->getMessage());
         }
     }
