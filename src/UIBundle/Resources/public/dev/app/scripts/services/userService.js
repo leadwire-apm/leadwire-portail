@@ -169,10 +169,14 @@
 
         service.subscribe = function(billingInfo) {
             var payload = angular.copy(billingInfo);
-            var expiryInfos = payload.card.expiry.split('/');
-            payload.card.expiryMonth = expiryInfos[0].trim();
-            payload.card.expiryYear = expiryInfos[1].trim();
-            delete payload.card.expiry;
+            if(payload.card && payload.card.expiry){
+                var expiryInfos = payload.card.expiry.split('/');
+                payload.card.expiryMonth = expiryInfos[0].trim();
+                payload.card.expiryYear = expiryInfos[1].trim();
+                delete payload.card.expiry;
+            }else{
+                delete payload.card;
+            }
 
             return Account.subscribe(payload, $localStorage.user.id);
         };

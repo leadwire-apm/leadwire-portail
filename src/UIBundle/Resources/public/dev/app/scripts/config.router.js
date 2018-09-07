@@ -157,8 +157,15 @@ angular
                             '$ocLazyLoad',
                             '$rootScope',
                             'MenuFactory',
-                            function($ocLazyLoad, $rootScope, MenuFactory) {
+                            'UserService',
+                            function(
+                                $ocLazyLoad,
+                                $rootScope,
+                                MenuFactory,
+                                UserService
+                            ) {
                                 $rootScope.menus = MenuFactory.get('SETTINGS');
+                                UserService.handleFirstLogin();
 
                                 return $ocLazyLoad.load({
                                     name: 'sbAdminApp',
@@ -288,9 +295,11 @@ angular
                             $ocLazyLoad,
                             MenuFactory,
                             $rootScope,
-                            $localStorage
+                            $localStorage,
+                            UserService
                         ) {
                             $rootScope.menus = $localStorage.currentMenu;
+                            UserService.handleFirstLogin();
                             return $ocLazyLoad
                                 .load([
                                     {

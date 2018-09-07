@@ -3,7 +3,6 @@
         .module('leadwireApp')
         .run(function(
             $rootScope,
-            UserService,
             MenuFactory,
             $localStorage,
             CONFIG
@@ -17,8 +16,6 @@
             $rootScope.$watch('applications', function(newVal) {
                 $localStorage.applications = newVal;
             });
-            // show profile setting and billing stuff
-            UserService.handleFirstLogin();
         })
         .controller('AppCtrl', [
             '$scope',
