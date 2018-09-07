@@ -32,7 +32,9 @@
         }
 
         function loadPlans() {
+            vm.flipActivityIndicator();
             PlanFactory.findAll().then(function(response) {
+                vm.flipActivityIndicator();
                 vm.plans = response.data;
             });
         }
@@ -74,15 +76,12 @@
             }
         }
 
-        function shouldPlan(plan) {
-            vm.action = $stateParams.action;
+        function shouldShowPlan(plan) {
             var currentPlan = $rootScope.user.plan;
             return (
                 plan.id !== currentPlan.id &&
-                ((vm.action === ACTIONS.DOWNGRADE &&
-                    plan.price <= currentPlan.price) ||
-                    (vm.action === ACTIONS.UPGRADE &&
-                        plan.price >= currentPlan.price))
+                ((vm.isDowngrade && plan.price <= currentPlan.price) ||
+                    (vm.isUpgrade && plan.price >= currentPlan.price))
             );
         }
 
@@ -130,13 +129,16 @@
                         name: $rootScope.user.name
                     },
                     billingType: 'monthly'
-                }
+                },
+                action: $stateParams.action,
+                isUpgrade: $stateParams.action === ACTIONS.UPGRADE,
+                isDowngrade: $stateParams.action === ACTIONS.DOWNGRADE
             });
             vm.flipActivityIndicator = flipActivityIndicator;
             vm.loadPlans = loadPlans;
             vm.choosePlan = choosePlan;
             vm.validateBilling = validateBilling;
-            vm.shouldPlan = shouldPlan;
+            vm.shouldShowPlan = shouldShowPlan;
             vm.updateSubscription = updateSubscription;
             vm.loadPlans();
         };

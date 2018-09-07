@@ -167,14 +167,14 @@
             return updatedInfo;
         };
 
-        service.subscribe = function(billingInfo, userId) {
+        service.subscribe = function(billingInfo) {
             var payload = angular.copy(billingInfo);
             var expiryInfos = payload.card.expiry.split('/');
             payload.card.expiryMonth = expiryInfos[0].trim();
             payload.card.expiryYear = expiryInfos[1].trim();
             delete payload.card.expiry;
 
-            return Account.subscribe(payload, userId);
+            return Account.subscribe(payload, $localStorage.user.id);
         };
 
         service.handleFirstLogin = function() {

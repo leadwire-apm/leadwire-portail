@@ -10,12 +10,12 @@
                     class="fa fa-arrow-down"></i> Downgrade</a>
         </div>
         <div class="clearfix"></div>
-        <div ng-if="ctrl.subscription" class="panel panel-bordered">
-            <div class="panel-heading border">
+        <div  class="panel panel-bordered">
+            <div class="panel-heading border-primary">
                 Information
             </div>
-            <div class="panel-body bg-dark-dark">
-                <div class="col-sm-12">
+            <div class="panel-body bg-primary-dark">
+                <div ng-if="ctrl.subscription" class="col-sm-12">
                     <div class="col-sm-6">
                         <span class="bold">Subscription creation date :</span>
                         {{ctrl.moment(ctrl.subscription.created *
@@ -41,7 +41,9 @@
                         1000).format(ctrl.CONSTANTS.EN_DATE_FORMAT)}}
                     </div>
                 </div>
-
+                <div ng-if="!ctrl.subscription" class="col-sm-12 text-center">
+                    <spinner is-loading="!ctrl.subscription" size="36"/>
+                </div>
             </div>
         </div>
         <div class="table-responsive">
