@@ -21,7 +21,12 @@
                 </tbody>
             </table>
         </div>
-        <a ui-sref="app.updateSubscription({action:'upgrade'})" class="btn btn-block">Upgrade to see more available data</a>
+        <p class="alert alert-info text-center " ng-if="user.plan.retention !==15">
+            Only data with blue background are avaibale on dashboard, to see more available data <br><a
+                ui-sref="app.updateSubscription({action:'upgrade'})" class="btn btn-primary">
+                Upgrade your plan
+            </a>
+        </p>
 
     </div>
 </div>

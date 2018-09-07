@@ -13,7 +13,9 @@
         function loadSubscription() {
             UserService.getSubscription()
                 .then(function(response) {
-                    vm.subscription = response.data;
+                    if (response.status === 200) {
+                        vm.subscription = response.data;
+                    }
                 })
                 .catch(function() {});
         }
@@ -23,7 +25,9 @@
             UserService.getInvoices()
                 .then(function(response) {
                     vm.flipActivityIndicator();
-                    vm.invoices = response.data;
+                    if (response.status === 200) {
+                        vm.invoices = response.data;
+                    }
                 })
                 .catch(function() {
                     vm.flipActivityIndicator();
