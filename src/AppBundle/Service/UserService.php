@@ -186,12 +186,20 @@ class UserService
 
     public function getSubscription(User $user)
     {
-        return $this->subscriptionService->get($user->getSubscriptionId(), $user->getCustomer());
+        if ($user->getSubscriptionId() || !$user->getCustomer()) {
+            return $this->subscriptionService->get($user->getSubscriptionId(), $user->getCustomer());
+        } else {
+            return [];
+        }
     }
 
     public function getInvoices(User $user)
     {
-        return $this->customerService->getInvoices($user->getCustomer()->getGatewayToken());
+        if ($user->getCustomer()) {
+            return $this->customerService->getInvoices($user->getCustomer()->getGatewayToken());
+        } else {
+            return [];
+        }
     }
 
     public function updateSubscription(User $user, $data)
