@@ -184,7 +184,7 @@
 
         service.handleFirstLogin = function() {
             var connectedUser = angular.extend({}, $localStorage.user);
-            // var connectedUser = null;
+            // var connectedUser = {id:'sa'};
             if (
                 connectedUser.id &&
                 (!connectedUser.email || !connectedUser.plan)

@@ -53,8 +53,7 @@
                             ng-if="!ctrl.cantMakeUpgrade"
                             ng-disabled="ctrl.billingForm.$invalid || !ctrl.selectedPlan || ctrl.ui.isSaving"
                             data-ng-click="ctrl.validateBilling()">
-                        <spinner is-loading="ctrl.ui.isSaving"/>
-                        Validate
+                        <spinner is-loading="ctrl.ui.isSaving"/> Validate
                     </button>
 
                 </div>
