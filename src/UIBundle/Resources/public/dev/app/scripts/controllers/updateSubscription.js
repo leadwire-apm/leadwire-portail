@@ -2,6 +2,7 @@
     angular
         .module('leadwireApp')
         .controller('updateSubscriptionCtrl', [
+            '$scope',
             'UserService',
             'PlanFactory',
             '$stateParams',
@@ -13,6 +14,7 @@
         ]);
 
     function controller(
+        $scope,
         UserService,
         PlanFactory,
         $stateParams,
@@ -27,14 +29,14 @@
             DOWNGRADE: 'downgrade'
         };
 
-        function flipActivityIndicator() {
-            vm.ui.isLoading = !vm.ui.isLoading;
+        function flipActivityIndicator(activity) {
+            vm.ui[activity] = !vm.ui[activity];
         }
 
         function loadPlans() {
-            vm.flipActivityIndicator();
+            vm.flipActivityIndicator('isLoading');
             PlanFactory.findAll().then(function(response) {
-                vm.flipActivityIndicator();
+                vm.flipActivityIndicator('isLoading');
                 vm.plans = response.data;
             });
         }
@@ -52,6 +54,7 @@
         function validateBilling() {
             if (vm.selectedPlan.price > 0) {
                 if (!vm.billingForm.$invalid) {
+                    // if he has an old basic account we need to subscribe first before update
                     if ($rootScope.user.plan.price === 0) {
                         UserService.subscribe(
                             vm.billingInformation,
@@ -86,11 +89,13 @@
         }
 
         function updateSubscription() {
+            vm.flipActivityIndicator('isSaving');
             UserService.updateSubscription({
                 plan: vm.billingInformation.plan,
                 billingType: vm.billingInformation.billingType
             })
                 .then(function(response) {
+                    vm.flipActivityIndicator('isSaving');
                     if (response.status === 200) {
                         toastr.success(MESSAGES_CONSTANTS.SUCCESS);
                     } else {
@@ -98,12 +103,14 @@
                     }
                 })
                 .catch(function(error) {
+                    vm.flipActivityIndicator('isSaving');
                     toastr.error(error.message);
                 });
         }
 
         function handleError(response) {
             if (
+                response.data &&
                 response.data.error &&
                 response.data.error.exception &&
                 response.data.error.exception.length
@@ -132,7 +139,8 @@
                 },
                 action: $stateParams.action,
                 isUpgrade: $stateParams.action === ACTIONS.UPGRADE,
-                isDowngrade: $stateParams.action === ACTIONS.DOWNGRADE
+                isDowngrade: $stateParams.action === ACTIONS.DOWNGRADE,
+                cantMakeUpgrade: false
             });
             vm.flipActivityIndicator = flipActivityIndicator;
             vm.loadPlans = loadPlans;
@@ -141,6 +149,25 @@
             vm.shouldShowPlan = shouldShowPlan;
             vm.updateSubscription = updateSubscription;
             vm.loadPlans();
+
+            $scope.$watch(
+                function() {
+                    return vm.plans;
+                },
+                function(newVal) {
+                    var cant = true;
+                    if (newVal && newVal.length) {
+                        var currentPlanPrice = $rootScope.user.plan.price;
+
+                        newVal.forEach(function(plan) {
+                            if (cant && plan.price > currentPlanPrice) {
+                                cant = false;
+                            }
+                        });
+                    }
+                    vm.cantMakeUpgrade = cant && vm.isUpgrade;
+                }
+            );
         };
     }
 })(window.angular, window.moment);

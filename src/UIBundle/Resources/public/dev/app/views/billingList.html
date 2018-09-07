@@ -4,9 +4,9 @@
     </div>
     <div class="panel-body">
         <div class="mb25">
-            <a ui-sref="app.updateSubscription({action:'upgrade'})" class="btn btn-primary pull-right ml15 mb25"><i
+            <a  ui-sref="app.updateSubscription({action:'upgrade'})" class="btn btn-primary pull-right ml15 mb25"><i
                     class="fa fa-arrow-up"></i> Upgrade</a>
-            <a ui-sref="app.updateSubscription({action:'downgrade'})" class="btn btn-danger pull-right ml15 mb25"><i
+            <a ng-if="user.plan.price >0" ui-sref="app.updateSubscription({action:'downgrade'})" class="btn btn-danger pull-right ml15 mb25"><i
                     class="fa fa-arrow-down"></i> Downgrade</a>
         </div>
         <div class="clearfix"></div>
@@ -16,7 +16,7 @@
             </div>
             <div class="panel-body bg-primary-dark">
                 <div ng-if="ctrl.subscription" class="col-sm-12">
-                    <div class="col-sm-6">
+                    <div class="col-sm-6" ng-if="user.plan.price >0">
                         <span class="bold">Subscription creation date :</span>
                         {{ctrl.moment(ctrl.subscription.created *
                         1000).format(ctrl.CONSTANTS.EN_DATE_FORMAT)}}
@@ -26,7 +26,7 @@
                         <span class="bold">Current plan : </span>
                         {{user.plan.name}}
                     </div>
-                    <div class="col-sm-6">
+                    <div class="col-sm-6" ng-if="user.plan.price >0">
                         <span class="bold">Subscriptions : </span>
                         <ul>
                             <li class="" ng-repeat="item in ctrl.subscription.items.data">
@@ -35,7 +35,7 @@
                             </li>
                         </ul>
                     </div>
-                    <div class="col-sm-6">
+                    <div class="col-sm-6" ng-if="user.plan.price >0">
                         <span class="bold">Payment due :</span>
                         {{ctrl.moment(ctrl.subscription.current_period_end *
                         1000).format(ctrl.CONSTANTS.EN_DATE_FORMAT)}}

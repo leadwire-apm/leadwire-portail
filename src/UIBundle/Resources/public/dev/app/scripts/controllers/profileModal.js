@@ -31,6 +31,10 @@
         var YEARLY_MONTH_TEXT = 'Yearly bill total';
         var MONTHLY_MONTH_TEXT = 'Monthly bill total';
         onLoad();
+        vm.flipActivityIndicator = function() {
+            vm.ui.isSaving = !vm.ui.isSaving;
+        };
+
         vm.save = function() {
             if (vm.userForm.$valid) {
                 UserService.saveUser(vm.user, vm.avatar)
@@ -108,10 +112,13 @@
         };
 
         function subscribe() {
+            vm.flipActivityIndicator();
             UserService.subscribe(vm.billingInformation)
                 .then(function(response) {
                     if (response.status === 200) {
+                        vm.flipActivityIndicator();
                         toastr.success(MESSAGES_CONSTANTS.SUCCESS);
+                        UserService.setProfile(true);
                         $modalInstance.close();
                     } else {
                         if (
@@ -125,6 +132,7 @@
                         } else {
                             toastr.error(MESSAGES_CONSTANTS.ERROR);
                         }
+                        vm.flipActivityIndicator();
                     }
                 })
                 .catch(function(error) {
@@ -147,7 +155,6 @@
                     billText: MONTHLY_MONTH_TEXT
                 },
                 showCheckBoxes: true,
-                isAdding: true
             });
 
             $scope.$watch(

@@ -4,6 +4,7 @@
             {{ctrl.action}} subscription
         </div>
         <div class="panel-body">
+
             <div class="text-center">
                 <div class="widget bg-white">
                     <div class="overflow-hidden">
@@ -14,13 +15,25 @@
                 </div>
             </div>
 
+            <div ng-if="ctrl.plans.length" class="col-md-12">
+                <div ng-if="ctrl.cantMakeUpgrade" class="widget bg-dark-light">
+                    <div class="widget-bg-icon">
+                        <i class="fa fa-warning"></i>
+                    </div>
+                    <div class="widget-details">
+                        <h4 class="no-margin">Warning</h4>
+                        <span>You can't make an upgrade , you're already in the highest plan</span>
+                    </div>
+                </div>
+            </div>
+
             <!--<h4 class="text-center text-primary">Actual plan : {{user.plan.name}}</h4>-->
             <div class="col-sm-12" ng-if="!ctrl.ui.isLoading">
                 <div data-ng-include="ASSETS_BASE_URL + 'views/pricingTable.html'"></div>
                 <hr>
             </div>
             <div class="col-sm-12 text-center">
-                <spinner is-loading="ctrl.ui.isLoading" size="36"/>
+                <spinner is-loading="ctrl.ui.isLoading" size="24"/>
             </div>
             <div class="text-center" ng-if="user.plan.price==0">
                 <label class="cb-radio ml10">
@@ -39,11 +52,11 @@
             <form class="form-horizontal bordered-group" name="ctrl.billingForm"
                   ng-submit="ctrl.validateBilling()"
                   role="form"
-                  ui-jq="card" ui-options="{container: '.card'}"
+
             >
 
                 <div class="row" ng-if="user.plan.price==0">
-                    <div class="col-sm-6">
+                    <div class="col-sm-6" >
                         <div class="form-group">
                             <label class="col-sm-4 control-label">Card number *</label>
                             <div class="col-sm-8">
@@ -77,15 +90,17 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-sm-6">
+                    <div class="col-sm-6" ui-jq="card" ui-options="{container: '.card'}">
                         <div class="card"></div>
                     </div>
                 </div>
 
                 <div class="row mt25">
                     <button type="button" class="btn btn-primary pull-right ml15"
-                            ng-disabled="ctrl.billingForm.$invalid || !ctrl.selectedPlan"
-                            data-ng-click="ctrl.validateBilling()">Validate
+                            ng-if="!ctrl.cantMakeUpgrade"
+                            ng-disabled="ctrl.billingForm.$invalid || !ctrl.selectedPlan || ctrl.ui.isSaving"
+                            data-ng-click="ctrl.validateBilling()">
+                        <spinner is-loading="ctrl.ui.isSaving"/> Validate
                     </button>
 
                 </div>
