@@ -133,10 +133,12 @@ class UserService
         $token = null;
         if ($plan) {
             if ($plan->getPrice() == 0) {
-                $this->subscriptionService->delete(
-                    $user->getSubscriptionId(),
-                    $user->getCustomer()->getGatewayToken()
-                );
+                if ($user->getSubscriptionId()) {
+                    $this->subscriptionService->delete(
+                        $user->getSubscriptionId(),
+                        $user->getCustomer()->getGatewayToken()
+                    );
+                }
                 $user->setPlan($plan);
                 $this->userManager->update($user);
                 return true;
