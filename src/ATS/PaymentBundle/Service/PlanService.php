@@ -259,7 +259,7 @@ class PlanService
             ])->send()->getData()['id'];
 
             $pricing = new PricingPlan();
-            $pricing->setName("Monthly");
+            $pricing->setName("monthly");
             $pricing->setToken($token);
             $third->addPrice($pricing);
 
@@ -275,7 +275,7 @@ class PlanService
             ])->send()->getData()['id'];
 
             $pricing = new PricingPlan();
-            $pricing->setName("Yearly");
+            $pricing->setName("yearly");
             $pricing->setToken($token);
             $third->addPrice($pricing);
 

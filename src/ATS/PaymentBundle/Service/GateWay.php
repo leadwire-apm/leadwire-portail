@@ -41,6 +41,8 @@ class GateWay
 
     public function __call($name, $arguments)
     {
-        return call_user_func_array(array($this->gateway,$name), $arguments);
+        if (method_exists($this->gateway, $name)) {
+            return call_user_func_array(array($this->gateway,$name), $arguments);
+        }
     }
 }
