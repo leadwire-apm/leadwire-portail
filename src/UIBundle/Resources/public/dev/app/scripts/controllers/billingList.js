@@ -1,9 +1,14 @@
 (function(angular, moment) {
     angular
         .module('leadwireApp')
-        .controller('billingListCtrl', ['UserService','$rootScope', 'CONFIG', controller]);
+        .controller('billingListCtrl', [
+            'UserService',
+            '$rootScope',
+            'CONFIG',
+            controller
+        ]);
 
-    function controller(UserService,$rootScope, PlanFactory,CONSTANTS) {
+    function controller(UserService, $rootScope, CONSTANTS) {
         var vm = this;
         function loadSubscription() {
             UserService.getSubscription()
@@ -30,6 +35,7 @@
         }
 
         vm.onLoad = function() {
+            console.log(CONSTANTS.EN_DATE_FORMAT);
             vm = angular.extend(vm, {
                 moment: moment,
                 CONSTANTS: CONSTANTS,
