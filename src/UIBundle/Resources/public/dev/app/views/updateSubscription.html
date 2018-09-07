@@ -4,77 +4,92 @@
             {{ctrl.action}} subscription
         </div>
         <div class="panel-body">
-            <h5 class="text-center">Actual plan {{user.plan.name}}</h5>
-            <div data-ng-include="ASSETS_BASE_URL + 'views/pricingTable.html'"></div>
-            <hr>
-
-                <div class="text-center" ng-if="user.plan.price==0">
-                    <label class="cb-radio ml10">
-                        <input type="radio" name="billingType" ng-model="ctrl.billingInformation.billingType"
-                               value="monthly"/>
-                        monthly engagement
-                    </label>
-                    <label class="cb-radio ml10">
-                        <input type="radio" name="billingType"
-                               ng-model="ctrl.billingInformation.billingType"
-                               value="yearly"/>
-                        yearly engagement
-                    </label>
+            <div class="text-center">
+                <div class="widget bg-white">
+                    <div class="overflow-hidden">
+                        <span class="widget-title">{{user.plan.name}}</span>
+                        <span class="widget-subtitle">Actual plan</span>
+                    </div>
+                    <hr>
                 </div>
-                <form class="form-horizontal bordered-group" name="ctrl.billingForm"
-                      ng-submit="ctrl.validateBilling()"
-                      role="form"
-                      ui-jq="card" ui-options="{container: '.card'}"
-                >
+            </div>
 
-                    <div class="row" ng-if="user.plan.price==0">
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label class="col-sm-4 control-label">Card number *</label>
-                                <div class="col-sm-8">
-                                    <input type="text" class="form-control" name="number"
-                                           required
-                                           ng-model="ctrl.billingInformation.card.number">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-4 control-label">Full name *</label>
-                                <div class="col-sm-8">
-                                    <input type="text" class="form-control" name="name"
-                                           required
-                                           ng-model="ctrl.billingInformation.card.name">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-4 control-label">Expiration date *</label>
-                                <div class="col-sm-8">
-                                    <input type="text" class="form-control" name="expiry"
-                                           required
-                                           ng-model="ctrl.billingInformation.card.expiry">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-4 control-label">CVC number *</label>
-                                <div class="col-sm-8">
-                                    <input type="text" class="form-control" name="cvc"
-                                           required
-                                           ng-model="ctrl.billingInformation.card.cvc">
-                                </div>
+            <!--<h4 class="text-center text-primary">Actual plan : {{user.plan.name}}</h4>-->
+            <div class="col-sm-12" ng-if="!ctrl.ui.isLoading">
+                <div data-ng-include="ASSETS_BASE_URL + 'views/pricingTable.html'"></div>
+                <hr>
+            </div>
+            <div class="col-sm-12 text-center">
+                <spinner is-loading="ctrl.ui.isLoading" size="36"/>
+            </div>
+            <div class="text-center" ng-if="user.plan.price==0">
+                <label class="cb-radio ml10">
+                    <input type="radio" name="billingType" ng-model="ctrl.billingInformation.billingType"
+                           value="monthly"/>
+                    monthly engagement
+                </label>
+                <label class="cb-radio ml10">
+                    <input type="radio" name="billingType"
+                           ng-model="ctrl.billingInformation.billingType"
+                           value="yearly"/>
+                    yearly engagement
+                </label>
+            </div>
+
+            <form class="form-horizontal bordered-group" name="ctrl.billingForm"
+                  ng-submit="ctrl.validateBilling()"
+                  role="form"
+                  ui-jq="card" ui-options="{container: '.card'}"
+            >
+
+                <div class="row" ng-if="user.plan.price==0">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label">Card number *</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" name="number"
+                                       required
+                                       ng-model="ctrl.billingInformation.card.number">
                             </div>
                         </div>
-                        <div class="col-sm-6">
-                            <div class="card"></div>
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label">Full name *</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" name="name"
+                                       required
+                                       ng-model="ctrl.billingInformation.card.name">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label">Expiration date *</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" name="expiry"
+                                       required
+                                       ng-model="ctrl.billingInformation.card.expiry">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label">CVC number *</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" name="cvc"
+                                       required
+                                       ng-model="ctrl.billingInformation.card.cvc">
+                            </div>
                         </div>
                     </div>
-
-                    <div class="row mt25">
-                        <button type="button" class="btn btn-primary pull-right ml15"
-                                ng-disabled="ctrl.billingForm.$invalid || !ctrl.selectedPlan"
-                                data-ng-click="ctrl.validateBilling()">Validate
-                        </button>
-
+                    <div class="col-sm-6">
+                        <div class="card"></div>
                     </div>
-                </form>
+                </div>
+
+                <div class="row mt25">
+                    <button type="button" class="btn btn-primary pull-right ml15"
+                            ng-disabled="ctrl.billingForm.$invalid || !ctrl.selectedPlan"
+                            data-ng-click="ctrl.validateBilling()">Validate
+                    </button>
+
+                </div>
+            </form>
         </div>
     </div>
 </div>

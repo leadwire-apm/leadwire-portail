@@ -1,7 +1,7 @@
 <div class="wrap">
     <div class="pricing-table">
 
-        <div ng-repeat="plan in ctrl.plans" class="plan" ng-if="ctrl.isAdding || ctrl.shouldPlan(plan)">
+        <div ng-repeat="plan in ctrl.plans" class="plan" ng-if="ctrl.shouldShowPlan(plan)">
             <h3 class="name">{{plan.name}}</h3>
             <h4 class="price">{{plan.price}} €<span>/month</span></h4>
             <ul class="details">
@@ -37,7 +37,7 @@
 
     .wrap {
         width: 100%;
-        margin: 30px auto;
+        margin: 10px auto;
         color: #607d8b;
         /*box-shadow: 1px 1px 10px #424242;*/
     }
@@ -49,6 +49,8 @@
         text-align: center;
         position: relative;
         z-index: 10;
+        box-shadow: 1px 1px 10px #424242;
+
     }
     .plan:first-child:nth-last-child(1) {
         width: 50%;

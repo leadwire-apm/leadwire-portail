@@ -94,6 +94,15 @@
             }
         };
 
+        /**
+         * In the case of first we always show all plans
+         * @returns {boolean}
+         */
+        vm.shouldShowPlan = function() {
+            return true;
+        };
+
+
         vm.validateBilling = function() {
             if (!vm.billingForm.$invalid) {
                 UserService.subscribe(vm.billingInformation, vm.user.id)
