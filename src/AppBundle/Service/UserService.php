@@ -186,7 +186,7 @@ class UserService
 
     public function getSubscription(User $user)
     {
-        if (!$user->getSubscriptionId() || !$user->getCustomer()) {
+        if ($user->getSubscriptionId() && $user->getCustomer()) {
             return $this->subscriptionService->get($user->getSubscriptionId(), $user->getCustomer());
         } else {
             return [];
