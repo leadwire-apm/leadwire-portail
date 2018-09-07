@@ -291,58 +291,65 @@ angular
                         CONFIG.ASSETS_BASE_URL + 'views/dashboard.html',
                     resolve: {
                         loginRequired: loginRequired,
-                        deps: function(
-                            $ocLazyLoad,
-                            MenuFactory,
-                            $rootScope,
-                            $localStorage,
-                            UserService
-                        ) {
-                            $rootScope.menus = $localStorage.currentMenu;
-                            UserService.handleFirstLogin();
-                            return $ocLazyLoad
-                                .load([
-                                    {
-                                        insertBefore: '#load_styles_before',
-                                        files: [
+                        deps: [
+                            '$ocLazyLoad',
+                            'MenuFactory',
+                            '$rootScope',
+                            '$localStorage',
+                            'UserService',
+                            function(
+                                $ocLazyLoad,
+                                MenuFactory,
+                                $rootScope,
+                                $localStorage,
+                                UserService
+                            ) {
+                                $rootScope.menus = $localStorage.currentMenu;
+                                UserService.handleFirstLogin();
+                                return $ocLazyLoad
+                                    .load([
+                                        {
+                                            insertBefore: '#load_styles_before',
+                                            files: [
+                                                CONFIG.ASSETS_BASE_URL +
+                                                    'styles/climacons-font.css',
+                                                CONFIG.ASSETS_BASE_URL +
+                                                    'vendor/rickshaw/rickshaw.min.css'
+                                            ]
+                                        },
+                                        {
+                                            serie: true,
+                                            files: [
+                                                CONFIG.ASSETS_BASE_URL +
+                                                    'vendor/d3/d3.min.js',
+                                                CONFIG.ASSETS_BASE_URL +
+                                                    'vendor/rickshaw/rickshaw.min.js',
+                                                CONFIG.ASSETS_BASE_URL +
+                                                    'vendor/flot/jquery.flot.js',
+                                                CONFIG.ASSETS_BASE_URL +
+                                                    'vendor/flot/jquery.flot.resize.js',
+                                                CONFIG.ASSETS_BASE_URL +
+                                                    'vendor/flot/jquery.flot.pie.js',
+                                                CONFIG.ASSETS_BASE_URL +
+                                                    'vendor/flot/jquery.flot.categories.js'
+                                            ]
+                                        },
+                                        {
+                                            name: 'angular-flot',
+                                            files: [
+                                                CONFIG.ASSETS_BASE_URL +
+                                                    'vendor/angular-flot/angular-flot.js'
+                                            ]
+                                        }
+                                    ])
+                                    .then(function() {
+                                        return $ocLazyLoad.load(
                                             CONFIG.ASSETS_BASE_URL +
-                                                'styles/climacons-font.css',
-                                            CONFIG.ASSETS_BASE_URL +
-                                                'vendor/rickshaw/rickshaw.min.css'
-                                        ]
-                                    },
-                                    {
-                                        serie: true,
-                                        files: [
-                                            CONFIG.ASSETS_BASE_URL +
-                                                'vendor/d3/d3.min.js',
-                                            CONFIG.ASSETS_BASE_URL +
-                                                'vendor/rickshaw/rickshaw.min.js',
-                                            CONFIG.ASSETS_BASE_URL +
-                                                'vendor/flot/jquery.flot.js',
-                                            CONFIG.ASSETS_BASE_URL +
-                                                'vendor/flot/jquery.flot.resize.js',
-                                            CONFIG.ASSETS_BASE_URL +
-                                                'vendor/flot/jquery.flot.pie.js',
-                                            CONFIG.ASSETS_BASE_URL +
-                                                'vendor/flot/jquery.flot.categories.js'
-                                        ]
-                                    },
-                                    {
-                                        name: 'angular-flot',
-                                        files: [
-                                            CONFIG.ASSETS_BASE_URL +
-                                                'vendor/angular-flot/angular-flot.js'
-                                        ]
-                                    }
-                                ])
-                                .then(function() {
-                                    return $ocLazyLoad.load(
-                                        CONFIG.ASSETS_BASE_URL +
-                                            'scripts/controllers/dashboard.js'
-                                    );
-                                });
-                        }
+                                                'scripts/controllers/dashboard.js'
+                                        );
+                                    });
+                            }
+                        ]
                     },
                     controller: 'dashboardCtrl',
                     controllerAs: 'ctrl'
