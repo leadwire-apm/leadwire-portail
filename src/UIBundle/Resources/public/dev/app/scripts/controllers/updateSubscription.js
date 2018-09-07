@@ -7,6 +7,7 @@
             'PlanFactory',
             '$stateParams',
             '$rootScope',
+            '$state',
             'toastr',
             'MESSAGES_CONSTANTS',
             'CONFIG',
@@ -19,6 +20,7 @@
         PlanFactory,
         $stateParams,
         $rootScope,
+        $state,
         toastr,
         MESSAGES_CONSTANTS,
         CONSTANTS
@@ -99,6 +101,7 @@
                 .then(function(response) {
                     vm.flipActivityIndicator('isSaving');
                     if (response.status === 200) {
+                        $state.go('app.billingList');
                         toastr.success(MESSAGES_CONSTANTS.SUCCESS);
                     } else {
                         handleError(response);
