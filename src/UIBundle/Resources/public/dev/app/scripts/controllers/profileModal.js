@@ -118,6 +118,7 @@
                     if (response.status === 200) {
                         vm.flipActivityIndicator();
                         toastr.success(MESSAGES_CONSTANTS.SUCCESS);
+                        UserService.setProfile(true);
                         $modalInstance.close();
                     } else {
                         if (

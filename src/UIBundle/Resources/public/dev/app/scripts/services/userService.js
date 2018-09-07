@@ -24,11 +24,12 @@
         var service = this;
         var sep = '###';
 
-        service.setProfile = function() {
+        service.setProfile = function(force) {
             return new Promise(function(resolve, reject) {
                 if (
                     angular.isUndefined($localStorage.user) ||
                     $localStorage.user === null
+                    || force
                 ) {
                     Account.getProfile()
                         .then(function(response) {
