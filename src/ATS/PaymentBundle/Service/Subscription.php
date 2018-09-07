@@ -82,7 +82,8 @@ class Subscription
         return $this->request('updateSubscription', [
             'customerReference' => $customerReference,
             'subscriptionReference' => $subscriptionReference,
-            'plan' => $planReference
+            'plan' => $planReference,
+            //"periodEnd" => false,
         ]);
     }
 

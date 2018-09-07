@@ -121,9 +121,13 @@ class CustomerService
     {
         $card = new CreditCard($data);
         $id = $this->request('createToken', ['card' => $card])['id'];
-        $customer->setGatewayToken($id);
-        $this->customerManager->update($customer);
-        return $customer;
+
+        $this->gateway->request(
+            'updateCustomer',
+            [ 'customerReference' => $customer->getGatewayToken(), 'source' => $id]
+        );
+
+        return true;
     }
 
     /**

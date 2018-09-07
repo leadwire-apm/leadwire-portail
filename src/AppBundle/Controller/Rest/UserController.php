@@ -127,4 +127,25 @@ class UserController extends BaseRestController
             throw new HttpException(400, $e->getMessage());
         }
     }
+
+    /**
+     * @Route("/{id}/creditCard", methods="PUT")
+     *
+     * @param Request $request
+     * @param UserService $userService
+     * @return Response
+     * @throws HttpException
+     */
+    public function updateCreditCardAction(Request $request, UserService $userService)
+    {
+        try {
+            $data = $userService->updateCreditCard(
+                $this->getUser(),
+                json_decode($request->getContent(), true)
+            );
+            return $this->json($data);
+        } catch (\Exception $e) {
+            throw new HttpException(400, $e->getMessage());
+        }
+    }
 }
