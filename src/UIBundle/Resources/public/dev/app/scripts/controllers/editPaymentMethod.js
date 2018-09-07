@@ -43,14 +43,10 @@
         function flipActivityIndicator(activity) {
             vm.ui[activity] = !vm.ui[activity];
         }
+
         function handleError(response) {
-            if (
-                response.data &&
-                response.data.error &&
-                response.data.error.exception &&
-                response.data.error.exception.length
-            ) {
-                toastr.error(response.data.error.exception[0].message);
+            if (response.data.message) {
+                toastr.error(response.data.message);
             } else {
                 toastr.error(MESSAGES_CONSTANTS.ERROR);
             }
