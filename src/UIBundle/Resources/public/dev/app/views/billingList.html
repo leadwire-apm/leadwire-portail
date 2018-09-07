@@ -63,6 +63,9 @@
                         <spinner is-loading="ctrl.ui.isLoading"></spinner>
                     </td>
                 </tr>
+                <tr ng-if="!ctrl.invoices.length && !ctrl.ui.isLoading">
+                    <td colspan="5" class="text-center text-red">No invoices yet</td>
+                </tr>
                 <tr ng-repeat="invoice in ctrl.invoices">
                     <th class="text-center">
                         <i ng-if="invoice.paid" class="fa fa-check text-green"></i>

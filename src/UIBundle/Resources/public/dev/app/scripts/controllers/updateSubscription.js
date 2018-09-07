@@ -28,6 +28,8 @@
             UPGRADE: 'upgrade',
             DOWNGRADE: 'downgrade'
         };
+        var YEARLY_MONTH_TEXT = 'Yearly bill total';
+        var MONTHLY_MONTH_TEXT = 'Monthly bill total';
 
         function flipActivityIndicator(activity) {
             vm.ui[activity] = !vm.ui[activity];
@@ -125,13 +127,64 @@
             return inclPrice.toFixed(2);
         }
 
+        function updateCantUpgrade(newVal) {
+            var cant = true;
+            if (newVal && newVal.length) {
+                var currentPlanPrice = $rootScope.user.plan.price;
+
+                newVal.forEach(function(plan) {
+                    if (cant && plan.price > currentPlanPrice) {
+                        cant = false;
+                    }
+                });
+            }
+            vm.cantMakeUpgrade = cant && vm.isUpgrade;
+        }
+
+        function registerWatchers() {
+            $scope.$watch(
+                function() {
+                    return vm.plans;
+                },
+                function(newVal) {
+                    updateCantUpgrade(newVal);
+                }
+            );
+            $scope.$watch(
+                function() {
+                    return vm.billingInformation.billingType;
+                },
+                function(newValue) {
+                    if (vm.selectedPlan && vm.selectedPlan.price) {
+                        if (newValue === 'monthly') {
+                            vm.exclTaxPrice = vm.selectedPlan.price;
+                            vm.ui.billText = MONTHLY_MONTH_TEXT;
+                        } else {
+                            vm.exclTaxPrice =
+                                vm.selectedPlan.price *
+                                (1 - vm.selectedPlan.discount / 100) *
+                                12;
+                            vm.ui.billText = YEARLY_MONTH_TEXT;
+                        }
+                        vm.inclTaxPrice = calculatePriceInclTax(
+                            vm.exclTaxPrice
+                        );
+                    }
+                }
+            );
+        }
+
         vm.onLoad = function() {
             vm = angular.extend(vm, {
                 moment: moment,
                 CONSTANTS: CONSTANTS,
-                ui: {},
+                ui: {
+                    billText: MONTHLY_MONTH_TEXT,
+                    isSaving:false,
+                    isLoading:false
+                },
                 billingInformation: {
-                    plan: {},
+                    plan: null,
                     card: {
                         name: $rootScope.user.name
                     },
@@ -149,25 +202,7 @@
             vm.shouldShowPlan = shouldShowPlan;
             vm.updateSubscription = updateSubscription;
             vm.loadPlans();
-
-            $scope.$watch(
-                function() {
-                    return vm.plans;
-                },
-                function(newVal) {
-                    var cant = true;
-                    if (newVal && newVal.length) {
-                        var currentPlanPrice = $rootScope.user.plan.price;
-
-                        newVal.forEach(function(plan) {
-                            if (cant && plan.price > currentPlanPrice) {
-                                cant = false;
-                            }
-                        });
-                    }
-                    vm.cantMakeUpgrade = cant && vm.isUpgrade;
-                }
-            );
+            registerWatchers();
         };
     }
 })(window.angular, window.moment);
