@@ -144,7 +144,7 @@
             vm = angular.extend(vm, {
                 user: angular.extend({}, $localStorage.user),
                 step: {
-                    number: 1,
+                    number: 2,
                     title: 'User Settings'
                 },
                 billingInformation: {

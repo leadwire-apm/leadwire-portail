@@ -251,5 +251,14 @@
                 }
             );
         };
+        service.updatePaymentMethod = function(cardInfo) {
+            var payload = angular.copy(cardInfo);
+            var expiryInfos = payload.expiry.split('/');
+            payload.expiryMonth = expiryInfos[0].trim();
+            payload.expiryYear = expiryInfos[1].trim();
+            delete payload.expiry;
+
+            return Account.editPaymentMethod(payload, $localStorage.user.id);
+        };
     }
 })(window.angular);

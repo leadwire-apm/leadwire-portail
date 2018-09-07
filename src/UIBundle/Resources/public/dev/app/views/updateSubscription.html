@@ -34,7 +34,7 @@
             </div>
             <div></div>
             <div class="text-center bg-default widget border border-primary"
-                 ng-if="user.plan.price==0 && ctrl.billingInformation.plan">
+                 ng-if="ctrl.billingInformation.plan && ctrl.selectedPlan.price > 0">
                 <div class="col-sm-6" data-ng-include="ASSETS_BASE_URL + 'views/billingEngagementChoices.html'"></div>
                 <div class="col-sm-6" ng-if="ctrl.exclTaxPrice"
                      data-ng-include="ASSETS_BASE_URL + 'views/billingTotals.html'"></div>

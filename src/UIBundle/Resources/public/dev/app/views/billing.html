@@ -13,8 +13,8 @@
                     </div>
                     <div class="pt5 text-muted small">
                         <ul class="details">
-                            <li>{{ctrl.selectedPlan.retention}} days<strong> Retention </strong></li>
-                            <li>{{ctrl.selectedPlan.maxTransactionPerDay}}<strong> Transaction/day </strong></li>
+                            <li>{{ctrl.selectedPlan.retention}} {{ctrl.selectedPlan.retention > 1 ? 'days' :'day'}} <strong> Retention </strong></li>
+                            <li>{{ctrl.selectedPlan.maxTransactionPerDay.toLocaleString()}}<strong> Transaction/day </strong></li>
                         </ul>
                     </div>
                 </div>

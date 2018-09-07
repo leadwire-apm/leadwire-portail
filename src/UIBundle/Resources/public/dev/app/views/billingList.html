@@ -1,9 +1,10 @@
 <div class="panel mb25" ng-init="ctrl.onLoad()">
     <div class="panel-heading border">
-        Billing List
+        Payment history
     </div>
     <div class="panel-body">
         <div class="mb25">
+            <a ng-if="user.plan.price >0" ui-sref="app.editPaymentMethod" class="btn btn-info pull-right ml15 mb25"> <i class="fa fa-pencil"></i> Edit payment method</a>
             <a  ui-sref="app.updateSubscription({action:'upgrade'})" class="btn btn-primary pull-right ml15 mb25"><i
                     class="fa fa-arrow-up"></i> Upgrade</a>
             <a ng-if="user.plan.price >0" ui-sref="app.updateSubscription({action:'downgrade'})" class="btn btn-danger pull-right ml15 mb25"><i
@@ -63,7 +64,7 @@
                     </td>
                 </tr>
                 <tr ng-if="!ctrl.invoices.length && !ctrl.ui.isLoading">
-                    <td colspan="5" class="text-center text-red">No invoices yet</td>
+                    <td colspan="5" class="text-center text-red">You have not made any payments.</td>
                 </tr>
                 <tr ng-repeat="invoice in ctrl.invoices">
                     <th class="text-center">
@@ -76,9 +77,10 @@
                     </th>
                     <th class="text-center">{{invoice.total/100 | currency:'€'}}</th>
                     <th class="text-center">
-                        <a href="{{invoice.invoice_pdf}}">
+                        <a ng-if="invoice.invoice_pdf" href="{{invoice.invoice_pdf}}">
                             <i class="fa fa-download"></i>
                         </a>
+                        <span ng-if="!invoice.invoice_pdf">-</span>
                     </th>
 
                 </tr>

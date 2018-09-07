@@ -35,6 +35,11 @@
                     CONFIG.BASE_URL + 'api/user/' + userId + '/subscribe',
                     body
                 );
+            },editPaymentMethod: function(cardInfo,userId) {
+                return $http.put(
+                    CONFIG.BASE_URL + 'api/user/' + userId + '/creditCard',
+                    cardInfo
+                );
             }
         };
     }
