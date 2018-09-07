@@ -87,8 +87,7 @@
 
         vm.validatePlan = function() {
             if (vm.selectedPlan.price == 0) {
-                toastr.success(MESSAGES_CONSTANTS.SUCCESS);
-                $modalInstance.close();
+                subscribe();
             } else {
                 vm.nextStep();
             }
@@ -102,33 +101,36 @@
             return true;
         };
 
-
         vm.validateBilling = function() {
             if (!vm.billingForm.$invalid) {
-                UserService.subscribe(vm.billingInformation, vm.user.id)
-                    .then(function(response) {
-                        if (response.status === 200) {
-                            toastr.success(MESSAGES_CONSTANTS.SUCCESS);
-                            $modalInstance.close();
-                        } else {
-                            if (
-                                response.data.error &&
-                                response.data.error.exception &&
-                                response.data.error.exception.length
-                            ) {
-                                toastr.error(
-                                    response.data.error.exception[0].message
-                                );
-                            } else {
-                                toastr.error(MESSAGES_CONSTANTS.ERROR);
-                            }
-                        }
-                    })
-                    .catch(function(error) {
-                        toastr.error(error.message);
-                    });
+                subscribe();
             }
         };
+
+        function subscribe() {
+            UserService.subscribe(vm.billingInformation)
+                .then(function(response) {
+                    if (response.status === 200) {
+                        toastr.success(MESSAGES_CONSTANTS.SUCCESS);
+                        $modalInstance.close();
+                    } else {
+                        if (
+                            response.data.error &&
+                            response.data.error.exception &&
+                            response.data.error.exception.length
+                        ) {
+                            toastr.error(
+                                response.data.error.exception[0].message
+                            );
+                        } else {
+                            toastr.error(MESSAGES_CONSTANTS.ERROR);
+                        }
+                    }
+                })
+                .catch(function(error) {
+                    toastr.error(error.message);
+                });
+        }
 
         function onLoad() {
             vm = angular.extend(vm, {
@@ -145,7 +147,7 @@
                     billText: MONTHLY_MONTH_TEXT
                 },
                 showCheckBoxes: true,
-                isAdding:true,
+                isAdding: true
             });
 
             $scope.$watch(
