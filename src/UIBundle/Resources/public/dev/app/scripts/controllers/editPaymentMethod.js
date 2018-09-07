@@ -24,13 +24,36 @@
         var vm = this;
 
         function validateBilling() {
+            vm.flipActivityIndicator('isSaving');
             UserService.updatePaymentMethod(vm.billingInformation.card)
                 .then(function(response) {
-                    console.log(response);
+                    vm.flipActivityIndicator('isSaving');
+                    if (response.status === 200) {
+                        toastr.success(MESSAGES_CONSTANTS.SUCCESS);
+                        $state.go('app.billingList');
+                    } else {
+                        handleError(response);
+                    }
                 })
                 .catch(function(error) {
-                    console.log(error);
+                    vm.flipActivityIndicator('isSaving');
+                    toastr.error(error.message);
                 });
+        }
+        function flipActivityIndicator(activity) {
+            vm.ui[activity] = !vm.ui[activity];
+        }
+        function handleError(response) {
+            if (
+                response.data &&
+                response.data.error &&
+                response.data.error.exception &&
+                response.data.error.exception.length
+            ) {
+                toastr.error(response.data.error.exception[0].message);
+            } else {
+                toastr.error(MESSAGES_CONSTANTS.ERROR);
+            }
         }
 
         vm.onLoad = function() {
@@ -47,6 +70,7 @@
                 }
             });
             vm.validateBilling = validateBilling;
+            vm.flipActivityIndicator = flipActivityIndicator;
         };
     }
 })(window.angular, window.moment);
