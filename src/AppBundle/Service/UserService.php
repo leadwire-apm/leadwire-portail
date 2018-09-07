@@ -131,32 +131,46 @@ class UserService
         $data = json_decode($data, true);
         $plan = $this->planService->getPlan($data['plan']);
         $token = null;
-        if (!$token) {
-            foreach ($plan->getPrices() as $pricingPlan) {
-                if ($pricingPlan->getName() == $data['billingType']) {
-                    $token = $pricingPlan->getToken();
-                }
-            }
-            $customer = $this->customerService->newCustomer($json, $data['card']);
-            $user->setCustomer($customer);
-            if ($customer) {
-                if ($subscriptionId = $this->subscriptionService->create(
-                    $token,
-                    $customer
-                )
-                ) {
-                    $user->setSubscriptionId($subscriptionId);
-                    $user->setPlan($plan);
-                    $this->userManager->update($user);
-                    return true;
+        if ($plan) {
+            if ($plan->getPrice() == 0) {
+                $this->subscriptionService->delete(
+                    $user->getSubscriptionId(),
+                    $user->getCustomer()->getGatewayToken()
+                );
+                $user->setPlan($plan);
+                $this->userManager->update($user);
+                return true;
+            } else {
+                if (!$token) {
+                    foreach ($plan->getPrices() as $pricingPlan) {
+                        if ($pricingPlan->getName() == $data['billingType']) {
+                            $token = $pricingPlan->getToken();
+                        }
+                    }
+                    $customer = $this->customerService->newCustomer($json, $data['card']);
+                    $user->setCustomer($customer);
+                    if ($customer) {
+                        if ($subscriptionId = $this->subscriptionService->create(
+                            $token,
+                            $customer
+                        )
+                        ) {
+                            $user->setSubscriptionId($subscriptionId);
+                            $user->setPlan($plan);
+                            $this->userManager->update($user);
+                            return true;
+                        } else {
+                            return false;
+                        }
+                    } else {
+                        return false;
+                    }
                 } else {
                     return false;
                 }
-            } else {
-                return false;
             }
         } else {
-            return false;
+            throw new \Exception("Plan Not found.");
         }
     }
 
@@ -201,11 +215,11 @@ class UserService
                     $this->userManager->update($user);
                     return $data;
                 } else {
-                    throw new \Exception("Plan was ot found");
+                    throw new \Exception("Plan was not found");
                 }
             }
         } else {
-            throw new \Exception("Plan was ot found");
+            throw new \Exception("Plan was not found");
         }
     }
 
