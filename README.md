@@ -56,7 +56,7 @@ This cmd should csv file. for help you can use
 
 ## Sending mail
 
-Sending mail is differed task. It can be has a cron (every minutes for example)
+Sending mail is deferred task. It can be a cron (every minutes for example)
 
 
 ```bin/console swiftmailer:spool:send --env=prod```
