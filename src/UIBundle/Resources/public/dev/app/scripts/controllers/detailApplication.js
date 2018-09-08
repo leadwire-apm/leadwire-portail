@@ -1,4 +1,4 @@
-(function(angular, swal) {
+(function(angular, swal, moment) {
     angular
         .module('leadwireApp')
         .controller('applicationDetailCtrl', [
@@ -17,17 +17,22 @@
         Invitation,
         $stateParams,
         $rootScope,
-        CONFIG,
+        CONSTANTS,
         toastr,
         MESSAGES_CONSTANTS
     ) {
         var vm = this;
+
         vm.getApp = function() {
             ApplicationFactory.get($stateParams.id).then(function(res) {
                 vm.app = res.data;
             });
         };
-        init();
+        vm.loadStats = function() {
+            ApplicationFactory.stats($stateParams.id).then(function(response) {
+                vm.appStats = response.data;
+            });
+        };
 
         vm.handleInviteUser = function() {
             var invitedEmails = vm.app.invitations.map(function(invitation) {
@@ -104,16 +109,22 @@
             vm.ui['isSaving' + suffix] = !vm.ui['isSaving' + suffix];
         };
 
-        function init() {
+        vm.onLoad = function() {
             $rootScope.currentNav = 'settings';
-            vm.ui = {
-                isSaving: false
-            };
-            vm.invitedUser = {
-                email: ''
-            };
-            vm.DOWNLOAD_URL = CONFIG.DOWNLOAD_URL;
+            vm = angular.extend(vm, {
+                ui: {
+                    isSaving: false
+                },
+                invitedUser: {
+                    email: ''
+                },
+                CONSTANTS: CONSTANTS,
+                moment: moment,
+                retention: $rootScope.user.plan.retention,
+                DOWNLOAD_URL: CONSTANTS.DOWNLOAD_URL
+            });
             vm.getApp();
-        }
+            vm.loadStats();
+        };
     }
-})(window.angular, window.swal);
+})(window.angular, window.swal, window.moment);

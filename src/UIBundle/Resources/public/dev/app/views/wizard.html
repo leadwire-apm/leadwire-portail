@@ -1,0 +1,11 @@
+<div class="panel mb25">
+    <div class="panel-heading">
+        Step {{ctrl.step.number}} : {{ctrl.step.title}}
+    </div>
+    <div ng-if="ctrl.step.number == 1" class="panel-body" data-ng-include="ASSETS_BASE_URL + 'views/profileForm.html'">
+    </div>
+    <div ng-if="ctrl.step.number == 2" class="panel-body" data-ng-include="ASSETS_BASE_URL + 'views/pricing.html'">
+    </div>
+    <div ng-if="ctrl.step.number == 3" class="panel-body" data-ng-include="ASSETS_BASE_URL + 'views/billing.html'">
+    </div>
+</div>

@@ -42,8 +42,6 @@
                             MESSAGES_CONSTANTS.ERROR
                     );
                 }
-                //console.log(response.data);
-
                 // $scope.$emit('new-application', vm.application);
             };
 

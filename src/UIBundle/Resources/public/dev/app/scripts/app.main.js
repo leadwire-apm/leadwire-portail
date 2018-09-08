@@ -1,7 +1,12 @@
 (function(angular) {
     angular
         .module('leadwireApp')
-        .run(function($rootScope, MenuFactory, $localStorage, CONFIG) {
+        .run(function(
+            $rootScope,
+            MenuFactory,
+            $localStorage,
+            CONFIG
+        ) {
             $rootScope.menus = $localStorage.currentMenu;
             $rootScope.applications = $localStorage.applications;
             $rootScope.dashboards = $localStorage.dashboards;
@@ -106,15 +111,11 @@
             $scope.isChangingContext = true;
             DashboardService.fetchDashboardsByAppId(app.id)
                 .then(function(response) {
-                    console.log(response)
-                    debugger;
-
                     $scope.isChangingContext = false;
                     $scope.selectedAppId = response.appId;
                     if (response.dashboards && response.dashboards.length) {
                         var firstDashboardLink =
                             '/dashboard/' + response.dashboards[0].id;
-                        debugger
                         $location.path(firstDashboardLink);
                     }
                     $scope.$apply();

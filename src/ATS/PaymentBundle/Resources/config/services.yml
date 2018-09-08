@@ -1,0 +1,29 @@
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+    public: true
+
+  ATS\PaymentBundle\:
+    resource: '../../*'
+    exclude: '../../{Document,Repository}'
+
+  ats_payment.customer_service:
+    class: ATS\PaymentBundle\Service\CustomerService
+    autowire: true
+
+  ats_payment.payment_service:
+    class: ATS\PaymentBundle\Service\PaymentService
+    autowire: true
+
+  ats_payment.gateway:
+    class: "ATS\\PaymentBundle\\Service\\GateWay"
+    autowire: false
+    arguments:
+      - "%payment_api_key%"
+      - "%secret_key%"
+      - "%providerName%"
+
+  ATS\PaymentBundle\Service\GateWay: "@ats_payment.gateway"
+
+

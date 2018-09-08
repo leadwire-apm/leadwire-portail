@@ -24,11 +24,12 @@
         var service = this;
         var sep = '###';
 
-        service.setProfile = function() {
+        service.setProfile = function(force) {
             return new Promise(function(resolve, reject) {
                 if (
                     angular.isUndefined($localStorage.user) ||
-                    $localStorage.user === null
+                    $localStorage.user === null ||
+                    force
                 ) {
                     Account.getProfile()
                         .then(function(response) {
@@ -167,29 +168,97 @@
             return updatedInfo;
         };
 
+        service.subscribe = function(billingInfo) {
+            var payload = angular.copy(billingInfo);
+            if (payload.card && payload.card.expiry) {
+                var expiryInfos = payload.card.expiry.split('/');
+                payload.card.expiryMonth = expiryInfos[0].trim();
+                payload.card.expiryYear = expiryInfos[1].trim();
+                delete payload.card.expiry;
+            } else {
+                delete payload.card;
+            }
+
+            return Account.subscribe(payload, $localStorage.user.id);
+        };
+
         service.handleFirstLogin = function() {
             var connectedUser = angular.extend({}, $localStorage.user);
-            if (!connectedUser || !connectedUser.email) {
+            // var connectedUser = {id:'sa'};
+            if (
+                connectedUser.id &&
+                (!connectedUser.email || !connectedUser.plan)
+            ) {
                 $ocLazyLoad
                     .load({
-                        name: 'sbAdminApp',
+                        insertBefore: '#load_styles_before',
                         files: [
                             $rootScope.ASSETS_BASE_URL +
-                                'scripts/controllers/profileModal.js'
+                                'vendor/chosen_v1.4.0/chosen.min.css',
+                            $rootScope.ASSETS_BASE_URL +
+                                'vendor/chosen_v1.4.0/chosen.jquery.min.js',
+                            $rootScope.ASSETS_BASE_URL +
+                                'vendor/card/lib/js/jquery.card.js',
+                            $rootScope.ASSETS_BASE_URL +
+                                'vendor/jquery-validation/dist/jquery.validate.min.js',
+                            $rootScope.ASSETS_BASE_URL +
+                                'vendor/twitter-bootstrap-wizard/jquery.bootstrap.wizard.min.js'
                         ]
                     })
                     .then(function() {
-                        $modal.open({
-                            ariaLabelledBy: 'User-form',
-                            ariaDescribedBy: 'User-form',
-                            templateUrl:
-                                $rootScope.ASSETS_BASE_URL +
-                                'views/profile.html',
-                            controller: 'profileModalCtrl',
-                            controllerAs: 'ctrl'
-                        });
+                        $ocLazyLoad
+                            .load({
+                                name: 'sbAdminApp',
+                                files: [
+                                    $rootScope.ASSETS_BASE_URL +
+                                        'scripts/controllers/profileModal.js'
+                                ]
+                            })
+                            .then(function() {
+                                $modal.open({
+                                    ariaLabelledBy: 'User-form',
+                                    size: 'lg',
+                                    keyboard: false,
+                                    backdrop: 'static',
+                                    ariaDescribedBy: 'User-form',
+                                    templateUrl:
+                                        $rootScope.ASSETS_BASE_URL +
+                                        'views/wizard.html',
+                                    controller: 'profileModalCtrl',
+                                    controllerAs: 'ctrl'
+                                });
+                            });
                     });
             }
+        };
+
+        service.getInvoices = function() {
+            return Account.invoices($localStorage.user.id);
+        };
+        service.getSubscription = function() {
+            return Account.subscription($localStorage.user.id);
+        };
+        service.updateSubscription = function(body) {
+            return Account.updateSubscription(body, $localStorage.user.id).then(
+                function(updateResponse) {
+                    if (updateResponse.status === 200) {
+                        return service.setProfile(true).then(function() {
+                            return updateResponse;
+                        });
+                    } else {
+                        return updateResponse;
+                    }
+                }
+            );
+        };
+        service.updatePaymentMethod = function(cardInfo) {
+            var payload = angular.copy(cardInfo);
+            var expiryInfos = payload.expiry.split('/');
+            payload.expiryMonth = expiryInfos[0].trim();
+            payload.expiryYear = expiryInfos[1].trim();
+            delete payload.expiry;
+
+            return Account.editPaymentMethod(payload, $localStorage.user.id);
         };
     }
 })(window.angular);

@@ -5,6 +5,7 @@ namespace AppBundle\Controller\Rest;
 use AppBundle\Service\AuthService;
 use AppBundle\Service\ElasticSearch;
 use AppBundle\Service\LdapService;
+use AppBundle\Service\StatService;
 use AppBundle\Service\UserService;
 use ATS\CoreBundle\Controller\Rest\BaseRestController;
 use FOS\RestBundle\Controller\Annotations\Route;
@@ -57,6 +58,29 @@ class AppController extends BaseRestController
         }
     }
 
+    /**
+     * @Route("/{id}/stats", methods="GET")
+     *
+     * @param StatService $statService
+     * @param AppService $appService
+     * @param string  $id
+     *
+     * @return Response
+     */
+    public function getStatsAction(StatService $statService, AppService $appService, $id)
+    {
+        $app = $appService->getApp($id);
+
+        if (!$app) {
+            throw new HttpException(404);
+        }
+
+        return $this->prepareJsonResponse(
+            $statService->getStats(['app' => $app]),
+            200,
+            "Default"
+        );
+    }
 
     /**
      * @Route("/{id}/activate", methods="POST")

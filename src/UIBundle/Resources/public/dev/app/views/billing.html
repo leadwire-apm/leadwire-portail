@@ -1,0 +1,53 @@
+<div class="row no-margin">
+    <div class="col-lg-12">
+        <div class="row">
+            <div class="col-sm-6 mb25">
+                <div class="widget bg-dark-dark" style="border-radius: 2px">
+                    <div class="text-info h5 mt0 mb0">Selected plan</div>
+                    <div class="small text-uppercase">{{ctrl.selectedPlan.name}}</div>
+                    <div class="absolute tp rt pt15 pr15">
+                        <div class="text-success">
+                            <span>{{ctrl.selectedPlan.price}} €</span> (excl tax)
+                        </div>
+                        <div class="small">/month</div>
+                    </div>
+                    <div class="pt5 text-muted small">
+                        <ul class="details">
+                            <li>{{ctrl.selectedPlan.retention}} {{ctrl.selectedPlan.retention > 1 ? 'days' :'day'}} <strong> Retention </strong></li>
+                            <li>{{ctrl.selectedPlan.maxTransactionPerDay.toLocaleString()}}<strong> Transaction/day </strong></li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-sm-6 mb25">
+                <div class="text-center" data-ng-include="ASSETS_BASE_URL + 'views/billingEngagementChoices.html'">
+                </div>
+                <hr>
+                <div data-ng-include="ASSETS_BASE_URL + 'views/billingTotals.html'">
+                </div>
+            </div>
+
+        </div>
+        <hr>
+        <form class="form-horizontal bordered-group" name="ctrl.billingForm" ng-submit="ctrl.validateBilling()"
+              role="form"
+        >
+
+            <div class="row" data-ng-include="ASSETS_BASE_URL + 'views/billingForm.html'">
+            </div>
+            <div class="row mt25">
+                <button type="button" class="btn btn-primary pull-right ml15"
+                        ng-disabled="ctrl.billingForm.$invalid || ctrl.ui.isSaving"
+                        data-ng-click="ctrl.validateBilling()">
+                    <spinner is-loading="ctrl.ui.isSaving"></spinner>
+                    Validate
+
+                </button>
+                <button type="button" class="btn btn-primary pull-right ml15" data-ng-click="ctrl.previousStep()">
+                    Previous
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

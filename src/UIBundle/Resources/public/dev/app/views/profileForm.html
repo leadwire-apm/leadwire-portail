@@ -1,0 +1,146 @@
+<div class="row no-margin">
+    <div class="col-lg-12">
+        <form class="form-horizontal bordered-group" name="ctrl.userForm" ng-submit="ctrl.save()" role="form">
+            <div class="form-group">
+                <label class="col-sm-2 control-label" for="login">Login</label>
+                <div class="col-sm-10">
+                    <input type="text" id="login" class="form-control" ng-model="ctrl.user.username" disabled>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label" for="name">Full Name *</label>
+                <div class="col-sm-10">
+                    <input type="text" id="name" name="name" class="form-control" ng-model="ctrl.user.name"
+                           required>
+                    <span class="text-red"
+                          ng-show="ctrl.userForm.name.$error.required && !ctrl.userForm.name.$pristine">This field is required</span>
+
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Email *</label>
+                <div class="col-sm-10">
+                    <input type="email" class="form-control" autocomplete='email' ng-model="ctrl.user.email"
+                           name="email" placeholder="Your Email" required>
+                    <span class="text-red"
+                          ng-show="ctrl.userForm.email.$error.required && !ctrl.userForm.email.$pristine">This field is required</span>
+                    <span class="text-red"
+                          ng-show="ctrl.userForm.email.$error.email && !ctrl.userForm.email.$pristine">This field should be a valid email</span>
+
+                </div>
+
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Company</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" placeholder="Company" ng-model="ctrl.user.company">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Phone</label>
+                <div class="col-sm-2">
+
+                    <!--ng-options="country.phoneCode for country in ctrl.countries track by country.alpha2Code"-->
+
+                    <select name="phoneCode" class="form-control"
+                            ng-init="ctrl._user={phoneCode:ctrl.user.phoneCode}"
+                            ng-change="ctrl.user.phoneCode = ctrl._user.phoneCode"
+                            ng-model="ctrl._user"
+                            ng-options="country.alpha2Code+ ' +' +country.phoneCode for country in countries track by country.phoneCode"
+                            data-ng-disabled="!countries.length"
+                    >
+                        <option value="">Choose one</option>
+                    </select>
+                </div>
+                <div class="col-sm-8">
+                    <input type="tel" name="contact" class="form-control" placeholder="Your phone number"
+                           ng-model="ctrl.user.contact">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label" for="contactPreference">Contact preference *</label>
+                <div class="col-sm-10">
+                    <select id="contactPreference" name="contactPreference" class="form-control"
+                            ng-model="ctrl.user.contactPreference" required>
+                        <option>Email</option>
+                        <option>Phone</option>
+                    </select>
+                    <span class="text-red"
+                          ng-show="ctrl.userForm.contactPreference.$error.required && !ctrl.userForm.contactPreference.$pristine">This field is required</span>
+
+                </div>
+            </div>
+            <div class="form-group">
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Avatar</label>
+                    <div class="col-sm-6">
+                        <input type="file" file-model="ctrl.avatar">
+                    </div>
+                    <div class="col-sm-2">
+                        <img http-src="{{ctrl.user.avatar}}"
+                             class="m-r--30 pull-right" width="50" height="50" alt="{{ctrl.user.name}}"
+                             title="{{ctrl.user.name}}"></div>
+                </div>
+            </div>
+
+            <div class="form-group" ng-if="!ctrl.showCheckBoxes">
+                <label class="col-sm-2 control-label" for="defaultApp">Default Application</label>
+                <div class="col-sm-10">
+                    <select id="defaultApp" name="defaultApp" class="form-control"
+                            ng-init="ctrl._application={id:ctrl.user.defaultApp.id}"
+                            ng-change="ctrl.user.defaultApp.id = ctrl._application.id"
+                            ng-model="ctrl._application"
+                            ng-options="application.name for application in applications track by application.id"
+                    >
+                        <option value=""></option>
+                    </select>
+                    <span class="text-red"
+                          ng-show="ctrl.userForm.defaultApp.$error.required && !ctrl.userForm.defaultApp.$pristine">This field is required</span>
+
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">I accept</label>
+                <div class="col-sm-10">
+
+                    <div class="checkbox" ng-if="ctrl.showCheckBoxes">
+                        <label>
+                            <input name="TOC" type="checkbox" required> Terms of contract
+                            <a
+                                    ui-sref="static.termsOfContacts"
+                                    target="_blank" class="btn-link"><i
+                                    class="fa fa-external-link"></i></a>
+                        </label>
+                        <span class="text-red"
+                              ng-show="ctrl.userForm.TOC.$error.required && !ctrl.userForm.TOC.$pristine">This field is required</span>
+
+                    </div>
+
+                    <div class="checkbox" ng-if="ctrl.showCheckBoxes">
+                        <label>
+                            <input name="TOS" type="checkbox" required> Terms of service
+                            <a ui-sref="static.termsOfService"
+                               target="_blank" class="btn-link"><i
+                                    class="fa fa-external-link"></i></a>
+                        </label>
+                        <span class="text-red"
+                              ng-show="ctrl.userForm.TOS.$error.required && !ctrl.userForm.TOS.$pristine">This field is required</span>
+
+                    </div>
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" ng-model="ctrl.user.acceptNewsLetter">Newsletter
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <button data-ng-disabled="!ctrl.userForm.$valid" type="submit" class="btn btn-primary pull-right">Save</button>
+        </form>
+    </div>
+</div>

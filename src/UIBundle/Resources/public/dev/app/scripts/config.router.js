@@ -157,8 +157,15 @@ angular
                             '$ocLazyLoad',
                             '$rootScope',
                             'MenuFactory',
-                            function($ocLazyLoad, $rootScope, MenuFactory) {
+                            'UserService',
+                            function(
+                                $ocLazyLoad,
+                                $rootScope,
+                                MenuFactory,
+                                UserService
+                            ) {
                                 $rootScope.menus = MenuFactory.get('SETTINGS');
+                                UserService.handleFirstLogin();
 
                                 return $ocLazyLoad.load({
                                     name: 'sbAdminApp',
@@ -211,6 +218,111 @@ angular
                     controller: 'applicationEditCtrl',
                     controllerAs: 'ctrl'
                 })
+                .state('app.billingList', {
+                    url: '/billing/list',
+                    templateUrl:
+                        CONFIG.ASSETS_BASE_URL + 'views/billingList.html',
+                    controller: 'billingListCtrl',
+                    controllerAs: 'ctrl',
+                    resolve: {
+                        loginRequired: loginRequired,
+                        deps: [
+                            '$ocLazyLoad',
+                            '$rootScope',
+                            'MenuFactory',
+                            function($ocLazyLoad, $rootScope, MenuFactory) {
+                                $rootScope.menus = MenuFactory.get('SETTINGS');
+
+                                return $ocLazyLoad.load(
+                                    CONFIG.ASSETS_BASE_URL +
+                                        'scripts/controllers/billingList.js'
+                                );
+                            }
+                        ]
+                    }
+                })
+                .state('app.editPaymentMethod', {
+                    url: '/payment/edit',
+                    templateUrl:
+                        CONFIG.ASSETS_BASE_URL + 'views/editPaymentMethod.html',
+                    controller: 'editPaymentMethodCtrl',
+                    controllerAs: 'ctrl',
+                    resolve: {
+                        loginRequired: loginRequired,
+                        deps: [
+                            '$ocLazyLoad',
+                            '$rootScope',
+                            'MenuFactory',
+                            function($ocLazyLoad, $rootScope, MenuFactory) {
+                                $rootScope.menus = MenuFactory.get('SETTINGS');
+
+                                return $ocLazyLoad
+                                    .load({
+                                        insertBefore: '#load_styles_before',
+                                        files: [
+                                            $rootScope.ASSETS_BASE_URL +
+                                                'vendor/chosen_v1.4.0/chosen.min.css',
+                                            $rootScope.ASSETS_BASE_URL +
+                                                'vendor/chosen_v1.4.0/chosen.jquery.min.js',
+                                            $rootScope.ASSETS_BASE_URL +
+                                                'vendor/card/lib/js/jquery.card.js',
+                                            $rootScope.ASSETS_BASE_URL +
+                                                'vendor/jquery-validation/dist/jquery.validate.min.js',
+                                            $rootScope.ASSETS_BASE_URL +
+                                                'vendor/twitter-bootstrap-wizard/jquery.bootstrap.wizard.min.js'
+                                        ]
+                                    })
+                                    .then(function() {
+                                        return $ocLazyLoad.load(
+                                            CONFIG.ASSETS_BASE_URL +
+                                                'scripts/controllers/editPaymentMethod.js'
+                                        );
+                                    });
+                            }
+                        ]
+                    }
+                })
+                .state('app.updateSubscription', {
+                    url: '/subscription/{action}',
+                    templateUrl:
+                        CONFIG.ASSETS_BASE_URL +
+                        'views/updateSubscription.html',
+                    controller: 'updateSubscriptionCtrl',
+                    controllerAs: 'ctrl',
+                    resolve: {
+                        loginRequired: loginRequired,
+                        deps: [
+                            '$ocLazyLoad',
+                            '$rootScope',
+                            'MenuFactory',
+                            function($ocLazyLoad, $rootScope, MenuFactory) {
+                                $rootScope.menus = MenuFactory.get('SETTINGS');
+                                return $ocLazyLoad
+                                    .load({
+                                        insertBefore: '#load_styles_before',
+                                        files: [
+                                            $rootScope.ASSETS_BASE_URL +
+                                                'vendor/chosen_v1.4.0/chosen.min.css',
+                                            $rootScope.ASSETS_BASE_URL +
+                                                'vendor/chosen_v1.4.0/chosen.jquery.min.js',
+                                            $rootScope.ASSETS_BASE_URL +
+                                                'vendor/card/lib/js/jquery.card.js',
+                                            $rootScope.ASSETS_BASE_URL +
+                                                'vendor/jquery-validation/dist/jquery.validate.min.js',
+                                            $rootScope.ASSETS_BASE_URL +
+                                                'vendor/twitter-bootstrap-wizard/jquery.bootstrap.wizard.min.js'
+                                        ]
+                                    })
+                                    .then(function() {
+                                        return $ocLazyLoad.load(
+                                            CONFIG.ASSETS_BASE_URL +
+                                                'scripts/controllers/updateSubscription.js'
+                                        );
+                                    });
+                            }
+                        ]
+                    }
+                })
                 .state('app.dashboard', {
                     abstract: true
                 })
@@ -220,56 +332,65 @@ angular
                         CONFIG.ASSETS_BASE_URL + 'views/dashboard.html',
                     resolve: {
                         loginRequired: loginRequired,
-                        deps: function(
-                            $ocLazyLoad,
-                            MenuFactory,
-                            $rootScope,
-                            $localStorage
-                        ) {
-                            $rootScope.menus = $localStorage.currentMenu;
-                            return $ocLazyLoad
-                                .load([
-                                    {
-                                        insertBefore: '#load_styles_before',
-                                        files: [
+                        deps: [
+                            '$ocLazyLoad',
+                            'MenuFactory',
+                            '$rootScope',
+                            '$localStorage',
+                            'UserService',
+                            function(
+                                $ocLazyLoad,
+                                MenuFactory,
+                                $rootScope,
+                                $localStorage,
+                                UserService
+                            ) {
+                                $rootScope.menus = $localStorage.currentMenu;
+                                UserService.handleFirstLogin();
+                                return $ocLazyLoad
+                                    .load([
+                                        {
+                                            insertBefore: '#load_styles_before',
+                                            files: [
+                                                CONFIG.ASSETS_BASE_URL +
+                                                    'styles/climacons-font.css',
+                                                CONFIG.ASSETS_BASE_URL +
+                                                    'vendor/rickshaw/rickshaw.min.css'
+                                            ]
+                                        },
+                                        {
+                                            serie: true,
+                                            files: [
+                                                CONFIG.ASSETS_BASE_URL +
+                                                    'vendor/d3/d3.min.js',
+                                                CONFIG.ASSETS_BASE_URL +
+                                                    'vendor/rickshaw/rickshaw.min.js',
+                                                CONFIG.ASSETS_BASE_URL +
+                                                    'vendor/flot/jquery.flot.js',
+                                                CONFIG.ASSETS_BASE_URL +
+                                                    'vendor/flot/jquery.flot.resize.js',
+                                                CONFIG.ASSETS_BASE_URL +
+                                                    'vendor/flot/jquery.flot.pie.js',
+                                                CONFIG.ASSETS_BASE_URL +
+                                                    'vendor/flot/jquery.flot.categories.js'
+                                            ]
+                                        },
+                                        {
+                                            name: 'angular-flot',
+                                            files: [
+                                                CONFIG.ASSETS_BASE_URL +
+                                                    'vendor/angular-flot/angular-flot.js'
+                                            ]
+                                        }
+                                    ])
+                                    .then(function() {
+                                        return $ocLazyLoad.load(
                                             CONFIG.ASSETS_BASE_URL +
-                                                'styles/climacons-font.css',
-                                            CONFIG.ASSETS_BASE_URL +
-                                                'vendor/rickshaw/rickshaw.min.css'
-                                        ]
-                                    },
-                                    {
-                                        serie: true,
-                                        files: [
-                                            CONFIG.ASSETS_BASE_URL +
-                                                'vendor/d3/d3.min.js',
-                                            CONFIG.ASSETS_BASE_URL +
-                                                'vendor/rickshaw/rickshaw.min.js',
-                                            CONFIG.ASSETS_BASE_URL +
-                                                'vendor/flot/jquery.flot.js',
-                                            CONFIG.ASSETS_BASE_URL +
-                                                'vendor/flot/jquery.flot.resize.js',
-                                            CONFIG.ASSETS_BASE_URL +
-                                                'vendor/flot/jquery.flot.pie.js',
-                                            CONFIG.ASSETS_BASE_URL +
-                                                'vendor/flot/jquery.flot.categories.js'
-                                        ]
-                                    },
-                                    {
-                                        name: 'angular-flot',
-                                        files: [
-                                            CONFIG.ASSETS_BASE_URL +
-                                                'vendor/angular-flot/angular-flot.js'
-                                        ]
-                                    }
-                                ])
-                                .then(function() {
-                                    return $ocLazyLoad.load(
-                                        CONFIG.ASSETS_BASE_URL +
-                                            'scripts/controllers/dashboard.js'
-                                    );
-                                });
-                        }
+                                                'scripts/controllers/dashboard.js'
+                                        );
+                                    });
+                            }
+                        ]
                     },
                     controller: 'dashboardCtrl',
                     controllerAs: 'ctrl'

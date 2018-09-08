@@ -4,6 +4,9 @@ namespace AppBundle\Service;
 
 use ATS\EmailBundle\Document\Email;
 use ATS\EmailBundle\Service\SimpleMailerService;
+use ATS\PaymentBundle\Service\CustomerService;
+use ATS\PaymentBundle\Service\Subscription;
+use ATS\PaymentBundle\Service\PlanService;
 use Psr\Log\LoggerInterface;
 use JMS\Serializer\SerializerInterface;
 use AppBundle\Manager\UserManager;
@@ -49,6 +52,21 @@ class UserService
     private $sender;
 
     /**
+     * @var CustomerService
+     */
+    private $customerService;
+
+    /**
+     * @var Subscription
+     */
+    private $subscriptionService;
+
+    /**
+     * @var PlanService
+     */
+    private $planService;
+
+    /**
      * Constructor
      *
      * @param UserManager $userManager
@@ -56,6 +74,10 @@ class UserService
      * @param LoggerInterface $logger
      * @param SimpleMailerService $mailer
      * @param Router $router
+     * @param ContainerInterface $container
+     * @param CustomerService $customerService
+     * @param Subscription $subscriptionService
+     * @param PlanService $planService
      */
     public function __construct(
         UserManager $userManager,
@@ -63,7 +85,10 @@ class UserService
         LoggerInterface $logger,
         SimpleMailerService $mailer,
         Router $router,
-        ContainerInterface $container
+        ContainerInterface $container,
+        CustomerService $customerService,
+        Subscription $subscriptionService,
+        PlanService $planService
     ) {
         $this->userManager = $userManager;
         $this->serializer = $serializer;
@@ -71,6 +96,9 @@ class UserService
         $this->mailer = $mailer;
         $this->router = $router;
         $this->sender = $container->getParameter('sender');
+        $this->customerService = $customerService;
+        $this->subscriptionService = $subscriptionService;
+        $this->planService = $planService;
     }
 
     /**
@@ -97,6 +125,121 @@ class UserService
         return $this->userManager->paginate($criteria, $pageNumber, $itemsPerPage);
     }
 
+    public function subscribe($data, User $user)
+    {
+        $json = json_encode(["name" => $user->getName(), "email" => $user->getEmail()]);
+        $data = json_decode($data, true);
+        $plan = $this->planService->getPlan($data['plan']);
+        $token = null;
+        if ($plan) {
+            if ($plan->getPrice() == 0) {
+                if ($user->getSubscriptionId()) {
+                    $this->subscriptionService->delete(
+                        $user->getSubscriptionId(),
+                        $user->getCustomer()->getGatewayToken()
+                    );
+                }
+                $user->setPlan($plan);
+                $this->userManager->update($user);
+                return true;
+            } else {
+                if (!$token) {
+                    foreach ($plan->getPrices() as $pricingPlan) {
+                        if ($pricingPlan->getName() == $data['billingType']) {
+                            $token = $pricingPlan->getToken();
+                        }
+                    }
+
+                    $customer = $this->customerService->newCustomer($json, $data['card']);
+
+                    $user->setCustomer($customer);
+                    if ($customer) {
+                        if ($subscriptionId = $this->subscriptionService->create(
+                            $token,
+                            $customer
+                        )
+                        ) {
+                            $user->setSubscriptionId($subscriptionId);
+                            $user->setPlan($plan);
+                            $this->userManager->update($user);
+                            return true;
+                        } else {
+                            return false;
+                        }
+                    } else {
+                        return false;
+                    }
+                } else {
+                    return false;
+                }
+            }
+        } else {
+            throw new \Exception("Plan Not found.");
+        }
+    }
+
+    public function getSubscription(User $user)
+    {
+        if ($user->getSubscriptionId() && $user->getCustomer()) {
+            return $this->subscriptionService->get($user->getSubscriptionId(), $user->getCustomer());
+        } else {
+            return [];
+        }
+    }
+
+    public function getInvoices(User $user)
+    {
+        if ($user->getCustomer()) {
+            return $this->customerService->getInvoices($user->getCustomer()->getGatewayToken());
+        } else {
+            return [];
+        }
+    }
+
+    public function updateSubscription(User $user, $data)
+    {
+        $plan = $this->planService->getPlan($data['plan']);
+        $token = false;
+
+        if ($plan) {
+            if ($plan->getPrice() == 0) {
+                $this->subscriptionService->delete(
+                    $user->getSubscriptionId(),
+                    $user->getCustomer()->getGatewayToken()
+                );
+                $user->setPlan($plan);
+                $this->userManager->update($user);
+                return true;
+            } else {
+                foreach ($plan->getPrices() as $billingType) {
+                    if ($billingType->getName() == $data['billingType']) {
+                        $token = $billingType->getToken();
+                    }
+                }
+
+                if (is_string($token)) {
+                    $data = $this->subscriptionService->update(
+                        $user->getCustomer()->getGatewayToken(),
+                        $user->getSubscriptionId(),
+                        $token
+                    );
+                    $user->setPlan($plan);
+                    $this->userManager->update($user);
+                    return $data;
+                } else {
+                    throw new \Exception("Plan was not found");
+                }
+            }
+        } else {
+            throw new \Exception("Plan was not found");
+        }
+    }
+
+    public function updateCreditCard(User $user, $data)
+    {
+        return $this->customerService->updateCard($user->getCustomer(), $data);
+    }
+
     /**
      * Get a specific user
      *
@@ -106,7 +249,7 @@ class UserService
      */
     public function getUser($id)
     {
-         return $this->userManager->getOneBy(['id' => $id]);
+        return $this->userManager->getOneBy(['id' => $id]);
     }
 
     /**
@@ -118,7 +261,7 @@ class UserService
      */
     public function getUsers(array $criteria = [])
     {
-         return $this->userManager->getBy($criteria);
+        return $this->userManager->getBy($criteria);
     }
 
     /**
@@ -131,8 +274,8 @@ class UserService
     public function newUser($json)
     {
         $user = $this
-                ->serializer
-                ->deserialize($json, User::class, 'json');
+            ->serializer
+            ->deserialize($json, User::class, 'json');
 
         return $this->updateUser($json);
     }
@@ -175,17 +318,17 @@ class UserService
      */
     public function deleteUser($id)
     {
-         $this->userManager->deleteById($id);
+        $this->userManager->deleteById($id);
     }
 
-     /**
-      * Performs a full text search on  User
-      *
-      * @param string $term
-      * @param string $lang
-      *
-      * @return array
-      */
+    /**
+     * Performs a full text search on  User
+     *
+     * @param string $term
+     * @param string $lang
+     *
+     * @return array
+     */
     public function textSearch($term, $lang)
     {
         return $this->userManager->textSearch($term, $lang);
@@ -219,7 +362,7 @@ class UserService
                 'username' => $user->getUsername(),
                 'email' => $user->getEmail(),
                 'link' => $this->router->generate('verify_email', ['email' => $user->getEmail()], UrlGeneratorInterface::ABSOLUTE_URL)
-                ]);
+            ]);
         $this->mailer->send($mail, false);
     }
 }

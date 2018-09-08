@@ -68,13 +68,18 @@
         }
 
         function handleLoginSuccess(provider) {
-            return function(dashboardId) {
+            return function(response) {
                 toastr.success(MESSAGES_CONSTANTS.LOGIN_SUCCESS(provider));
                 $location.search({});
                 vm.isChecking = false;
-                if (dashboardId !== null) {
+                if (
+                    response &&
+                    response.dashboards &&
+                    response.dashboards &&
+                    response.dashboards.length
+                ) {
                     $state.go('app.dashboard.home', {
-                        id: dashboardId
+                        id: response.dashboards[0].id
                     });
                 } else {
                     $state.go('app.applicationsList');
@@ -142,7 +147,6 @@
 
         function onLoad() {
             if ($auth.isAuthenticated()) {
-                console.log('Connected User', $localStorage.user);
                 if (invitationId !== undefined && $localStorage.user) {
                     InvitationService.acceptInvitation(
                         invitationId,
@@ -152,7 +156,10 @@
                             toastr.success(
                                 MESSAGES_CONSTANTS.INVITATION_ACCEPTED
                             );
-                        ($localStorage.applications || ($localStorage.applications = [])).push(app);
+                            (
+                                $localStorage.applications ||
+                                ($localStorage.applications = [])
+                            ).push(app);
                             $state.go('app.applicationsList');
                         })
                         .catch(function(error) {

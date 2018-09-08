@@ -40,13 +40,17 @@ angular
         ASSETS_BASE_URL: '/', // PROD BECOME : bundles/ui/app/
         UPLOAD_URL: 'http://localhost:9000/uploads/',
         DOWNLOAD_URL: 'http://localhost:9000/core/api/resource/',
-        SWEETALERT_DANGER_MODE: {},
-        GITHUB_CLIENT_ID: '094c2b7f0e14da4d0ca8' /*local*/
+        GITHUB_CLIENT_ID: '094c2b7f0e14da4d0ca8' /*local*/,
         //'GITHUB_CLIENT_ID': '5ae68ff984489a4ed647' /*prod*/
         //'GITHUB_CLIENT_ID': 'a5b3aee9593a1aaa5046', /*test*/
+        DATE_DEFAULT_FORMAT: 'YYYY-MM-DD[T]HH:mm:ssZZ',
+        EN_DATE_FORMAT: 'YYYY-DD-MM',
+        FR_DATE_FORMAT: 'DD-MM-YYYY',
+        TAX: 20
     })
     .constant('MESSAGES_CONSTANTS', {
         ERROR: 'Something went wrong,please try again.',
+        SUCCESS: 'Operation successfully completed\n.',
         EDIT_APP_SUCCESS: 'Your app has been updated successfully.',
         ACTIVATE_APP_SUCCESS: 'Your app has been activated successfully.',
         ACTIVATE_APP_FAILURE:
@@ -61,5 +65,12 @@ angular
         LOGIN_SUCCESS: function(provider) {
             return 'You have successfully signed in with ' + provider;
         },
-        LOGOUT_SUCCESS: 'You have been logged out.'
+        LOGOUT_SUCCESS: 'You have been logged out.',
+        SWEET_ALERT_DELETE_MODE: {
+            title: 'Are you sure?',
+            text: 'Once deleted, you will not be able to recover this App!',
+            icon: 'warning',
+            buttons: true,
+            dangerMode: true
+        }
     });
