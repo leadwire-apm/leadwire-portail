@@ -43,3 +43,20 @@ The command should ask at the end for the parameters of the instances (Database,
 * Update parameters in `src/UIBundle/Resources/public/dev/app/scripts/app.js`
 * Go root directory
 * ```bin/console leadwire:install```
+
+# CLI cmd
+
+## Import Stats
+
+```bin/console leadwire:import:stats <file>```
+
+This cmd should csv file. for help you can use 
+
+```bin/console leadwire:import:stats --help```
+
+## Sending mail
+
+Sending mail is deferred task. It can be a cron (every minutes for example)
+
+
+```bin/console swiftmailer:spool:send --env=prod```

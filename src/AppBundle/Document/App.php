@@ -33,7 +33,7 @@ class App
      * @var string
      *
      * @ODM\Field(type="string", name="uuid")
-     * @ODM\Index(unique=true)
+     * @ODM\UniqueIndex()
      * @JMS\Type("string")
      * @JMS\Expose
      * @JMS\Groups({"Default"})
@@ -44,6 +44,7 @@ class App
      * @var string
      *
      * @ODM\Field(type="string", name="name")
+     * @ODM\UniqueIndex()
      * @Assert\Length(min=5, max=32)
      * @JMS\Type("string")
      * @JMS\Expose

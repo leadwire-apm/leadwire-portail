@@ -36,10 +36,14 @@ class LdapService
         $this->logger = $logger;
     }
 
-    public function createLdapUserEntry(string $uuid)
+    /**
+     * Create Ldap entry on User Creation
+     * @param string $uuid
+     */
+    public function createUserEntry(string $uuid)
     {
         $entry = new Entry(
-            "cn=$uuid,ou=People,dc=leadwire,dc=io",
+            "cn=user_$uuid,ou=People,dc=leadwire,dc=io",
             [
                 'gidNumber' => '5',
                 'objectClass' => ['posixGroup', 'top'],
@@ -49,29 +53,29 @@ class LdapService
         $this->saveEntry($entry);
     }
 
-    public function createLdapAppEntry(string $uuid, string $appUuid)
+    public function createAppEntry(string $uuid, string $appUuid)
     {
 
         $entry = new Entry(
-            "cn=$appUuid,ou=Group,dc=leadwire,dc=io",
+            "cn=app_$appUuid,ou=Group,dc=leadwire,dc=io",
             [
-                'cn' => 'app_' . $appUuid,
+                'cn' => 'shared_' . $appUuid,
                 'objectClass' => ['groupofnames'],
-                'member' => "cn=$uuid,ou=People,dc=leadwire,dc=io"
+                'member' => "cn=user_$uuid,ou=People,dc=leadwire,dc=io"
             ]
         );
         return $this->saveEntry($entry);
     }
 
-    public function createLdapInvitationEntry(Invitation $invitation)
+    public function createInvitationEntry(Invitation $invitation)
     {
         $uuid = $invitation->getUser()->getUuid();
         $entry = new Entry(
-            "cn={$invitation->getApp()->getUuid()},ou=Group,dc=leadwire,dc=io",
+            "cn=app_{$invitation->getApp()->getUuid()},ou=Group,dc=leadwire,dc=io",
             [
                 "changetype" => "modify",
-                "add" =>  "$uuid",
-                "memberUid" => $uuid,
+                "add" =>  "user_$uuid",
+                "memberUid" => "user_$uuid",
             ]
         );
 

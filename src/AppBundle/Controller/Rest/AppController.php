@@ -9,6 +9,7 @@ use AppBundle\Service\StatService;
 use AppBundle\Service\UserService;
 use ATS\CoreBundle\Controller\Rest\BaseRestController;
 use FOS\RestBundle\Controller\Annotations\Route;
+use MongoDuplicateKeyException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -175,11 +176,15 @@ class AppController extends BaseRestController
      */
     public function newAppAction(Request $request, AppService $appService)
     {
-        $this->denyAccessUnlessGranted(AclVoter::CREATE, App::class);
-        $data = $request->getContent();
-        $successful = $appService->newApp($data, $this->getUser());
+        try {
+            $this->denyAccessUnlessGranted(AclVoter::CREATE, App::class);
+            $data = $request->getContent();
+            $successful = $appService->newApp($data, $this->getUser());
 
-        return $this->prepareJsonResponse($successful != null ? $successful : false);
+            return $this->prepareJsonResponse($successful != null ? $successful : false);
+        } catch (MongoDuplicateKeyException $e) {
+            return $this->exception("App Name is not Unique");
+        }
     }
 
     /**
@@ -193,10 +198,14 @@ class AppController extends BaseRestController
      */
     public function updateAppAction(Request $request, AppService $appService, string $id)
     {
-        $data = $request->getContent();
-        $successful = $appService->updateApp($data, $id);
+        try {
+            $data = $request->getContent();
+            $successful = $appService->updateApp($data, $id);
 
-        return $this->prepareJsonResponse($successful);
+            return $this->prepareJsonResponse($successful);
+        } catch (MongoDuplicateKeyException $e) {
+            return $this->exception("App Name is not Unique");
+        }
     }
 
     /**
@@ -262,5 +271,10 @@ class AppController extends BaseRestController
         ;
 
         return new CsvResponse($exported);
+    }
+
+    private function exception($message, $status = 400)
+    {
+        return new JsonResponse(array('message' => $message), $status);
     }
 }

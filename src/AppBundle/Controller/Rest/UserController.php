@@ -12,6 +12,7 @@ use JMS\Serializer\SerializationContext;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class UserController extends BaseRestController
@@ -20,16 +21,13 @@ class UserController extends BaseRestController
     /**
      * @Route("/me", methods="GET")
      *
-     * @param Request $request
-     * @param AuthService $auth
      * @return Response
-     * @throws \HttpException
      */
-    public function getMeAction(Request $request)
+    public function getMeAction()
     {
         $user = $this->getUser();
         if (!$user) {
-            throw new HttpException("Non Authorized", 401);
+            return $this->exception("Non Authorized", 401);
         }
 
         return $this->prepareJsonResponse($user, 200, "Default");
@@ -70,7 +68,7 @@ class UserController extends BaseRestController
 
             return $this->prepareJsonResponse($successful);
         } catch (\Exception $e) {
-            throw new HttpException(400, $e->getMessage());
+            return $this->exception($e->getMessage(), 400);
         }
     }
 
@@ -87,7 +85,7 @@ class UserController extends BaseRestController
 
             return $this->prepareJsonResponse($data);
         } catch (\Exception $e) {
-            throw new HttpException(400, $e->getMessage());
+            return $this->exception($e->getMessage(), 400);
         }
     }
 
@@ -101,9 +99,9 @@ class UserController extends BaseRestController
     {
         try {
             $data = $userService->getSubscription($this->getUser());
-            return new JsonResponse($data, 200);
+            return $this->exception($data, 200);
         } catch (\Exception $e) {
-            throw new HttpException(400, $e->getMessage());
+            return $this->exception($e->getMessage(), 400);
         }
     }
 
@@ -113,7 +111,7 @@ class UserController extends BaseRestController
      * @param Request $request
      * @param UserService $userService
      * @return Response
-     * @throws HttpException
+     * @throws BadRequestHttpException
      */
     public function updateSubscriptionAction(Request $request, UserService $userService)
     {
@@ -124,7 +122,7 @@ class UserController extends BaseRestController
             );
             return $this->json($data);
         } catch (\Exception $e) {
-            throw new HttpException(400, $e->getMessage());
+            return $this->exception($e->getMessage(), 400);
         }
     }
 
@@ -134,7 +132,7 @@ class UserController extends BaseRestController
      * @param Request $request
      * @param UserService $userService
      * @return Response
-     * @throws HttpException
+     * @throws BadRequestHttpException
      */
     public function updateCreditCardAction(Request $request, UserService $userService)
     {
@@ -145,7 +143,12 @@ class UserController extends BaseRestController
             );
             return $this->json($data);
         } catch (\Exception $e) {
-            throw new HttpException(400, $e->getMessage());
+            return $this->exception($e->getMessage(), 400);
         }
+    }
+
+    private function exception($message, $status = 400)
+    {
+        return new JsonResponse(array('message' => $message), $status);
     }
 }
