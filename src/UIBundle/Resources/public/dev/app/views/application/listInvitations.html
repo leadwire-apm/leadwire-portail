@@ -1,30 +1,24 @@
 <div ng-repeat="invitation in ctrl.app.invitations">
 
     <div class="media">
-        <a class="pull-left" href="javascript:;">
-            <img class="media-object avatar avatar-sm"
-                 data-ng-src="{{ctrl.DOWNLOAD_URL+invitation.user.avatar}}"
-                 alt="">
-        </a>
-        <div class="comment">
-            <div class="comment-author">
-                <div class="comment-meta small">
-                    <button class="btn btn-danger"
-                            ng-click="ctrl.deleteInvitation(invitation.id)">
-                        <i ng-if="!ctrl.ui.isDeleting" class="fa fa-trash"></i>
-                        <spinner is-loading="ctrl.ui.isDeleting"></spinner>
-                    </button>
-                </div>
+        <div class="comment col-sm-12">
+            <div class="col-sm-8 col-xs-12 text-center">
                 <a href="javascript:;"><strong>{{invitation.user ? invitation.user.email
                     :invitation.email}}</strong></a>
                 <span ng-if="invitation.isPending" class="label label-default">
                     Pending <i class="fa fa-clock-o"></i>
                 </span>
-                <span ng-if="!invitation.isPending" class="label label-info">
+                <span ng-if="!invitation.isPending" class="label label-info text-center">
                     Accepted <i class="fa fa-check"></i>
                 </span>
             </div>
-
+            <div class="col-sm-4 col-xs-12 text-center">
+                <button class="btn btn-danger"
+                        ng-click="ctrl.deleteInvitation(invitation.id)">
+                    <i ng-if="!ctrl.ui.isDeleting" class="fa fa-trash"></i>
+                    <spinner is-loading="ctrl.ui.isDeleting"></spinner>
+                </button>
+            </div>
         </div>
     </div>
     <hr>
@@ -38,18 +32,21 @@
     <form name="inviteUserForm" class="form-horizontal bordered-group"
           ng-submit="ctrl.handleInviteUser()" role="form">
         <div class="input-group mb15">
-            <input id="email"
-                   name="inviteUserForm"
-                   type="email" class="form-control br0" placeholder="user email"
-                   ng-model="ctrl.invitedUser.email" required>
+            <div class="col-sm-12">
+                <input id="email"
+                       name="inviteUserForm"
+                       type="email" class="form-control br0" placeholder="user email"
+                       ng-model="ctrl.invitedUser.email" required/>
+            </div>
+
             <span class="input-group-btn">
-                                     <button class="btn btn-primary" type="submit"
-                                             ng-disabled="inviteUserForm.$invalid">
-                                            <spinner is-loading="ctrl.ui.isSaving"></spinner>
-                                            <i ng-if="!ctrl.ui.isSaving" class="fa fa-user-plus">
-                                            </i> Inviter user
-                                     </button>
-                                </span>
+                 <button class="btn btn-primary" type="submit"
+                         ng-disabled="inviteUserForm.$invalid">
+                        <spinner is-loading="ctrl.ui.isSaving"></spinner>
+                        <i ng-if="!ctrl.ui.isSaving" class="fa fa-user-plus">
+                        </i> Inviter user
+                 </button>
+            </span>
         </div>
     </form>
 </div>

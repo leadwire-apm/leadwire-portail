@@ -84,7 +84,6 @@
                             modalVM.activationCode
                         )
                             .then(function(response) {
-                                console.log(response);
                                 if (response.data) {
                                     toastr.success(
                                         MESSAGES_CONSTANTS.ACTIVATE_APP_SUCCESS

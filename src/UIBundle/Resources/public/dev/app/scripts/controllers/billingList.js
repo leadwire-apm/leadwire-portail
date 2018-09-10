@@ -13,7 +13,8 @@
         function loadSubscription() {
             UserService.getSubscription()
                 .then(function(response) {
-                    if (response.status === 200) {
+                    console.log(response)
+                if (response.status === 200) {
                         vm.subscription = response.data;
                     }
                 })

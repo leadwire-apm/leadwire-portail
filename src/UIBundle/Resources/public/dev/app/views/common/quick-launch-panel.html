@@ -2,13 +2,23 @@
     <div class="quick-launcher-inner">
         <a href="javascript:;" class="close" quick-launch>×</a>
         <div class="css-table-xs">
-
-            <div ng-repeat="app in applications" ng-if="app.isEnabled" class="col">
+            <button data-ng-click="prevPage()" ng-if="applications.length!==0"
+                  class="col text-center text-white btn btn-link pull-left">
+                <i class="fa fa-arrow-left"></i>
+            </button>
+            <div ng-repeat="app in applications"
+                 ng-if="app.isEnabled && start<=$index && end>$index"
+                 class="col" >
                 <a ng-click="changeContextApp(app)">
                     <i ng-class="app.id == selectedAppId ? 'fa fa-desktop text-amber' : 'fa fa-desktop'"></i>
                     <span ng-class="app.id == selectedAppId ? 'text-amber' : ''">{{ app.name }}</span>
                 </a>
             </div>
+            <button data-ng-click="nextPage()" ng-if="applications.length!==0"
+                  class="col text-center text-white btn btn-link pull-right">
+                <i class="fa fa-arrow-right"></i>
+            </button>
+
             <div class="col" ng-if="applications.length==0">
                 <a ui-sref="app.applicationsAdd">
                     <span>Create your first App</span>

@@ -117,30 +117,31 @@
                     user.defaultApp.id
                 );
             } else {
+                return null
                 // else take the first enabled app
-                return ApplicationFactory.findAll()
-                    .then(function(response) {
-                        if (response.data && response.data.length) {
-                            $rootScope.$broadcast('set:apps', response.data);
-                            var firstEnabled = response.data.find(function(
-                                app
-                            ) {
-                                return app.isEnabled;
-                            });
-                            if (firstEnabled) {
-                                return DashboardService.fetchDashboardsByAppId(
-                                    firstEnabled.id
-                                );
-                            } else {
-                                return null;
-                            }
-                        }
-                        return null;
-                    })
-                    .catch(function(error) {
-                        console.log('HandleAfterRedirect', error);
-                        return null;
-                    });
+                // return ApplicationFactory.findAll()
+                //     .then(function(response) {
+                //         if (response.data && response.data.length) {
+                //             $rootScope.$broadcast('set:apps', response.data);
+                //             var firstEnabled = response.data.find(function(
+                //                 app
+                //             ) {
+                //                 return app.isEnabled;
+                //             });
+                //             if (firstEnabled) {
+                //                 return DashboardService.fetchDashboardsByAppId(
+                //                     firstEnabled.id
+                //                 );
+                //             } else {
+                //                 return null;
+                //             }
+                //         }
+                //         return null;
+                //     })
+                //     .catch(function(error) {
+                //         console.log('HandleAfterRedirect', error);
+                //         return null;
+                //     });
                 // no default app
             }
         }
