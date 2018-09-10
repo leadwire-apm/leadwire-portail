@@ -11,10 +11,10 @@
             'toastr',
             'MESSAGES_CONSTANTS',
             'CONFIG',
-            controller
+            updateSubscriptionCtrlFN
         ]);
 
-    function controller(
+    function updateSubscriptionCtrlFN(
         $scope,
         UserService,
         PlanFactory,
@@ -117,9 +117,7 @@
         }
 
         function handleError(response) {
-            if (
-                response.data.message
-            ) {
+            if (response.data.message) {
                 toastr.error(response.data.message);
             } else {
                 toastr.error(MESSAGES_CONSTANTS.ERROR);
@@ -144,37 +142,29 @@
             vm.cantMakeUpgrade = cant && vm.isUpgrade;
         }
 
+        function updatePrices(newValue) {
+            if (vm.selectedPlan && vm.selectedPlan.price) {
+                if (newValue === 'monthly') {
+                    vm.exclTaxPrice = vm.selectedPlan.price;
+                    vm.ui.billText = MONTHLY_MONTH_TEXT;
+                } else {
+                    vm.exclTaxPrice =
+                        vm.selectedPlan.price *
+                        (1 - vm.selectedPlan.discount / 100) *
+                        12;
+                    vm.ui.billText = YEARLY_MONTH_TEXT;
+                }
+                vm.inclTaxPrice = calculatePriceInclTax(vm.exclTaxPrice);
+            }
+        }
+
         function registerWatchers() {
-            $scope.$watch(
-                function() {
-                    return vm.plans;
-                },
-                function(newVal) {
-                    updateCantUpgrade(newVal);
-                }
-            );
-            $scope.$watch(
-                function() {
-                    return vm.billingInformation.billingType;
-                },
-                function(newValue) {
-                    if (vm.selectedPlan && vm.selectedPlan.price) {
-                        if (newValue === 'monthly') {
-                            vm.exclTaxPrice = vm.selectedPlan.price;
-                            vm.ui.billText = MONTHLY_MONTH_TEXT;
-                        } else {
-                            vm.exclTaxPrice =
-                                vm.selectedPlan.price *
-                                (1 - vm.selectedPlan.discount / 100) *
-                                12;
-                            vm.ui.billText = YEARLY_MONTH_TEXT;
-                        }
-                        vm.inclTaxPrice = calculatePriceInclTax(
-                            vm.exclTaxPrice
-                        );
-                    }
-                }
-            );
+            $scope.$watch(function() {
+                return vm.plans;
+            }, updateCantUpgrade);
+            $scope.$watch(function() {
+                return vm.billingInformation.billingType;
+            }, updatePrices);
         }
 
         vm.onLoad = function() {
