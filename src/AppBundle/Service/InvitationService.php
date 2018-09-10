@@ -117,7 +117,7 @@ class InvitationService
      */
     public function getInvitation($id)
     {
-         return $this->invitationManager->getOneBy(['id' => $id]);
+        return $this->invitationManager->getOneBy(['id' => $id]);
     }
 
     /**
@@ -129,7 +129,7 @@ class InvitationService
      */
     public function getInvitations(array $criteria = [])
     {
-         return $this->invitationManager->getBy($criteria);
+        return $this->invitationManager->getBy($criteria);
     }
 
     /**
@@ -143,8 +143,8 @@ class InvitationService
     public function newInvitation($json, User $user)
     {
         $invitation = $this
-                ->serializer
-                ->deserialize($json, Invitation::class, 'json');
+            ->serializer
+            ->deserialize($json, Invitation::class, 'json');
         $id = $this->invitationManager->update($invitation);
         $this->sendInvitationMail($this->getInvitation($id), $user);
         return $id;
@@ -164,9 +164,11 @@ class InvitationService
         try {
             $invitation = $this->serializer->deserialize($json, Invitation::class, 'json');
             $invitation->setApp($this->appService->getApp($invitation->getApp()->getId()));
-            $this->invitationManager->update($invitation);
-            $this->ldap->createInvitationEntry($invitation);
-            $isSuccessful = true;
+            if ($invitation->getApp()->getOwner() != $invitation->getUser()) {
+                $this->invitationManager->update($invitation);
+                $this->ldap->createInvitationEntry($invitation);
+                $isSuccessful = true;
+            }
         } catch (\Exception $e) {
             $this->logger->error($e->getMessage());
             $isSuccessful = false;
@@ -184,17 +186,17 @@ class InvitationService
      */
     public function deleteInvitation($id)
     {
-         $this->invitationManager->deleteById($id);
+        $this->invitationManager->deleteById($id);
     }
 
-     /**
-      * Performs a full text search on  Invitation
-      *
-      * @param string $term
-      * @param string $lang
-      *
-      * @return array
-      */
+    /**
+     * Performs a full text search on  Invitation
+     *
+     * @param string $term
+     * @param string $lang
+     *
+     * @return array
+     */
     public function textSearch($term, $lang)
     {
         return $this->invitationManager->textSearch($term, $lang);
