@@ -99,7 +99,7 @@ class UserController extends BaseRestController
     {
         try {
             $data = $userService->getSubscription($this->getUser());
-            return $this->exception($data, 200);
+            return $this->json($data, 200);
         } catch (\Exception $e) {
             return $this->exception($e->getMessage(), 400);
         }
