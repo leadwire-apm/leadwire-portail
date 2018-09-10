@@ -3,6 +3,7 @@
 namespace AppBundle\Service;
 
 use AppBundle\Document\App;
+use AppBundle\Document\User;
 use GuzzleHttp\Exception\GuzzleException;
 use Psr\Log\LoggerInterface;
 use SensioLabs\Security\Exception\HttpException;
@@ -127,29 +128,38 @@ class ElasticSearch
     /**
      * @param App $app
      */
-    public function resetIndex(App $app)
+    public function resetAppIndexes(App $app)
+    {
+        //$userUuid = $app->getOwner()->getUuid();
+        $appUuid = $app->getUuid();
+        $tenants = [/*"default" => "app_$appUuid", "user" => "user_$userUuid",*/ "shared" => "shared_$appUuid"];
+        foreach ($tenants as $name => $tenant) {
+            $this->putIndex($tenant);
+        }
+    }
+
+    public function resetUserIndexes(User $user)
+    {
+        $this->putIndex($user->getIndex());
+    }
+
+    private function putIndex(string $index)
     {
         $client = new \GuzzleHttp\Client(['defaults' => ['verify' => false]]);
-        $userUuid = $app->getOwner()->getUuid();
-        $appUuid = $app->getUuid();
-        $tenants = ["default" => "app_$appUuid", "user" => "user_$userUuid", "shared" => "share_$appUuid"];
         try {
-            foreach ($tenants as $name => $tenant) {
-                $client->put(
-                    $this->settings['host'] . ".kibana_$tenant",
-                    [
-                        'headers' => [
-                            'Content-type' => 'application/json',
-                        ],
-                        'auth' => $this->getAuth()
-                    ]
-                );
-            }
+            $client->put(
+                $this->settings['host'] . ".kibana_" . $index,
+                [
+                    'headers' => [
+                        'Content-type' => 'application/json',
+                    ],
+                    'auth' => $this->getAuth()
+                ]
+            );
         } catch (\GuzzleHttp\Exception\ClientException $e) {
             $this->logger->error("Error on reset index", ['exception' => $e ]);
         }
     }
-
     protected function transformeId($id)
     {
         $searchs = ['dashboard:', 'visualization:'];

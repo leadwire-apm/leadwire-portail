@@ -497,4 +497,9 @@ class User extends \ATS\UserBundle\Document\User
         $this->customer = $customer;
         return $this;
     }
+
+    public function getIndex()
+    {
+        return "user_" . $this->uuid;
+    }
 }

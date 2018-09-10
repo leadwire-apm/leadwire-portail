@@ -17,12 +17,18 @@ class AuthService
     private $container;
     private $userManager;
     private $ldapService;
+    private $elastic;
 
-    public function __construct(ContainerInterface $container, UserManager $userManage, LdapService $ldapService)
-    {
+    public function __construct(
+        ContainerInterface $container,
+        UserManager $userManage,
+        LdapService $ldapService,
+        ElasticSearch $elastic
+    ) {
         $this->container = $container;
         $this->userManager = $userManage;
         $this->ldapService = $ldapService;
+        $this->elastic = $elastic;
     }
 
     private function get($name)
@@ -51,7 +57,8 @@ class AuthService
             $user = $this->checkAndAdd($data);
             $data['_id'] = $user->getId();
             if (!$user->getEmail()) {
-                $this->ldapService->createLdapUserEntry($user->getUuid());
+                $this->ldapService->createUserEntry($user->getUuid());
+                $this->elastic->resetUserIndexes($user);
             }
             return $user;
         } catch (GuzzleException $e) {

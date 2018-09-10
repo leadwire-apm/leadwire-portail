@@ -53,7 +53,7 @@ class Kibana
                 ]
             );
 
-            //$this->elastic->resetIndex($app);
+            $this->elastic->resetAppIndexes($app);
             return $this->elastic->copyIndex($app->getIndex());
         } catch (\Exception $e) {
             $this->logger->error("error on import", ["exception" => $e]);
