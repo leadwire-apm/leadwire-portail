@@ -74,16 +74,21 @@ class Subscription
      * @param string $customerReference
      * @param string $subscriptionReference
      * @param string $planReference
+     * @param string $anchor
      * @return array
      * @throws OmnipayException
      */
-    public function update(string $customerReference, string $subscriptionReference, string $planReference)
-    {
+    public function update(
+        string $customerReference,
+        string $subscriptionReference,
+        string $planReference,
+        string $anchor = 'uncharged'
+    ) {
         return $this->request('updateSubscription', [
             'customerReference' => $customerReference,
             'subscriptionReference' => $subscriptionReference,
             'plan' => $planReference,
-            //"periodEnd" => false,
+            "anchor" => $anchor,
         ]);
     }
 

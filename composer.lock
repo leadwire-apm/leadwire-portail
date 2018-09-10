@@ -1,7 +1,7 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
     "content-hash": "28e1ed59e453b770735d3c23e9d7397f",
@@ -2670,17 +2670,6 @@
         {
             "name": "league/omnipay",
             "version": "v3.0.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/thephpleague/omnipay.git",
-                "reference": "1514469083290aa53102440bae19313b6c8d7900"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/omnipay/zipball/1514469083290aa53102440bae19313b6c8d7900",
-                "reference": "1514469083290aa53102440bae19313b6c8d7900",
-                "shasum": ""
-            },
             "require": {
                 "omnipay/common": "^3",
                 "php": "^5.6|^7",
@@ -3131,7 +3120,7 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/aksontini/omnipay-stripe",
-                "reference": "5e172532e5f800a94878bf2082629263bf5fb43f"
+                "reference": "8f1265a703d720bb4dd743dd52bd8b2d10817d4f"
             },
             "require": {
                 "omnipay/common": "^3"
@@ -3175,7 +3164,7 @@
                 "payment",
                 "stripe"
             ],
-            "time": "2018-09-05T14:10:36+00:00"
+            "time": "2018-09-10T15:49:13+00:00"
         },
         {
             "name": "paragonie/random_compat",
