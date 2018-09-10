@@ -53,7 +53,7 @@ class AuthService
             if (!$user->getEmail()) {
                 $this->ldapService->createLdapUserEntry($user->getUuid());
             }
-            return $data;
+            return $user;
         } catch (GuzzleException $e) {
             sd($e->getMessage());
         } catch (\Exception $e) {
@@ -61,14 +61,14 @@ class AuthService
         }
     }
 
-    public function generateToken($userId, $tokenSecret)
+    public function generateToken(User $user, $tokenSecret)
     {
         $token = [
             'host' => $this->get('app_domain'),
-            'user' =>  $userId,
-            'name' =>  "leadwire-apm-test",
+            'user' =>  $user->getUuid(),
+            'name' =>  $user->getUsername(),
             'iat' => time(),
-            'exp' =>  time() + 18000000,
+            'exp' =>  time() + 1800 + 1800 * 2,
             'nbf' => time()
         ];
 
@@ -121,6 +121,6 @@ class AuthService
     {
         $jwt = explode(' ', $authorization);
         $token = $this->decodeToken($jwt[1]);
-        return $this->userManager->getOneBy(['id' => $token->user]);
+        return $this->userManager->getOneBy(['uuid' => $token->user]);
     }
 }

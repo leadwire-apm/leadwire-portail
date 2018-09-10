@@ -28,7 +28,6 @@ class UserController extends BaseRestController
         $user = $this->getUser();
         if (!$user) {
             return $this->exception("Non Authorized", 401);
-
         }
 
         return $this->prepareJsonResponse($user, 200, "Default");
