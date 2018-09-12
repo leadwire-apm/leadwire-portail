@@ -54,14 +54,14 @@ class ElasticSearch
         $userUuid = $app->getOwner()->getUuid();
         $appUuid = $app->getUuid();
         // for prod use only
-        $tenants = ["default" => "app_$appUuid", "user" => "user_$appUuid", "shared" => "share_$appUuid"];
+        $tenants = $app->getIndexes();
         // for dev use only
 //        $tenants = ["default" => "apptest", 'user' => "adm-portail", "shared" => "share_$appUuid"];
         $res = [];
         //$this->resetIndex($app);
-        foreach ($tenants as $name => $tenant) {
+        foreach ($tenants as $index => $tenant) {
             try {
-                $key = $name == "default" ? "Default" : "Custom";
+                $key = $index == 0 ? "Default" : "Custom";
                 $res[$key] = isset($res[$key]) ? $res[$key] : [];
                 $response = $client->get(
                     $this->settings['host'] . ".kibana_$tenant" . "/_search?pretty",
@@ -130,10 +130,9 @@ class ElasticSearch
      */
     public function resetAppIndexes(App $app)
     {
-        //$userUuid = $app->getOwner()->getUuid();
-        $appUuid = $app->getUuid();
-        $tenants = [/*"default" => "app_$appUuid", "user" => "user_$userUuid",*/ "shared" => "shared_$appUuid"];
-        foreach ($tenants as $name => $tenant) {
+        $tenants = $app->getIndexes();
+
+        foreach ($tenants as $tenant) {
             $this->putIndex($tenant);
         }
     }

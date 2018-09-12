@@ -362,6 +362,15 @@ class App
         return 'app_' . $this->getUuid();
     }
 
+    public function getIndexes()
+    {
+        return [
+            $this->getIndex(),
+            'user_' . $this->getUuid(),
+            'shared_' . $this->getUuid(),
+        ];
+    }
+
     /**
      * Returns string representation of the object
      *
