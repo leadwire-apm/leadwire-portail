@@ -15,17 +15,18 @@
         service.baseUrl = 'https://kibana.leadwire.io/';
 
         service.getUrl = function(tenantPrefix, dashboardId, hasParameters) {
-            var tenant = "";
-            switch (tenantPrefix) {
-                case "app_":
-                    tenant = tenantPrefix + $localStorage.selectedAppId;
-                    break;
-                case "shared_":
-                    tenant = tenantPrefix + $localStorage.selectedAppId;
-                    break;
-                default:
-                    tenant =  tenantPrefix + $localStorage.user.uuid;
-            }
+            //var tenant = "";
+            // switch (tenantPrefix) {
+            //     case "app_":
+            //         tenant = tenantPrefix + $localStorage.selectedAppId;
+            //         break;
+            //     case "shared_":
+            //         tenant = tenantPrefix + $localStorage.selectedAppId;
+            //         break;
+            //     default:
+            //         tenant =  tenantPrefix + $localStorage.user.uuid;
+            // }
+            var tenant = tenantPrefix + $localStorage.selectedAppId;
             if (hasParameters === true) {
                 return (
                     service.baseUrl +
