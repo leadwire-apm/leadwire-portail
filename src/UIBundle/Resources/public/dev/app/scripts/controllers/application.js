@@ -8,6 +8,7 @@
             'toastr',
             'MESSAGES_CONSTANTS',
             '$localStorage',
+            'Paginator',
             '$modal',
             applicationListCtrlFN
         ]);
@@ -19,9 +20,29 @@
         toastr,
         MESSAGES_CONSTANTS,
         $localStorage,
+        Paginator,
         $modal
     ) {
         var vm = this;
+
+        function getApps() {
+            // get all
+            vm.flipActivityIndicator('isLoading');
+            ApplicationFactory.findAll()
+                .then(function(response) {
+                    vm.flipActivityIndicator('isLoading');
+
+                    vm.apps = response.data;
+                    vm.paginator.items = vm.apps;
+                    $localStorage.applications = response.data;
+                })
+                .catch(function() {
+                    vm.flipActivityIndicator('isLoading');
+                    vm.apps = [];
+                    vm.paginator.items = vm.apps;
+                });
+        }
+
         vm.deleteApp = function(id) {
             swal(MESSAGES_CONSTANTS.SWEET_ALERT_DELETE_MODE).then(function(
                 willDelete
@@ -29,7 +50,7 @@
                 if (willDelete) {
                     ApplicationFactory.remove(id)
                         .then(function() {
-                            getApps();
+                            vm.getApps();
                             swal.close();
                             toastr.success(
                                 MESSAGES_CONSTANTS.DELETE_APP_SUCCESS
@@ -50,19 +71,9 @@
             });
         };
 
-        vm.flipActivityIndicator = function(suffix) {
-            suffix = typeof suffix !== 'undefined' ? suffix : '';
-            vm.ui['isDeleting' + suffix] = !vm.ui['isDeleting' + suffix];
+        vm.flipActivityIndicator = function(activity) {
+            vm.ui[activity] = !vm.ui[activity];
         };
-
-        function getApps() {
-            // get all
-            ApplicationFactory.findAll().then(function(response) {
-                vm.apps = response.data;
-                $localStorage.applications = response.data;
-            });
-        }
-
 
         vm.enableApp = function(selectedApp) {
             $modal.open({
@@ -117,11 +128,14 @@
         };
 
         vm.init = function() {
-            vm.ui = {
-                isDeleting: false
-            };
-            getApps();
+            vm = angular.extend(vm, {
+                ui: {},
+                paginator: Paginator.create({
+                    itemsPerPage: 5
+                })
+            });
+            vm.getApps = getApps;
+            vm.getApps();
         };
-
     }
 })(window.angular, window.swal);

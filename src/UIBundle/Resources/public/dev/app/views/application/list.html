@@ -1,14 +1,15 @@
-<div ng-init="ctrl.init()">
-    <div>
+<div class="panel" ng-init="ctrl.init()">
+    <div class="panel-heading">
         <h4>Application List</h4>
         <hr>
     </div>
     <div class="panel-body">
         <div class="row no-margin">
             <div class="col-lg-12 ">
-                <a class="btn btn-primary pull-right mb10" ui-sref="app.applicationsAdd"><i class="fa fa-plus-circle"></i>
+                <a class="btn btn-primary pull-right mb10" ui-sref="app.applicationsAdd"><i
+                        class="fa fa-plus-circle"></i>
                     Add</a>
-                <div class="table-responsive">
+                <div class="no-more-tables">
                     <table class="table table-striped mb0">
                         <thead>
                         <tr>
@@ -22,16 +23,24 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr ng-repeat="app in ctrl.apps">
+                        <tr ng-if="ctrl.ui.isLoading" class="text-center">
+                            <td colspan="7">
+                                <spinner is-loading="ctrl.ui.isLoading" size="24" ></spinner>
+                            </td>
+                        </tr>
+                        <tr ng-repeat="app in ctrl.apps"
+                            ng-if="ctrl.paginator.start<=$index && ctrl.paginator.end>$index"
+
+                        >
                             <td data-label="Name">
                                 <span></span>{{app.name}}
                             </td>
                             <td data-label="Type">{{app.type.name}}</td>
                             <td data-label="Email">{{app.email}}</td>
                             <td data-label="Status" class="align-middle">
-                            <span data-ng-class="app.isEnabled ? 'label label-success' : 'label label-default'">
-                                {{app.isEnabled ? 'Enabled' : 'Disabled'}}
-                            </span>
+                                <span data-ng-class="app.isEnabled ? 'label label-success' : 'label label-default'">
+                                    {{app.isEnabled ? 'Enabled' : 'Disabled'}}
+                                </span>
 
                             </td>
                             <td data-label="Details">
@@ -77,6 +86,30 @@
                         </tr>
                         </tbody>
                     </table>
+                </div>
+                <div class="text-center">
+                    <ul class="pagination ">
+                        <li>
+                            <button class="btn" data-ng-click="ctrl.paginator.prevPage()">
+                                <i class="fa fa-arrow-left"></i>
+                            </button>
+                        </li>
+                        <li ng-repeat="i in ctrl.paginator.getPageNumber() track by $index"
+                            ng-if="$index"
+                        >
+                            <button class="btn"
+                                    ng-class="{'btn-primary': ctrl.paginator.isCurrent($index)}"
+                                    data-ng-click="ctrl.paginator.goToPage($index)"
+                            >{{$index}}
+                            </button>
+                        </li>
+                        <li>
+                            <button class="btn" data-ng-click="ctrl.paginator.nextPage()">
+                                <i class="fa fa-arrow-right"></i>
+                            </button>
+                        </li>
+
+                    </ul>
                 </div>
 
 

@@ -1,51 +1,57 @@
 (function(angular) {
-    angular.module('leadwireApp').run(function(
-        $rootScope,
-        MenuFactory,
-        $localStorage,
-        CONFIG,
-        $templateCache,
-    ) {
-        $rootScope.menus = $localStorage.currentMenu;
-        $rootScope.applications = $localStorage.applications;
-        $rootScope.dashboards = $localStorage.dashboards;
-        $rootScope.ASSETS_BASE_URL = CONFIG.ASSETS_BASE_URL;
-        $rootScope.DOWNLOAD_URL = CONFIG.DOWNLOAD_URL;
-        $rootScope.UPLOAD_URL = CONFIG.UPLOAD_URL;
-        $rootScope.$watch('applications', function(newVal) {
-            $localStorage.applications = newVal;
-        });
-        $templateCache.put('template/tabs/tabset.html',
-            '\n' +
-            '<div>\n' +
-            '  <ul class="nav nav-{{type || \'tabs\'}}" ng-class="{\'nav-stacked\': vertical, \'nav-justified\': justified}" ng-transclude></ul>\n' +
-            '  <div class="tab-content">\n' +
-            //This is the part that needs to be added. NOTE that the ng-repeat was removed from the original div
-            //and replaced with the ng-repeat-start and ng-repeat-end directives. This is you aren't limited to
-            //outputting a single dom node for each tab. We need two, one for the accordion header and one for the tab itself
-            '    <div ng-repeat-start="tab in tabs" ng-click="tab.active=true" class="tab-accordion-header" ng-class="{\'active\': tab.active}">{{tab.heading}}</div>\n' +
-            '    <div class="tab-pane" \n' +
-            '         ng-repeat-end \n' +
-            '         ng-class="{active: tab.active}"\n' +
-            '         tab-content-transclude="tab">\n' +
-            '    </div>\n' +
-            '  </div>\n' +
-            '</div>\n' +
-            '');
-    }).controller('AppCtrl', [
-        '$scope',
-        '$state',
-        '$rootScope',
-        '$auth',
-        '$location',
-        '$http',
-        '$localStorage',
-        'ApplicationService',
-        'DashboardService',
-        'MESSAGES_CONSTANTS',
-        'toastr',
-        AppCtrlFN,
-    ]);
+    angular
+        .module('leadwireApp')
+        .run(function(
+            $rootScope,
+            MenuFactory,
+            $localStorage,
+            CONFIG,
+            $templateCache
+        ) {
+            $rootScope.menus = $localStorage.currentMenu;
+            $rootScope.applications = $localStorage.applications;
+            $rootScope.dashboards = $localStorage.dashboards;
+            $rootScope.ASSETS_BASE_URL = CONFIG.ASSETS_BASE_URL;
+            $rootScope.DOWNLOAD_URL = CONFIG.DOWNLOAD_URL;
+            $rootScope.UPLOAD_URL = CONFIG.UPLOAD_URL;
+            $rootScope.$watch('applications', function(newVal) {
+                $localStorage.applications = newVal;
+            });
+            $templateCache.put(
+                'template/tabs/tabset.html',
+                '\n' +
+                    '<div>\n' +
+                    "  <ul class=\"nav nav-{{type || 'tabs'}}\" ng-class=\"{'nav-stacked': vertical, 'nav-justified': justified}\" ng-transclude></ul>\n" +
+                    '  <div class="tab-content">\n' +
+                    //This is the part that needs to be added. NOTE that the ng-repeat was removed from the original div
+                    //and replaced with the ng-repeat-start and ng-repeat-end directives. This is you aren't limited to
+                    //outputting a single dom node for each tab. We need two, one for the accordion header and one for the tab itself
+                    '    <div ng-repeat-start="tab in tabs" ng-click="tab.active=true" class="tab-accordion-header" ng-class="{\'active\': tab.active}">{{tab.heading}}</div>\n' +
+                    '    <div class="tab-pane" \n' +
+                    '         ng-repeat-end \n' +
+                    '         ng-class="{active: tab.active}"\n' +
+                    '         tab-content-transclude="tab">\n' +
+                    '    </div>\n' +
+                    '  </div>\n' +
+                    '</div>\n' +
+                    ''
+            );
+        })
+        .controller('AppCtrl', [
+            '$scope',
+            '$state',
+            '$rootScope',
+            '$auth',
+            '$location',
+            '$http',
+            '$localStorage',
+            'ApplicationService',
+            'DashboardService',
+            'MESSAGES_CONSTANTS',
+            'toastr',
+            'Paginator',
+            AppCtrlFN
+        ]);
 
     function AppCtrlFN(
         $scope,
@@ -59,6 +65,7 @@
         DashboardService,
         MESSAGES_CONSTANTS,
         toastr,
+        Paginator
     ) {
         onLoad();
 
@@ -78,7 +85,7 @@
             $localStorage.selectedApp = $localStorage.applications.find(
                 function(currApp) {
                     return currApp.id === appId;
-                },
+                }
             );
             $scope.$emit('context:updated');
         });
@@ -115,7 +122,7 @@
             function() {
                 $localStorage.layout = $scope.app.layout;
             },
-            true,
+            true
         );
 
         $scope.getRandomArbitrary = function() {
@@ -124,8 +131,8 @@
 
         $scope.changeContextApp = function(app) {
             $scope.isChangingContext = true;
-            DashboardService.fetchDashboardsByAppId(app.id).
-                then(function(response) {
+            DashboardService.fetchDashboardsByAppId(app.id)
+                .then(function(response) {
                     $scope.isChangingContext = false;
                     $scope.selectedAppId = response.appId;
                     if (response.dashboards && response.dashboards.length) {
@@ -134,8 +141,8 @@
                         $location.path(firstDashboardLink);
                     }
                     $scope.$apply();
-                }).
-                catch(function() {
+                })
+                .catch(function() {
                     $scope.$apply(function() {
                         $scope.isChangingContext = false;
                     });
@@ -146,36 +153,12 @@
         $scope.brandRedirectTo = function() {
             if ($localStorage.dashboards && $localStorage.dashboards.length) {
                 return $state.go('app.dashboard.home', {
-                    id: $localStorage.dashboards[0].id,
+                    id: $localStorage.dashboards[0].id
                 });
             } else {
                 return $location.go('app.applicationList');
             }
         };
-
-        // Handle pagination start
-        $scope.itemsPerPage = 5;
-        $scope.start = 0;
-        $scope.end = $scope.itemsPerPage;
-
-        $scope.nextPage = function() {
-            if ($scope.applications.length && $scope.end <=
-                $scope.applications.length - 1) {
-                $scope.start += $scope.itemsPerPage;
-                $scope.end += $scope.itemsPerPage;
-            }
-
-        };
-
-        $scope.prevPage = function() {
-            if ($scope.applications.length && $scope.start <=
-                $scope.applications.length && $scope.start > 0) {
-                $scope.start = $scope.start - $scope.itemsPerPage;
-                $scope.end = $scope.end - $scope.itemsPerPage;
-            }
-
-        };
-        // Handle Pagination end
 
         $scope.logout = function() {
             delete $localStorage.user;
@@ -191,6 +174,11 @@
         };
 
         function onLoad() {
+            $scope.paginator = Paginator.create({
+                start: 0,
+                items: $scope.applications
+            });
+
             $scope.mobileView = 767;
             $scope.state = $state;
             $scope.app = {
@@ -210,10 +198,10 @@
                     isConversationOpen: false,
                     isQuickLaunch: false,
                     sidebarTheme: '',
-                    headerTheme: '',
+                    headerTheme: ''
                 },
                 isMessageOpen: false,
-                isConfigOpen: false,
+                isConfigOpen: false
             };
 
             $rootScope.user = $localStorage.user;
