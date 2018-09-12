@@ -14,8 +14,8 @@
                     <input type="text" id="name" name="name" class="form-control" ng-model="ctrl.user.name"
                            required>
                     <span class="text-red"
-                          ng-show="ctrl.userForm.name.$error.required && !ctrl.userForm.name.$pristine">This field is required</span>
-
+                          ng-show="ctrl.userForm.name.$error.required && !ctrl.userForm.name.$pristine">This field is required
+                    </span>
                 </div>
             </div>
 
@@ -28,9 +28,7 @@
                           ng-show="ctrl.userForm.email.$error.required && !ctrl.userForm.email.$pristine">This field is required</span>
                     <span class="text-red"
                           ng-show="ctrl.userForm.email.$error.email && !ctrl.userForm.email.$pristine">This field should be a valid email</span>
-
                 </div>
-
             </div>
 
             <div class="form-group">
@@ -43,9 +41,6 @@
             <div class="form-group">
                 <label class="col-sm-2 control-label">Phone</label>
                 <div class="col-sm-2">
-
-                    <!--ng-options="country.phoneCode for country in ctrl.countries track by country.alpha2Code"-->
-
                     <select name="phoneCode" class="form-control"
                             ng-init="ctrl._user={phoneCode:ctrl.user.phoneCode}"
                             ng-change="ctrl.user.phoneCode = ctrl._user.phoneCode"

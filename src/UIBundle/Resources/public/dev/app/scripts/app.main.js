@@ -153,6 +153,7 @@
             }
         };
 
+        // Handle pagination start
         $scope.itemsPerPage = 5;
         $scope.start = 0;
         $scope.end = $scope.itemsPerPage;
@@ -174,6 +175,7 @@
             }
 
         };
+        // Handle Pagination end
 
         $scope.logout = function() {
             delete $localStorage.user;

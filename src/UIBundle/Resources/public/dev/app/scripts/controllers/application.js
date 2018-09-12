@@ -22,7 +22,6 @@
         $modal
     ) {
         var vm = this;
-        init();
         vm.deleteApp = function(id) {
             swal(MESSAGES_CONSTANTS.SWEET_ALERT_DELETE_MODE).then(function(
                 willDelete
@@ -64,12 +63,6 @@
             });
         }
 
-        function init() {
-            vm.ui = {
-                isDeleting: false
-            };
-            getApps();
-        }
 
         vm.enableApp = function(selectedApp) {
             $modal.open({
@@ -122,5 +115,13 @@
                 controllerAs: 'ctrl'
             });
         };
+
+        vm.init = function() {
+            vm.ui = {
+                isDeleting: false
+            };
+            getApps();
+        };
+
     }
 })(window.angular, window.swal);

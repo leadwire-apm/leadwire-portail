@@ -30,8 +30,8 @@
             UPGRADE: 'upgrade',
             DOWNGRADE: 'downgrade'
         };
-        var YEARLY_MONTH_TEXT = 'Yearly bill total';
-        var MONTHLY_MONTH_TEXT = 'Monthly bill total';
+        var YEARLY_BILLING_TEXT = 'Yearly bill total';
+        var MONTHLY_BILLING_TEXT = 'Monthly bill total';
 
         function flipActivityIndicator(activity) {
             vm.ui[activity] = !vm.ui[activity];
@@ -55,6 +55,12 @@
             }
         }
 
+        function loadSubscription() {
+            UserService.getSubscription().then(function(response) {
+                vm.userSubscription = response.data;
+            });
+        }
+
         function validateBilling() {
             if (vm.selectedPlan.price > 0) {
                 if (!vm.billingForm.$invalid) {
@@ -70,7 +76,7 @@
                                 if (response.status === 200) {
                                     vm.updateSubscription();
                                 } else {
-                                    handleError(response);
+                                    vm.handleError(response);
                                 }
                             })
                             .catch(function(error) {
@@ -97,17 +103,24 @@
 
         function updateSubscription() {
             vm.flipActivityIndicator('isSaving');
-            UserService.updateSubscription({
-                plan: vm.billingInformation.plan,
-                billingType: vm.billingInformation.billingType
-            })
+            var payload = angular.extend(
+                {},
+                {
+                    plan: vm.billingInformation.plan,
+                    billingType: vm.billingInformation.billingType
+                }
+            );
+            if (vm.isDowngrade) {
+                payload.periodEnd = vm.userSubscription.current_period_end;
+            }
+            UserService.updateSubscription(payload)
                 .then(function(response) {
                     vm.flipActivityIndicator('isSaving');
                     if (response.status === 200) {
                         $state.go('app.billingList');
                         toastr.success(MESSAGES_CONSTANTS.SUCCESS);
                     } else {
-                        handleError(response);
+                        vm.handleError(response);
                     }
                 })
                 .catch(function(error) {
@@ -146,13 +159,13 @@
             if (vm.selectedPlan && vm.selectedPlan.price) {
                 if (newValue === 'monthly') {
                     vm.exclTaxPrice = vm.selectedPlan.price;
-                    vm.ui.billText = MONTHLY_MONTH_TEXT;
+                    vm.ui.billText = MONTHLY_BILLING_TEXT;
                 } else {
                     vm.exclTaxPrice =
                         vm.selectedPlan.price *
                         (1 - vm.selectedPlan.discount / 100) *
                         12;
-                    vm.ui.billText = YEARLY_MONTH_TEXT;
+                    vm.ui.billText = YEARLY_BILLING_TEXT;
                 }
                 vm.inclTaxPrice = calculatePriceInclTax(vm.exclTaxPrice);
             }
@@ -168,11 +181,12 @@
         }
 
         vm.onLoad = function() {
+            //init state
             vm = angular.extend(vm, {
                 moment: moment,
                 CONSTANTS: CONSTANTS,
                 ui: {
-                    billText: MONTHLY_MONTH_TEXT,
+                    billText: MONTHLY_BILLING_TEXT,
                     isSaving: false,
                     isLoading: false
                 },
@@ -194,7 +208,10 @@
             vm.validateBilling = validateBilling;
             vm.shouldShowPlan = shouldShowPlan;
             vm.updateSubscription = updateSubscription;
+            vm.loadSubscription = loadSubscription;
+            vm.handleError = handleError;
             vm.loadPlans();
+            vm.loadSubscription();
             registerWatchers();
         };
     }
