@@ -18,10 +18,10 @@
             var tenant = "";
             switch (tenantPrefix) {
                 case "app_":
-                    tenant = tenantPrefix + $localStorage.selectedAppId;
+                    tenant = tenantPrefix + $localStorage.selectedApp.uuid;
                     break;
                 case "shared_":
-                    tenant = tenantPrefix + $localStorage.selectedAppId;
+                    tenant = tenantPrefix + $localStorage.selectedApp.uuid;
                     break;
                 default:
                     tenant =  tenantPrefix + $localStorage.user.uuid;
