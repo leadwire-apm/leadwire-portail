@@ -143,32 +143,28 @@ class UserService
                 $this->userManager->update($user);
                 return true;
             } else {
-                if (!$token) {
-                    foreach ($plan->getPrices() as $pricingPlan) {
-                        if ($pricingPlan->getName() == $data['billingType']) {
-                            $token = $pricingPlan->getToken();
-                        }
+                foreach ($plan->getPrices() as $pricingPlan) {
+                    if ($pricingPlan->getName() == $data['billingType']) {
+                        $token = $pricingPlan->getToken();
                     }
+                }
 
+                if (!$user->getCustomer()) {
                     $customer = $this->customerService->newCustomer($json, $data['card']);
-
                     $user->setCustomer($customer);
-                    if ($customer) {
-                        if ($subscriptionId = $this->subscriptionService->create(
-                            $token,
-                            $customer
-                        )
-                        ) {
-                            $user->setSubscriptionId($subscriptionId);
-                            $user->setPlan($plan);
-                            $this->userManager->update($user);
-                            return true;
-                        } else {
-                            return false;
-                        }
-                    } else {
-                        return false;
-                    }
+                } else {
+                    $customer = $user->getCustomer();
+                }
+
+                if ($subscriptionId = $this->subscriptionService->create(
+                    $token,
+                    $customer
+                )
+                ) {
+                    $user->setSubscriptionId($subscriptionId);
+                    $user->setPlan($plan);
+                    $this->userManager->update($user);
+                    return true;
                 } else {
                     return false;
                 }
