@@ -53,18 +53,13 @@ class LdapService
         $this->saveEntry($entry);
     }
 
-    public function createAppEntry(string $uuid, string $appUuid)
+    public function createAppEntry(string $userIndex, string $appUuid)
     {
 
-        $entry = new Entry(
-            "cn=app_$appUuid,ou=Group,dc=leadwire,dc=io",
-            [
-                'cn' => 'shared_' . $appUuid,
-                'objectClass' => ['groupofnames'],
-                'member' => "cn=user_$uuid,ou=People,dc=leadwire,dc=io"
-            ]
-        );
-        return $this->saveEntry($entry);
+        $entryApp = $this->createAppIndex("app_$appUuid", $userIndex);
+        $entryShared = $this->createAppIndex("shared_$appUuid", $userIndex);
+
+        return $entryApp;
     }
 
     public function createInvitationEntry(Invitation $invitation)
@@ -80,6 +75,19 @@ class LdapService
         );
 
         $this->saveEntry($entry);
+    }
+
+    public function createAppIndex(string $index, string $userIndex)
+    {
+        $entry = new Entry(
+            "cn=$index,ou=Group,dc=leadwire,dc=io",
+            [
+                'cn' => "$index",
+                'objectClass' => ['groupofnames'],
+                'member' => "cn=$userIndex,ou=People,dc=leadwire,dc=io"
+            ]
+        );
+        return $this->saveEntry($entry);
     }
 
     protected function instantiateLdap()
