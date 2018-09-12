@@ -54,7 +54,7 @@ class ElasticSearch
         $userUuid = $app->getOwner()->getUuid();
         $appUuid = $app->getUuid();
         // for prod use only
-        $tenants = ["default" => "app_$appUuid", "user" => "user_$userUuid", "shared" => "share_$appUuid"];
+        $tenants = ["default" => "app_$appUuid", "user" => "user_$appUuid", "shared" => "share_$appUuid"];
         // for dev use only
 //        $tenants = ["default" => "apptest", 'user' => "adm-portail", "shared" => "share_$appUuid"];
         $res = [];
