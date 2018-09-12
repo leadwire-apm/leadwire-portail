@@ -72,7 +72,7 @@ class AuthService
     {
         $token = [
             'host' => $this->get('app_domain'),
-            'user' =>  $user->getUuid(),
+            'user' =>  $user->getIndex(),
             'name' =>  $user->getUsername(),
             'iat' => time(),
             'exp' =>  time() + 1800 + 1800 * 2,
@@ -128,6 +128,6 @@ class AuthService
     {
         $jwt = explode(' ', $authorization);
         $token = $this->decodeToken($jwt[1]);
-        return $this->userManager->getOneBy(['uuid' => $token->user]);
+        return $this->userManager->getOneBy(['uuid' => str_replace("user_", "", $token->user)]);
     }
 }
