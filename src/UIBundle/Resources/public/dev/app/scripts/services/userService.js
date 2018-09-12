@@ -34,7 +34,6 @@
                     Account.getProfile()
                         .then(function(response) {
                             var userInfo = response.data;
-                            var sep = '###';
                             var contactInfos = response.data.contact
                                 ? response.data.contact.split(sep)
                                 : [];
@@ -73,7 +72,7 @@
             return new Promise(function(resolve, reject) {
                 var updatedInfo = service.transformUser(user);
                 Account.updateProfile(updatedInfo)
-                    .then(function(data) {
+                    .then(function(updated) {
                         $localStorage.user = angular.extend(
                             $localStorage.user,
                             updatedInfo,
@@ -83,7 +82,7 @@
                             }
                         );
 
-                        if (data) {
+                        if (updated) {
                             //if he updated his avatar we need to make another request
                             if (avatar) {
                                 FileService.upload(avatar, 'user').then(
@@ -105,7 +104,7 @@
                                 resolve();
                             }
                         } else {
-                            throw new Error(data);
+                            throw new Error(updated);
                         }
                     })
                     .catch(function(error) {

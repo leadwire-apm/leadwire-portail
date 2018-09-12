@@ -4,9 +4,11 @@
     </div>
     <div class="panel-body">
         <div class="mb25">
-            <a ui-sref="app.updateSubscription({action:'upgrade'})" class="btn btn-primary pull-right ml15 mb25"><i
+            <a ui-sref="app.updateSubscription({action:'upgrade'})"
+               ng-if="ctrl.ui.showUpgrade"
+               class="btn btn-primary pull-right ml15 mb25"><i
                 class="fa fa-arrow-up"></i> Upgrade</a>
-            <a ng-if="user.plan.price >0" ui-sref="app.updateSubscription({action:'downgrade'})"
+            <a ng-if="user.plan.price > 0" ui-sref="app.updateSubscription({action:'downgrade'})"
             class="btn btn-danger pull-right ml15 mb25"><i
                 class="fa fa-arrow-down"></i> Downgrade</a>
             <a ng-if="user.plan.price >0"

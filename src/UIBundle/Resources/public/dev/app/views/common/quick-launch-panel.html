@@ -2,7 +2,7 @@
     <div class="quick-launcher-inner">
         <a href="javascript:;" class="close" quick-launch>×</a>
         <div class="css-table-xs">
-            <button data-ng-click="prevPage()" ng-if="applications.length!==0"
+            <button data-ng-click="prevPage()" ng-if="applications.length!==0 && applications.length > itemsPerPage"
                   class="col text-center text-white btn btn-link pull-left">
                 <i class="fa fa-arrow-left"></i>
             </button>
@@ -14,7 +14,7 @@
                     <span ng-class="app.id == selectedAppId ? 'text-amber' : ''">{{ app.name }}</span>
                 </a>
             </div>
-            <button data-ng-click="nextPage()" ng-if="applications.length!==0"
+            <button data-ng-click="nextPage()" ng-if="applications.length!==0 && applications.length > itemsPerPage"
                   class="col text-center text-white btn btn-link pull-right">
                 <i class="fa fa-arrow-right"></i>
             </button>
