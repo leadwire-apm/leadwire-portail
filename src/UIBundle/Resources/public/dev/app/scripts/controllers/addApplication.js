@@ -30,7 +30,6 @@
         $state
     ) {
         var vm = this;
-        onLoad();
         vm.saveApp = function() {
             vm.flipActivityIndicator();
             ApplicationFactory.save(vm.application)
@@ -43,18 +42,23 @@
             vm.ui.isSaving = !vm.ui.isSaving;
         };
 
-        function onLoad() {
-            vm.ui = {
-                isSaving: false
-            };
-
+        vm.loadApplicationTypes = function() {
             ApplicationTypeFactory.findAll().then(function(response) {
                 vm.applicationTypes = response.data;
             });
-        }
+        };
+
+        vm.onLoad = function() {
+            vm = angular.extend(vm, {
+                ui: {
+                    isSaving: false
+                }
+            });
+            vm.loadApplicationTypes();
+        };
 
         function handleAfterSuccess(success) {
-            if(success){
+            if (success) {
                 vm.flipActivityIndicator();
                 $state.go('app.applicationsList');
             }

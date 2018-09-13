@@ -4,6 +4,13 @@
         'CONFIG',
         function($http, CONFIG) {
             return {
+                /**
+                 * Helper to upload file to the server
+                 *
+                 * @param file
+                 * @param entity
+                 * @returns {Promise}
+                 */
                 upload: function(file, entity) {
                     var fd = new FormData();
                     fd.append('file', file);

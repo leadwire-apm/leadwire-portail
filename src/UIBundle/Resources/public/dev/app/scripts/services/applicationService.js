@@ -11,6 +11,10 @@
         ) {
             var service = {};
 
+            /**
+             * update default app
+             * @param app
+             */
             service.setAppAsDefault = function(app) {
                 var updatedApp = {
                     id: app.id,
@@ -22,15 +26,15 @@
                 });
             };
 
+        /**
+         * what to do after saving app successfully
+         *
+         * @param response
+         * @returns {boolean}
+         */
             service.handleSaveOnSuccess = function(response) {
-                //if its my first app i will change the context to this app
-                // var noAppsYet =
-                //     !$localStorage.applications ||
-                //     !$localStorage.applications.length;
-                // if (noAppsYet) {
-                //     DashboardService.fetchDashboardsByAppId(response.data.id);
-                // }
                 if (response.data !== false && response.status === 200) {
+                    //add app to LocalStorage so we can find it in the top menu
                     (
                         $localStorage.applications ||
                         ($localStorage.applications = [])
@@ -44,10 +48,7 @@
                             : MESSAGES_CONSTANTS.ADD_APP_FAILURE ||
                               MESSAGES_CONSTANTS.ERROR;
                     throw new Error(message);
-
-                    return false;
                 }
-                // $scope.$emit('new-application', vm.application);
             };
 
             return service;
