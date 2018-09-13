@@ -364,7 +364,7 @@ class App
     {
         return [
             $this->getIndex(),
-            'user_' . $this->getUuid(),
+            $this->getOwner()->getIndex(),
             'shared_' . $this->getUuid(),
         ];
     }
