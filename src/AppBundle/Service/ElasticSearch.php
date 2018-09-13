@@ -50,15 +50,12 @@ class ElasticSearch
     protected function getRawDashboards(App $app)
     {
         $client = new \GuzzleHttp\Client(['defaults' => ['verify' => false]]);
-        //$uuid = "test";
-        $userUuid = $app->getOwner()->getUuid();
-        $appUuid = $app->getUuid();
         // for prod use only
         $tenants = $app->getIndexes();
         // for dev use only
 //        $tenants = ["default" => "apptest", 'user' => "adm-portail", "shared" => "share_$appUuid"];
         $res = [];
-        //$this->resetIndex($app);
+
         foreach ($tenants as $index => $tenant) {
             try {
                 $key = $index == 0 ? "Default" : "Custom";
@@ -83,7 +80,7 @@ class ElasticSearch
                         $res [$key][] = [
                             "id" => $this->transformeId($element->_id),
                             "name" => $title,
-                            "private" => ($key == "user" || $key == "default"),
+                            "private" => ($index == 1),
                         ];
                     }
                 }
@@ -101,7 +98,7 @@ class ElasticSearch
         $default = [];
         foreach ($dashboards['Custom'] as $item) {
             preg_match_all('/\[([^]]+)\]/', $item['name'], $out);
-            $theme = isset($out[1][0]) ? $out[1][0] : 'Musc';
+            $theme = isset($out[1][0]) ? $out[1][0] : 'Misc';
             $custom[$theme][] = [
                 "private" => $item['private'],
                 "id" => $item['id'],
