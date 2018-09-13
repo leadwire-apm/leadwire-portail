@@ -25,7 +25,7 @@
                         <tbody>
                         <tr ng-if="ctrl.ui.isLoading" class="text-center">
                             <td colspan="7">
-                                <spinner is-loading="ctrl.ui.isLoading" size="24" ></spinner>
+                                <spinner is-loading="ctrl.ui.isLoading" size="24"></spinner>
                             </td>
                         </tr>
                         <tr ng-repeat="app in ctrl.apps"
@@ -52,22 +52,25 @@
                                     <i class="fa fa-info"></i>
                                 </a>
                             </td>
-                            <td data-title="Activate app" ng-if="!app.isEnabled && app.owner.id == user.id" data-label="Activate app">
+                            <td ng-if="!app.isEnabled && app.owner.id == user.id"
+                                data-title="Activate app"
+                                data-label="Activate app">
                                 <a class="btn btn-primary"
                                    title="Activate app"
                                    data-placement="left"
                                    data-toggle="tooltip"
                                    ng-click="ctrl.enableApp(app)"
-                                   >
+                                >
                                     <i class="fa fa-key"></i>
                                 </a>
                             </td>
-                            <td data-title="Edit App" data-label="Edit app">
+                            <td ng-if="app.isEnabled && app.owner.id == user.id"
+                                data-title="Edit App" data-label="Edit app">
                                 <a class="btn btn-warning"
                                    title="Edit application"
                                    data-placement="left"
                                    data-toggle="tooltip"
-                                   ng-if="app.isEnabled && app.owner.id == user.id"
+
                                    ui-sref="app.applicationEdit({id:app.id})"><i class="fa fa-pencil"></i></a>
                             </td>
                             <td data-title="Delete" data-label="Delete">
