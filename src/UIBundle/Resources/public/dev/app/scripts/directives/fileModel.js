@@ -1,7 +1,7 @@
-/**
- * directive used to get file from input file
- */
 (function(angular) {
+    /**
+     * directive used to get file from input file
+     */
     angular.module('leadwireApp').directive('fileModel', [
         '$parse',
         function($parse) {

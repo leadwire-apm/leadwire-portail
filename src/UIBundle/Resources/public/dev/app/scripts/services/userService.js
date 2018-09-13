@@ -28,7 +28,7 @@
          * refresh user stored in localStorage
          *
          * @param force
-         * @returns {Promise<any>}
+         * @returns {Promise}
          */
         service.setProfile = function(force) {
             return new Promise(function(resolve, reject) {
@@ -79,7 +79,7 @@
          *
          * @param user
          * @param avatar
-         * @returns {Promise<any>}
+         * @returns {Promise}
          */
         service.saveUser = function(user, avatar) {
             return new Promise(function(resolve, reject) {
@@ -133,7 +133,7 @@
          * in this case we accept it if its not accepted yet
          *
          * @param invitationId
-         * @returns {Promise<any>}
+         * @returns {Promise}
          */
         service.handleBeforeRedirect = function(invitationId) {
             return new Promise(function(resolve, reject) {
@@ -198,7 +198,7 @@
          * Subscribe to a plan
          *
          * @param billingInfo
-         * @returns {*|Diposable|Promise<PushSubscription>}
+         * @returns {Promise}
          */
         service.subscribe = function(billingInfo) {
             var payload = angular.copy(billingInfo);

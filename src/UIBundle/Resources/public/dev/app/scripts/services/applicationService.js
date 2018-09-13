@@ -26,12 +26,12 @@
                 });
             };
 
-        /**
-         * what to do after saving app successfully
-         *
-         * @param response
-         * @returns {boolean}
-         */
+            /**
+             * what to do after saving app successfully
+             *
+             * @param response
+             * @returns {boolean}
+             */
             service.handleSaveOnSuccess = function(response) {
                 if (response.data !== false && response.status === 200) {
                     //add app to LocalStorage so we can find it in the top menu

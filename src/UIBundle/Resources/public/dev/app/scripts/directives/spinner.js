@@ -1,7 +1,7 @@
-/**
- * spinner to show when doing some async stuff
- */
 (function(angular) {
+    /**
+     * spinner to show when doing some async stuff
+     */
     angular.module('leadwireApp').directive('spinner', [
         function() {
             return {

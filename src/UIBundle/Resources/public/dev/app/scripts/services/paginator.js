@@ -1,7 +1,7 @@
-/**
- * Paginator service to facilitate the pagination in the front side
- */
 (function(angular) {
+    /**
+     * Paginator service to facilitate the pagination in the front side
+     */
     angular
         .module('leadwireApp')
         .value('paginationOptions', {

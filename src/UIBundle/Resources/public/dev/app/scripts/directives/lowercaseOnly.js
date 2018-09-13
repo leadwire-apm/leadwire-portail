@@ -1,19 +1,18 @@
-/**
- * Directive used to change any character to lower case
- */
 (function(angular) {
+    /**
+     * Directive used to change any character to lower case
+     */
     angular.module('leadwireApp').directive('lowercaseOnly', [
         function() {
             return {
                 restrict: 'A',
                 require: 'ngModel',
                 link: function(scope, element, attrs, ctrl) {
-
                     element.on('keypress', function(e) {
                         var char = e.char || String.fromCharCode(e.charCode);
                         var keyCode = e.charCode || e.which || e.key;
-                        if(keyCode !== 8){
-                            if (!/^[a-z0-9._]$/i.test(char) ) {
+                        if (keyCode !== 8) {
+                            if (!/^[a-z0-9._]$/i.test(char)) {
                                 e.preventDefault();
                                 return false;
                             }
@@ -45,5 +44,4 @@
             };
         }
     ]);
-
-})(window.angular)
+})(window.angular);

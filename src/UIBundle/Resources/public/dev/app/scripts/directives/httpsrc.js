@@ -1,7 +1,7 @@
-/**
- * directive to read file from server using a base64 string
- */
 (function(angular) {
+    /**
+     * directive to read file from server using a base64 string
+     */
     angular.module('leadwireApp').directive('httpSrc', [
         '$http',
         '$rootScope',
