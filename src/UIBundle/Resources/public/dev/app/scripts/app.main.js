@@ -152,11 +152,11 @@
 
         $scope.brandRedirectTo = function() {
             if ($localStorage.dashboards && $localStorage.dashboards.length) {
-                return $state.go('app.dashboard.home', {
+                $state.go('app.dashboard.home', {
                     id: $localStorage.dashboards[0].id
                 });
             } else {
-                return $location.go('app.applicationList');
+                $state.go('app.applicationsList');
             }
         };
 

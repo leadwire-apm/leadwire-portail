@@ -102,48 +102,50 @@
         }
 
         function handleAfterRedirect(user) {
-            if (
-                user.defaultApp &&
-                user.defaultApp.id &&
-                user.defaultApp.isEnabled
-            ) {
-                ApplicationFactory.findAll().then(function(response) {
-                    if (response.data && response.data.length) {
-                        $rootScope.$broadcast('set:apps', response.data);
-                    }
-                });
-                //take the default app
-                return DashboardService.fetchDashboardsByAppId(
-                    user.defaultApp.id
-                );
-            } else {
-                return null
-                // else take the first enabled app
-                // return ApplicationFactory.findAll()
-                //     .then(function(response) {
-                //         if (response.data && response.data.length) {
-                //             $rootScope.$broadcast('set:apps', response.data);
-                //             var firstEnabled = response.data.find(function(
-                //                 app
-                //             ) {
-                //                 return app.isEnabled;
-                //             });
-                //             if (firstEnabled) {
-                //                 return DashboardService.fetchDashboardsByAppId(
-                //                     firstEnabled.id
-                //                 );
-                //             } else {
-                //                 return null;
-                //             }
-                //         }
-                //         return null;
-                //     })
-                //     .catch(function(error) {
-                //         console.log('HandleAfterRedirect', error);
-                //         return null;
-                //     });
-                // no default app
-            }
+           return ApplicationFactory.findAll().then(function(response) {
+                if (response.data && response.data.length) {
+                    $rootScope.$broadcast('set:apps', response.data);
+                }
+               if (
+                   user.defaultApp &&
+                   user.defaultApp.id &&
+                   user.defaultApp.isEnabled
+               ) {
+                   //take the default app
+                   return DashboardService.fetchDashboardsByAppId(
+                       user.defaultApp.id
+                   );
+               } else {
+                   return null;
+                   // else take the first enabled app
+                   // return ApplicationFactory.findAll()
+                   //     .then(function(response) {
+                   //         if (response.data && response.data.length) {
+                   //             $rootScope.$broadcast('set:apps', response.data);
+                   //             var firstEnabled = response.data.find(function(
+                   //                 app
+                   //             ) {
+                   //                 return app.isEnabled;
+                   //             });
+                   //             if (firstEnabled) {
+                   //                 return DashboardService.fetchDashboardsByAppId(
+                   //                     firstEnabled.id
+                   //                 );
+                   //             } else {
+                   //                 return null;
+                   //             }
+                   //         }
+                   //         return null;
+                   //     })
+                   //     .catch(function(error) {
+                   //         console.log('HandleAfterRedirect', error);
+                   //         return null;
+                   //     });
+                   // no default app
+               }
+            });
+
+
         }
 
         function onLoad() {
