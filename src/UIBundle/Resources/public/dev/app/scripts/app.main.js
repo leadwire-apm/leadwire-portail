@@ -3,7 +3,6 @@
         .module('leadwireApp')
         .run(function(
             $rootScope,
-            MenuFactory,
             $localStorage,
             CONFIG,
             $templateCache
