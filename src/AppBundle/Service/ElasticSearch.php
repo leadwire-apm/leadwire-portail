@@ -162,7 +162,6 @@ class ElasticSearch
                     'auth' => $this->getAuth()
                 ]
             );
-
         } catch (\GuzzleHttp\Exception\ClientException $e) {
             $this->logger->critical("Error on Import index", ['exception' => $e ]);
         }
