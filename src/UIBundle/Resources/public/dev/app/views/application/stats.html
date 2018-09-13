@@ -1,32 +1,30 @@
-<div class="col-md-10 col-sm-10 col-xs-10">
-    <div>
-        <div class="table-responsive">
-            <table class="table mb0">
-                <thead>
-                <tr>
-                    <th class="text-center">
-                        Date
-                    </th>
-                    <th class="text-center ">Transactions</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr ng-repeat="stat in ctrl.appStats"
-                    ng-class="{'bg-blue':$index < ctrl.retention,'bg-grey-f':$index >= ctrl.retention}">
-                    <td class="text-center">
-                        {{ctrl.moment(stat.day,ctrl.CONSTANTS.DEFAULT_DATE_FORMAT).format(ctrl.CONSTANTS.EN_DATE_FORMAT)}}
-                    </td>
-                    <td class="text-center">{{stat.nbr}}</td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-        <p class="alert alert-info text-center " ng-if="user.plan.retention !==15">
-            Only data with blue background are avaibale on dashboard, to see more available data <br><a
-                ui-sref="app.updateSubscription({action:'upgrade'})" class="btn btn-primary">
-                Upgrade your plan
-            </a>
-        </p>
-
+<div class="col-lg-11 col-md-9 col-sm-7 col-xs-12">
+    <div class="no-more-tables">
+        <table class="table mb0">
+            <thead>
+            <tr>
+                <th class="text-center">
+                    Date
+                </th>
+                <th class="text-center ">Transactions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="stat in ctrl.appStats"
+                ng-class="{'bg-blue':$index < ctrl.retention,'bg-grey-f':$index >= ctrl.retention}">
+                <td class="text-center">
+                    {{ctrl.moment(stat.day,ctrl.CONSTANTS.DEFAULT_DATE_FORMAT).format(ctrl.CONSTANTS.EN_DATE_FORMAT)}}
+                </td>
+                <td class="text-center">{{stat.nbr}}</td>
+            </tr>
+            </tbody>
+        </table>
     </div>
+    <p class="alert alert-info text-center " ng-if="user.plan.retention !==15">
+        Only data with blue background are avaibale on dashboard, to see more available data <br><a
+            ui-sref="app.updateSubscription({action:'upgrade'})" class="btn btn-primary">
+        Upgrade your plan
+    </a>
+    </p>
+
 </div>

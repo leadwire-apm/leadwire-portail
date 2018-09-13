@@ -32,18 +32,18 @@
                             ng-if="ctrl.paginator.start<=$index && ctrl.paginator.end>$index"
 
                         >
-                            <td data-label="Name">
+                            <td data-title="Name" data-label="Name">
                                 <span></span>{{app.name}}
                             </td>
-                            <td data-label="Type">{{app.type.name}}</td>
-                            <td data-label="Email">{{app.email}}</td>
-                            <td data-label="Status" class="align-middle">
+                            <td data-title="Type" data-label="Type">{{app.type.name}}</td>
+                            <td data-title="Email" data-label="Email">{{app.email}}</td>
+                            <td data-title="Status" data-label="Status" class="align-middle">
                                 <span data-ng-class="app.isEnabled ? 'label label-success' : 'label label-default'">
                                     {{app.isEnabled ? 'Enabled' : 'Disabled'}}
                                 </span>
 
                             </td>
-                            <td data-label="Details">
+                            <td data-title="Details" data-label="Details">
                                 <a class="btn btn-info"
                                    title="Details"
                                    data-placement="left"
@@ -52,26 +52,25 @@
                                     <i class="fa fa-info"></i>
                                 </a>
                             </td>
-                            <td data-label="Activate application">
-
+                            <td data-title="Activate app" ng-if="!app.isEnabled && app.owner.id == user.id" data-label="Activate app">
                                 <a class="btn btn-primary"
-                                   title="Activate application"
+                                   title="Activate app"
                                    data-placement="left"
                                    data-toggle="tooltip"
-
                                    ng-click="ctrl.enableApp(app)"
-                                   ng-if="!app.isEnabled && app.owner.id == user.id">
+                                   >
                                     <i class="fa fa-key"></i>
                                 </a>
+                            </td>
+                            <td data-title="Edit App" data-label="Edit app">
                                 <a class="btn btn-warning"
                                    title="Edit application"
                                    data-placement="left"
                                    data-toggle="tooltip"
-
                                    ng-if="app.isEnabled && app.owner.id == user.id"
                                    ui-sref="app.applicationEdit({id:app.id})"><i class="fa fa-pencil"></i></a>
                             </td>
-                            <td data-label="Delete">
+                            <td data-title="Delete" data-label="Delete">
                                 <button class="btn btn-danger"
                                         title="Delete application"
                                         data-placement="left"

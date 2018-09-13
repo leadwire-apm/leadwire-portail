@@ -30,17 +30,22 @@
                 // if (noAppsYet) {
                 //     DashboardService.fetchDashboardsByAppId(response.data.id);
                 // }
-                if (response.data !== false) {
+                if (response.data !== false && response.status === 200) {
                     (
                         $localStorage.applications ||
                         ($localStorage.applications = [])
                     ).push(response.data);
                     toastr.success(MESSAGES_CONSTANTS.ADD_APP_SUCCESS);
+                    return true;
                 } else {
-                    toastr.error(
-                        MESSAGES_CONSTANTS.ADD_APP_FAILURE ||
-                            MESSAGES_CONSTANTS.ERROR
-                    );
+                    var message =
+                        response.data && response.data.message
+                            ? response.data.message
+                            : MESSAGES_CONSTANTS.ADD_APP_FAILURE ||
+                              MESSAGES_CONSTANTS.ERROR;
+                    throw new Error(message);
+
+                    return false;
                 }
                 // $scope.$emit('new-application', vm.application);
             };

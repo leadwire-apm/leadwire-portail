@@ -10,7 +10,7 @@
             <div ng-repeat="app in applications"
                  ng-if="app.isEnabled && paginator.start<=$index && paginator.end>$index"
                  class="col" >
-                <a ng-click="changeContextApp(app)">
+                <a ng-click="changeContextApp(app)" quick-launch>
                     <i ng-class="app.id == selectedAppId ? 'fa fa-desktop text-amber' : 'fa fa-desktop'"></i>
                     <span ng-class="app.id == selectedAppId ? 'text-amber' : ''">{{ app.name }}</span>
                 </a>

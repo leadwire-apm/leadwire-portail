@@ -141,6 +141,7 @@
                         $location.path(firstDashboardLink);
                     }
                     $scope.$apply();
+
                 })
                 .catch(function() {
                     $scope.$apply(function() {

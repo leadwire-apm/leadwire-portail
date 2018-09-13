@@ -53,10 +53,13 @@
             });
         }
 
-        function handleAfterSuccess() {
-            vm.flipActivityIndicator();
-            $state.go('app.applicationsList');
+        function handleAfterSuccess(success) {
+            if(success){
+                vm.flipActivityIndicator();
+                $state.go('app.applicationsList');
+            }
         }
+
         function handleOnFailure(error) {
             toastr.error(
                 error.message ||
