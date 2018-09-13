@@ -81,6 +81,7 @@ class ElasticSearch
                             "id" => $this->transformeId($element->_id),
                             "name" => $title,
                             "private" => ($index == 1),
+                            "tenant" => $tenant
                         ];
                     }
                 }
@@ -102,6 +103,7 @@ class ElasticSearch
             $custom[$theme][] = [
                 "private" => $item['private'],
                 "id" => $item['id'],
+                "tenant" => $item['tenant'],
                 "name" => str_replace("[$theme] ", "", $item['name']),
             ];
         }
@@ -112,6 +114,7 @@ class ElasticSearch
             $default[] = [
                 "private" => $item['private'],
                 "id" => $item['id'],
+                "tenant" => $item['tenant'],
                 "name" => str_replace("[$theme] ", "", $item['name']),
             ];
         }
