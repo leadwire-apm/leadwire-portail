@@ -1,10 +1,10 @@
-<div class="col-lg-12 ">
-    <p><span class="bold text-bluegrey">Name : </span> {{ctrl.app.name}}</p>
-    <p><span class="bold text-bluegrey">Type : </span> {{ctrl.app.type.name}}</p>
-    <p><span class="bold text-bluegrey">Email : </span> {{ctrl.app.email}}</p>
-    <p><span class="bold text-bluegrey">Owner : </span> {{ctrl.app.owner.email}}</p>
-    <p><span class="bold text-bluegrey">Login Github : </span> {{ctrl.app.owner.username}}</p>
-    <p><span class="bold text-bluegrey">State : </span>
+<div class="col-lg-12">
+    <h5><span class="bold text-bluegrey">Name : </span> {{ctrl.app.name}}</h5>
+    <h5><span class="bold text-bluegrey">Type : </span> {{ctrl.app.type.name}}</h5>
+    <h5><span class="bold text-bluegrey">Email : </span> {{ctrl.app.email}}</h5>
+    <h5><span class="bold text-bluegrey">Owner : </span> {{ctrl.app.owner.email}}</h5>
+    <h5><span class="bold text-bluegrey">Login Github : </span> {{ctrl.app.owner.username}}</h5>
+    <h5><span class="bold text-bluegrey">State : </span>
         <span ng-class="ctrl.app.isEnabled ? 'label label-success' : 'label label-default'">{{ctrl.app.isEnabled ? 'Enabled' :'Disabled'}}</span>
-    </p>
+    </h5>
 </div>
