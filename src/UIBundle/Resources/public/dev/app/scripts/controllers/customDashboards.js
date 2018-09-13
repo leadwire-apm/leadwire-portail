@@ -21,7 +21,6 @@
         vm.loadThemeList = function() {
             vm.selectedAppUuid = $localStorage.selectedApp.uuid;
             vm.currentUserUuid = $localStorage.user.uuid;
-            console.log($localStorage.customMenus)
             vm.themeList = Object.keys($localStorage.customMenus.list).reduce(
                 function(acc, theme) {
                     acc.push({
