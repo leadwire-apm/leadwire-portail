@@ -10,21 +10,22 @@
 </div>
 
 <div class="col-sm-12 col-md-12 col-xs-12">
-    <div ng-if="!ctrl.themeList.length" class="alert alert-info">
-        No Dashboard yet.
+    <div ng-if="!ctrl.themeList.length" class="alert alert-info text-center">
+        <h4>
+            No Dashboard yet.
+        </h4>
     </div>
-
     <div ng-repeat="theme in ctrl.themeList" class="col-md-6 col-sm-6 col-xs-12">
         <h3>{{theme.name}}</h3>
         <ul class="list-group">
             <a class="list-group-item" ng-repeat="dashboard in theme.dashboards"
                ui-sref="app.dashboard.home({id:dashboard.id})">
-                <span class="btn btn-link ">
-                    {{dashboard.name}}</span>
-                <i class="pull-right"
-                   style="font-size: medium"
+                <i class="label label-info pull-right"
+                   style="font-size: medium;padding: .2em 10px .3em"
                    ng-class="{'fa fa-lock':dashboard.private,'fa fa-unlock':!dashboard.private}">
                 </i>
+                <span class="btn btn-link ">
+                    {{dashboard.name}}</span>
             </a>
         </ul>
     </div>
