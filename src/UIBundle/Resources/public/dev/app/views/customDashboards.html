@@ -20,9 +20,9 @@
         <ul class="list-group">
             <a class="list-group-item" ng-repeat="dashboard in theme.dashboards"
                ui-sref="app.dashboard.home({id:dashboard.id})">
-                <i class="label label-info pull-right"
+                <i class="pull-right"
                    style="font-size: medium;padding: .2em 10px .3em"
-                   ng-class="{'fa fa-lock':dashboard.private,'fa fa-unlock':!dashboard.private}">
+                   ng-class="{'fa fa-lock label label-danger':dashboard.private,'fa fa-unlock label label-info':!dashboard.private}">
                 </i>
                 <span class="btn btn-link ">
                     {{dashboard.name}}</span>
