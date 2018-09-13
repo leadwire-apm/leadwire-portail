@@ -29,11 +29,16 @@
     ) {
         var service = this;
 
-        function updateSidebarMenus(defaultDashboards) {
+        /**
+         *
+         * @param dashboards
+         */
+        service.updateSidebarMenus = function(dashboards) {
+            //change sidebar menu using Menu factory
             $localStorage.currentMenu = MenuFactory.set(
-                defaultDashboards,
+                dashboards,
                 function(menu) {
-                    return menu['name'];
+                    return menu.name;
                 },
                 function(menu) {
                     return $state.href('app.dashboard.home', {
@@ -45,13 +50,14 @@
                 }
             );
             $rootScope.menus = $localStorage.currentMenu;
-        }
+        };
 
         service.fetchDashboardsByAppId = function(appId) {
             return new Promise(function(resolve, reject) {
                 ApplicationFactory.findMyDashboard(appId)
                     .then(function(response) {
                         $localStorage.dashboards = response.data.Default;
+                        //inform other controller that we changed context
                         $rootScope.$broadcast('set:contextApp', appId);
                         $rootScope.$broadcast('set:customMenus', {
                             withCustom: !!Object.keys(
@@ -59,7 +65,7 @@
                             ).length,
                             list: response.data.Custom || {}
                         });
-                        updateSidebarMenus(response.data.Default);
+                        service.updateSidebarMenus(response.data.Default);
                         resolve({
                             appId: appId,
                             dashboards: response.data.Default

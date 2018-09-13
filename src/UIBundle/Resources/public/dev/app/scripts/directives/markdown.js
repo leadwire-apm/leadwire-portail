@@ -1,3 +1,6 @@
+/**
+ * parse markdown to HTML
+ */
 (function(angular) {
     angular.module('leadwireApp').
         provider('markdownConverter', function() {

@@ -21,6 +21,9 @@
             function(CountryApi, $rootScope, $localStorage) {
                 var service = this;
 
+                /**
+                 * Fetch country code for phone input
+                 */
                 service.loadCountries = function() {
                     if (!$localStorage.countries) {
                         CountryApi.getAll().then(function(res) {
