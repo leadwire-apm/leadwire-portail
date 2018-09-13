@@ -142,6 +142,32 @@ class ElasticSearch
         $this->putIndex($user->getIndex());
     }
 
+    public function importIndex(string $index = "adm-portail")
+    {
+        $client = new \GuzzleHttp\Client(['defaults' => ['verify' => false]]);
+        try {
+            $client->post(
+                $this->settings['host'] . ".kibana_" . $index . "/doc/index-pattern:apm-*",
+                [
+                    'body' => json_encode([
+                        "type" => "index-pattern",
+                        "index-pattern" => [
+                            "title" => "apm-*",
+                            "timeFieldName" => "@timestamp",
+                        ]
+                    ]),
+                    'headers' => [
+                        'Content-type' => 'application/json',
+                    ],
+                    'auth' => $this->getAuth()
+                ]
+            );
+
+        } catch (\GuzzleHttp\Exception\ClientException $e) {
+            $this->logger->critical("Error on Import index", ['exception' => $e ]);
+        }
+    }
+
     private function putIndex(string $index)
     {
         $client = new \GuzzleHttp\Client(['defaults' => ['verify' => false]]);
@@ -156,9 +182,10 @@ class ElasticSearch
                 ]
             );
         } catch (\GuzzleHttp\Exception\ClientException $e) {
-            $this->logger->error("Error on reset index", ['exception' => $e ]);
+            $this->logger->critical("Error on reset index", ['exception' => $e ]);
         }
     }
+
     protected function transformeId($id)
     {
         $searchs = ['dashboard:', 'visualization:'];
@@ -204,7 +231,7 @@ class ElasticSearch
             ]);
             return true;
         } catch (\Exception $e) {
-            $this->logger->error("Error when replacing indexes", ['exception' => $e ]);
+            $this->logger->critical("Error when replacing indexes", ['exception' => $e ]);
             return false;
         }
     }

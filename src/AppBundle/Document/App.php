@@ -15,8 +15,6 @@ use Doctrine\Bundle\MongoDBBundle\Validator\Constraints\Unique;
  * @ODM\ChangeTrackingPolicy("DEFERRED_EXPLICIT")
  * @JMS\ExclusionPolicy("all")
  * @ATS\ApplicationView
- * @Unique(fields={"name"})
-
  */
 class App
 {
