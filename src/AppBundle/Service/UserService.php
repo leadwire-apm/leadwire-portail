@@ -235,7 +235,17 @@ class UserService
 
     public function updateCreditCard(User $user, $data)
     {
-        return $this->customerService->updateCard($user->getCustomer(), $data);
+        if ($user->getCustomer()) {
+            $customer = $user->getCustomer();
+        } else {
+            $json = json_encode(["name" => $user->getName(), "email" => $user->getEmail()]);
+            $data = json_decode($data, true);
+
+            $customer = $this->customerService->newCustomer($json, $data);
+            $user->setCustomer($customer);
+            $this->userManager->update($user);
+        }
+        return $this->customerService->updateCard($customer, $data);
     }
 
     /**
