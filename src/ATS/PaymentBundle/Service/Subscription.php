@@ -82,7 +82,7 @@ class Subscription
         string $customerReference,
         string $subscriptionReference,
         string $planReference,
-        string $anchor = 'uncharged'
+        $anchor
     ) {
         return $this->request('updateSubscription', [
             'customerReference' => $customerReference,
