@@ -198,7 +198,8 @@ class UserService
         $plan = $this->planService->getPlan($data['plan']);
         $token = false;
         if ($plan) {
-            $anchorCycle = $user->getPlan()->getPrice() < $plan->getPrice() ? 'unchanged' : $data['periodEnd'];
+            $anchorCycle = 'unchanged';
+            //$user->getPlan()->getPrice() < $plan->getPrice() ? 'unchanged' : $data['periodEnd'];
             if ($plan->getPrice() == 0) {
                 $this->subscriptionService->delete(
                     $user->getSubscriptionId(),
