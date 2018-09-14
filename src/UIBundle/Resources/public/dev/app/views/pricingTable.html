@@ -1,6 +1,9 @@
 <div class="wrap">
     <div class="pricing-table">
-        <div ng-repeat="plan in ctrl.plans" class="plan" ng-if="ctrl.shouldShowPlan(plan)">
+        <div ng-repeat="plan in ctrl.plans | orderBy:ctrl.orderBy"
+             class="plan"
+             ng-if="ctrl.shouldShowPlan(plan)"
+        >
             <h3 class="name">{{plan.name}}</h3>
             <h4 class="price">{{plan.price}} € <br>
                 <span class="text-center"> per month</span>

@@ -178,6 +178,7 @@
                 ui: {
                     billText: MONTHLY_BILLING_TEXT
                 },
+                orderBy:'price',
                 showCheckBoxes: true
             });
             registerWatchers();
