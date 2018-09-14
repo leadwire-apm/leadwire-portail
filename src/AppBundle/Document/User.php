@@ -159,7 +159,7 @@ class User extends \ATS\UserBundle\Document\User
     /**
      * @var App
      *
-     * @ODM\ReferenceOne(targetDocument="AppBundle\Document\App", name="defaultApp", cascade={"persist"})
+     * @ODM\ReferenceOne(targetDocument="AppBundle\Document\App", name="defaultApp", cascade={"persist"}, nullable=true)
      * @JMS\Type("AppBundle\Document\App")
      * @JMS\Expose
      * @JMS\Groups({"Default", "full"})
@@ -463,10 +463,10 @@ class User extends \ATS\UserBundle\Document\User
     }
 
     /**
-     * @param App $defaultApp
+     * @param App|null $defaultApp
      * @return User
      */
-    public function setDefaultApp(App $defaultApp)
+    public function setDefaultApp($defaultApp)
     {
         $this->defaultApp = $defaultApp;
         return $this;

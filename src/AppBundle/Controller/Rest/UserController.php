@@ -7,8 +7,6 @@ use AppBundle\Service\UserService;
 use ATS\CoreBundle\Controller\Rest\BaseRestController;
 use ATS\PaymentBundle\Exception\OmnipayException;
 use FOS\RestBundle\Controller\Annotations\Route;
-use JMS\Serializer\DeserializationContext;
-use JMS\Serializer\SerializationContext;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;

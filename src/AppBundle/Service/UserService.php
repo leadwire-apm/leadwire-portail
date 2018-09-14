@@ -7,6 +7,7 @@ use ATS\EmailBundle\Service\SimpleMailerService;
 use ATS\PaymentBundle\Service\CustomerService;
 use ATS\PaymentBundle\Service\Subscription;
 use ATS\PaymentBundle\Service\PlanService;
+use JMS\Serializer\DeserializationContext;
 use Psr\Log\LoggerInterface;
 use JMS\Serializer\SerializerInterface;
 use AppBundle\Manager\UserManager;
@@ -299,10 +300,13 @@ class UserService
     {
         $isSuccessful = false;
 
+        $context = new DeserializationContext();
+        $context->setSerializeNull(true);
+
         try {
             $user = $this
                 ->serializer
-                ->deserialize($json, User::class, 'json');
+                ->deserialize($json, User::class, 'json', $context);
 
             $this->userManager->update($user);
             if (!$user->getIsEmailValid()) {
