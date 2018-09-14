@@ -110,12 +110,11 @@
                 {},
                 {
                     plan: vm.billingInformation.plan,
-                    billingType: vm.billingInformation.billingType
+                    billingType: vm.billingInformation.billingType,
+                    periodEnd : vm.userSubscription.current_period_end
                 }
             );
-            if (vm.isDowngrade) {
-                payload.periodEnd = vm.userSubscription.current_period_end;
-            }
+
             UserService.updateSubscription(payload)
                 .then(function(response) {
                     vm.flipActivityIndicator('isSaving');
