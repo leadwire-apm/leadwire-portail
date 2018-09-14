@@ -214,7 +214,7 @@ class UserService
                 }
 
                 if (is_string($token)) {
-                    $anchorCycle = isset($data['periodEnd']) ? $data['periodEnd'] : 'uncharged';
+                    $anchorCycle = isset($data['periodEnd']) ? $data['periodEnd'] : time();
                     $data = $this->subscriptionService->update(
                         $user->getCustomer()->getGatewayToken(),
                         $user->getSubscriptionId(),
