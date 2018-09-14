@@ -2,6 +2,12 @@
 
 ## Requirements
 
+
+### Installation de Mongodb
+
+https://docs.mongodb.com/v3.4/tutorial/install-mongodb-on-red-hat/
+
+
 ### Install Nginx
 
 yum install epel-release -y
@@ -92,10 +98,6 @@ La section root pour mettre le chemin de du dossier web du projet.
 Les sections ssl_certificate et ssl_certificate_key sont pour la gestion des certificats.
 
 A vérifier le chemin /var/run/php-fpm/php-fpm.sock existqe bien.
-
-### Installation de Mongodb
-
-https://docs.mongodb.com/v3.4/tutorial/install-mongodb-on-red-hat/
 
 
 ### Installation Composer
