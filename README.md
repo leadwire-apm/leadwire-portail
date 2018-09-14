@@ -34,11 +34,11 @@ php-ldap php-json
 
 ### Configure Nginx
 
-Choisir ou mettre le dossier du projet. Dans le VPS du test: /apps/leadwire-portail
+Path of the projet is a free choice. conventionally is: /apps/leadwire-portail
 
-Editer la configuration /etc/nginx/nginx.conf
+Edit Config File /etc/nginx/nginx.conf
 
-Dans la section du port 80 faire une redirection vers le 443
+In section 80 redirect to 443
 
 ```
  server {
@@ -49,7 +49,7 @@ Dans la section du port 80 faire une redirection vers le 443
     }
 ```
 
-Dans la section du https:
+In Https Section:
 
 ```
 server {
@@ -93,11 +93,11 @@ server {
 
 ```
 
-La section root pour mettre le chemin de du dossier web du projet.
+root section is for project path. It should be 'Web' folder of the projet
 
-Les sections ssl_certificate et ssl_certificate_key sont pour la gestion des certificats.
+Sections ssl_certificate & ssl_certificate_key are for certificats.
 
-A vérifier le chemin /var/run/php-fpm/php-fpm.sock existqe bien.
+Check /var/run/php-fpm/php-fpm.sock
 
 
 ### Installation Composer
