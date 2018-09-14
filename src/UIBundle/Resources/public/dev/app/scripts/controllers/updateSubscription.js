@@ -61,32 +61,35 @@
             });
         }
 
-        function validateBilling() {
-            if (vm.selectedPlan.price > 0) {
-                if (!vm.billingForm.$invalid) {
-                    // if he has an old basic account we need to subscribe first before update
-                    if ($rootScope.user.plan.price === 0) {
+        function createSubscription() {
+            if (!vm.billingForm.$invalid) {
+                vm.flipActivityIndicator('isSaving');
+                UserService.subscribe(vm.billingInformation, $rootScope.user.id)
+                    .then(function(response) {
                         vm.flipActivityIndicator('isSaving');
-                        UserService.subscribe(
-                            vm.billingInformation,
-                            $rootScope.user.id
-                        )
-                            .then(function(response) {
-                                vm.flipActivityIndicator('isSaving');
-                                if (response.status === 200) {
-                                    vm.updateSubscription();
-                                } else {
-                                    vm.handleError(response);
-                                }
-                            })
-                            .catch(function(error) {
-                                vm.flipActivityIndicator('isSaving');
-                                toastr.error(error.message);
-                            });
-                    } else {
-                        vm.updateSubscription();
-                    }
-                }
+                        if (response.status === 200) {
+                            toastr.success(MESSAGES_CONSTANTS.SUCCESS);
+                        } else {
+                            vm.handleError(response);
+                        }
+                    })
+                    .catch(function(error) {
+                        vm.flipActivityIndicator('isSaving');
+                        toastr.error(error.message);
+                    });
+            } else {
+                toastr.error('Verify your card information');
+            }
+        }
+
+        /**
+         * BASIC-> * : POST
+         * *(-BASIC) -> * : PUT
+         */
+        function validateBilling() {
+            // if he has an old basic account we need to subscribe first before update
+            if ($rootScope.user.plan.price === 0) {
+                vm.createSubscription();
             } else {
                 vm.updateSubscription();
             }
@@ -136,6 +139,7 @@
                 toastr.error(MESSAGES_CONSTANTS.ERROR);
             }
         }
+
         function calculatePriceInclTax(price) {
             var inclPrice = price * (1 + CONSTANTS.TAX / 100);
             return inclPrice.toFixed(2);
@@ -208,6 +212,7 @@
             vm.validateBilling = validateBilling;
             vm.shouldShowPlan = shouldShowPlan;
             vm.updateSubscription = updateSubscription;
+            vm.createSubscription = createSubscription;
             vm.loadSubscription = loadSubscription;
             vm.handleError = handleError;
             vm.loadPlans();

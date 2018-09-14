@@ -28,8 +28,8 @@
         CONSTANTS
     ) {
         var vm = this;
-        var YEARLY_MONTH_TEXT = 'Yearly bill total';
-        var MONTHLY_MONTH_TEXT = 'Monthly bill total';
+        var YEARLY_BILLING_TEXT = 'Yearly bill total';
+        var MONTHLY_BILLING_TEXT = 'Monthly bill total';
         onLoad();
         vm.flipActivityIndicator = function() {
             vm.ui.isSaving = !vm.ui.isSaving;
@@ -115,8 +115,8 @@
             vm.flipActivityIndicator();
             UserService.subscribe(vm.billingInformation)
                 .then(function(response) {
+                    vm.flipActivityIndicator();
                     if (response.status === 200) {
-                        vm.flipActivityIndicator();
                         toastr.success(MESSAGES_CONSTANTS.SUCCESS);
                         UserService.setProfile(true);
                         $modalInstance.close();
@@ -126,12 +126,42 @@
                         } else {
                             toastr.error(MESSAGES_CONSTANTS.ERROR);
                         }
-                        vm.flipActivityIndicator();
                     }
                 })
                 .catch(function(error) {
                     toastr.error(error.message);
                 });
+        }
+
+        function registerWatchers() {
+            $scope.$watch(
+                function() {
+                    return vm.billingInformation.billingType;
+                },
+                function(newValue) {
+                    if (vm.selectedPlan && vm.selectedPlan.price) {
+                        if (newValue === 'monthly') {
+                            vm.exclTaxPrice = vm.selectedPlan.price;
+                            vm.ui.billText = MONTHLY_BILLING_TEXT;
+                        } else {
+                            vm.exclTaxPrice =
+                                vm.selectedPlan.price *
+                                (1 - vm.selectedPlan.discount / 100) *
+                                12;
+                            vm.ui.billText = YEARLY_BILLING_TEXT;
+                        }
+                        vm.inclTaxPrice = calculatePriceInclTax(
+                            vm.exclTaxPrice
+                        );
+                    }
+                }
+            );
+        }
+
+        function loadPlans() {
+            PlanFactory.findAll().then(function(response) {
+                vm.plans = response.data;
+            });
         }
 
         function onLoad() {
@@ -146,37 +176,12 @@
                     billingType: 'monthly'
                 },
                 ui: {
-                    billText: MONTHLY_MONTH_TEXT
+                    billText: MONTHLY_BILLING_TEXT
                 },
                 showCheckBoxes: true
             });
-
-            $scope.$watch(
-                function() {
-                    return vm.billingInformation.billingType;
-                },
-                function(newValue) {
-                    if (vm.selectedPlan && vm.selectedPlan.price) {
-                        if (newValue === 'monthly') {
-                            vm.exclTaxPrice = vm.selectedPlan.price;
-                            vm.ui.billText = MONTHLY_MONTH_TEXT;
-                        } else {
-                            vm.exclTaxPrice =
-                                vm.selectedPlan.price *
-                                (1 - vm.selectedPlan.discount / 100) *
-                                12;
-                            vm.ui.billText = YEARLY_MONTH_TEXT;
-                        }
-                        vm.inclTaxPrice = calculatePriceInclTax(
-                            vm.exclTaxPrice
-                        );
-                    }
-                }
-            );
-
-            PlanFactory.findAll().then(function(response) {
-                vm.plans = response.data;
-            });
+            registerWatchers();
+            loadPlans();
             CountryService.loadCountries();
         }
 
