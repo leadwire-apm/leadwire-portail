@@ -200,6 +200,7 @@
                     },
                     billingType: 'monthly'
                 },
+                orderBy:'price',
                 action: $stateParams.action,
                 isUpgrade: $stateParams.action === ACTIONS.UPGRADE,
                 isDowngrade: $stateParams.action === ACTIONS.DOWNGRADE,
