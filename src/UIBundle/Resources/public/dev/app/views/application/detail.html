@@ -1,50 +1,51 @@
-<div class="row" ng-init="ctrl.onLoad()">
-    <div class="col-md-12 col-sm-12">
+<div class="col-md-12 col-sm-12" ng-init="ctrl.onLoad()">
 
-        <tabset justified="true" class="box-tab justified ">
-            <tab heading="Detail Application">
-                <div class="row no-margin" data-ng-include="ASSETS_BASE_URL + 'views/application/applicationInfo.html'">
-                </div>
-            </tab>
-            <tab heading="Invited Users" ng-if="user.id == ctrl.app.owner.id"
-            >
-                <section class="widget bg-white post-comments"
-                         data-ng-include="ASSETS_BASE_URL + 'views/application/listInvitations.html'">
-                </section>
-            </tab>
-            <tab heading="Installation" ng-if="user.id == ctrl.app.owner.id">
-                <div class="container" data-ng-include="ASSETS_BASE_URL + 'views/application/installation.html'">
-                </div>
-            </tab>
-            <tab heading="Stats" ng-if="user.id == ctrl.app.owner.id">
-                <div class="container" data-ng-include="ASSETS_BASE_URL + 'views/application/stats.html'">
-                </div>
-            </tab>
-        </tabset>
-    </div>
+    <tabset justified="true" class="box-tab justified ">
+        <tab heading="Detail Application">
+            <section  data-ng-include="ASSETS_BASE_URL + 'views/application/applicationInfo.html'">
+            </section>
+        </tab>
+        <tab heading="Invited Users" ng-if="user.id == ctrl.app.owner.id"
+        >
+            <section class="widget bg-white post-comments"
+                     data-ng-include="ASSETS_BASE_URL + 'views/application/listInvitations.html'">
+            </section>
+        </tab>
+        <tab heading="Installation" ng-if="user.id == ctrl.app.owner.id">
+            <section data-ng-include="ASSETS_BASE_URL + 'views/application/installation.html'">
+            </section>
+        </tab>
+        <tab heading="Stats" ng-if="user.id == ctrl.app.owner.id">
+            <section data-ng-include="ASSETS_BASE_URL + 'views/application/stats.html'">
+            </section>
+        </tab>
+    </tabset>
 </div>
-
 
 <style>
     .tab-accordion-header, .tab-accordion-header.active {
-        display:none;
+        display: none;
     }
-    @media(max-width: 400px) {
+
+    @media (max-width: 400px) {
         ul.nav-tabs {
-            display:none;
+            display: none;
         }
+
         .tab-accordion-header {
             background-color: #666666;
             color: #ffffff;
             padding: 10px;
             width: 100%;
             margin: 1px 0;
-            display:block;
+            display: block;
         }
+
         .tab-accordion-header.active {
-            display:block;
-            background-color:#dd3333;
+            display: block;
+            background-color: #dd3333;
         }
+
         .tab-content {
             border-top: 0px transparent none;
         }

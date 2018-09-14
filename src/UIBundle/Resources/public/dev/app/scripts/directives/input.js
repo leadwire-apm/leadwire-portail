@@ -19,6 +19,14 @@
                 };
             }
         ])
+        .directive('button', [
+            function() {
+                return {
+                    restrict: 'E',
+                    link: link
+                };
+            }
+        ])
         .directive('select', [
             function() {
                 return {
