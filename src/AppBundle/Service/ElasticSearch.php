@@ -3,6 +3,7 @@
 namespace AppBundle\Service;
 
 use AppBundle\Document\App;
+use AppBundle\Document\User;
 use GuzzleHttp\Exception\GuzzleException;
 use Psr\Log\LoggerInterface;
 use SensioLabs\Security\Exception\HttpException;
@@ -49,18 +50,15 @@ class ElasticSearch
     protected function getRawDashboards(App $app)
     {
         $client = new \GuzzleHttp\Client(['defaults' => ['verify' => false]]);
-        //$uuid = "test";
-        $userUuid = $app->getOwner()->getUuid();
-        $appUuid = $app->getUuid();
         // for prod use only
-        $tenants = ["default" => "app_$appUuid", "user" => "user_$userUuid", "shared" => "share_$appUuid"];
+        $tenants = $app->getIndexes();
         // for dev use only
 //        $tenants = ["default" => "apptest", 'user' => "adm-portail", "shared" => "share_$appUuid"];
         $res = [];
-        //$this->resetIndex($app);
-        foreach ($tenants as $name => $tenant) {
+
+        foreach ($tenants as $index => $tenant) {
             try {
-                $key = $name == "default" ? "Default" : "Custom";
+                $key = $index == 0 ? "Default" : "Custom";
                 $res[$key] = isset($res[$key]) ? $res[$key] : [];
                 $response = $client->get(
                     $this->settings['host'] . ".kibana_$tenant" . "/_search?pretty",
@@ -82,7 +80,8 @@ class ElasticSearch
                         $res [$key][] = [
                             "id" => $this->transformeId($element->_id),
                             "name" => $title,
-                            "private" => ($key == "user" || $key == "default"),
+                            "private" => ($index == 1),
+                            "tenant" => $tenant
                         ];
                     }
                 }
@@ -100,20 +99,22 @@ class ElasticSearch
         $default = [];
         foreach ($dashboards['Custom'] as $item) {
             preg_match_all('/\[([^]]+)\]/', $item['name'], $out);
-            $theme = isset($out[1][0]) ? $out[1][0] : 'Musc';
+            $theme = isset($out[1][0]) ? $out[1][0] : 'Misc';
             $custom[$theme][] = [
                 "private" => $item['private'],
                 "id" => $item['id'],
+                "tenant" => $item['tenant'],
                 "name" => str_replace("[$theme] ", "", $item['name']),
             ];
         }
 
         foreach ($dashboards['Default'] as $item) {
             preg_match_all('/\[([^]]+)\]/', $item['name'], $out);
-            $theme = isset($out[1][0]) ? $out[1][0] : 'Musc';
+            $theme = isset($out[1][0]) ? $out[1][0] : 'Misc';
             $default[] = [
                 "private" => $item['private'],
                 "id" => $item['id'],
+                "tenant" => $item['tenant'],
                 "name" => str_replace("[$theme] ", "", $item['name']),
             ];
         }
@@ -127,26 +128,60 @@ class ElasticSearch
     /**
      * @param App $app
      */
-    public function resetIndex(App $app)
+    public function resetAppIndexes(App $app)
+    {
+        $tenants = $app->getIndexes();
+
+        foreach ($tenants as $tenant) {
+            $this->putIndex($tenant);
+        }
+    }
+
+    public function resetUserIndexes(User $user)
+    {
+        $this->putIndex($user->getIndex());
+    }
+
+    public function importIndex(string $index = "adm-portail")
     {
         $client = new \GuzzleHttp\Client(['defaults' => ['verify' => false]]);
-        $userUuid = $app->getOwner()->getUuid();
-        $appUuid = $app->getUuid();
-        $tenants = ["default" => "app_$appUuid", "user" => "user_$userUuid", "shared" => "share_$appUuid"];
         try {
-            foreach ($tenants as $name => $tenant) {
-                $client->put(
-                    $this->settings['host'] . ".kibana_$tenant",
-                    [
-                        'headers' => [
-                            'Content-type' => 'application/json',
-                        ],
-                        'auth' => $this->getAuth()
-                    ]
-                );
-            }
+            $client->post(
+                $this->settings['host'] . ".kibana_" . $index . "/doc/index-pattern:apm-*",
+                [
+                    'body' => json_encode([
+                        "type" => "index-pattern",
+                        "index-pattern" => [
+                            "title" => "apm-*",
+                            "timeFieldName" => "@timestamp",
+                        ]
+                    ]),
+                    'headers' => [
+                        'Content-type' => 'application/json',
+                    ],
+                    'auth' => $this->getAuth()
+                ]
+            );
         } catch (\GuzzleHttp\Exception\ClientException $e) {
-            $this->logger->error("Error on reset index", ['exception' => $e ]);
+            $this->logger->critical("Error on Import index", ['exception' => $e ]);
+        }
+    }
+
+    private function putIndex(string $index)
+    {
+        $client = new \GuzzleHttp\Client(['defaults' => ['verify' => false]]);
+        try {
+            $client->put(
+                $this->settings['host'] . ".kibana_" . $index,
+                [
+                    'headers' => [
+                        'Content-type' => 'application/json',
+                    ],
+                    'auth' => $this->getAuth()
+                ]
+            );
+        } catch (\GuzzleHttp\Exception\ClientException $e) {
+            $this->logger->critical("Error on reset index", ['exception' => $e ]);
         }
     }
 
@@ -195,7 +230,7 @@ class ElasticSearch
             ]);
             return true;
         } catch (\Exception $e) {
-            $this->logger->error("Error when replacing indexes", ['exception' => $e ]);
+            $this->logger->critical("Error when replacing indexes", ['exception' => $e ]);
             return false;
         }
     }

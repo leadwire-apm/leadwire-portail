@@ -36,10 +36,14 @@ class LdapService
         $this->logger = $logger;
     }
 
-    public function createLdapUserEntry(string $uuid)
+    /**
+     * Create Ldap entry on User Creation
+     * @param string $uuid
+     */
+    public function createUserEntry(string $uuid)
     {
         $entry = new Entry(
-            "cn=$uuid,ou=People,dc=leadwire,dc=io",
+            "cn=user_$uuid,ou=People,dc=leadwire,dc=io",
             [
                 'gidNumber' => '5',
                 'objectClass' => ['posixGroup', 'top'],
@@ -49,33 +53,41 @@ class LdapService
         $this->saveEntry($entry);
     }
 
-    public function createLdapAppEntry(string $uuid, string $appUuid)
+    public function createAppEntry(string $userIndex, string $appUuid)
     {
 
-        $entry = new Entry(
-            "cn=$appUuid,ou=Group,dc=leadwire,dc=io",
-            [
-                'cn' => 'app_' . $appUuid,
-                'objectClass' => ['groupofnames'],
-                'member' => "cn=$uuid,ou=People,dc=leadwire,dc=io"
-            ]
-        );
-        return $this->saveEntry($entry);
+        $entryApp = $this->createAppIndex("app_$appUuid", $userIndex);
+        $entryShared = $this->createAppIndex("shared_$appUuid", $userIndex);
+
+        return $entryApp;
     }
 
-    public function createLdapInvitationEntry(Invitation $invitation)
+    public function createInvitationEntry(Invitation $invitation)
     {
         $uuid = $invitation->getUser()->getUuid();
         $entry = new Entry(
-            "cn={$invitation->getApp()->getUuid()},ou=Group,dc=leadwire,dc=io",
+            "cn=app_{$invitation->getApp()->getUuid()},ou=Group,dc=leadwire,dc=io",
             [
                 "changetype" => "modify",
-                "add" =>  "$uuid",
-                "memberUid" => $uuid,
+                "add" =>  "user_$uuid",
+                "memberUid" => "user_$uuid",
             ]
         );
 
         $this->saveEntry($entry);
+    }
+
+    public function createAppIndex(string $index, string $userIndex)
+    {
+        $entry = new Entry(
+            "cn=$index,ou=Group,dc=leadwire,dc=io",
+            [
+                'cn' => "$index",
+                'objectClass' => ['groupofnames'],
+                'member' => "cn=$userIndex,ou=People,dc=leadwire,dc=io"
+            ]
+        );
+        return $this->saveEntry($entry);
     }
 
     protected function instantiateLdap()

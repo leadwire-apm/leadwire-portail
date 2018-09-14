@@ -7,9 +7,8 @@
                 return new Promise(function(resolve, reject) {
                     InvitationFactory.get(invitationId)
                         .then(function(response) {
-                            console.log('Invitation', response);
                             if (!response.data.user && response.data.app) {
-                                var invitToUpdate = {
+                                InvitationFactory.update(invitationId, {
                                     id: invitationId,
                                     isPending: false,
                                     user: {
@@ -18,16 +17,11 @@
                                     app: {
                                         id: response.data.app.id
                                     }
-                                };
-                                InvitationFactory.update(
-                                    invitationId,
-                                    invitToUpdate
-                                );
+                                });
                             }
                             resolve(response.data.app);
                         })
                         .catch(function(error) {
-                            console.log('service.acceptInvitation', error);
                             reject();
                         });
                 });

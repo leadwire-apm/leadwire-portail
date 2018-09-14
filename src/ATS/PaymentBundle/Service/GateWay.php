@@ -2,6 +2,7 @@
 
 namespace ATS\PaymentBundle\Service;
 
+use ATS\PaymentBundle\Exception\OmnipayException;
 use Omnipay\Omnipay;
 
 class GateWay
@@ -43,6 +44,8 @@ class GateWay
     {
         if (method_exists($this->gateway, $name)) {
             return call_user_func_array(array($this->gateway,$name), $arguments);
+        } else {
+            throw new OmnipayException("Operation $name not found!");
         }
     }
 }

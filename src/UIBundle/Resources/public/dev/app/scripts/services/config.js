@@ -14,11 +14,23 @@
 
         service.baseUrl = 'https://kibana.leadwire.io/';
 
-        service.getUrl = function(dashboardId, hasParameters) {
+        service.getUrl = function(tenantPrefix, dashboardId, hasParameters) {
+            var tenant = "";
+            switch (tenantPrefix) {
+                case "app_":
+                    tenant = tenantPrefix + $localStorage.selectedApp.uuid;
+                    break;
+                case "shared_":
+                    tenant = tenantPrefix + $localStorage.selectedApp.uuid;
+                    break;
+                default:
+                    tenant =  tenantPrefix + $localStorage.user.uuid;
+            }
+
             if (hasParameters === true) {
                 return (
                     service.baseUrl +
-                    $localStorage.user.uuid +
+                    tenant +
                     '&token=' +
                     $auth.getToken() +
                     dashboardId
@@ -26,7 +38,7 @@
             } else {
                 return (
                     service.baseUrl +
-                    $localStorage.user.uuid +
+                    tenant +
                     '?token=' +
                     $auth.getToken() +
                     dashboardId
@@ -34,8 +46,8 @@
             }
         };
 
-        service.getDashboard = function(dashboardId, hasParameter) {
-            var url = this.getUrl('#/dashboard/' + dashboardId, hasParameter);
+        service.getDashboard = function(tenantPrefix, dashboardId, hasParameter) {
+            var url = this.getUrl(tenantPrefix, "#/dashboard/" + dashboardId, hasParameter);
             return url;
         };
 

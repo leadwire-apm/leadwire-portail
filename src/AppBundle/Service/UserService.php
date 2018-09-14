@@ -7,6 +7,7 @@ use ATS\EmailBundle\Service\SimpleMailerService;
 use ATS\PaymentBundle\Service\CustomerService;
 use ATS\PaymentBundle\Service\Subscription;
 use ATS\PaymentBundle\Service\PlanService;
+use JMS\Serializer\DeserializationContext;
 use Psr\Log\LoggerInterface;
 use JMS\Serializer\SerializerInterface;
 use AppBundle\Manager\UserManager;
@@ -143,32 +144,28 @@ class UserService
                 $this->userManager->update($user);
                 return true;
             } else {
-                if (!$token) {
-                    foreach ($plan->getPrices() as $pricingPlan) {
-                        if ($pricingPlan->getName() == $data['billingType']) {
-                            $token = $pricingPlan->getToken();
-                        }
+                foreach ($plan->getPrices() as $pricingPlan) {
+                    if ($pricingPlan->getName() == $data['billingType']) {
+                        $token = $pricingPlan->getToken();
                     }
+                }
 
+                if (!$user->getCustomer()) {
                     $customer = $this->customerService->newCustomer($json, $data['card']);
-
                     $user->setCustomer($customer);
-                    if ($customer) {
-                        if ($subscriptionId = $this->subscriptionService->create(
-                            $token,
-                            $customer
-                        )
-                        ) {
-                            $user->setSubscriptionId($subscriptionId);
-                            $user->setPlan($plan);
-                            $this->userManager->update($user);
-                            return true;
-                        } else {
-                            return false;
-                        }
-                    } else {
-                        return false;
-                    }
+                } else {
+                    $customer = $user->getCustomer();
+                }
+
+                if ($subscriptionId = $this->subscriptionService->create(
+                    $token,
+                    $customer
+                )
+                ) {
+                    $user->setSubscriptionId($subscriptionId);
+                    $user->setPlan($plan);
+                    $this->userManager->update($user);
+                    return true;
                 } else {
                     return false;
                 }
@@ -200,8 +197,9 @@ class UserService
     {
         $plan = $this->planService->getPlan($data['plan']);
         $token = false;
-
         if ($plan) {
+            $anchorCycle = 'unchanged';
+            //$user->getPlan()->getPrice() < $plan->getPrice() ? 'unchanged' : $data['periodEnd'];
             if ($plan->getPrice() == 0) {
                 $this->subscriptionService->delete(
                     $user->getSubscriptionId(),
@@ -221,7 +219,8 @@ class UserService
                     $data = $this->subscriptionService->update(
                         $user->getCustomer()->getGatewayToken(),
                         $user->getSubscriptionId(),
-                        $token
+                        $token,
+                        $anchorCycle
                     );
                     $user->setPlan($plan);
                     $this->userManager->update($user);
@@ -237,7 +236,17 @@ class UserService
 
     public function updateCreditCard(User $user, $data)
     {
-        return $this->customerService->updateCard($user->getCustomer(), $data);
+        if ($user->getCustomer()) {
+            $customer = $user->getCustomer();
+        } else {
+            $json = json_encode(["name" => $user->getName(), "email" => $user->getEmail()]);
+            $data = json_decode($data, true);
+
+            $customer = $this->customerService->newCustomer($json, $data);
+            $user->setCustomer($customer);
+            $this->userManager->update($user);
+        }
+        return $this->customerService->updateCard($customer, $data);
     }
 
     /**
@@ -291,10 +300,13 @@ class UserService
     {
         $isSuccessful = false;
 
+        $context = new DeserializationContext();
+        $context->setSerializeNull(true);
+
         try {
             $user = $this
                 ->serializer
-                ->deserialize($json, User::class, 'json');
+                ->deserialize($json, User::class, 'json', $context);
 
             $this->userManager->update($user);
             if (!$user->getIsEmailValid()) {

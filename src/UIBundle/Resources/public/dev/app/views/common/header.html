@@ -13,12 +13,25 @@
     <!-- /logo -->
 
     <ul class="nav navbar-nav navbar-right pull-right">
+
         <li class="pull-left">
-            <a href="javascript:;" quick-launch>
+            <a href="javascript:;"
+               title="Change application"
+               data-placement="left"
+               data-toggle="tooltip"
+               quick-launch>
                 <i class="fa fa-circle-thin"></i>
             </a>
         </li>
-
+        <li class="pull-left hidden-xs">
+            <a ui-sref="app.user"
+               title="Settings"
+               data-placement="left"
+               data-toggle="tooltip"
+            >
+                <i style="font-size: 15px;" class="fa fa-cog"></i>
+            </a>
+        </li>
         <li class="dropdown hidden" dropdown>
 
             <a href="javascript:;" class="dropdown-toggle isDisabled "> <!--dropdown-toggle-->

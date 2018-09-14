@@ -20,7 +20,7 @@
                 responseError: function(response) {
                     console.log('status: ', response.status);
                     if (response.status === 401 || response.status === 403) {
-                        delete $localStorage.user;
+                        $localStorage.reset();
                         $location.path('/login');
                     } else if (response.status === 500) {
                         throw new Error(MESSAGES_CONSTANTS.ERROR);
@@ -35,10 +35,5 @@
             };
         }
     ]);
-    // .service('HttpErrorHandler',function() {
-    //     var service = this;
-    //     service.handleError = function(response,cbOnSuccess) {
-    //
-    //     };
-    // });
+
 })(window.angular);

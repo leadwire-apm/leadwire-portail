@@ -61,15 +61,16 @@
                 .then(function() {
                     return invitationId;
                 })
-                .then(UserService.handleBeforeRedirect)
-                .then(handleAfterRedirect)
-                .then(handleLoginSuccess(provider))
+                .then(UserService.handleBeforeRedirect) //accept invitation and update Localstorage
+                .then(handleAfterRedirect) //fetch application and dashboard
+                .then(handleLoginSuccess(provider)) //redirect
                 .catch(handleLoginFailure);
         }
 
         function handleLoginSuccess(provider) {
             return function(response) {
                 toastr.success(MESSAGES_CONSTANTS.LOGIN_SUCCESS(provider));
+                //clear query string (?invitationId=***)
                 $location.search({});
                 vm.isChecking = false;
                 if (
@@ -78,6 +79,7 @@
                     response.dashboards &&
                     response.dashboards.length
                 ) {
+                    //redirect to first dashboard
                     $state.go('app.dashboard.home', {
                         id: response.dashboards[0].id
                     });
@@ -102,47 +104,50 @@
         }
 
         function handleAfterRedirect(user) {
-            if (
-                user.defaultApp &&
-                user.defaultApp.id &&
-                user.defaultApp.isEnabled
-            ) {
-                ApplicationFactory.findAll().then(function(response) {
-                    if (response.data && response.data.length) {
-                        $rootScope.$broadcast('set:apps', response.data);
-                    }
-                });
-                //take the default app
-                return DashboardService.fetchDashboardsByAppId(
-                    user.defaultApp.id
-                );
-            } else {
-                // else take the first enabled app
-                return ApplicationFactory.findAll()
-                    .then(function(response) {
-                        if (response.data && response.data.length) {
-                            $rootScope.$broadcast('set:apps', response.data);
-                            var firstEnabled = response.data.find(function(
-                                app
-                            ) {
-                                return app.isEnabled;
-                            });
-                            if (firstEnabled) {
-                                return DashboardService.fetchDashboardsByAppId(
-                                    firstEnabled.id
-                                );
-                            } else {
-                                return null;
-                            }
-                        }
-                        return null;
-                    })
-                    .catch(function(error) {
-                        console.log('HandleAfterRedirect', error);
-                        return null;
-                    });
-                // no default app
-            }
+           return ApplicationFactory.findAll().then(function(response) {
+                if (response.data && response.data.length) {
+                    $rootScope.$broadcast('set:apps', response.data);
+                }
+               if (
+                   user.defaultApp &&
+                   user.defaultApp.id &&
+                   user.defaultApp.isEnabled
+               ) {
+                   //take the default app
+                   return DashboardService.fetchDashboardsByAppId(
+                       user.defaultApp.id
+                   );
+               } else {
+                   return null;
+                   // else take the first enabled app
+                   // return ApplicationFactory.findAll()
+                   //     .then(function(response) {
+                   //         if (response.data && response.data.length) {
+                   //             $rootScope.$broadcast('set:apps', response.data);
+                   //             var firstEnabled = response.data.find(function(
+                   //                 app
+                   //             ) {
+                   //                 return app.isEnabled;
+                   //             });
+                   //             if (firstEnabled) {
+                   //                 return DashboardService.fetchDashboardsByAppId(
+                   //                     firstEnabled.id
+                   //                 );
+                   //             } else {
+                   //                 return null;
+                   //             }
+                   //         }
+                   //         return null;
+                   //     })
+                   //     .catch(function(error) {
+                   //         console.log('HandleAfterRedirect', error);
+                   //         return null;
+                   //     });
+                   // no default app
+               }
+            });
+
+
         }
 
         function onLoad() {

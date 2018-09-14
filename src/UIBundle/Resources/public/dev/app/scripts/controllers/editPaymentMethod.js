@@ -9,10 +9,10 @@
             'toastr',
             'MESSAGES_CONSTANTS',
             'CONFIG',
-            controller
+            editPaymentMethodCtrlFN
         ]);
 
-    function controller(
+    function editPaymentMethodCtrlFN(
         $scope,
         UserService,
         $rootScope,

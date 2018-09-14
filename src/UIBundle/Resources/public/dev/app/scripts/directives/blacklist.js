@@ -13,8 +13,7 @@ angular.module('leadwireApp').directive('blacklist', function() {
                     }
                 });
                 ngModel.$setValidity('blacklist', valid);
-                if (valid)
-                    scope.$parent.ctrl.blackWord = undefined;
+                if (valid) scope.$parent.ctrl.blackWord = undefined;
 
                 return valid ? value : undefined;
             });
@@ -31,10 +30,9 @@ angular.module('leadwireApp').directive('blacklist', function() {
                     });
                 }
                 ngModel.$setValidity('blacklist', valid);
-                if (valid)
-                    scope.$parent.ctrl.blackWord = undefined;
+                if (valid) scope.$parent.ctrl.blackWord = undefined;
                 return value;
             });
-        },
+        }
     };
 });

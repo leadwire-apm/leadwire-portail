@@ -4,6 +4,7 @@
         .controller('applicationEditCtrl', [
             'ApplicationFactory',
             '$stateParams',
+            '$state',
             '$rootScope',
             'toastr',
             'MESSAGES_CONSTANTS',
@@ -13,6 +14,7 @@
     function applicationEditCtrlFN(
         ApplicationFactory,
         $stateParams,
+        $state,
         $rootScope,
         toastr,
         MESSAGES_CONSTANTS
@@ -34,6 +36,7 @@
                 .then(function() {
                     vm.flipActivityIndicator();
                     toastr.success(MESSAGES_CONSTANTS.EDIT_APP_SUCCESS);
+                    $state.go('app.applicationsList');
                 })
                 .catch(function(error) {
                     vm.flipActivityIndicator();

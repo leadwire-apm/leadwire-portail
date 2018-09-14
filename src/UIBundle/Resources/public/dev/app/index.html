@@ -7,6 +7,9 @@
     <title>Lead Wire APM</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="yes" />
 
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
     <link rel="apple-touch-icon" sizes="57x57" ng-href="{{ASSETS_BASE_URL}}images/favicon/apple-icon-57x57.png">
@@ -82,7 +85,6 @@
 <script src="scripts/extentions/lib.js"></script>
 <script src="scripts/extentions/moment.min.js"></script>
 <script src="vendor/fastclick/lib/fastclick.js"></script>
-
 <script src="vendor/angular-cookies/angular-cookies.js"></script>
 <script src="scripts/extentions/angular-toastr.js"></script>
 <script src="scripts/extentions/sweetalert.js"></script>
@@ -106,6 +108,9 @@
 <script src="scripts/services/httpInterceptorFactory.js"></script>
 <script src="scripts/services/countryApi.js"></script>
 <script src="scripts/services/planFactory.js"></script>
+<script src="scripts/services/menuFactory.js"></script>
+<script src="scripts/services/config.js"></script>
+<script src="scripts/services/paginator.js"></script>
 
 <script src="scripts/app.main.js"></script>
 <script src="scripts/config.router.js"></script>
@@ -126,17 +131,16 @@
 <script src="scripts/directives/vector.js"></script>
 
 <!-- Custom -->
-<script src="scripts/services/config.js"></script>
 <script src="vendor/satellizer/dist/satellizer.min.js"></script>
 <script src="scripts/directives/fileModel.js"></script>
 <script src="scripts/directives/spinner.js"></script>
-<script src="scripts/directives/showtab.js"></script>
-<script src="scripts/directives/validAppName.js"></script>
+<script src="scripts/directives/blacklist.js"></script>
 <script src="scripts/directives/lowercaseOnly.js"></script>
-<script src="scripts/directives/requiredIfTrue.js"></script>
-<script src="scripts/services/menuFactory.js"></script>
 <script src="scripts/directives/httpsrc.js"></script>
 <script src="scripts/directives/markdown.js"></script>
+<script src="scripts/directives/input.js"></script>
+<script src="scripts/directives/preventDefault.js"></script>
+
 
 
 <!-- endbuild -->

@@ -1,6 +1,10 @@
 (function(angular) {
-    angular.module('leadwireApp').
-        provider('markdownConverter', function() {
+    /**
+     * parse markdown to HTML
+     */
+    angular
+        .module('leadwireApp')
+        .provider('markdownConverter', function() {
             var opts = {};
             return {
                 config: function(newOpts) {
@@ -8,10 +12,10 @@
                 },
                 $get: function() {
                     return new window.showdown.Converter(opts);
-                },
+                }
             };
-        }).
-        directive('markdown', [
+        })
+        .directive('markdown', [
             '$sanitize',
             'markdownConverter',
             function($sanitize, markdownConverter) {
@@ -20,18 +24,21 @@
                     link: function(scope, element, attrs) {
                         if (attrs.markdown) {
                             scope.$watch(attrs.markdown, function(newVal) {
-                                var html = newVal ?
-                                    $sanitize(
-                                        markdownConverter.makeHtml(newVal)) :
-                                    '';
+                                var html = newVal
+                                    ? $sanitize(
+                                          markdownConverter.makeHtml(newVal)
+                                      )
+                                    : '';
                                 element.html(html);
                             });
                         } else {
                             var html = $sanitize(
-                                markdownConverter.makeHtml(element.text()));
+                                markdownConverter.makeHtml(element.text())
+                            );
                             element.html(html);
                         }
-                    },
+                    }
                 };
-            }]);
+            }
+        ]);
 })(window.angular);

@@ -16,7 +16,7 @@
 
         if (!!$state.params.id) {
             vm.dashboardLink = $sce.trustAsResourceUrl(
-                ConfigService.getDashboard($state.params.id, false)
+                ConfigService.getDashboard("app_", $state.params.id, false)
             );
         }
     }

@@ -7,8 +7,6 @@ use AppBundle\Service\UserService;
 use ATS\CoreBundle\Controller\Rest\BaseRestController;
 use ATS\PaymentBundle\Exception\OmnipayException;
 use FOS\RestBundle\Controller\Annotations\Route;
-use JMS\Serializer\DeserializationContext;
-use JMS\Serializer\SerializationContext;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
@@ -28,7 +26,6 @@ class UserController extends BaseRestController
         $user = $this->getUser();
         if (!$user) {
             return $this->exception("Non Authorized", 401);
-
         }
 
         return $this->prepareJsonResponse($user, 200, "Default");
@@ -100,7 +97,7 @@ class UserController extends BaseRestController
     {
         try {
             $data = $userService->getSubscription($this->getUser());
-            return $this->exception($data, 200);
+            return $this->json($data, 200);
         } catch (\Exception $e) {
             return $this->exception($e->getMessage(), 400);
         }

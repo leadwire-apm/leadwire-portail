@@ -45,11 +45,10 @@ class AuthController extends BaseRestController
             $parameters["github_access_token_url"],
             $parameters["github_users_api_url"]
         );
-        $userData['timeout'] = time() + 1800;
 
         return new JsonResponse(
             [
-                "token" => $authService->generateToken($userData['_id'], $globalSettnigs['token_secret'])
+                "token" => $authService->generateToken($userData, $globalSettnigs['token_secret'])
             ]
         );
     }

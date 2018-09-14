@@ -24,6 +24,9 @@
 
         vm.save = function() {
             if (vm.userForm.$valid) {
+                if (!vm.user.defaultApp || !vm.user.defaultApp.id) {
+                    vm.user.defaultApp = null;
+                }
                 UserService.saveUser(vm.user, vm.avatar)
                     .then(function(fileName) {
                         vm.handleSuccessForm(fileName);
@@ -35,7 +38,6 @@
         };
 
         vm.handleSuccessForm = function handleSuccess(fileName) {
-
             // $localStorage.user = vm.user;
             if (fileName) {
                 $scope.$emit('update:image', fileName);

@@ -15,8 +15,6 @@ use Doctrine\Bundle\MongoDBBundle\Validator\Constraints\Unique;
  * @ODM\ChangeTrackingPolicy("DEFERRED_EXPLICIT")
  * @JMS\ExclusionPolicy("all")
  * @ATS\ApplicationView
- * @Unique(fields={"name"})
-
  */
 class App
 {
@@ -33,7 +31,7 @@ class App
      * @var string
      *
      * @ODM\Field(type="string", name="uuid")
-     * @ODM\Index(unique=true)
+     * @ODM\UniqueIndex()
      * @JMS\Type("string")
      * @JMS\Expose
      * @JMS\Groups({"Default"})
@@ -44,6 +42,7 @@ class App
      * @var string
      *
      * @ODM\Field(type="string", name="name")
+     * @ODM\UniqueIndex()
      * @Assert\Length(min=5, max=32)
      * @JMS\Type("string")
      * @JMS\Expose
@@ -359,6 +358,15 @@ class App
     public function getIndex()
     {
         return 'app_' . $this->getUuid();
+    }
+
+    public function getIndexes()
+    {
+        return [
+            $this->getIndex(),
+            $this->getOwner()->getIndex(),
+            'shared_' . $this->getUuid(),
+        ];
     }
 
     /**

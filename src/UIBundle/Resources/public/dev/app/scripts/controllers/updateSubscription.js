@@ -11,10 +11,10 @@
             'toastr',
             'MESSAGES_CONSTANTS',
             'CONFIG',
-            controller
+            updateSubscriptionCtrlFN
         ]);
 
-    function controller(
+    function updateSubscriptionCtrlFN(
         $scope,
         UserService,
         PlanFactory,
@@ -30,8 +30,8 @@
             UPGRADE: 'upgrade',
             DOWNGRADE: 'downgrade'
         };
-        var YEARLY_MONTH_TEXT = 'Yearly bill total';
-        var MONTHLY_MONTH_TEXT = 'Monthly bill total';
+        var YEARLY_BILLING_TEXT = 'Yearly bill total';
+        var MONTHLY_BILLING_TEXT = 'Monthly bill total';
 
         function flipActivityIndicator(activity) {
             vm.ui[activity] = !vm.ui[activity];
@@ -55,32 +55,41 @@
             }
         }
 
-        function validateBilling() {
-            if (vm.selectedPlan.price > 0) {
-                if (!vm.billingForm.$invalid) {
-                    // if he has an old basic account we need to subscribe first before update
-                    if ($rootScope.user.plan.price === 0) {
+        function loadSubscription() {
+            UserService.getSubscription().then(function(response) {
+                vm.userSubscription = response.data;
+            });
+        }
+
+        function createSubscription() {
+            if (!vm.billingForm.$invalid) {
+                vm.flipActivityIndicator('isSaving');
+                UserService.subscribe(vm.billingInformation, $rootScope.user.id)
+                    .then(function(response) {
                         vm.flipActivityIndicator('isSaving');
-                        UserService.subscribe(
-                            vm.billingInformation,
-                            $rootScope.user.id
-                        )
-                            .then(function(response) {
-                                vm.flipActivityIndicator('isSaving');
-                                if (response.status === 200) {
-                                    vm.updateSubscription();
-                                } else {
-                                    handleError(response);
-                                }
-                            })
-                            .catch(function(error) {
-                                vm.flipActivityIndicator('isSaving');
-                                toastr.error(error.message);
-                            });
-                    } else {
-                        vm.updateSubscription();
-                    }
-                }
+                        if (response.status === 200) {
+                            toastr.success(MESSAGES_CONSTANTS.SUCCESS);
+                        } else {
+                            vm.handleError(response);
+                        }
+                    })
+                    .catch(function(error) {
+                        vm.flipActivityIndicator('isSaving');
+                        toastr.error(error.message);
+                    });
+            } else {
+                toastr.error('Verify your card information');
+            }
+        }
+
+        /**
+         * BASIC-> * : POST
+         * *(-BASIC) -> * : PUT
+         */
+        function validateBilling() {
+            // if he has an old basic account we need to subscribe first before update
+            if ($rootScope.user.plan.price === 0) {
+                vm.createSubscription();
             } else {
                 vm.updateSubscription();
             }
@@ -97,17 +106,23 @@
 
         function updateSubscription() {
             vm.flipActivityIndicator('isSaving');
-            UserService.updateSubscription({
-                plan: vm.billingInformation.plan,
-                billingType: vm.billingInformation.billingType
-            })
+            var payload = angular.extend(
+                {},
+                {
+                    plan: vm.billingInformation.plan,
+                    billingType: vm.billingInformation.billingType,
+                    periodEnd : vm.userSubscription.current_period_end
+                }
+            );
+
+            UserService.updateSubscription(payload)
                 .then(function(response) {
                     vm.flipActivityIndicator('isSaving');
                     if (response.status === 200) {
                         $state.go('app.billingList');
                         toastr.success(MESSAGES_CONSTANTS.SUCCESS);
                     } else {
-                        handleError(response);
+                        vm.handleError(response);
                     }
                 })
                 .catch(function(error) {
@@ -117,14 +132,13 @@
         }
 
         function handleError(response) {
-            if (
-                response.data.message
-            ) {
+            if (response.data.message) {
                 toastr.error(response.data.message);
             } else {
                 toastr.error(MESSAGES_CONSTANTS.ERROR);
             }
         }
+
         function calculatePriceInclTax(price) {
             var inclPrice = price * (1 + CONSTANTS.TAX / 100);
             return inclPrice.toFixed(2);
@@ -144,45 +158,38 @@
             vm.cantMakeUpgrade = cant && vm.isUpgrade;
         }
 
+        function updatePrices(newValue) {
+            if (vm.selectedPlan && vm.selectedPlan.price) {
+                if (newValue === 'monthly') {
+                    vm.exclTaxPrice = vm.selectedPlan.price;
+                    vm.ui.billText = MONTHLY_BILLING_TEXT;
+                } else {
+                    vm.exclTaxPrice =
+                        vm.selectedPlan.price *
+                        (1 - vm.selectedPlan.discount / 100) *
+                        12;
+                    vm.ui.billText = YEARLY_BILLING_TEXT;
+                }
+                vm.inclTaxPrice = calculatePriceInclTax(vm.exclTaxPrice);
+            }
+        }
+
         function registerWatchers() {
-            $scope.$watch(
-                function() {
-                    return vm.plans;
-                },
-                function(newVal) {
-                    updateCantUpgrade(newVal);
-                }
-            );
-            $scope.$watch(
-                function() {
-                    return vm.billingInformation.billingType;
-                },
-                function(newValue) {
-                    if (vm.selectedPlan && vm.selectedPlan.price) {
-                        if (newValue === 'monthly') {
-                            vm.exclTaxPrice = vm.selectedPlan.price;
-                            vm.ui.billText = MONTHLY_MONTH_TEXT;
-                        } else {
-                            vm.exclTaxPrice =
-                                vm.selectedPlan.price *
-                                (1 - vm.selectedPlan.discount / 100) *
-                                12;
-                            vm.ui.billText = YEARLY_MONTH_TEXT;
-                        }
-                        vm.inclTaxPrice = calculatePriceInclTax(
-                            vm.exclTaxPrice
-                        );
-                    }
-                }
-            );
+            $scope.$watch(function() {
+                return vm.plans;
+            }, updateCantUpgrade);
+            $scope.$watch(function() {
+                return vm.billingInformation.billingType;
+            }, updatePrices);
         }
 
         vm.onLoad = function() {
+            //init state
             vm = angular.extend(vm, {
                 moment: moment,
                 CONSTANTS: CONSTANTS,
                 ui: {
-                    billText: MONTHLY_MONTH_TEXT,
+                    billText: MONTHLY_BILLING_TEXT,
                     isSaving: false,
                     isLoading: false
                 },
@@ -204,7 +211,11 @@
             vm.validateBilling = validateBilling;
             vm.shouldShowPlan = shouldShowPlan;
             vm.updateSubscription = updateSubscription;
+            vm.createSubscription = createSubscription;
+            vm.loadSubscription = loadSubscription;
+            vm.handleError = handleError;
             vm.loadPlans();
+            vm.loadSubscription();
             registerWatchers();
         };
     }

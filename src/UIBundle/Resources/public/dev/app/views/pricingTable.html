@@ -1,13 +1,12 @@
 <div class="wrap">
     <div class="pricing-table">
-
         <div ng-repeat="plan in ctrl.plans" class="plan" ng-if="ctrl.shouldShowPlan(plan)">
             <h3 class="name">{{plan.name}}</h3>
             <h4 class="price">{{plan.price}} € <br>
                 <span class="text-center"> per month</span>
             </h4>
             <ul class="details">
-                <li>{{plan.retention}}  {{plan.retention > 1 ? 'days' :'day'}}  <strong>Retention</strong></li>
+                <li>{{plan.retention}} {{plan.retention > 1 ? 'days' :'day'}} <strong>Retention</strong></li>
                 <li>{{plan.maxTransactionPerDay.toLocaleString()}}<strong> Transaction/day </strong></li>
             </ul>
 
@@ -16,9 +15,9 @@
                         ng-click="ctrl.choosePlan(plan)" class="btn">Order
                 </button>
             </h5>
-        </div><!--.plan-->
+        </div>
+    </div>
 </div>
-
 <style>
     .cf:before, .pricing-table:before,
     .cf:after,
@@ -52,8 +51,8 @@
         position: relative;
         z-index: 10;
         box-shadow: 1px 1px 10px #424242;
-
     }
+
     .plan:first-child:nth-last-child(1) {
         width: 50%;
         margin-left: 25%;
@@ -132,5 +131,22 @@
     .pricing-table .plan:nth-child(2n) {
         /*box-shadow: 0px 0px 10px #424242;*/
         z-index: 100;
+    }
+    @media screen and (max-width: 768px) {
+        .plan:first-child:nth-last-child(1) {
+            width: 100%
+        }
+
+        /* two items */
+        .plan:first-child:nth-last-child(2),
+        .plan:first-child:nth-last-child(2) ~ .plan {
+            width: 100%
+        }
+
+        /* three items */
+        .plan:first-child:nth-last-child(3),
+        .plan:first-child:nth-last-child(3) ~ .plan {
+            width: 100%
+        }
     }
 </style>

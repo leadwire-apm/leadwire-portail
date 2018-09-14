@@ -4,6 +4,7 @@ namespace AppBundle\Command;
 
 use AppBundle\Service\ApplicationTypeService;
 use ATS\PaymentBundle\Service\PlanService;
+use Doctrine\ODM\MongoDB\DocumentManager;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -15,12 +16,16 @@ class InstallCommand extends Command
 {
     private $applicationTypeService;
     private $planService;
+    private $dm;
 
-    public function __construct(ApplicationTypeService $applicationTypeService, PlanService $planService)
-    {
+    public function __construct(
+        ApplicationTypeService $applicationTypeService,
+        PlanService $planService,
+        DocumentManager $doctrine
+    ) {
         $this->applicationTypeService = $applicationTypeService;
         $this->planService = $planService;
-
+        $this->dm = $doctrine;
         parent::__construct();
     }
 
@@ -92,6 +97,9 @@ Load default Application Type. Insert template for Kibana and more..')
             $output->writeln("<fg=red>" . $e->getMessage() . "</>");
             return;
         }
+
+        $output->writeln("Creating Indexes");
+        $this->dm->getSchemaManager()->ensureIndexes();
 
         $output->writeln("<fg=green>It's done!</>");
     }

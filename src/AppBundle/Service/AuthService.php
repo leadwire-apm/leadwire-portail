@@ -17,12 +17,18 @@ class AuthService
     private $container;
     private $userManager;
     private $ldapService;
+    private $elastic;
 
-    public function __construct(ContainerInterface $container, UserManager $userManage, LdapService $ldapService)
-    {
+    public function __construct(
+        ContainerInterface $container,
+        UserManager $userManage,
+        LdapService $ldapService,
+        ElasticSearch $elastic
+    ) {
         $this->container = $container;
         $this->userManager = $userManage;
         $this->ldapService = $ldapService;
+        $this->elastic = $elastic;
     }
 
     private function get($name)
@@ -51,9 +57,10 @@ class AuthService
             $user = $this->checkAndAdd($data);
             $data['_id'] = $user->getId();
             if (!$user->getEmail()) {
-                $this->ldapService->createLdapUserEntry($user->getUuid());
+                $this->ldapService->createUserEntry($user->getUuid());
+                $this->elastic->resetUserIndexes($user);
             }
-            return $data;
+            return $user;
         } catch (GuzzleException $e) {
             sd($e->getMessage());
         } catch (\Exception $e) {
@@ -61,14 +68,14 @@ class AuthService
         }
     }
 
-    public function generateToken($userId, $tokenSecret)
+    public function generateToken(User $user, $tokenSecret)
     {
         $token = [
             'host' => $this->get('app_domain'),
-            'user' =>  $userId,
-            'name' =>  "leadwire-apm-test",
+            'user' =>  $user->getIndex(),
+            'name' =>  $user->getUsername(),
             'iat' => time(),
-            'exp' =>  time() + 18000000,
+            'exp' =>  time() + 1800 + 1800 * 2,
             'nbf' => time()
         ];
 
@@ -121,6 +128,6 @@ class AuthService
     {
         $jwt = explode(' ', $authorization);
         $token = $this->decodeToken($jwt[1]);
-        return $this->userManager->getOneBy(['id' => $token->user]);
+        return $this->userManager->getOneBy(['uuid' => str_replace("user_", "", $token->user)]);
     }
 }

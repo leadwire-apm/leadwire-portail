@@ -24,6 +24,12 @@
         var service = this;
         var sep = '###';
 
+        /**
+         * refresh user stored in localStorage
+         *
+         * @param force
+         * @returns {Promise}
+         */
         service.setProfile = function(force) {
             return new Promise(function(resolve, reject) {
                 if (
@@ -34,7 +40,6 @@
                     Account.getProfile()
                         .then(function(response) {
                             var userInfo = response.data;
-                            var sep = '###';
                             var contactInfos = response.data.contact
                                 ? response.data.contact.split(sep)
                                 : [];
@@ -69,11 +74,18 @@
             });
         };
 
+        /**
+         * Update user infos and upload new image if needed
+         *
+         * @param user
+         * @param avatar
+         * @returns {Promise}
+         */
         service.saveUser = function(user, avatar) {
             return new Promise(function(resolve, reject) {
                 var updatedInfo = service.transformUser(user);
                 Account.updateProfile(updatedInfo)
-                    .then(function(data) {
+                    .then(function(updated) {
                         $localStorage.user = angular.extend(
                             $localStorage.user,
                             updatedInfo,
@@ -83,7 +95,7 @@
                             }
                         );
 
-                        if (data) {
+                        if (updated) {
                             //if he updated his avatar we need to make another request
                             if (avatar) {
                                 FileService.upload(avatar, 'user').then(
@@ -105,7 +117,7 @@
                                 resolve();
                             }
                         } else {
-                            throw new Error(data);
+                            throw new Error(updated);
                         }
                     })
                     .catch(function(error) {
@@ -115,6 +127,14 @@
             });
         };
 
+        /**
+         * On login we updated user in localStorage and
+         * we need to check if there is an invitation in the url
+         * in this case we accept it if its not accepted yet
+         *
+         * @param invitationId
+         * @returns {Promise}
+         */
         service.handleBeforeRedirect = function(invitationId) {
             return new Promise(function(resolve, reject) {
                 service
@@ -130,7 +150,7 @@
                                 })
                                 .catch(function(error) {
                                     console.log(
-                                        'service.handleBeforeRedirect 1',
+                                        'handleBeforeRedirect 1',
                                         error
                                     );
                                     resolve($localStorage.user);
@@ -140,12 +160,18 @@
                         }
                     })
                     .catch(function(error) {
-                        console.log('service.handleBeforeRedirect 2', error);
+                        console.log('handleBeforeRedirect 2', error);
                         reject(error);
                     });
             });
         };
 
+        /**
+         * change object shape to match Backend needs
+         *
+         * @param user
+         * @returns {Object}
+         */
         service.transformUser = function(user) {
             var phone = user.contact
                 ? user.phoneCode + sep + user.contact
@@ -168,6 +194,12 @@
             return updatedInfo;
         };
 
+        /**
+         * Subscribe to a plan
+         *
+         * @param billingInfo
+         * @returns {Promise}
+         */
         service.subscribe = function(billingInfo) {
             var payload = angular.copy(billingInfo);
             if (payload.card && payload.card.expiry) {
@@ -182,6 +214,11 @@
             return Account.subscribe(payload, $localStorage.user.id);
         };
 
+        /**
+         * On first login we need to show a model
+         * to update user information
+         * and subscribe to a plan
+         */
         service.handleFirstLogin = function() {
             var connectedUser = angular.extend({}, $localStorage.user);
             // var connectedUser = {id:'sa'};
@@ -206,6 +243,7 @@
                         ]
                     })
                     .then(function() {
+                        // show modal
                         $ocLazyLoad
                             .load({
                                 name: 'sbAdminApp',
@@ -232,12 +270,29 @@
             }
         };
 
+        /**
+         * Load invoices
+         *
+         * @returns {*}
+         */
         service.getInvoices = function() {
             return Account.invoices($localStorage.user.id);
         };
+        /**
+         * load subscription
+         *
+         * @returns {*}
+         */
         service.getSubscription = function() {
             return Account.subscription($localStorage.user.id);
         };
+
+        /**
+         * change plan
+         *
+         * @param body
+         * @returns {*}
+         */
         service.updateSubscription = function(body) {
             return Account.updateSubscription(body, $localStorage.user.id).then(
                 function(updateResponse) {
@@ -251,6 +306,13 @@
                 }
             );
         };
+
+        /**
+         * edit payment information
+         *
+         * @param cardInfo
+         * @returns {*}
+         */
         service.updatePaymentMethod = function(cardInfo) {
             var payload = angular.copy(cardInfo);
             var expiryInfos = payload.expiry.split('/');
