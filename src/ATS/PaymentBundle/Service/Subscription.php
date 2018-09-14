@@ -74,7 +74,7 @@ class Subscription
      * @param string $customerReference
      * @param string $subscriptionReference
      * @param string $planReference
-     * @param int $anchor
+     * @param string $anchor
      * @return array
      * @throws OmnipayException
      */
@@ -82,7 +82,7 @@ class Subscription
         string $customerReference,
         string $subscriptionReference,
         string $planReference,
-        int $anchor
+        $anchor
     ) {
         return $this->request('updateSubscription', [
             'customerReference' => $customerReference,
