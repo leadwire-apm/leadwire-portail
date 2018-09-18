@@ -8,6 +8,7 @@
             '$stateParams',
             '$rootScope',
             '$state',
+            '$q',
             'toastr',
             'MESSAGES_CONSTANTS',
             'CONFIG',
@@ -21,6 +22,7 @@
         $stateParams,
         $rootScope,
         $state,
+        $q,
         toastr,
         MESSAGES_CONSTANTS,
         CONSTANTS
@@ -37,12 +39,53 @@
             vm.ui[activity] = !vm.ui[activity];
         }
 
+        /**
+         *
+         * @returns {Promise}
+         */
         function loadPlans() {
             vm.flipActivityIndicator('isLoading');
-            PlanFactory.findAll().then(function(response) {
+            return PlanFactory.findAll().then(function(response) {
                 vm.flipActivityIndicator('isLoading');
                 vm.plans = response.data;
             });
+        }
+
+        function loadInvoices() {
+            vm.flipActivityIndicator();
+            return UserService.getInvoices()
+                .then(function(response) {
+                    vm.flipActivityIndicator();
+                    if (response.status === 200) {
+                        vm.invoices = response.data;
+                    }
+                })
+                .catch(function() {
+                    vm.flipActivityIndicator();
+                });
+        }
+
+        function loadSubscription() {
+            return UserService.getSubscription().then(function(response) {
+                vm.userSubscription = response.data;
+            });
+        }
+
+        function init() {
+            vm.flipActivityIndicator('isInitializing');
+            var plansPromise = vm.loadPlans();
+            var subscriptionPromise = vm.loadSubscription();
+            var invoicePromise = vm.loadInvoices();
+            $q.all([plansPromise, subscriptionPromise, invoicePromise])
+                .then(function() {
+                    vm.flipActivityIndicator('isInitializing');
+                })
+                .catch(function() {
+                    vm.flipActivityIndicator('isInitializing');
+                    vm.ui.error = true;
+
+                    toastr.error(MESSAGES_CONSTANTS.ERROR);
+                });
         }
 
         function choosePlan(selectedPlan) {
@@ -53,12 +96,6 @@
                 vm.exclTaxPrice = selectedPlan.price;
                 vm.inclTaxPrice = calculatePriceInclTax(selectedPlan.price);
             }
-        }
-
-        function loadSubscription() {
-            UserService.getSubscription().then(function(response) {
-                vm.userSubscription = response.data;
-            });
         }
 
         function createSubscription() {
@@ -92,7 +129,7 @@
          */
         function validateBilling() {
             // if he has an old basic account we need to subscribe first before update
-            if ($rootScope.user.plan.price === 0) {
+            if (!vm.invoices || !vm.invoices.length) {
                 vm.createSubscription();
             } else {
                 vm.updateSubscription();
@@ -195,7 +232,8 @@
                 ui: {
                     billText: MONTHLY_BILLING_TEXT,
                     isSaving: false,
-                    isLoading: false
+                    isLoading: false,
+                    isInitializing: false
                 },
                 billingInformation: {
                     plan: null,
@@ -212,15 +250,17 @@
             });
             vm.flipActivityIndicator = flipActivityIndicator;
             vm.loadPlans = loadPlans;
+            vm.loadInvoices = loadInvoices;
+            vm.loadSubscription = loadSubscription;
+            vm.init = init;
             vm.choosePlan = choosePlan;
             vm.validateBilling = validateBilling;
             vm.shouldShowPlan = shouldShowPlan;
             vm.updateSubscription = updateSubscription;
             vm.createSubscription = createSubscription;
-            vm.loadSubscription = loadSubscription;
             vm.handleError = handleError;
-            vm.loadPlans();
-            vm.loadSubscription();
+
+            vm.init();
             registerWatchers();
         };
     }
