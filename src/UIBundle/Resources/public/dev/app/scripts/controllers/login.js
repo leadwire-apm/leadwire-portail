@@ -81,7 +81,9 @@
                 ) {
                     //redirect to first dashboard
                     $state.go('app.dashboard.home', {
-                        id: response.dashboards[0].id
+                        id: response.dashboards[0].id,
+                        tenant:null
+
                     });
                 } else {
                     $state.go('app.applicationsList');

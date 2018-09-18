@@ -66,10 +66,14 @@
                 vm.flipActivityIndicator('isSaving');
                 UserService.subscribe(vm.billingInformation, $rootScope.user.id)
                     .then(function(response) {
-                        vm.flipActivityIndicator('isSaving');
                         if (response.status === 200) {
-                            toastr.success(MESSAGES_CONSTANTS.SUCCESS);
+                            UserService.setProfile(true).then(function() {
+                                vm.flipActivityIndicator('isSaving');
+                                toastr.success(MESSAGES_CONSTANTS.SUCCESS);
+                                $state.go('app.billingList');
+                            });
                         } else {
+                            vm.flipActivityIndicator('isSaving');
                             vm.handleError(response);
                         }
                     })
@@ -111,7 +115,7 @@
                 {
                     plan: vm.billingInformation.plan,
                     billingType: vm.billingInformation.billingType,
-                    periodEnd : vm.userSubscription.current_period_end
+                    periodEnd: vm.userSubscription.current_period_end
                 }
             );
 
@@ -200,7 +204,7 @@
                     },
                     billingType: 'monthly'
                 },
-                orderBy:'price',
+                orderBy: 'price',
                 action: $stateParams.action,
                 isUpgrade: $stateParams.action === ACTIONS.UPGRADE,
                 isDowngrade: $stateParams.action === ACTIONS.DOWNGRADE,

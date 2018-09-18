@@ -327,7 +327,7 @@ angular
                     abstract: true
                 })
                 .state('app.dashboard.home', {
-                    url: '/dashboard/{id}',
+                    url: '/dashboard/:id/:tenant',
                     templateUrl:
                         CONFIG.ASSETS_BASE_URL + 'views/dashboard.html',
                     resolve: {
