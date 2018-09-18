@@ -4,7 +4,7 @@ namespace AppBundle\Service;
 
 use AppBundle\Document\User;
 use AppBundle\Manager\UserManager;
-use Monolog\Logger;
+use Psr\Log\LoggerInterface;
 use Ramsey\Uuid\Uuid;
 use Firebase\JWT\ExpiredException;
 use \Firebase\JWT\JWT;
@@ -26,7 +26,7 @@ class AuthService
         UserManager $userManage,
         LdapService $ldapService,
         ElasticSearch $elastic,
-        Logger $logger
+        LoggerInterface $logger
     ) {
         $this->container = $container;
         $this->userManager = $userManage;
