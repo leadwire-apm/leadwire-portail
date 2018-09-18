@@ -166,13 +166,11 @@ class CustomerService
 
     public function getInvoices($customerRef)
     {
-        return $this->request(
-            'listInvoices',
+        return $this->gateway->listInvoices(
             array(
                 'customerReference' => $customerRef,
-                'limit' => 100
             )
-        )['data'];
+        )->send()->getList();
     }
 
     /**
