@@ -164,7 +164,7 @@ class InvitationService
         try {
             $invitation = $this->serializer->deserialize($json, Invitation::class, 'json');
             $invitation->setApp($this->appService->getApp($invitation->getApp()->getId()));
-            if ($invitation->getApp()->getOwner() != $invitation->getUser()) {
+            if ($invitation->getApp()->getOwner()->getId() != $invitation->getUser()->getId()) {
                 $this->invitationManager->update($invitation);
                 $this->ldap->createInvitationEntry($invitation);
                 $isSuccessful = true;

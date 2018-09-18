@@ -61,7 +61,7 @@ class ElasticSearch
                 $key = $index == 0 ? "Default" : "Custom";
                 $res[$key] = isset($res[$key]) ? $res[$key] : [];
                 $response = $client->get(
-                    $this->settings['host'] . ".kibana_$tenant" . "/_search?pretty",
+                    $this->settings['host'] . ".kibana_$tenant" . "/_search?pretty&from=0&size=10000",
                     [
                         'headers' => [
                             'Content-type' => 'application/json',
@@ -72,6 +72,7 @@ class ElasticSearch
                         ]
                     ]
                 );
+
                 $body = json_decode($response->getBody())->hits->hits;
                 foreach ($body as $element) {
                     if (in_array($element->_source->type, array("dashboard"/*, "visualization"*/))) {
@@ -132,14 +133,38 @@ class ElasticSearch
     {
         $tenants = $app->getIndexes();
 
-        foreach ($tenants as $tenant) {
-            $this->putIndex($tenant);
-        }
+        $this->postIndex(
+            [
+                "indices" => ".kibana_app",
+                "ignore_unavailable" => "true",
+                "include_global_state" => false,
+                "rename_pattern" => ".kibana_(.+)",
+                "rename_replacement" => ".kibana_" . $tenants[0]
+            ]
+        );
+
+        $this->postIndex(
+            [
+                "indices" => ".kibana_shared",
+                "ignore_unavailable" => "true",
+                "include_global_state" => false,
+                "rename_pattern" => ".kibana_(.+)",
+                "rename_replacement" => ".kibana_" . $tenants[2]
+            ]
+        );
     }
 
     public function resetUserIndexes(User $user)
     {
-        $this->putIndex($user->getIndex());
+        $this->postIndex(
+            [
+                "indices" => ".kibana_user",
+                "ignore_unavailable" => "true",
+                "include_global_state" => false,
+                "rename_pattern" => ".kibana_(.+)",
+                "rename_replacement" => ".kibana_" . $user->getIndex()
+            ]
+        );
     }
 
     public function importIndex(string $index = "adm-portail")
@@ -174,6 +199,25 @@ class ElasticSearch
             $client->put(
                 $this->settings['host'] . ".kibana_" . $index,
                 [
+                    'headers' => [
+                        'Content-type' => 'application/json',
+                    ],
+                    'auth' => $this->getAuth()
+                ]
+            );
+        } catch (\GuzzleHttp\Exception\ClientException $e) {
+            $this->logger->critical("Error on reset index", ['exception' => $e ]);
+        }
+    }
+
+    private function postIndex(array $options)
+    {
+        $client = new \GuzzleHttp\Client(['defaults' => ['verify' => false]]);
+        try {
+            $client->post(
+                $this->settings['host'] . "/_snapshot/my_backup/kibana_snapshot/_restore",
+                [
+                    'body' => json_encode($options),
                     'headers' => [
                         'Content-type' => 'application/json',
                     ],
