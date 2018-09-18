@@ -10,7 +10,11 @@
 </div>
 
 <div class="col-sm-12 col-md-12 col-xs-12">
-    <div ng-if="!ctrl.themeList.length" class="alert alert-info text-center">
+    <div ng-if="ctrl.isLoading" class="text-center m-b--15">
+        <spinner is-loading="ctrl.isLoading" size="32"></spinner>
+    </div>
+
+    <div ng-if="!ctrl.themeList.length && !ctrl.isLoading" class="alert alert-info text-center">
         <h4>
             No Dashboard yet.
         </h4>
@@ -19,7 +23,7 @@
         <h3>{{theme.name}}</h3>
         <ul class="list-group">
             <a class="list-group-item" ng-repeat="dashboard in theme.dashboards"
-               ui-sref="app.dashboard.home({id:dashboard.id})">
+               ui-sref="app.dashboard.home({id:dashboard.id,tenant:dashboard.tenant})">
                 <i class="pull-right"
                    style="font-size: medium;padding: .2em 10px .3em"
                    ng-class="{'fa fa-lock label label-danger':dashboard.private,'fa fa-unlock label label-info':!dashboard.private}">

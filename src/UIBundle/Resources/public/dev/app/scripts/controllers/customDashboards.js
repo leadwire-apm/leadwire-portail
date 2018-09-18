@@ -2,35 +2,47 @@
     angular
         .module('leadwireApp')
         .controller('customDashboardsCtrl', [
+            '$scope',
+            'DashboardService',
             '$localStorage',
             '$rootScope',
             controller
         ]);
 
-    function controller($localStorage, $rootScope) {
+    function controller($scope, DashboardService, $localStorage, $rootScope) {
         var vm = this;
 
         vm.onLoad = function() {
-            vm.loadThemeList();
+            vm.isLoading = true;
+            DashboardService.fetchDashboardsByAppId(
+                $rootScope.user.defaultApp.id
+            )
+                .then(function(data) {
+                    vm.loadThemeList.apply(vm, [data.custom]);
+                })
+                .catch(function() {
+                    vm.isLoading = false;
+                });
         };
 
-        $rootScope.$on('context:updated', function() {
-            vm.loadThemeList();
-        });
-
-        vm.loadThemeList = function() {
+        vm.loadThemeList = function(dashboards) {
+            var customDashboards = dashboards || $localStorage.customMenus.list;
             vm.selectedAppUuid = $localStorage.selectedApp.uuid;
             vm.currentUserUuid = $localStorage.user.uuid;
-            vm.themeList = Object.keys($localStorage.customMenus.list).reduce(
-                function(acc, theme) {
+            $scope.$apply(function() {
+                vm.isLoading = false;
+                vm.themeList = Object.keys(customDashboards).reduce(function(
+                    acc,
+                    theme
+                ) {
                     acc.push({
                         name: theme,
-                        dashboards: $localStorage.customMenus.list[theme]
+                        dashboards: customDashboards[theme]
                     });
                     return acc;
                 },
-                []
-            );
+                []);
+            });
         };
 
         vm.onLoad();
