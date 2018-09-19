@@ -128,30 +128,33 @@ class ElasticSearch
 
     /**
      * @param App $app
+     * @return bool
      */
     public function resetAppIndexes(App $app)
     {
         $tenants = $app->getIndexes();
 
-        $this->postIndex(
+        if (!$this->postIndex(
             [
-                "indices" => ".kibana_app",
-                "ignore_unavailable" => "true",
-                "include_global_state" => false,
-                "rename_pattern" => ".kibana_(.+)",
-                "rename_replacement" => ".kibana_" . $tenants[0]
+                    "indices" => ".kibana_app",
+                    "ignore_unavailable" => "true",
+                    "include_global_state" => false,
+                    "rename_pattern" => ".kibana_(.+)",
+                    "rename_replacement" => ".kibana_" . $tenants[0]
             ]
-        );
-
-        $this->postIndex(
-            [
-                "indices" => ".kibana_shared",
-                "ignore_unavailable" => "true",
-                "include_global_state" => false,
-                "rename_pattern" => ".kibana_(.+)",
-                "rename_replacement" => ".kibana_" . $tenants[2]
-            ]
-        );
+        ) ||
+            ! $this->postIndex(
+                [
+                    "indices" => ".kibana_shared",
+                    "ignore_unavailable" => "true",
+                    "include_global_state" => false,
+                    "rename_pattern" => ".kibana_(.+)",
+                    "rename_replacement" => ".kibana_" . $tenants[2]
+                ]
+            ) ) {
+            return false;
+        }
+        return true;
     }
 
     public function resetUserIndexes(User $user)
@@ -226,6 +229,7 @@ class ElasticSearch
             );
         } catch (\GuzzleHttp\Exception\ClientException $e) {
             $this->logger->critical("Error on reset index", ['exception' => $e ]);
+            return false;
         }
     }
 
@@ -248,7 +252,6 @@ class ElasticSearch
             return true;
         } catch (\Exception $e) {
             $this->logger->warning("Error when deleting index", ['exception' => $e ]);
-
             return false;
         }
     }

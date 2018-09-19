@@ -33,9 +33,9 @@ class Kibana
      */
     public function createDashboards(App $app)
     {
-        $this->elastic->deleteIndex();
+        $isSuccess = $this->elastic->deleteIndex();
         //$this->elastic->importIndex($app->getIndex());
-        $this->elastic->resetAppIndexes($app);
+        $isSuccess &= $this->elastic->resetAppIndexes($app);
 
         $client = new \GuzzleHttp\Client(['defaults' => ['verify' => false]]);
         $json_template = json_encode($app->getType()->getTemplate());
@@ -55,7 +55,8 @@ class Kibana
                 ]
             );
 
-            return $this->elastic->copyIndex($app->getIndex());
+            $isSuccess &= $this->elastic->copyIndex($app->getIndex());
+            return $isSuccess;
         } catch (\Exception $e) {
             $this->logger->error("error on import", ["exception" => $e]);
             return false;
