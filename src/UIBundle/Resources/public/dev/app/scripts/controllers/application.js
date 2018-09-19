@@ -34,7 +34,8 @@
 
                     vm.apps = response.data;
                     vm.paginator.items = vm.apps;
-                    $localStorage.applications = response.data;
+                    $localStorage.applications = vm.apps;
+                    $scope.$broadcast('set:apps', vm.apps);
                 })
                 .catch(function() {
                     vm.flipActivityIndicator('isLoading');

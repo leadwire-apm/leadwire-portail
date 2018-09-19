@@ -70,7 +70,7 @@
                 vm.userSubscription = response.data;
             });
         }
-
+toastr
         function init() {
             vm.flipActivityIndicator('isInitializing');
             var plansPromise = vm.loadPlans();
