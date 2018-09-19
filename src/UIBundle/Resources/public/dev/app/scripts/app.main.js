@@ -163,6 +163,7 @@
             delete $localStorage.applications;
             delete $localStorage.dashboards;
             delete $localStorage.selectedAppId;
+            delete $localStorage.selectedApp;
 
             $auth.logout().then(function() {
                 toastr.info(MESSAGES_CONSTANTS.LOGOUT_SUCCESS);

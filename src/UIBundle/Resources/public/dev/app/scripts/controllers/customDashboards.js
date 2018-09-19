@@ -15,7 +15,7 @@
         vm.onLoad = function() {
             vm.isLoading = true;
             DashboardService.fetchDashboardsByAppId(
-                $rootScope.user.defaultApp.id
+                $localStorage.selectedAppId
             )
                 .then(function(data) {
                     vm.loadThemeList.apply(vm, [data.custom]);
