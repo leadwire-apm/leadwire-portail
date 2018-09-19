@@ -72,6 +72,10 @@
 
         $scope.$on('set:apps', function(event, apps) {
             $scope.applications = $localStorage.applications = apps;
+            $scope.paginator = Paginator.create({
+                start: 0,
+                items: $scope.applications
+            });
         });
 
         $scope.$on('set:contextApp', function(event, appId) {
@@ -98,12 +102,6 @@
             });
         });
 
-        $scope.$on('new-application', function(event, newApp) {
-            (
-                $localStorage.applications || ($localStorage.applications = [])
-            ).push(newApp);
-            ($scope.applications || ($scope.applications = [])).push(newApp);
-        });
 
         if (angular.isDefined($localStorage.layout)) {
             $scope.app.layout = $localStorage.layout;
