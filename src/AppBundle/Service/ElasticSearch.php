@@ -227,6 +227,7 @@ class ElasticSearch
                     'auth' => $this->getAuth()
                 ]
             );
+            return true;
         } catch (\GuzzleHttp\Exception\ClientException $e) {
             $this->logger->critical("Error on reset index", ['exception' => $e ]);
             return false;
