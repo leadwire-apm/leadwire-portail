@@ -1,12 +1,7 @@
 (function(angular) {
     angular
         .module('leadwireApp')
-        .run(function(
-            $rootScope,
-            $localStorage,
-            CONFIG,
-            $templateCache
-        ) {
+        .run(function($rootScope, $localStorage, CONFIG, $templateCache) {
             $rootScope.menus = $localStorage.currentMenu;
             $rootScope.applications = $localStorage.applications;
             $rootScope.dashboards = $localStorage.dashboards;
@@ -77,6 +72,10 @@
 
         $scope.$on('set:apps', function(event, apps) {
             $scope.applications = $localStorage.applications = apps;
+            $scope.paginator = Paginator.create({
+                start: 0,
+                items: $scope.applications
+            });
         });
 
         $scope.$on('set:contextApp', function(event, appId) {
@@ -103,12 +102,6 @@
             });
         });
 
-        $scope.$on('new-application', function(event, newApp) {
-            (
-                $localStorage.applications || ($localStorage.applications = [])
-            ).push(newApp);
-            ($scope.applications || ($scope.applications = [])).push(newApp);
-        });
 
         if (angular.isDefined($localStorage.layout)) {
             $scope.app.layout = $localStorage.layout;
@@ -132,15 +125,17 @@
             $scope.isChangingContext = true;
             DashboardService.fetchDashboardsByAppId(app.id)
                 .then(function(response) {
+                    console.log(
+                        response.dashboards && response.dashboards.length
+                    );
                     $scope.isChangingContext = false;
                     $scope.selectedAppId = response.appId;
                     if (response.dashboards && response.dashboards.length) {
                         var firstDashboardLink =
-                            '/dashboard/' + response.dashboards[0].id;
+                            '/dashboard/' + response.dashboards[0].id + '/';
                         $location.path(firstDashboardLink);
                     }
                     $scope.$apply();
-
                 })
                 .catch(function() {
                     $scope.$apply(function() {
@@ -166,6 +161,7 @@
             delete $localStorage.applications;
             delete $localStorage.dashboards;
             delete $localStorage.selectedAppId;
+            delete $localStorage.selectedApp;
 
             $auth.logout().then(function() {
                 toastr.info(MESSAGES_CONSTANTS.LOGOUT_SUCCESS);

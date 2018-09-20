@@ -27,6 +27,22 @@
                 };
             }
         ])
+        .directive('a', [
+            function() {
+                return {
+                    restrict: 'E',
+                    link: link
+                };
+            }
+        ])
+        .directive('label', [
+            function() {
+                return {
+                    restrict: 'E',
+                    link: link
+                };
+            }
+        ])
         .directive('select', [
             function() {
                 return {

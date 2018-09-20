@@ -59,7 +59,7 @@ class LdapService
         $entryApp = $this->createAppIndex("app_$appUuid", $userIndex);
         $entryShared = $this->createAppIndex("shared_$appUuid", $userIndex);
 
-        return $entryApp;
+        return $entryApp && $entryShared;
     }
 
     public function createInvitationEntry(Invitation $invitation)
@@ -120,7 +120,7 @@ class LdapService
                 $this->logger->warning($e->getMessage());
                 return true;
             } else {
-                $this->logger->error($e->getMessage());
+                $this->logger->critical($e->getMessage());
                 return false;
             }
         }

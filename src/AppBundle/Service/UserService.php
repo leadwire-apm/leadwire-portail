@@ -196,6 +196,7 @@ class UserService
     public function updateSubscription(User $user, $data)
     {
         $plan = $this->planService->getPlan($data['plan']);
+        $subscription = $this->subscriptionService->get($user->getSubscriptionId(), $user->getCustomer());
         $token = false;
         if ($plan) {
             $anchorCycle = 'unchanged';
@@ -216,12 +217,26 @@ class UserService
                 }
 
                 if (is_string($token)) {
-                    $data = $this->subscriptionService->update(
-                        $user->getCustomer()->getGatewayToken(),
-                        $user->getSubscriptionId(),
-                        $token,
-                        $anchorCycle
-                    );
+                    if ($user->getPlan()->getPrice() < $plan->getPrice() &&
+                        $subscription["plan"]["interval"] . 'ly' != $data['billingType']
+                    ) {
+                        $anchorCycle = 'now';
+                    }
+
+                    if ($user->getPlan()->getPrice() == 0) {
+                        $data = $this->subscriptionService->create(
+                            $token,
+                            $user->getCustomer()
+                        );
+                    } else {
+                        $data = $this->subscriptionService->update(
+                            $user->getCustomer()->getGatewayToken(),
+                            $user->getSubscriptionId(),
+                            $token,
+                            $anchorCycle
+                        );
+
+                    }
                     $user->setPlan($plan);
                     $this->userManager->update($user);
                     return $data;

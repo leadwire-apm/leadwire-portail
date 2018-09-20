@@ -42,7 +42,8 @@
                 },
                 function(menu) {
                     return $state.href('app.dashboard.home', {
-                        id: menu.id
+                        id: menu.id,
+                        tenant: null
                     });
                 },
                 function(menu) {
@@ -52,6 +53,11 @@
             $rootScope.menus = $localStorage.currentMenu;
         };
 
+        /**
+         *
+         * @param appId
+         * @returns {Promise}
+         */
         service.fetchDashboardsByAppId = function(appId) {
             return new Promise(function(resolve, reject) {
                 ApplicationFactory.findMyDashboard(appId)
@@ -68,7 +74,8 @@
                         service.updateSidebarMenus(response.data.Default);
                         resolve({
                             appId: appId,
-                            dashboards: response.data.Default
+                            dashboards: response.data.Default,
+                            custom: response.data.Custom
                         });
                     })
                     .catch(function(error) {

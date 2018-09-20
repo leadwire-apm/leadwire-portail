@@ -31,10 +31,8 @@
             ApplicationFactory.findAll()
                 .then(function(response) {
                     vm.flipActivityIndicator('isLoading');
-
-                    vm.apps = response.data;
-                    vm.paginator.items = vm.apps;
-                    $localStorage.applications = response.data;
+                    vm.apps = vm.paginator.items = response.data;
+                    $scope.$emit('set:apps', vm.apps);
                 })
                 .catch(function() {
                     vm.flipActivityIndicator('isLoading');
@@ -51,6 +49,12 @@
                     ApplicationFactory.remove(id)
                         .then(function() {
                             vm.getApps();
+                            // $localStorage.applications = (
+                            //     $localStorage.applications ||
+                            //     ($localStorage.applications = [])
+                            // ).filter(function(currApp) {
+                            //     return currApp.id !== id;
+                            // });
                             swal.close();
                             toastr.success(
                                 MESSAGES_CONSTANTS.DELETE_APP_SUCCESS

@@ -166,13 +166,11 @@ class CustomerService
 
     public function getInvoices($customerRef)
     {
-        $response = $this->gateway->listInvoices(array('customerReference' => $customerRef))->send();
-
-        if ($response->isSuccessful()) {
-            return $response->getData()['data'];
-        } else {
-            throw new OmnipayException($response->getMessage());
-        }
+        return $this->gateway->listInvoices(
+            array(
+                'customerReference' => $customerRef,
+            )
+        )->send()->getList();
     }
 
     /**

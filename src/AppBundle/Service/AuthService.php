@@ -4,6 +4,7 @@ namespace AppBundle\Service;
 
 use AppBundle\Document\User;
 use AppBundle\Manager\UserManager;
+use Psr\Log\LoggerInterface;
 use Ramsey\Uuid\Uuid;
 use Firebase\JWT\ExpiredException;
 use \Firebase\JWT\JWT;
@@ -18,17 +19,20 @@ class AuthService
     private $userManager;
     private $ldapService;
     private $elastic;
+    private $logger;
 
     public function __construct(
         ContainerInterface $container,
         UserManager $userManage,
         LdapService $ldapService,
-        ElasticSearch $elastic
+        ElasticSearch $elastic,
+        LoggerInterface $logger
     ) {
         $this->container = $container;
         $this->userManager = $userManage;
         $this->ldapService = $ldapService;
         $this->elastic = $elastic;
+        $this->logger = $logger;
     }
 
     private function get($name)
@@ -61,10 +65,9 @@ class AuthService
                 $this->elastic->resetUserIndexes($user);
             }
             return $user;
-        } catch (GuzzleException $e) {
-            sd($e->getMessage());
         } catch (\Exception $e) {
-            sd($e->getMessage());
+            $this->logger->critical("Exception on User creation ", ['exception' => $e]);
+            return false;
         }
     }
 
@@ -113,10 +116,9 @@ class AuthService
             } else {
                 return $dbUser;
             }
-        } catch (UnsatisfiedDependencyException $e) {
-            throw new Exception('Caught exception: ' . $e->getMessage());
         } catch (\Exception $e) {
-            throw $e;
+            $this->logger->critical("Exception on User creation ", ['exception' => $e]);
+            return false;
         }
     }
 
