@@ -223,12 +223,20 @@ class UserService
                         $anchorCycle = 'now';
                     }
 
-                    $data = $this->subscriptionService->update(
-                        $user->getCustomer()->getGatewayToken(),
-                        $user->getSubscriptionId(),
-                        $token,
-                        $anchorCycle
-                    );
+                    if ($user->getPlan()->getPrice() == 0) {
+                        $data = $this->subscriptionService->create(
+                            $token,
+                            $user->getCustomer()
+                        );
+                    } else {
+                        $data = $this->subscriptionService->update(
+                            $user->getCustomer()->getGatewayToken(),
+                            $user->getSubscriptionId(),
+                            $token,
+                            $anchorCycle
+                        );
+
+                    }
                     $user->setPlan($plan);
                     $this->userManager->update($user);
                     return $data;

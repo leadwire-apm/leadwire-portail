@@ -41,8 +41,8 @@ class Subscription
     /**
      * @param $subscriptionName
      * @param Customer $customer
-     * @return string | bool
      *
+     * @return mixed
      * @throws OmnipayException
      */
     public function create($subscriptionName, Customer $customer)
