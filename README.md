@@ -128,7 +128,10 @@ npm install -g grunt-cli
 
 npm install -g bower
 
-
+npm install -g replace
+ 
+yum install git
+ 
 
 
 
