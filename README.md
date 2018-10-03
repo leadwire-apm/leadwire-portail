@@ -2,6 +2,8 @@
 
 ## Requirements
 
+### Download The repo
+git clone {url du repo}
 
 ### Installation de Mongodb
 
@@ -137,17 +139,34 @@ yum install git
 
 ## Installation
 
-* ```composer install```
+* ```php composer.phar install```
+
+if you installed composer globally, the command should be
+
+```composer install```
 
 The command should ask at the end for the parameters of the instances (Database, email, ldap...)
 
 * ```cd src/UIBundle/Resources/public/dev```
 * ```npm install```
-* ```bower install```
+* In case of regular user ```bower install``` in case of root add this parameter ```--allow-root```
 * Uncomment the first and last line from `src/UIBundle/Resources/public/dev/app/index.html`
 * Update parameters in `src/UIBundle/Resources/public/dev/app/scripts/app.js`
 * Go root directory
 * ```bin/console leadwire:install```
+
+### notes
+
+ In case of changing parameters like :
+ 
+ * adding user/password to mongodb access
+ * changing IPs of Ldap / elastic VPS
+ 
+ 
+Just update the file app/config/parameters.yml and clean cache (rm -rf var/cache/app)
+
+Stripe account should be unique for every instance. Do not share stripe account between test and prod.
+Stripe account should have tel and email validated before going to test and prod.
 
 # CLI cmd
 
