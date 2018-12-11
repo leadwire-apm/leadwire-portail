@@ -1,9 +1,10 @@
 includes:
     - vendor/phpstan/phpstan-symfony/extension.neon
 parameters:
+    reportUnmatchedIgnoredErrors: false
     level: max
     paths:
-        - %rootDir%/../../../src
+        - %rootDir%/../../../src/AppBundle
     symfony:
         container_xml_path: %rootDir%/../../../var/cache/app/dev/appDevDebugProjectContainer.xml
     ignoreErrors:
