@@ -4,7 +4,6 @@ imports:
     - { resource: services.yml }
     - { resource: vendor/config.yml}
     - { resource: "@AppBundle/Resources/config/config.yml" }
-    - { resource: "@AnalyticsBundle/Resources/config/config.yml" }
     - { resource: "@CoreBundle/Resources/config/config.yml" }
     - { resource: "@ClientBootstrapperBundle/Resources/config/services.yml" }
     - { resource: "@UIBundle/Resources/config/services.yml" }

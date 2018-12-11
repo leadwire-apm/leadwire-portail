@@ -36,11 +36,11 @@ angular
         textColor: '#6B6B6B'
     })
     .constant('CONFIG', {
-        BASE_URL: 'http://localhost:9000/',
+        BASE_URL: 'http://leadwire.local/',
         ASSETS_BASE_URL: '/', // PROD BECOME : bundles/ui/app/
-        UPLOAD_URL: 'http://localhost:9000/uploads/',
-        DOWNLOAD_URL: 'http://localhost:9000/core/api/resource/',
-        GITHUB_CLIENT_ID: '094c2b7f0e14da4d0ca8' /*local*/,
+        UPLOAD_URL: 'http://leadwire.local/uploads/',
+        DOWNLOAD_URL: 'http://leadwire.local/core/api/resource/',
+        GITHUB_CLIENT_ID: 'aa236b3900fb084b3ccf' /*local*/,
         //'GITHUB_CLIENT_ID': '5ae68ff984489a4ed647' /*prod*/
         //'GITHUB_CLIENT_ID': 'a5b3aee9593a1aaa5046', /*test*/
         DATE_DEFAULT_FORMAT: 'YYYY-MM-DD[T]HH:mm:ssZZ',
@@ -62,7 +62,7 @@ angular
         DELETE_INVITATION_SUCCESS: 'The invitation has been deleted.',
         ADD_APP_SUCCESS:
             'Your app has been added successfully. You need to activate your app',
-        LOGIN_SUCCESS: function(provider) {
+        LOGIN_SUCCESS: function (provider) {
             return 'You have successfully signed in with ' + provider;
         },
         LOGOUT_SUCCESS: 'You have been logged out.',

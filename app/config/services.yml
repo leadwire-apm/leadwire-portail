@@ -31,10 +31,6 @@ services:
         resource: '../../src/ATS/EmailBundle/*'
         exclude: '../../src/ATS/EmailBundle/{Document,Repository}'
 
-    ATS\AnalyticsBundle\:
-        resource: '../../src/ATS/AnalyticsBundle/*'
-        exclude: '../../src/ATS/AnalyticsBundle/{Document,Repository}'
-
     ATS\UserBundle\:
         resource: '../../src/ATS/UserBundle/*'
         exclude: '../../src/ATS/UserBundle/{Document,Repository}'
@@ -42,10 +38,6 @@ services:
     ATS\TranslationBundle\:
         resource: '../../src/ATS/TranslationBundle/*'
         exclude: '../../src/ATS/TranslationBundle/{Document,Repository}'
-
-    ATS\ScheduledTaskBundle\:
-        resource: '../../src/ATS/ScheduledTaskBundle/*'
-        exclude: '../../src/ATS/ScheduledTaskBundle/{Document,Repository}'
 
     ATS\ClientBootstrapperBundle\:
         resource: '../../src/ATS/ClientBootstrapperBundle/*'

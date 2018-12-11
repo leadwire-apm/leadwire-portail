@@ -1,12 +1,12 @@
-<?php declare(strict_types=1);
+<?php declare (strict_types = 1);
 
 namespace ATS\PaymentBundle\Service;
 
-use ATS\PaymentBundle\Document\PricingPlan;
 use Psr\Log\LoggerInterface;
+use ATS\PaymentBundle\Document\Plan;
 use JMS\Serializer\SerializerInterface;
 use ATS\PaymentBundle\Manager\PlanManager;
-use ATS\PaymentBundle\Document\Plan;
+use ATS\PaymentBundle\Document\PricingPlan;
 
 /**
  * Service class for Plan entities
@@ -205,13 +205,18 @@ class PlanService
             /**
              * Monthly Plan
              */
-            $token = $this->gateway->createPlan([
+            $plan = $this->gateway->createPlan([
                 "interval" => 'month',
                 "name" => $second->getName(),
                 "currency" => "eur",
                 "amount" => $second->getPrice(),
                 "id" => $second->getName() . "-month",
-            ])->send()->getData()['id'];
+            ])->send()->getData();
+
+            if (array_has_key($plan,'error') === false) {
+                $token = $plan['id'];
+            }
+
 
             $pricing = new PricingPlan();
             $pricing->setName("monthly");
@@ -239,8 +244,8 @@ class PlanService
 
         $third = $this->planManager->getOneBy(['name' => "PREMIUM"]);
         if (!$third) {
-            $third  = new Plan();
-            $third ->setName("PREMIUM")
+            $third = new Plan();
+            $third->setName("PREMIUM")
                 ->setIsCreditCard(true)
                 ->setDiscount(15)
                 ->setPrice(640)
@@ -255,7 +260,7 @@ class PlanService
                 "name" => $third->getName(),
                 "currency" => "eur",
                 "amount" => $third->getPrice(),
-                "id" => $third->getName() . "-month"
+                "id" => $third->getName() . "-month",
             ])->send()->getData()['id'];
 
             $pricing = new PricingPlan();
@@ -271,7 +276,7 @@ class PlanService
                 "name" => $third->getName(),
                 "currency" => "eur",
                 "amount" => $third->getYearlyPrice(),
-                "id" => $third->getName() . "-year"
+                "id" => $third->getName() . "-year",
             ])->send()->getData()['id'];
 
             $pricing = new PricingPlan();

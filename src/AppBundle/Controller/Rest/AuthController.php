@@ -1,4 +1,4 @@
-<?php declare(strict_types=1);
+<?php declare (strict_types = 1);
 
 namespace AppBundle\Controller\Rest;
 
@@ -28,16 +28,15 @@ class AuthController extends BaseRestController
         }
     }
 
-
     public function githubAction(Request $request, AuthService $authService)
     {
         $data = json_decode($request->getContent(), true);
         $parameters = $this->getParameter("auth_providers")['github'];
         $globalSettnigs = $this->getParameter('auth_providers')['settings'];
         $params = [
-            'client_id' =>  $data ['clientId'],
+            'client_id' => $data['clientId'],
             'redirect_uri' => $data['redirectUri'],
-            'client_secret' =>  $parameters["github_client_secret"],
+            'client_secret' => $parameters["github_client_secret"],
             'code' => $data['code'],
         ];
         $userData = $authService->githubProvider(
@@ -48,7 +47,7 @@ class AuthController extends BaseRestController
 
         return new JsonResponse(
             [
-                "token" => $authService->generateToken($userData, $globalSettnigs['token_secret'])
+                "token" => $authService->generateToken($userData, $globalSettnigs['token_secret']),
             ]
         );
     }

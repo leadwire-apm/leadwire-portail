@@ -22,13 +22,11 @@ class AppKernel extends Kernel
             new FOS\RestBundle\FOSRestBundle(),
             new FOS\OAuthServerBundle\FOSOAuthServerBundle(),
             new Nelmio\CorsBundle\NelmioCorsBundle(),
-            new ATS\AnalyticsBundle\AnalyticsBundle(),
             new ATS\CoreBundle\CoreBundle(),
             new ATS\EmailBundle\EmailBundle(),
             new ATS\UserBundle\UserBundle(),
             new ATS\AdminBundle\AdminBundle(),
             new ATS\TranslationBundle\TranslationBundle(),
-            new ATS\ScheduledTaskBundle\ScheduledTaskBundle(),
 
             new ATS\ClientBootstrapperBundle\ClientBootstrapperBundle(),
             new AppBundle\AppBundle(),
