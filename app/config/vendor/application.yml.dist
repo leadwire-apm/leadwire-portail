@@ -1,17 +1,13 @@
-# This file is a "template" of what your application.yml file should look like
+# This file is auto-generated during the composer install
 parameters:
-    app_domain:     somedomainename.com
-    app_schemes:    http
-    app_locale:     fr
-
+    app_domain: leadwire.local
+    app_schemes: http
+    app_locale: en
     public_api_prefix: public-api
     internal_api_prefix: api
-    # A secret key that's used to generate certain security-related tokens: http://nux.net/secret
-    secret:         ThisTokenIsNotSoSecretChangeIt
-
-    app_version:    1.0.0
-    app_id:         SOMEAPPIDENTIFIER
-    app_title: Symfony BoilerPlate
-    app_description: Symfony on steroids
-
-    acl_rules: []
+    secret: ThisTokenIsNotSoSecretChangeIt
+    app_version: 1.0.0
+    app_id: LEADWIRE
+    app_title: 'LeadWire APM'
+    app_description: 'LeadWire APM'
+    acl_rules: {  }
