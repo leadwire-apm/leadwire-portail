@@ -19,18 +19,18 @@ systemctl start nginx
 systemctl enable nginx
 
 ### Install PHP
+```sh
+$ wget http://rpms.remirepo.net/enterprise/remi-release-7.rpm
 
-wget http://rpms.remirepo.net/enterprise/remi-release-7.rpm
+$ rpm -Uvh remi-release-7.rpm
 
-rpm -Uvh remi-release-7.rpm
+$ yum install yum-utils -y
 
-yum install yum-utils -y
+$ yum-config-manager --enable remi-php71
 
-yum-config-manager --enable remi-php71
-
-yum --enablerepo=remi,remi-php71 install php-opcache php-pecl-apcu php-cli php-pear php-pecl-mongodb php-gd php-mbstring php-mcrypt php-xml
+$ yum --enablerepo=remi,remi-php71 install php-opcache php-pecl-apcu php-cli php-pear php-pecl-mongodb php-gd php-mbstring php-mcrypt php-xml
 php-ldap php-json
-
+```
 
 ### Configure Nginx
 
@@ -102,7 +102,7 @@ Check /var/run/php-fpm/php-fpm.sock
 
 ### Installation Composer
 
-```
+```sh
 php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
 php -r "if (hash_file('SHA384', 'composer-setup.php') === '544e09ee996cdf60ece3804abc52599c22b1f40f4323403c44d44fdfdd586475ca9813a858088ffbc1f233e9b180f061') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"
 php composer-setup.php
@@ -144,7 +144,9 @@ The command should ask at the end for the parameters of the instances (Database,
 * Uncomment the first and last line from `src/UIBundle/Resources/public/dev/app/index.html`
 * Update parameters in `src/UIBundle/Resources/public/dev/app/scripts/app.js`
 * Go root directory
-* ```bin/console leadwire:install```
+ ```sh
+$ bin/console leadwire:install
+```
 
 # CLI cmd
 
@@ -152,13 +154,17 @@ The command should ask at the end for the parameters of the instances (Database,
 
 ```bin/console leadwire:import:stats <file>```
 
-This cmd should csv file. for help you can use 
+This cmd should csv file. for help you can use
 
-```bin/console leadwire:import:stats --help```
+```sh
+$ bin/console leadwire:import:stats --help
+```
 
 ## Sending mail
 
 Sending mail is deferred task. It can be a cron (every minutes for example)
 
 
-```bin/console swiftmailer:spool:send --env=prod```
+```sh
+$ bin/console swiftmailer:spool:send --env=prod
+```

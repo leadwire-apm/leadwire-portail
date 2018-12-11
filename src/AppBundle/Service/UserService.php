@@ -1,17 +1,17 @@
-<?php declare(strict_types=1);
+<?php declare (strict_types = 1);
 
 namespace AppBundle\Service;
 
+use AppBundle\Document\User;
+use AppBundle\Manager\UserManager;
 use ATS\EmailBundle\Document\Email;
 use ATS\EmailBundle\Service\SimpleMailerService;
 use ATS\PaymentBundle\Service\CustomerService;
-use ATS\PaymentBundle\Service\Subscription;
 use ATS\PaymentBundle\Service\PlanService;
+use ATS\PaymentBundle\Service\Subscription;
 use JMS\Serializer\DeserializationContext;
-use Psr\Log\LoggerInterface;
 use JMS\Serializer\SerializerInterface;
-use AppBundle\Manager\UserManager;
-use AppBundle\Document\User;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\Router;
@@ -157,14 +157,13 @@ class UserService
                     $customer = $user->getCustomer();
                 }
 
-                if ($subscriptionId = $this->subscriptionService->create(
-                    $token,
-                    $customer
-                )
-                ) {
+                $subscriptionId = $this->subscriptionService->create($token, $customer);
+
+                if ($subscriptionId) {
                     $user->setSubscriptionId($subscriptionId);
                     $user->setPlan($plan);
                     $this->userManager->update($user);
+
                     return true;
                 } else {
                     return false;
@@ -177,7 +176,7 @@ class UserService
 
     public function getSubscription(User $user)
     {
-        if ($user->getSubscriptionId() && $user->getCustomer()) {
+        if ($user->getSubscriptionId() !== null && $user->getCustomer() !== null) {
             return $this->subscriptionService->get($user->getSubscriptionId(), $user->getCustomer());
         } else {
             return [];
@@ -186,7 +185,7 @@ class UserService
 
     public function getInvoices(User $user)
     {
-        if ($user->getCustomer()) {
+        if ($user->getCustomer() !== null) {
             return $this->customerService->getInvoices($user->getCustomer()->getGatewayToken());
         } else {
             return [];
@@ -198,32 +197,34 @@ class UserService
         $plan = $this->planService->getPlan($data['plan']);
         $subscription = $this->subscriptionService->get($user->getSubscriptionId(), $user->getCustomer());
         $token = false;
-        if ($plan) {
+
+        if ($plan !== null) {
             $anchorCycle = 'unchanged';
             //$user->getPlan()->getPrice() < $plan->getPrice() ? 'unchanged' : $data['periodEnd'];
-            if ($plan->getPrice() == 0) {
+            if ($plan->getPrice() === 0) {
                 $this->subscriptionService->delete(
                     $user->getSubscriptionId(),
                     $user->getCustomer()->getGatewayToken()
                 );
                 $user->setPlan($plan);
                 $this->userManager->update($user);
+
                 return true;
             } else {
                 foreach ($plan->getPrices() as $billingType) {
-                    if ($billingType->getName() == $data['billingType']) {
+                    if ($billingType->getName() === $data['billingType']) {
                         $token = $billingType->getToken();
                     }
                 }
 
-                if (is_string($token)) {
+                if (is_string($token) === true) {
                     if ($user->getPlan()->getPrice() < $plan->getPrice() &&
-                        $subscription["plan"]["interval"] . 'ly' != $data['billingType']
+                        $subscription["plan"]["interval"] . 'ly' !== $data['billingType']
                     ) {
                         $anchorCycle = 'now';
                     }
 
-                    if ($user->getPlan()->getPrice() == 0) {
+                    if ($user->getPlan()->getPrice() === 0) {
                         $data = $this->subscriptionService->create(
                             $token,
                             $user->getCustomer()
@@ -235,10 +236,10 @@ class UserService
                             $token,
                             $anchorCycle
                         );
-
                     }
                     $user->setPlan($plan);
                     $this->userManager->update($user);
+
                     return $data;
                 } else {
                     throw new \Exception("Plan was not found");
@@ -251,7 +252,7 @@ class UserService
 
     public function updateCreditCard(User $user, $data)
     {
-        if ($user->getCustomer()) {
+        if ($user->getCustomer() !== null) {
             $customer = $user->getCustomer();
         } else {
             $json = json_encode(["name" => $user->getName(), "email" => $user->getEmail()]);
@@ -324,7 +325,7 @@ class UserService
                 ->deserialize($json, User::class, 'json', $context);
 
             $this->userManager->update($user);
-            if (!$user->getIsEmailValid()) {
+            if ($user->getIsEmailValid() === false) {
                 $this->sendVerifEmail($user);
             }
             $isSuccessful = true;
@@ -385,11 +386,13 @@ class UserService
             ->setSenderAddress($this->sender)
             ->setTemplate('AppBundle:Mail:verif.html.twig')
             ->setRecipientAddress($user->getEmail())
-            ->setMessageParameters([
-                'username' => $user->getUsername(),
-                'email' => $user->getEmail(),
-                'link' => $this->router->generate('verify_email', ['email' => $user->getEmail()], UrlGeneratorInterface::ABSOLUTE_URL)
-            ]);
+            ->setMessageParameters(
+                [
+                    'username' => $user->getUsername(),
+                    'email' => $user->getEmail(),
+                    'link' => $this->router->generate('verify_email', ['email' => $user->getEmail()], UrlGeneratorInterface::ABSOLUTE_URL),
+                ]
+            );
         $this->mailer->send($mail, false);
     }
 }

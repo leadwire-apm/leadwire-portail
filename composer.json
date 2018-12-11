@@ -54,8 +54,10 @@
         "kint-php/kint": "^2.2",
         "nelmio/api-doc-bundle": "^3.2",
         "phploc/phploc": "^4.0",
-        "phpstan/phpstan": "0.10",
+        "phpstan/phpstan": "^0.10.6",
+        "phpstan/phpstan-symfony": "^0.10.2",
         "sensio/generator-bundle": "^3.0",
+        "squizlabs/php_codesniffer": "^3.3",
         "symfony/browser-kit": "^3.4",
         "symfony/css-selector": "^3.4",
         "symfony/phpunit-bridge": "^3.4"

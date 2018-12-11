@@ -1,0 +1,98 @@
+<?xml version="1.0"?>
+<ruleset name="ats">
+    <description>Coding standard based on Zend with some additions.</description>
+
+     <!-- Include the whole Zend standard -->
+    <rule ref="PSR2"/>
+    <rule ref="PSR1"/>
+    <!-- Specific Rules -->
+    <rule ref="Generic.CodeAnalysis.EmptyStatement"/>
+    <rule ref="Generic.Commenting.Todo"/>
+    <rule ref="Generic.NamingConventions.UpperCaseConstantName"/>
+    <rule ref="Generic.NamingConventions.ConstructorName"/>
+    <rule ref="Generic.PHP.DeprecatedFunctions"/>
+    <rule ref="Generic.PHP.LowerCaseKeyword"/>
+    <rule ref="Generic.PHP.LowerCaseConstant"/>
+    <rule ref="Generic.WhiteSpace.DisallowTabIndent"/>
+    <rule ref="Generic.WhiteSpace.LanguageConstructSpacing"/>
+    <rule ref="Generic.WhiteSpace.ScopeIndent"/>
+    <rule ref="PEAR.Files.IncludingFile"/>
+    <!-- <rule ref="PEAR.ControlStructures.MultiLineCondition"/> -->
+    <!-- <rule ref="PEAR.Formatting.MultiLineAssignment"/> -->
+    <rule ref="PEAR.Functions.ValidDefaultValue"/>
+    <rule ref="PSR2.Files.EndFileNewline"/>
+    <rule ref="Zend.Files.ClosingTag"/>
+    <rule ref="Zend.Debug.CodeAnalyzer"/>
+
+    <!-- Only one argument per line in multi-line function calls -->
+    <rule ref="PEAR.Functions.FunctionCallSignature">
+        <properties>
+            <property name="allowMultipleArguments" value="false"/>
+        </properties>
+    </rule>
+
+    <!-- There MUST NOT be trailing whitespace at the end of lines.
+    Blank lines MAY be added to improve readability and to indicate related blocks of code except where explicitly forbidden. -->
+    <rule ref="Squiz.WhiteSpace.SuperfluousWhitespace">
+        <properties>
+            <property name="ignoreBlankLines" value="true"/>
+        </properties>
+    </rule>
+    <rule ref="Squiz.WhiteSpace.SuperfluousWhitespace.StartFile">
+        <severity>0</severity>
+    </rule>
+    <rule ref="Squiz.WhiteSpace.SuperfluousWhitespace.EndFile">
+        <severity>0</severity>
+    </rule>
+    <rule ref="Squiz.WhiteSpace.SuperfluousWhitespace.EmptyLines">
+        <severity>0</severity>
+    </rule>
+
+    <!-- There MUST NOT be more than one statement per line. -->
+    <rule ref="Generic.Formatting.DisallowMultipleStatements"/>
+
+    <!-- The extends and implements keywords MUST be declared on the same line as the class name. -->
+    <!-- The opening brace for the class MUST go on its own line; the closing brace for the class MUST go on the next line after the body. -->
+    <!-- Opening braces MUST be on their own line and MUST NOT be preceded or followed by a blank line. -->
+    <!-- Closing braces MUST be on their own line and MUST NOT be preceded by a blank line. -->
+    <!-- Lists of implements and extends MAY be split across multiple lines, where each subsequent line is indented once. When doing so, the first item in the list MUST be on the next line, and there MUST be only one interface per line. -->
+    <rule ref="PSR2.Classes.ClassDeclaration"/>
+
+    <!-- Visibility MUST be declared on all properties. -->
+    <!-- The var keyword MUST NOT be used to declare a property. -->
+    <!-- There MUST NOT be more than one property declared per statement. -->
+    <!-- Property names MUST NOT be prefixed with a single underscore to indicate protected or private visibility. -->
+    <rule ref="PSR2.Classes.PropertyDeclaration"/>
+
+    <!-- Visibility MUST be declared on all methods. -->
+    <rule ref="Squiz.Scope.MethodScope"/>
+    <rule ref="Squiz.WhiteSpace.ScopeKeywordSpacing"/>
+
+    <!-- Method and function names MUST NOT be declared with a space after the method name. The opening brace MUST go on its own line, and the closing brace MUST go on the next line following the body. There MUST NOT be a space after the opening parenthesis, and there MUST NOT be a space before the closing parenthesis. -->
+    <rule ref="PSR2.Methods.FunctionClosingBrace"/>
+    <rule ref="Squiz.Functions.FunctionDeclaration"/>
+    <rule ref="Squiz.Functions.LowercaseFunctionKeywords"/>
+
+    <!-- Method and function arguments with default values MUST go at the end of the argument list. -->
+    <rule ref="PEAR.Functions.ValidDefaultValue"/>
+
+    <!-- The general style rules for control structures are as follows:
+    There MUST be one space after the control structure keyword
+    There MUST NOT be a space after the opening parenthesis
+    There MUST NOT be a space before the closing parenthesis
+    There MUST be one space between the closing parenthesis and the opening brace
+    The structure body MUST be indented once
+    The closing brace MUST be on the next line after the body
+    The body of each structure MUST be enclosed by braces. This standardizes how the structures look, and reduces the likelihood of introducing errors as new lines get added to the body. -->
+    <rule ref="Squiz.ControlStructures.ControlSignature"/>
+    <rule ref="Squiz.WhiteSpace.ControlStructureSpacing.SpacingAfterOpen" />
+    <rule ref="Squiz.WhiteSpace.ControlStructureSpacing.SpacingBeforeClose" />
+    <rule ref="Squiz.WhiteSpace.ScopeClosingBrace"/>
+    <rule ref="Squiz.ControlStructures.ForEachLoopDeclaration"/>
+    <rule ref="Squiz.ControlStructures.ForLoopDeclaration"/>
+    <rule ref="Squiz.ControlStructures.LowercaseDeclaration"/>
+    <rule ref="PSR2.ControlStructures.ControlStructureSpacing"/>
+    <rule ref="Generic.ControlStructures.InlineControlStructure"/>
+
+    <rule ref="Squiz.Operators.ComparisonOperatorUsage" />
+</ruleset>

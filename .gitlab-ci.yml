@@ -1,0 +1,47 @@
+variables:
+    CONTAINER_IMAGE: registry.gitlab.ats-digital.com/ats/docker:php7.2
+    DOCKER_DRIVER: overlay2
+
+services:
+    - mongo:3.4
+
+stages:
+    - test
+
+cache:
+    key: ${CI_COMMIT_REF_SLUG}
+    paths:
+        - vendor/
+
+# phpunit:
+#     image: $CONTAINER_IMAGE
+#     stage: test
+#     before_script:
+#         - composer install
+#     tags:
+#         - phpunit
+#     script:
+#         - ./vendor/bin/simple-phpunit --coverage-text --colors=never --strict-coverage --disallow-test-output -c phpunit.xml.dist
+
+phpcs:
+    image: $CONTAINER_IMAGE
+    stage: test
+    before_script:
+        - composer install
+        - cp ./app/config/parameters.yml.dist ./app/config/parameters.yml
+    tags:
+        - phpunit
+    script:
+        - ./vendor/bin/phpcs --error-severity=1 --warning-severity=8 --extensions=php --standard=ats_ruleset.xml.dist --encoding=utf-8 ./src
+
+phpstan:
+    image: $CONTAINER_IMAGE
+    stage: test
+    before_script:
+        - composer install
+        - cp ./app/config/parameters.yml.dist ./app/config/parameters.yml
+    tags:
+        - phpunit
+    script:
+        - ./bin/console cache:clear --env dev
+        - ./vendor/bin/phpstan analyse
