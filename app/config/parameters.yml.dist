@@ -28,7 +28,7 @@ parameters:
     kibana:
         username: adm-portail
         password: portail-adm
-        host: 'https://adm-kibana.leadwire.io'
+        host: 'https://kibana.leadwire.io'
         template_folder: '%kernel.project_dir%/app/Resources/Kibana'
     elastic:
         username: adm-portail
