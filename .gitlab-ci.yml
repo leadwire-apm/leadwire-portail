@@ -32,7 +32,7 @@ phpcs:
     tags:
         - phpunit
     script:
-        - ./vendor/bin/phpcs --error-severity=1 --warning-severity=8 --extensions=php --standard=ats_ruleset.xml.dist --encoding=utf-8 ./src
+        - ./vendor/bin/phpcs --error-severity=1 --warning-severity=8 --extensions=php --standard=ats_ruleset.xml.dist --encoding=utf-8 ./src/AppBundle
 
 phpstan:
     image: $CONTAINER_IMAGE

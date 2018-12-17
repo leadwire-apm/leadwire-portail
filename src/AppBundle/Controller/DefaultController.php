@@ -1,9 +1,8 @@
-<?php declare(strict_types=1);
+<?php declare (strict_types = 1);
 
 namespace AppBundle\Controller;
 
 use AppBundle\Manager\UserManager;
-use Doctrine\Bundle\MongoDBBundle\Logger\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
@@ -26,7 +25,7 @@ class DefaultController extends Controller
     public function verifAction(UserManager $um, $email)
     {
         $user = $um->getOneBy(['email' => $email]);
-        if ($user->getIsEmailValid()) {
+        if ($user->getIsEmailValid() === true) {
             return $this->redirect('/');
         }
         $user->setActive(true);

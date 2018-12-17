@@ -1,12 +1,12 @@
-<?php declare(strict_types=1);
+<?php declare (strict_types = 1);
 
 namespace AppBundle\Service;
 
-use ATS\CoreBundle\Service\Http\GuzzleClient;
-use Psr\Log\LoggerInterface;
-use JMS\Serializer\SerializerInterface;
-use AppBundle\Manager\ApplicationTypeManager;
 use AppBundle\Document\ApplicationType;
+use AppBundle\Manager\ApplicationTypeManager;
+use ATS\CoreBundle\Service\Http\GuzzleClient;
+use JMS\Serializer\SerializerInterface;
+use Psr\Log\LoggerInterface;
 
 /**
  * Service class for ApplicationType entities
@@ -173,16 +173,20 @@ class ApplicationTypeService
     public function createDefaultType()
     {
         $defaultType = $this->applicationTypeManager->getOneBy(['name' => "Java"]);
-        if (!$defaultType) {
+        if ($defaultType === null) {
             $client = new GuzzleClient();
             $url = "https://github.com/leadwire-apm/leadwire-javaagent";
             $response = $client->get($url . "/raw/stable/README.md", ['stream' => true]);
             $defaultType = new ApplicationType();
             $defaultType->setName("Java");
             $defaultType->setInstallation($response->getBody()->read(10000));
-            $defaultType->setTemplate(json_decode(file_get_contents(
-                __DIR__ . "/../../../app/Resources/Kibana/apm-dashboards.json"
-            )));
+            $defaultType->setTemplate(
+                json_decode(
+                    file_get_contents(
+                        __DIR__ . "/../../../app/Resources/Kibana/apm-dashboards.json"
+                    )
+                )
+            );
             $defaultType->setAgent($url);
             $this->applicationTypeManager->update($defaultType);
         }

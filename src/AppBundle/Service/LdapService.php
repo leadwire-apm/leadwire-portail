@@ -93,9 +93,12 @@ class LdapService
     protected function instantiateLdap()
     {
 
-        $ldap = Ldap::create('ext_ldap', [
+        $ldap = Ldap::create(
+            'ext_ldap',
+            [
             'connection_string' => 'ldap://' . $this->settings['host'] . ':' . $this->settings['port'],
-        ]);
+            ]
+        );
 
         $ldap->bind($this->settings['dn_user'], $this->settings['mdp']);
 

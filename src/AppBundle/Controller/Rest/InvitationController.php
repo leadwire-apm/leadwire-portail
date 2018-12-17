@@ -1,18 +1,17 @@
-<?php declare(strict_types=1);
+<?php declare (strict_types = 1);
 
 namespace AppBundle\Controller\Rest;
 
 use AppBundle\Document\Invitation;
-use AppBundle\Service\AuthService;
+use AppBundle\Service\InvitationService;
 use ATS\CoreBundle\Controller\Rest\BaseRestController;
+use ATS\CoreBundle\HTTPFoundation\CsvResponse;
+use ATS\CoreBundle\Service\Exporter\Exporter;
+use ATS\CoreBundle\Service\Voter\AclVoter;
 use FOS\RestBundle\Controller\Annotations\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
-use ATS\CoreBundle\Service\Voter\AclVoter;
-use ATS\CoreBundle\HTTPFoundation\CsvResponse;
-use ATS\CoreBundle\Service\Exporter\Exporter;
-use AppBundle\Service\InvitationService;
 
 class InvitationController extends BaseRestController
 {
@@ -93,13 +92,13 @@ class InvitationController extends BaseRestController
     }
 
     /**
-    * @Route("/{id}/update", methods="PUT")
-    *
-    * @param Request $request
-    * @param InvitationService $invitationService
-    *
-    * @return Response
-    */
+     * @Route("/{id}/update", methods="PUT")
+     *
+     * @param Request $request
+     * @param InvitationService $invitationService
+     *
+     * @return Response
+     */
     public function updateInvitationAction(Request $request, InvitationService $invitationService)
     {
         $data = $request->getContent();
@@ -167,8 +166,7 @@ class InvitationController extends BaseRestController
             ->setFilter($data['filter'])
             ->setSchema(explode(',', $data['schema']))
             ->export()
-            ->getRawData()
-        ;
+            ->getRawData();
 
         return new CsvResponse($exported);
     }

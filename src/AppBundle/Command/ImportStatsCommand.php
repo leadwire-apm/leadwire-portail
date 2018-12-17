@@ -4,11 +4,11 @@ namespace AppBundle\Command;
 use AppBundle\Document\Stat;
 use AppBundle\Manager\AppManager;
 use AppBundle\Service\StatService;
+use Doctrine\Bundle\MongoDBBundle\ManagerRegistry;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Doctrine\Bundle\MongoDBBundle\ManagerRegistry;
 
 class ImportStatsCommand extends Command
 {
@@ -36,22 +36,23 @@ class ImportStatsCommand extends Command
         parent::__construct();
     }
 
-
     protected function configure()
     {
         $this
             ->setName('leadwire:import:stats')
             ->setDescription('Import CSV file to Database')
             ->addArgument('file', InputArgument::REQUIRED, "CSV file to import")
-            ->setHelp('Import CSV file to Database.
+            ->setHelp(
+                'Import CSV file to Database.
 CSV file must have a header in first line. It should loik like:
-app_uuid;jour;nb_tx');
+app_uuid;jour;nb_tx'
+            );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $file = $input->getArgument('file');
-        if (is_file($file)) {
+        if (is_file($file) === true) {
             $stats = [];
             $apps = [];
             $row = 0;
@@ -61,9 +62,9 @@ app_uuid;jour;nb_tx');
                     $num = count($data);
                     $row++;
                     for ($c = 1; $c < $num; $c++) {
-                        if (!isset($apps[$data[0]])) {
+                        if (false === isset($apps[$data[0]])) {
                             $apps[$data[0]] = $this->appManager->getOneBy(['uuid' => $data[0]]);
-                            if (!$apps[$data[0]]) {
+                            if ($apps[$data[0]] === false) {
                                 $output->writeln(
                                     "<fg=red> App with uuid = '"
                                     . $data[0]

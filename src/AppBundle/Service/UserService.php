@@ -132,9 +132,9 @@ class UserService
         $data = json_decode($data, true);
         $plan = $this->planService->getPlan($data['plan']);
         $token = null;
-        if ($plan) {
-            if ($plan->getPrice() == 0) {
-                if ($user->getSubscriptionId()) {
+        if ($plan !== null) {
+            if ($plan->getPrice() === 0) {
+                if ($user->getSubscriptionId() !== null) {
                     $this->subscriptionService->delete(
                         $user->getSubscriptionId(),
                         $user->getCustomer()->getGatewayToken()
@@ -145,12 +145,12 @@ class UserService
                 return true;
             } else {
                 foreach ($plan->getPrices() as $pricingPlan) {
-                    if ($pricingPlan->getName() == $data['billingType']) {
+                    if ($pricingPlan->getName() === $data['billingType']) {
                         $token = $pricingPlan->getToken();
                     }
                 }
 
-                if (!$user->getCustomer()) {
+                if ($user->getCustomer() !== null) {
                     $customer = $this->customerService->newCustomer($json, $data['card']);
                     $user->setCustomer($customer);
                 } else {
@@ -159,7 +159,7 @@ class UserService
 
                 $subscriptionId = $this->subscriptionService->create($token, $customer);
 
-                if ($subscriptionId) {
+                if ($subscriptionId !== null) {
                     $user->setSubscriptionId($subscriptionId);
                     $user->setPlan($plan);
                     $this->userManager->update($user);

@@ -77,12 +77,17 @@ class AuthService
             )->getBody();
 
             $data = json_decode($res, true);
-            $user = $this->checkAndAdd($data);
-            $data['_id'] = $user->getId();
-            if (!$user->getEmail()) {
-                $this->ldapService->createUserEntry($user->getUuid());
-                $this->elastic->resetUserIndexes($user);
+            $user = $this->userManager->getOneBy(['username' => $userData['login']]);
+
+            if ($user === null) {
+                $user = $this->addUser($data);
+
+                if ($user !== false) {
+                    $this->ldapService->createUserEntry($user->getUuid());
+                    $this->elastic->resetUserIndexes($user);
+                }
             }
+
             return $user;
         } catch (\Exception $e) {
             $this->logger->critical("Exception on User creation ", ['exception' => $e]);
@@ -108,35 +113,31 @@ class AuthService
     {
         $token = JWT::decode($jwt, $this->get('auth_providers')['settings']['token_secret'], ['HS256']);
 
-        if (!isset($token->host) || $token->host != $this->get('app_domain')) {
+        if (isset($token->host) === false || $token->host !== $this->get('app_domain')) {
             throw new ExpiredException('Invalide token');
         }
 
         return $token;
     }
 
-    protected function checkAndAdd(array $userData)
+    protected function addUser(array $userData)
     {
         try {
-            $dbUser = $this->userManager->getOneBy(['username' => $userData['login']]);
+            $uuid1 = Uuid::uuid1();
+            $this->userManager->create(
+                $userData['login'],
+                $uuid1->toString(),
+                $userData['avatar_url'],
+                $userData['name'],
+                [User::DEFAULT_ROLE],
+                true
+            );
+            $dbUser = $this->userManager->getUserByUsername($userData['login']);
 
-            if (!$dbUser) {
-                $uuid1 = Uuid::uuid1();
-                $this->userManager->create(
-                    $userData['login'],
-                    $uuid1->toString(),
-                    $userData['avatar_url'],
-                    $userData['name'],
-                    [User::DEFAULT_ROLE],
-                    true
-                );
-                $dbUser = $this->userManager->getUserByUsername($userData['login']);
-                return $dbUser;
-            } else {
-                return $dbUser;
-            }
+            return $dbUser;
         } catch (\Exception $e) {
             $this->logger->critical("Exception on User creation ", ['exception' => $e]);
+
             return false;
         }
     }

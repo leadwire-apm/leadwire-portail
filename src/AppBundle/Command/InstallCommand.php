@@ -44,16 +44,17 @@ class InstallCommand extends Command
             ->setName('leadwire:install')
             ->setDescription('Creates files and data required by the app.')
             ->addArgument('dev', InputArgument::OPTIONAL, "If set, ignore grunt build step")
-            ->setHelp('Creates files and data required by the app.
-Load default Application Type. Insert template for Kibana and more..')
-        ;
+            ->setHelp(
+                'Creates files and data required by the app.
+Load default Application Type. Insert template for Kibana and more..'
+            );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $isDev = $input->getArgument('dev');
 
-        if (!$isDev) {
+        if ($isDev !== true) {
             /**
              * Create Build of assets first.
              */

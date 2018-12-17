@@ -1,23 +1,20 @@
-<?php declare(strict_types=1);
+<?php declare (strict_types = 1);
 
 namespace AppBundle\Controller\Rest;
 
+use AppBundle\Service\AppService;
 use AppBundle\Service\AuthService;
 use AppBundle\Service\ElasticSearch;
-use AppBundle\Service\LdapService;
 use AppBundle\Service\StatService;
-use AppBundle\Service\UserService;
 use ATS\CoreBundle\Controller\Rest\BaseRestController;
+use ATS\CoreBundle\HTTPFoundation\CsvResponse;
+use ATS\CoreBundle\Service\Exporter\Exporter;
+use ATS\CoreBundle\Service\Voter\AclVoter;
 use FOS\RestBundle\Controller\Annotations\Route;
 use MongoDuplicateKeyException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
-use ATS\CoreBundle\Service\Voter\AclVoter;
-use ATS\CoreBundle\HTTPFoundation\CsvResponse;
-use ATS\CoreBundle\Service\Exporter\Exporter;
-use AppBundle\Service\AppService;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class AppController extends BaseRestController
@@ -52,7 +49,7 @@ class AppController extends BaseRestController
     public function getDashboardsAction(Request $request, AppService $appService, ElasticSearch $elastic, $id)
     {
         $app = $appService->getApp($id);
-        if (!$app) {
+        if ($app === null) {
             throw new HttpException(404, "App not Found");
         } else {
             return $this->json($elastic->getDashboads($app));
@@ -72,7 +69,7 @@ class AppController extends BaseRestController
     {
         $app = $appService->getApp($id);
 
-        if (!$app) {
+        if ($app === null) {
             throw new HttpException(404);
         }
 
@@ -95,14 +92,13 @@ class AppController extends BaseRestController
     public function activationAppAction(Request $request, AppService $appService, $id)
     {
         $app = $appService->activateApp($id, json_decode($request->getContent()));
-        //$this->denyAccessUnlessGranted(AclVoter::VIEW, $app);
-        if (!!$app) {
+
+        if ($app !== null) {
             return $this->prepareJsonResponse($app, 200, "Default");
         } else {
             return $this->prepareJsonResponse($app, 400, "Default");
         }
     }
-
 
     /**
      * @Route("/list", methods="GET")
@@ -179,9 +175,14 @@ class AppController extends BaseRestController
         try {
             $this->denyAccessUnlessGranted(AclVoter::CREATE, App::class);
             $data = $request->getContent();
-            $successful = $appService->newApp($data, $this->getUser());
+            $application = $appService->newApp($data, $this->getUser());
 
-            return $this->prepareJsonResponse($successful != null ? $successful : false);
+            if ($application !== null) {
+                return $this->prepareJsonResponse($application);
+            } else {
+                return $this->prepareJsonResponse(false);
+            }
+
         } catch (MongoDuplicateKeyException $e) {
             return $this->exception("App Name is not Unique");
         }
@@ -225,29 +226,6 @@ class AppController extends BaseRestController
         return $this->prepareJsonResponse([]);
     }
 
-//    /**
-//     * @Route("/{lang}/{term}/search", methods="GET", defaults={"lang" = "en"})
-//     *
-//     * @param Request $request
-//     * @param AppService $appService
-//     * @param string $term
-//     * @param string $lang
-//     *
-//     * @return Response
-//     */
-//    public function searchAppAction(Request $request, AppService $appService, $term, $lang)
-//    {
-//        $this->denyAccessUnlessGranted(AclVoter::SEARCH, App::class);
-//
-//        try {
-//            $result = $todoService->textSearch($term, $lang);
-//        } catch (\MongoException $e) {
-//            throw new BadRequestHttpException("Entity " . App::class . " is not searchable. ");
-//        }
-//
-//        return $this->prepareJsonResponse($appService->textSearch($term, $lang));
-//    }
-
     /**
      * @Route("/csv-export", methods="POST")
      *
@@ -267,8 +245,7 @@ class AppController extends BaseRestController
             ->setFilter($data['filter'])
             ->setSchema(explode(',', $data['schema']))
             ->export()
-            ->getRawData()
-        ;
+            ->getRawData();
 
         return new CsvResponse($exported);
     }

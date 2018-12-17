@@ -2,10 +2,7 @@
 namespace AppBundle\Service;
 
 use AppBundle\Document\App;
-use GuzzleHttp\Exception\GuzzleException;
-
 use Psr\Log\LoggerInterface;
-use Ramsey\Uuid\Uuid;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -47,11 +44,11 @@ class Kibana
                 [
                     'body' => $json_template,
                     'headers' => [
-                        'Content-type'  => 'application/json',
+                        'Content-type' => 'application/json',
                         'kbn-xsrf' => 'true',
-                        'x-tenants-enabled' => true
+                        'x-tenants-enabled' => true,
                     ],
-                    'auth' => $this->getAuth()
+                    'auth' => $this->getAuth(),
                 ]
             );
 
@@ -65,9 +62,9 @@ class Kibana
 
     private function getAuth()
     {
-        return  [
+        return [
             $this->settings['username'],
-            $this->settings['password']
+            $this->settings['password'],
         ];
     }
 }

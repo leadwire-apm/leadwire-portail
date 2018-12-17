@@ -1,16 +1,16 @@
-<?php declare(strict_types=1);
+<?php declare (strict_types = 1);
 
 namespace AppBundle\Controller\Rest;
 
+use AppBundle\Service\ApplicationTypeService;
 use ATS\CoreBundle\Controller\Rest\BaseRestController;
+use ATS\CoreBundle\HTTPFoundation\CsvResponse;
+use ATS\CoreBundle\Service\Exporter\Exporter;
+use ATS\CoreBundle\Service\Voter\AclVoter;
 use FOS\RestBundle\Controller\Annotations\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
-use ATS\CoreBundle\Service\Voter\AclVoter;
-use ATS\CoreBundle\HTTPFoundation\CsvResponse;
-use ATS\CoreBundle\Service\Exporter\Exporter;
-use AppBundle\Service\ApplicationTypeService;
 
 class ApplicationTypeController extends BaseRestController
 {
@@ -91,13 +91,13 @@ class ApplicationTypeController extends BaseRestController
     }
 
     /**
-    * @Route("/{id}/update", methods="PUT")
-    *
-    * @param Request $request
-    * @param ApplicationTypeService $applicationtypeService
-    *
-    * @return Response
-    */
+     * @Route("/{id}/update", methods="PUT")
+     *
+     * @param Request $request
+     * @param ApplicationTypeService $applicationtypeService
+     *
+     * @return Response
+     */
     public function updateApplicationTypeAction(Request $request, ApplicationTypeService $applicationtypeService)
     {
         $data = $request->getContent();
@@ -165,8 +165,7 @@ class ApplicationTypeController extends BaseRestController
             ->setFilter($data['filter'])
             ->setSchema(explode(',', $data['schema']))
             ->export()
-            ->getRawData()
-        ;
+            ->getRawData();
 
         return new CsvResponse($exported);
     }

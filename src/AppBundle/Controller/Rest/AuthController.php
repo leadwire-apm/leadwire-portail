@@ -21,7 +21,7 @@ class AuthController extends BaseRestController
      */
     public function getAuthAction(Request $request, AuthService $authService, $provider)
     {
-        if (method_exists($this, $provider . 'Action')) {
+        if (method_exists($this, $provider . 'Action') === true) {
             return $this->{$provider . 'Action'}($request, $authService);
         } else {
             return new JsonResponse("Provider not found", 404);

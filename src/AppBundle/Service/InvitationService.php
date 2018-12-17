@@ -1,14 +1,14 @@
-<?php declare(strict_types=1);
+<?php declare (strict_types = 1);
 
 namespace AppBundle\Service;
 
+use AppBundle\Document\Invitation;
 use AppBundle\Document\User;
+use AppBundle\Manager\InvitationManager;
 use ATS\EmailBundle\Document\Email;
 use ATS\EmailBundle\Service\SimpleMailerService;
-use Psr\Log\LoggerInterface;
 use JMS\Serializer\SerializerInterface;
-use AppBundle\Manager\InvitationManager;
-use AppBundle\Document\Invitation;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\Router;
@@ -164,7 +164,7 @@ class InvitationService
         try {
             $invitation = $this->serializer->deserialize($json, Invitation::class, 'json');
             $invitation->setApp($this->appService->getApp($invitation->getApp()->getId()));
-            if ($invitation->getApp()->getOwner()->getId() != $invitation->getUser()->getId()) {
+            if ($invitation->getApp()->getOwner()->getId() !== $invitation->getUser()->getId()) {
                 $this->invitationManager->update($invitation);
                 $this->ldap->createInvitationEntry($invitation);
                 $isSuccessful = true;
@@ -223,12 +223,14 @@ class InvitationService
             ->setSenderAddress($this->sender)
             ->setTemplate('AppBundle:Mail:AppInvitation.html.twig')
             ->setRecipientAddress($invitation->getEmail())
-            ->setMessageParameters([
-                'user' => $user,
-                'email' => $invitation->getEmail(),
-                'invitation' => $invitation->getId(),
-                'link' => $this->router->generate('angular_endPoint', [], UrlGeneratorInterface::ABSOLUTE_URL)
-            ]);
+            ->setMessageParameters(
+                [
+                    'user' => $user,
+                    'email' => $invitation->getEmail(),
+                    'invitation' => $invitation->getId(),
+                    'link' => $this->router->generate('angular_endPoint', [], UrlGeneratorInterface::ABSOLUTE_URL)
+                ]
+            );
 
         $this->mailer->send($mail, false);
     }

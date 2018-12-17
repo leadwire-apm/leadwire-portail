@@ -1,10 +1,10 @@
-<?php declare(strict_types=1);
+<?php declare (strict_types = 1);
 
 namespace AppBundle\Manager;
 
+use AppBundle\Document\User;
 use ATS\CoreBundle\Manager\AbstractManager;
 use Doctrine\Bundle\MongoDBBundle\ManagerRegistry;
-use AppBundle\Document\User;
 
 /**
  * Manager class for User entities
@@ -40,9 +40,7 @@ class UserManager extends AbstractManager
             ->setUuid($uuid)
             ->setAvatar($avatar)
             ->setName($name)
-            ->setIsEmailValid(false)
-        ;
-
+            ->setIsEmailValid(false);
 
         $this->update($user);
     }

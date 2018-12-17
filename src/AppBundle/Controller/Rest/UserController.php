@@ -1,15 +1,13 @@
-<?php declare(strict_types=1);
+<?php declare (strict_types = 1);
 
 namespace AppBundle\Controller\Rest;
 
-use AppBundle\Service\AuthService;
 use AppBundle\Service\UserService;
 use ATS\CoreBundle\Controller\Rest\BaseRestController;
-use ATS\PaymentBundle\Exception\OmnipayException;
 use FOS\RestBundle\Controller\Annotations\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
@@ -24,13 +22,12 @@ class UserController extends BaseRestController
     public function getMeAction()
     {
         $user = $this->getUser();
-        if (!$user) {
+        if ($user === null) {
             return $this->exception("Non Authorized", 401);
         }
 
         return $this->prepareJsonResponse($user, 200, "Default");
     }
-
 
     /**
      * @Route("/{id}/update", methods="PUT")
