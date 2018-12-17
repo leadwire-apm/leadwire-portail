@@ -4,21 +4,40 @@ namespace AppBundle\Service;
 
 use AppBundle\Document\User;
 use AppBundle\Manager\UserManager;
+use AppBundle\Service\ElasticSearch;
+use AppBundle\Service\LdapService;
+use Firebase\JWT\ExpiredException;
 use Psr\Log\LoggerInterface;
 use Ramsey\Uuid\Uuid;
-use Firebase\JWT\ExpiredException;
-use \Firebase\JWT\JWT;
-use GuzzleHttp\Exception\GuzzleException;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
+use \Firebase\JWT\JWT;
 
 class AuthService
 {
+    /**
+     * @var ContainerInterface
+     */
     private $container;
+
+    /**
+     * @var UserManager
+     */
     private $userManager;
+
+    /**
+     * @var LdapService
+     */
     private $ldapService;
+
+    /**
+     * @var ElasticSearch
+     */
     private $elastic;
+
+    /**
+     * @var LoggerInterface
+     */
     private $logger;
 
     public function __construct(
@@ -54,7 +73,7 @@ class AuthService
                 'GET',
                 $githubUserAPI . '?' . $responseGithub,
                 [
-                    'headers' => [ 'User-Agent' => 'leadwire']]
+                    'headers' => ['User-Agent' => 'leadwire']]
             )->getBody();
 
             $data = json_decode($res, true);
@@ -75,11 +94,11 @@ class AuthService
     {
         $token = [
             'host' => $this->get('app_domain'),
-            'user' =>  $user->getIndex(),
-            'name' =>  $user->getUsername(),
+            'user' => $user->getIndex(),
+            'name' => $user->getUsername(),
             'iat' => time(),
-            'exp' =>  time() + 1800 + 1800 * 2,
-            'nbf' => time()
+            'exp' => time() + 1800 + 1800 * 2,
+            'nbf' => time(),
         ];
 
         return JWT::encode($token, $tokenSecret);

@@ -2,11 +2,11 @@
 
 namespace ATS\PaymentBundle\Service;
 
-use Psr\Log\LoggerInterface;
 use ATS\PaymentBundle\Document\Plan;
-use JMS\Serializer\SerializerInterface;
-use ATS\PaymentBundle\Manager\PlanManager;
 use ATS\PaymentBundle\Document\PricingPlan;
+use ATS\PaymentBundle\Manager\PlanManager;
+use JMS\Serializer\SerializerInterface;
+use Psr\Log\LoggerInterface;
 
 /**
  * Service class for Plan entities
@@ -180,6 +180,9 @@ class PlanService
 
     public function createDefaulPlans()
     {
+
+        $createdPlans = $this->gateway->listPlans()->send()->getData()['data'];
+
         $first = $this->planManager->getOneBy(['name' => "BASIC"]);
         if (!$first) {
             $first = new Plan();
@@ -205,18 +208,23 @@ class PlanService
             /**
              * Monthly Plan
              */
-            $plan = $this->gateway->createPlan([
-                "interval" => 'month',
-                "name" => $second->getName(),
-                "currency" => "eur",
-                "amount" => $second->getPrice(),
-                "id" => $second->getName() . "-month",
-            ])->send()->getData();
 
-            if (array_has_key($plan,'error') === false) {
-                $token = $plan['id'];
+            $stripePlan = array_filter($createdPlans, function ($elem) use ($second) {
+                return $elem['id'] === $second->getName() . "-month";
+            });
+
+            if ($stripePlan === null) {
+                $plan = $this->gateway->createPlan([
+                    "interval" => 'month',
+                    "name" => $second->getName(),
+                    "currency" => "eur",
+                    "amount" => $second->getPrice(),
+                    "id" => $second->getName() . "-month",
+                ])->send()->getData();
+
+            } else {
+                $token = reset($stripePlan)['id'];
             }
-
 
             $pricing = new PricingPlan();
             $pricing->setName("monthly");
@@ -226,13 +234,21 @@ class PlanService
             /**
              * Yearly Plan
              */
-            $token = $this->gateway->createPlan([
-                "interval" => 'year',
-                "name" => $second->getName(),
-                "currency" => "eur",
-                "amount" => $second->getYearlyPrice(),
-                "id" => $second->getName() . "-year",
-            ])->send()->getData()['id'];
+            $stripePlan = array_filter($createdPlans, function ($elem) use ($second) {
+                return $elem['id'] === $second->getName() . "-year";
+            });
+
+            if ($stripePlan === null) {
+                $token = $this->gateway->createPlan([
+                    "interval" => 'year',
+                    "name" => $second->getName(),
+                    "currency" => "eur",
+                    "amount" => $second->getYearlyPrice(),
+                    "id" => $second->getName() . "-year",
+                ])->send()->getData()['id'];
+            } else {
+                $token = reset($stripePlan)['id'];
+            }
 
             $pricing = new PricingPlan();
             $pricing->setName("yearly");
@@ -255,13 +271,22 @@ class PlanService
             /**
              * monthly plan
              */
-            $token = $this->gateway->createPlan([
-                "interval" => 'month',
-                "name" => $third->getName(),
-                "currency" => "eur",
-                "amount" => $third->getPrice(),
-                "id" => $third->getName() . "-month",
-            ])->send()->getData()['id'];
+
+            $stripePlan = array_filter($createdPlans, function ($elem) use ($third) {
+                return $elem['id'] === $third->getName() . "-month";
+            });
+
+            if ($stripePlan === null) {
+                $token = $this->gateway->createPlan([
+                    "interval" => 'month',
+                    "name" => $third->getName(),
+                    "currency" => "eur",
+                    "amount" => $third->getPrice(),
+                    "id" => $third->getName() . "-month",
+                ])->send()->getData()['id'];
+            } else {
+                $token = reset($stripePlan)['id'];
+            }
 
             $pricing = new PricingPlan();
             $pricing->setName("monthly");
@@ -271,13 +296,21 @@ class PlanService
             /**
              * Yearly plan
              */
-            $token = $this->gateway->createPlan([
-                "interval" => 'year',
-                "name" => $third->getName(),
-                "currency" => "eur",
-                "amount" => $third->getYearlyPrice(),
-                "id" => $third->getName() . "-year",
-            ])->send()->getData()['id'];
+
+            $stripePlan = array_filter($createdPlans, function ($elem) use ($third) {
+                return $elem['id'] === $third->getName() . "-year";
+            });
+            if ($stripePlan === null) {
+                $token = $this->gateway->createPlan([
+                    "interval" => 'year',
+                    "name" => $third->getName(),
+                    "currency" => "eur",
+                    "amount" => $third->getYearlyPrice(),
+                    "id" => $third->getName() . "-year",
+                ])->send()->getData()['id'];
+            } else {
+                $token = reset($stripePlan)['id'];
+            }
 
             $pricing = new PricingPlan();
             $pricing->setName("yearly");

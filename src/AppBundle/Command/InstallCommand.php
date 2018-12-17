@@ -6,16 +6,25 @@ use AppBundle\Service\ApplicationTypeService;
 use ATS\PaymentBundle\Service\PlanService;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Input\ArrayInput;
 
 class InstallCommand extends Command
 {
+    /**
+     * @var ApplicationTypeService
+     */
     private $applicationTypeService;
+    /**
+     * @var PlanService
+     */
     private $planService;
+
+    /**
+     * @var DocumentManager
+     */
     private $dm;
 
     public function __construct(
@@ -28,7 +37,6 @@ class InstallCommand extends Command
         $this->dm = $doctrine;
         parent::__construct();
     }
-
 
     protected function configure()
     {
@@ -65,10 +73,10 @@ Load default Application Type. Insert template for Kibana and more..')
             "Install Assets" => [
                 'command' => "assets:install",
                 '--symlink' => true,
-            ] ,
+            ],
             "Assetic Dump" => [
                 'command' => "assetic:dump",
-            ]
+            ],
         ];
 
         foreach ($commands as $step => $arguments) {

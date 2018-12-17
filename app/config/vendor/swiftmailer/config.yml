@@ -3,9 +3,9 @@ swiftmailer:
     transport:  "%mailer_transport%"
     username:   "%mailer_user%"
     password:   "%mailer_password%"
-    # spool:
-    #     type: file
-    #     path: '%kernel.project_dir%/var/spool/app/%kernel.environment%'
-    # antiflood:
-    #     threshold: 99
-    #     sleep:     5
+    spool:
+        type: file
+        path: '%kernel.project_dir%/var/spool/app/%kernel.environment%'
+    antiflood:
+        threshold: 99
+        sleep:     5
