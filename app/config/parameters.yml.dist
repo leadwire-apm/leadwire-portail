@@ -1,6 +1,6 @@
 # This file is auto-generated during the composer install
 parameters:
-    database_host: localhost
+    database_host: mongo
     database_port: 27017
     database_name: leadwire
     database_user: null
