@@ -7,6 +7,7 @@ monolog:
             type: rotating_file
             action_level: error
             max_files: 10
+            level: error
         nested:
             type: stream
             path: '%kernel.logs_dir%/%kernel.environment%.log'
