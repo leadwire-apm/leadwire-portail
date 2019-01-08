@@ -28,7 +28,7 @@ class ApplicationController extends BaseRestController
      */
     public function getAppAction(Request $request, ApplicationService $applicationService, $id)
     {
-        $data = $applicationService->getApp($id);
+        $data = $applicationService->getApplication($id);
 
         return $this->prepareJsonResponse($data, 200, "Default");
     }
@@ -44,7 +44,7 @@ class ApplicationController extends BaseRestController
      */
     public function getDashboardsAction(Request $request, ApplicationService $applicationService, ElasticSearch $elastic, $id)
     {
-        $app = $applicationService->getApp($id);
+        $app = $applicationService->getApplication($id);
         if ($app === null) {
             throw new HttpException(404, "App not Found");
         } else {
@@ -63,7 +63,7 @@ class ApplicationController extends BaseRestController
      */
     public function getStatsAction(StatService $statService, ApplicationService $applicationService, $id)
     {
-        $app = $applicationService->getApp($id);
+        $app = $applicationService->getApplication($id);
 
         if ($app === null) {
             throw new HttpException(404);
@@ -87,7 +87,7 @@ class ApplicationController extends BaseRestController
      */
     public function activationAppAction(Request $request, ApplicationService $applicationService, $id)
     {
-        $app = $applicationService->activateApp($id, json_decode($request->getContent()));
+        $app = $applicationService->activateApplication($id, json_decode($request->getContent()));
 
         if ($app !== null) {
             return $this->prepareJsonResponse($app, 200, "Default");
@@ -117,12 +117,10 @@ class ApplicationController extends BaseRestController
      * @param Request $request
      * @param ApplicationService $applicationService
      *
-     * @param AuthService $auth
      * @return Response
      */
     public function invitedListAppsAction(Request $request, ApplicationService $applicationService)
     {
-
         $data = $applicationService->invitedListApps($this->getUser());
 
         return $this->prepareJsonResponse($data);
@@ -159,8 +157,8 @@ class ApplicationController extends BaseRestController
      * @param Request $request
      * @param ApplicationService $applicationService
      *
-     * @param AuthService $authService
      * @return Response
+     *
      * @throws \Exception
      */
     public function newAppAction(Request $request, ApplicationService $applicationService)

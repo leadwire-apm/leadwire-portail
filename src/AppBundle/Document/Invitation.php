@@ -97,11 +97,11 @@ class Invitation
 
     /**
      * Set app
-     * @param Application
+     * @param Application $application
      *
      * @return Invitation
      */
-    public function setApp(Application $app)
+    public function setApplication(Application $application)
     {
         $this->application = $application;
 
@@ -120,7 +120,7 @@ class Invitation
 
     /**
      * Set email
-     * @param string
+     * @param string $email
      *
      * @return Invitation
      */
@@ -142,7 +142,7 @@ class Invitation
 
     /**
      * Set isPending
-     * @param bool
+     * @param bool $isPending
      *
      * @return Invitation
      */
@@ -164,7 +164,7 @@ class Invitation
 
     /**
      * Set user
-     * @param User
+     * @param User $user
      *
      * @return Invitation
      */

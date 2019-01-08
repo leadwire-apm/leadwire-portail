@@ -52,6 +52,7 @@ security:
                     - AppBundle\Security\TokenAuthenticator
 
     access_control:
-    - { path: ^/login,                   roles: [ IS_AUTHENTICATED_ANONYMOUSLY ] }
-    - { path: ^/core/%internal_api_prefix%, roles: [ IS_AUTHENTICATED_ANONYMOUSLY ] }
-    - { path: ^/%internal_api_prefix%, roles: [ IS_AUTHENTICATED_ANONYMOUSLY ] }
+    - { path: ^/login,                             roles: [ IS_AUTHENTICATED_ANONYMOUSLY ] }
+    - { path: ^/core/%internal_api_prefix%,        roles: [ IS_AUTHENTICATED_ANONYMOUSLY ] }
+    - { path: ^/%internal_api_prefix%,             roles: [ IS_AUTHENTICATED_ANONYMOUSLY ] }
+    - { path: ^/%internal_api_prefix%/back-office, roles: [ ROLE_SUPER_ADMIN ] }

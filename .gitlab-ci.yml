@@ -13,16 +13,6 @@ cache:
     paths:
         - vendor/
 
-# phpunit:
-#     image: $CONTAINER_IMAGE
-#     stage: test
-#     before_script:
-#         - composer install
-#     tags:
-#         - phpunit
-#     script:
-#         - ./vendor/bin/simple-phpunit --coverage-text --colors=never --strict-coverage --disallow-test-output -c phpunit.xml.dist
-
 phpcs:
     image: $CONTAINER_IMAGE
     stage: test

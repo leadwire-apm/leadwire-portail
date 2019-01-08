@@ -34,8 +34,7 @@ class UserController extends BaseRestController
      *
      * @param Request $request
      * @param UserService $userService
-     *
-     * @param $id
+     * @param string $id
      * @return Response
      */
     public function updateUserAction(Request $request, UserService $userService, $id)
@@ -51,8 +50,8 @@ class UserController extends BaseRestController
      *
      * @param Request $request
      * @param UserService $userService
+     * @param string $id
      *
-     * @param $id
      * @return Response
      */
     public function subscribeAction(Request $request, UserService $userService, $id)
@@ -71,6 +70,7 @@ class UserController extends BaseRestController
      * @Route("/{id}/invoices", methods="GET")
      *
      * @param UserService $userService
+     *
      * @return Response
      */
     public function getInvoicesAction(UserService $userService)
@@ -88,6 +88,7 @@ class UserController extends BaseRestController
      * @Route("/{id}/subscription", methods="GET")
      *
      * @param UserService $userService
+     *
      * @return Response
      */
     public function getSubscriptionAction(UserService $userService)
@@ -105,7 +106,9 @@ class UserController extends BaseRestController
      *
      * @param Request $request
      * @param UserService $userService
+     *
      * @return Response
+     *
      * @throws BadRequestHttpException
      */
     public function updateSubscriptionAction(Request $request, UserService $userService)
@@ -126,7 +129,9 @@ class UserController extends BaseRestController
      *
      * @param Request $request
      * @param UserService $userService
+     *
      * @return Response
+     *
      * @throws BadRequestHttpException
      */
     public function updateCreditCardAction(Request $request, UserService $userService)

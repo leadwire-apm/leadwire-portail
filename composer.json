@@ -13,8 +13,7 @@
         ]
     },
     "provide": {
-        "ext-mongo": "*",
-        "ext-json": "*"
+        "ext-mongo": "*"
     },
     "require": {
         "php": ">=7.0",

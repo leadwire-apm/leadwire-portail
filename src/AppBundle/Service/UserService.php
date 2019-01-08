@@ -201,7 +201,7 @@ class UserService
         if ($plan !== null) {
             $anchorCycle = 'unchanged';
             //$user->getPlan()->getPrice() < $plan->getPrice() ? 'unchanged' : $data['periodEnd'];
-            if ($plan->getPrice() === 0) {
+            if ($plan->getPrice() == 0) {
                 $this->subscriptionService->delete(
                     $user->getSubscriptionId(),
                     $user->getCustomer()->getGatewayToken()
@@ -224,7 +224,7 @@ class UserService
                         $anchorCycle = 'now';
                     }
 
-                    if ($user->getPlan()->getPrice() === 0) {
+                    if ($user->getPlan()->getPrice() == 0) {
                         $data = $this->subscriptionService->create(
                             $token,
                             $user->getCustomer()

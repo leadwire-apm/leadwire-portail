@@ -26,7 +26,6 @@ class ApplicationTypeController extends BaseRestController
     public function getApplicationTypeAction(Request $request, ApplicationTypeService $applicationtypeService, $id)
     {
         $data = $applicationtypeService->getApplicationType($id);
-        $this->denyAccessUnlessGranted(AclVoter::VIEW, $data);
 
         return $this->prepareJsonResponse($data);
     }
@@ -41,7 +40,6 @@ class ApplicationTypeController extends BaseRestController
      */
     public function listApplicationTypesAction(Request $request, ApplicationTypeService $applicationtypeService)
     {
-        $this->denyAccessUnlessGranted(AclVoter::VIEW_ALL, ApplicationType::class);
         $data = $applicationtypeService->listApplicationTypes();
 
         return $this->prepareJsonResponse($data);
@@ -67,7 +65,6 @@ class ApplicationTypeController extends BaseRestController
         $pageNumber,
         $itemsPerPage
     ) {
-        $this->denyAccessUnlessGranted(AclVoter::VIEW_ALL, ApplicationType::class);
         $pageResult = $applicationtypeService->paginate($pageNumber, $itemsPerPage);
 
         return $this->prepareJsonResponse($pageResult);
@@ -83,7 +80,6 @@ class ApplicationTypeController extends BaseRestController
      */
     public function newApplicationTypeAction(Request $request, ApplicationTypeService $applicationtypeService)
     {
-        $this->denyAccessUnlessGranted(AclVoter::CREATE, ApplicationType::class);
         $data = $request->getContent();
         $successful = $applicationtypeService->newApplicationType($data);
 
@@ -117,56 +113,8 @@ class ApplicationTypeController extends BaseRestController
      */
     public function deleteApplicationTypeAction(Request $request, ApplicationTypeService $applicationtypeService, $id)
     {
-        $this->denyAccessUnlessGranted(AclVoter::DELETE, ApplicationType::class);
         $applicationtypeService->deleteApplicationType($id);
 
         return $this->prepareJsonResponse([]);
-    }
-
-    /**
-     * @Route("/{lang}/{term}/search", methods="GET", defaults={"lang" = "en"})
-     *
-     * @param Request $request
-     * @param ApplicationTypeService $applicationtypeService
-     * @param string $term
-     * @param string $lang
-     *
-     * @return Response
-     */
-    public function searchApplicationTypeAction(Request $request, ApplicationTypeService $applicationtypeService, $term, $lang)
-    {
-        $this->denyAccessUnlessGranted(AclVoter::SEARCH, ApplicationType::class);
-
-        try {
-            $result = $todoService->textSearch($term, $lang);
-        } catch (\MongoException $e) {
-            throw new BadRequestHttpException("Entity " . ApplicationType::class . " is not searchable. ");
-        }
-
-        return $this->prepareJsonResponse($applicationtypeService->textSearch($term, $lang));
-    }
-
-    /**
-     * @Route("/csv-export", methods="POST")
-     *
-     * @param Request $request
-     * @param Exporter $exporter
-     *
-     * @return CsvResponse
-     */
-    public function generateCsvExportAction(Request $request, Exporter $exporter)
-    {
-        $this->denyAccessUnlessGranted(AclVoter::EXPORT, ApplicationType::class);
-        $data = json_decode($request->getContent(), true);
-
-        $exported = $exporter
-            ->setFormat(Exporter::FORMAT_CSV)
-            ->setEntity(ApplicationType::class)
-            ->setFilter($data['filter'])
-            ->setSchema(explode(',', $data['schema']))
-            ->export()
-            ->getRawData();
-
-        return new CsvResponse($exported);
     }
 }

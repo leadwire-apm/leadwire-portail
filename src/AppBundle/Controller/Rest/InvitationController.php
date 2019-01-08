@@ -25,7 +25,6 @@ class InvitationController extends BaseRestController
     public function getInvitationAction(Request $request, InvitationService $invitationService, $id)
     {
         $data = $invitationService->getInvitation($id);
-        $this->denyAccessUnlessGranted(AclVoter::VIEW, $data);
 
         return $this->prepareJsonResponse($data);
     }
@@ -40,7 +39,6 @@ class InvitationController extends BaseRestController
      */
     public function listInvitationsAction(Request $request, InvitationService $invitationService)
     {
-        $this->denyAccessUnlessGranted(AclVoter::VIEW_ALL, Invitation::class);
         $data = $invitationService->listInvitations();
 
         return $this->prepareJsonResponse($data);
@@ -66,7 +64,6 @@ class InvitationController extends BaseRestController
         $pageNumber,
         $itemsPerPage
     ) {
-        $this->denyAccessUnlessGranted(AclVoter::VIEW_ALL, Invitation::class);
         $pageResult = $invitationService->paginate($pageNumber, $itemsPerPage);
 
         return $this->prepareJsonResponse($pageResult);
@@ -82,7 +79,6 @@ class InvitationController extends BaseRestController
      */
     public function newInvitationAction(Request $request, InvitationService $invitationService)
     {
-        $this->denyAccessUnlessGranted(AclVoter::CREATE, Invitation::class);
         $data = $request->getContent();
         $successful = $invitationService->newInvitation($data, $this->getUser());
 
@@ -116,32 +112,8 @@ class InvitationController extends BaseRestController
      */
     public function deleteInvitationAction(Request $request, InvitationService $invitationService, $id)
     {
-        $this->denyAccessUnlessGranted(AclVoter::DELETE, Invitation::class);
         $invitationService->deleteInvitation($id);
 
         return $this->prepareJsonResponse([]);
-    }
-
-    /**
-     * @Route("/{lang}/{term}/search", methods="GET", defaults={"lang" = "en"})
-     *
-     * @param Request $request
-     * @param InvitationService $invitationService
-     * @param string $term
-     * @param string $lang
-     *
-     * @return Response
-     */
-    public function searchInvitationAction(Request $request, InvitationService $invitationService, $term, $lang)
-    {
-        $this->denyAccessUnlessGranted(AclVoter::SEARCH, Invitation::class);
-
-        try {
-            $result = $todoService->textSearch($term, $lang);
-        } catch (\MongoException $e) {
-            throw new BadRequestHttpException("Entity " . Invitation::class . " is not searchable. ");
-        }
-
-        return $this->prepareJsonResponse($invitationService->textSearch($term, $lang));
     }
 }

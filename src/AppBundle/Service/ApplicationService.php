@@ -101,7 +101,7 @@ class ApplicationService
         $apps = [];
 
         foreach ($user->invitations as $invitation) {
-            $app = $invitation->getApp();
+            $app = $invitation->getApplication();
             if ($app->getIsRemoved() === false) {
                 $apps[] = $app;
             }
@@ -128,9 +128,9 @@ class ApplicationService
      *
      * @param string $id
      *
-     * @return Application
+     * @return ?Application
      */
-    public function getApp($id): Application
+    public function getApplication($id): ?Application
     {
         return $this->applicationManager->getOneBy(['_id' => $id, 'isRemoved' => false]);
     }
@@ -138,21 +138,22 @@ class ApplicationService
     /**
      * Activate Disabled App
      *
-     * @param $id
-     * @param $body
+     * @param string $id
+     * @param \stdClass $body
      *
      * @return ?Application
      */
-    public function activateApp($id, $body): ?Application
+    public function activateApplication($id, $body): ?Application
     {
         $code = $body->code;
 
-        if (strlen($code) === 6 && substr($code, 1, 1) === 'B' &&
-            substr($code, 4, 1) === 7 &&
-            strtoupper($code) === $code) {
-            $app = $this->getApp($id);
+        if ((strlen($code) === 6) && (substr($code, 1, 1) === 'B') &&
+            (substr($code, 4, 1) === '7') &&
+            (strtoupper($code) === $code)) {
+            $app = $this->getApplication($id);
             $app->setIsEnabled(true);
             $this->applicationManager->update($app);
+
             return $app;
         } else {
             return null;
@@ -185,6 +186,7 @@ class ApplicationService
     {
         $context = new DeserializationContext();
         $context->setGroups(['Default']);
+        /** @var Application $app */
         $app = $this
             ->serializer
             ->deserialize($json, Application::class, 'json', $context);
@@ -196,6 +198,7 @@ class ApplicationService
             ->setUuid($uuid1->toString())
             ->setIsRemoved(false);
 
+        /** @var string $applicationTypeId */
         $applicationTypeId = $app->getType()->getId();
         $ap = $this->apService->getApplicationType($applicationTypeId);
         $app->setType($ap);

@@ -96,7 +96,7 @@ class ApplicationType
 
     /**
      * Set name
-     * @param string
+     * @param string $name
      *
      * @return ApplicationType
      */
@@ -118,7 +118,7 @@ class ApplicationType
 
     /**
      * Set installation
-     * @param string
+     * @param string $installation
      *
      * @return ApplicationType
      */
@@ -139,6 +139,7 @@ class ApplicationType
 
     /**
      * Set template
+     * @param string $template
      *
      * @return ApplicationType
      */
@@ -160,7 +161,7 @@ class ApplicationType
 
     /**
      * Set agent
-     * @param string
+     * @param string $agent
      *
      * @return ApplicationType
      */

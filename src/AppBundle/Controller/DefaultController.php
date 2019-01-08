@@ -18,8 +18,10 @@ class DefaultController extends Controller
 
     /**
      * @Route("/verify/{email}", methods="GET", name="verify_email")
+     *
      * @param  UserManager $um
-     * @param $email
+     * @param string $email
+     *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function verifAction(UserManager $um, $email)
@@ -31,6 +33,7 @@ class DefaultController extends Controller
         $user->setActive(true);
         $user->setIsEmailValid(true);
         $um->update($user);
+
         return $this->redirect('/');
     }
 }

@@ -20,15 +20,18 @@ class User implements AdvancedUserInterface, \Serializable
      *
      * @ODM\Id("strategy=auto")
      * @JMS\Expose
+     * @JMS\Type("string")
      */
-    private $id;
+    protected $id;
 
     /**
      * @var string
      *
      * @ODM\Field(type="string")
+     * @JMS\Expose
+     * @JMS\Type("string")
      */
-    private $username;
+    protected $username;
 
     /**
      * @var string

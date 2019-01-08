@@ -80,7 +80,7 @@ class Stat
 
     /**
      * Set day
-     * @param \DateTime
+     * @param \DateTime $day
      *
      * @return Stat
      */
@@ -103,7 +103,7 @@ class Stat
 
     /**
      * Set nbr
-     * @param integer
+     * @param integer $nbr
      *
      * @return Stat
      */
@@ -115,15 +115,15 @@ class Stat
     }
 
     /**
-     * @return App
+     * @return Application
      */
-    public function getApp(): Application
+    public function getApplication(): Application
     {
         return $this->application;
     }
 
     /**
-     * @param Application $app
+     * @param Application $application
      *
      * @return Stat
      */

@@ -21,18 +21,6 @@ use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 
 class User extends \ATS\UserBundle\Document\User
 {
-
-    /**
-     * @var \MongoId
-     *
-     * @ODM\Id("strategy=auto")
-     * @JMS\Type("string")
-     * @JMS\Expose
-     * @JMS\Groups({"full","Default"})
-     */
-    private $id;
-
-
     /**
      * @var string
      *
@@ -62,7 +50,7 @@ class User extends \ATS\UserBundle\Document\User
      * @JMS\Type("string")
      * @ODM\Field(type="string")
      */
-    private $username;
+    protected $username;
 
     /**
      * @var string
@@ -158,7 +146,7 @@ class User extends \ATS\UserBundle\Document\User
     public $myApps;
 
     /**
-     * @var App
+     * @var ?Application
      *
      * @ODM\ReferenceOne(targetDocument="AppBundle\Document\Application", name="defaultApp", cascade={"persist"}, nullable=true)
      * @JMS\Type("AppBundle\Document\Application")
@@ -366,7 +354,7 @@ class User extends \ATS\UserBundle\Document\User
     /**
      * Set isEmailValid
      *
-     * @param bool isEmailValid
+     * @param bool $isEmailValid
      *
      * @return User
      */
@@ -414,13 +402,13 @@ class User extends \ATS\UserBundle\Document\User
     /**
      * Set contactPreference
      *
-     * @param string $contact
+     * @param string $contactPreference
      *
      * @return User
      */
     public function setContactPreference($contactPreference)
     {
-        $this->contactPreference = $contactPreference ;
+        $this->contactPreference = $contactPreference;
 
         return $this;
     }
@@ -456,15 +444,16 @@ class User extends \ATS\UserBundle\Document\User
     }
 
     /**
-     * @return App
+     * @return ?Application
      */
-    public function getDefaultApplication(): Application
+    public function getDefaultApplication(): ?Application
     {
         return $this->defaultApplication;
     }
 
     /**
-     * @param App|null $defaultApplication
+     * @param ?Application $defaultApplication
+     *
      * @return User
      */
     public function setdefaultApplication($defaultApplication)

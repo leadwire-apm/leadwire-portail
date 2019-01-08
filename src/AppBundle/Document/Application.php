@@ -128,9 +128,6 @@ class Application
      */
     public $invitations;
 
-
-    public $dashboards;
-
     /**
      * Constructor
      */
@@ -154,7 +151,7 @@ class Application
      *
      * @param string $uuid
      *
-     * @return App
+     * @return Application
      */
     public function setUuid($uuid)
     {
@@ -186,9 +183,9 @@ class Application
 
     /**
      * Set name
-     * @param string
+     * @param string $name
      *
-     * @return App
+     * @return Application
      */
     public function setName($name)
     {
@@ -208,9 +205,9 @@ class Application
 
     /**
      * Set description
-     * @param string
+     * @param string $description
      *
-     * @return App
+     * @return Application
      */
     public function setDescription($description)
     {
@@ -231,13 +228,14 @@ class Application
 
     /**
      * Set email
-     * @param string
+     * @param string $email
      *
-     * @return App
+     * @return Application
      */
     public function setEmail($email)
     {
         $this->email = $email;
+
         return $this;
     }
 
@@ -253,13 +251,14 @@ class Application
 
     /**
      * Set paymentData
-     * @param string
+     * @param string $paymentData
      *
-     * @return App
+     * @return Application
      */
     public function setPaymentData($paymentData)
     {
         $this->paymentData = $paymentData;
+
         return $this;
     }
 
@@ -275,13 +274,14 @@ class Application
 
     /**
      * Set owner
-     * @param User
+     * @param User $owner
      *
-     * @return App
+     * @return Application
      */
     public function setOwner(User $owner)
     {
         $this->owner = $owner;
+
         return $this;
     }
 
@@ -303,11 +303,13 @@ class Application
     public function setType(ApplicationType $type)
     {
         $this->type = $type;
+
         return $this;
     }
 
     /**
      * Get isEnabled
+     *
      * @return boolean
      */
     public function getIsEnabled()
@@ -318,14 +320,19 @@ class Application
     /**
      * Set isEnabled
      * @param boolean $isEnabled
-     * @return $this
+     *
+     * @return Application
      */
     public function setIsEnabled(bool $isEnabled)
     {
         $this->isEnabled = $isEnabled;
+
         return $this;
     }
 
+    /**
+     * @return boolean
+     */
     public function isEnabled()
     {
         return $this->isEnabled;
@@ -333,6 +340,7 @@ class Application
 
     /**
      * Get isRemoved
+     *
      * @return boolean
      */
     public function getIsRemoved()
@@ -343,16 +351,19 @@ class Application
     /**
      * Set type
      * @param boolean $isRemoved
-     * @return $this
+     *
+     * @return Application
      */
     public function setIsRemoved(bool $isRemoved)
     {
         $this->isRemoved = $isRemoved;
+
         return $this;
     }
 
     /**
      * Get elastic index
+     *
      * @return string
      */
     public function getIndex()
