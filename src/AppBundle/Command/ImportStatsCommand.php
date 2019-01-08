@@ -14,11 +14,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 class ImportStatsCommand extends Command
 {
     /**
-     * @var StatService
-     */
-    private $statService;
-
-    /**
      * @var ApplicationManager
      */
     private $applicationManager;
@@ -28,9 +23,8 @@ class ImportStatsCommand extends Command
      */
     private $managerRegistry;
 
-    public function __construct(StatService $statService, ApplicationManager $applicationManager, ManagerRegistry $managerRegistry)
+    public function __construct(ApplicationManager $applicationManager, ManagerRegistry $managerRegistry)
     {
-        $this->statService = $statService;
         $this->applicationManager = $applicationManager;
         $this->managerRegistry = $managerRegistry;
 

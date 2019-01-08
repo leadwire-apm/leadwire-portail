@@ -5,7 +5,6 @@ imports:
     - { resource: vendor/config.yml}
     - { resource: "@AppBundle/Resources/config/config.yml" }
     - { resource: "@CoreBundle/Resources/config/config.yml" }
-    - { resource: "@ClientBootstrapperBundle/Resources/config/services.yml" }
     - { resource: "@UIBundle/Resources/config/services.yml" }
     - { resource: "@PaymentBundle/Resources/config/services.yml" }
 

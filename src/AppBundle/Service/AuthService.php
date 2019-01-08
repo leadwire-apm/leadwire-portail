@@ -7,6 +7,7 @@ use AppBundle\Manager\UserManager;
 use AppBundle\Service\ElasticSearch;
 use AppBundle\Service\LdapService;
 use Firebase\JWT\ExpiredException;
+use GuzzleHttp\Client;
 use Psr\Log\LoggerInterface;
 use Ramsey\Uuid\Uuid;
 use Symfony\Component\Config\Definition\Exception\Exception;
@@ -61,7 +62,7 @@ class AuthService
 
     public function githubProvider(array $params, string $githubAccessTokenUrl, string $githubUserAPI)
     {
-        $client = new \GuzzleHttp\Client();
+        $client = new Client();
         try {
             $responseGithub = $client->request(
                 'GET',

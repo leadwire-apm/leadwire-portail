@@ -5,7 +5,7 @@ parameters:
     app_locale: en
     public_api_prefix: public-api
     internal_api_prefix: api
-    secret: ThisTokenIsNotSoSecretChangeIt
+    secret: 06abd8f87b9d3b88feb152891421cb20017e56dd
     app_version: 1.0.0
     app_id: LEADWIRE
     app_title: 'LeadWire APM'

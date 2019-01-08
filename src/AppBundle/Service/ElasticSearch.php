@@ -2,9 +2,10 @@
 
 namespace AppBundle\Service;
 
-use AppBundle\Document\Application;
+use GuzzleHttp\Client;
 use AppBundle\Document\User;
 use Psr\Log\LoggerInterface;
+use AppBundle\Document\Application;
 use SensioLabs\Security\Exception\HttpException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -48,7 +49,7 @@ class ElasticSearch
 
     protected function getRawDashboards(Application $app)
     {
-        $client = new \GuzzleHttp\Client(['defaults' => ['verify' => false]]);
+        $client = new Client(['defaults' => ['verify' => false]]);
         // for prod use only
         $tenants = $app->getIndexes();
         // for dev use only
@@ -172,7 +173,7 @@ class ElasticSearch
 
     public function importIndex(string $index = "adm-portail")
     {
-        $client = new \GuzzleHttp\Client(['defaults' => ['verify' => false]]);
+        $client = new Client(['defaults' => ['verify' => false]]);
         try {
             $client->post(
                 $this->settings['host'] . ".kibana_" . $index . "/doc/index-pattern:apm-*",
@@ -197,27 +198,9 @@ class ElasticSearch
         }
     }
 
-    private function putIndex(string $index)
-    {
-        $client = new \GuzzleHttp\Client(['defaults' => ['verify' => false]]);
-        try {
-            $client->put(
-                $this->settings['host'] . ".kibana_" . $index,
-                [
-                    'headers' => [
-                        'Content-type' => 'application/json',
-                    ],
-                    'auth' => $this->getAuth(),
-                ]
-            );
-        } catch (\GuzzleHttp\Exception\ClientException $e) {
-            $this->logger->critical("Error on reset index", ['exception' => $e]);
-        }
-    }
-
     private function postIndex(array $options)
     {
-        $client = new \GuzzleHttp\Client(['defaults' => ['verify' => false]]);
+        $client = new Client(['defaults' => ['verify' => false]]);
         try {
             $client->post(
                 $this->settings['host'] . "/_snapshot/my_backup/kibana_snapshot/_restore",
@@ -248,8 +231,8 @@ class ElasticSearch
     public function deleteIndex()
     {
         try {
-            $client = new \GuzzleHttp\Client(['defaults' => ['verify' => false]]);
-            $response = $client->delete(
+            $client = new Client(['defaults' => ['verify' => false]]);
+            $client->delete(
                 $this->settings['host'] . ".kibana_adm-portail",
                 [
                     'auth' => $this->getAuth(),
@@ -265,8 +248,8 @@ class ElasticSearch
     public function copyIndex($index)
     {
         try {
-            $client = new \GuzzleHttp\Client(['defaults' => ['verify' => false]]);
-            $response = $client->post(
+            $client = new Client(['defaults' => ['verify' => false]]);
+            $client->post(
                 $this->settings['host'] . "_reindex",
                 [
                     'body' => json_encode(

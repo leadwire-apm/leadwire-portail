@@ -6,11 +6,3 @@ core_rest_upload:
     schemes: "%app_schemes%"
     options:
         expose: true
-
-core_rest_option:
-    resource: "@CoreBundle/Controller/Rest/OptionController.php"
-    type: "rest"
-    prefix: "/core/%internal_api_prefix%/option"
-    options:
-        expose: true
-

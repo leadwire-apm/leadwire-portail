@@ -37,10 +37,3 @@ app_rest_applicationtype:
     prefix: "/%internal_api_prefix%/applicationType"
     options:
         expose: true
-
-app_user_admin:
-    resource: "@AppBundle/Controller/BackOffice/UserAdminController.php"
-    type: "rest"
-    prefix: "/%internal_api_prefix%/back-office/users"
-    options:
-        expose: true

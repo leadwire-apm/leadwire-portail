@@ -99,10 +99,6 @@ class StatService
      */
     public function newStat($json)
     {
-        $stat = $this
-            ->serializer
-            ->deserialize($json, Stat::class, 'json');
-
         return $this->updateStat($json);
     }
 

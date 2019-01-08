@@ -2,11 +2,11 @@
 
 namespace AppBundle\Service;
 
-use AppBundle\Document\ApplicationType;
-use AppBundle\Manager\ApplicationTypeManager;
-use ATS\CoreBundle\Service\Http\GuzzleClient;
-use JMS\Serializer\SerializerInterface;
+use GuzzleHttp\Client;
 use Psr\Log\LoggerInterface;
+use AppBundle\Document\ApplicationType;
+use JMS\Serializer\SerializerInterface;
+use AppBundle\Manager\ApplicationTypeManager;
 
 /**
  * Service class for ApplicationType entities
@@ -100,10 +100,6 @@ class ApplicationTypeService
      */
     public function newApplicationType($json)
     {
-        $applicationType = $this
-            ->serializer
-            ->deserialize($json, ApplicationType::class, 'json');
-
         return $this->updateApplicationType($json);
     }
 
@@ -124,7 +120,6 @@ class ApplicationTypeService
             $isSuccessful = true;
         } catch (\Exception $e) {
             $this->logger->error($e->getMessage());
-            $isSuccessful = false;
         }
 
         return $isSuccessful;
@@ -149,7 +144,7 @@ class ApplicationTypeService
     {
         $defaultType = $this->applicationTypeManager->getOneBy(['name' => "Java"]);
         if ($defaultType === null) {
-            $client = new GuzzleClient();
+            $client = new Client();
             $url = "https://github.com/leadwire-apm/leadwire-javaagent";
             $response = $client->get($url . "/raw/stable/README.md", ['stream' => true]);
             $defaultType = new ApplicationType();

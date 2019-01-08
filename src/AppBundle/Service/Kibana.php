@@ -2,6 +2,7 @@
 namespace AppBundle\Service;
 
 use AppBundle\Document\Application;
+use GuzzleHttp\Client;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -44,7 +45,7 @@ class Kibana
         $isSuccess = $this->elastic->deleteIndex();
         $isSuccess &= $this->elastic->resetAppIndexes($app);
 
-        $client = new \GuzzleHttp\Client(['defaults' => ['verify' => false]]);
+        $client = new Client(['defaults' => ['verify' => false]]);
         $json_template = json_encode($app->getType()->getTemplate());
         $url = $this->settings['host'] . "/api/kibana/dashboards/import";
 

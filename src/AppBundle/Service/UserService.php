@@ -133,7 +133,7 @@ class UserService
         $plan = $this->planService->getPlan($data['plan']);
         $token = null;
         if ($plan !== null) {
-            if ($plan->getPrice() == 0) {
+            if ($plan->getPrice() === 0.0) {
                 if ($user->getSubscriptionId() !== null) {
                     $this->subscriptionService->delete(
                         $user->getSubscriptionId(),
@@ -201,7 +201,7 @@ class UserService
         if ($plan !== null) {
             $anchorCycle = 'unchanged';
             //$user->getPlan()->getPrice() < $plan->getPrice() ? 'unchanged' : $data['periodEnd'];
-            if ($plan->getPrice() == 0) {
+            if ($plan->getPrice() === 0.0) {
                 $this->subscriptionService->delete(
                     $user->getSubscriptionId(),
                     $user->getCustomer()->getGatewayToken()
@@ -224,7 +224,7 @@ class UserService
                         $anchorCycle = 'now';
                     }
 
-                    if ($user->getPlan()->getPrice() == 0) {
+                    if ($user->getPlan()->getPrice() === 0.0) {
                         $data = $this->subscriptionService->create(
                             $token,
                             $user->getCustomer()
@@ -298,10 +298,6 @@ class UserService
      */
     public function newUser($json)
     {
-        $user = $this
-            ->serializer
-            ->deserialize($json, User::class, 'json');
-
         return $this->updateUser($json, null);
     }
 
