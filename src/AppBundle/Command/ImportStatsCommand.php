@@ -2,6 +2,7 @@
 namespace AppBundle\Command;
 
 use AppBundle\Document\Stat;
+use AppBundle\Manager\ApplicationManager;
 use AppBundle\Manager\AppManager;
 use AppBundle\Service\StatService;
 use Doctrine\Bundle\MongoDBBundle\ManagerRegistry;
@@ -18,19 +19,19 @@ class ImportStatsCommand extends Command
     private $statService;
 
     /**
-     * @var AppManager
+     * @var ApplicationManager
      */
-    private $appManager;
+    private $applicationManager;
 
     /**
      * @var ManagerRegistry
      */
     private $managerRegistry;
 
-    public function __construct(StatService $statService, AppManager $appManager, ManagerRegistry $managerRegistry)
+    public function __construct(StatService $statService, ApplicationManager $applicationManager, ManagerRegistry $managerRegistry)
     {
         $this->statService = $statService;
-        $this->appManager = $appManager;
+        $this->applicationManager = $applicationManager;
         $this->managerRegistry = $managerRegistry;
 
         parent::__construct();
@@ -51,7 +52,7 @@ app_uuid;jour;nb_tx'
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $file = $input->getArgument('file');
+        $file = (string) $input->getArgument('file');
         if (is_file($file) === true) {
             $stats = [];
             $apps = [];
@@ -63,7 +64,7 @@ app_uuid;jour;nb_tx'
                     $row++;
                     for ($c = 1; $c < $num; $c++) {
                         if (false === isset($apps[$data[0]])) {
-                            $apps[$data[0]] = $this->appManager->getOneBy(['uuid' => $data[0]]);
+                            $apps[$data[0]] = $this->applicationManager->getOneBy(['uuid' => $data[0]]);
                             if ($apps[$data[0]] === false) {
                                 $output->writeln(
                                     "<fg=red> App with uuid = '"

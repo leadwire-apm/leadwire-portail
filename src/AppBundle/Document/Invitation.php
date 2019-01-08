@@ -2,17 +2,17 @@
 
 namespace AppBundle\Document;
 
-use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
+use AppBundle\Document\Application;
+
 use JMS\Serializer\Annotation as JMS;
-use ATS\CoreBundle\Annotation as ATS;
-use AppBundle\Document\App;
+use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 
 /**
  * @ODM\Document(repositoryClass="AppBundle\Repository\InvitationRepository")
  * @ODM\HasLifecycleCallbacks
  * @ODM\ChangeTrackingPolicy("DEFERRED_EXPLICIT")
  * @JMS\ExclusionPolicy("all")
- * @ATS\ApplicationView
+ *
  */
 class Invitation
 {
@@ -26,14 +26,14 @@ class Invitation
     private $id;
 
     /**
-     * @var App
+     * @var Application
      *
-     * @ODM\ReferenceOne(targetDocument="AppBundle\Document\App", name="app", cascade={"persist"}, inversedBy="invitations")
-     * @JMS\Type("AppBundle\Document\App")
+     * @ODM\ReferenceOne(targetDocument="AppBundle\Document\Application", name="app", cascade={"persist"}, inversedBy="invitations")
+     * @JMS\Type("AppBundle\Document\Application")
      * @JMS\Expose
      * @JMS\Groups({"Default", "full"})
      */
-    private $app;
+    private $application;
 
     /**
      * @var string
@@ -88,22 +88,23 @@ class Invitation
     /**
      * Get app
      *
-     * @return App
+     * @return Application
      */
-    public function getApp()
+    public function getApplication()
     {
-        return $this->app;
+        return $this->application;
     }
 
     /**
      * Set app
-     * @param App
+     * @param Application
      *
      * @return Invitation
      */
-    public function setApp(App $app)
+    public function setApp(Application $app)
     {
-        $this->app = $app;
+        $this->application = $application;
+
         return $this;
     }
 

@@ -173,7 +173,7 @@ abstract class AbstractManager
     /**
      * @param array $criteria
      *
-     * @return array
+     * @return mixed
      */
     public function getOneBy(array $criteria)
     {

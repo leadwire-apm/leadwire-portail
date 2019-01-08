@@ -2,7 +2,7 @@
 
 namespace AppBundle\Service;
 
-use AppBundle\Document\App;
+use AppBundle\Document\Application;
 use AppBundle\Document\User;
 use Psr\Log\LoggerInterface;
 use SensioLabs\Security\Exception\HttpException;
@@ -36,7 +36,7 @@ class ElasticSearch
         $this->logger = $logger;
     }
 
-    public function getDashboads(App $app)
+    public function getDashboads(Application $app)
     {
         try {
             return $this->filter($this->getRawDashboards($app));
@@ -46,7 +46,7 @@ class ElasticSearch
         }
     }
 
-    protected function getRawDashboards(App $app)
+    protected function getRawDashboards(Application $app)
     {
         $client = new \GuzzleHttp\Client(['defaults' => ['verify' => false]]);
         // for prod use only
@@ -126,10 +126,11 @@ class ElasticSearch
     }
 
     /**
-     * @param App $app
+     * @param Application $app
+     *
      * @return bool
      */
-    public function resetAppIndexes(App $app)
+    public function resetAppIndexes(Application $app)
     {
         $tenants = $app->getIndexes();
 

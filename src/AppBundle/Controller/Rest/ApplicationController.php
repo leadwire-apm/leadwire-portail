@@ -2,14 +2,11 @@
 
 namespace AppBundle\Controller\Rest;
 
-use AppBundle\Service\AppService;
+use AppBundle\Service\ApplicationService;
 use AppBundle\Service\AuthService;
 use AppBundle\Service\ElasticSearch;
 use AppBundle\Service\StatService;
 use ATS\CoreBundle\Controller\Rest\BaseRestController;
-use ATS\CoreBundle\HTTPFoundation\CsvResponse;
-use ATS\CoreBundle\Service\Exporter\Exporter;
-use ATS\CoreBundle\Service\Voter\AclVoter;
 use FOS\RestBundle\Controller\Annotations\Route;
 use MongoDuplicateKeyException;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -17,22 +14,21 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
-class AppController extends BaseRestController
+class ApplicationController extends BaseRestController
 {
 
     /**
      * @Route("/{id}/get", methods="GET")
      *
      * @param Request $request
-     * @param AppService $appService
+     * @param ApplicationService $applicationService
      * @param string  $id
      *
      * @return Response
      */
-    public function getAppAction(Request $request, AppService $appService, $id)
+    public function getAppAction(Request $request, ApplicationService $applicationService, $id)
     {
-        $data = $appService->getApp($id);
-        $this->denyAccessUnlessGranted(AclVoter::VIEW, $data);
+        $data = $applicationService->getApp($id);
 
         return $this->prepareJsonResponse($data, 200, "Default");
     }
@@ -41,14 +37,14 @@ class AppController extends BaseRestController
      * @Route("/{id}/dashboards", methods="GET")
      *
      * @param Request $request
-     * @param AppService $appService
+     * @param ApplicationService $applicationService
      * @param string  $id
      *
      * @return Response
      */
-    public function getDashboardsAction(Request $request, AppService $appService, ElasticSearch $elastic, $id)
+    public function getDashboardsAction(Request $request, ApplicationService $applicationService, ElasticSearch $elastic, $id)
     {
-        $app = $appService->getApp($id);
+        $app = $applicationService->getApp($id);
         if ($app === null) {
             throw new HttpException(404, "App not Found");
         } else {
@@ -60,14 +56,14 @@ class AppController extends BaseRestController
      * @Route("/{id}/stats", methods="GET")
      *
      * @param StatService $statService
-     * @param AppService $appService
+     * @param ApplicationService $applicationService
      * @param string  $id
      *
      * @return Response
      */
-    public function getStatsAction(StatService $statService, AppService $appService, $id)
+    public function getStatsAction(StatService $statService, ApplicationService $applicationService, $id)
     {
-        $app = $appService->getApp($id);
+        $app = $applicationService->getApp($id);
 
         if ($app === null) {
             throw new HttpException(404);
@@ -84,14 +80,14 @@ class AppController extends BaseRestController
      * @Route("/{id}/activate", methods="POST")
      *
      * @param Request $request
-     * @param AppService $appService
+     * @param ApplicationService $applicationService
      * @param string  $id
      *
      * @return Response
      */
-    public function activationAppAction(Request $request, AppService $appService, $id)
+    public function activationAppAction(Request $request, ApplicationService $applicationService, $id)
     {
-        $app = $appService->activateApp($id, json_decode($request->getContent()));
+        $app = $applicationService->activateApp($id, json_decode($request->getContent()));
 
         if ($app !== null) {
             return $this->prepareJsonResponse($app, 200, "Default");
@@ -104,15 +100,14 @@ class AppController extends BaseRestController
      * @Route("/list", methods="GET")
      *
      * @param Request $request
-     * @param AppService $appService
+     * @param ApplicationService $applicationService
      *
      * @return Response
      */
-    public function listAppsAction(Request $request, AppService $appService)
+    public function listAppsAction(Request $request, ApplicationService $applicationService)
     {
-        $this->denyAccessUnlessGranted(AclVoter::VIEW_ALL, App::class);
         $user = $this->getUser();
-        $data = array_merge($appService->invitedListApps($user), $appService->listApps($user));
+        $data = array_merge($applicationService->invitedListApps($user), $applicationService->listApps($user));
         return $this->prepareJsonResponse($data, 200, "Default");
     }
 
@@ -120,16 +115,15 @@ class AppController extends BaseRestController
      * @Route("/invited/list", methods="GET")
      *
      * @param Request $request
-     * @param AppService $appService
+     * @param ApplicationService $applicationService
      *
      * @param AuthService $auth
      * @return Response
      */
-    public function invitedListAppsAction(Request $request, AppService $appService)
+    public function invitedListAppsAction(Request $request, ApplicationService $applicationService)
     {
-        $this->denyAccessUnlessGranted(AclVoter::VIEW_ALL, App::class);
 
-        $data = $appService->invitedListApps($this->getUser());
+        $data = $applicationService->invitedListApps($this->getUser());
 
         return $this->prepareJsonResponse($data);
     }
@@ -142,7 +136,7 @@ class AppController extends BaseRestController
      * )
      *
      * @param Request $request
-     * @param AppService $appService
+     * @param ApplicationService $applicationService
      * @param int $pageNumber
      * @param int $itemsPerPage
      *
@@ -150,12 +144,11 @@ class AppController extends BaseRestController
      */
     public function paginateAppsAction(
         Request $request,
-        AppService $appService,
+        ApplicationService $applicationService,
         $pageNumber,
         $itemsPerPage
     ) {
-        $this->denyAccessUnlessGranted(AclVoter::VIEW_ALL, App::class);
-        $pageResult = $appService->paginate($pageNumber, $itemsPerPage);
+        $pageResult = $applicationService->paginate($pageNumber, $itemsPerPage);
 
         return $this->prepareJsonResponse($pageResult);
     }
@@ -164,25 +157,23 @@ class AppController extends BaseRestController
      * @Route("/new", methods="POST")
      *
      * @param Request $request
-     * @param AppService $appService
+     * @param ApplicationService $applicationService
      *
      * @param AuthService $authService
      * @return Response
      * @throws \Exception
      */
-    public function newAppAction(Request $request, AppService $appService)
+    public function newAppAction(Request $request, ApplicationService $applicationService)
     {
         try {
-            $this->denyAccessUnlessGranted(AclVoter::CREATE, App::class);
             $data = $request->getContent();
-            $application = $appService->newApp($data, $this->getUser());
+            $application = $applicationService->newApp($data, $this->getUser());
 
             if ($application !== null) {
                 return $this->prepareJsonResponse($application);
             } else {
                 return $this->prepareJsonResponse(false);
             }
-
         } catch (MongoDuplicateKeyException $e) {
             return $this->exception("App Name is not Unique");
         }
@@ -192,16 +183,16 @@ class AppController extends BaseRestController
      * @Route("/{id}/update", methods="PUT")
      *
      * @param Request $request
-     * @param AppService $appService
+     * @param ApplicationService $applicationService
      *
      * @param string $id
      * @return Response
      */
-    public function updateAppAction(Request $request, AppService $appService, string $id)
+    public function updateAppAction(Request $request, ApplicationService $applicationService, string $id)
     {
         try {
             $data = $request->getContent();
-            $successful = $appService->updateApp($data, $id);
+            $successful = $applicationService->updateApp($data, $id);
 
             return $this->prepareJsonResponse($successful);
         } catch (MongoDuplicateKeyException $e) {
@@ -213,41 +204,16 @@ class AppController extends BaseRestController
      * @Route("/{id}/delete", methods="DELETE")
      *
      * @param Request $request
-     * @param AppService $appService
+     * @param ApplicationService $applicationService
      * @param string $id
      *
      * @return Response
      */
-    public function deleteAppAction(Request $request, AppService $appService, $id)
+    public function deleteAppAction(Request $request, ApplicationService $applicationService, $id)
     {
-        $this->denyAccessUnlessGranted(AclVoter::DELETE, App::class);
-        $appService->deleteApp($id);
+        $applicationService->deleteApp($id);
 
         return $this->prepareJsonResponse([]);
-    }
-
-    /**
-     * @Route("/csv-export", methods="POST")
-     *
-     * @param Request $request
-     * @param Exporter $exporter
-     *
-     * @return CsvResponse
-     */
-    public function generateCsvExportAction(Request $request, Exporter $exporter)
-    {
-        $this->denyAccessUnlessGranted(AclVoter::EXPORT, App::class);
-        $data = json_decode($request->getContent(), true);
-
-        $exported = $exporter
-            ->setFormat(Exporter::FORMAT_CSV)
-            ->setEntity(App::class)
-            ->setFilter($data['filter'])
-            ->setSchema(explode(',', $data['schema']))
-            ->export()
-            ->getRawData();
-
-        return new CsvResponse($exported);
     }
 
     private function exception($message, $status = 400)

@@ -166,18 +166,6 @@ class PlanService
         return $this->planManager->textSearch($term, $lang);
     }
 
-    /**
-     * Performs multi-field grouped query on Plan
-     * @param array $searchCriteria
-     * @param array $groupFields
-     * @param array $valueProcessors
-     * @return array
-     */
-    public function getAndGroupBy(array $searchCriteria, $groupFields = [], $valueProcessors = [])
-    {
-        return $this->planManager->getAndGroupBy($searchCriteria, $groupFields, $valueProcessors);
-    }
-
     public function createDefaulPlans()
     {
 

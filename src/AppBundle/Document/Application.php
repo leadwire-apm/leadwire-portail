@@ -4,19 +4,19 @@ namespace AppBundle\Document;
 
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 use JMS\Serializer\Annotation as JMS;
-use ATS\CoreBundle\Annotation as ATS;
+
 use AppBundle\Document\User;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Bundle\MongoDBBundle\Validator\Constraints\Unique;
 
 /**
- * @ODM\Document(repositoryClass="AppBundle\Repository\AppRepository")
+ * @ODM\Document(repositoryClass="AppBundle\Repository\ApplicationRepository")
  * @ODM\HasLifecycleCallbacks
  * @ODM\ChangeTrackingPolicy("DEFERRED_EXPLICIT")
  * @JMS\ExclusionPolicy("all")
- * @ATS\ApplicationView
+ *
  */
-class App
+class Application
 {
     /**
      * @var \MongoId

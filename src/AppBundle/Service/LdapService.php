@@ -55,7 +55,6 @@ class LdapService
 
     public function createAppEntry(string $userIndex, string $appUuid)
     {
-
         $entryApp = $this->createAppIndex("app_$appUuid", $userIndex);
         $entryShared = $this->createAppIndex("shared_$appUuid", $userIndex);
 
@@ -66,7 +65,7 @@ class LdapService
     {
         $uuid = $invitation->getUser()->getUuid();
         $entry = new Entry(
-            "cn=app_{$invitation->getApp()->getUuid()},ou=Group,dc=leadwire,dc=io",
+            "cn=app_{$invitation->getApplication()->getUuid()},ou=Group,dc=leadwire,dc=io",
             [
                 "changetype" => "modify",
                 "add" =>  "user_$uuid",

@@ -2,9 +2,9 @@
 
 namespace AppBundle\Service;
 
-use AppBundle\Document\App;
+use AppBundle\Document\Application;
 use AppBundle\Document\User;
-use AppBundle\Manager\AppManager;
+use AppBundle\Manager\ApplicationManager;
 use JMS\Serializer\DeserializationContext;
 use JMS\Serializer\SerializerInterface;
 use Psr\Log\LoggerInterface;
@@ -14,12 +14,12 @@ use Ramsey\Uuid\Uuid;
  * Service class for App entities
  *
  */
-class AppService
+class ApplicationService
 {
     /**
-     * @var AppManager
+     * @var ApplicationManager
      */
-    private $appManager;
+    private $applicationManager;
 
     /**
      * @var SerializerInterface
@@ -53,7 +53,7 @@ class AppService
     /**
      * Constructor
      *
-     * @param AppManager $appManager
+     * @param ApplicationManager $applicationManager
      * @param SerializerInterface $serializer
      * @param LoggerInterface $logger
      * @param LdapService $ldapService
@@ -62,7 +62,7 @@ class AppService
      * @param ElasticSearch $elastic
      */
     public function __construct(
-        AppManager $appManager,
+        ApplicationManager $applicationManager,
         SerializerInterface $serializer,
         LoggerInterface $logger,
         LdapService $ldapService,
@@ -70,7 +70,7 @@ class AppService
         ApplicationTypeService $apService,
         ElasticSearch $elastic
     ) {
-        $this->appManager = $appManager;
+        $this->applicationManager = $applicationManager;
         $this->serializer = $serializer;
         $this->logger = $logger;
         $this->ldapService = $ldapService;
@@ -83,16 +83,23 @@ class AppService
      * List all apps
      *
      * @param User $user
+     *
      * @return array
      */
     public function listApps(User $user)
     {
-        return $this->appManager->getBy(['owner' => $user, 'isRemoved' => false]);
+        return $this->applicationManager->getBy(['owner' => $user, 'isRemoved' => false]);
     }
 
+    /**
+     * @var USer $user
+     *
+     * @return array
+     */
     public function invitedListApps(User $user)
     {
         $apps = [];
+
         foreach ($user->invitations as $invitation) {
             $app = $invitation->getApp();
             if ($app->getIsRemoved() === false) {
@@ -113,7 +120,7 @@ class AppService
      */
     public function paginate($pageNumber = 1, $itemsPerPage = 20, array $criteria = [])
     {
-        return $this->appManager->paginate($criteria, $pageNumber, $itemsPerPage);
+        return $this->applicationManager->paginate($criteria, $pageNumber, $itemsPerPage);
     }
 
     /**
@@ -121,20 +128,22 @@ class AppService
      *
      * @param string $id
      *
-     * @return App
+     * @return Application
      */
-    public function getApp($id)
+    public function getApp($id): Application
     {
-        return $this->appManager->getOneBy(['_id' => $id, 'isRemoved' => false]);
+        return $this->applicationManager->getOneBy(['_id' => $id, 'isRemoved' => false]);
     }
 
     /**
      * Activate Disabled App
+     *
      * @param $id
      * @param $body
-     * @return App
+     *
+     * @return ?Application
      */
-    public function activateApp($id, $body)
+    public function activateApp($id, $body): ?Application
     {
         $code = $body->code;
 
@@ -143,7 +152,7 @@ class AppService
             strtoupper($code) === $code) {
             $app = $this->getApp($id);
             $app->setIsEnabled(true);
-            $this->appManager->update($app);
+            $this->applicationManager->update($app);
             return $app;
         } else {
             return null;
@@ -153,31 +162,32 @@ class AppService
     /**
      * Get specific apps
      *
-     * @param string $criteria
+     * @param array $criteria
      *
      * @return array
      */
     public function getApps(array $criteria = [])
     {
-        return $this->appManager->getBy($criteria);
+        return $this->applicationManager->getBy($criteria);
     }
 
     /**
      * Creates a new app from JSON data
      *
      * @param string $json
-     *
      * @param User $user
-     * @return App
+     *
+     * @return ?Application
+     *
      * @throws \Exception
      */
-    public function newApp($json, User $user)
+    public function newApp($json, User $user): ?Application
     {
         $context = new DeserializationContext();
         $context->setGroups(['Default']);
         $app = $this
             ->serializer
-            ->deserialize($json, App::class, 'json', $context);
+            ->deserialize($json, Application::class, 'json', $context);
 
         $uuid1 = Uuid::uuid1();
         $app
@@ -189,12 +199,12 @@ class AppService
         $applicationTypeId = $app->getType()->getId();
         $ap = $this->apService->getApplicationType($applicationTypeId);
         $app->setType($ap);
-        $this->appManager->update($app);
+        $this->applicationManager->update($app);
         if ($this->ldapService->createAppEntry($user->getIndex(), $app->getUuid()) === true &&
             $this->kibana->createDashboards($app) === true) {
             return $app;
         } else {
-            $this->appManager->delete($app);
+            $this->applicationManager->delete($app);
             $this->logger->critical("Application was removed due to error in Ldap/Kibana or Elastic search");
 
             return null;
@@ -213,14 +223,14 @@ class AppService
         $isSuccessful = false;
 
         try {
-            $realApp = $this->appManager->getOneBy(['id' => $id]);
+            $realApp = $this->applicationManager->getOneBy(['id' => $id]);
             if ($realApp !== null) {
                 return false;
             }
             $context = new DeserializationContext();
             $context->setGroups(['Default']);
-            $app = $this->serializer->deserialize($json, App::class, 'json', $context);
-            $this->appManager->update($app);
+            $app = $this->serializer->deserialize($json, Application::class, 'json', $context);
+            $this->applicationManager->update($app);
             $isSuccessful = true;
         } catch (\Exception $e) {
             $this->logger->error($e->getMessage());
@@ -239,31 +249,6 @@ class AppService
      */
     public function deleteApp($id)
     {
-        $this->appManager->update($this->appManager->getOneBy(['id' => $id])->setIsRemoved(true));
-    }
-
-    /**
-     * Performs a full text search on  App
-     *
-     * @param string $term
-     * @param string $lang
-     *
-     * @return array
-     */
-    public function textSearch($term, $lang)
-    {
-        return $this->appManager->textSearch($term, $lang);
-    }
-
-    /**
-     * Performs multi-field grouped query on App
-     * @param array $searchCriteria
-     * @param string $groupField
-     * @param \Closure $groupValueProcessor
-     * @return array
-     */
-    public function getAndGroupBy(array $searchCriteria, $groupFields = [], $valueProcessors = [])
-    {
-        return $this->appManager->getAndGroupBy($searchCriteria, $groupFields, $valueProcessors);
+        $this->applicationManager->update($this->applicationManager->getOneBy(['id' => $id])->setIsRemoved(true));
     }
 }

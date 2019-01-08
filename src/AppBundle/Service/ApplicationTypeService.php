@@ -82,7 +82,7 @@ class ApplicationTypeService
     /**
      * Get specific applicationTypes
      *
-     * @param string $criteria
+     * @param array $criteria
      *
      * @return array
      */
@@ -140,31 +140,6 @@ class ApplicationTypeService
     public function deleteApplicationType($id)
     {
         $this->applicationTypeManager->deleteById($id);
-    }
-
-    /**
-     * Performs a full text search on  ApplicationType
-     *
-     * @param string $term
-     * @param string $lang
-     *
-     * @return array
-     */
-    public function textSearch($term, $lang)
-    {
-        return $this->applicationTypeManager->textSearch($term, $lang);
-    }
-
-    /**
-     * Performs multi-field grouped query on ApplicationType
-     * @param array $searchCriteria
-     * @param string $groupField
-     * @param \Closure $groupValueProcessor
-     * @return array
-     */
-    public function getAndGroupBy(array $searchCriteria, $groupFields = [], $valueProcessors = [])
-    {
-        return $this->applicationTypeManager->getAndGroupBy($searchCriteria, $groupFields, $valueProcessors);
     }
 
     /**

@@ -29,6 +29,7 @@ phpcs:
     before_script:
         - composer install
         - cp ./app/config/parameters.yml.dist ./app/config/parameters.yml
+        - sed  -i ''  "s/localhost/mongo/" app/config/parameters.yml
     tags:
         - phpunit
     script:
@@ -40,6 +41,7 @@ phpstan:
     before_script:
         - composer install
         - cp ./app/config/parameters.yml.dist ./app/config/parameters.yml
+        - sed  -i ''  "s/localhost/mongo/" app/config/parameters.yml
     tags:
         - phpunit
     script:

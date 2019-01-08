@@ -1,7 +1,7 @@
 <?php
 namespace AppBundle\Service;
 
-use AppBundle\Document\App;
+use AppBundle\Document\Application;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -12,9 +12,19 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 class Kibana
 {
-
+    /**
+     * @var array
+     */
     private $settings;
+
+    /**
+     * @var LoggerInterface
+     */
     private $logger;
+
+    /**
+     * @var ElasticSearch
+     */
     private $elastic;
 
     public function __construct(ContainerInterface $container, LoggerInterface $logger, ElasticSearch $elastic)
@@ -25,13 +35,13 @@ class Kibana
     }
 
     /**
-     * @param App $app
-     * @return bool
+     * @param Application $app
+     *
+     * @return int|bool
      */
-    public function createDashboards(App $app)
+    public function createDashboards(Application $app)
     {
         $isSuccess = $this->elastic->deleteIndex();
-        //$this->elastic->importIndex($app->getIndex());
         $isSuccess &= $this->elastic->resetAppIndexes($app);
 
         $client = new \GuzzleHttp\Client(['defaults' => ['verify' => false]]);

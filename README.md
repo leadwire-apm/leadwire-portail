@@ -1,6 +1,12 @@
 # Install Leadwire
 
 ## Requirements
+---
+
+### Download The repo
+```sh
+$ git clone {url du repo}
+```
 
 
 ### Installation de Mongodb
@@ -9,14 +15,15 @@ https://docs.mongodb.com/v3.4/tutorial/install-mongodb-on-red-hat/
 
 
 ### Install Nginx
+```sh
+$ yum install epel-release -y
 
-yum install epel-release -y
+$ yum install nginx -y
 
-yum install nginx -y
+$ systemctl start nginx
 
-systemctl start nginx
-
-systemctl enable nginx
+$ systemctl enable nginx
+```
 
 ### Install PHP
 ```sh
@@ -36,7 +43,7 @@ php-ldap php-json
 
 Path of the projet is a free choice. conventionally is: /apps/leadwire-portail
 
-Edit Config File /etc/nginx/nginx.conf
+Edit Config File `/etc/nginx/nginx.conf`
 
 In section 80 redirect to 443
 
@@ -89,8 +96,6 @@ server {
             location = /50x.html {
         }
     }
-
-
 ```
 
 root section is for project path. It should be 'Web' folder of the projet
@@ -103,43 +108,48 @@ Check /var/run/php-fpm/php-fpm.sock
 ### Installation Composer
 
 ```sh
-php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
-php -r "if (hash_file('SHA384', 'composer-setup.php') === '544e09ee996cdf60ece3804abc52599c22b1f40f4323403c44d44fdfdd586475ca9813a858088ffbc1f233e9b180f061') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"
-php composer-setup.php
-php -r "unlink('composer-setup.php');"
+$ php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+$ php -r "if (hash_file('SHA384', 'composer-setup.php') === '544e09ee996cdf60ece3804abc52599c22b1f40f4323403c44d44fdfdd586475ca9813a858088ffbc1f233e9b180f061') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"
+$ php composer-setup.php
+$ php -r "unlink('composer-setup.php');"
 
 ```
 
-### Installation Node
+### Install Node
+```sh
+$ yum install nodejs
 
-yum install nodejs
+$ yum install npm
+```
+### Install Grunt at Bower
+```sh
+$ npm install -g grunt-cli
 
-Pour la verification:
+$ npm install -g bower
 
-node --version
+$ npm install -g replace
+```
+### Install git
+```sh
+$ yum install git
+```
 
-install npm
+## Install application's dependencies
 
-yum install npm
+```sh
+$ php composer.phar install
+```
 
-### Installation Grunt at Bower
+*Note*: if you installed composer [globally](https://getcomposer.org/doc/00-intro.md#installation-linux-unix-macos), the command is:
 
-npm install -g grunt-cli
-
-npm install -g bower
-
-
-
-
-
-## Installation
-
-* ```composer install```
+```sh
+$ composer install
+```
 
 The command should ask at the end for the parameters of the instances (Database, email, ldap...)
 
 * ```cd src/UIBundle/Resources/public/dev```
-* ```npm install```
+* In case of regular user ```bower install``` in case of root add this parameter ```--allow-root```
 * ```bower install```
 * Uncomment the first and last line from `src/UIBundle/Resources/public/dev/app/index.html`
 * Update parameters in `src/UIBundle/Resources/public/dev/app/scripts/app.js`
@@ -147,6 +157,20 @@ The command should ask at the end for the parameters of the instances (Database,
  ```sh
 $ bin/console leadwire:install
 ```
+
+### notes
+
+ In case of changing parameters like :
+
+ * adding user/password to mongodb access
+ * changing IPs of Ldap / elastic VPS
+
+
+Just update the file app/config/parameters.yml and clean cache (rm -rf var/cache/app)
+
+Stripe account should be unique for every instance. Do not share stripe account between test and prod.
+Stripe account should have tel and email validated before going to test and prod.
+
 
 # CLI cmd
 

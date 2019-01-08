@@ -4,14 +4,14 @@ namespace AppBundle\Document;
 
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 use JMS\Serializer\Annotation as JMS;
-use ATS\CoreBundle\Annotation as ATS;
+
 use AppBundle\Document\App;
 
 /**
  * @ODM\Document(repositoryClass="AppBundle\Repository\ApplicationTypeRepository")
  * @ODM\HasLifecycleCallbacks
  * @JMS\ExclusionPolicy("all")
- * @ATS\ApplicationView
+ *
  */
 class ApplicationType
 {

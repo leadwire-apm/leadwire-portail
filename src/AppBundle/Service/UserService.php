@@ -133,7 +133,7 @@ class UserService
         $plan = $this->planService->getPlan($data['plan']);
         $token = null;
         if ($plan !== null) {
-            if ($plan->getPrice() === 0) {
+            if ($plan->getPrice() == 0) {
                 if ($user->getSubscriptionId() !== null) {
                     $this->subscriptionService->delete(
                         $user->getSubscriptionId(),
@@ -280,7 +280,7 @@ class UserService
     /**
      * Get specific users
      *
-     * @param string $criteria
+     * @param array $criteria
      *
      * @return array
      */
@@ -302,7 +302,7 @@ class UserService
             ->serializer
             ->deserialize($json, User::class, 'json');
 
-        return $this->updateUser($json);
+        return $this->updateUser($json, null);
     }
 
     /**
@@ -325,8 +325,8 @@ class UserService
                 ->deserialize($json, User::class, 'json', $context);
 
             $this->userManager->update($user);
-            if ($user->getIsEmailValid() === false) {
-                $this->sendVerifEmail($user);
+            if ($user instanceof User && $user->getIsEmailValid() === false) {
+                $this->sendVerificationEmail($user);
             }
             $isSuccessful = true;
         } catch (\Exception $e) {
@@ -363,21 +363,9 @@ class UserService
     }
 
     /**
-     * Performs multi-field grouped query on User
-     * @param array $searchCriteria
-     * @param string $groupField
-     * @param \Closure $groupValueProcessor
-     * @return array
-     */
-    public function getAndGroupBy(array $searchCriteria, $groupFields = [], $valueProcessors = [])
-    {
-        return $this->userManager->getAndGroupBy($searchCriteria, $groupFields, $valueProcessors);
-    }
-
-    /**
      * @param User $user
      */
-    public function sendVerifEmail(User $user)
+    public function sendVerificationEmail(User $user)
     {
         $mail = new Email();
         $mail

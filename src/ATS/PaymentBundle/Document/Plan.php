@@ -4,14 +4,14 @@ namespace ATS\PaymentBundle\Document;
 
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 use JMS\Serializer\Annotation as JMS;
-use ATS\CoreBundle\Annotation as ATS;
+
 
 /**
  * @ODM\Document(repositoryClass="ATS\PaymentBundle\Repository\PlanRepository")
  * @ODM\HasLifecycleCallbacks
  * @ODM\ChangeTrackingPolicy("DEFERRED_EXPLICIT")
  * @JMS\ExclusionPolicy("all")
- * @ATS\ApplicationView
+ *
  */
 class Plan
 {

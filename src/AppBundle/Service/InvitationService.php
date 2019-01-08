@@ -55,9 +55,9 @@ class InvitationService
     private $ldap;
 
     /**
-     * @var AppService
+     * @var ApplicationService
      */
-    private $appService;
+    private $applicationService;
 
     /**
      * Constructor
@@ -69,9 +69,9 @@ class InvitationService
      * @param Router $router
      * @param ContainerInterface $container
      * @param LdapService $ldap
-     * @param AppService $appService
+     * @param ApplicationService $applicationService
      */
-    public function __construct(InvitationManager $invitationManager, SerializerInterface $serializer, LoggerInterface $logger, SimpleMailerService $mailer, Router $router, ContainerInterface $container, LdapService $ldap, AppService $appService)
+    public function __construct(InvitationManager $invitationManager, SerializerInterface $serializer, LoggerInterface $logger, SimpleMailerService $mailer, Router $router, ContainerInterface $container, LdapService $ldap, ApplicationService $applicationService)
     {
         $this->invitationManager = $invitationManager;
         $this->serializer = $serializer;
@@ -81,7 +81,7 @@ class InvitationService
         $this->router = $router;
         $this->sender = $container->getParameter('sender');
         $this->ldap = $ldap;
-        $this->appService = $appService;
+        $this->applicationService = $applicationService;
     }
 
     /**
@@ -123,7 +123,7 @@ class InvitationService
     /**
      * Get specific invitations
      *
-     * @param string $criteria
+     * @param array $criteria
      *
      * @return array
      */
@@ -163,7 +163,7 @@ class InvitationService
 
         try {
             $invitation = $this->serializer->deserialize($json, Invitation::class, 'json');
-            $invitation->setApp($this->appService->getApp($invitation->getApp()->getId()));
+            $invitation->setApp($this->applicationService->getApp($invitation->getApp()->getId()));
             if ($invitation->getApp()->getOwner()->getId() !== $invitation->getUser()->getId()) {
                 $this->invitationManager->update($invitation);
                 $this->ldap->createInvitationEntry($invitation);
@@ -200,18 +200,6 @@ class InvitationService
     public function textSearch($term, $lang)
     {
         return $this->invitationManager->textSearch($term, $lang);
-    }
-
-    /**
-     * Performs multi-field grouped query on Invitation
-     * @param array $searchCriteria
-     * @param string $groupField
-     * @param \Closure $groupValueProcessor
-     * @return array
-     */
-    public function getAndGroupBy(array $searchCriteria, $groupFields = [], $valueProcessors = [])
-    {
-        return $this->invitationManager->getAndGroupBy($searchCriteria, $groupFields, $valueProcessors);
     }
 
     public function sendInvitationMail(Invitation $invitation, User $user)

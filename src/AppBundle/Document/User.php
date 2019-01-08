@@ -2,13 +2,14 @@
 
 namespace AppBundle\Document;
 
-use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
-use ATS\PaymentBundle\Document\Customer;
+use AppBundle\Document\Application;
+use ATS\PaymentBundle\Document\Plan;
 use JMS\Serializer\Annotation as JMS;
-use Symfony\Component\Security\Core\User\AdvancedUserInterface;
+use ATS\PaymentBundle\Document\Customer;
+use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Bundle\MongoDBBundle\Validator\Constraints\Unique;
-use ATS\PaymentBundle\Document\Plan;
+use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 
 /**
  * @ODM\Document(repositoryClass="ATS\UserBundle\Repository\UserRepository")
@@ -159,12 +160,12 @@ class User extends \ATS\UserBundle\Document\User
     /**
      * @var App
      *
-     * @ODM\ReferenceOne(targetDocument="AppBundle\Document\App", name="defaultApp", cascade={"persist"}, nullable=true)
-     * @JMS\Type("AppBundle\Document\App")
+     * @ODM\ReferenceOne(targetDocument="AppBundle\Document\Application", name="defaultApp", cascade={"persist"}, nullable=true)
+     * @JMS\Type("AppBundle\Document\Application")
      * @JMS\Expose
      * @JMS\Groups({"Default", "full"})
      */
-    private $defaultApp = null;
+    private $defaultApplication = null;
 
     /**
      * @var Plan
@@ -457,18 +458,18 @@ class User extends \ATS\UserBundle\Document\User
     /**
      * @return App
      */
-    public function getDefaultApp(): App
+    public function getDefaultApplication(): Application
     {
-        return $this->defaultApp;
+        return $this->defaultApplication;
     }
 
     /**
-     * @param App|null $defaultApp
+     * @param App|null $defaultApplication
      * @return User
      */
-    public function setDefaultApp($defaultApp)
+    public function setdefaultApplication($defaultApplication)
     {
-        $this->defaultApp = $defaultApp;
+        $this->defaultApplication = $defaultApplication;
         return $this;
     }
 

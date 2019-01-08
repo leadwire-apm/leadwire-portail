@@ -1,17 +1,16 @@
-<?php declare(strict_types=1);
+<?php declare (strict_types = 1);
 
 namespace AppBundle\Document;
 
+use AppBundle\Document\Application;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 use JMS\Serializer\Annotation as JMS;
-use ATS\CoreBundle\Annotation as ATS;
 
 /**
  * @ODM\Document(repositoryClass="AppBundle\Repository\StatRepository")
  * @ODM\HasLifecycleCallbacks
  * @ODM\ChangeTrackingPolicy("DEFERRED_EXPLICIT")
  * @JMS\ExclusionPolicy("all")
- * @ATS\ApplicationView
  */
 class Stat
 {
@@ -45,12 +44,11 @@ class Stat
     private $nbr;
 
     /**
-     * @var App
+     * @var Application
      *
-     * @ODM\ReferenceOne(targetDocument="AppBundle\Document\App", name="app", cascade={"persist"})
+     * @ODM\ReferenceOne(targetDocument="AppBundle\Document\Application", name="app", cascade={"persist"})
      */
-    private $app;
-
+    private $application;
 
     /**
      * Constructor
@@ -89,6 +87,7 @@ class Stat
     public function setDay($day)
     {
         $this->day = $day;
+
         return $this;
     }
 
@@ -111,24 +110,27 @@ class Stat
     public function setNbr($nbr)
     {
         $this->nbr = $nbr;
+
         return $this;
     }
 
     /**
      * @return App
      */
-    public function getApp(): App
+    public function getApp(): Application
     {
-        return $this->app;
+        return $this->application;
     }
 
     /**
-     * @param App $defaultApp
+     * @param Application $app
+     *
      * @return Stat
      */
-    public function setApp(App $app)
+    public function setApp(Application $application)
     {
-        $this->app = $app;
+        $this->application = $application;
+
         return $this;
     }
     /**

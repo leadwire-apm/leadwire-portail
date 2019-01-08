@@ -5,8 +5,6 @@ namespace AppBundle\Controller\Rest;
 use AppBundle\Document\Invitation;
 use AppBundle\Service\InvitationService;
 use ATS\CoreBundle\Controller\Rest\BaseRestController;
-use ATS\CoreBundle\HTTPFoundation\CsvResponse;
-use ATS\CoreBundle\Service\Exporter\Exporter;
 use ATS\CoreBundle\Service\Voter\AclVoter;
 use FOS\RestBundle\Controller\Annotations\Route;
 use Symfony\Component\HttpFoundation\Request;
@@ -145,29 +143,5 @@ class InvitationController extends BaseRestController
         }
 
         return $this->prepareJsonResponse($invitationService->textSearch($term, $lang));
-    }
-
-    /**
-     * @Route("/csv-export", methods="POST")
-     *
-     * @param Request $request
-     * @param Exporter $exporter
-     *
-     * @return CsvResponse
-     */
-    public function generateCsvExportAction(Request $request, Exporter $exporter)
-    {
-        $this->denyAccessUnlessGranted(AclVoter::EXPORT, Invitation::class);
-        $data = json_decode($request->getContent(), true);
-
-        $exported = $exporter
-            ->setFormat(Exporter::FORMAT_CSV)
-            ->setEntity(Invitation::class)
-            ->setFilter($data['filter'])
-            ->setSchema(explode(',', $data['schema']))
-            ->export()
-            ->getRawData();
-
-        return new CsvResponse($exported);
     }
 }

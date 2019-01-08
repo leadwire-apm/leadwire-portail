@@ -9,6 +9,6 @@ use ATS\CoreBundle\Repository\BaseDocumentRepository;
  *
  * @see \ATS\CoreBundle\Repository\BaseDocumentRepository
  */
-class AppRepository extends BaseDocumentRepository
+class ApplicationRepository extends BaseDocumentRepository
 {
 }

@@ -1,11 +1,11 @@
-<?php declare(strict_types=1);
+<?php declare (strict_types = 1);
 
 namespace AppBundle\Service;
 
-use Psr\Log\LoggerInterface;
-use JMS\Serializer\SerializerInterface;
-use AppBundle\Manager\StatManager;
 use AppBundle\Document\Stat;
+use AppBundle\Manager\StatManager;
+use JMS\Serializer\SerializerInterface;
+use Psr\Log\LoggerInterface;
 
 /**
  * Service class for Stat entities
@@ -75,19 +75,19 @@ class StatService
      */
     public function getStat($id)
     {
-         return $this->statManager->getOneBy(['id' => $id]);
+        return $this->statManager->getOneBy(['id' => $id]);
     }
 
     /**
      * Get specific stats
      *
-     * @param string $criteria
+     * @param array $criteria
      *
      * @return array
      */
     public function getStats(array $criteria = [])
     {
-         return $this->statManager->getBy($criteria, array("day" => "DESC"), 15);
+        return $this->statManager->getBy($criteria, array("day" => "DESC"), 15);
     }
 
     /**
@@ -100,8 +100,8 @@ class StatService
     public function newStat($json)
     {
         $stat = $this
-                ->serializer
-                ->deserialize($json, Stat::class, 'json');
+            ->serializer
+            ->deserialize($json, Stat::class, 'json');
 
         return $this->updateStat($json);
     }
@@ -138,31 +138,6 @@ class StatService
      */
     public function deleteStat($id)
     {
-         $this->statManager->deleteById($id);
-    }
-
-     /**
-      * Performs a full text search on  Stat
-      *
-      * @param string $term
-      * @param string $lang
-      *
-      * @return array
-      */
-    public function textSearch($term, $lang)
-    {
-        return $this->statManager->textSearch($term, $lang);
-    }
-
-    /**
-     * Performs multi-field grouped query on Stat
-     * @param array $searchCriteria
-     * @param string $groupField
-     * @param \Closure $groupValueProcessor
-     * @return array
-     */
-    public function getAndGroupBy(array $searchCriteria, $groupFields = [], $valueProcessors = [])
-    {
-        return $this->statManager->getAndGroupBy($searchCriteria, $groupFields, $valueProcessors);
+        $this->statManager->deleteById($id);
     }
 }
