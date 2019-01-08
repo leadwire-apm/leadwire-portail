@@ -3,5 +3,3 @@ services:
         autowire: true
         autoconfigure: true
         public: true
-    ATS\DistributionBundle\:
-        resource: '../../src/ATS/DistributionBundle/*'
