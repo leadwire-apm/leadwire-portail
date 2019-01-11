@@ -2,21 +2,21 @@
 
     <tabset justified="true" class="box-tab justified ">
         <tab heading="Detail Application">
-            <section  ng-include="'views/application/applicationInfo.html'">
+            <section  ng-include="'application/applicationInfo.html'">
             </section>
         </tab>
         <tab heading="Invited Users" ng-if="user.id == ctrl.app.owner.id"
         >
             <section class="widget bg-white post-comments"
-                     ng-include="'views/application/listInvitations.html'">
+                     ng-include="'application/listInvitations.html'">
             </section>
         </tab>
         <tab heading="Installation" ng-if="user.id == ctrl.app.owner.id">
-            <section ng-include="'views/application/installation.html'">
+            <section ng-include="'application/installation.html'">
             </section>
         </tab>
         <tab heading="Stats" ng-if="user.id == ctrl.app.owner.id">
-            <section ng-include="'views/application/stats.html'">
+            <section ng-include="'application/stats.html'">
             </section>
         </tab>
     </tabset>
