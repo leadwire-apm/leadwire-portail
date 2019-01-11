@@ -1,14 +1,13 @@
-<?php declare(strict_types=1);
+<?php declare (strict_types = 1);
 
 namespace ATS\PaymentBundle\Controller\Rest;
 
 use ATS\CoreBundle\Controller\Rest\BaseRestController;
 use ATS\PaymentBundle\Document\Plan;
+use ATS\PaymentBundle\Service\PlanService;
 use FOS\RestBundle\Controller\Annotations\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use ATS\CoreBundle\Service\Voter\AclVoter;
-use ATS\PaymentBundle\Service\PlanService;
 
 class PlanController extends BaseRestController
 {
@@ -24,7 +23,6 @@ class PlanController extends BaseRestController
     public function getPlanAction(Request $request, PlanService $planService, $id)
     {
         $data = $planService->getPlan($id);
-        $this->denyAccessUnlessGranted(AclVoter::VIEW, $data);
 
         return $this->prepareJsonResponse($data);
     }
@@ -39,7 +37,6 @@ class PlanController extends BaseRestController
      */
     public function listPlansAction(Request $request, PlanService $planService)
     {
-        $this->denyAccessUnlessGranted(AclVoter::VIEW_ALL, Plan::class);
         $data = $planService->listPlans();
 
         return $this->prepareJsonResponse($data);
@@ -65,7 +62,6 @@ class PlanController extends BaseRestController
         $pageNumber,
         $itemsPerPage
     ) {
-        $this->denyAccessUnlessGranted(AclVoter::VIEW_ALL, Plan::class);
         $pageResult = $planService->paginate($pageNumber, $itemsPerPage);
 
         return $this->prepareJsonResponse($pageResult);

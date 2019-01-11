@@ -1,0 +1,30 @@
+<div class="container">
+    <div class="quick-launcher-inner">
+        <a href="javascript:;" class="close" quick-launch>×</a>
+        <div class="css-table-xs">
+            <button data-ng-click="paginator.prevPage()"
+                    ng-if="applications.length!==0 && applications.length > paginator.itemsPerPage"
+                  class="col text-center text-white btn btn-link pull-left">
+                <i class="fa fa-arrow-left"></i>
+            </button>
+            <div ng-repeat="app in applications"
+                 ng-if="app.isEnabled && paginator.start<=$index && paginator.end>$index"
+                 class="col" >
+                <a ng-click="changeContextApp(app)" quick-launch>
+                    <i ng-class="app.id == selectedAppId ? 'fa fa-desktop text-amber' : 'fa fa-desktop'"></i>
+                    <span ng-class="app.id == selectedAppId ? 'text-amber' : ''">[[ app.name ]]</span>
+                </a>
+            </div>
+            <button data-ng-click="paginator.nextPage()"
+                    ng-if="applications.length!==0 && applications.length > paginator.itemsPerPage"
+                  class="col text-center text-white btn btn-link pull-right">
+                <i class="fa fa-arrow-right"></i>
+            </button>
+            <div class="col" ng-if="applications.length==0">
+                <a ui-sref="app.applicationsAdd">
+                    <span>Create your first App</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

@@ -5,11 +5,9 @@ namespace AppBundle\Controller\Rest;
 use AppBundle\Document\Invitation;
 use AppBundle\Service\InvitationService;
 use ATS\CoreBundle\Controller\Rest\BaseRestController;
-use ATS\CoreBundle\Service\Voter\AclVoter;
 use FOS\RestBundle\Controller\Annotations\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class InvitationController extends BaseRestController
 {

@@ -13,6 +13,6 @@ class DefaultController extends Controller
      */
     public function indexAction()
     {
-        return $this->render('@UI/Default/index.html');
+        return $this->render('@UI/Default/index.html.twig');
     }
 }
