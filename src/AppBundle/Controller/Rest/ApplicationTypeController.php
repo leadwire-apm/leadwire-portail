@@ -4,13 +4,9 @@ namespace AppBundle\Controller\Rest;
 
 use AppBundle\Service\ApplicationTypeService;
 use ATS\CoreBundle\Controller\Rest\BaseRestController;
-use ATS\CoreBundle\HTTPFoundation\CsvResponse;
-use ATS\CoreBundle\Service\Exporter\Exporter;
-use ATS\CoreBundle\Service\Voter\AclVoter;
 use FOS\RestBundle\Controller\Annotations\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class ApplicationTypeController extends BaseRestController
 {

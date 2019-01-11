@@ -1,0 +1,155 @@
+<div class="wrap">
+    <div class="pricing-table">
+        <div ng-repeat="plan in ctrl.plans | orderBy:ctrl.orderBy"
+             class="plan"
+             ng-if="ctrl.shouldShowPlan(plan)"
+        >
+            <h3 class="name">[[plan.name]]</h3>
+            <h4 class="price">[[plan.price]] € <br>
+                <span class="text-center"> per month</span>
+            </h4>
+            <ul class="details">
+                <li>[[plan.retention]] [[plan.retention > 1 ? 'days' :'day']] <strong>Retention</strong></li>
+                <li>[[plan.maxTransactionPerDay.toLocaleString()]]<strong> Transaction/day </strong></li>
+            </ul>
+
+            <h5 class="order">
+                <button ng-class="{'btn-success':ctrl.billingInformation.plan==plan.id}"
+                        ng-click="ctrl.choosePlan(plan)" class="btn">Order
+                </button>
+            </h5>
+        </div>
+    </div>
+</div>
+<style>
+    .cf:before, .pricing-table:before,
+    .cf:after,
+    .pricing-table:after {
+        content: ".";
+        display: block;
+        height: 0;
+        overflow: hidden;
+    }
+
+    .cf:after, .pricing-table:after {
+        clear: both;
+    }
+
+    .cf, .pricing-table {
+        zoom: 1;
+    }
+
+    .wrap {
+        width: 100%;
+        margin: 10px auto;
+        color: #607d8b;
+        /*box-shadow: 1px 1px 10px #424242;*/
+    }
+
+    .pricing-table .plan {
+        box-sizing: border-box;
+        background-color: #fff;
+        float: left;
+        text-align: center;
+        position: relative;
+        z-index: 10;
+        box-shadow: 1px 1px 10px #424242;
+    }
+
+    .plan:first-child:nth-last-child(1) {
+        width: 50%;
+        margin-left: 25%;
+    }
+
+    /* two items */
+    .plan:first-child:nth-last-child(2),
+    .plan:first-child:nth-last-child(2) ~ .plan {
+        width: 45%;
+        margin-left: 3%;
+    }
+
+    /* three items */
+    .plan:first-child:nth-last-child(3),
+    .plan:first-child:nth-last-child(3) ~ .plan {
+        width: 33.3333%;
+    }
+
+    .pricing-table .plan h3.name {
+        font-size: 20px;
+        background-color: #546e7a;
+        padding: 15px;
+        color: #fff;
+    }
+
+    .pricing-table .plan h4.price {
+        font-size: 49px;
+        color: #fff;
+        padding: 30px;
+        background-color: #01A4F5;
+        line-height: 40px;
+    }
+
+    .pricing-table .plan h4.price span {
+        font-size: 16px;
+        font-style: italic;
+    }
+
+    .pricing-table .plan ul.details {
+        list-style-type: none;
+    }
+
+    .pricing-table .plan ul.details li {
+        border-bottom: 1px solid #B3B9C4;
+        padding: 15px;
+    }
+
+    .pricing-table .plan h5.order {
+        padding: 30px;
+        font-size: 17px;
+    }
+
+    .pricing-table .plan h5.order a {
+        text-decoration: none;
+        color: #fff;
+        background-color: #01A4F5;
+        padding: 10px 20px;
+    }
+
+    .pricing-table .plan:first-child h4.price {
+        background-color: #95a5a6;
+    }
+
+    .pricing-table .plan:first-child h5.order a {
+        background-color: #95a5a6;
+    }
+
+    .pricing-table .plan:last-child h4.price {
+        background-color: #0EC0A5;
+    }
+
+    .pricing-table .plan:last-child h5.order a {
+        background-color: #0EC0A5;
+    }
+
+    .pricing-table .plan:nth-child(2n) {
+        /*box-shadow: 0px 0px 10px #424242;*/
+        z-index: 100;
+    }
+    @media screen and (max-width: 768px) {
+        .plan:first-child:nth-last-child(1) {
+            width: 100%
+        }
+
+        /* two items */
+        .plan:first-child:nth-last-child(2),
+        .plan:first-child:nth-last-child(2) ~ .plan {
+            width: 100%
+        }
+
+        /* three items */
+        .plan:first-child:nth-last-child(3),
+        .plan:first-child:nth-last-child(3) ~ .plan {
+            width: 100%
+        }
+    }
+</style>

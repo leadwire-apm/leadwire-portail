@@ -1,0 +1,33 @@
+<!-- preloader -->
+<preloader class="preloader ng-hide"></preloader>
+<!-- /preloader -->
+
+<!-- sidebar panel -->
+<div class="sidebar-panel offscreen-left" ng-include="'common/sidebar-panel.html'"></div>
+<!-- /sidebar panel -->
+
+<!-- content panel -->
+<div class="main-panel">
+
+  <!-- top header -->
+  <div class="header navbar" ng-include="'common/header.html'"></div>
+  <!-- /top header -->
+
+  <!-- main area -->
+  <div class="main-content [[$state.current.data.contentClasses]]" data-ui-view></div>
+  <!-- /main area -->
+
+</div>
+<!-- /content panel -->
+
+<!-- bottom footer -->
+<footer class="content-footer" ng-include="'common/footer.html'"></footer>
+<!-- /bottom footer -->
+
+<!-- chat -->
+<div class="chat-panel" data-ng-class="{'conversation-open': app.layout.isConversationOpen}" ng-include="'common/chat-panel.html'"></div>
+<!-- /chat -->
+
+<!-- options panel -->
+<div class="configuration" ng-include="'common/options.html'" data-ng-class="{'active': app.isConfigOpen}"></div>
+<!-- /options panel -->

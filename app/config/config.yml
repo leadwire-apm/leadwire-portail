@@ -45,19 +45,35 @@ twig:
     strict_variables: '%kernel.debug%'
     globals:
         app_version:  '%app_version%'
+        BASE_URL: '%app_schemes%://%app_domain%/'
+        ASSETS_BASE_URL: '/'
+        UPLOAD_URL: '%app_schemes%://%app_domain%/uploads/'
+        DOWNLOAD_URL: '%app_schemes%://%app_domain%/core/api/resource/'
+        GITHUB_CLIENT_ID: 'aa236b3900fb084b3ccf'
+        # 'GITHUB_CLIENT_ID': '5ae68ff984489a4ed647' /*prod*/
+        # 'GITHUB_CLIENT_ID': 'a5b3aee9593a1aaa5046', /*test*/
+        DATE_DEFAULT_FORMAT: 'YYYY-MM-DD[T]HH:mm:ssZZ'
+        EN_DATE_FORMAT: 'YYYY-DD-MM'
+        FR_DATE_FORMAT: 'DD-MM-YYYY'
+        TAX: 20
+    paths:
+        '%kernel.project_dir%/src/UIBundle/Resources/views/Default': ~
 
 # Assetic Configuration
 assetic:
     debug:          '%kernel.debug%'
     use_controller: false
     bundles:
-        - CoreBundle
-        - AppBundle
-        - UserBundle
-        - AdminBundle
-        - TranslationBundle
+        - UIBundle
+
     filters:
         cssrewrite: ~
+    #     yui_css:
+    #         jar: '%yui_compressor_path%'
+    #     yui_js:
+    #         jar: '%yui_compressor_path%'
+    #     jsqueeze: ~
+    # write_to: '%kernel.root_dir%/../web/assets'
 
 doctrine_mongodb:
     auto_generate_hydrator_classes: true

@@ -1,0 +1,123 @@
+<div class="panel" ng-init="ctrl.init()">
+    <div class="panel-heading">
+        <h4>Application List</h4>
+        <hr>
+    </div>
+    <div class="panel-body">
+        <div class="row no-margin">
+            <div class="col-lg-12 ">
+                <a class="btn btn-primary pull-right mb10" ui-sref="app.applicationsAdd"><i
+                        class="fa fa-plus-circle"></i>
+                    Add</a>
+                <div class="no-more-tables">
+                    <table class="table table-striped mb0">
+                        <thead>
+                        <tr>
+                            <th class="col-md-5">
+                                <span></span>Name
+                            </th>
+                            <th class="col-md-2">Type</th>
+                            <th class="col-md-2">Email</th>
+                            <th class="col-md-2">Status</th>
+                            <th colspan="3" style="text-align: center">Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-if="ctrl.ui.isLoading" class="text-center">
+                            <td colspan="7">
+                                <spinner is-loading="ctrl.ui.isLoading" size="24"></spinner>
+                            </td>
+                        </tr>
+                        <tr ng-repeat="app in ctrl.apps"
+                            ng-if="ctrl.paginator.start<=$index && ctrl.paginator.end>$index"
+
+                        >
+                            <td data-title="Name" data-label="Name">
+                                <span></span>[[app.name]]
+                            </td>
+                            <td data-title="Type" data-label="Type">[[app.type.name]]</td>
+                            <td data-title="Email" data-label="Email">[[app.email]]</td>
+                            <td data-title="Status" data-label="Status" class="align-middle">
+                                <span data-ng-class="app.isEnabled ? 'label label-success' : 'label label-default'">
+                                    [[app.isEnabled ? 'Enabled' : 'Disabled']]
+                                </span>
+
+                            </td>
+                            <td data-title="Details" data-label="Details">
+                                <a class="btn btn-info"
+                                   title="Details"
+                                   data-placement="left"
+                                   data-toggle="tooltip"
+                                   ng-disabled="!app.isEnabled" ui-sref="app.applicationDetail({id:app.id})">
+                                    <i class="fa fa-info"></i>
+                                </a>
+                            </td>
+                            <td ng-if="!app.isEnabled && app.owner.id == user.id"
+                                data-title="Activate app"
+                                data-label="Activate app">
+                                <a class="btn btn-primary"
+                                   title="Activate app"
+                                   data-placement="left"
+                                   data-toggle="tooltip"
+                                   ng-click="ctrl.enableApp(app)"
+                                >
+                                    <i class="fa fa-key"></i>
+                                </a>
+                            </td>
+                            <td ng-if="app.isEnabled && app.owner.id == user.id"
+                                data-title="Edit App" data-label="Edit app">
+                                <a class="btn btn-warning"
+                                   title="Edit application"
+                                   data-placement="left"
+                                   data-toggle="tooltip"
+
+                                   ui-sref="app.applicationEdit({id:app.id})"><i class="fa fa-pencil"></i></a>
+                            </td>
+                            <td data-title="Delete" data-label="Delete">
+                                <button class="btn btn-danger"
+                                        title="Delete application"
+                                        data-placement="left"
+                                        data-toggle="tooltip"
+
+                                        ng-click="ctrl.deleteApp(app.id)">
+                                    <i ng-if="!ctrl.ui.isDeleting" class="fa fa-trash"></i>
+                                    <spinner is-loading="ctrl.ui.isDeleting"></spinner>
+
+                                </button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="text-center">
+                    <ul class="pagination ">
+                        <li>
+                            <button class="btn" data-ng-click="ctrl.paginator.prevPage()">
+                                <i class="fa fa-arrow-left"></i>
+                            </button>
+                        </li>
+                        <li ng-repeat="i in ctrl.paginator.getPageNumber() track by $index"
+                            ng-if="$index"
+                        >
+                            <button class="btn"
+                                    ng-class="{'btn-primary': ctrl.paginator.isCurrent($index)}"
+                                    data-ng-click="ctrl.paginator.goToPage($index)"
+                            >[[$index]]
+                            </button>
+                        </li>
+                        <li>
+                            <button class="btn" data-ng-click="ctrl.paginator.nextPage()">
+                                <i class="fa fa-arrow-right"></i>
+                            </button>
+                        </li>
+
+                    </ul>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+
+
+</div>
