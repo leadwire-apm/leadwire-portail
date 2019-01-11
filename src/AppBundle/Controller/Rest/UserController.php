@@ -42,7 +42,7 @@ class UserController extends BaseRestController
         $data = $request->getContent();
         $successful = $userService->updateUser($data, $id);
 
-        return $this->prepareJsonResponse($successful);
+        return new JsonResponse($successful);
     }
 
     /**
@@ -60,7 +60,7 @@ class UserController extends BaseRestController
             $data = $request->getContent();
             $successful = $userService->subscribe($data, $this->getUser());
 
-            return $this->prepareJsonResponse($successful);
+            return new JsonResponse($successful);
         } catch (\Exception $e) {
             return $this->exception($e->getMessage(), 400);
         }
@@ -78,7 +78,7 @@ class UserController extends BaseRestController
         try {
             $data = $userService->getInvoices($this->getUser());
 
-            return $this->prepareJsonResponse($data);
+            return new JsonResponse($data);
         } catch (\Exception $e) {
             return $this->exception($e->getMessage(), 400);
         }
@@ -95,7 +95,8 @@ class UserController extends BaseRestController
     {
         try {
             $data = $userService->getSubscription($this->getUser());
-            return $this->json($data, 200);
+
+            return new JsonResponse($data);
         } catch (\Exception $e) {
             return $this->exception($e->getMessage(), 400);
         }
@@ -118,7 +119,8 @@ class UserController extends BaseRestController
                 $this->getUser(),
                 json_decode($request->getContent(), true)
             );
-            return $this->json($data);
+
+            return new JsonResponse($data);
         } catch (\Exception $e) {
             return $this->exception($e->getMessage(), 400);
         }
@@ -141,7 +143,8 @@ class UserController extends BaseRestController
                 $this->getUser(),
                 json_decode($request->getContent(), true)
             );
-            return $this->json($data);
+
+            return new JsonResponse($data);
         } catch (\Exception $e) {
             return $this->exception($e->getMessage(), 400);
         }

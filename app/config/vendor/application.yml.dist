@@ -10,4 +10,5 @@ parameters:
     app_id: LEADWIRE
     app_title: 'LeadWire APM'
     app_description: 'LeadWire APM'
-    acl_rules: {  }
+    github_client_id: null
+    super_admin_user_name: admin

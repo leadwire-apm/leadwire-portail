@@ -127,31 +127,6 @@ class ApplicationController extends BaseRestController
     }
 
     /**
-     * @Route(
-     *    "/paginate/{pageNumber}/{itemsPerPage}",
-     *    methods="GET",
-     *    defaults={"pageNumber" = 1, "itemsPerPage" = 20}
-     * )
-     *
-     * @param Request $request
-     * @param ApplicationService $applicationService
-     * @param int $pageNumber
-     * @param int $itemsPerPage
-     *
-     * @return Response
-     */
-    public function paginateAppsAction(
-        Request $request,
-        ApplicationService $applicationService,
-        $pageNumber,
-        $itemsPerPage
-    ) {
-        $pageResult = $applicationService->paginate($pageNumber, $itemsPerPage);
-
-        return $this->prepareJsonResponse($pageResult);
-    }
-
-    /**
      * @Route("/new", methods="POST")
      *
      * @param Request $request
@@ -168,9 +143,9 @@ class ApplicationController extends BaseRestController
             $application = $applicationService->newApp($data, $this->getUser());
 
             if ($application !== null) {
-                return $this->prepareJsonResponse($application);
+                return new JsonResponse($application);
             } else {
-                return $this->prepareJsonResponse(false);
+                return new JsonResponse(false);
             }
         } catch (MongoDuplicateKeyException $e) {
             return $this->exception("App Name is not Unique");
@@ -192,7 +167,7 @@ class ApplicationController extends BaseRestController
             $data = $request->getContent();
             $successful = $applicationService->updateApp($data, $id);
 
-            return $this->prepareJsonResponse($successful);
+            return new JsonResponse($successful);
         } catch (MongoDuplicateKeyException $e) {
             return $this->exception("App Name is not Unique");
         }
@@ -211,7 +186,7 @@ class ApplicationController extends BaseRestController
     {
         $applicationService->deleteApp($id);
 
-        return $this->prepareJsonResponse([]);
+        return new JsonResponse(null, 200);
     }
 
     private function exception($message, $status = 400)

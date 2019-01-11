@@ -5,6 +5,7 @@ namespace AppBundle\Controller\Rest;
 use AppBundle\Service\ApplicationTypeService;
 use ATS\CoreBundle\Controller\Rest\BaseRestController;
 use FOS\RestBundle\Controller\Annotations\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -23,7 +24,7 @@ class ApplicationTypeController extends BaseRestController
     {
         $data = $applicationtypeService->getApplicationType($id);
 
-        return $this->prepareJsonResponse($data);
+        return new JsonResponse($data);
     }
 
     /**
@@ -38,32 +39,7 @@ class ApplicationTypeController extends BaseRestController
     {
         $data = $applicationtypeService->listApplicationTypes();
 
-        return $this->prepareJsonResponse($data);
-    }
-
-    /**
-     * @Route(
-     *    "/paginate/{pageNumber}/{itemsPerPage}",
-     *    methods="GET",
-     *    defaults={"pageNumber" = 1, "itemsPerPage" = 20}
-     * )
-     *
-     * @param Request $request
-     * @param ApplicationTypeService $applicationtypeService
-     * @param int $pageNumber
-     * @param int $itemsPerPage
-     *
-     * @return Response
-     */
-    public function paginateApplicationTypesAction(
-        Request $request,
-        ApplicationTypeService $applicationtypeService,
-        $pageNumber,
-        $itemsPerPage
-    ) {
-        $pageResult = $applicationtypeService->paginate($pageNumber, $itemsPerPage);
-
-        return $this->prepareJsonResponse($pageResult);
+        return new JsonResponse($data);
     }
 
     /**
@@ -79,7 +55,7 @@ class ApplicationTypeController extends BaseRestController
         $data = $request->getContent();
         $successful = $applicationtypeService->newApplicationType($data);
 
-        return $this->prepareJsonResponse($successful);
+        return new JsonResponse($successful);
     }
 
     /**
@@ -95,7 +71,7 @@ class ApplicationTypeController extends BaseRestController
         $data = $request->getContent();
         $successful = $applicationtypeService->updateApplicationType($data);
 
-        return $this->prepareJsonResponse($successful);
+        return new JsonResponse($successful);
     }
 
     /**
@@ -111,6 +87,6 @@ class ApplicationTypeController extends BaseRestController
     {
         $applicationtypeService->deleteApplicationType($id);
 
-        return $this->prepareJsonResponse([]);
+        return new JsonResponse(null);
     }
 }

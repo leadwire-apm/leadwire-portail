@@ -151,6 +151,7 @@ class AuthService
     {
         $jwt = explode(' ', $authorization);
         $token = $this->decodeToken($jwt[1]);
+
         return $this->userManager->getOneBy(['uuid' => str_replace("user_", "", $token->user)]);
     }
 }

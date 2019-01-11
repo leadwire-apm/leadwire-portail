@@ -3,13 +3,11 @@
 namespace AppBundle\Document;
 
 use AppBundle\Document\Application;
-use ATS\PaymentBundle\Document\Plan;
-use JMS\Serializer\Annotation as JMS;
 use ATS\PaymentBundle\Document\Customer;
-use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
-use Symfony\Component\Validator\Constraints as Assert;
+use ATS\PaymentBundle\Document\Plan;
 use Doctrine\Bundle\MongoDBBundle\Validator\Constraints\Unique;
-use Symfony\Component\Security\Core\User\AdvancedUserInterface;
+use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
+use JMS\Serializer\Annotation as JMS;
 
 /**
  * @ODM\Document(repositoryClass="ATS\UserBundle\Repository\UserRepository")
@@ -80,7 +78,6 @@ class User extends \ATS\UserBundle\Document\User
      * @JMS\Groups({"full","Default"})
      */
     private $contact;
-
 
     /**
      * @var string
@@ -175,7 +172,6 @@ class User extends \ATS\UserBundle\Document\User
      */
     private $customer = null;
 
-
     /**
      * Get id
      *
@@ -199,7 +195,6 @@ class User extends \ATS\UserBundle\Document\User
 
         return $this;
     }
-
 
     /**
      * Get uuid
@@ -277,7 +272,6 @@ class User extends \ATS\UserBundle\Document\User
     {
         return $this->getUsername();
     }
-
 
     /**
      * Set company
@@ -384,7 +378,7 @@ class User extends \ATS\UserBundle\Document\User
      */
     public function setContact($contact)
     {
-        $this->contact = $contact ;
+        $this->contact = $contact;
 
         return $this;
     }
@@ -396,7 +390,7 @@ class User extends \ATS\UserBundle\Document\User
      */
     public function getContact()
     {
-        return $this->contact ;
+        return $this->contact;
     }
 
     /**
@@ -420,7 +414,7 @@ class User extends \ATS\UserBundle\Document\User
      */
     public function getContactPreference()
     {
-        return $this->contactPreference ;
+        return $this->contactPreference;
     }
 
     /**
@@ -462,7 +456,7 @@ class User extends \ATS\UserBundle\Document\User
         return $this;
     }
 
-    public function getPlan() : Plan
+    public function getPlan(): Plan
     {
         return $this->plan;
     }

@@ -43,7 +43,6 @@ class InstallCommand extends Command
         $this
             ->setName('leadwire:install')
             ->setDescription('Creates files and data required by the app.')
-            ->addArgument('dev', InputArgument::OPTIONAL, "If set, ignore grunt build step")
             ->setHelp(
                 'Creates files and data required by the app.
 Load default Application Type. Insert template for Kibana and more..'
@@ -52,21 +51,6 @@ Load default Application Type. Insert template for Kibana and more..'
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $isDev = $input->getArgument('dev');
-
-        if ($isDev !== true) {
-            /**
-             * Create Build of assets first.
-             */
-            $output->writeln("<fg=yellow>Dev mode off, executing grunt build...</>");
-
-            $outputGrunt = shell_exec("cd src/UIBundle/Resources/public/dev && grunt build");
-            $output->writeln((string)$outputGrunt);
-            shell_exec(" cd ../../../../../");
-        } else {
-            $output->writeln("<fg=yellow>Dev mode on going to grunt build...</>");
-        }
-
         /**
          * Assets install and dump.
          */

@@ -88,7 +88,7 @@ class ApplicationService
      */
     public function listApps(User $user)
     {
-        return $this->applicationManager->getBy(['owner' => $user, 'isRemoved' => false]);
+        return $this->applicationManager->getBy(['owner' => $user, 'removed' => false]);
     }
 
     /**
@@ -102,7 +102,7 @@ class ApplicationService
 
         foreach ($user->invitations as $invitation) {
             $app = $invitation->getApplication();
-            if ($app->getIsRemoved() === false) {
+            if ($app->isRemoved() === false) {
                 $apps[] = $app;
             }
         }
@@ -132,7 +132,7 @@ class ApplicationService
      */
     public function getApplication($id): ?Application
     {
-        return $this->applicationManager->getOneBy(['_id' => $id, 'isRemoved' => false]);
+        return $this->applicationManager->getOneBy(['_id' => $id, 'removed' => false]);
     }
 
     /**
@@ -151,7 +151,13 @@ class ApplicationService
             (substr($code, 4, 1) === '7') &&
             (strtoupper($code) === $code)) {
             $app = $this->getApplication($id);
-            $app->setIsEnabled(true);
+
+            if ($app instanceof Application) {
+                $app->setEnabled(true);
+            } else {
+                throw new \Exception(sprintf("Unknow application %s", $id));
+            }
+
             $this->applicationManager->update($app);
 
             return $app;
@@ -194,9 +200,9 @@ class ApplicationService
         $uuid1 = Uuid::uuid1();
         $app
             ->setOwner($user)
-            ->setIsEnabled(false)
+            ->setEnabled(false)
             ->setUuid($uuid1->toString())
-            ->setIsRemoved(false);
+            ->setRemoved(false);
 
         /** @var string $applicationTypeId */
         $applicationTypeId = $app->getType()->getId();
@@ -252,6 +258,6 @@ class ApplicationService
      */
     public function deleteApp($id)
     {
-        $this->applicationManager->update($this->applicationManager->getOneBy(['id' => $id])->setIsRemoved(true));
+        $this->applicationManager->update($this->applicationManager->getOneBy(['id' => $id])->setRemoved(true));
     }
 }

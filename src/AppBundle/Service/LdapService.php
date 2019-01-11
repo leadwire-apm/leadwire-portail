@@ -27,12 +27,13 @@ class LdapService
     private $logger;
     /**
      * LdapService constructor.
-     * @param ContainerInterface $container
+     *
      * @param LoggerInterface $logger
+     * @param array $ldapConfig
      */
-    public function __construct(ContainerInterface $container, LoggerInterface $logger)
+    public function __construct(LoggerInterface $logger, array $ldapConfig = [])
     {
-        $this->settings = $container->getParameter('ldap');
+        $this->settings = $ldapConfig;
         $this->logger = $logger;
     }
 
@@ -68,7 +69,7 @@ class LdapService
             "cn=app_{$invitation->getApplication()->getUuid()},ou=Group,dc=leadwire,dc=io",
             [
                 "changetype" => "modify",
-                "add" =>  "user_$uuid",
+                "add" => "user_$uuid",
                 "memberUid" => "user_$uuid",
             ]
         );
@@ -83,7 +84,7 @@ class LdapService
             [
                 'cn' => "$index",
                 'objectClass' => ['groupofnames'],
-                'member' => "cn=$userIndex,ou=People,dc=leadwire,dc=io"
+                'member' => "cn=$userIndex,ou=People,dc=leadwire,dc=io",
             ]
         );
         return $this->saveEntry($entry);
@@ -95,7 +96,7 @@ class LdapService
         $ldap = Ldap::create(
             'ext_ldap',
             [
-            'connection_string' => 'ldap://' . $this->settings['host'] . ':' . $this->settings['port'],
+                'connection_string' => 'ldap://' . $this->settings['host'] . ':' . $this->settings['port'],
             ]
         );
 

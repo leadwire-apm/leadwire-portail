@@ -9,12 +9,12 @@ $ git clone {url du repo}
 ```
 
 
-### Installation de Mongodb
+### MongoDB Setup
 
 https://docs.mongodb.com/v3.4/tutorial/install-mongodb-on-red-hat/
 
 
-### Install Nginx
+### Nginx Setup
 ```sh
 $ yum install epel-release -y
 
@@ -25,7 +25,8 @@ $ systemctl start nginx
 $ systemctl enable nginx
 ```
 
-### Install PHP
+### PHP & PHP-extensions Setup
+#### RedHat based distros
 ```sh
 $ wget http://rpms.remirepo.net/enterprise/remi-release-7.rpm
 
@@ -39,9 +40,9 @@ $ yum --enablerepo=remi,remi-php71 install php-opcache php-pecl-apcu php-cli php
 php-ldap php-json
 ```
 
-### Configure Nginx
+### Nginx vHost configuration
 
-Path of the projet is a free choice. conventionally is: /apps/leadwire-portail
+Path of the projet is a free choice. conventionally it is: /apps/leadwire-portail
 
 Edit Config File `/etc/nginx/nginx.conf`
 
@@ -98,38 +99,22 @@ server {
     }
 ```
 
-root section is for project path. It should be 'Web' folder of the projet
+- `root`  should point to the web folder of the application. e.g: /path/to/leadwire-repo/`web`
 
-Sections ssl_certificate & ssl_certificate_key are for certificats.
+- Sections ssl_certificate & ssl_certificate_key are for certificats.
 
 Check /var/run/php-fpm/php-fpm.sock
 
 
-### Installation Composer
+### Composer Setup
 
 ```sh
-$ php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
-$ php -r "if (hash_file('SHA384', 'composer-setup.php') === '544e09ee996cdf60ece3804abc52599c22b1f40f4323403c44d44fdfdd586475ca9813a858088ffbc1f233e9b180f061') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"
-$ php composer-setup.php
-$ php -r "unlink('composer-setup.php');"
+# From the projets root folder
+
+$ ./scripts/get_composer.sh
 
 ```
-
-### Install Node
-```sh
-$ yum install nodejs
-
-$ yum install npm
-```
-### Install Grunt at Bower
-```sh
-$ npm install -g grunt-cli
-
-$ npm install -g bower
-
-$ npm install -g replace
-```
-### Install git
+### git Setup
 ```sh
 $ yum install git
 ```
@@ -148,47 +133,27 @@ $ composer install
 
 The command should ask at the end for the parameters of the instances (Database, email, ldap...)
 
-* ```cd src/UIBundle/Resources/public/dev```
-* In case of regular user ```bower install``` in case of root add this parameter ```--allow-root```
-* ```bower install```
-* Uncomment the first and last line from `src/UIBundle/Resources/public/dev/app/index.html`
-* Update parameters in `src/UIBundle/Resources/public/dev/app/scripts/app.js`
-* Go root directory
- ```sh
-$ bin/console leadwire:install
-```
+### Notes
 
-### notes
+- In case of changing parameters such as:
+    * Adding user/password to mongodb access
+    * Changing IPs of Ldap / elastic VPS
 
- In case of changing parameters like :
+    Update the right parameter in app/config/parameters.yml then rebuild the cache:
+    ```sh
+    $ app/console cache:clear --env=ENV # Where ENV is dev on development environment and prod on production servers
+    ```
 
- * adding user/password to mongodb access
- * changing IPs of Ldap / elastic VPS
+- Stripe account should be unique for each instance. (i.e. Do not share stripe account between test and prod.)
 
-
-Just update the file app/config/parameters.yml and clean cache (rm -rf var/cache/app)
-
-Stripe account should be unique for every instance. Do not share stripe account between test and prod.
-Stripe account should have tel and email validated before going to test and prod.
+- Stripe account should have a valid phone number and e-mail before going to test and prod.
 
 
 # CLI cmd
 
 ## Import Stats
 
-```bin/console leadwire:import:stats <file>```
-
-This cmd should csv file. for help you can use
-
+- To import applications' statistics from a CSV file
 ```sh
-$ bin/console leadwire:import:stats --help
-```
-
-## Sending mail
-
-Sending mail is deferred task. It can be a cron (every minutes for example)
-
-
-```sh
-$ bin/console swiftmailer:spool:send --env=prod
+$ bin/console leadwire:import:stats /path/to/stats-file
 ```

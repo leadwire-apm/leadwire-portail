@@ -1,11 +1,10 @@
-<?php declare(strict_types=1);
+<?php declare (strict_types = 1);
 
 namespace AppBundle\Document;
 
 use AppBundle\Document\Application;
-
-use JMS\Serializer\Annotation as JMS;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
+use JMS\Serializer\Annotation as JMS;
 
 /**
  * @ODM\Document(repositoryClass="AppBundle\Repository\InvitationRepository")
@@ -45,7 +44,6 @@ class Invitation
      */
     private $email;
 
-
     /**
      * @var User
      *
@@ -65,7 +63,6 @@ class Invitation
      * @JMS\Groups({"Default"})
      */
     private $isPending = true;
-
 
     /**
      * Constructor

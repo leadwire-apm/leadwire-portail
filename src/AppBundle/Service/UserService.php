@@ -255,6 +255,7 @@ class UserService
         if ($user->getCustomer() !== null) {
             $customer = $user->getCustomer();
         } else {
+            /** @var string $json */
             $json = json_encode(["name" => $user->getName(), "email" => $user->getEmail()]);
             $data = json_decode($data, true);
 

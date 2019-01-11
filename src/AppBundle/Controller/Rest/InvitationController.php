@@ -6,6 +6,7 @@ use AppBundle\Document\Invitation;
 use AppBundle\Service\InvitationService;
 use ATS\CoreBundle\Controller\Rest\BaseRestController;
 use FOS\RestBundle\Controller\Annotations\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -24,7 +25,7 @@ class InvitationController extends BaseRestController
     {
         $data = $invitationService->getInvitation($id);
 
-        return $this->prepareJsonResponse($data);
+        return new JsonResponse($data);
     }
 
     /**
@@ -39,32 +40,7 @@ class InvitationController extends BaseRestController
     {
         $data = $invitationService->listInvitations();
 
-        return $this->prepareJsonResponse($data);
-    }
-
-    /**
-     * @Route(
-     *    "/paginate/{pageNumber}/{itemsPerPage}",
-     *    methods="GET",
-     *    defaults={"pageNumber" = 1, "itemsPerPage" = 20}
-     * )
-     *
-     * @param Request $request
-     * @param InvitationService $invitationService
-     * @param int $pageNumber
-     * @param int $itemsPerPage
-     *
-     * @return Response
-     */
-    public function paginateInvitationsAction(
-        Request $request,
-        InvitationService $invitationService,
-        $pageNumber,
-        $itemsPerPage
-    ) {
-        $pageResult = $invitationService->paginate($pageNumber, $itemsPerPage);
-
-        return $this->prepareJsonResponse($pageResult);
+        return new JsonResponse($data);
     }
 
     /**
@@ -80,7 +56,7 @@ class InvitationController extends BaseRestController
         $data = $request->getContent();
         $successful = $invitationService->newInvitation($data, $this->getUser());
 
-        return $this->prepareJsonResponse($successful);
+        return new JsonResponse($successful);
     }
 
     /**
@@ -96,7 +72,7 @@ class InvitationController extends BaseRestController
         $data = $request->getContent();
         $successful = $invitationService->updateInvitation($data);
 
-        return $this->prepareJsonResponse($successful);
+        return new JsonResponse($successful);
     }
 
     /**
@@ -112,6 +88,6 @@ class InvitationController extends BaseRestController
     {
         $invitationService->deleteInvitation($id);
 
-        return $this->prepareJsonResponse([]);
+        return new JsonResponse(null);
     }
 }

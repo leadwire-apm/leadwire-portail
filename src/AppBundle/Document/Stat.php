@@ -127,7 +127,7 @@ class Stat
      *
      * @return Stat
      */
-    public function setApp(Application $application)
+    public function setApplication(Application $application)
     {
         $this->application = $application;
 

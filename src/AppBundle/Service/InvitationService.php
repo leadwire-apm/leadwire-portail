@@ -12,6 +12,7 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\Router;
+use AppBundle\Document\Application;
 
 /**
  * Service class for Invitation entities
@@ -164,7 +165,16 @@ class InvitationService
         try {
             /** @var Invitation $invitation */
             $invitation = $this->serializer->deserialize($json, Invitation::class, 'json');
-            $invitation->setApplication($this->applicationService->getApplication((string)$invitation->getApplication()->getId()));
+
+            /** @var Application $application */
+            $application = $this->applicationService->getApplication((string) $invitation->getApplication()->getId());
+
+            if ($application instanceof Application) {
+                $invitation->setApplication($application);
+            } else {
+                throw new \Exception(sprintf("Unknown application %s", $invitation->getApplication()->getId()));
+            }
+
             if ($invitation->getApplication()->getOwner()->getId() !== $invitation->getUser()->getId()) {
                 $this->invitationManager->update($invitation);
                 $this->ldap->createInvitationEntry($invitation);

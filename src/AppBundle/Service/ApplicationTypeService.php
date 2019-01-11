@@ -2,11 +2,11 @@
 
 namespace AppBundle\Service;
 
-use GuzzleHttp\Client;
-use Psr\Log\LoggerInterface;
 use AppBundle\Document\ApplicationType;
-use JMS\Serializer\SerializerInterface;
 use AppBundle\Manager\ApplicationTypeManager;
+use GuzzleHttp\Client;
+use JMS\Serializer\SerializerInterface;
+use Psr\Log\LoggerInterface;
 
 /**
  * Service class for ApplicationType entities
@@ -150,13 +150,20 @@ class ApplicationTypeService
             $defaultType = new ApplicationType();
             $defaultType->setName("Java");
             $defaultType->setInstallation($response->getBody()->read(10000));
-            $defaultType->setTemplate(
-                json_decode(
-                    file_get_contents(
+            $content = file_get_contents(
+                __DIR__ . "/../../../app/Resources/Kibana/apm-dashboards.json"
+            );
+
+            if ($content !== false) {
+                $defaultType->setTemplate(json_decode($content));
+            } else {
+                throw new \Exception(
+                    sprintf(
+                        "Bad content from file %s",
                         __DIR__ . "/../../../app/Resources/Kibana/apm-dashboards.json"
                     )
-                )
-            );
+                );
+            }
             $defaultType->setAgent($url);
             $this->applicationTypeManager->update($defaultType);
         }

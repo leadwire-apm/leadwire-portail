@@ -1,13 +1,12 @@
-<?php declare(strict_types=1);
+<?php declare (strict_types = 1);
 
 namespace AppBundle\Document;
 
+use AppBundle\Document\User;
+use Doctrine\Bundle\MongoDBBundle\Validator\Constraints\Unique;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 use JMS\Serializer\Annotation as JMS;
-
-use AppBundle\Document\User;
 use Symfony\Component\Validator\Constraints as Assert;
-use Doctrine\Bundle\MongoDBBundle\Validator\Constraints\Unique;
 
 /**
  * @ODM\Document(repositoryClass="AppBundle\Repository\ApplicationRepository")
@@ -60,7 +59,6 @@ class Application
      */
     private $description;
 
-
     /**
      * @var string
      *
@@ -85,19 +83,18 @@ class Application
      * @var boolean
      * @JMS\Expose
      * @JMS\Type("boolean")
-     * @ODM\Field(type="boolean", name="isEnabled")
+     * @ODM\Field(type="boolean", name="enabled")
      */
-    private $isEnabled;
-
+    private $enabled;
 
     /**
      * @var boolean
      * @JMS\Groups({"never"})
      * @JMS\Expose
      * @JMS\Type("boolean")
-     * @ODM\Field(type="boolean", name="isRemoved")
+     * @ODM\Field(type="boolean", name="removed")
      */
-    private $isRemoved;
+    private $removed;
 
     /**
      * @var User
@@ -109,7 +106,6 @@ class Application
      */
     private $owner;
 
-
     /**
      * @var ApplicationType
      *
@@ -119,7 +115,6 @@ class Application
      * @JMS\Groups({"full", "Default"})
      */
     private $type;
-
 
     /** @ODM\ReferenceMany(targetDocument="Invitation", mappedBy="app")
      * @JMS\Type("array<AppBundle\Document\Invitation>")
@@ -159,7 +154,6 @@ class Application
 
         return $this;
     }
-
 
     /**
      * Get uuid
@@ -214,7 +208,6 @@ class Application
         $this->description = $description;
         return $this;
     }
-
 
     /**
      * Get email
@@ -285,7 +278,6 @@ class Application
         return $this;
     }
 
-
     /**
      * Get type
      * @return ApplicationType
@@ -308,55 +300,47 @@ class Application
     }
 
     /**
-     * Get isEnabled
+     * Get enabled
      *
      * @return boolean
      */
-    public function getIsEnabled()
+    public function isEnabled()
     {
-        return $this->isEnabled;
+        return $this->enabled;
     }
 
     /**
-     * Set isEnabled
-     * @param boolean $isEnabled
+     * Set enabled
+     * @param boolean $enabled
      *
      * @return Application
      */
-    public function setIsEnabled(bool $isEnabled)
+    public function setEnabled(bool $enabled)
     {
-        $this->isEnabled = $isEnabled;
+        $this->enabled = $enabled;
 
         return $this;
     }
 
     /**
-     * @return boolean
-     */
-    public function isEnabled()
-    {
-        return $this->isEnabled;
-    }
-
-    /**
-     * Get isRemoved
+     * Get removed
      *
      * @return boolean
      */
-    public function getIsRemoved()
+    public function isRemoved()
     {
-        return $this->isRemoved;
+        return $this->removed;
     }
 
     /**
      * Set type
-     * @param boolean $isRemoved
+     * @param boolean $removed
      *
      * @return Application
      */
-    public function setIsRemoved(bool $isRemoved)
+    public function setRemoved(bool $removed)
     {
-        $this->isRemoved = $isRemoved;
+        $this->removed = $removed;
 
         return $this;
     }

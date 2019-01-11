@@ -1,1 +1,9 @@
 services:
+    app.service.ldap:
+      class: "AppBundle\\Service\\LdapService"
+      arguments:
+        - "@logger"
+        - "%ldap%"
+
+    AppBundle\Service\LdapService:
+      alias: "@app.service.ldap"

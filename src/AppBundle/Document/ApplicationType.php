@@ -1,11 +1,10 @@
-<?php declare(strict_types=1);
+<?php declare (strict_types = 1);
 
 namespace AppBundle\Document;
 
+use AppBundle\Document\App;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 use JMS\Serializer\Annotation as JMS;
-
-use AppBundle\Document\App;
 
 /**
  * @ODM\Document(repositoryClass="AppBundle\Repository\ApplicationTypeRepository")
@@ -64,7 +63,6 @@ class ApplicationType
      * @JMS\Groups({"full"})
      */
     public $apps;
-
 
     /**
      * Constructor

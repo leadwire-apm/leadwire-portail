@@ -1,12 +1,11 @@
 <?php
 namespace AppBundle\Command;
 
+use DateTime;
 use AppBundle\Document\Stat;
 use AppBundle\Manager\ApplicationManager;
-use AppBundle\Manager\AppManager;
-use AppBundle\Service\StatService;
-use Doctrine\Bundle\MongoDBBundle\ManagerRegistry;
 use Symfony\Component\Console\Command\Command;
+use Doctrine\Bundle\MongoDBBundle\ManagerRegistry;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -46,15 +45,19 @@ app_uuid;jour;nb_tx'
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $file = (string) $input->getArgument('file');
+        /** @var string $file */
+        $file = $input->getArgument('file');
+
         if (is_file($file) === true) {
             $stats = [];
             $apps = [];
             $row = 0;
 
-            if (($handle = fopen($file, "r")) !== false) {
+            $handle = fopen($file, "r");
+
+            if ($handle !== false) {
                 while (($data = fgetcsv($handle, 0, ";")) !== false) {
-                    $num = count($data);
+                    $num = is_array($data) ? count($data) : 0;
                     $row++;
                     for ($c = 1; $c < $num; $c++) {
                         if (false === isset($apps[$data[0]])) {
@@ -69,11 +72,15 @@ app_uuid;jour;nb_tx'
                             }
                         }
                         $timezone = new \DateTimeZone('Europe/London');
-                        $date = \DateTime::createFromFormat('Ymd', $data[1], $timezone);
+                        $date = DateTime::createFromFormat('Ymd', $data[1], $timezone);
+                        if ($date instanceof DateTime) {
+                            $stats[$row]->setDay($date);
+                        } else {
+                            throw new \Exception(sprintf("Bad value for DateTime object [%s]", $data[1]));
+                        }
                         $stats[$row] = new Stat();
-                        $stats[$row]->setDay($date)
-                            ->setNbr($data[2])
-                            ->setApp($apps[$data[0]]);
+                        $stats[$row]->setNbr($data[2])
+                            ->setApplication($apps[$data[0]]);
 
                         $this->managerRegistry->getManager()->persist($stats[$row]);
                     }

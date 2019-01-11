@@ -27,7 +27,10 @@ class UserManager extends AbstractManager
      */
     public function getUserByUsername($username)
     {
-        return $this->getDocumentRepository()->getByUsername($username);
+        /** @var User $user */
+        $user = $this->getDocumentRepository()->findOneBy(['username' => $username]);
+
+        return $user;
     }
 
     public function create($username, $uuid, $avatar, $name, $roles = [], $active = true)

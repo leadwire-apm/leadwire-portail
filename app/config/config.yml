@@ -49,7 +49,7 @@ twig:
         ASSETS_BASE_URL: '/'
         UPLOAD_URL: '%app_schemes%://%app_domain%/uploads/'
         DOWNLOAD_URL: '%app_schemes%://%app_domain%/core/api/resource/'
-        GITHUB_CLIENT_ID: 'aa236b3900fb084b3ccf'
+        GITHUB_CLIENT_ID: '%github_client_id%'
         # 'GITHUB_CLIENT_ID': '5ae68ff984489a4ed647' /*prod*/
         # 'GITHUB_CLIENT_ID': 'a5b3aee9593a1aaa5046', /*test*/
         DATE_DEFAULT_FORMAT: 'YYYY-MM-DD[T]HH:mm:ssZZ'

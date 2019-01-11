@@ -2,10 +2,10 @@
 
 namespace AppBundle\Service;
 
-use GuzzleHttp\Client;
-use AppBundle\Document\User;
-use Psr\Log\LoggerInterface;
 use AppBundle\Document\Application;
+use AppBundle\Document\User;
+use GuzzleHttp\Client;
+use Psr\Log\LoggerInterface;
 use SensioLabs\Security\Exception\HttpException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
