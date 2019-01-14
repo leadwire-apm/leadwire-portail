@@ -5,5 +5,24 @@ services:
         - "@logger"
         - "%ldap%"
 
+    app.service.elastic_search:
+      class: "AppBundle\\Service\\ElasticSearchService"
+      arguments:
+        - "@logger"
+        - "%elastic%"
+
+    app.service.kibana:
+      class: "AppBundle\\Service\\KibanaService"
+      arguments:
+        - "@logger"
+        - "@app.service.elastic_search"
+        - "%kibana%"
+
     AppBundle\Service\LdapService:
       alias: "@app.service.ldap"
+
+    AppBundle\Service\ElasticSearchService:
+      alias: "@app.service.elastic_search"
+
+    AppBundle\Service\KibanaService:
+      alias: "@app.service.kibana"

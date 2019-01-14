@@ -35,15 +35,16 @@ class UserManager extends AbstractManager
 
     public function create($username, $uuid, $avatar, $name, $roles = [], $active = true)
     {
-        $user = (new User)
-            ->setActive($active)
+        $user = new User();
+        $user
+            ->setAvatar($avatar)
+            ->setUuid($uuid)
+            ->setName($name)
+            ->setIsEmailValid(false)
             ->setUsername($username)
             ->setRoles($roles)
-            ->setPassword("")
-            ->setUuid($uuid)
-            ->setAvatar($avatar)
-            ->setName($name)
-            ->setIsEmailValid(false);
+            ->setActive($active)
+            ->setPassword("");
 
         $this->update($user);
     }

@@ -18,7 +18,7 @@ class BaseRestController extends FOSRestController
     /**
      * Prepares a JSON Response
      *
-     * @param array $data
+     * @param mixed $data
      * @param int $responseCode
      * @param string $contextGroup
      *

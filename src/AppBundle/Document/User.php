@@ -450,9 +450,10 @@ class User extends \ATS\UserBundle\Document\User
      *
      * @return User
      */
-    public function setdefaultApplication($defaultApplication)
+    public function setdefaultApplication($defaultApplication): self
     {
         $this->defaultApplication = $defaultApplication;
+
         return $this;
     }
 
@@ -469,9 +470,10 @@ class User extends \ATS\UserBundle\Document\User
 
     /**
      * Get Customer
-     * @return Customer | null
+     *
+     * @return ?Customer
      */
-    public function getCustomer()
+    public function getCustomer(): ?Customer
     {
         return $this->customer;
     }

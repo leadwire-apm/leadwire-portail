@@ -4,7 +4,7 @@ namespace AppBundle\Controller\Rest;
 
 use AppBundle\Service\ApplicationService;
 use AppBundle\Service\AuthService;
-use AppBundle\Service\ElasticSearch;
+use AppBundle\Service\ElasticSearchService;
 use AppBundle\Service\StatService;
 use ATS\CoreBundle\Controller\Rest\BaseRestController;
 use FOS\RestBundle\Controller\Annotations\Route;
@@ -42,7 +42,7 @@ class ApplicationController extends BaseRestController
      *
      * @return Response
      */
-    public function getDashboardsAction(Request $request, ApplicationService $applicationService, ElasticSearch $elastic, $id)
+    public function getDashboardsAction(Request $request, ApplicationService $applicationService, ElasticSearchService $elastic, $id)
     {
         $app = $applicationService->getApplication($id);
         if ($app === null) {

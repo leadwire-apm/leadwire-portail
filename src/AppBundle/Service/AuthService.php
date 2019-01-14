@@ -4,7 +4,7 @@ namespace AppBundle\Service;
 
 use AppBundle\Document\User;
 use AppBundle\Manager\UserManager;
-use AppBundle\Service\ElasticSearch;
+use AppBundle\Service\ElasticSearchService;
 use AppBundle\Service\LdapService;
 use Firebase\JWT\ExpiredException;
 use GuzzleHttp\Client;
@@ -32,7 +32,7 @@ class AuthService
     private $ldapService;
 
     /**
-     * @var ElasticSearch
+     * @var ElasticSearchService
      */
     private $elastic;
 
@@ -45,7 +45,7 @@ class AuthService
         ContainerInterface $container,
         UserManager $userManage,
         LdapService $ldapService,
-        ElasticSearch $elastic,
+        ElasticSearchService $elastic,
         LoggerInterface $logger
     ) {
         $this->container = $container;

@@ -11,7 +11,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @package AppBundle\Service
  * @author Anis Ksontini <aksontini@ats-digital.com>
  */
-class Kibana
+class KibanaService
 {
     /**
      * @var array
@@ -24,13 +24,13 @@ class Kibana
     private $logger;
 
     /**
-     * @var ElasticSearch
+     * @var ElasticSearchService
      */
     private $elastic;
 
-    public function __construct(ContainerInterface $container, LoggerInterface $logger, ElasticSearch $elastic)
+    public function __construct(LoggerInterface $logger, ElasticSearchService $elastic, array $kibanaConfig = [])
     {
-        $this->settings = $container->getParameter('kibana');
+        $this->settings = $kibanaConfig;
         $this->logger = $logger;
         $this->elastic = $elastic;
     }

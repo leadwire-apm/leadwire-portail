@@ -10,11 +10,11 @@ use SensioLabs\Security\Exception\HttpException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Class ElasticSearch Service. Manage connexions with Kibana Rest API.
+ * Class ElasticSearchService Service. Manage connexions with Kibana Rest API.
  * @package AppBundle\Service
  * @author Anis Ksontini <aksontini@ats-digital.com>
  */
-class ElasticSearch
+class ElasticSearchService
 {
     /**
      * @var mixed
@@ -27,16 +27,19 @@ class ElasticSearch
     private $logger;
 
     /**
-     * ElasticSearch constructor.
-     * @param ContainerInterface $container
+     * ElasticSearchService constructor.
      * @param LoggerInterface $logger
+     * @param array $elasticSearchConfig
      */
-    public function __construct(ContainerInterface $container, LoggerInterface $logger)
+    public function __construct(LoggerInterface $logger, array $elasticSearchConfig = [])
     {
-        $this->settings = $container->getParameter('elastic');
+        $this->settings = $elasticSearchConfig;
         $this->logger = $logger;
     }
 
+    /**
+     * @param Application $app
+     */
     public function getDashboads(Application $app)
     {
         try {
@@ -47,6 +50,9 @@ class ElasticSearch
         }
     }
 
+    /**
+     * @param Application $app
+     */
     protected function getRawDashboards(Application $app)
     {
         $client = new Client(['defaults' => ['verify' => false]]);
@@ -158,6 +164,9 @@ class ElasticSearch
         return true;
     }
 
+    /**
+     * @param User $user
+     */
     public function resetUserIndexes(User $user)
     {
         $this->postIndex(
