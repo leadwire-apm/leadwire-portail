@@ -186,7 +186,7 @@ class UserService
      * @param User $user
      * @param array $data
      *
-     * @return void
+     * @return mixed
      */
     public function updateSubscription(User $user, $data)
     {

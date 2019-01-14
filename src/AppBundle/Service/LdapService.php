@@ -72,9 +72,9 @@ class LdapService
      *
      * @param string $userIndex
      * @param string $appUuid
-     * @return void
+     * @return bool
      */
-    public function createAppEntry(string $userIndex, string $appUuid)
+    public function createAppEntry(string $userIndex, string $appUuid): bool
     {
         $entryApp = $this->createAppIndex("app_$appUuid", $userIndex);
         $entryShared = $this->createAppIndex("shared_$appUuid", $userIndex);
@@ -86,9 +86,10 @@ class LdapService
      * createInvitationEntry
      *
      * @param Invitation $invitation
-     * @return void
+     *
+     * @return bool
      */
-    public function createInvitationEntry(Invitation $invitation)
+    public function createInvitationEntry(Invitation $invitation): bool
     {
         $uuid = $invitation->getUser()->getUuid();
         $entry = new Entry(
@@ -108,7 +109,8 @@ class LdapService
      *
      * @param string $index
      * @param string $userIndex
-     * @return void
+     *
+     * @return bool
      */
     public function createAppIndex(string $index, string $userIndex)
     {
@@ -126,9 +128,9 @@ class LdapService
     /**
      * instantiateLdap
      *
-     * @return void
+     * @return Ldap
      */
-    protected function instantiateLdap()
+    protected function instantiateLdap(): Ldap
     {
         $ldap = Ldap::create(
             'ext_ldap',
