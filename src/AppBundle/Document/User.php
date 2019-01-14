@@ -19,6 +19,9 @@ use JMS\Serializer\Annotation as JMS;
 
 class User extends \ATS\UserBundle\Document\User
 {
+    const ROLE_SUPER_ADMIN = 'ROLE_SUPER_ADMIN';
+    const ROLE_ADMIN = 'ROLE_ADMIN';
+
     /**
      * @var string
      *

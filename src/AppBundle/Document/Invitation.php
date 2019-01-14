@@ -62,7 +62,7 @@ class Invitation
      * @JMS\Expose
      * @JMS\Groups({"Default"})
      */
-    private $isPending = true;
+    private $pending = true;
 
     /**
      * Constructor
@@ -128,24 +128,25 @@ class Invitation
     }
 
     /**
-     * Get isPending
+     * Get pending
      *
      * @return bool
      */
-    public function getIsPending()
+    public function isPending()
     {
-        return $this->isPending;
+        return $this->pending;
     }
 
     /**
-     * Set isPending
-     * @param bool $isPending
+     * Set pending
+     * @param bool $pending
      *
      * @return Invitation
      */
-    public function setIsPending($isPending)
+    public function setPending($pending)
     {
-        $this->isPending = $isPending;
+        $this->pending = $pending;
+
         return $this;
     }
 

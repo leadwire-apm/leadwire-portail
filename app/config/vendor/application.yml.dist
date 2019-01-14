@@ -11,4 +11,4 @@ parameters:
     app_title: 'LeadWire APM'
     app_description: 'LeadWire APM'
     github_client_id: null
-    super_admin_user_name: admin
+    super_admin_username: admin

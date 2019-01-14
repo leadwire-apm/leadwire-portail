@@ -2,6 +2,7 @@
 
 namespace AppBundle\Service;
 
+use AppBundle\Document\Application;
 use AppBundle\Document\Invitation;
 use AppBundle\Document\User;
 use AppBundle\Manager\InvitationManager;
@@ -12,7 +13,6 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\Router;
-use AppBundle\Document\Application;
 
 /**
  * Service class for Invitation entities
@@ -72,8 +72,16 @@ class InvitationService
      * @param LdapService $ldap
      * @param ApplicationService $applicationService
      */
-    public function __construct(InvitationManager $invitationManager, SerializerInterface $serializer, LoggerInterface $logger, SimpleMailerService $mailer, Router $router, ContainerInterface $container, LdapService $ldap, ApplicationService $applicationService)
-    {
+    public function __construct(
+        InvitationManager $invitationManager,
+        SerializerInterface $serializer,
+        LoggerInterface $logger,
+        SimpleMailerService $mailer,
+        Router $router,
+        ContainerInterface $container,
+        LdapService $ldap,
+        ApplicationService $applicationService
+    ) {
         $this->invitationManager = $invitationManager;
         $this->serializer = $serializer;
         $this->logger = $logger;

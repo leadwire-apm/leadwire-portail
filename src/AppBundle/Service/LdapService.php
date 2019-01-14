@@ -3,7 +3,6 @@
 namespace AppBundle\Service;
 
 use AppBundle\Document\Invitation;
-use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Ldap\Entry;
 use Symfony\Component\Ldap\Exception\LdapException;
@@ -25,26 +24,40 @@ class LdapService
      * @var LoggerInterface
      */
     private $logger;
+
     /**
      * LdapService constructor.
      *
      * @param LoggerInterface $logger
-     * @param array $ldapConfig
+     * @param array $settings
      */
-    public function __construct(LoggerInterface $logger, array $ldapConfig = [])
+    public function __construct(LoggerInterface $logger, array $settings)
     {
-        $this->settings = $ldapConfig;
+        $this->settings = $settings;
         $this->logger = $logger;
     }
 
     /**
      * Create Ldap entry on User Creation
      * @param string $uuid
+     *
      */
     public function createUserEntry(string $uuid)
     {
+        $this->createUserIndex("user_$uuid");
+        $this->createUserIndex("user_all_$uuid");
+    }
+
+    /**
+     * createUserIndex
+     *
+     * @param string $userIndex
+     * @return void
+     */
+    public function createUserIndex(string $userIndex)
+    {
         $entry = new Entry(
-            "cn=user_$uuid,ou=People,dc=leadwire,dc=io",
+            "cn=$userIndex,ou=People,dc=leadwire,dc=io",
             [
                 'gidNumber' => '5',
                 'objectClass' => ['posixGroup', 'top'],
@@ -54,6 +67,13 @@ class LdapService
         $this->saveEntry($entry);
     }
 
+    /**
+     * createAppEntry
+     *
+     * @param string $userIndex
+     * @param string $appUuid
+     * @return void
+     */
     public function createAppEntry(string $userIndex, string $appUuid)
     {
         $entryApp = $this->createAppIndex("app_$appUuid", $userIndex);
@@ -62,6 +82,12 @@ class LdapService
         return $entryApp && $entryShared;
     }
 
+    /**
+     * createInvitationEntry
+     *
+     * @param Invitation $invitation
+     * @return void
+     */
     public function createInvitationEntry(Invitation $invitation)
     {
         $uuid = $invitation->getUser()->getUuid();
@@ -77,6 +103,13 @@ class LdapService
         $this->saveEntry($entry);
     }
 
+    /**
+     * createAppIndex
+     *
+     * @param string $index
+     * @param string $userIndex
+     * @return void
+     */
     public function createAppIndex(string $index, string $userIndex)
     {
         $entry = new Entry(
@@ -90,9 +123,13 @@ class LdapService
         return $this->saveEntry($entry);
     }
 
+    /**
+     * instantiateLdap
+     *
+     * @return void
+     */
     protected function instantiateLdap()
     {
-
         $ldap = Ldap::create(
             'ext_ldap',
             [
@@ -108,6 +145,7 @@ class LdapService
     /**
      * Save Ldap entry
      * @param Entry $entry
+     *
      * @return bool
      */
     protected function saveEntry(Entry $entry)
@@ -115,15 +153,17 @@ class LdapService
         try {
             $ldap = $this->instantiateLdap();
             $entryManager = $ldap->getEntryManager();
-
             $entryManager->add($entry);
+
             return true;
         } catch (LdapException $e) {
             if (strpos($e->getMessage(), 'Already exists.') !== false) {
                 $this->logger->warning($e->getMessage());
+
                 return true;
             } else {
                 $this->logger->critical($e->getMessage());
+
                 return false;
             }
         }

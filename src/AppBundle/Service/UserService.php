@@ -181,6 +181,13 @@ class UserService
         }
     }
 
+    /**
+     *
+     * @param User $user
+     * @param array $data
+     *
+     * @return void
+     */
     public function updateSubscription(User $user, $data)
     {
         if ($user->getCustomer() === null) {
@@ -193,7 +200,6 @@ class UserService
 
         if ($plan !== null) {
             $anchorCycle = 'unchanged';
-            //$user->getPlan()->getPrice() < $plan->getPrice() ? 'unchanged' : $data['periodEnd'];
             if ($plan->getPrice() === 0.0) {
                 $this->subscriptionService->delete(
                     $user->getSubscriptionId(),

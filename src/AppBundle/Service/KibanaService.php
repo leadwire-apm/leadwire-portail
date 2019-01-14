@@ -4,7 +4,6 @@ namespace AppBundle\Service;
 use AppBundle\Document\Application;
 use GuzzleHttp\Client;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Class Kibana Service. Manage connexions with Kibana Rest API.
@@ -28,9 +27,9 @@ class KibanaService
      */
     private $elastic;
 
-    public function __construct(LoggerInterface $logger, ElasticSearchService $elastic, array $kibanaConfig = [])
+    public function __construct(LoggerInterface $logger, ElasticSearchService $elastic, array $settings = [])
     {
-        $this->settings = $kibanaConfig;
+        $this->settings = $settings;
         $this->logger = $logger;
         $this->elastic = $elastic;
     }

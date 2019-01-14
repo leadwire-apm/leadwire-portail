@@ -42,7 +42,7 @@ class UserController extends BaseRestController
         $data = $request->getContent();
         $successful = $userService->updateUser($data, $id);
 
-        return new JsonResponse($successful);
+        return $this->prepareJsonResponse($successful);
     }
 
     /**
@@ -60,7 +60,7 @@ class UserController extends BaseRestController
             $data = $request->getContent();
             $successful = $userService->subscribe($data, $this->getUser());
 
-            return new JsonResponse($successful);
+            return $this->prepareJsonResponse($successful);
         } catch (\Exception $e) {
             return $this->exception($e->getMessage(), 400);
         }
@@ -78,7 +78,7 @@ class UserController extends BaseRestController
         try {
             $data = $userService->getInvoices($this->getUser());
 
-            return new JsonResponse($data);
+            return $this->prepareJsonResponse($data);
         } catch (\Exception $e) {
             return $this->exception($e->getMessage(), 400);
         }
@@ -96,7 +96,7 @@ class UserController extends BaseRestController
         try {
             $data = $userService->getSubscription($this->getUser());
 
-            return new JsonResponse($data);
+            return $this->prepareJsonResponse($data);
         } catch (\Exception $e) {
             return $this->exception($e->getMessage(), 400);
         }
@@ -120,7 +120,7 @@ class UserController extends BaseRestController
                 json_decode($request->getContent(), true)
             );
 
-            return new JsonResponse($data);
+            return $this->prepareJsonResponse($data);
         } catch (\Exception $e) {
             return $this->exception($e->getMessage(), 400);
         }
@@ -144,7 +144,7 @@ class UserController extends BaseRestController
                 json_decode($request->getContent(), true)
             );
 
-            return new JsonResponse($data);
+            return $this->prepareJsonResponse($data);
         } catch (\Exception $e) {
             return $this->exception($e->getMessage(), 400);
         }
@@ -152,6 +152,6 @@ class UserController extends BaseRestController
 
     private function exception($message, $status = 400)
     {
-        return new JsonResponse(array('message' => $message), $status);
+        return $this->prepareJsonResponse(array('message' => $message), $status);
     }
 }

@@ -143,9 +143,9 @@ class ApplicationController extends BaseRestController
             $application = $applicationService->newApp($data, $this->getUser());
 
             if ($application !== null) {
-                return new JsonResponse($application);
+                return $this->prepareJsonResponse($application);
             } else {
-                return new JsonResponse(false);
+                return $this->prepareJsonResponse(false);
             }
         } catch (MongoDuplicateKeyException $e) {
             return $this->exception("App Name is not Unique");
@@ -167,7 +167,7 @@ class ApplicationController extends BaseRestController
             $data = $request->getContent();
             $successful = $applicationService->updateApp($data, $id);
 
-            return new JsonResponse($successful);
+            return $this->prepareJsonResponse($successful);
         } catch (MongoDuplicateKeyException $e) {
             return $this->exception("App Name is not Unique");
         }
@@ -186,11 +186,11 @@ class ApplicationController extends BaseRestController
     {
         $applicationService->deleteApp($id);
 
-        return new JsonResponse(null, 200);
+        return $this->prepareJsonResponse(null, 200);
     }
 
     private function exception($message, $status = 400)
     {
-        return new JsonResponse(array('message' => $message), $status);
+        return $this->prepareJsonResponse(array('message' => $message), $status);
     }
 }

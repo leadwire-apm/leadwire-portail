@@ -7,7 +7,6 @@ use AppBundle\Document\User;
 use GuzzleHttp\Client;
 use Psr\Log\LoggerInterface;
 use SensioLabs\Security\Exception\HttpException;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Class ElasticSearchService Service. Manage connexions with Kibana Rest API.
@@ -29,11 +28,11 @@ class ElasticSearchService
     /**
      * ElasticSearchService constructor.
      * @param LoggerInterface $logger
-     * @param array $elasticSearchConfig
+     * @param array $settings
      */
-    public function __construct(LoggerInterface $logger, array $elasticSearchConfig = [])
+    public function __construct(LoggerInterface $logger, array $settings = [])
     {
-        $this->settings = $elasticSearchConfig;
+        $this->settings = $settings;
         $this->logger = $logger;
     }
 
@@ -94,7 +93,6 @@ class ElasticSearchService
                 }
             } catch (\GuzzleHttp\Exception\ClientException $e) {
                 $this->logger->error($e->getMessage());
-                //throw new HttpException("An error has occurred while executing your request.", 500);
             }
         }
         return $res;

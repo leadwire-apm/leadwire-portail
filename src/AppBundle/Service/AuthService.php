@@ -68,7 +68,7 @@ class AuthService
                 'GET',
                 $githubAccessTokenUrl . '?' . http_build_query($params)
             )->getBody();
-            // parse_str($responseGithub, $responseGithub);
+
             /* parse the response as array */
             $res = $client->request(
                 'GET',
