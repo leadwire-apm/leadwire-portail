@@ -2,14 +2,15 @@
 
 namespace AppBundle\Controller\Rest;
 
+use AppBundle\Document\User;
 use AppBundle\Service\UserService;
-use ATS\CoreBundle\Controller\Rest\BaseRestController;
-use FOS\RestBundle\Controller\Annotations\Route;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use FOS\RestBundle\Controller\Annotations\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use ATS\CoreBundle\Controller\Rest\BaseRestController;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class UserController extends BaseRestController
 {
@@ -153,5 +154,22 @@ class UserController extends BaseRestController
     private function exception($message, $status = 400)
     {
         return $this->prepareJsonResponse(array('message' => $message), $status);
+    }
+
+    /**
+     * @Route("/{id}/delete", methods="DELETE")
+     *
+     * @param Request $request
+     * @param UserService $userService
+     * @param string $id
+     *
+     * @return Response
+     */
+    public function deleteUserAction(Request $request, UserService $userService, $id)
+    {
+        $this->denyAccessUnlessGranted(User::ROLE_ADMIN);
+        $successful = $userService->softDeleteUser($id);
+
+        return $this->prepareJsonResponse($successful);
     }
 }

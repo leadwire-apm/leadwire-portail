@@ -36,8 +36,11 @@ class ApplicationTypeService
      * @param SerializerInterface $serializer
      * @param LoggerInterface $logger
      */
-    public function __construct(ApplicationTypeManager $applicationTypeManager, SerializerInterface $serializer, LoggerInterface $logger)
-    {
+    public function __construct(
+        ApplicationTypeManager $applicationTypeManager,
+        SerializerInterface $serializer,
+        LoggerInterface $logger
+    ) {
         $this->applicationTypeManager = $applicationTypeManager;
         $this->serializer = $serializer;
         $this->logger = $logger;

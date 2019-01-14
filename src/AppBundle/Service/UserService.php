@@ -379,4 +379,26 @@ class UserService
             );
         $this->mailer->send($mail, false);
     }
+
+    /**
+     *
+     * @param string $id
+     *
+     * @return boolean
+     */
+    public function softDeleteUser(string $id): bool
+    {
+        $isSuccessful = false;
+        /** @var User $user */
+        $user = $this->userManager->getOneBy(['id' => $id]);
+
+        if ($user instanceof User) {
+            $user->setDeleted(true);
+            $this->userManager->update($user);
+
+            $isSuccessful = true;
+        }
+
+        return $isSuccessful;
+    }
 }

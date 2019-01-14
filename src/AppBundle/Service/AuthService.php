@@ -78,7 +78,12 @@ class AuthService
             )->getBody();
 
             $data = json_decode($res, true);
-            $user = $this->userManager->getOneBy(['username' => $data['login']]);
+
+            $user = $this->userManager->getOneBy(
+                [
+                    'username' => $data['login'],
+                ]
+            );
 
             if ($user === null) {
                 $user = $this->addUser($data);

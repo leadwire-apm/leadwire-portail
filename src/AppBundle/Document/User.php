@@ -176,6 +176,15 @@ class User extends \ATS\UserBundle\Document\User
     private $customer = null;
 
     /**
+     * @var bool
+     *
+     * @ODM\Field(type="bool")
+     * @JMS\Type("boolean")
+     * @JMS\Expose
+     */
+    private $deleted;
+
+    /**
      * Get id
      *
      * @return \MongoId
@@ -490,5 +499,29 @@ class User extends \ATS\UserBundle\Document\User
     public function getIndex()
     {
         return "user_" . $this->uuid;
+    }
+
+    /**
+     * Get the value of deleted
+     *
+     * @return  bool
+     */
+    public function isDeleted()
+    {
+        return $this->deleted;
+    }
+
+    /**
+     * Set the value of deleted
+     *
+     * @param  bool  $deleted
+     *
+     * @return  self
+     */
+    public function setDeleted(bool $deleted)
+    {
+        $this->deleted = $deleted;
+
+        return $this;
     }
 }
