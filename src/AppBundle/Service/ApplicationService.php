@@ -47,10 +47,6 @@ class ApplicationService
     private $apService;
 
     /**
-     * @var ElasticSearchService
-     */
-    private $elastic;
-    /**
      * Constructor
      *
      * @param ApplicationManager $applicationManager
@@ -59,7 +55,6 @@ class ApplicationService
      * @param LdapService $ldapService
      * @param KibanaService $kibana
      * @param ApplicationTypeService $apService
-     * @param ElasticSearchService $elastic
      */
     public function __construct(
         ApplicationManager $applicationManager,
@@ -67,8 +62,7 @@ class ApplicationService
         LoggerInterface $logger,
         LdapService $ldapService,
         KibanaService $kibana,
-        ApplicationTypeService $apService,
-        ElasticSearchService $elastic
+        ApplicationTypeService $apService
     ) {
         $this->applicationManager = $applicationManager;
         $this->serializer = $serializer;
@@ -76,7 +70,6 @@ class ApplicationService
         $this->ldapService = $ldapService;
         $this->kibana = $kibana;
         $this->apService = $apService;
-        $this->elastic = $elastic;
     }
 
     /**

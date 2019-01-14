@@ -321,7 +321,7 @@ class UserService
                 ->deserialize($json, User::class, 'json', $context);
 
             $this->userManager->update($user);
-            if ($user instanceof User && $user->getIsEmailValid() === false) {
+            if ($user instanceof User && $user->isEmailValid() === false) {
                 $this->sendVerificationEmail($user);
             }
             $isSuccessful = true;

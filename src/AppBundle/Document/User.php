@@ -109,7 +109,7 @@ class User extends \ATS\UserBundle\Document\User
      * @JMS\Type("boolean")
      * @JMS\Groups({"full","Default"})
      */
-    private $isEmailValid = false;
+    private $emailValid = false;
 
     /**
      * @var string
@@ -358,27 +358,27 @@ class User extends \ATS\UserBundle\Document\User
     }
 
     /**
-     * Set isEmailValid
+     * Set emailValid
      *
-     * @param bool $isEmailValid
+     * @param bool $emailValid
      *
-     * @return User
+     * @return self
      */
-    public function setIsEmailValid($isEmailValid)
+    public function setEmailValid($emailValid): self
     {
-        $this->isEmailValid = $isEmailValid;
+        $this->emailValid = $emailValid;
 
         return $this;
     }
 
     /**
-     * Get isEmailValid
+     * Get emailValid
      *
      * @return bool
      */
-    public function getIsEmailValid()
+    public function isEmailValid()
     {
-        return $this->isEmailValid;
+        return $this->emailValid;
     }
 
     /**

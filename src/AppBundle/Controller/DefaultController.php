@@ -27,11 +27,11 @@ class DefaultController extends Controller
     public function verifAction(UserManager $um, $email)
     {
         $user = $um->getOneBy(['email' => $email]);
-        if ($user->getIsEmailValid() === true) {
+        if ($user->isEmailValid() === true) {
             return $this->redirect('/');
         }
         $user->setActive(true);
-        $user->setIsEmailValid(true);
+        $user->setEmailValid(true);
         $um->update($user);
 
         return $this->redirect('/');
