@@ -57,7 +57,7 @@ app_uuid;jour;nb_tx'
 
             if ($handle !== false) {
                 while (($data = fgetcsv($handle, 0, ";")) !== false) {
-                    $num = is_array($data) ? count($data) : 0;
+                    $num = is_array($data) === true ? count($data) : 0;
                     $row++;
                     for ($c = 1; $c < $num; $c++) {
                         if (false === isset($apps[$data[0]])) {
