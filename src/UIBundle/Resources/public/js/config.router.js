@@ -7,7 +7,7 @@ angular
         '$urlRouterProvider',
         '$authProvider',
         'CONFIG',
-        function($stateProvider, $urlRouterProvider, $authProvider, CONFIG) {
+        function ($stateProvider, $urlRouterProvider, $authProvider, CONFIG) {
             // For unmatched routes
             $urlRouterProvider.otherwise('/applications/list');
 
@@ -23,7 +23,7 @@ angular
             var skipIfLoggedIn = [
                 '$q',
                 '$auth',
-                function($q, $auth) {
+                function ($q, $auth) {
                     var deferred = $q.defer();
                     if ($auth.isAuthenticated()) {
                         deferred.reject();
@@ -38,7 +38,7 @@ angular
                 '$q',
                 '$location',
                 '$auth',
-                function($q, $location, $auth) {
+                function ($q, $location, $auth) {
                     var deferred = $q.defer();
                     if ($auth.isAuthenticated()) {
                         deferred.resolve();
@@ -58,20 +58,6 @@ angular
                 .state('login', {
                     url: '/login',
                     templateUrl: 'extras-signin.html',
-                    resolve: {
-                        deps: [
-                            '$ocLazyLoad',
-                            function($ocLazyLoad) {
-                                return $ocLazyLoad.load({
-                                    name: 'sbAdminApp',
-                                    files: [
-                                        CONFIG.ASSETS_BASE_URL +
-                                            'bundles/ui/js/controllers/login.js'
-                                    ]
-                                });
-                            }
-                        ]
-                    },
                     data: {
                         title: 'login'
                     },
@@ -82,7 +68,7 @@ angular
                     url: '/settings',
                     templateUrl: 'profile.html',
                     resolve: {
-                        isModal: function() {
+                        isModal: function () {
                             return false;
                         },
                         loginRequired: loginRequired,
@@ -90,15 +76,9 @@ angular
                             '$ocLazyLoad',
                             'MenuFactory',
                             '$rootScope',
-                            function($ocLazyLoad, MenuFactory, $rootScope) {
+                            function ($ocLazyLoad, MenuFactory, $rootScope) {
                                 $rootScope.menus = MenuFactory.get('SETTINGS');
-                                return $ocLazyLoad.load({
-                                    name: 'sbAdminApp',
-                                    files: [
-                                        CONFIG.ASSETS_BASE_URL +
-                                            'bundles/ui/js/controllers/profile.js'
-                                    ]
-                                });
+                                return Promise.resolve();
                             }
                         ]
                     },
@@ -113,10 +93,7 @@ angular
                     templateUrl: 'application/add.html',
                     resolve: {
                         loginRequired: loginRequired,
-                        deps: getNotyDeps([
-                            CONFIG.ASSETS_BASE_URL +
-                                'bundles/ui/js/controllers/addApplication.js'
-                        ])
+                        deps: updateMenuItems()
                     },
                     data: {
                         title: 'Add Application'
@@ -154,22 +131,10 @@ angular
                             '$rootScope',
                             'MenuFactory',
                             'UserService',
-                            function(
-                                $ocLazyLoad,
-                                $rootScope,
-                                MenuFactory,
-                                UserService
-                            ) {
+                            function ($ocLazyLoad, $rootScope, MenuFactory, UserService) {
                                 $rootScope.menus = MenuFactory.get('SETTINGS');
                                 UserService.handleFirstLogin();
-
-                                return $ocLazyLoad.load({
-                                    name: 'sbAdminApp',
-                                    files: [
-                                        CONFIG.ASSETS_BASE_URL +
-                                            'bundles/ui/js/controllers/application.js'
-                                    ]
-                                });
+                                return Promise.resolve();
                             }
                         ]
                     },
@@ -184,10 +149,7 @@ angular
                     templateUrl: 'application/detail.html',
                     resolve: {
                         loginRequired: loginRequired,
-                        deps: getNotyDeps([
-                            CONFIG.ASSETS_BASE_URL +
-                                'bundles/ui/js/controllers/detailApplication.js'
-                        ])
+                        deps: updateMenuItems()
                     },
                     data: {
                         title: 'Application Detail'
@@ -200,10 +162,7 @@ angular
                     templateUrl: 'application/edit.html',
                     resolve: {
                         loginRequired: loginRequired,
-                        deps: getNotyDeps([
-                            CONFIG.ASSETS_BASE_URL +
-                                'bundles/ui/js/controllers/editApplication.js'
-                        ])
+                        deps: updateMenuItems()
                     },
                     data: {
                         title: 'Edit Application'
@@ -219,16 +178,11 @@ angular
                     resolve: {
                         loginRequired: loginRequired,
                         deps: [
-                            '$ocLazyLoad',
                             '$rootScope',
                             'MenuFactory',
-                            function($ocLazyLoad, $rootScope, MenuFactory) {
+                            function ($rootScope, MenuFactory) {
                                 $rootScope.menus = MenuFactory.get('SETTINGS');
-
-                                return $ocLazyLoad.load(
-                                    CONFIG.ASSETS_BASE_URL +
-                                        'bundles/ui/js/controllers/billingList.js'
-                                );
+                                return Promise.resolve();
                             }
                         ]
                     }
@@ -241,29 +195,11 @@ angular
                     resolve: {
                         loginRequired: loginRequired,
                         deps: [
-                            '$ocLazyLoad',
                             '$rootScope',
                             'MenuFactory',
-                            function($ocLazyLoad, $rootScope, MenuFactory) {
+                            function ($rootScope, MenuFactory) {
                                 $rootScope.menus = MenuFactory.get('SETTINGS');
-
-                                return $ocLazyLoad
-                                    .load({
-                                        insertBefore: '#load_styles_before',
-                                        files: [
-                                                'css/chosen.min.css',
-                                                'bundles/ui/js/lib/chosen.jquery.min.js',
-                                                'bundles/ui/js/lib/jquery.card.js',
-                                                'bundles/ui/js/lib/jquery.validate.min.js',
-                                                'bundles/ui/js/lib/jquery.bootstrap.wizard.min.js'
-                                        ]
-                                    })
-                                    .then(function() {
-                                        return $ocLazyLoad.load(
-                                            CONFIG.ASSETS_BASE_URL +
-                                                'bundles/ui/js/controllers/editPaymentMethod.js'
-                                        );
-                                    });
+                                return Promise.resolve();
                             }
                         ]
                     }
@@ -276,28 +212,11 @@ angular
                     resolve: {
                         loginRequired: loginRequired,
                         deps: [
-                            '$ocLazyLoad',
                             '$rootScope',
                             'MenuFactory',
-                            function($ocLazyLoad, $rootScope, MenuFactory) {
+                            function ($rootScope, MenuFactory) {
                                 $rootScope.menus = MenuFactory.get('SETTINGS');
-                                return $ocLazyLoad
-                                    .load({
-                                        insertBefore: '#load_styles_before',
-                                        files: [
-                                                'css/chosen.min.css',
-                                                'bundles/ui/js/lib/chosen.jquery.min.js',
-                                                'bundles/ui/js/lib/jquery.card.js',
-                                                'bundles/ui/js/lib/jquery.validate.min.js',
-                                                'bundles/ui/js/lib/jquery.bootstrap.wizard.min.js'
-                                        ]
-                                    })
-                                    .then(function() {
-                                        return $ocLazyLoad.load(
-                                            CONFIG.ASSETS_BASE_URL +
-                                                'bundles/ui/js/controllers/updateSubscription.js'
-                                        );
-                                    });
+                                return Promise.resolve();
                             }
                         ]
                     }
@@ -307,66 +226,17 @@ angular
                 })
                 .state('app.dashboard.home', {
                     url: '/dashboard/:id/:tenant',
-                    templateUrl:'dashboard.html',
+                    templateUrl: 'dashboard.html',
                     resolve: {
                         loginRequired: loginRequired,
                         deps: [
-                            '$ocLazyLoad',
                             'MenuFactory',
                             '$rootScope',
                             '$localStorage',
                             'UserService',
-                            function(
-                                $ocLazyLoad,
-                                MenuFactory,
-                                $rootScope,
-                                $localStorage,
-                                UserService
-                            ) {
+                            function (MenuFactory, $rootScope, $localStorage, UserService) {
                                 $rootScope.menus = $localStorage.currentMenu;
                                 UserService.handleFirstLogin();
-                                return $ocLazyLoad
-                                    .load([
-                                        {
-                                            insertBefore: '#load_styles_before',
-                                            files: [
-                                                CONFIG.ASSETS_BASE_URL +
-                                                    'styles/climacons-font.css',
-                                                CONFIG.ASSETS_BASE_URL +
-                                                    'vendor/rickshaw/rickshaw.min.css'
-                                            ]
-                                        },
-                                        {
-                                            serie: true,
-                                            files: [
-                                                CONFIG.ASSETS_BASE_URL +
-                                                    'vendor/d3/d3.min.js',
-                                                CONFIG.ASSETS_BASE_URL +
-                                                    'vendor/rickshaw/rickshaw.min.js',
-                                                CONFIG.ASSETS_BASE_URL +
-                                                    'vendor/flot/jquery.flot.js',
-                                                CONFIG.ASSETS_BASE_URL +
-                                                    'vendor/flot/jquery.flot.resize.js',
-                                                CONFIG.ASSETS_BASE_URL +
-                                                    'vendor/flot/jquery.flot.pie.js',
-                                                CONFIG.ASSETS_BASE_URL +
-                                                    'vendor/flot/jquery.flot.categories.js'
-                                            ]
-                                        },
-                                        {
-                                            name: 'angular-flot',
-                                            files: [
-                                                CONFIG.ASSETS_BASE_URL +
-                                                    'vendor/angular-flot/angular-flot.js'
-                                            ]
-                                        }
-                                    ])
-                                    .then(function() {
-                                        return $ocLazyLoad.load(
-                                            CONFIG.ASSETS_BASE_URL +
-                                                'bundles/ui/js/controllers/dashboard.js'
-                                        );
-                                    });
                             }
                         ]
                     },
@@ -379,16 +249,7 @@ angular
                     controller: 'customDashboardsCtrl',
                     controllerAs: 'ctrl',
                     resolve: {
-                        loginRequired: loginRequired,
-                        deps: [
-                            '$ocLazyLoad',
-                            function($ocLazyLoad) {
-                                return $ocLazyLoad.load(
-                                    CONFIG.ASSETS_BASE_URL +
-                                        'bundles/ui/js/controllers/customDashboards.js'
-                                );
-                            }
-                        ]
+                        loginRequired: loginRequired
                     }
                 })
                 .state('app.dashboard.manageDashboard', {
@@ -397,32 +258,14 @@ angular
                     controller: 'manageDashboardsCtrl',
                     controllerAs: 'ctrl',
                     resolve: {
-                        loginRequired: loginRequired,
-                        deps: [
-                            '$ocLazyLoad',
-                            function($ocLazyLoad) {
-                                return $ocLazyLoad.load(
-                                    CONFIG.ASSETS_BASE_URL +
-                                        'bundles/ui/js/controllers/manageDashboards.js'
-                                );
-                            }
-                        ]
+                        loginRequired: loginRequired
                     }
                 })
                 .state('app.infrastructureMonitoring', {
                     url: '/infrastructureMonitoring',
                     templateUrl: 'infrastructureMonitoring.html',
                     resolve: {
-                        loginRequired: loginRequired,
-                        deps: [
-                            '$ocLazyLoad',
-                            function($ocLazyLoad) {
-                                return $ocLazyLoad.load(
-                                    CONFIG.ASSETS_BASE_URL +
-                                        'bundles/ui/js/controllers/infrastructureMonitoring.js'
-                                );
-                            }
-                        ]
+                        loginRequired: loginRequired
                     },
                     data: {
                         title: 'Infrastructure Monitoring'
@@ -434,16 +277,7 @@ angular
                     url: '/architectureDiscovery',
                     templateUrl: 'architectureDiscovery.html',
                     resolve: {
-                        loginRequired: loginRequired,
-                        deps: [
-                            '$ocLazyLoad',
-                            function($ocLazyLoad) {
-                                return $ocLazyLoad.load(
-                                    CONFIG.ASSETS_BASE_URL +
-                                        'bundles/ui/js/controllers/architectureDiscovery.js'
-                                );
-                            }
-                        ]
+                        loginRequired: loginRequired
                     },
                     data: {
                         title: 'Architecture Discovery'
@@ -457,16 +291,7 @@ angular
                     url: '/dataBrowser',
                     templateUrl: 'dataBrowser.html',
                     resolve: {
-                        loginRequired: loginRequired,
-                        deps: [
-                            '$ocLazyLoad',
-                            function($ocLazyLoad) {
-                                return $ocLazyLoad.load(
-                                    CONFIG.ASSETS_BASE_URL +
-                                        'bundles/ui/js/controllers/dataBrowser.js'
-                                );
-                            }
-                        ]
+                        loginRequired: loginRequired
                     },
                     data: {
                         title: 'Data Browser'
@@ -480,16 +305,7 @@ angular
                     url: '/customReports',
                     templateUrl: 'customReports.html',
                     resolve: {
-                        loginRequired: loginRequired,
-                        deps: [
-                            '$ocLazyLoad',
-                            function($ocLazyLoad) {
-                                return $ocLazyLoad.load(
-                                    CONFIG.ASSETS_BASE_URL +
-                                        'bundles/ui/js/controllers/customReports.js'
-                                );
-                            }
-                        ]
+                        loginRequired: loginRequired
                     },
                     data: {
                         title: 'Custom Reports'
@@ -504,16 +320,7 @@ angular
                     url: '/syntheticMonitoring',
                     templateUrl: 'syntheticMonitoring.html',
                     resolve: {
-                        loginRequired: loginRequired,
-                        deps: [
-                            '$ocLazyLoad',
-                            function($ocLazyLoad) {
-                                return $ocLazyLoad.load(
-                                    CONFIG.ASSETS_BASE_URL +
-                                        'bundles/ui/js/controllers/syntheticMonitoring.js'
-                                );
-                            }
-                        ]
+                        loginRequired: loginRequired
                     },
                     data: {
                         title: 'Synthetic Monitoring'
@@ -527,16 +334,7 @@ angular
                     url: '/alerts',
                     templateUrl: 'alerts.html',
                     resolve: {
-                        loginRequired: loginRequired,
-                        deps: [
-                            '$ocLazyLoad',
-                            function($ocLazyLoad) {
-                                return $ocLazyLoad.load(
-                                    CONFIG.ASSETS_BASE_URL +
-                                        'bundles/ui/js/controllers/alerts.js'
-                                );
-                            }
-                        ]
+                        loginRequired: loginRequired
                     },
                     data: {
                         title: 'Alerts'
@@ -550,16 +348,7 @@ angular
                     url: '/businessTransactions',
                     templateUrl: 'businessTransactions.html',
                     resolve: {
-                        loginRequired: loginRequired,
-                        deps: [
-                            '$ocLazyLoad',
-                            function($ocLazyLoad) {
-                                return $ocLazyLoad.load(
-                                    CONFIG.ASSETS_BASE_URL +
-                                        'bundles/ui/js/controllers/businessTransactions.js'
-                                );
-                            }
-                        ]
+                        loginRequired: loginRequired
                     },
                     data: {
                         title: 'Business Transactions'
@@ -573,16 +362,7 @@ angular
                     url: '/realUserMonitoring',
                     templateUrl: 'realUserMonitoring.html',
                     resolve: {
-                        loginRequired: loginRequired,
-                        deps: [
-                            '$ocLazyLoad',
-                            function($ocLazyLoad) {
-                                return $ocLazyLoad.load(
-                                    CONFIG.ASSETS_BASE_URL +
-                                        'bundles/ui/js/controllers/realUserMonitoring.js'
-                                );
-                            }
-                        ]
+                        loginRequired: loginRequired
                     },
                     data: {
                         title: 'Real User Monitoring'
@@ -601,16 +381,7 @@ angular
                     url: '/visualisations',
                     templateUrl: 'administration/visualisations.html',
                     resolve: {
-                        loginRequired: loginRequired,
-                        deps: [
-                            '$ocLazyLoad',
-                            function($ocLazyLoad) {
-                                return $ocLazyLoad.load(
-                                    CONFIG.ASSETS_BASE_URL +
-                                        'bundles/ui/js/controllers/administration.visualisations.js'
-                                );
-                            }
-                        ]
+                        loginRequired: loginRequired
                     },
                     data: {
                         title: 'Administration / Visualisations'
@@ -622,16 +393,7 @@ angular
                     url: '/reports',
                     templateUrl: 'administration/reports.html',
                     resolve: {
-                        loginRequired: loginRequired,
-                        deps: [
-                            '$ocLazyLoad',
-                            function($ocLazyLoad) {
-                                return $ocLazyLoad.load(
-                                    CONFIG.ASSETS_BASE_URL +
-                                        'bundles/ui/js/controllers/administration.reports.js'
-                                );
-                            }
-                        ]
+                        loginRequired: loginRequired
                     },
                     data: {
                         title: 'Administration / Reports'
@@ -643,20 +405,7 @@ angular
                     controller: 'logoutCtrl',
                     controllerAs: 'ctrl',
                     url: '/logout',
-                    resolve: {
-                        deps: [
-                            '$ocLazyLoad',
-                            function($ocLazyLoad) {
-                                return $ocLazyLoad.load({
-                                    name: 'sbAdminApp',
-                                    files: [
-                                        CONFIG.ASSETS_BASE_URL +
-                                            'bundles/ui/js/controllers/login.js'
-                                    ]
-                                });
-                            }
-                        ]
-                    },
+                    resolve: {},
                     data: {
                         title: 'login'
                     }
@@ -687,38 +436,13 @@ angular
                     templateUrl: 'static/aboutUs.html'
                 });
 
-            function getNotyDeps(files) {
+            function updateMenuItems() {
                 return [
-                    '$ocLazyLoad',
                     'MenuFactory',
                     '$rootScope',
-                    function($ocLazyLoad, MenuFactory, $rootScope) {
+                    function (MenuFactory, $rootScope) {
                         $rootScope.menus = MenuFactory.get('SETTINGS');
-                        return $ocLazyLoad
-                            .load([
-                                {
-                                    insertBefore: '#load_styles_before',
-                                    files: [
-                                        CONFIG.ASSETS_BASE_URL +
-                                            'css/chosen.min.css'
-                                    ]
-                                },
-                                {
-                                    serie: true,
-                                    files: [
-                                            'bundles/ui/js/lib/chosen.jquery.min.js',
-                                        CONFIG.ASSETS_BASE_URL +
-                                            'bundles/ui/js/lib/jquery.noty.packaged.min.js',
-                                            'bundles/ui/js/extensions/noty-defaults.js'
-                                    ]
-                                }
-                            ])
-                            .then(function() {
-                                return $ocLazyLoad.load({
-                                    name: 'sbAdminApp',
-                                    files: files
-                                });
-                            });
+                        return Promise.resolve();
                     }
                 ];
             }
@@ -730,7 +454,7 @@ angular
         '$locationProvider',
         'MESSAGES_CONSTANTS',
         'toastrConfig',
-        function(
+        function (
             $ocLazyLoadProvider,
             $httpProvider,
             $locationProvider,
@@ -738,7 +462,7 @@ angular
             toastrConfig
         ) {
             $ocLazyLoadProvider.config({
-                debug: false,
+                debug: true,
                 events: false
             });
             $httpProvider.interceptors.push('HttpInterceptor');
