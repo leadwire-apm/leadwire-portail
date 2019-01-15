@@ -24,7 +24,7 @@ class ApplicationTypeController extends BaseRestController
     {
         $data = $applicationtypeService->getApplicationType($id);
 
-        return new JsonResponse($data);
+        return $this->prepareJsonResponse($data);
     }
 
     /**
@@ -39,7 +39,7 @@ class ApplicationTypeController extends BaseRestController
     {
         $data = $applicationtypeService->listApplicationTypes();
 
-        return new JsonResponse($data);
+        return $this->prepareJsonResponse($data);
     }
 
     /**
@@ -55,7 +55,7 @@ class ApplicationTypeController extends BaseRestController
         $data = $request->getContent();
         $successful = $applicationtypeService->newApplicationType($data);
 
-        return new JsonResponse($successful);
+        return $this->prepareJsonResponse($successful);
     }
 
     /**
@@ -71,7 +71,7 @@ class ApplicationTypeController extends BaseRestController
         $data = $request->getContent();
         $successful = $applicationtypeService->updateApplicationType($data);
 
-        return new JsonResponse($successful);
+        return $this->prepareJsonResponse($successful);
     }
 
     /**
@@ -87,6 +87,6 @@ class ApplicationTypeController extends BaseRestController
     {
         $applicationtypeService->deleteApplicationType($id);
 
-        return new JsonResponse(null);
+        return $this->prepareJsonResponse(null);
     }
 }

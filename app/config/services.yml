@@ -48,3 +48,15 @@ services:
     ATS\UserBundle\Controller\:
         resource: '../../src/ATS/UserBundle/Controller'
         tags: ['controller.service_arguments']
+
+    AppBundle\Service\LdapService:
+        arguments:
+            $settings: '%ldap%'
+
+    AppBundle\Service\ElasticSearchService:
+        arguments:
+            $settings: "%elastic%"
+
+    AppBundle\Service\KibanaService:
+        arguments:
+            $settings: "%kibana%"

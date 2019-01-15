@@ -25,7 +25,7 @@ class InvitationController extends BaseRestController
     {
         $data = $invitationService->getInvitation($id);
 
-        return new JsonResponse($data);
+        return $this->prepareJsonResponse($data);
     }
 
     /**
@@ -40,7 +40,7 @@ class InvitationController extends BaseRestController
     {
         $data = $invitationService->listInvitations();
 
-        return new JsonResponse($data);
+        return $this->prepareJsonResponse($data);
     }
 
     /**
@@ -56,7 +56,7 @@ class InvitationController extends BaseRestController
         $data = $request->getContent();
         $successful = $invitationService->newInvitation($data, $this->getUser());
 
-        return new JsonResponse($successful);
+        return $this->prepareJsonResponse($successful);
     }
 
     /**
@@ -72,7 +72,7 @@ class InvitationController extends BaseRestController
         $data = $request->getContent();
         $successful = $invitationService->updateInvitation($data);
 
-        return new JsonResponse($successful);
+        return $this->prepareJsonResponse($successful);
     }
 
     /**
@@ -88,6 +88,6 @@ class InvitationController extends BaseRestController
     {
         $invitationService->deleteInvitation($id);
 
-        return new JsonResponse(null);
+        return $this->prepareJsonResponse(null);
     }
 }

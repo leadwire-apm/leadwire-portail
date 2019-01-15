@@ -112,36 +112,25 @@ class UserService
         return $this->userManager->getAll();
     }
 
-    /**
-     * Paginates through Users
-     *
-     * @param int $pageNumber
-     * @param int $itemsPerPage
-     * @param array $criteria
-     *
-     * @return array
-     */
-    public function paginate($pageNumber = 1, $itemsPerPage = 20, array $criteria = [])
-    {
-        return $this->userManager->paginate($criteria, $pageNumber, $itemsPerPage);
-    }
-
     public function subscribe($data, User $user)
     {
+        /** @var string $json */
         $json = json_encode(["name" => $user->getName(), "email" => $user->getEmail()]);
         $data = json_decode($data, true);
         $plan = $this->planService->getPlan($data['plan']);
         $token = null;
+
         if ($plan !== null) {
             if ($plan->getPrice() === 0.0) {
                 if ($user->getSubscriptionId() !== null) {
                     $this->subscriptionService->delete(
                         $user->getSubscriptionId(),
-                        $user->getCustomer()->getGatewayToken()
+                        $user->getCustomer() !== null ? $user->getCustomer()->getGatewayToken() : ''
                     );
                 }
                 $user->setPlan($plan);
                 $this->userManager->update($user);
+
                 return true;
             } else {
                 foreach ($plan->getPrices() as $pricingPlan) {
@@ -150,7 +139,7 @@ class UserService
                     }
                 }
 
-                if ($user->getCustomer() !== null) {
+                if ($user->getCustomer() === null) {
                     $customer = $this->customerService->newCustomer($json, $data['card']);
                     $user->setCustomer($customer);
                 } else {
@@ -192,15 +181,25 @@ class UserService
         }
     }
 
+    /**
+     *
+     * @param User $user
+     * @param array $data
+     *
+     * @return mixed
+     */
     public function updateSubscription(User $user, $data)
     {
+        if ($user->getCustomer() === null) {
+            throw new \Exception(sprintf("Customer for user %s is null", $user->getId()));
+        }
+
         $plan = $this->planService->getPlan($data['plan']);
         $subscription = $this->subscriptionService->get($user->getSubscriptionId(), $user->getCustomer());
         $token = false;
 
         if ($plan !== null) {
             $anchorCycle = 'unchanged';
-            //$user->getPlan()->getPrice() < $plan->getPrice() ? 'unchanged' : $data['periodEnd'];
             if ($plan->getPrice() === 0.0) {
                 $this->subscriptionService->delete(
                     $user->getSubscriptionId(),
@@ -322,7 +321,7 @@ class UserService
                 ->deserialize($json, User::class, 'json', $context);
 
             $this->userManager->update($user);
-            if ($user instanceof User && $user->getIsEmailValid() === false) {
+            if ($user instanceof User && $user->isEmailValid() === false) {
                 $this->sendVerificationEmail($user);
             }
             $isSuccessful = true;
@@ -379,5 +378,27 @@ class UserService
                 ]
             );
         $this->mailer->send($mail, false);
+    }
+
+    /**
+     *
+     * @param string $id
+     *
+     * @return boolean
+     */
+    public function softDeleteUser(string $id): bool
+    {
+        $isSuccessful = false;
+        /** @var User $user */
+        $user = $this->userManager->getOneBy(['id' => $id]);
+
+        if ($user instanceof User) {
+            $user->setDeleted(true);
+            $this->userManager->update($user);
+
+            $isSuccessful = true;
+        }
+
+        return $isSuccessful;
     }
 }

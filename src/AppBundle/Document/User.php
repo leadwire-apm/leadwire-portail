@@ -19,6 +19,9 @@ use JMS\Serializer\Annotation as JMS;
 
 class User extends \ATS\UserBundle\Document\User
 {
+    const ROLE_SUPER_ADMIN = 'ROLE_SUPER_ADMIN';
+    const ROLE_ADMIN = 'ROLE_ADMIN';
+
     /**
      * @var string
      *
@@ -106,7 +109,7 @@ class User extends \ATS\UserBundle\Document\User
      * @JMS\Type("boolean")
      * @JMS\Groups({"full","Default"})
      */
-    private $isEmailValid = false;
+    private $emailValid = false;
 
     /**
      * @var string
@@ -171,6 +174,15 @@ class User extends \ATS\UserBundle\Document\User
      * @JMS\Groups({"Default", "full"})
      */
     private $customer = null;
+
+    /**
+     * @var bool
+     *
+     * @ODM\Field(type="bool")
+     * @JMS\Type("boolean")
+     * @JMS\Expose
+     */
+    private $deleted;
 
     /**
      * Get id
@@ -346,27 +358,27 @@ class User extends \ATS\UserBundle\Document\User
     }
 
     /**
-     * Set isEmailValid
+     * Set emailValid
      *
-     * @param bool $isEmailValid
+     * @param bool $emailValid
      *
-     * @return User
+     * @return self
      */
-    public function setIsEmailValid($isEmailValid)
+    public function setEmailValid($emailValid): self
     {
-        $this->isEmailValid = $isEmailValid;
+        $this->emailValid = $emailValid;
 
         return $this;
     }
 
     /**
-     * Get isEmailValid
+     * Get emailValid
      *
      * @return bool
      */
-    public function getIsEmailValid()
+    public function isEmailValid()
     {
-        return $this->isEmailValid;
+        return $this->emailValid;
     }
 
     /**
@@ -450,9 +462,10 @@ class User extends \ATS\UserBundle\Document\User
      *
      * @return User
      */
-    public function setdefaultApplication($defaultApplication)
+    public function setdefaultApplication($defaultApplication): self
     {
         $this->defaultApplication = $defaultApplication;
+
         return $this;
     }
 
@@ -469,9 +482,10 @@ class User extends \ATS\UserBundle\Document\User
 
     /**
      * Get Customer
-     * @return Customer | null
+     *
+     * @return ?Customer
      */
-    public function getCustomer()
+    public function getCustomer(): ?Customer
     {
         return $this->customer;
     }
@@ -485,5 +499,29 @@ class User extends \ATS\UserBundle\Document\User
     public function getIndex()
     {
         return "user_" . $this->uuid;
+    }
+
+    /**
+     * Get the value of deleted
+     *
+     * @return  bool
+     */
+    public function isDeleted()
+    {
+        return $this->deleted;
+    }
+
+    /**
+     * Set the value of deleted
+     *
+     * @param  bool  $deleted
+     *
+     * @return  self
+     */
+    public function setDeleted(bool $deleted)
+    {
+        $this->deleted = $deleted;
+
+        return $this;
     }
 }

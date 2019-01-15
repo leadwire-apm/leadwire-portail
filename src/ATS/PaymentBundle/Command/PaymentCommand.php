@@ -31,7 +31,6 @@ class PaymentCommand extends BaseCommand
 
     protected function doExecute()
     {
-        //$this->paymentService->useProvider('Stripe');
         $json = json_encode(["name" => "test", "email" => "test123@example.com"]);
 
         $data = [
@@ -41,12 +40,6 @@ class PaymentCommand extends BaseCommand
             'cvv' => '123',
         ];
         $customer = $this->customerService->newCustomer($json, $data);
-// @todo clean  test cmd
-//        if ($this->paymentService->purchase($data, 'test123@example.com', '100', 'EUR')) {
-//            $this->info("hell yeah");
-//        } else {
-//            $this->error("could not be executed");
-//        }
 
         if ($response = $this->paymentService->createSubscription(
             "plan_DXfkvylic5gOHx",
