@@ -87,7 +87,7 @@
                 if (response.data) {
                   toastr.success(MESSAGES_CONSTANTS.ACTIVATE_APP_SUCCESS);
                   var updatedApp = angular.extend(selectedApp, {
-                    isEnabled: true
+                    enabled: true
                   });
                   $scope.$emit('activate:app', updatedApp);
                   vm.apps = vm.apps.map(function(currentApp) {

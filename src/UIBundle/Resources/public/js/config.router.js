@@ -38,9 +38,11 @@ angular
                 '$q',
                 '$location',
                 '$auth',
-                function ($q, $location, $auth) {
+                '$localStorage',
+                function ($q, $location, $auth,$localStorage) {
                     var deferred = $q.defer();
                     if ($auth.isAuthenticated()) {
+                        console.log($localStorage.user)
                         deferred.resolve();
                     } else {
                         $location.path('/login');
@@ -260,6 +262,22 @@ angular
                     resolve: {
                         loginRequired: loginRequired
                     }
+                })
+                .state('app.management', {
+                    abstract: true,
+                    url: '/management'
+                })
+                .state('app.management.users', {
+                    url: '/users',
+                    templateUrl: 'management/users.html',
+                    resolve: {
+                        loginRequired: loginRequired
+                    },
+                    data: {
+                        title: 'Management / Users'
+                    },
+                    controller: 'ManageUsersController',
+                    controllerAs: 'ctrl'
                 })
                 .state('app.infrastructureMonitoring', {
                     url: '/infrastructureMonitoring',

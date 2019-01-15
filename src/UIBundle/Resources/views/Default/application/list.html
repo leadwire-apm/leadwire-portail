@@ -38,8 +38,8 @@
                             <td data-title="Type" data-label="Type">[[app.type.name]]</td>
                             <td data-title="Email" data-label="Email">[[app.email]]</td>
                             <td data-title="Status" data-label="Status" class="align-middle">
-                                <span data-ng-class="app.isEnabled ? 'label label-success' : 'label label-default'">
-                                    [[app.isEnabled ? 'Enabled' : 'Disabled']]
+                                <span data-ng-class="app.enabled ? 'label label-success' : 'label label-default'">
+                                    [[app.enabled ? 'Enabled' : 'Disabled']]
                                 </span>
 
                             </td>
@@ -48,11 +48,11 @@
                                    title="Details"
                                    data-placement="left"
                                    data-toggle="tooltip"
-                                   ng-disabled="!app.isEnabled" ui-sref="app.applicationDetail({id:app.id})">
+                                   ng-disabled="!app.enabled" ui-sref="app.applicationDetail({id:app.id})">
                                     <i class="fa fa-info"></i>
                                 </a>
                             </td>
-                            <td ng-if="!app.isEnabled && app.owner.id == user.id"
+                            <td ng-if="!app.enabled && app.owner.id == user.id"
                                 data-title="Activate app"
                                 data-label="Activate app">
                                 <a class="btn btn-primary"
@@ -64,7 +64,7 @@
                                     <i class="fa fa-key"></i>
                                 </a>
                             </td>
-                            <td ng-if="app.isEnabled && app.owner.id == user.id"
+                            <td ng-if="app.enabled && app.owner.id == user.id"
                                 data-title="Edit App" data-label="Edit app">
                                 <a class="btn btn-warning"
                                    title="Edit application"

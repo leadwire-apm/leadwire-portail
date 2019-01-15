@@ -1,14 +1,20 @@
 (function(angular) {
     angular
         .module('leadwireApp')
-        .factory('Account', ['$http', 'CONFIG', UserFactoryFN]);
+        .factory('UserFactory', ['$http', 'CONFIG', UserFactoryFN]);
 
     function UserFactoryFN($http, CONFIG) {
         return {
+            list: function() {
+                return $http.get(CONFIG.BASE_URL + 'api/user/list');
+            },
+            delete: function(id) {
+                return $http.delete(CONFIG.BASE_URL + 'api/user/'+id+'/delete');
+            },
             getProfile: function() {
                 return $http.get(CONFIG.BASE_URL + 'api/user/me');
             },
-            updateProfile: function(profileData) {
+            update: function(profileData) {
                 return $http.put(
                     CONFIG.BASE_URL + 'api/user/' + profileData.id + '/update',
                     profileData
@@ -35,7 +41,8 @@
                     CONFIG.BASE_URL + 'api/user/' + userId + '/subscribe',
                     body
                 );
-            },editPaymentMethod: function(cardInfo,userId) {
+            }
+            ,editPaymentMethod: function(cardInfo,userId) {
                 return $http.put(
                     CONFIG.BASE_URL + 'api/user/' + userId + '/creditCard',
                     cardInfo

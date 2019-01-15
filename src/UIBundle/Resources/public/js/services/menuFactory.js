@@ -1,28 +1,28 @@
-(function(angular) {
+(function (angular) {
     angular
         .module('leadwireApp')
         .factory('MenuFactory', [
             'Menus',
             '$state',
-            function(Menus, $state) {
+            function (Menus, $state) {
                 return {
-                    get: function(menuKey) {
+                    get: function (menuKey) {
                         return Menus[menuKey]
-                            ? Menus[menuKey].map(function(menu) {
-                                  return angular.extend({}, menu, {
-                                      route: $state.href(menu.route)
-                                  });
-                              })
+                            ? Menus[menuKey].map(function (menu) {
+                                return angular.extend({}, menu, {
+                                    route: $state.href(menu.route)
+                                });
+                            })
                             : [];
                     },
-                    set: function(
+                    set: function (
                         menus,
                         labelCallback,
                         routeCallback,
                         iconCallback
                     ) {
                         try {
-                            return menus.map(function(menu) {
+                            return menus.map(function (menu) {
                                 return {
                                     label: labelCallback(menu),
                                     route: routeCallback(menu),
@@ -125,6 +125,13 @@
                     label: 'Billing'
                 }
 
+            ],
+            ADMINISTRATION: [
+                {
+                    route: 'app.manageUsers',
+                    icon: 'fa fa-user',
+                    label: 'Manage Users'
+                }
             ]
         });
 })(window.angular);
