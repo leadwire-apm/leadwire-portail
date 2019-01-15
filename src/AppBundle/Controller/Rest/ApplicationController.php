@@ -70,7 +70,7 @@ class ApplicationController extends BaseRestController
         }
 
         return $this->prepareJsonResponse(
-            $statService->getStats(['app' => $app]),
+            $statService->getStats(['app.$id' => $app->getId()]),
             200,
             "Default"
         );

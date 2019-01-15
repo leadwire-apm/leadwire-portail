@@ -59,7 +59,7 @@ class ApplicationType
     private $agent;
 
     /**
-     * @ODM\ReferenceMany(targetDocument="App", inversedBy="type")
+     * @ODM\ReferenceMany(targetDocument="Application", inversedBy="type")
      * @JMS\Groups({"full"})
      */
     public $apps;
