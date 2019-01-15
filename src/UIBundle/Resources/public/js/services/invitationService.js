@@ -14,7 +14,7 @@
                                     user: {
                                         id: userId
                                     },
-                                    app: {
+                                    application: {
                                         id: response.data.app.id
                                     }
                                 });
