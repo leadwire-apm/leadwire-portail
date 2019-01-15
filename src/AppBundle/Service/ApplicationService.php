@@ -228,8 +228,8 @@ class ApplicationService
 
         try {
             $realApp = $this->applicationManager->getOneBy(['id' => $id]);
-            if ($realApp !== null) {
-                return false;
+            if ($realApp === null) {
+                throw new \Exception(sprintf("Unknow application %s", $id));
             }
             $context = new DeserializationContext();
             $context->setGroups(['Default']);
