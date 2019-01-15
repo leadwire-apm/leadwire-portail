@@ -140,7 +140,7 @@ class User extends \ATS\UserBundle\Document\User
     public $invitations;
 
     /**
-     * @ODM\ReferenceMany(targetDocument="App", mappedBy="owner")
+     * @ODM\ReferenceMany(targetDocument="Application", mappedBy="owner")
      * @JMS\Groups({"full","Default"})
      */
     public $myApps;

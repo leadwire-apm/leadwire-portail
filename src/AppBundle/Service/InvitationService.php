@@ -206,19 +206,6 @@ class InvitationService
         $this->invitationManager->deleteById($id);
     }
 
-    /**
-     * Performs a full text search on  Invitation
-     *
-     * @param string $term
-     * @param string $lang
-     *
-     * @return array
-     */
-    public function textSearch($term, $lang)
-    {
-        return $this->invitationManager->textSearch($term, $lang);
-    }
-
     public function sendInvitationMail(Invitation $invitation, User $user)
     {
         $mail = new Email();
@@ -230,13 +217,13 @@ class InvitationService
             ->setRecipientAddress($invitation->getEmail())
             ->setMessageParameters(
                 [
-                    'user' => $user,
+                    'inviter' => $user->getUsername(),
                     'email' => $invitation->getEmail(),
                     'invitation' => $invitation->getId(),
                     'link' => $this->router->generate('angular_endPoint', [], UrlGeneratorInterface::ABSOLUTE_URL)
                 ]
             );
 
-        $this->mailer->send($mail, false);
+        $this->mailer->send($mail, true);
     }
 }
