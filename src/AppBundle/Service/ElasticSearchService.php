@@ -293,6 +293,5 @@ class ElasticSearchService
 
     public function createDefaultApplications(User $user)
     {
-
     }
 }

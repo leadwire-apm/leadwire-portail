@@ -135,7 +135,7 @@ class AuthService
      *
      * @param string $jwt
      *
-     * @return object
+     * @return mixed
      */
     public function decodeToken($jwt)
     {
