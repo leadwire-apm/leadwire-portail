@@ -222,8 +222,7 @@ class InvitationService
                     'invitation' => $invitation->getId(),
                     'link' => $this->router->generate('angular_endPoint', [], UrlGeneratorInterface::ABSOLUTE_URL)
                 ]
-            )
-            ;
+            );
 
         $this->mailer->send($mail, true);
     }
