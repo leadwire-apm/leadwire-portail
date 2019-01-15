@@ -1,48 +1,48 @@
-(function(angular) {
+(function (angular) {
     angular
         .module('leadwireApp')
         .factory('UserFactory', ['$http', 'CONFIG', UserFactoryFN]);
 
     function UserFactoryFN($http, CONFIG) {
         return {
-            list: function() {
+            list: function () {
                 return $http.get(CONFIG.BASE_URL + 'api/user/list');
             },
-            delete: function(id) {
-                return $http.delete(CONFIG.BASE_URL + 'api/user/'+id+'/delete');
+            delete: function (id) {
+                return $http.delete(CONFIG.BASE_URL + 'api/user/' + id + '/delete');
             },
-            getProfile: function() {
+            getProfile: function () {
                 return $http.get(CONFIG.BASE_URL + 'api/user/me');
             },
-            update: function(profileData) {
+            update: function (profileData) {
                 return $http.put(
                     CONFIG.BASE_URL + 'api/user/' + profileData.id + '/update',
                     profileData
                 );
             },
-            subscribe: function(body, userId) {
+            subscribe: function (body, userId) {
                 return $http.post(
                     CONFIG.BASE_URL + 'api/user/' + userId + '/subscribe',
                     body
                 );
             },
-            invoices: function(userId) {
+            invoices: function (userId) {
                 return $http.get(
                     CONFIG.BASE_URL + 'api/user/' + userId + '/invoices'
                 );
             },
-            subscription: function(userId) {
+            subscription: function (userId) {
                 return $http.get(
                     CONFIG.BASE_URL + 'api/user/' + userId + '/subscription'
                 );
             },
-            updateSubscription: function(body, userId) {
+            updateSubscription: function (body, userId) {
                 return $http.put(
                     CONFIG.BASE_URL + 'api/user/' + userId + '/subscribe',
                     body
                 );
             }
-            ,editPaymentMethod: function(cardInfo,userId) {
+            , editPaymentMethod: function (cardInfo, userId) {
                 return $http.put(
                     CONFIG.BASE_URL + 'api/user/' + userId + '/creditCard',
                     cardInfo

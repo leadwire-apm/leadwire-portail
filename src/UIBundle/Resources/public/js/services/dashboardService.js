@@ -75,7 +75,8 @@
                         resolve({
                             appId: appId,
                             dashboards: response.data.Default,
-                            custom: response.data.Custom
+                            custom: response.data.Custom,
+                            path:'app.dashboard.home'
                         });
                     })
                     .catch(function(error) {

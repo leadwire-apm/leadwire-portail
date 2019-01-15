@@ -3,7 +3,7 @@
         .module('leadwireApp')
         .controller('applicationDetailCtrl', [
             'ApplicationFactory',
-            'Invitation',
+            'InvitationFactory',
             '$stateParams',
             '$rootScope',
             'CONFIG',
@@ -14,7 +14,7 @@
 
     function applicationDetailCtrlFN(
         ApplicationFactory,
-        Invitation,
+        InvitationFactory,
         $stateParams,
         $rootScope,
         CONSTANTS,
@@ -42,7 +42,7 @@
                 invitedEmails.indexOf(vm.invitedUser.email.toLowerCase()) === -1
             ) {
                 vm.flipActivityIndicator();
-                Invitation.save({
+                InvitationFactory.save({
                     email: vm.invitedUser.email,
                     app: {
                         id: vm.app.id
@@ -82,7 +82,7 @@
                 dangerMode: true
             }).then(function(willDelete) {
                 if (willDelete) {
-                    Invitation.remove(id)
+                    InvitationFactory.remove(id)
                         .then(function() {
                             swal.close();
                             toastr.success(

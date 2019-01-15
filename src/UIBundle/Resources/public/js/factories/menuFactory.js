@@ -126,12 +126,22 @@
                 }
 
             ],
-            ADMINISTRATION: [
+            MANAGEMENT: [
                 {
-                    route: 'app.manageUsers',
+                    route: 'app.management.users',
                     icon: 'fa fa-user',
                     label: 'Manage Users'
-                }
+                },
+                {
+                    route: 'app.management.admins',
+                    icon: 'fa fa-lock',
+                    label: 'Manage Admins'
+                },
+                {
+                    route: 'app.management.plans',
+                    icon: 'fa fa-money',
+                    label: 'Manage plans'
+                },
             ]
         });
 })(window.angular);
