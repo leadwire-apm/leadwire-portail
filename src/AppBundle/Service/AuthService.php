@@ -11,16 +11,10 @@ use GuzzleHttp\Client;
 use Psr\Log\LoggerInterface;
 use Ramsey\Uuid\Uuid;
 use Symfony\Component\Config\Definition\Exception\Exception;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use \Firebase\JWT\JWT;
 
 class AuthService
 {
-    /**
-     * @var ContainerInterface
-     */
-    private $container;
-
     /**
      * @var UserManager
      */
@@ -41,25 +35,39 @@ class AuthService
      */
     private $logger;
 
+    /**
+     * @var string
+     */
+    private $appDomain;
+
+    /**
+     * @var array
+     */
+    private $authProviderSettings;
+
     public function __construct(
-        ContainerInterface $container,
         UserManager $userManage,
         LdapService $ldapService,
         ElasticSearchService $elastic,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        string $appDomain,
+        array $authProviderSettings
     ) {
-        $this->container = $container;
         $this->userManager = $userManage;
         $this->ldapService = $ldapService;
         $this->elastic = $elastic;
         $this->logger = $logger;
+        $this->appDomain = $appDomain;
+        $this->authProviderSettings = $authProviderSettings;
     }
 
-    private function get($name)
-    {
-        return $this->container->getParameter($name);
-    }
-
+    /**
+     *
+     * @param array $params
+     * @param string $githubAccessTokenUrl
+     * @param string $githubUserAPI
+     *
+     */
     public function githubProvider(array $params, string $githubAccessTokenUrl, string $githubUserAPI)
     {
         $client = new Client();
@@ -91,6 +99,7 @@ class AuthService
                 if ($user !== false) {
                     $this->ldapService->createUserEntry($user->getUuid());
                     $this->elastic->resetUserIndexes($user);
+                    $this->elastic->createDefaultApplications($user);
                 }
             }
 
@@ -101,10 +110,17 @@ class AuthService
         }
     }
 
+    /**
+     *
+     * @param User $user
+     * @param string $tokenSecret
+     *
+     * @return string
+     */
     public function generateToken(User $user, $tokenSecret)
     {
         $token = [
-            'host' => $this->get('app_domain'),
+            'host' => $this->appDomain,
             'user' => $user->getIndex(),
             'name' => $user->getUsername(),
             'iat' => time(),
@@ -115,11 +131,17 @@ class AuthService
         return JWT::encode($token, $tokenSecret);
     }
 
+    /**
+     *
+     * @param string $jwt
+     *
+     * @return object
+     */
     public function decodeToken($jwt)
     {
-        $token = JWT::decode($jwt, $this->get('auth_providers')['settings']['token_secret'], ['HS256']);
+        $token = JWT::decode($jwt, $this->authProviderSettings['settings']['token_secret'], ['HS256']);
 
-        if (isset($token->host) === false || $token->host !== $this->get('app_domain')) {
+        if (isset($token->host) === false || $token->host !== $this->appDomain) {
             throw new ExpiredException('Invalide token');
         }
 

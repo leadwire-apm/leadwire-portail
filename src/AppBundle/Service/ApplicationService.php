@@ -202,15 +202,17 @@ class ApplicationService
         $ap = $this->apService->getApplicationType($applicationTypeId);
         $app->setType($ap);
         $this->applicationManager->update($app);
-        if ($this->ldapService->createAppEntry($user->getIndex(), $app->getUuid()) === true /*&&
-            $this->kibana->createDashboards($app) === true*/) {
-            return $app;
-        } else {
-            $this->applicationManager->delete($app);
-            $this->logger->critical("Application was removed due to error in Ldap/Kibana or Elastic search");
+        // if ($this->ldapService->createAppEntry($user->getIndex(), $app->getUuid()) === true &&
+        //     $this->kibana->createDashboards($app) === true) {
+        //     return $app;
+        // } else {
+        //     $this->applicationManager->delete($app);
+        //     $this->logger->critical("Application was removed due to error in Ldap/Kibana or Elastic search");
 
-            return null;
-        }
+        //     return null;
+        // }
+
+        return $app;
     }
 
     /**

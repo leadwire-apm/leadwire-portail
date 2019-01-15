@@ -167,7 +167,7 @@ class UserController extends BaseRestController
      */
     public function deleteUserAction(Request $request, UserService $userService, $id)
     {
-        $this->denyAccessUnlessGranted(User::ROLE_ADMIN);
+        $this->denyAccessUnlessGranted([User::ROLE_ADMIN, User::ROLE_SUPER_ADMIN]);
         $successful = $userService->softDeleteUser($id);
 
         return $this->prepareJsonResponse($successful);

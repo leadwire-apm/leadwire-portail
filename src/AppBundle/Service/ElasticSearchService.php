@@ -290,4 +290,9 @@ class ElasticSearchService
             $this->settings['password'],
         ];
     }
+
+    public function createDefaultApplications(User $user)
+    {
+
+    }
 }

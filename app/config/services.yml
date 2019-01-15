@@ -60,3 +60,16 @@ services:
     AppBundle\Service\KibanaService:
         arguments:
             $settings: "%kibana%"
+
+    AppBundle\Service\InvitationService:
+        arguments:
+            $sender: "%sender%"
+
+    AppBundle\Service\UserService:
+        arguments:
+            $sender: "%sender%"
+
+    AppBundle\Service\AuthService:
+        arguments:
+            $appDomain: "%app_domain%"
+            $authProviderSettings: "%auth_providers%"
