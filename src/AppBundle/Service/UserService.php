@@ -12,7 +12,6 @@ use ATS\PaymentBundle\Service\Subscription;
 use JMS\Serializer\DeserializationContext;
 use JMS\Serializer\SerializerInterface;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\Router;
 
@@ -75,7 +74,6 @@ class UserService
      * @param LoggerInterface $logger
      * @param SimpleMailerService $mailer
      * @param Router $router
-     * @param ContainerInterface $container
      * @param CustomerService $customerService
      * @param Subscription $subscriptionService
      * @param PlanService $planService
@@ -86,17 +84,17 @@ class UserService
         LoggerInterface $logger,
         SimpleMailerService $mailer,
         Router $router,
-        ContainerInterface $container,
         CustomerService $customerService,
         Subscription $subscriptionService,
-        PlanService $planService
+        PlanService $planService,
+        string $sender
     ) {
         $this->userManager = $userManager;
         $this->serializer = $serializer;
         $this->logger = $logger;
         $this->mailer = $mailer;
         $this->router = $router;
-        $this->sender = $container->getParameter('sender');
+        $this->sender = $sender;
         $this->customerService = $customerService;
         $this->subscriptionService = $subscriptionService;
         $this->planService = $planService;

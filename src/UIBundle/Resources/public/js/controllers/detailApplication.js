@@ -44,7 +44,7 @@
                 vm.flipActivityIndicator();
                 InvitationFactory.save({
                     email: vm.invitedUser.email,
-                    app: {
+                    application: {
                         id: vm.app.id
                     }
                 })

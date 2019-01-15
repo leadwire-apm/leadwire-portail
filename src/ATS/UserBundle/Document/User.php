@@ -51,6 +51,7 @@ class User implements AdvancedUserInterface, \Serializable
      * @var bool
      *
      * @ODM\Field(type="boolean")
+     * @JMS\Expose
      */
     private $active;
 
@@ -65,6 +66,7 @@ class User implements AdvancedUserInterface, \Serializable
      * @var array
      *
      * @ODM\Field(type="hash")
+     * @JMS\Expose
      */
     private $roles;
 

@@ -4,10 +4,10 @@
             <div class="col-sm-8 col-xs-12 text-center">
                 <a href="javascript:;"><strong>[[invitation.user ? invitation.user.email
                     :invitation.email]]</strong></a>
-                <span ng-if="invitation.isPending" class="label label-default">
+                <span ng-if="invitation.pending" class="label label-default">
                     Pending <i class="fa fa-clock-o"></i>
                 </span>
-                <span ng-if="!invitation.isPending" class="label label-info text-center">
+                <span ng-if="!invitation.pending" class="label label-info text-center">
                     Accepted <i class="fa fa-check"></i>
                 </span>
             </div>
@@ -43,7 +43,7 @@
                          ng-disabled="inviteUserForm.$invalid">
                         <spinner is-loading="ctrl.ui.isSaving"></spinner>
                         <i ng-if="!ctrl.ui.isSaving" class="fa fa-user-plus">
-                        </i> Inviter user
+                        </i> Invite user
                  </button>
             </span>
         </div>

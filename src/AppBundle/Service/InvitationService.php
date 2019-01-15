@@ -10,7 +10,6 @@ use ATS\EmailBundle\Document\Email;
 use ATS\EmailBundle\Service\SimpleMailerService;
 use JMS\Serializer\SerializerInterface;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\Router;
 
@@ -68,7 +67,6 @@ class InvitationService
      * @param LoggerInterface $logger
      * @param SimpleMailerService $mailer
      * @param Router $router
-     * @param ContainerInterface $container
      * @param LdapService $ldap
      * @param ApplicationService $applicationService
      */
@@ -78,9 +76,9 @@ class InvitationService
         LoggerInterface $logger,
         SimpleMailerService $mailer,
         Router $router,
-        ContainerInterface $container,
         LdapService $ldap,
-        ApplicationService $applicationService
+        ApplicationService $applicationService,
+        string $sender
     ) {
         $this->invitationManager = $invitationManager;
         $this->serializer = $serializer;
@@ -88,7 +86,7 @@ class InvitationService
         $this->mailer =
         $this->mailer = $mailer;
         $this->router = $router;
-        $this->sender = $container->getParameter('sender');
+        $this->sender = $sender;
         $this->ldap = $ldap;
         $this->applicationService = $applicationService;
     }

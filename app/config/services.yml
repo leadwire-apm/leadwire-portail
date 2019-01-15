@@ -19,10 +19,6 @@ services:
         # but if a service is unused, it's removed anyway
         exclude: '../../src/AppBundle/{Document,Repository}'
 
-    ATS\AdminBundle\:
-        resource: '../../src/ATS/AdminBundle/*'
-        exclude: '../../src/ATS/AdminBundle/{Document,Repository}'
-
     ATS\CoreBundle\:
         resource: '../../src/ATS/CoreBundle/*'
         exclude: '../../src/ATS/CoreBundle/{Document,Repository}'
@@ -60,3 +56,16 @@ services:
     AppBundle\Service\KibanaService:
         arguments:
             $settings: "%kibana%"
+
+    AppBundle\Service\InvitationService:
+        arguments:
+            $sender: "%sender%"
+
+    AppBundle\Service\UserService:
+        arguments:
+            $sender: "%sender%"
+
+    AppBundle\Service\AuthService:
+        arguments:
+            $appDomain: "%app_domain%"
+            $authProviderSettings: "%auth_providers%"

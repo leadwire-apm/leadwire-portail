@@ -24,7 +24,6 @@ class AppKernel extends Kernel
             new ATS\CoreBundle\CoreBundle(),
             new ATS\EmailBundle\EmailBundle(),
             new ATS\UserBundle\UserBundle(),
-            new ATS\AdminBundle\AdminBundle(),
             new ATS\TranslationBundle\TranslationBundle(),
             new AppBundle\AppBundle(),
             new UIBundle\UIBundle(),
