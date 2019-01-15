@@ -1,4 +1,0 @@
-admin_default:
-    resource: "@AdminBundle/Controller/AdminController.php"
-    type: "annotation"
-    prefix: "%admin_routes_prefix%"

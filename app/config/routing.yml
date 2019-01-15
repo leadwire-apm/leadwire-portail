@@ -39,16 +39,6 @@ user:
     host:     "%app_domain%"
     schemes:  "%app_schemes%"
 
-admin:
-    resource: "@AdminBundle/Resources/config/routing.yml"
-    prefix:   "/"
-    host:     "%app_domain%"
-    schemes:  "%app_schemes%"
-
-app_routes:
-    resource: .
-    type: admin
-
 fos_js_routing:
     resource: "@FOSJsRoutingBundle/Resources/config/routing/routing.xml"
     host:     "%app_domain%"
