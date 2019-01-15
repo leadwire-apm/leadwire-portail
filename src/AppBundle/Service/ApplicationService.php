@@ -202,8 +202,8 @@ class ApplicationService
         $ap = $this->apService->getApplicationType($applicationTypeId);
         $app->setType($ap);
         $this->applicationManager->update($app);
-        if ($this->ldapService->createAppEntry($user->getIndex(), $app->getUuid()) === true &&
-            $this->kibana->createDashboards($app) === true) {
+        if ($this->ldapService->createAppEntry($user->getIndex(), $app->getUuid()) === true /*&&
+            $this->kibana->createDashboards($app) === true*/) {
             return $app;
         } else {
             $this->applicationManager->delete($app);

@@ -113,7 +113,7 @@
                if (
                    user.defaultApp &&
                    user.defaultApp.id &&
-                   user.defaultApp.isEnabled
+                   user.defaultApp.enabled
                ) {
                    //take the default app
                    return DashboardService.fetchDashboardsByAppId(
@@ -129,7 +129,7 @@
                    //             var firstEnabled = response.data.find(function(
                    //                 app
                    //             ) {
-                   //                 return app.isEnabled;
+                   //                 return app.enabled;
                    //             });
                    //             if (firstEnabled) {
                    //                 return DashboardService.fetchDashboardsByAppId(
