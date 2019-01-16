@@ -111,10 +111,6 @@ class PlanService
      */
     public function newPlan($json)
     {
-        $plan = $this
-            ->serializer
-            ->deserialize($json, Plan::class, 'json');
-
         return $this->updatePlan($json);
     }
 

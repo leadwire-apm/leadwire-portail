@@ -69,3 +69,7 @@ services:
         arguments:
             $appDomain: "%app_domain%"
             $authProviderSettings: "%auth_providers%"
+
+    AppBundle\Service\ApplicationTypeService:
+        arguments:
+            $dataRootPath: "%kernel.project_dir%/app/Resources/Kibana"

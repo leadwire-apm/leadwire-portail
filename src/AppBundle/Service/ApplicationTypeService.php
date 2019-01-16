@@ -30,20 +30,28 @@ class ApplicationTypeService
     private $logger;
 
     /**
+     * @var string
+     */
+    private $dataRootPath;
+
+    /**
      * Constructor
      *
      * @param ApplicationTypeManager $applicationTypeManager
      * @param SerializerInterface $serializer
      * @param LoggerInterface $logger
+     * @param string $dataRootPath
      */
     public function __construct(
         ApplicationTypeManager $applicationTypeManager,
         SerializerInterface $serializer,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        string $dataRootPath
     ) {
         $this->applicationTypeManager = $applicationTypeManager;
         $this->serializer = $serializer;
         $this->logger = $logger;
+        $this->dataRootPath = $dataRootPath;
     }
 
     /**
@@ -154,7 +162,7 @@ class ApplicationTypeService
             $defaultType->setName("Java");
             $defaultType->setInstallation($response->getBody()->read(10000));
             $content = file_get_contents(
-                __DIR__ . "/../../../app/Resources/Kibana/apm-dashboards.json"
+                $this->dataRootPath . "/apm-dashboards.json"
             );
 
             if ($content !== false) {
@@ -163,7 +171,7 @@ class ApplicationTypeService
                 throw new \Exception(
                     sprintf(
                         "Bad content from file %s",
-                        __DIR__ . "/../../../app/Resources/Kibana/apm-dashboards.json"
+                        $this->dataRootPath . "/apm-dashboards.json"
                     )
                 );
             }
