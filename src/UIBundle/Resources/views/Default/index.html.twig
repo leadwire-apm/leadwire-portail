@@ -195,6 +195,18 @@
         <script type="text/ng-template" id="manageDashboards.html">
             {% include 'manageDashboards.html' %}
         </script>
+        <script type="text/ng-template" id="management/users.html">
+            {% include 'management/users.html' %}
+        </script>
+        <script type="text/ng-template" id="management/admins.html">
+            {% include 'management/admins.html' %}
+        </script>
+        <script type="text/ng-template" id="management/plans.html">
+            {% include 'management/plans.html' %}
+        </script>
+
+
+
         <script type="text/ng-template" id="infrastructureMonitoring.html">
             {% include 'infrastructureMonitoring.html' %}
         </script>
@@ -262,22 +274,27 @@
             'bundles/ui/js/extensions/moment.min.js'
             'bundles/ui/js/app.js'
             'bundles/ui/js/app.main.js'
-            'bundles/ui/js/services/account.js'
+
+            'bundles/ui/js/factories/userFactory.js'
+            'bundles/ui/js/factories/httpInterceptorFactory.js'
+            'bundles/ui/js/factories/planFactory.js'
+            'bundles/ui/js/factories/applicationFactory.js'
+            'bundles/ui/js/factories/applicationTypeFactory.js'
+            'bundles/ui/js/factories/countryApi.js'
+            'bundles/ui/js/factories/invitationFactory.js'
+            'bundles/ui/js/factories/menuFactory.js'
+
             'bundles/ui/js/services/applicationService.js'
             'bundles/ui/js/services/config.js'
             'bundles/ui/js/services/dashboardService.js'
-            'bundles/ui/js/services/httpInterceptorFactory.js'
             'bundles/ui/js/services/invitationService.js'
             'bundles/ui/js/services/messages.js'
-            'bundles/ui/js/services/planFactory.js'
-            'bundles/ui/js/services/applicationFactory.js'
-            'bundles/ui/js/services/applicationTypeFactory.js'
-            'bundles/ui/js/services/countryApi.js'
             'bundles/ui/js/services/fileService.js'
-            'bundles/ui/js/services/invitation.js'
-            'bundles/ui/js/services/menuFactory.js'
             'bundles/ui/js/services/paginator.js'
             'bundles/ui/js/services/userService.js'
+            'bundles/ui/js/services/planService.js'
+            'bundles/ui/js/services/routeGuard.js'
+
             'bundles/ui/js/directives/anchor-scroll.js'
             'bundles/ui/js/directives/blacklist.js'
             'bundles/ui/js/directives/c3.js'
@@ -300,6 +317,7 @@
             'bundles/ui/js/directives/scrollup.js'
             'bundles/ui/js/directives/spinner.js'
             'bundles/ui/js/directives/vector.js'
+
             'bundles/ui/js/controllers/addApplication.js'
             'bundles/ui/js/controllers/alerts.js'
             'bundles/ui/js/controllers/businessTransactions.js'
@@ -318,6 +336,9 @@
             'bundles/ui/js/controllers/customReports.js'
             'bundles/ui/js/controllers/editApplication.js'
             'bundles/ui/js/controllers/mainApp.js'
+            'bundles/ui/js/controllers/users/manageUsers.js'
+            'bundles/ui/js/controllers/users/manageAdmins.js'
+            'bundles/ui/js/controllers/plans/list.js'
             'bundles/ui/js/controllers/realUserMonitoring.js'
             'bundles/ui/js/controllers/advices.js'
             'bundles/ui/js/controllers/billingList.js'
@@ -326,7 +347,7 @@
             'bundles/ui/js/controllers/manageDashboards.js'
             'bundles/ui/js/controllers/syntheticMonitoring.js'
             'bundles/ui/js/config.router.js'
-         %}
+        %}
             <script src="{{ asset_url }}"></script>
         {% endjavascripts %}
 

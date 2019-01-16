@@ -1,6 +1,6 @@
 (function(angular) {
     angular.module('leadwireApp').service('InvitationService', [
-        'Invitation',
+        'InvitationFactory',
         function(InvitationFactory) {
             var service = this;
             service.acceptInvitation = function(invitationId, userId) {

@@ -32,7 +32,11 @@
 
         vm.editApp = function() {
             vm.flipActivityIndicator();
-            ApplicationFactory.update(vm.application.id, vm.application)
+            const updatedApp = angular.extend({},vm.application);
+            delete updatedApp.invitations;
+            delete updatedApp.owner;
+            delete updatedApp.type;
+            ApplicationFactory.update(vm.application.id, updatedApp)
                 .then(function() {
                     vm.flipActivityIndicator();
                     toastr.success(MESSAGES_CONSTANTS.EDIT_APP_SUCCESS);

@@ -49,6 +49,27 @@ angular
                 }
             ];
 
+            var adminRequired = [
+                '$q',
+                '$location',
+                '$auth',
+                '$localStorage',
+                function ($q, $location, $auth, $localStorage) {
+                    var deferred = $q.defer();
+                    if ($auth.isAuthenticated()) {
+                        if ($localStorage.user.roles
+                            && $localStorage.user.roles.indexOf('ROLE_ADMIN') !== -1) {
+                            deferred.resolve();
+                        } else {
+                            $location.path('/');
+                        }
+                    } else {
+                        $location.path('/login');
+                    }
+                    return deferred.promise;
+                }
+            ];
+
             // Application routes
             $stateProvider
                 .state('app', {
@@ -71,16 +92,8 @@ angular
                         isModal: function () {
                             return false;
                         },
-                        loginRequired: loginRequired,
-                        deps: [
-                            '$ocLazyLoad',
-                            'MenuFactory',
-                            '$rootScope',
-                            function ($ocLazyLoad, MenuFactory, $rootScope) {
-                                $rootScope.menus = MenuFactory.get('SETTINGS');
-                                return Promise.resolve();
-                            }
-                        ]
+                        permissions: loginRequired,
+                        menu: updateMenuItems('SETTINGS')
                     },
                     data: {
                         title: 'Settings'
@@ -92,8 +105,8 @@ angular
                     url: '/applications/add',
                     templateUrl: 'application/add.html',
                     resolve: {
-                        loginRequired: loginRequired,
-                        deps: updateMenuItems()
+                        permissions: loginRequired,
+                        menu: updateMenuItems('SETTINGS')
                     },
                     data: {
                         title: 'Add Application'
@@ -105,7 +118,7 @@ angular
                     url: '/term-of-contract',
                     templateUrl: 'toc.html',
                     resolve: {
-                        loginRequired: loginRequired
+                        permissions: loginRequired
                     },
                     data: {
                         title: 'Term of Contract'
@@ -115,7 +128,7 @@ angular
                     url: '/term-of-service',
                     templateUrl: 'tos.html',
                     resolve: {
-                        loginRequired: loginRequired
+                        permissions: loginRequired
                     },
                     data: {
                         title: 'Term of Service'
@@ -125,13 +138,12 @@ angular
                     url: '/applications/list',
                     templateUrl: 'application/list.html',
                     resolve: {
-                        loginRequired: loginRequired,
+                        permissions: loginRequired,
                         deps: [
-                            '$ocLazyLoad',
                             '$rootScope',
                             'MenuFactory',
                             'UserService',
-                            function ($ocLazyLoad, $rootScope, MenuFactory, UserService) {
+                            function ($rootScope, MenuFactory, UserService) {
                                 $rootScope.menus = MenuFactory.get('SETTINGS');
                                 UserService.handleFirstLogin();
                                 return Promise.resolve();
@@ -148,8 +160,8 @@ angular
                     url: '/applications/{id}/detail',
                     templateUrl: 'application/detail.html',
                     resolve: {
-                        loginRequired: loginRequired,
-                        deps: updateMenuItems()
+                        permissions: loginRequired,
+                        menu: updateMenuItems('SETTINGS')
                     },
                     data: {
                         title: 'Application Detail'
@@ -161,8 +173,8 @@ angular
                     url: '/applications/{id}/edit',
                     templateUrl: 'application/edit.html',
                     resolve: {
-                        loginRequired: loginRequired,
-                        deps: updateMenuItems()
+                        permissions: loginRequired,
+                        menu: updateMenuItems('SETTINGS')
                     },
                     data: {
                         title: 'Edit Application'
@@ -176,7 +188,7 @@ angular
                     controller: 'billingListCtrl',
                     controllerAs: 'ctrl',
                     resolve: {
-                        loginRequired: loginRequired,
+                        permissions: loginRequired,
                         deps: [
                             '$rootScope',
                             'MenuFactory',
@@ -193,7 +205,7 @@ angular
                     controller: 'editPaymentMethodCtrl',
                     controllerAs: 'ctrl',
                     resolve: {
-                        loginRequired: loginRequired,
+                        permissions: loginRequired,
                         deps: [
                             '$rootScope',
                             'MenuFactory',
@@ -210,7 +222,7 @@ angular
                     controller: 'updateSubscriptionCtrl',
                     controllerAs: 'ctrl',
                     resolve: {
-                        loginRequired: loginRequired,
+                        permissions: loginRequired,
                         deps: [
                             '$rootScope',
                             'MenuFactory',
@@ -228,7 +240,7 @@ angular
                     url: '/dashboard/:id/:tenant',
                     templateUrl: 'dashboard.html',
                     resolve: {
-                        loginRequired: loginRequired,
+                        permissions: loginRequired,
                         deps: [
                             'MenuFactory',
                             '$rootScope',
@@ -249,7 +261,7 @@ angular
                     controller: 'customDashboardsCtrl',
                     controllerAs: 'ctrl',
                     resolve: {
-                        loginRequired: loginRequired
+                        permissions: loginRequired
                     }
                 })
                 .state('app.dashboard.manageDashboard', {
@@ -258,14 +270,59 @@ angular
                     controller: 'manageDashboardsCtrl',
                     controllerAs: 'ctrl',
                     resolve: {
-                        loginRequired: loginRequired
+                        permissions: loginRequired
                     }
+                })
+                .state('app.management', {
+                    abstract: true,
+                    url: '/management'
+
+                })
+                .state('app.management.users', {
+                    url: '/users/list',
+                    templateUrl: 'management/users.html',
+                    resolve: {
+                        permissions: adminRequired,
+                        menu: updateMenuItems('MANAGEMENT')
+                    },
+                    data: {
+                        title: 'Management / Users'
+                    },
+                    controller: 'ManageUsersController',
+                    controllerAs: 'ctrl'
+                })
+                .state('app.management.admins', {
+                    url: '/admins/list',
+                    templateUrl: 'management/admins.html',
+                    resolve: {
+                        permissions: adminRequired,
+                        menu: updateMenuItems('MANAGEMENT')
+                    },
+                    data: {
+                        title: 'Management / Admins'
+                    },
+                    controller: 'ManageAdminsController',
+                    controllerAs: 'ctrl'
+                })
+
+                .state('app.management.plans', {
+                    url: '/plans/list',
+                    templateUrl: 'management/plans.html',
+                    resolve: {
+                        permissions: adminRequired,
+                        menu: updateMenuItems('MANAGEMENT')
+                    },
+                    data: {
+                        title: 'Management / Plans'
+                    },
+                    controller: 'PlanListController',
+                    controllerAs: 'ctrl'
                 })
                 .state('app.infrastructureMonitoring', {
                     url: '/infrastructureMonitoring',
                     templateUrl: 'infrastructureMonitoring.html',
                     resolve: {
-                        loginRequired: loginRequired
+                        permissions: loginRequired
                     },
                     data: {
                         title: 'Infrastructure Monitoring'
@@ -277,7 +334,7 @@ angular
                     url: '/architectureDiscovery',
                     templateUrl: 'architectureDiscovery.html',
                     resolve: {
-                        loginRequired: loginRequired
+                        permissions: loginRequired
                     },
                     data: {
                         title: 'Architecture Discovery'
@@ -291,7 +348,7 @@ angular
                     url: '/dataBrowser',
                     templateUrl: 'dataBrowser.html',
                     resolve: {
-                        loginRequired: loginRequired
+                        permissions: loginRequired
                     },
                     data: {
                         title: 'Data Browser'
@@ -305,7 +362,7 @@ angular
                     url: '/customReports',
                     templateUrl: 'customReports.html',
                     resolve: {
-                        loginRequired: loginRequired
+                        permissions: loginRequired
                     },
                     data: {
                         title: 'Custom Reports'
@@ -320,7 +377,7 @@ angular
                     url: '/syntheticMonitoring',
                     templateUrl: 'syntheticMonitoring.html',
                     resolve: {
-                        loginRequired: loginRequired
+                        permissions: loginRequired
                     },
                     data: {
                         title: 'Synthetic Monitoring'
@@ -334,7 +391,7 @@ angular
                     url: '/alerts',
                     templateUrl: 'alerts.html',
                     resolve: {
-                        loginRequired: loginRequired
+                        permissions: loginRequired
                     },
                     data: {
                         title: 'Alerts'
@@ -348,7 +405,7 @@ angular
                     url: '/businessTransactions',
                     templateUrl: 'businessTransactions.html',
                     resolve: {
-                        loginRequired: loginRequired
+                        permissions: loginRequired
                     },
                     data: {
                         title: 'Business Transactions'
@@ -362,7 +419,7 @@ angular
                     url: '/realUserMonitoring',
                     templateUrl: 'realUserMonitoring.html',
                     resolve: {
-                        loginRequired: loginRequired
+                        permissions: loginRequired
                     },
                     data: {
                         title: 'Real User Monitoring'
@@ -381,7 +438,7 @@ angular
                     url: '/visualisations',
                     templateUrl: 'administration/visualisations.html',
                     resolve: {
-                        loginRequired: loginRequired
+                        permissions: loginRequired
                     },
                     data: {
                         title: 'Administration / Visualisations'
@@ -393,7 +450,7 @@ angular
                     url: '/reports',
                     templateUrl: 'administration/reports.html',
                     resolve: {
-                        loginRequired: loginRequired
+                        permissions: loginRequired
                     },
                     data: {
                         title: 'Administration / Reports'
@@ -436,12 +493,12 @@ angular
                     templateUrl: 'static/aboutUs.html'
                 });
 
-            function updateMenuItems() {
+            function updateMenuItems(key) {
                 return [
                     'MenuFactory',
                     '$rootScope',
                     function (MenuFactory, $rootScope) {
-                        $rootScope.menus = MenuFactory.get('SETTINGS');
+                        $rootScope.menus = MenuFactory.get(key);
                         return Promise.resolve();
                     }
                 ];

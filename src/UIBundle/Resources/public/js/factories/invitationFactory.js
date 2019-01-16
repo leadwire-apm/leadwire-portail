@@ -1,5 +1,5 @@
 (function(angular) {
-    angular.module('leadwireApp').factory('Invitation', [
+    angular.module('leadwireApp').factory('InvitationFactory', [
         '$http',
         'CONFIG',
         function($http, CONFIG) {
