@@ -94,7 +94,6 @@
                                 phoneCode: user.phoneCode
                             }
                         );
-
                         if (updated) {
                             //if he updated his avatar we need to make another request
                             if (avatar) {
@@ -282,9 +281,19 @@
         service.delete = function (id) {
             return UserFactory.delete(id);
         };
+        service.detail = function (id) {
+            return UserFactory.get(id);
+        };
 
         service.list = function () {
             return UserFactory.list();
+        }
+
+        service.update = function (updatedUser) {
+            return UserFactory.update(updatedUser)
+        }
+        service.enable = function (id, message) {
+            return UserFactory.enable(id, message)
         }
 
     }

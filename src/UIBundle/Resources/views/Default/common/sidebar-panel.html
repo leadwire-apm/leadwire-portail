@@ -24,14 +24,14 @@
             <spinner is-loading="true" size="32" color="'antiquewhite'"></spinner>
         </li>
         <li ng-if="!isChangingContext" ng-repeat="menu in menus track by menu.route" ui-sref-active="active"
-            >
-            <a  ng-href="[[menu.route]]">
+        >
+            <a ng-href="[[menu.route]]">
                 <i class="[[menu.icon]]"></i>
                 <span>[[menu.label]]</span>
             </a>
         </li>
         <li ng-if="!isChangingContext && state.includes('app.dashboard')">
-            <a  ui-sref="app.dashboard.customDashboard">
+            <a ui-sref="app.dashboard.customDashboard">
                 <i class="fa fa-file-text"></i>
                 <span>Custom</span>
             </a>

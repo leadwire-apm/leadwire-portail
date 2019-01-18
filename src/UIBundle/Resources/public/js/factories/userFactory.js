@@ -11,6 +11,9 @@
             delete: function (id) {
                 return $http.delete(CONFIG.BASE_URL + 'api/user/' + id + '/delete');
             },
+            get: function (id) {
+                return $http.get(CONFIG.BASE_URL + 'api/user/' + id + '/get');
+            },
             getProfile: function () {
                 return $http.get(CONFIG.BASE_URL + 'api/user/me');
             },
@@ -41,11 +44,17 @@
                     CONFIG.BASE_URL + 'api/user/' + userId + '/subscribe',
                     body
                 );
-            }
-            , editPaymentMethod: function (cardInfo, userId) {
+            },
+            editPaymentMethod: function (cardInfo, userId) {
                 return $http.put(
                     CONFIG.BASE_URL + 'api/user/' + userId + '/creditCard',
                     cardInfo
+                );
+            },
+            enable: function (id, message) {
+                return $http.put(
+                    CONFIG.BASE_URL + 'api/user/' + id + '/enabled',
+                    {message: message}
                 );
             }
         };
