@@ -291,6 +291,16 @@ angular
                     controller: 'ManageUsersController',
                     controllerAs: 'ctrl'
                 })
+                .state('app.management.userDetail', {
+                    url: '/users/:id/detail',
+                    templateUrl: 'management/userDetail.html',
+                    resolve: {
+                        permissions: adminRequired,
+                        menu: updateMenuItems('MANAGEMENT')
+                    },
+                    controller: 'DetailUserController',
+                    controllerAs: 'ctrl'
+                })
                 .state('app.management.admins', {
                     url: '/admins/list',
                     templateUrl: 'management/admins.html',
