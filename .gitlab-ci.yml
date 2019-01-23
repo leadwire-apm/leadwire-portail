@@ -8,6 +8,7 @@ services:
 stages:
     - test
     - sensio
+    - deploy
 
 cache:
     key: ${CI_COMMIT_REF_SLUG}
@@ -48,3 +49,29 @@ sensio-insight:
     except:
         refs:
             - /^v[0-9]{1,}.*$/
+    allow_failure: true
+
+deploy:test:
+    image: $CONTAINER_IMAGE
+    stage: deploy
+    environment:
+        name: test
+        url: http://leadwire.test.ats-digital.com
+    only:
+        - develop
+    script:
+        - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
+        - eval $(ssh-agent -s)
+        - ssh-add <(echo "$ATS_TEST_SSH_KEY")
+        - mkdir -p ~/.ssh
+        - 'echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+        - ssh -t ats@test.ats-digital.com 'cd /apps/leadwire_lot2 &&
+            pwd &&
+            eval $(ssh-agent -s) &&
+            ssh-add ~/.ssh/ats_test_id_rsa &&
+            git pull origin develop &&
+            composer install --no-dev --no-scripts &&
+            app/console assets:install --env prod &&
+            app/console assetic:dump --env prod &&
+            app/console cache:clear --env prod
+        '
