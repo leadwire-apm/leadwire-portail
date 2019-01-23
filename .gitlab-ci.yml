@@ -70,7 +70,6 @@ deploy:test:
         - ssh -t ats@test.ats-digital.com 'cd /apps/leadwire_lot2 &&
             pwd &&
             eval $(ssh-agent -s) &&
-            ssh-add ~/.ssh/ats_test_id_rsa &&
             git pull origin develop &&
             composer install --no-dev --no-scripts &&
             app/console assets:install --env prod &&
