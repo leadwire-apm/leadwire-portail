@@ -78,7 +78,7 @@
 
         };
 
-        vm.changePermission = function (admin) {
+        vm.changePermission = function(admin){
             vm.flipActivityIndicator('isSaving' + admin.id);
             const user = angular.extend({}, admin);
             if (vm.isAdmin(user)) {

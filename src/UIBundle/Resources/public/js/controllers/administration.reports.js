@@ -9,4 +9,4 @@
     }
 
 
-})(window.angular)
+})(window.angular);

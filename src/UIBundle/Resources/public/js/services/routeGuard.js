@@ -23,7 +23,6 @@
         };
 
         service.adminRequired = function () {
-            debugger;
             var deferred = $q.defer();
             if ($auth.isAuthenticated()) {
                 if ($localStorage.user.roles
