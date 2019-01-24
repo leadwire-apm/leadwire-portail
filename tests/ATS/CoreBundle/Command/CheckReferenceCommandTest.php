@@ -13,9 +13,10 @@ class CheckReferenceCommandTest extends KernelTestCase
     public function testExecute()
     {
         $kernel = self::bootKernel();
+        $managerRegistry = $kernel->getContainer()->get('doctrine_mongodb');
         $application = new Application($kernel);
 
-        $application->add(new CheckReferenceCommand());
+        $application->add(new CheckReferenceCommand($managerRegistry));
 
         $command = $application->find('ats:core:tools:doctrine:check-reference');
         $commandTester = new CommandTester($command);

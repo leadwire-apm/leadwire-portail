@@ -53,7 +53,7 @@
             },
             toggleStatus: function (id, body) {
                 return $http.put(
-                    CONFIG.BASE_URL + 'api/user/' + id + '/lockToggle',
+                    CONFIG.BASE_URL + 'api/user/' + id + '/lock-toggle',
                     body,
                 );
             },

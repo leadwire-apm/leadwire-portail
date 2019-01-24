@@ -10,42 +10,14 @@ security:
     providers:
         simple_user_provider:
             id: ATS\UserBundle\Provider\SimpleUserProvider
-        api_key_user_provider:
-            id: ATS\UserBundle\Provider\ApiKeyUserProvider
 
     firewalls:
         dev:
             pattern:  ^/(_(profiler|wdt)|css|images|js|login)/
             security: false
-        public_api:
-            pattern: ^/%public_api_prefix%
-            stateless: true
-            simple_preauth:
-                authenticator: ATS\UserBundle\Security\ApiKeyAuthenticator
-            provider: api_key_user_provider
-        oauth_token:
-            pattern:    ^/oauth/v2/token
-            security:   false
-        main:
-            pattern:    ^/oauth/v2/auth
-            provider:  simple_user_provider
-            form_login:
-                login_path: user_security_login
-                check_path: user_security_login_check
-                default_target_path:  /oauth/v2/user
-                csrf_token_generator: security.csrf.token_manager
-                use_referer: true
-            logout_on_user_change: true
-            logout:
-                path:  user_security_logout
-                invalidate_session: true
-            remember_me:
-               secret: '%secret%'
-               lifetime: 63072000 # 2 years = 730 days in seconds
-               path: user_security_update_access_token
-               always_remember_me: true
         api:
-            pattern:    ^(/core)?/%internal_api_prefix%((?!/translation|/context))
+            pattern:  ^(/core)?/%internal_api_prefix%((?!/translation|/context))
+            provider: simple_user_provider
             stateless: true
             guard:
                 authenticators:

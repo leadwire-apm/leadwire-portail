@@ -6,6 +6,7 @@ services:
     - mongo:3.4
 
 stages:
+    - lint
     - test
     - sensio
     - deploy
@@ -15,9 +16,19 @@ cache:
     paths:
         - vendor/
 
-phpcs:
+phpunit:
     image: $CONTAINER_IMAGE
     stage: test
+    before_script:
+        - composer install
+    tags:
+        - phpunit
+    script:
+        - ./vendor/bin/simple-phpunit --coverage-text --colors=never --strict-coverage --disallow-test-output -c phpunit.xml.dist
+
+phpcs:
+    image: $CONTAINER_IMAGE
+    stage: lint
     before_script:
         - composer install
         - cp ./app/config/parameters.yml.dist ./app/config/parameters.yml
@@ -28,7 +39,7 @@ phpcs:
 
 phpstan:
     image: $CONTAINER_IMAGE
-    stage: test
+    stage: lint
     before_script:
         - composer install
         - cp ./app/config/parameters.yml.dist ./app/config/parameters.yml

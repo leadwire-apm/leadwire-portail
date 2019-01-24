@@ -185,6 +185,24 @@ class User extends \ATS\UserBundle\Document\User
     private $deleted;
 
     /**
+     * @var bool
+     *
+     * @ODM\Field(type="bool")
+     * @JMS\Type("boolean")
+     * @JMS\Expose
+     */
+    private $locked;
+
+    /**
+     * @var string
+     *
+     * @ODM\Field(type="string")
+     * @JMS\Type("string")
+     * @JMS\Expose
+     */
+    private $lockMessage;
+
+    /**
      * Get id
      *
      * @return \MongoId
@@ -521,6 +539,65 @@ class User extends \ATS\UserBundle\Document\User
     public function setDeleted(bool $deleted)
     {
         $this->deleted = $deleted;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of locked
+     *
+     * @return  bool
+     */
+    public function isLocked(): bool
+    {
+        return $this->locked;
+    }
+
+    /**
+     * Set the value of locked
+     *
+     * @param  bool  $locked
+     *
+     * @return  self
+     */
+    public function setLocked(bool $locked): self
+    {
+        $this->locked = $locked;
+
+        return $this;
+    }
+
+    /**
+     * Toggles value of locked
+     *
+     * @return  self
+     */
+    public function toggleLock(): self
+    {
+        $this->locked = ! $this->locked;
+
+        return $this;
+    }
+    /**
+     * Get the value of lockMessage
+     *
+     * @return  string
+     */
+    public function getLockMessage(): ?string
+    {
+        return $this->lockMessage;
+    }
+
+    /**
+     * Set the value of lockMessage
+     *
+     * @param  string  $lockMessage
+     *
+     * @return  self
+     */
+    public function setLockMessage(string $lockMessage): self
+    {
+        $this->lockMessage = $lockMessage;
 
         return $this;
     }

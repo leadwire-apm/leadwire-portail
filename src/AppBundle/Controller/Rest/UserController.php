@@ -23,11 +23,24 @@ class UserController extends BaseRestController
     public function getMeAction()
     {
         $user = $this->getUser();
+
         if ($user === null) {
             return $this->exception("Non Authorized", 401);
         }
 
         return $this->prepareJsonResponse($user, 200, "Default");
+    }
+
+    /**
+     * @Route("/list", methods="GET")
+     *
+     * @return Response
+     */
+    public function listUsersAction(Request $request, UserService $userService)
+    {
+        $users = $userService->listUsers();
+
+        return $this->prepareJsonResponse($users);
     }
 
     /**
@@ -169,6 +182,30 @@ class UserController extends BaseRestController
     {
         $this->denyAccessUnlessGranted([User::ROLE_ADMIN, User::ROLE_SUPER_ADMIN]);
         $successful = $userService->softDeleteUser($id);
+
+        return $this->prepareJsonResponse($successful);
+    }
+
+    /**
+     * @Route("/{id}/lock-toggle", methods="PUT")
+     *
+     * @param Request $request
+     * @param UserService $userService
+     * @param string $id
+     *
+     * @return Response
+     */
+    public function lockToggleUserAction(Request $request, UserService $userService, $id)
+    {
+        $this->denyAccessUnlessGranted([User::ROLE_ADMIN, User::ROLE_SUPER_ADMIN]);
+
+        $lockMessage = $request->get("message");
+
+        if ($lockMessage === null) {
+            $lockMessage = $this->container->getParameter('default_lock_message');
+        }
+
+        $successful = $userService->lockToggle($id, $lockMessage);
 
         return $this->prepareJsonResponse($successful);
     }

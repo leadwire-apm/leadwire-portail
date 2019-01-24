@@ -14,6 +14,7 @@ use JMS\Serializer\SerializerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\Router;
+use Symfony\Component\Routing\RouterInterface;
 
 /**
  * Service class for User entities
@@ -42,7 +43,7 @@ class UserService
     private $mailer;
 
     /**
-     * @var Router
+     * @var RouterInterface
      */
     private $router;
 
@@ -73,7 +74,7 @@ class UserService
      * @param SerializerInterface $serializer
      * @param LoggerInterface $logger
      * @param SimpleMailerService $mailer
-     * @param Router $router
+     * @param RouterInterface $router
      * @param CustomerService $customerService
      * @param Subscription $subscriptionService
      * @param PlanService $planService
@@ -83,7 +84,7 @@ class UserService
         SerializerInterface $serializer,
         LoggerInterface $logger,
         SimpleMailerService $mailer,
-        Router $router,
+        RouterInterface $router,
         CustomerService $customerService,
         Subscription $subscriptionService,
         PlanService $planService,
@@ -394,6 +395,34 @@ class UserService
             $user->setDeleted(true);
             $this->userManager->update($user);
 
+            $isSuccessful = true;
+        }
+
+        return $isSuccessful;
+    }
+
+    /**
+     * Toggles Lock staus for a given user
+     *
+     * @param string $id
+     * @param string $lockMessage
+     *
+     * @return boolean
+     */
+    public function lockToggle(string $id, string $lockMessage): bool
+    {
+        $isSuccessful = false;
+
+        $user = $this->userManager->getOneBy(['id' => $id]);
+
+        if ($user instanceof User) {
+            $user->toggleLock();
+            if ($user->isLocked() === true) {
+                // It's a lock operation --> Update the lock message if any
+                $user->setLockMessage($lockMessage);
+            }
+
+            $this->userManager->update($user);
             $isSuccessful = true;
         }
 
