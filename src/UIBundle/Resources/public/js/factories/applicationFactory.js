@@ -1,48 +1,101 @@
-(function(angular) {
-    angular
-        .module('leadwireApp')
-        .factory('ApplicationFactory', function($http, CONFIG) {
+(function (angular) {
+    angular.module('leadwireApp').
+        factory('ApplicationFactory', function ($http, CONFIG) {
             return {
-                findAll: function() {
+
+                /**
+                 *
+                 * @returns {Promise}
+                 */
+                findMyApplications: function () {
                     return $http.get(CONFIG.BASE_URL + 'api/app/list');
                 },
-                findMyDashboard: function(id) {
+                /**
+                 *
+                 * @returns {Promise}
+                 */
+                findAll: function () {
+                    return $http.get(CONFIG.BASE_URL + 'api/app/all');
+                },
+                /**
+                 *
+                 * @returns {Promise}
+                 */
+                findMyDashboard: function (id) {
                     return $http.get(
-                        CONFIG.BASE_URL + 'api/app/' + id + '/dashboards'
+                        CONFIG.BASE_URL + 'api/app/' + id + '/dashboards',
                     );
                 },
-                findInvitedApps: function() {
+                /**
+                 *
+                 * @returns {Promise}
+                 */
+                findInvitedApps: function () {
                     return $http.get(CONFIG.BASE_URL + 'api/app/invited/list');
                 },
-                save: function(body) {
+                /**
+                 *
+                 * @returns {Promise}
+                 */
+                save: function (body) {
                     return $http.post(CONFIG.BASE_URL + 'api/app/new', body);
                 },
-                get: function(id) {
+                /**
+                 *
+                 * @returns {Promise}
+                 */
+                get: function (id) {
                     return $http.get(
-                        CONFIG.BASE_URL + 'api/app/' + id + '/get'
+                        CONFIG.BASE_URL + 'api/app/' + id + '/get',
                     );
                 },
-                update: function(id, body) {
+                /**
+                 *
+                 * @returns {Promise}
+                 */
+                update: function (id, body) {
                     return $http.put(
                         CONFIG.BASE_URL + 'api/app/' + id + '/update',
-                        body
+                        body,
                     );
                 },
-                remove: function(id) {
+                /**
+                 *
+                 * @returns {Promise}
+                 */
+                remove: function (id) {
                     return $http.delete(
-                        CONFIG.BASE_URL + 'api/app/' + id + '/delete'
+                        CONFIG.BASE_URL + 'api/app/' + id + '/delete',
                     );
                 },
+                /**
+                 *
+                 * @returns {Promise}
+                 */
+                toggleStatus: function (id) {
+                    return $http.put(
+                        CONFIG.BASE_URL + 'api/app/' + id + '/lockToggle',
+                    );
+                },
+                /**
+                 *
+                 * @returns {Promise}
+                 */
                 activate: function (id, code) {
                     return $http.post(
-                        CONFIG.BASE_URL + 'api/app/' + id + '/activate', {code: code}
+                        CONFIG.BASE_URL + 'api/app/' + id + '/activate',
+                        { code: code },
                     );
                 },
+                /**
+                 *
+                 * @returns {Promise}
+                 */
                 stats: function (id) {
                     return $http.get(
-                        CONFIG.BASE_URL + 'api/app/' + id + '/stats'
+                        CONFIG.BASE_URL + 'api/app/' + id + '/stats',
                     );
                 },
             };
-        })
+        });
 })(window.angular);

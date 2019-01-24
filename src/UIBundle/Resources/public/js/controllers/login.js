@@ -15,7 +15,7 @@
  * @param $state
  * @constructor
  */
-function LoginControllerFN(
+function LoginControllerFN (
     $location,
     $auth,
     InvitationService,
@@ -27,7 +27,7 @@ function LoginControllerFN(
     DashboardService,
     ApplicationFactory,
     $rootScope,
-    $state
+    $state,
 ) {
     var vm = this;
     var invitationId =
@@ -37,25 +37,22 @@ function LoginControllerFN(
     onLoad();
     vm.authenticate = authenticate;
 
-    function authenticate(provider) {
+    function authenticate (provider) {
         vm.isChecking = true;
 
-        $auth
-            .authenticate(provider)
-            .then(function () {
-                return invitationId;
-            })
-            .then(getMe) // accept invitation and update Localstorage
+        $auth.authenticate(provider).then(function () {
+            return invitationId;
+        }).then(getMe) // accept invitation and update Localstorage
             .then(handleAfterRedirect) // fetch application and dashboard
             .then(handleLoginSuccess(provider)) // redirect
             .catch(handleLoginFailure);
     }
 
-    function getMe(invitationId) {
-        return UserService.handleBeforeRedirect(invitationId)
+    function getMe (invitationId) {
+        return UserService.handleBeforeRedirect(invitationId);
     }
 
-    function handleLoginSuccess(provider) {
+    function handleLoginSuccess (provider) {
         return function (response) {
             toastr.success(MESSAGES_CONSTANTS.LOGIN_SUCCESS(provider));
             // clear query string (?invitationId=***)
@@ -69,7 +66,7 @@ function LoginControllerFN(
                 //redirect to first dashboard
                 $state.go(response.path, {
                     id: response.dashboards[0].id,
-                    tenant: null
+                    tenant: null,
                 });
             } else {
                 $state.go(response.path);
@@ -78,7 +75,7 @@ function LoginControllerFN(
         };
     }
 
-    function handleLoginFailure(error) {
+    function handleLoginFailure (error) {
         vm.isChecking = false;
         var message = null;
         if (error.message) {
@@ -91,84 +88,81 @@ function LoginControllerFN(
         toastr.error(message);
     }
 
-    function handleAfterRedirect(user) {
+    function handleAfterRedirect (user) {
         const isAdmin = user.roles.indexOf('ROLE_ADMIN') !== -1;
         const isSuperAdmin = user.roles.indexOf('ROLE_SUPER_ADMIN') !== -1;
         if (isAdmin) {
             $localStorage.currentMenu = MenuFactory.get('MANAGEMENT');
-            return {path: 'app.management.users'};
+            return { path: 'app.management.users' };
 
         } else if (isSuperAdmin) {
             // TODO
         } else {
             // Simple user
-            return ApplicationFactory.findAll().then(function (response) {
-                if (response.data && response.data.length) {
-                    $rootScope.$broadcast('set:apps', response.data);
-                }
-                if (
-                    user.defaultApp &&
-                    user.defaultApp.id &&
-                    user.defaultApp.enabled
-                ) {
-                    //take the default app
-                    return DashboardService.fetchDashboardsByAppId(
-                        user.defaultApp.id
-                    );
-                } else {
-                    return {path: 'app.applicationsList'};
-                }
-            });
+            return ApplicationFactory.findMyApplications().
+                then(function (response) {
+                    if (response.data && response.data.length) {
+                        $rootScope.$broadcast('set:apps', response.data);
+                    }
+                    if (
+                        user.defaultApp &&
+                        user.defaultApp.id &&
+                        user.defaultApp.enabled
+                    ) {
+                        //take the default app
+                        return DashboardService.fetchDashboardsByAppId(
+                            user.defaultApp.id,
+                        );
+                    } else {
+                        return { path: 'app.applicationsList' };
+                    }
+                });
 
         }
 
-
     }
 
-    function onLoad() {
+    function onLoad () {
         if ($auth.isAuthenticated()) {
             if (invitationId !== undefined && $localStorage.user) {
                 InvitationService.acceptInvitation(
                     invitationId,
-                    $localStorage.user.id
-                )
-                    .then(function (app) {
-                        toastr.success(
-                            MESSAGES_CONSTANTS.INVITATION_ACCEPTED
-                        );
-                        (
-                            $localStorage.applications ||
-                            ($localStorage.applications = [])
-                        ).push(app);
-                        $state.go('app.applicationsList');
-                    })
-                    .catch(function (error) {
-                        toastr.error(MESSAGES_CONSTANTS.ERROR);
-                        console.log('onLoad Login', error);
-                    });
+                    $localStorage.user.id,
+                ).then(function (app) {
+                    toastr.success(
+                        MESSAGES_CONSTANTS.INVITATION_ACCEPTED,
+                    );
+                    (
+                        $localStorage.applications ||
+                        ($localStorage.applications = [])
+                    ).push(app);
+                    $state.go('app.applicationsList');
+                }).catch(function (error) {
+                    toastr.error(MESSAGES_CONSTANTS.ERROR);
+                    console.log('onLoad Login', error);
+                });
             } else {
                 $state.go('app.applicationsList');
             }
         }
     }
 }
+
 (function (angular) {
 
-    angular
-        .module('leadwireApp')
-        .controller('LoginCtrl', [
-            '$location',
-            '$auth',
-            'InvitationService',
-            'UserService',
-            'MenuFactory',
-            '$localStorage',
-            'toastr',
-            'MESSAGES_CONSTANTS',
-            'DashboardService',
-            'ApplicationFactory',
-            '$rootScope',
-            '$state',
-            LoginControllerFN
-        ]);
+    angular.module('leadwireApp').controller('LoginCtrl', [
+        '$location',
+        '$auth',
+        'InvitationService',
+        'UserService',
+        'MenuFactory',
+        '$localStorage',
+        'toastr',
+        'MESSAGES_CONSTANTS',
+        'DashboardService',
+        'ApplicationFactory',
+        '$rootScope',
+        '$state',
+        LoginControllerFN,
+    ]);
 })(window.angular);

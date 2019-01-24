@@ -1,24 +1,21 @@
 (function (angular) {
-    angular
-        .module('leadwireApp')
-        .service('PlanService', function (
-            PlanFactory,
-        ) {
-            var service = {};
+    angular.module('leadwireApp').service('PlanService', function (
+        PlanFactory,
+    ) {
+        var service = {};
 
-            service.list = function () {
-                return PlanFactory.findAll()
-                    .then(function (response) {
-                        return response.data
-                    }).catch((err) => {
-                        return []
-                    })
-            };
+        service.list = function () {
+            return PlanFactory.findAll().then(function (response) {
+                return response.data;
+            }).catch((err) => {
+                return [];
+            });
+        };
 
-            service.delete = function (id) {
+        service.delete = function (id) {
 
-            };
+        };
 
-            return service;
-        });
+        return service;
+    });
 })(window.angular);
