@@ -6,8 +6,8 @@ services:
     - mongo:3.4
 
 stages:
-    # - test
-    # - sensio
+    - test
+    - sensio
     - deploy
 
 cache:
@@ -15,41 +15,41 @@ cache:
     paths:
         - vendor/
 
-# phpcs:
-#     image: $CONTAINER_IMAGE
-#     stage: test
-#     before_script:
-#         - composer install
-#         - cp ./app/config/parameters.yml.dist ./app/config/parameters.yml
-#     tags:
-#         - phpunit
-#     script:
-#         - ./vendor/bin/phpcs --error-severity=1 --warning-severity=8 --extensions=php --standard=ats_ruleset.xml.dist --encoding=utf-8 ./src/AppBundle
+phpcs:
+    image: $CONTAINER_IMAGE
+    stage: test
+    before_script:
+        - composer install
+        - cp ./app/config/parameters.yml.dist ./app/config/parameters.yml
+    tags:
+        - phpunit
+    script:
+        - ./vendor/bin/phpcs --error-severity=1 --warning-severity=8 --extensions=php --standard=ats_ruleset.xml.dist --encoding=utf-8 ./src/AppBundle
 
-# phpstan:
-#     image: $CONTAINER_IMAGE
-#     stage: test
-#     before_script:
-#         - composer install
-#         - cp ./app/config/parameters.yml.dist ./app/config/parameters.yml
-#     tags:
-#         - phpunit
-#     script:
-#         - ./bin/console cache:clear --env dev
-#         - ./vendor/bin/phpstan analyse
+phpstan:
+    image: $CONTAINER_IMAGE
+    stage: test
+    before_script:
+        - composer install
+        - cp ./app/config/parameters.yml.dist ./app/config/parameters.yml
+    tags:
+        - phpunit
+    script:
+        - ./bin/console cache:clear --env dev
+        - ./vendor/bin/phpstan analyse
 
-# sensio-insight:
-#     image: $CONTAINER_IMAGE
-#     stage: sensio
-#     tags:
-#         - php-qa
-#     script:
-#         - curl -o insight.phar -s https://get.insight.symfony.com/insight.phar
-#         - php insight.phar analyze --no-interaction --no-ansi 2d9d7311-a698-4ed2-b484-6c19f0211940 --reference $CI_COMMIT_SHA --user-uuid 2acbe908-0593-4401-a1ae-315ec03e025f --api-token b9b8faac9a8ade3d12b75b7a84e42d9dfc3ec4c3d19f680564dbfc98850d69fc --fail-condition "analysis.grade in ['none']"
-#     except:
-#         refs:
-#             - /^v[0-9]{1,}.*$/
-#     allow_failure: true
+sensio-insight:
+    image: $CONTAINER_IMAGE
+    stage: sensio
+    tags:
+        - php-qa
+    script:
+        - curl -o insight.phar -s https://get.insight.symfony.com/insight.phar
+        - php insight.phar analyze --no-interaction --no-ansi 2d9d7311-a698-4ed2-b484-6c19f0211940 --reference $CI_COMMIT_SHA --user-uuid 2acbe908-0593-4401-a1ae-315ec03e025f --api-token b9b8faac9a8ade3d12b75b7a84e42d9dfc3ec4c3d19f680564dbfc98850d69fc --fail-condition "analysis.grade in ['none']"
+    except:
+        refs:
+            - /^v[0-9]{1,}.*$/
+    allow_failure: true
 
 deploy:test:
     image: $CONTAINER_IMAGE
