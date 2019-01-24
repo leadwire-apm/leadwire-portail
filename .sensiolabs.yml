@@ -1,0 +1,14 @@
+pre_composer_script: |
+    #!/bin/bash
+    yes '' | pecl install mongodb
+
+php_ini: |
+    extension=mongodb.so
+
+exclude_patterns:
+    - app/check.php
+    - app/SymfonyRequirements.php
+    - web/config.php
+    - web/app*.php
+    - src/UIBundle/Resources/public/js/**/*.js
+    - .gitlab-ci.yml

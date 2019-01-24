@@ -13,8 +13,6 @@ parameters:
     payment_api_key: pk_test_cHbboCRT7xXYc1TAd9AyhgEI
     secret_key: sk_test_BXblT1kn2Qgv9R2aTvltloU7
     providerName: Stripe
-    super_admin_user_name: leadwire-apm
-    github_client_id: aa236b3900fb084b3ccf
     auth_providers:
         github:
             github_access_token_url: 'https://github.com/login/oauth/access_token'
