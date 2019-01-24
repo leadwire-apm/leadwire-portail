@@ -52,34 +52,29 @@
         service.all = function () {
             return ApplicationFactory.findAll().then(function (response) {
                 return response.data;
-            }).catch((error) => {
-                return [];
+            }).catch(function (error) {
+                throw new Error(error);
             });
         };
 
         service.toggleStatus = function (applicationId) {
-            return new Promise(function (resolve, reject) {
-                ApplicationFactory.toggleStatus(applicationId).
-                    then(function (response) {
-                        resolve(response.data);
-                    }).
-                    catch((err) => {
-                        reject(err);
-                    });
-            });
+            return ApplicationFactory.toggleStatus(applicationId).
+                then(function (response) {
+                    return (response.data);
+                }).
+                catch(function (err) {
+                    throw new Error(err);
+                });
         };
 
         service.delete = function (applicationId) {
-            return new Promise(function (resolve, reject) {
-                ApplicationFactory.remove(applicationId).
-                    then(function (response) {
-                        resolve(response.data);
-                    }).
-                    catch((err) => {
-                        reject(err);
-                    });
-            });
-
+            return ApplicationFactory.remove(applicationId).
+                then(function (response) {
+                    return response.data;
+                }).
+                catch(function (err) {
+                    throw new Error(err);
+                });
         };
 
         return service;

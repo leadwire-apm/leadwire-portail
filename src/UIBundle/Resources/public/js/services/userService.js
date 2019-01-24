@@ -283,7 +283,11 @@
         };
 
         service.list = function () {
-            return UserFactory.list();
+            return UserFactory.list().then(function (response) {
+                return response.data;
+            }).catch(function (err) {
+                throw new Error(err);
+            });
         };
 
         service.update = function (updatedUser) {

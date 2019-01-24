@@ -91,9 +91,9 @@
             vm.loadUsers = function () {
 
                 vm.flipActivityIndicator('isLoading');
-                UserService.list().then(function (response) {
+                UserService.list().then(function (users) {
                     vm.flipActivityIndicator('isLoading');
-                    vm.users = response.data;
+                    vm.users = users;
                 }).catch(function (err) {
                     vm.flipActivityIndicator('isLoading');
                     // TODO Remove This

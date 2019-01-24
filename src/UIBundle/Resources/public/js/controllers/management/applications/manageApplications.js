@@ -23,7 +23,7 @@
             vm.ui[key] = !vm.ui[key];
         };
 
-        vm.handleOnDelete = function (id) {
+        vm.handleOnDelete = function (application) {
             swal(MESSAGES_CONSTANTS.SWEET_ALERT_VALIDATION).
                 then(function (willDelete) {
                     if (willDelete) {
@@ -54,8 +54,21 @@
                 vm.applications = applications;
             }).catch(function (error) {
                 vm.flipActivityIndicator('isLoading');
-                console.log(error);
-                vm.applications = [];
+                // TODO : REMOVE THIS
+                vm.applications = [
+                    {
+                        id: 1, name: 'App 1', owner: {
+                            name: 'Owner 1',
+                        },
+                        active: true,
+                    },
+                    {
+                        id: 2, name: 'App 2', owner: {
+                            name: 'Owner 2',
+                        },
+                        active: false,
+                    },
+                ];
             });
         };
 
@@ -74,7 +87,7 @@
 
         vm.deleteApplication = function (id) {
             vm.flipActivityIndicator('isDeleting' + id);
-            return ApplicationService.delete(id).
+            ApplicationService.delete(id).
                 then(function () {
                     vm.flipActivityIndicator('isDeleting' + id);
                     toastr.success(MESSAGES_CONSTANTS.SUCCESS);
