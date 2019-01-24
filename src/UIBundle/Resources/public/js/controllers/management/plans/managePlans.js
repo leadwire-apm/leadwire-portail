@@ -36,7 +36,6 @@
             PlanService.list().then(function (plans) {
                 vm.flipActivityIndicator('isLoading');
                 vm.plans = plans;
-
             })
         };
 

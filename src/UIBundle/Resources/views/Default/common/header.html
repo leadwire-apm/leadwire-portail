@@ -23,7 +23,7 @@
                 <i class="fa fa-circle-thin"></i>
             </a>
         </li>
-        <li class="pull-left hidden-xs" ng-if="user.role.indexOf('ROLE_ADMIN')!==-1">
+        <li class="pull-left hidden-xs" ng-if="[[user.roles.indexOf('ROLE_ADMIN')!==-1]]">
             <a ui-sref="app.management.users">
                 <i class="fa fa-dashboard"></i>
             </a>

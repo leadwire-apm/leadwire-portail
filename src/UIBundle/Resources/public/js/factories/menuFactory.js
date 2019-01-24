@@ -142,6 +142,11 @@
                     icon: 'fa fa-money',
                     label: 'Manage plans'
                 },
+                {
+                    route: 'app.management.applications',
+                    icon: 'fa fa-desktop',
+                    label: 'Manage applications'
+                },
             ]
         });
 })(window.angular);
