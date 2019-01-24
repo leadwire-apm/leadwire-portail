@@ -10,20 +10,22 @@
                     <table class="table table-striped mb0">
                         <thead>
                         <tr>
-                            <th>
-                                <span></span>Name
+                            <th class="text-center">
+                                Name
                             </th>
-                            <th>Email</th>
-                            <th colspan="3" style="text-align: center">Actions</th>
+                            <th class="text-center">Email</th>
+                            <th class="text-center" colspan="3" style="text-align: center">Actions</th>
                         </tr>
                         </thead>
                         <tbody>
                         <tr ng-if="ctrl.ui.isLoading" class="text-center">
                             <td colspan="6">
-                                <spinner is-loading="ctrl.ui.isLoading" size="24"></spinner>
+                                <spinner is-loading="ctrl.ui.isLoading"
+                                         size="24"></spinner>
                             </td>
                         </tr>
                         <tr ng-repeat="admin in ctrl.admins"
+                            class="text-center"
 
                         >
                             <td data-title="Name" data-label="Name">
@@ -36,7 +38,8 @@
                                 <button data-ng-class="ctrl.isAdmin(admin) ? 'btn btn-danger' : 'btn btn-success'"
                                         ng-click="ctrl.handleChangePermission(admin)">
                                     [[ctrl.isAdmin(admin) ? 'Revoke ' : 'Promote']]
-                                    <spinner is-loading="ctrl.ui['isSaving'+admin.id]"></spinner>
+                                    <spinner
+                                            is-loading="ctrl.ui['isSaving'+admin.id]"></spinner>
                                 </button>
                             </td>
                         </tr>

@@ -1,0 +1,52 @@
+(function (angular) {
+    angular.module('leadwireApp')
+        .controller('AddApplicationTypeController', [
+            'ApplicationTypeService',
+            'toastr',
+            'MESSAGES_CONSTANTS',
+            '$state',
+            AddApplicationTypeCtrlFN,
+        ]);
+
+    /**
+     * Handle add new application logic
+     *
+     */
+    function AddApplicationTypeCtrlFN (
+        ApplicationTypeService,
+        toastr,
+        MESSAGES_CONSTANTS,
+        $state,
+    ) {
+        var vm = this;
+
+        vm.flipActivityIndicator = function (key) {
+            vm.ui[key] = !vm.ui[key];
+        };
+
+        vm.saveAppType = function () {
+            ApplicationTypeService.create(vm.applicationType)
+                .then(function () {
+                    toastr.success(MESSAGES_CONSTANTS.SUCCESS);
+                    $state.go('app.management.applicationTypes');
+                })
+                .catch(function () {
+                    toastr.error(MESSAGES_CONSTANTS.ERROR);
+
+                });
+        };
+
+        vm.init = function () {
+            vm = angular.extend(vm, {
+                ui: {
+                    isSaving: false,
+                },
+                applicationType: {
+                    name: '',
+                    agent: '',
+                },
+            });
+        };
+
+    }
+})(window.angular);

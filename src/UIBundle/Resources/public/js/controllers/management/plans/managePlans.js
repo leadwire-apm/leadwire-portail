@@ -6,25 +6,24 @@
             'toastr',
             'MESSAGES_CONSTANTS',
             '$state',
-            PlanListCtrlFN
+            PlanListCtrlFN,
         ]);
 
     /**
      * Handle add new application logic
      *
      */
-    function PlanListCtrlFN(
+    function PlanListCtrlFN (
         PlanService,
         toastr,
         MESSAGES_CONSTANTS,
-        $state
+        $state,
     ) {
         var vm = this;
 
         vm.flipActivityIndicator = function (key) {
             vm.ui[key] = !vm.ui[key];
         };
-
 
         vm.deletePlan = function (id) {
             console.log(id);
@@ -33,10 +32,11 @@
         vm.loadPlans = function () {
             vm.flipActivityIndicator('isLoading');
             // should send some criteria
-            PlanService.list().then(function (plans) {
-                vm.flipActivityIndicator('isLoading');
-                vm.plans = plans;
-            })
+            PlanService.list()
+                .then(function (plans) {
+                    vm.flipActivityIndicator('isLoading');
+                    vm.plans = plans;
+                });
         };
 
         vm.init = function () {
@@ -45,9 +45,9 @@
                     isSaving: false,
                     isLoading: false,
                 },
-                plans: []
+                plans: [],
             });
-            vm.loadPlans()
+            vm.loadPlans();
         };
 
     }

@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html class="no-js" data-ng-app="leadwireApp">
 <head>
     <meta charset="utf-8">
@@ -26,6 +27,7 @@
     <meta name="theme-color" content="#ffffff">
     <meta name="msapplication-TileImage" ng-content="images/favicon/android-icon-144x144.png">
     <meta id="load_styles_before">
+
 
     {% stylesheets 'bundles/ui/css/*' %}
         <link rel="stylesheet" href="{{ asset_url }}"/>
@@ -218,6 +220,22 @@
     {% include 'management/applications.html' %}
 </script>
 
+<script type="text/ng-template" id="management/applicationTypes/list.html">
+    {% include 'management/applicationTypes/list.html' %}
+</script>
+
+<script type="text/ng-template" id="management/applicationTypes/add.html">
+    {% include 'management/applicationTypes/add.html' %}
+</script>
+
+<script type="text/ng-template" id="management/applicationTypes/edit.html">
+    {% include 'management/applicationTypes/edit.html' %}
+</script>
+
+<script type="text/ng-template" id="management/applicationTypes/form.html">
+    {% include 'management/applicationTypes/form.html' %}
+</script>
+
 
 <script type="text/ng-template" id="infrastructureMonitoring.html">
     {% include 'infrastructureMonitoring.html' %}
@@ -254,14 +272,19 @@
         FR_DATE_FORMAT = '{{ FR_DATE_FORMAT }}';
         TAX = '{{ TAX }}';
     </script>
+
     {% javascripts
+        'bundles/ui/js/extensions/polyfills.js'
+        'bundles/ui/js/extensions/modernizr.js'
         'bundles/ui/js/lib/jquery.min.js'
         'bundles/ui/js/lib/angular.min.js'
+        'bundles/ui/js/lib/bootstrap.min.js'
         'bundles/ui/js/lib/angular-animate.min.js'
         'bundles/ui/js/lib/angular-touch.min.js'
         'bundles/ui/js/lib/ngStorage.min.js'
         'bundles/ui/js/lib/satellizer.min.js'
         'bundles/ui/js/lib/ui-bootstrap-tpls.min.js'
+
         'bundles/ui/js/lib/ui-utils.min.js'
         'bundles/ui/js/lib/angular-cookies.min.js'
         'bundles/ui/js/lib/angular-sanitize.min.js'
@@ -276,13 +299,13 @@
         'bundles/ui/js/lib/jquery.card.js'
         'bundles/ui/js/lib/jquery.validate.min.js'
         'bundles/ui/js/lib/jquery.bootstrap.wizard.min.js'
+        'bundles/ui/js/lib/summernote.js'
+        'bundles/ui/js/lib/fastclick.js'
         'bundles/ui/js/extensions/angular-toastr.js'
         'bundles/ui/js/extensions/showdown.js'
-        'bundles/ui/js/extensions/polyfills.js'
         'bundles/ui/js/extensions/lib.js'
         'bundles/ui/js/extensions/noty-defaults.js'
         'bundles/ui/js/extensions/sweetalert.js'
-        'bundles/ui/js/extensions/modernizr.js'
         'bundles/ui/js/extensions/moment.min.js'
         'bundles/ui/js/app.js'
         'bundles/ui/js/app.main.js'
@@ -305,6 +328,7 @@
         'bundles/ui/js/services/paginator.js'
         'bundles/ui/js/services/userService.js'
         'bundles/ui/js/services/planService.js'
+        'bundles/ui/js/services/applicationTypeService.js'
         'bundles/ui/js/services/routeGuard.js'
 
         'bundles/ui/js/directives/anchor-scroll.js'
@@ -354,6 +378,9 @@
         'bundles/ui/js/controllers/management/users/manageAdmins.js'
         'bundles/ui/js/controllers/management/applications/manageApplications.js'
         'bundles/ui/js/controllers/management/plans/managePlans.js'
+        'bundles/ui/js/controllers/management/applicationTypes/manageApplicationTypes.js'
+        'bundles/ui/js/controllers/management/applicationTypes/addApplicationType.js'
+        'bundles/ui/js/controllers/management/applicationTypes/editApplicationType.js'
 
         'bundles/ui/js/controllers/realUserMonitoring.js'
         'bundles/ui/js/controllers/advices.js'
@@ -362,7 +389,11 @@
         'bundles/ui/js/controllers/editPaymentMethod.js'
         'bundles/ui/js/controllers/manageDashboards.js'
         'bundles/ui/js/controllers/syntheticMonitoring.js'
-        'bundles/ui/js/config.router.js' %}
+        'bundles/ui/js/config.router.js'
+        'bundles/ui/js/lib/custom.js'
+
+    %}
+
     <script src="{{ asset_url }}"></script>
     {% endjavascripts %}
 

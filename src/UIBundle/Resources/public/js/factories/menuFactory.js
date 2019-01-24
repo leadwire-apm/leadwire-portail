@@ -147,6 +147,11 @@
                     icon: 'fa fa-desktop',
                     label: 'Manage applications'
                 },
+                {
+                    route: 'app.management.applicationTypes',
+                    icon: 'fa fa-desktop',
+                    label: 'Manage types'
+                },
             ]
         });
 })(window.angular);

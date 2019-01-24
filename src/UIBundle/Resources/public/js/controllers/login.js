@@ -40,9 +40,11 @@ function LoginControllerFN (
     function authenticate (provider) {
         vm.isChecking = true;
 
-        $auth.authenticate(provider).then(function () {
-            return invitationId;
-        }).then(getMe) // accept invitation and update Localstorage
+        $auth.authenticate(provider)
+            .then(function () {
+                return invitationId;
+            })
+            .then(getMe) // accept invitation and update Localstorage
             .then(handleAfterRedirect) // fetch application and dashboard
             .then(handleLoginSuccess(provider)) // redirect
             .catch(handleLoginFailure);
@@ -76,6 +78,7 @@ function LoginControllerFN (
     }
 
     function handleLoginFailure (error) {
+        console.log(error);
         vm.isChecking = false;
         var message = null;
         if (error.message) {
@@ -99,8 +102,8 @@ function LoginControllerFN (
             // TODO
         } else {
             // Simple user
-            return ApplicationFactory.findMyApplications().
-                then(function (response) {
+            return ApplicationFactory.findMyApplications()
+                .then(function (response) {
                     if (response.data && response.data.length) {
                         $rootScope.$broadcast('set:apps', response.data);
                     }
@@ -128,19 +131,21 @@ function LoginControllerFN (
                 InvitationService.acceptInvitation(
                     invitationId,
                     $localStorage.user.id,
-                ).then(function (app) {
-                    toastr.success(
-                        MESSAGES_CONSTANTS.INVITATION_ACCEPTED,
-                    );
-                    (
-                        $localStorage.applications ||
-                        ($localStorage.applications = [])
-                    ).push(app);
-                    $state.go('app.applicationsList');
-                }).catch(function (error) {
-                    toastr.error(MESSAGES_CONSTANTS.ERROR);
-                    console.log('onLoad Login', error);
-                });
+                )
+                    .then(function (app) {
+                        toastr.success(
+                            MESSAGES_CONSTANTS.INVITATION_ACCEPTED,
+                        );
+                        (
+                            $localStorage.applications ||
+                            ($localStorage.applications = [])
+                        ).push(app);
+                        $state.go('app.applicationsList');
+                    })
+                    .catch(function (error) {
+                        toastr.error(MESSAGES_CONSTANTS.ERROR);
+                        console.log('onLoad Login', error);
+                    });
             } else {
                 $state.go('app.applicationsList');
             }
@@ -150,19 +155,20 @@ function LoginControllerFN (
 
 (function (angular) {
 
-    angular.module('leadwireApp').controller('LoginCtrl', [
-        '$location',
-        '$auth',
-        'InvitationService',
-        'UserService',
-        'MenuFactory',
-        '$localStorage',
-        'toastr',
-        'MESSAGES_CONSTANTS',
-        'DashboardService',
-        'ApplicationFactory',
-        '$rootScope',
-        '$state',
-        LoginControllerFN,
-    ]);
+    angular.module('leadwireApp')
+        .controller('LoginCtrl', [
+            '$location',
+            '$auth',
+            'InvitationService',
+            'UserService',
+            'MenuFactory',
+            '$localStorage',
+            'toastr',
+            'MESSAGES_CONSTANTS',
+            'DashboardService',
+            'ApplicationFactory',
+            '$rootScope',
+            '$state',
+            LoginControllerFN,
+        ]);
 })(window.angular);

@@ -1,23 +1,22 @@
 <div class="panel" ng-init="ctrl.init()">
     <div class="panel-heading">
-        <h4>Manage Applications [WIP/Mock List]</h4>
+        <h4>Manage Application Types</h4>
         <hr>
     </div>
     <div class="panel-body">
         <div class="row no-margin">
             <div class="col-lg-12 ">
                 <div class="row">
-                    <button class="btn  btn-default pull-right"><i class="fa fa-lock"></i>
-                        Generate code
-                    </button>
+                    <a ui-sref="app.management.addApplicationTypes"
+                       class="btn btn-success pull-right">
+                        <i class="fa fa-plus"></i> Add new application type</a>
                 </div>
                 <div class="no-more-tables">
                     <table class="table table-striped mb0">
                         <thead>
                         <tr>
                             <th class="text-center">Name</th>
-                            <th class="text-center">Owner</th>
-                            <th class="text-center">Status</th>
+                            <th class="text-center">agent</th>
                             <th class="text-center" colspan="3"
                                 style="text-align: center">Actions
                             </th>
@@ -30,29 +29,26 @@
                                          size="24"></spinner>
                             </td>
                         </tr>
-                        <tr ng-repeat="application in ctrl.applications"
+                        <tr ng-repeat="appType in ctrl.appTypes"
                             class="text-center"
-
                         >
                             <td data-title="Name" data-label="Name">
-                                [[application.name]]
+                                [[appType.name]]
                             </td>
-                            <td data-title="Owner" data-label="Owner">
-                                [[application.owner.name]]
-                            </td>
-                            <td data-title="Status" data-label="Status">
-                                <button data-ng-class="application.active ? 'btn btn-danger' : 'btn btn-success'"
-                                        ng-click="ctrl.handleOnToggleStatus(application)">
-                                    [[application.active ? 'Deactivate' : 'Activate']]
-                                </button>
+                            <td data-title="Agent" data-label="Agent">
+                                [[appType.agent]]
                             </td>
                             <td data-title="Actions" data-label="Actions"
                                 class="text-center">
+                                <a class="btn btn-warning"
+                                   ui-sref="app.management.editApplicationTypes({id:appType.id})">
+                                    Edit
+                                </a>
                                 <button class="btn btn-danger"
-                                        ng-click="ctrl.handleOnDelete(application)">
+                                        ng-click="ctrl.handleOnDelete(appType.id)">
                                     Delete
                                     <spinner
-                                            is-loading="ctrl.ui['isDeleting'+application.id]"></spinner>
+                                            is-loading="ctrl.ui['isDeleting'+appType.id]"></spinner>
                                 </button>
                             </td>
                         </tr>
