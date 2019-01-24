@@ -53,7 +53,7 @@
             },
             enable: function (id, message) {
                 return $http.put(
-                    CONFIG.BASE_URL + 'api/user/' + id + '/enabled',
+                    CONFIG.BASE_URL + 'api/user/' + id + '/lock-toggle',
                     {message: message}
                 );
             }

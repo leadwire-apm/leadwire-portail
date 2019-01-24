@@ -12,3 +12,4 @@ parameters:
     app_description: 'LeadWire APM'
     github_client_id: null
     super_admin_username: admin
+    default_lock_message: 'Your account has been locked'

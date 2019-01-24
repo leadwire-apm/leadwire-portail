@@ -11,6 +11,7 @@ use GuzzleHttp\Client;
 use Psr\Log\LoggerInterface;
 use Ramsey\Uuid\Uuid;
 use Symfony\Component\Config\Definition\Exception\Exception;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use \Firebase\JWT\JWT;
 
 class AuthService
@@ -66,48 +67,47 @@ class AuthService
      * @param array $params
      * @param string $githubAccessTokenUrl
      * @param string $githubUserAPI
-     *
      */
     public function githubProvider(array $params, string $githubAccessTokenUrl, string $githubUserAPI)
     {
         $client = new Client();
-        try {
-            $responseGithub = $client->request(
-                'GET',
-                $githubAccessTokenUrl . '?' . http_build_query($params)
-            )->getBody();
+        $responseGithub = $client->request(
+            'GET',
+            $githubAccessTokenUrl . '?' . http_build_query($params)
+        )->getBody();
 
-            /* parse the response as array */
-            $res = $client->request(
-                'GET',
-                $githubUserAPI . '?' . $responseGithub,
-                [
-                    'headers' => ['User-Agent' => 'leadwire']]
-            )->getBody();
+        /* parse the response as array */
+        $res = $client->request(
+            'GET',
+            $githubUserAPI . '?' . $responseGithub,
+            [
+                'headers' => ['User-Agent' => 'leadwire']]
+        )->getBody();
 
-            $data = json_decode($res, true);
+        $data = json_decode($res, true);
 
-            $user = $this->userManager->getOneBy(
-                [
-                    'username' => $data['login'],
-                ]
-            );
+        $user = $this->userManager->getOneBy(
+            [
+                'username' => $data['login'],
+            ]
+        );
 
-            if ($user === null) {
-                $user = $this->addUser($data);
+        if ($user === null) {
+            $user = $this->addUser($data);
 
-                if ($user !== false) {
-                    $this->ldapService->createUserEntry($user->getUuid());
-                    $this->elastic->resetUserIndexes($user);
-                    $this->elastic->createDefaultApplications($user);
-                }
+            if ($user !== false) {
+                $this->ldapService->createUserEntry($user->getUuid());
+                $this->elastic->resetUserIndexes($user);
+                $this->elastic->createDefaultApplications($user);
             }
-
-            return $user;
-        } catch (\Exception $e) {
-            $this->logger->critical("Exception on User creation ", ['exception' => $e]);
-            return false;
         }
+
+        // Check if user has been deleted
+        if ($user->isDeleted() === true) {
+            throw new AccessDeniedHttpException("User is deleted");
+        }
+
+        return $user;
     }
 
     /**

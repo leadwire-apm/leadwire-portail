@@ -3,18 +3,18 @@
 namespace AppBundle\Service;
 
 use AppBundle\Document\User;
-use Psr\Log\LoggerInterface;
 use AppBundle\Manager\UserManager;
 use ATS\EmailBundle\Document\Email;
-use Symfony\Component\Routing\Router;
-use JMS\Serializer\SerializerInterface;
-use ATS\PaymentBundle\Service\PlanService;
-use JMS\Serializer\DeserializationContext;
-use ATS\PaymentBundle\Service\Subscription;
-use ATS\PaymentBundle\Service\CustomerService;
-use Symfony\Component\Routing\RouterInterface;
 use ATS\EmailBundle\Service\SimpleMailerService;
+use ATS\PaymentBundle\Service\CustomerService;
+use ATS\PaymentBundle\Service\PlanService;
+use ATS\PaymentBundle\Service\Subscription;
+use JMS\Serializer\DeserializationContext;
+use JMS\Serializer\SerializerInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Routing\Router;
+use Symfony\Component\Routing\RouterInterface;
 
 /**
  * Service class for User entities
@@ -395,6 +395,34 @@ class UserService
             $user->setDeleted(true);
             $this->userManager->update($user);
 
+            $isSuccessful = true;
+        }
+
+        return $isSuccessful;
+    }
+
+    /**
+     * Toggles Lock staus for a given user
+     *
+     * @param string $id
+     * @param string $lockMessage
+     *
+     * @return boolean
+     */
+    public function lockToggle(string $id, string $lockMessage): bool
+    {
+        $isSuccessful = false;
+
+        $user = $this->userManager->getOneBy(['id' => $id]);
+
+        if ($user instanceof User) {
+            $user->toggleLock();
+            if ($user->isLocked() === true) {
+                // It's a lock operation --> Update the lock message if any
+                $user->setLockMessage($lockMessage);
+            }
+
+            $this->userManager->update($user);
             $isSuccessful = true;
         }
 
