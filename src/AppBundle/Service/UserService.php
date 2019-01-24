@@ -3,17 +3,18 @@
 namespace AppBundle\Service;
 
 use AppBundle\Document\User;
+use Psr\Log\LoggerInterface;
 use AppBundle\Manager\UserManager;
 use ATS\EmailBundle\Document\Email;
-use ATS\EmailBundle\Service\SimpleMailerService;
-use ATS\PaymentBundle\Service\CustomerService;
-use ATS\PaymentBundle\Service\PlanService;
-use ATS\PaymentBundle\Service\Subscription;
-use JMS\Serializer\DeserializationContext;
-use JMS\Serializer\SerializerInterface;
-use Psr\Log\LoggerInterface;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\Router;
+use JMS\Serializer\SerializerInterface;
+use ATS\PaymentBundle\Service\PlanService;
+use JMS\Serializer\DeserializationContext;
+use ATS\PaymentBundle\Service\Subscription;
+use ATS\PaymentBundle\Service\CustomerService;
+use Symfony\Component\Routing\RouterInterface;
+use ATS\EmailBundle\Service\SimpleMailerService;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * Service class for User entities
@@ -42,7 +43,7 @@ class UserService
     private $mailer;
 
     /**
-     * @var Router
+     * @var RouterInterface
      */
     private $router;
 
@@ -73,7 +74,7 @@ class UserService
      * @param SerializerInterface $serializer
      * @param LoggerInterface $logger
      * @param SimpleMailerService $mailer
-     * @param Router $router
+     * @param RouterInterface $router
      * @param CustomerService $customerService
      * @param Subscription $subscriptionService
      * @param PlanService $planService
@@ -83,7 +84,7 @@ class UserService
         SerializerInterface $serializer,
         LoggerInterface $logger,
         SimpleMailerService $mailer,
-        Router $router,
+        RouterInterface $router,
         CustomerService $customerService,
         Subscription $subscriptionService,
         PlanService $planService,

@@ -1,25 +1,26 @@
-<?php declare(strict_types=1);
+<?php declare (strict_types = 1);
 
 namespace ATS\UserBundle\Command;
 
+use ATS\UserBundle\Command\UserManagementBaseCommand;
 use ATS\UserBundle\Document\User;
 use ATS\UserBundle\Manager\UserManager;
-use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Console\Input\InputInterface;
-use ATS\UserBundle\Command\UserManagementBaseCommand;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Security\Core\Encoder\EncoderFactory;
+use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 
 class ChangePasswordCommand extends UserManagementBaseCommand
 {
 
     /**
-     * @var EncoderFactory
+     * @var EncoderFactoryInterface
      */
     private $encoderFactory;
 
-    public function __construct(UserManager $userManager, EncoderFactory $encoderFactory)
+    public function __construct(UserManager $userManager, EncoderFactoryInterface $encoderFactory)
     {
         $this->cmdOperation = 'change-password';
 

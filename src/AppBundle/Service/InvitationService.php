@@ -12,6 +12,7 @@ use JMS\Serializer\SerializerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\Router;
+use Symfony\Component\Routing\RouterInterface;
 
 /**
  * Service class for Invitation entities
@@ -40,7 +41,7 @@ class InvitationService
     private $mailer;
 
     /**
-     * @var Router
+     * @var RouterInterface
      */
     private $router;
 
@@ -75,7 +76,7 @@ class InvitationService
         SerializerInterface $serializer,
         LoggerInterface $logger,
         SimpleMailerService $mailer,
-        Router $router,
+        RouterInterface $router,
         LdapService $ldap,
         ApplicationService $applicationService,
         string $sender

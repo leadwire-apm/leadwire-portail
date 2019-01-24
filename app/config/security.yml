@@ -45,7 +45,8 @@ security:
                path: user_security_update_access_token
                always_remember_me: true
         api:
-            pattern:    ^(/core)?/%internal_api_prefix%((?!/translation|/context))
+            pattern:  ^(/core)?/%internal_api_prefix%((?!/translation|/context))
+            provider: simple_user_provider
             stateless: true
             guard:
                 authenticators:
