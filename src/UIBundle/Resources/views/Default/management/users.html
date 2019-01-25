@@ -52,13 +52,19 @@
                                         ng-click="ctrl.goDetail(user.id)">
                                     Detail
                                 </button>
-                                <button class="btn btn-danger"
+                                <button data-ng-class="ctrl.isAdmin(user) ? 'btn btn-danger' : 'btn btn-success'"
+                                        ng-click="ctrl.handleChangePermission(user)">
+                                    [[ctrl.isAdmin(user) ? 'Revoke ' : 'Promote']]
+                                    <spinner
+                                            is-loading="ctrl.ui['isSaving'+user.id]"></spinner>
+                                </button>
+                                <button class="btn bg-red"
                                         ng-click="ctrl.handleDeleteUser(user.id)">
-                                    Delete
+                                    <i class="fa fa-trash"></i> Delete
                                     <spinner
                                             is-loading="ctrl.ui['isDeleting'+user.id]"></spinner>
-
                                 </button>
+
                             </td>
                         </tr>
                         </tbody>

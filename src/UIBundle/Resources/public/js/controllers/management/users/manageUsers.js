@@ -19,6 +19,7 @@
             $state,
         ) {
             var vm = this;
+            var ROLE_ADMIN = 'ROLE_ADMIN';
 
             vm.flipActivityIndicator = function (key) {
                 vm.ui[key] = !vm.ui[key];
@@ -76,6 +77,46 @@
                 }
             };
 
+            vm.isAdmin = function (admin) {
+                return (admin && admin.roles && admin.roles.indexOf(ROLE_ADMIN) !==
+                    -1);
+            };
+
+            vm.handleChangePermission = function (admin) {
+                swal(MESSAGES_CONSTANTS.SWEET_ALERT_VALIDATION())
+                    .then(function (willDelete) {
+                        if (willDelete) {
+                            vm.changePermission(admin);
+                            swal.close();
+                        } else {
+                            swal.close();
+                        }
+                    });
+            };
+
+            vm.changePermission = function (admin) {
+                vm.flipActivityIndicator('isSaving' + admin.id);
+                const user = angular.extend({}, admin);
+                if (vm.isAdmin(user)) {
+                    user.roles = user.roles.filter(function (role) {
+                        return role !== ROLE_ADMIN;
+                    });
+                } else {
+                    user.roles.push(ROLE_ADMIN);
+                }
+                UserService.update(
+                    { id: user.id, email: user.email, roles: user.roles })
+                    .then(function (response) {
+                        toastr.success(MESSAGES_CONSTANTS.SUCCESS);
+                        vm.flipActivityIndicator('isSaving' + admin.id);
+                    })
+                    .then(vm.loadUsers)
+                    .catch(function (error) {
+                        toastr.error(MESSAGES_CONSTANTS.ERROR);
+                        vm.flipActivityIndicator('isSaving' + admin.id);
+                    });
+            };
+
             vm.toggleUserStatus = function (id, message) {
                 return UserService.toggleStatus(id, message)
                     .then(function (response) {
@@ -101,6 +142,7 @@
                         vm.users = [];
                     });
             };
+
             vm.goDetail = function (id) {
                 $state.go('app.management.userDetail', {
                     id: id,

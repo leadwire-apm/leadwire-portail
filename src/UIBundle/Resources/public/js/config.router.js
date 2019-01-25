@@ -139,12 +139,11 @@ angular.module('leadwireApp')
                     templateUrl: 'application/list.html',
                     resolve: {
                         permissions: loginRequired,
-                        deps: [
+                        menu: updateMenuItems('SETTINGS'),
+                        beforeMount: [
                             '$rootScope',
-                            'MenuFactory',
                             'UserService',
-                            function ($rootScope, MenuFactory, UserService) {
-                                $rootScope.menus = MenuFactory.get('SETTINGS');
+                            function ($rootScope, UserService) {
                                 UserService.handleFirstLogin();
                                 return Promise.resolve();
                             },
@@ -189,14 +188,7 @@ angular.module('leadwireApp')
                     controllerAs: 'ctrl',
                     resolve: {
                         permissions: loginRequired,
-                        deps: [
-                            '$rootScope',
-                            'MenuFactory',
-                            function ($rootScope, MenuFactory) {
-                                $rootScope.menus = MenuFactory.get('SETTINGS');
-                                return Promise.resolve();
-                            },
-                        ],
+                        menu: updateMenuItems('SETTINGS'),
                     },
                 })
                 .state('app.editPaymentMethod', {
@@ -206,14 +198,7 @@ angular.module('leadwireApp')
                     controllerAs: 'ctrl',
                     resolve: {
                         permissions: loginRequired,
-                        deps: [
-                            '$rootScope',
-                            'MenuFactory',
-                            function ($rootScope, MenuFactory) {
-                                $rootScope.menus = MenuFactory.get('SETTINGS');
-                                return Promise.resolve();
-                            },
-                        ],
+                        menu: updateMenuItems('SETTINGS'),
                     },
                 })
                 .state('app.updateSubscription', {
@@ -223,14 +208,7 @@ angular.module('leadwireApp')
                     controllerAs: 'ctrl',
                     resolve: {
                         permissions: loginRequired,
-                        deps: [
-                            '$rootScope',
-                            'MenuFactory',
-                            function ($rootScope, MenuFactory) {
-                                $rootScope.menus = MenuFactory.get('SETTINGS');
-                                return Promise.resolve();
-                            },
-                        ],
+                        menu: updateMenuItems('SETTINGS'),
                     },
                 })
                 .state('app.dashboard', {
@@ -241,7 +219,7 @@ angular.module('leadwireApp')
                     templateUrl: 'dashboard.html',
                     resolve: {
                         permissions: loginRequired,
-                        deps: [
+                        beforeMount: [
                             'MenuFactory',
                             '$rootScope',
                             '$localStorage',
@@ -301,16 +279,6 @@ angular.module('leadwireApp')
                         menu: updateMenuItems('MANAGEMENT'),
                     },
                     controller: 'DetailUserController',
-                    controllerAs: 'ctrl',
-                })
-                .state('app.management.admins', {
-                    url: '/admins/list',
-                    templateUrl: 'management/admins.html',
-                    resolve: {
-                        permissions: adminRequired,
-                        menu: updateMenuItems('MANAGEMENT'),
-                    },
-                    controller: 'ManageAdminsController',
                     controllerAs: 'ctrl',
                 })
                 .state('app.management.plans', {

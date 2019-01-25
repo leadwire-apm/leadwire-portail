@@ -1,6 +1,6 @@
 (function (angular) {
-    angular.module('leadwireApp').
-        factory('ApplicationFactory', function ($http, CONFIG) {
+    angular.module('leadwireApp')
+        .factory('ApplicationFactory', function ($http, CONFIG) {
             return {
 
                 /**
@@ -15,7 +15,7 @@
                  * @returns {Promise}
                  */
                 findAll: function () {
-                    return $http.get(CONFIG.BASE_URL + 'api/app/all');
+                    return $http.get(CONFIG.BASE_URL + 'api/app/list');
                 },
                 /**
                  *
@@ -72,9 +72,9 @@
                  *
                  * @returns {Promise}
                  */
-                toggleStatus: function (id) {
+                toggleEnabled: function (id) {
                     return $http.put(
-                        CONFIG.BASE_URL + 'api/app/' + id + '/lockToggle',
+                        CONFIG.BASE_URL + 'api/app/' + id + '/lock-toggle',
                     );
                 },
                 /**

@@ -32,6 +32,8 @@
     {% stylesheets 'bundles/ui/css/*' %}
         <link rel="stylesheet" href="{{ asset_url }}"/>
     {% endstylesheets %}
+    <link rel="stylesheet" href="bundles/ui/css/custom.css"/>
+
 </head>
 <body data-ng-controller="AppCtrl" class="[[ app.layout.sidebarTheme ]] [[ app.layout.headerTheme ]]">
 
@@ -210,9 +212,7 @@
     {% include 'management/userApplications.html' %}
 </script>
 
-<script type="text/ng-template" id="management/admins.html">
-    {% include 'management/admins.html' %}
-</script>
+
 <script type="text/ng-template" id="management/plans.html">
     {% include 'management/plans.html' %}
 </script>
@@ -379,7 +379,6 @@
 
         'bundles/ui/js/controllers/management/users/manageUsers.js'
         'bundles/ui/js/controllers/management/users/userDetail.js'
-        'bundles/ui/js/controllers/management/users/manageAdmins.js'
         'bundles/ui/js/controllers/management/applications/manageApplications.js'
         'bundles/ui/js/controllers/management/plans/managePlans.js'
         'bundles/ui/js/controllers/management/applicationTypes/manageApplicationTypes.js'

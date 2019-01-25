@@ -1,4 +1,4 @@
-(function(angular) {
+(function (angular) {
     angular
         .module('leadwireApp')
         .service('DashboardService', [
@@ -7,7 +7,7 @@
             '$rootScope',
             '$localStorage',
             '$state',
-            DashboardServiceFN
+            DashboardServiceFN,
         ]);
 
     /**
@@ -20,12 +20,12 @@
      * @param $state
      * @constructor
      */
-    function DashboardServiceFN(
+    function DashboardServiceFN (
         ApplicationFactory,
         MenuFactory,
         $rootScope,
         $localStorage,
-        $state
+        $state,
     ) {
         var service = this;
 
@@ -33,22 +33,22 @@
          *
          * @param dashboards
          */
-        service.updateSidebarMenus = function(dashboards) {
+        service.updateSidebarMenus = function (dashboards) {
             //change sidebar menu using Menu factory
             $localStorage.currentMenu = MenuFactory.set(
                 dashboards,
-                function(menu) {
+                function (menu) {
                     return menu.name;
                 },
-                function(menu) {
+                function (menu) {
                     return $state.href('app.dashboard.home', {
                         id: menu.id,
-                        tenant: null
+                        tenant: null,
                     });
                 },
-                function(menu) {
+                function (menu) {
                     return menu.icon || 'fa fa-dashboard';
-                }
+                },
             );
             $rootScope.menus = $localStorage.currentMenu;
         };
@@ -58,28 +58,28 @@
          * @param appId
          * @returns {Promise}
          */
-        service.fetchDashboardsByAppId = function(appId) {
-            return new Promise(function(resolve, reject) {
+        service.fetchDashboardsByAppId = function (appId) {
+            return new Promise(function (resolve, reject) {
                 ApplicationFactory.findMyDashboard(appId)
-                    .then(function(response) {
+                    .then(function (response) {
                         $localStorage.dashboards = response.data.Default;
                         //inform other controller that we changed context
                         $rootScope.$broadcast('set:contextApp', appId);
                         $rootScope.$broadcast('set:customMenus', {
                             withCustom: !!Object.keys(
-                                response.data.Custom || {}
+                                response.data.Custom || {},
                             ).length,
-                            list: response.data.Custom || {}
+                            list: response.data.Custom || {},
                         });
                         service.updateSidebarMenus(response.data.Default);
                         resolve({
                             appId: appId,
                             dashboards: response.data.Default,
                             custom: response.data.Custom,
-                            path:'app.dashboard.home'
+                            path: 'app.dashboard.home',
                         });
                     })
-                    .catch(function(error) {
+                    .catch(function (error) {
                         console.log('Error', error);
                         reject(error);
                     });

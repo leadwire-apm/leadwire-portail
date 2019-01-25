@@ -10,7 +10,7 @@
                         return Menus[menuKey]
                             ? Menus[menuKey].map(function (menu) {
                                 return angular.extend({}, menu, {
-                                    route: $state.href(menu.route)
+                                    route: $state.href(menu.route),
                                 });
                             })
                             : [];
@@ -19,79 +19,80 @@
                         menus,
                         labelCallback,
                         routeCallback,
-                        iconCallback
+                        iconCallback,
                     ) {
                         try {
                             return menus.map(function (menu) {
                                 return {
                                     label: labelCallback(menu),
                                     route: routeCallback(menu),
-                                    icon: iconCallback(menu)
+                                    icon: iconCallback(menu),
                                 };
                             });
-                        } catch (e) {
+                        }
+                        catch (e) {
                             return [];
                         }
-                    }
+                    },
                 };
-            }
+            },
         ])
         .constant('Menus', {
             DASHBOARD: [
                 {
                     icon: 'fa fa-dashboard',
                     label: 'Dashboard',
-                    route: 'app.realUserMonitoring'
+                    route: 'app.realUserMonitoring',
                 },
                 {
                     icon: 'fa fa-eye',
                     label: 'Real User Monitoring',
-                    route: 'app.syntheticMonitoring'
+                    route: 'app.syntheticMonitoring',
                 },
                 {
                     icon: 'fa fa-exchange',
                     label: 'Synthetic Monitoring',
-                    route: 'app.infrastructureMonitoring'
+                    route: 'app.infrastructureMonitoring',
                 },
                 {
                     icon: 'fa fa-search',
                     label: 'Infrastructure Monitoring',
-                    route: 'app.customReports '
+                    route: 'app.customReports ',
                 },
                 {
                     icon: 'fa fa-file-text',
                     label: 'Custom Reports ',
-                    route: 'app.realUserMonitoring'
+                    route: 'app.realUserMonitoring',
                 },
                 {
                     icon: 'fa fa-table',
                     label: 'Data Browser',
-                    route: 'app.realUserMonitoring'
+                    route: 'app.realUserMonitoring',
                 },
                 {
                     icon: 'fa fa-briefcase',
                     label: 'Business Transactions',
-                    route: 'app.realUserMonitoring'
+                    route: 'app.realUserMonitoring',
                 },
                 {
                     icon: 'fa fa-sitemap',
                     label: 'Architecture Discovery',
-                    route: 'app.realUserMonitoring'
+                    route: 'app.realUserMonitoring',
                 },
                 {
                     icon: 'fa fa-exclamation-triangle',
                     label: 'Alerts',
-                    route: 'app.realUserMonitoring'
+                    route: 'app.realUserMonitoring',
                 },
                 {
                     icon: 'fa fa-book',
                     label: 'Documentation',
-                    route: 'app.realUserMonitoring'
+                    route: 'app.realUserMonitoring',
                 },
                 {
                     icon: 'fa fa-support',
                     label: 'Support',
-                    route: 'app.realUserMonitoring'
+                    route: 'app.realUserMonitoring',
                 },
                 {
                     icon: 'fa fa-gears',
@@ -99,59 +100,54 @@
                     children: [
                         {
                             route: 'app.administration.visualisations',
-                            label: 'Visualisations'
+                            label: 'Visualisations',
                         },
                         {
                             route: 'app.administration.reports',
-                            label: 'Reports'
-                        }
-                    ]
-                }
+                            label: 'Reports',
+                        },
+                    ],
+                },
             ],
             SETTINGS: [
                 {
                     route: 'app.user',
                     icon: 'fa fa-user',
-                    label: 'Profile'
+                    label: 'Profile',
                 },
                 {
                     route: 'app.applicationsList',
                     icon: 'fa fa-desktop',
-                    label: 'Applications'
+                    label: 'Applications',
                 },
                 {
                     route: 'app.billingList',
                     icon: 'fa fa-money',
-                    label: 'Billing'
-                }
+                    label: 'Billing',
+                },
 
             ],
             MANAGEMENT: [
                 {
                     route: 'app.management.users',
                     icon: 'fa fa-user',
-                    label: 'Manage Users'
-                },
-                {
-                    route: 'app.management.admins',
-                    icon: 'fa fa-lock',
-                    label: 'Manage Admins'
+                    label: 'Manage Users',
                 },
                 {
                     route: 'app.management.plans',
                     icon: 'fa fa-money',
-                    label: 'Manage plans'
+                    label: 'Manage plans',
                 },
                 {
                     route: 'app.management.applications',
                     icon: 'fa fa-desktop',
-                    label: 'Manage applications'
+                    label: 'Manage applications',
                 },
                 {
                     route: 'app.management.applicationTypes',
                     icon: 'fa fa-desktop',
-                    label: 'Manage types'
+                    label: 'Manage types',
                 },
-            ]
+            ],
         });
 })(window.angular);
