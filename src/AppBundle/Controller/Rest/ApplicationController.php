@@ -44,13 +44,18 @@ class ApplicationController extends Controller
      *
      * @return Response
      */
-    public function getDashboardsAction(Request $request, ApplicationService $applicationService, ElasticSearchService $elastic, $id)
-    {
+    public function getApplicationDashboardsAction(
+        Request $request,
+        ApplicationService $applicationService,
+        ElasticSearchService $elastic,
+        $id
+    ) {
         $app = $applicationService->getApplication($id);
         if ($app === null) {
-            throw new HttpException(404, "App not Found");
+            throw new HttpException(Response::HTTP_NOT_FOUND, "App not Found");
         } else {
-            return $this->json($elastic->getDashboads($app));
+            $dashboards = $elastic->getDashboads($app);
+            return $this->renderResponse($dashboards);
         }
     }
 
@@ -68,7 +73,7 @@ class ApplicationController extends Controller
         $app = $applicationService->getApplication($id);
 
         if ($app === null) {
-            throw new HttpException(404);
+            throw new HttpException(Response::HTTP_NOT_FOUND);
         }
 
         return $this->renderResponse(
@@ -87,14 +92,14 @@ class ApplicationController extends Controller
      *
      * @return Response
      */
-    public function activationAppAction(Request $request, ApplicationService $applicationService, $id)
+    public function activateAppAction(Request $request, ApplicationService $applicationService, $id)
     {
         $app = $applicationService->activateApplication($id, json_decode($request->getContent()));
 
         if ($app !== null) {
             return $this->renderResponse($app, Response::HTTP_OK, ["Default"]);
         } else {
-            return $this->renderResponse($app, 400, ["Default"]);
+            return $this->renderResponse($app, Response::HTTP_BAD_REQUEST, ["Default"]);
         }
     }
 
@@ -192,7 +197,7 @@ class ApplicationController extends Controller
         return $this->renderResponse(null, Response::HTTP_OK);
     }
 
-    private function exception($message, $status = 400)
+    private function exception($message, $status = Response::HTTP_BAD_REQUEST)
     {
         return $this->renderResponse(array('message' => $message), $status);
     }

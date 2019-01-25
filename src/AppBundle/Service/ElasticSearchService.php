@@ -26,14 +26,20 @@ class ElasticSearchService
     private $logger;
 
     /**
+     * @var string
+     */
+    private $env;
+    /**
      * ElasticSearchService constructor.
      * @param LoggerInterface $logger
      * @param array $settings
+     * @param string $env
      */
-    public function __construct(LoggerInterface $logger, array $settings = [])
+    public function __construct(LoggerInterface $logger, array $settings = [], string $env)
     {
         $this->settings = $settings;
         $this->logger = $logger;
+        $this->env = $env;
     }
 
     /**
@@ -54,12 +60,17 @@ class ElasticSearchService
      */
     protected function getRawDashboards(Application $app)
     {
-        $client = new Client(['defaults' => ['verify' => false]]);
-        // for prod use only
-        $tenants = $app->getIndexes();
-        // for dev use only
-        //        $tenants = ["default" => "apptest", 'user' => "adm-portail", "shared" => "share_$appUuid"];
         $res = [];
+
+        $client = new Client(['defaults' => ['verify' => false]]);
+
+        // for prod use only
+        if ($this->env === 'prod') {
+            $tenants = $app->getIndexes();
+        } else {
+            // for dev use only
+            $tenants = ["apptest", "adm-portail", "share_" . $app->getUuid()];
+        }
 
         foreach ($tenants as $index => $tenant) {
             try {

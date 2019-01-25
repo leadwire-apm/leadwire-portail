@@ -86,16 +86,15 @@ class AuthService
 
         $data = json_decode($res, true);
 
-        $user = $this->userManager->getOneBy(
-            [
-                'username' => $data['login'],
-            ]
-        );
+        $user = $this->userManager->getOneBy(['username' => $data['login']]);
 
         if ($user === null) {
             $user = $this->addUser($data);
 
             if ($user !== false) {
+                // New user has been created.
+                // Should create LDAP & ElasticSearch entries
+
                 $this->ldapService->createUserEntry($user->getUuid());
                 $this->elastic->resetUserIndexes($user);
                 $this->elastic->createDefaultApplications($user);

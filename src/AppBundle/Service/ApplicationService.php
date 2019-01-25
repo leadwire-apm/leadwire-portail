@@ -46,7 +46,7 @@ class ApplicationService
     /**
      * @var ApplicationTypeService
      */
-    private $apService;
+    private $appTypeService;
 
     /**
      * Constructor
@@ -56,7 +56,7 @@ class ApplicationService
      * @param LoggerInterface $logger
      * @param LdapService $ldapService
      * @param KibanaService $kibana
-     * @param ApplicationTypeService $apService
+     * @param ApplicationTypeService $appTypeService
      */
     public function __construct(
         ApplicationManager $applicationManager,
@@ -64,14 +64,14 @@ class ApplicationService
         LoggerInterface $logger,
         LdapService $ldapService,
         KibanaService $kibana,
-        ApplicationTypeService $apService
+        ApplicationTypeService $appTypeService
     ) {
         $this->applicationManager = $applicationManager;
         $this->serializer = $serializer;
         $this->logger = $logger;
         $this->ldapService = $ldapService;
         $this->kibana = $kibana;
-        $this->apService = $apService;
+        $this->appTypeService = $appTypeService;
     }
 
     /**
@@ -202,18 +202,23 @@ class ApplicationService
 
         /** @var string $applicationTypeId */
         $applicationTypeId = $app->getType()->getId();
-        $ap = $this->apService->getApplicationType($applicationTypeId);
+        $ap = $this->appTypeService->getApplicationType($applicationTypeId);
         $app->setType($ap);
         $this->applicationManager->update($app);
-        // if ($this->ldapService->createAppEntry($user->getIndex(), $app->getUuid()) === true &&
-        //     $this->kibana->createDashboards($app) === true) {
-        //     return $app;
-        // } else {
-        //     $this->applicationManager->delete($app);
-        //     $this->logger->critical("Application was removed due to error in Ldap/Kibana or Elastic search");
 
-        //     return null;
-        // }
+        $ldapEntryCreationStatus = $this->ldapService->createAppEntry($user->getIndex(), $app->getUuid());
+
+        // !Dashboard creation is bogus
+        $dashboardsCreationStatus = true ; //$this->kibana->createDashboards($app);
+
+        if ( $ldapEntryCreationStatus === true && $dashboardsCreationStatus === true) {
+            return $app;
+        } else {
+            $this->applicationManager->delete($app);
+            $this->logger->critical("Application was removed due to error in Ldap/Kibana or Elastic search");
+
+            return null;
+        }
 
         return $app;
     }

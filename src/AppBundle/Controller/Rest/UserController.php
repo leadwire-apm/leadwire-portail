@@ -45,6 +45,22 @@ class UserController extends Controller
     }
 
     /**
+     * @Route("/{id}/get", methods="GET")
+     *
+     * @param Request $request
+     * @param UserService $userService
+     * @param string $id
+     *
+     * @return Response
+     */
+    public function getUserAction(Request $request, UserService $userService, $id)
+    {
+        $user = $userService->getUser($id);
+
+        return $this->renderResponse($user);
+    }
+
+    /**
      * @Route("/{id}/update", methods="PUT")
      *
      * @param Request $request
