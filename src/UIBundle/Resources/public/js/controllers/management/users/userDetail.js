@@ -6,18 +6,18 @@
             'toastr',
             'MESSAGES_CONSTANTS',
             '$state',
-            DetailUserCtrlFN
+            DetailUserCtrlFN,
         ]);
 
     /**
      * Handle add new application logic
      *
      */
-    function DetailUserCtrlFN(
+    function DetailUserCtrlFN (
         UserService,
         toastr,
         MESSAGES_CONSTANTS,
-        $state
+        $state,
     ) {
         var vm = this;
 
@@ -27,22 +27,29 @@
 
         vm.getUser = function (id) {
             vm.flipActivityIndicator('isLoading');
-            UserService.detail(id).then(function (response) {
-                vm.flipActivityIndicator('isLoading');
-                vm.user = response.data;
-            }).catch(function (err) {
-                vm.flipActivityIndicator('isLoading');
-                // TODO Remove This
-                vm.user = {
-                    id: 1,
-                    name: 'Ibra',
-                    email: 'ibra@gmail.com',
-                    active: true,
-                    role: ["ROLE_USER", "ROLE_ADMIN"],
-                    plans: [{id: 1, name: 'Premium'}, {id: 2, name: 'BASIC'}],
-                    applications: [{name: 'App 1 '}, {name: 'App 2'}, {name: 'App 3'}]
-                }
-            })
+            UserService.get(id)
+                .then(function (user) {
+                    vm.flipActivityIndicator('isLoading');
+                    vm.user = user;
+                })
+                .catch(function (err) {
+                    vm.flipActivityIndicator('isLoading');
+                    // TODO Remove This
+                    vm.user = {
+                        id: 1,
+                        name: 'Ibra',
+                        email: 'ibra@gmail.com',
+                        active: true,
+                        role: ['ROLE_USER', 'ROLE_ADMIN'],
+                        plans: [
+                            { id: 1, name: 'Premium' },
+                            { id: 2, name: 'BASIC' }],
+                        applications: [
+                            { name: 'App 1 ' },
+                            { name: 'App 2' },
+                            { name: 'App 3' }],
+                    };
+                });
         };
 
         vm.init = function () {
@@ -56,10 +63,10 @@
                     isLoading: false,
                 },
                 user: null,
-                userId: userId
+                userId: userId,
             });
-            vm.getUser(userId)
-        }
+            vm.getUser(userId);
+        };
 
     }
 })(window.angular);

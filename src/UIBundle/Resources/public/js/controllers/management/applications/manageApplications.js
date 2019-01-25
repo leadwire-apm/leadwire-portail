@@ -2,6 +2,7 @@
     angular.module('leadwireApp')
         .controller('ManageApplicationsController', [
             'ApplicationService',
+            'CodeService',
             'toastr',
             'MESSAGES_CONSTANTS',
             '$state',
@@ -14,6 +15,7 @@
      */
     function ManageApplicationsCtrlFN (
         ApplicationService,
+        CodeService,
         toastr,
         MESSAGES_CONSTANTS,
         $state,
@@ -25,7 +27,7 @@
         };
 
         vm.handleOnDelete = function (application) {
-            swal(MESSAGES_CONSTANTS.SWEET_ALERT_VALIDATION)
+            swal(MESSAGES_CONSTANTS.SWEET_ALERT_VALIDATION())
                 .then(function (willDelete) {
                     if (willDelete) {
                         vm.deleteApplication(application.id);
@@ -37,10 +39,27 @@
         };
 
         vm.handleOnToggleStatus = function (application) {
-            swal(MESSAGES_CONSTANTS.SWEET_ALERT_VALIDATION)
+            swal(MESSAGES_CONSTANTS.SWEET_ALERT_VALIDATION())
                 .then(function (willToggle) {
                     if (willToggle) {
                         vm.toggleApplicationStatus(application.id);
+                    } else {
+                        swal.close();
+                    }
+                });
+        };
+
+        vm.generateCode = function () {
+            swal(MESSAGES_CONSTANTS.SWEET_ALERT_VALIDATION())
+                .then(function (willGenerate) {
+                    if (willGenerate) {
+                        CodeService.create()
+                            .then(function () {
+                                toastr.success(MESSAGES_CONSTANTS.SUCCESS);
+                            })
+                            .catch(function () {
+                                toastr.error(MESSAGES_CONSTANTS.ERROR);
+                            });
                     } else {
                         swal.close();
                     }

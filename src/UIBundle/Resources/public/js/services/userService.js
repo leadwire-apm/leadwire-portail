@@ -278,8 +278,12 @@
             return UserFactory.delete(id);
         };
 
-        service.detail = function (id) {
-            return UserFactory.get(id);
+        service.get = function (id) {
+            return UserFactory.get(id).then(function (response) {
+                return response.data
+            }).catch(function (error) {
+                throw new Error(error);
+            });
         };
 
         service.list = function () {
