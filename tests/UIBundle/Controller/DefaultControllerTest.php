@@ -6,6 +6,11 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class DefaultControllerTest extends WebTestCase
 {
+    /**
+     * @uses ATS\CoreBundle\Manager\AbstractManager::__construct
+     * @uses ATS\TranslationBundle\Manager\TranslationEntryManager::__construct
+     * @uses ATS\TranslationBundle\Twig\TranslationTwigExtension::__construct
+     */
     public function testIndex()
     {
         $client = static::createClient();
