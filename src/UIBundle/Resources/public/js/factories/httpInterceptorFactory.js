@@ -24,7 +24,6 @@
                             403) {
                             $localStorage.$reset();
                             $location.path('/login');
-                            console.log(response);
                             throw {
                                 data: response.data,
                                 error: new Error(MESSAGES_CONSTANTS.ERROR),

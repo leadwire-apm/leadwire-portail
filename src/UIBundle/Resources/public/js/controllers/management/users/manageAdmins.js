@@ -47,9 +47,7 @@
                 })
                 .catch(function (err) {
                     vm.flipActivityIndicator('isLoading');
-                    // TODO Remove this
                     vm.admins = [];
-
                 });
         };
 
@@ -59,7 +57,7 @@
         };
 
         vm.handleChangePermission = function (admin) {
-            swal(MESSAGES_CONSTANTS.SWEET_ALERT_VALIDATION)
+            swal(MESSAGES_CONSTANTS.SWEET_ALERT_VALIDATION())
                 .then(function (willDelete) {
                     if (willDelete) {
                         vm.changePermission(admin);

@@ -14,7 +14,7 @@
                  *
                  * @returns {Promise}
                  */
-                create: function (newPlan) {
+                new: function (newPlan) {
                     return $http.post(CONFIG.BASE_URL + 'api/plan/new', newPlan);
                 },
                 /**

@@ -25,7 +25,7 @@
         };
 
         vm.handleOnDelete = function (id) {
-            swal(MESSAGES_CONSTANTS.SWEET_ALERT_VALIDATION)
+            swal(MESSAGES_CONSTANTS.SWEET_ALERT_VALIDATION())
                 .then(function (willDelete) {
                     if (willDelete) {
                         vm.deleteType(id);

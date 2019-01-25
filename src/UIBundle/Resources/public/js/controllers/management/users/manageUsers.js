@@ -1,11 +1,12 @@
 (function (angular, swal) {
-        angular.module('leadwireApp').controller('ManageUsersController', [
-            'UserService',
-            'toastr',
-            'MESSAGES_CONSTANTS',
-            '$state',
-            ManageUsersCtrlFN,
-        ]);
+        angular.module('leadwireApp')
+            .controller('ManageUsersController', [
+                'UserService',
+                'toastr',
+                'MESSAGES_CONSTANTS',
+                '$state',
+                ManageUsersCtrlFN,
+            ]);
 
         /**
          * Handle add new application logic
@@ -24,19 +25,20 @@
             };
 
             vm.handleDeleteUser = function (id) {
-
-                swal(MESSAGES_CONSTANTS.SWEET_ALERT_VALIDATION).
-                    then(function (willDelete) {
+                swal(MESSAGES_CONSTANTS.SWEET_ALERT_VALIDATION())
+                    .then(function (willDelete) {
                         if (willDelete) {
                             vm.flipActivityIndicator('isDeleting' + id);
-                            UserService.delete(id).then(function (response) {
-                                vm.flipActivityIndicator('isDeleting' + id);
-                                toastr.success(MESSAGES_CONSTANTS.SUCCESS);
+                            UserService.delete(id)
+                                .then(function (response) {
+                                    vm.flipActivityIndicator('isDeleting' + id);
+                                    toastr.success(MESSAGES_CONSTANTS.SUCCESS);
 
-                            }).catch(function (err) {
-                                vm.flipActivityIndicator('isDeleting' + id);
-                                toastr.error(MESSAGES_CONSTANTS.ERROR);
-                            });
+                                })
+                                .catch(function (err) {
+                                    vm.flipActivityIndicator('isDeleting' + id);
+                                    toastr.error(MESSAGES_CONSTANTS.ERROR);
+                                });
                         } else {
                             swal.close();
                         }
@@ -44,61 +46,57 @@
             };
 
             vm.handleOnToggleLock = function (user) {
-                if (user.active) {
-                    swal({
-                        text: 'The message to show when the user tries to login',
-                        content: 'input',
-                        button: {
-                            text: 'Submit',
-                            closeModal: false,
-                        },
-                    }).then(function (message) {
-                        if (!message) {
-                            throw null;
-                        }
-                        return vm.toggleUserStatus(user.id, message);
-                    }).then(function (response) {
-                        swal({
-                            title: MESSAGES_CONSTANTS.SUCCESS,
+                if (user.locked) {
+                    // UnLock the user
+                    swal(MESSAGES_CONSTANTS.SWEET_ALERT_VALIDATION())
+                        .then(function (willDelete) {
+                            if (willDelete) {
+                                vm.toggleUserStatus(user.id);
+                            } else {
+                                swal.close();
+                            }
                         });
-                    }).catch(function (err) {
-                        console.log(err);
-                        if (err) {
-                            swal('Error', MESSAGES_CONSTANTS.ERROR,
-                                'error');
-                        } else {
-                            swal.stopLoading();
-                            swal.close();
-                        }
-                    });
 
                 } else {
-                    vm.toggleUserStatus(user.id);
+                    // Block the user
+                    swal(MESSAGES_CONSTANTS.SWEET_ALERT_WITH_INPUT(
+                        'Please enter a message to show when the user tries to login'))
+                        .then(function (message) {
+                            if (!message) {
+                                throw null;
+                            }
+                            return vm.toggleUserStatus(user.id, message);
+                        })
+                        .catch(function (err) {
+                            swal.close();
+                        });
                 }
-
             };
 
             vm.toggleUserStatus = function (id, message) {
-                return UserService.toggleStatus(id, message).
-                    then(function (response) {
+                return UserService.toggleStatus(id, message)
+                    .then(function (response) {
+                        toastr.success(MESSAGES_CONSTANTS.SUCCESS);
                         return response;
-                    }).
-                    catch(function (err) {
+                    })
+                    .then(vm.loadUsers)
+                    .catch(function (err) {
+                        toastr.error(MESSAGES_CONSTANTS.ERROR);
                         vm.flipActivityIndicator('isSaving');
                     });
             };
 
             vm.loadUsers = function () {
-
                 vm.flipActivityIndicator('isLoading');
-                UserService.list().then(function (users) {
-                    vm.flipActivityIndicator('isLoading');
-                    vm.users = users;
-                }).catch(function (err) {
-                    vm.flipActivityIndicator('isLoading');
-                    // TODO Remove This
-                    vm.users = [];
-                });
+                UserService.list()
+                    .then(function (users) {
+                        vm.flipActivityIndicator('isLoading');
+                        vm.users = users;
+                    })
+                    .catch(function (err) {
+                        vm.flipActivityIndicator('isLoading');
+                        vm.users = [];
+                    });
             };
             vm.goDetail = function (id) {
                 $state.go('app.management.userDetail', {
@@ -116,7 +114,6 @@
                 });
                 vm.loadUsers();
             };
-
         }
     }
 

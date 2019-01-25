@@ -1,4 +1,4 @@
-<?php declare (strict_types = 1);
+<?php declare (strict_types=1);
 
 namespace AppBundle\Service;
 
@@ -9,6 +9,7 @@ use JMS\Serializer\DeserializationContext;
 use JMS\Serializer\SerializerInterface;
 use Psr\Log\LoggerInterface;
 use Ramsey\Uuid\Uuid;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 /**
  * Service class for App entities
@@ -99,6 +100,7 @@ class ApplicationService
                 $apps[] = $app;
             }
         }
+
         return $apps;
     }
 
@@ -253,6 +255,13 @@ class ApplicationService
      */
     public function deleteApp($id)
     {
-        $this->applicationManager->update($this->applicationManager->getOneBy(['id' => $id])->setRemoved(true));
+        $application = $this->applicationManager->getOneBy(['id' => $id]);
+        if ($application === null) {
+            throw new HttpException(404, "Application not Found");
+        } else {
+            $application->setRemoved(true);
+
+            $this->applicationManager->update($application);
+        }
     }
 }

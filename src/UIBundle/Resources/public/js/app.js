@@ -74,12 +74,25 @@ angular.module('leadwireApp', [
             buttons: true,
             dangerMode: true,
         },
-        SWEET_ALERT_VALIDATION: {
-            title: 'Are you sure?',
-            className: 'text-center',
-            icon: 'warning',
-            buttons: true,
-            dangerMode: true,
+        SWEET_ALERT_VALIDATION: function (text) {
+            return {
+                title: 'Are you sure?',
+                text: text,
+                className: 'text-center',
+                icon: 'warning',
+                buttons: true,
+                dangerMode: true,
+            };
+        },
+        SWEET_ALERT_WITH_INPUT: function (text) {
+            return {
+                text: text,
+                content: 'input',
+                button: {
+                    text: 'Submit',
+                    closeModal: false,
+                },
+            };
         },
 
     });
