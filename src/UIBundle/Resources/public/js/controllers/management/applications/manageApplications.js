@@ -76,27 +76,13 @@
                 })
                 .catch(function (error) {
                     vm.flipActivityIndicator('isLoading');
-                    // TODO : REMOVE THIS
-                    vm.applications = [
-                        {
-                            id: 1, name: 'App 1', owner: {
-                                name: 'Owner 1',
-                            },
-                            active: true,
-                        },
-                        {
-                            id: 2, name: 'App 2', owner: {
-                                name: 'Owner 2',
-                            },
-                            active: false,
-                        },
-                    ];
+                    vm.applications = [];
                 });
         };
 
         vm.toggleApplicationStatus = function (id) {
             vm.flipActivityIndicator('isSaving');
-            return ApplicationService.toggleStatus(id)
+            return ApplicationService.toggleEnabled(id)
                 .then(function () {
                     vm.flipActivityIndicator('isSaving');
                     toastr.success(

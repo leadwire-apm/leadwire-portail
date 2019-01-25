@@ -1,0 +1,3 @@
+.table > tbody > tr > td, .table > tbody > tr > td > span, .table > tbody > tr > td > button {
+    vertical-align: middle;
+}
