@@ -4,16 +4,17 @@ namespace AppBundle\Controller\Rest;
 
 use AppBundle\Document\User;
 use AppBundle\Service\UserService;
+use ATS\CoreBundle\Controller\Rest\RestControllerTrait;
+use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use FOS\RestBundle\Controller\Annotations\Route;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use ATS\CoreBundle\Controller\Rest\BaseRestController;
-use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
-class UserController extends BaseRestController
+class UserController extends Controller
 {
+    use RestControllerTrait;
 
     /**
      * @Route("/me", methods="GET")
@@ -28,7 +29,7 @@ class UserController extends BaseRestController
             return $this->exception("Non Authorized", 401);
         }
 
-        return $this->prepareJsonResponse($user, 200, "Default");
+        return $this->renderResponse($user, 200, ["Default"]);
     }
 
     /**
@@ -40,7 +41,7 @@ class UserController extends BaseRestController
     {
         $users = $userService->listUsers();
 
-        return $this->prepareJsonResponse($users);
+        return $this->renderResponse($users);
     }
 
     /**
@@ -56,7 +57,7 @@ class UserController extends BaseRestController
         $data = $request->getContent();
         $successful = $userService->updateUser($data, $id);
 
-        return $this->prepareJsonResponse($successful);
+        return $this->renderResponse($successful);
     }
 
     /**
@@ -74,7 +75,7 @@ class UserController extends BaseRestController
             $data = $request->getContent();
             $successful = $userService->subscribe($data, $this->getUser());
 
-            return $this->prepareJsonResponse($successful);
+            return $this->renderResponse($successful);
         } catch (\Exception $e) {
             return $this->exception($e->getMessage(), 400);
         }
@@ -92,7 +93,7 @@ class UserController extends BaseRestController
         try {
             $data = $userService->getInvoices($this->getUser());
 
-            return $this->prepareJsonResponse($data);
+            return $this->renderResponse($data);
         } catch (\Exception $e) {
             return $this->exception($e->getMessage(), 400);
         }
@@ -110,7 +111,7 @@ class UserController extends BaseRestController
         try {
             $data = $userService->getSubscription($this->getUser());
 
-            return $this->prepareJsonResponse($data);
+            return $this->renderResponse($data);
         } catch (\Exception $e) {
             return $this->exception($e->getMessage(), 400);
         }
@@ -134,7 +135,7 @@ class UserController extends BaseRestController
                 json_decode($request->getContent(), true)
             );
 
-            return $this->prepareJsonResponse($data);
+            return $this->renderResponse($data);
         } catch (\Exception $e) {
             return $this->exception($e->getMessage(), 400);
         }
@@ -158,7 +159,7 @@ class UserController extends BaseRestController
                 json_decode($request->getContent(), true)
             );
 
-            return $this->prepareJsonResponse($data);
+            return $this->renderResponse($data);
         } catch (\Exception $e) {
             return $this->exception($e->getMessage(), 400);
         }
@@ -166,7 +167,7 @@ class UserController extends BaseRestController
 
     private function exception($message, $status = 400)
     {
-        return $this->prepareJsonResponse(array('message' => $message), $status);
+        return $this->renderResponse(array('message' => $message), $status);
     }
 
     /**
@@ -183,7 +184,7 @@ class UserController extends BaseRestController
         $this->denyAccessUnlessGranted([User::ROLE_ADMIN, User::ROLE_SUPER_ADMIN]);
         $successful = $userService->softDeleteUser($id);
 
-        return $this->prepareJsonResponse($successful);
+        return $this->renderResponse($successful);
     }
 
     /**
@@ -202,11 +203,11 @@ class UserController extends BaseRestController
         $lockMessage = $request->get("message");
 
         if ($lockMessage === null) {
-            $lockMessage = $this->container->getParameter('default_lock_message');
+            $lockMessage = $this->getParameter('default_lock_message');
         }
 
         $successful = $userService->lockToggle($id, $lockMessage);
 
-        return $this->prepareJsonResponse($successful);
+        return $this->renderResponse($successful);
     }
 }

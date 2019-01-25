@@ -50,14 +50,12 @@ class BaseDocumentRepository extends DocumentRepository
      *
      * @return void
      */
-
     public function deleteAll()
     {
         $this->createQueryBuilder()
             ->remove()
             ->getQuery()
-            ->execute()
-        ;
+            ->execute();
     }
 
     /**
@@ -68,7 +66,7 @@ class BaseDocumentRepository extends DocumentRepository
      *
      * @return mixed
      */
-    public function like($text, $language = 'en')
+    public function textSearch($text, $language = 'english')
     {
         return $this
             ->createQueryBuilder()
@@ -80,69 +78,26 @@ class BaseDocumentRepository extends DocumentRepository
     }
 
     /**
-     * Returs search result within given dates for selected criteria
-     *
-     * @param \DateTime $from
-     * @param \DateTime $to
-     * @param array $criteria
-     * @param string $dateField
-     * @param string $sortDirection
-     *
-     * @return array
-     */
-    public function withinDates(
-        \DateTime $from,
-        \DateTime $to,
-        $criteria = [],
-        $dateField = 'date',
-        $sortDirection = 'DESC'
-    ) {
-        $_from = clone $from;
-        $_to = clone $to;
-
-        $_from->setTime(0, 0, 0);
-        $_to->setTime(23, 59, 59);
-
-        $qb = $this
-            ->createQueryBuilder()
-            ->field($dateField)->gte($_from)
-            ->field($dateField)->lte($_to);
-
-        foreach ($criteria as $field => $value) {
-            $qb->field($field)->equals($value);
-        }
-
-        $qb->sort($dateField, $sortDirection);
-
-        return $qb
-            ->getQuery()
-            ->execute()
-            ->toArray(false);
-    }
-
-    /**
      * @param array $criteria
      * @param array $selectFields
+     *
      * @return array
      */
     public function noHydrate($criteria = [], $selectFields = [])
     {
         $qb = $this->createQueryBuilder()->hydrate(false);
 
-        if (count($criteria)) {
-            foreach ($criteria as $field => $value) {
-                $qb->field($field)->equals($value);
-            }
+        foreach ($criteria as $field => $value) {
+            $qb->field($field)->equals($value);
         }
 
-        if (count($selectFields)) {
+        if (count($selectFields) > 0) {
             $qb->select($selectFields);
         }
 
         return $qb
             ->getQuery()
             ->execute()
-            ->toArray(false)
-        ;
+            ->toArray(false);
     }
 }

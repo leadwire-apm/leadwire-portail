@@ -33,12 +33,6 @@ translation:
     host:     "%app_domain%"
     schemes:  "%app_schemes%"
 
-user:
-    resource: "@UserBundle/Resources/config/routing.yml"
-    prefix:   "/"
-    host:     "%app_domain%"
-    schemes:  "%app_schemes%"
-
 fos_js_routing:
     resource: "@FOSJsRoutingBundle/Resources/config/routing/routing.xml"
     host:     "%app_domain%"

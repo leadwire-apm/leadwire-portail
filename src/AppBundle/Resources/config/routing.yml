@@ -5,35 +5,25 @@ app_default:
 
 app_rest_app:
     resource: "@AppBundle/Controller/Rest/ApplicationController.php"
-    type: "rest"
+    type: "annotation"
     prefix: "/%internal_api_prefix%/app"
-    options:
-        expose: true
 
 app_rest_invitation:
     resource: "@AppBundle/Controller/Rest/InvitationController.php"
-    type: "rest"
+    type: "annotation"
     prefix: "/%internal_api_prefix%/invitation"
-    options:
-        expose: true
 
 app_rest_user:
     resource: "@AppBundle/Controller/Rest/UserController.php"
-    type: "rest"
+    type: "annotation"
     prefix: "/%internal_api_prefix%/user"
-    options:
-        expose: true
 
 app_rest_auth:
     resource: "@AppBundle/Controller/Rest/AuthController.php"
-    type: "rest"
+    type: "annotation"
     prefix: "/login"
-    options:
-        expose: true
 
 app_rest_applicationtype:
     resource: "@AppBundle/Controller/Rest/ApplicationTypeController.php"
-    type: "rest"
+    type: "annotation"
     prefix: "/%internal_api_prefix%/applicationType"
-    options:
-        expose: true

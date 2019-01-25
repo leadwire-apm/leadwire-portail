@@ -3,19 +3,20 @@
 namespace AppBundle\Controller\Rest;
 
 use AppBundle\Service\ApplicationService;
-use AppBundle\Service\AuthService;
 use AppBundle\Service\ElasticSearchService;
 use AppBundle\Service\StatService;
-use ATS\CoreBundle\Controller\Rest\BaseRestController;
-use FOS\RestBundle\Controller\Annotations\Route;
+use ATS\CoreBundle\Controller\Rest\RestControllerTrait;
+use Symfony\Component\Routing\Annotation\Route;
 use MongoDuplicateKeyException;
-use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
-class ApplicationController extends BaseRestController
+class ApplicationController extends Controller
 {
+
+    use RestControllerTrait;
 
     /**
      * @Route("/{id}/get", methods="GET")
@@ -30,7 +31,7 @@ class ApplicationController extends BaseRestController
     {
         $data = $applicationService->getApplication($id);
 
-        return $this->prepareJsonResponse($data, 200, "Default");
+        return $this->renderResponse($data, 200, ["Default"]);
     }
 
     /**
@@ -69,10 +70,10 @@ class ApplicationController extends BaseRestController
             throw new HttpException(404);
         }
 
-        return $this->prepareJsonResponse(
+        return $this->renderResponse(
             $statService->getStats(['app.$id' => $app->getId()]),
             200,
-            "Default"
+            ["Default"]
         );
     }
 
@@ -90,9 +91,9 @@ class ApplicationController extends BaseRestController
         $app = $applicationService->activateApplication($id, json_decode($request->getContent()));
 
         if ($app !== null) {
-            return $this->prepareJsonResponse($app, 200, "Default");
+            return $this->renderResponse($app, 200, ["Default"]);
         } else {
-            return $this->prepareJsonResponse($app, 400, "Default");
+            return $this->renderResponse($app, 400, ["Default"]);
         }
     }
 
@@ -108,7 +109,7 @@ class ApplicationController extends BaseRestController
     {
         $user = $this->getUser();
         $data = array_merge($applicationService->invitedListApps($user), $applicationService->listApps($user));
-        return $this->prepareJsonResponse($data, 200, "Default");
+        return $this->renderResponse($data, 200, ["Default"]);
     }
 
     /**
@@ -123,7 +124,7 @@ class ApplicationController extends BaseRestController
     {
         $data = $applicationService->invitedListApps($this->getUser());
 
-        return $this->prepareJsonResponse($data);
+        return $this->renderResponse($data);
     }
 
     /**
@@ -143,9 +144,9 @@ class ApplicationController extends BaseRestController
             $application = $applicationService->newApp($data, $this->getUser());
 
             if ($application !== null) {
-                return $this->prepareJsonResponse($application);
+                return $this->renderResponse($application);
             } else {
-                return $this->prepareJsonResponse(false);
+                return $this->renderResponse(false);
             }
         } catch (MongoDuplicateKeyException $e) {
             return $this->exception("App Name is not Unique");
@@ -167,7 +168,7 @@ class ApplicationController extends BaseRestController
             $data = $request->getContent();
             $successful = $applicationService->updateApp($data, $id);
 
-            return $this->prepareJsonResponse($successful);
+            return $this->renderResponse($successful);
         } catch (MongoDuplicateKeyException $e) {
             return $this->exception("App Name is not Unique");
         }
@@ -186,11 +187,11 @@ class ApplicationController extends BaseRestController
     {
         $applicationService->deleteApp($id);
 
-        return $this->prepareJsonResponse(null, 200);
+        return $this->renderResponse(null, 200);
     }
 
     private function exception($message, $status = 400)
     {
-        return $this->prepareJsonResponse(array('message' => $message), $status);
+        return $this->renderResponse(array('message' => $message), $status);
     }
 }

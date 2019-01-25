@@ -2,10 +2,13 @@ services:
     _defaults:
         autowire: true
         autoconfigure: true
+        public: true
+
+    jms_serializer.doctrine_object_constructor:
+        class:        "%jms_serializer.doctrine_object_constructor.class%"
+        public:       false
+        arguments:    ["@doctrine_mongodb", "@jms_serializer.unserialize_object_constructor", "fallback"]
+
+    jms_serializer.object_constructor:
+        alias: jms_serializer.doctrine_object_constructor
         public: false
-
-    ATS\CoreBundle\Service\Parser:
-        public: true
-
-    ATS\CoreBundle\Service\Http\GuzzleClient:
-        public: true

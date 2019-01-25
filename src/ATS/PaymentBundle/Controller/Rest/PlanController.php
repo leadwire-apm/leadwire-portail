@@ -2,15 +2,17 @@
 
 namespace ATS\PaymentBundle\Controller\Rest;
 
-use ATS\CoreBundle\Controller\Rest\BaseRestController;
+use ATS\CoreBundle\Controller\Rest\RestControllerTrait;
 use ATS\PaymentBundle\Document\Plan;
 use ATS\PaymentBundle\Service\PlanService;
-use FOS\RestBundle\Controller\Annotations\Route;
+use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class PlanController extends BaseRestController
+class PlanController extends Controller
 {
+    use RestControllerTrait;
     /**
      * @Route("/{id}/get", methods="GET")
      *

@@ -3,14 +3,15 @@
 namespace AppBundle\Controller\Rest;
 
 use AppBundle\Service\ApplicationTypeService;
-use ATS\CoreBundle\Controller\Rest\BaseRestController;
-use FOS\RestBundle\Controller\Annotations\Route;
-use Symfony\Component\HttpFoundation\JsonResponse;
+use ATS\CoreBundle\Controller\Rest\RestControllerTrait;
+use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class ApplicationTypeController extends BaseRestController
+class ApplicationTypeController extends Controller
 {
+    use RestControllerTrait;
     /**
      * @Route("/{id}/get", methods="GET")
      *
@@ -24,7 +25,7 @@ class ApplicationTypeController extends BaseRestController
     {
         $data = $applicationtypeService->getApplicationType($id);
 
-        return $this->prepareJsonResponse($data);
+        return $this->renderResponse($data);
     }
 
     /**
@@ -39,7 +40,7 @@ class ApplicationTypeController extends BaseRestController
     {
         $data = $applicationtypeService->listApplicationTypes();
 
-        return $this->prepareJsonResponse($data);
+        return $this->renderResponse($data);
     }
 
     /**
@@ -55,7 +56,7 @@ class ApplicationTypeController extends BaseRestController
         $data = $request->getContent();
         $successful = $applicationtypeService->newApplicationType($data);
 
-        return $this->prepareJsonResponse($successful);
+        return $this->renderResponse($successful);
     }
 
     /**
@@ -71,7 +72,7 @@ class ApplicationTypeController extends BaseRestController
         $data = $request->getContent();
         $successful = $applicationtypeService->updateApplicationType($data);
 
-        return $this->prepareJsonResponse($successful);
+        return $this->renderResponse($successful);
     }
 
     /**
@@ -87,6 +88,6 @@ class ApplicationTypeController extends BaseRestController
     {
         $applicationtypeService->deleteApplicationType($id);
 
-        return $this->prepareJsonResponse(null);
+        return $this->renderResponse(null);
     }
 }
