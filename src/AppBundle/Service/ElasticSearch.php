@@ -216,7 +216,8 @@ class ElasticSearch
     private function postIndex(array $options)
     {
         $client = new \GuzzleHttp\Client(['defaults' => ['verify' => false]]);
-        try {
+        sleep (10);
+	try {
             $client->post(
                 $this->settings['host'] . "/_snapshot/my_backup/kibana_snapshot/_restore",
                 [
@@ -245,6 +246,8 @@ class ElasticSearch
 
     public function deleteIndex()
     {
+	//wdh
+	return true;
         try {
             $client = new \GuzzleHttp\Client(['defaults' => ['verify' => false]]);
             $response = $client->delete($this->settings['host'] . ".kibana_adm-portail", [
@@ -259,6 +262,8 @@ class ElasticSearch
 
     public function copyIndex($index)
     {
+	//wdh
+	return true;
         try {
             $client = new \GuzzleHttp\Client(['defaults' => ['verify' => false]]);
             $response = $client->post($this->settings['host']  . "_reindex", [
