@@ -1,5 +1,5 @@
 {
-    "name": "ats-digital/symfony-boilerplate",
+    "name": "leadwire/leadwire-portal",
     "license": "MIT",
     "type": "project",
     "description": "Leadwire portal",
@@ -23,7 +23,6 @@
         "firebase/php-jwt": "^5.0",
         "friendsofsymfony/jsrouting-bundle": "^2.2",
         "friendsofsymfony/oauth-server-bundle": "dev-master",
-        "friendsofsymfony/rest-bundle": "^2.3",
         "gedmo/doctrine-extensions": "^2.4",
         "guzzlehttp/guzzle": "^6.3",
         "incenteev/composer-parameter-handler": "^2.1",

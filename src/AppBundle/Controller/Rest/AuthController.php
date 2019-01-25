@@ -3,14 +3,14 @@
 namespace AppBundle\Controller\Rest;
 
 use AppBundle\Service\AuthService;
-use ATS\CoreBundle\Controller\Rest\BaseRestController;
 use FOS\RestBundle\Controller\Annotations\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class AuthController extends BaseRestController
+class AuthController extends Controller
 {
     /**
      * @Route("/{provider}", methods={"POST", "PATCH"})

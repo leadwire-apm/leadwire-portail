@@ -3,17 +3,18 @@
 namespace ATS\CoreBundle\Controller\Rest;
 
 use ATS\CoreBundle\Event\FileUploadedEvent;
-use FOS\RestBundle\Controller\Annotations\Route;
-
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
-use Symfony\Component\HttpFoundation\File\Exception\FileException;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Symfony\Component\HttpFoundation\JsonResponse;
+
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use FOS\RestBundle\Controller\Annotations\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
 
-class RestFileOperationController extends BaseRestController
+class RestFileOperationController extends Controller
 {
     /**
      * @Route("/upload", name="core_rest_upload", methods="POST")

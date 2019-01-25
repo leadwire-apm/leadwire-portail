@@ -5,5 +5,4 @@ imports:
     - { resource: doctrine/extensions.yml }
     - { resource: jms_serializer/config.yml }
     - { resource: swiftmailer/config.yml }
-    - { resource: fos_rest/config.yml }
     - { resource: nelmio/cors.yml }

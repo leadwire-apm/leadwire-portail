@@ -153,8 +153,10 @@ class InvitationService
         $invitation = $this
             ->serializer
             ->deserialize($json, Invitation::class, 'json');
+
         $id = $this->invitationManager->update($invitation);
-        $this->sendInvitationMail($this->getInvitation($id), $user);
+        $this->sendInvitationMail($this->getInvitation((string)$id), $user);
+
         return $id;
     }
 

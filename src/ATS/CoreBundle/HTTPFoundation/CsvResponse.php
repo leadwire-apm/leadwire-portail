@@ -9,10 +9,24 @@ class CsvResponse extends Response
 
     const DEFAULT_FILE_NAME = 'export.csv';
 
+    /**
+     * @var mixed
+     */
     protected $data;
 
+    /**
+     * @var string
+     */
     protected $fileName;
 
+    /**
+     * Ctor
+     *
+     * @param mixed $data
+     * @param string $fileName
+     * @param int $status
+     * @param array $headers
+     */
     public function __construct(
         $data = null,
         $fileName = self::DEFAULT_FILE_NAME,
@@ -29,11 +43,17 @@ class CsvResponse extends Response
         $this->fileName = $fileName;
     }
 
+    /**
+     *
+     * @param mixed $data
+     *
+     * @return CsvResponse
+     */
     public function setData($data)
     {
-        if (is_array($data)) {
+        if (is_array($data) === true) {
             foreach ($data as $row) {
-                $this->data .= implode(',', $row) ."\n";
+                $this->data .= implode(',', $row)."\n";
             }
         }
 
@@ -43,7 +63,7 @@ class CsvResponse extends Response
     /**
      * Updates the content and headers according to the JSON data and callback.
      *
-     * @return $this
+     * @return CsvResponse
      */
     protected function update()
     {

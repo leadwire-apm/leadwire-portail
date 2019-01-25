@@ -4,14 +4,15 @@ namespace AppBundle\Controller\Rest;
 
 use AppBundle\Document\Invitation;
 use AppBundle\Service\InvitationService;
-use ATS\CoreBundle\Controller\Rest\BaseRestController;
+use ATS\CoreBundle\Controller\Rest\RestControllerTrait;
 use FOS\RestBundle\Controller\Annotations\Route;
-use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class InvitationController extends BaseRestController
+class InvitationController extends Controller
 {
+    use RestControllerTrait;
     /**
      * @Route("/{id}/get", methods="GET")
      *
@@ -25,7 +26,7 @@ class InvitationController extends BaseRestController
     {
         $data = $invitationService->getInvitation($id);
 
-        return $this->prepareJsonResponse($data);
+        return $this->renderResponse($data);
     }
 
     /**
@@ -40,7 +41,7 @@ class InvitationController extends BaseRestController
     {
         $data = $invitationService->listInvitations();
 
-        return $this->prepareJsonResponse($data);
+        return $this->renderResponse($data);
     }
 
     /**
@@ -56,7 +57,7 @@ class InvitationController extends BaseRestController
         $data = $request->getContent();
         $successful = $invitationService->newInvitation($data, $this->getUser());
 
-        return $this->prepareJsonResponse($successful);
+        return $this->renderResponse($successful);
     }
 
     /**
@@ -72,7 +73,7 @@ class InvitationController extends BaseRestController
         $data = $request->getContent();
         $successful = $invitationService->updateInvitation($data);
 
-        return $this->prepareJsonResponse($successful);
+        return $this->renderResponse($successful);
     }
 
     /**
@@ -88,6 +89,6 @@ class InvitationController extends BaseRestController
     {
         $invitationService->deleteInvitation($id);
 
-        return $this->prepareJsonResponse(null);
+        return $this->renderResponse(null);
     }
 }
