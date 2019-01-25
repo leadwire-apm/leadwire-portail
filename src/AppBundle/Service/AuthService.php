@@ -107,6 +107,11 @@ class AuthService
             throw new AccessDeniedHttpException("User is deleted");
         }
 
+        // Check if user is locked
+        if ($user->isLocked() === true) {
+            throw new AccessDeniedHttpException($user->getLockMessage());
+        }
+
         return $user;
     }
 
