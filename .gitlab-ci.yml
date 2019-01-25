@@ -80,6 +80,7 @@ deploy:test:
         - 'echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
         - ssh -t ats@test.ats-digital.com 'cd /apps/leadwire_lot2 &&
             pwd &&
+            rm -fr /apps/leadwire_lot2/var/cache/app/prod &&
             eval $(ssh-agent -s) &&
             git pull origin develop &&
             ssh-add ~/.ssh/deploy_rsa &&
