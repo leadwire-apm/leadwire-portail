@@ -261,7 +261,7 @@ class ApplicationService
         } else {
             $application->setRemoved(true);
 
-            return $this->applicationManager->update($application);
+            $this->applicationManager->update($application);
         }
     }
 }
