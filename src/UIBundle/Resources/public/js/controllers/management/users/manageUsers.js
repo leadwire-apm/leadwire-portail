@@ -67,6 +67,9 @@
                             }
                             return vm.toggleUserStatus(user.id, message);
                         })
+                        .then(() => {
+                            swal.close();
+                        })
                         .catch(function (err) {
                             swal.close();
                         });
