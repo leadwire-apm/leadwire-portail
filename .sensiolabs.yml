@@ -12,3 +12,9 @@ exclude_patterns:
     - web/app*.php
     - src/UIBundle/Resources/public/js/**/*.js
     - .gitlab-ci.yml
+
+rules:
+    symfony.controller.too_many_actions_per_controller:
+        enabled: true
+        max_count: 20
+        threshold: 5
