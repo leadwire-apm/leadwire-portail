@@ -2,16 +2,20 @@
 
 namespace ATS\EmailBundle\Controller\Rest;
 
-use ATS\CoreBundle\Controller\Rest\BaseRestController;
 use ATS\EmailBundle\Document\Email;
-use ATS\EmailBundle\Service\SimpleMailerService;
-use FOS\RestBundle\Controller\Annotations\Route;
 use JMS\Serializer\SerializerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use ATS\EmailBundle\Service\SimpleMailerService;
+use Symfony\Component\Routing\Annotation\Route;
+use ATS\CoreBundle\Controller\Rest\BaseRestController;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use ATS\CoreBundle\Controller\Rest\RestControllerTrait;
 
-class EmailController extends BaseRestController
+class EmailController extends Controller
 {
+    use RestControllerTrait;
+
     /**
      * @Route("/send/{doSave}", methods="POST", defaults={"doSave"=false})
      *
@@ -36,7 +40,7 @@ class EmailController extends BaseRestController
             $response = $mailer->send($email, $doSave);
         }
 
-        return $this->prepareJsonResponse([$response]);
+        return $this->renderResponse([$response]);
     }
 
     /**
@@ -53,6 +57,6 @@ class EmailController extends BaseRestController
 
         $mailer->resend($id);
 
-        return $this->prepareJsonResponse([]);
+        return $this->renderResponse([]);
     }
 }

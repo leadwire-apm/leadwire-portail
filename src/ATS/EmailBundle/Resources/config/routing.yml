@@ -1,6 +1,4 @@
 email_rest:
     resource: "@EmailBundle/Controller/Rest/EmailController.php"
-    type: "rest"
+    type: "annotation"
     prefix: "/core/%internal_api_prefix%/email"
-    options:
-        expose: true

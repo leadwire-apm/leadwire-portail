@@ -2,16 +2,18 @@
 
 namespace ATS\TranslationBundle\Controller\Rest;
 
-use ATS\CoreBundle\Controller\Rest\BaseRestController;
-use ATS\TranslationBundle\Service\TranslationEntryService;
-use FOS\RestBundle\Controller\Annotations\Route;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use ATS\CoreBundle\Controller\Rest\BaseRestController;
+use ATS\CoreBundle\Controller\Rest\RestControllerTrait;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use ATS\TranslationBundle\Service\TranslationEntryService;
 
-class TranslationEntryController extends BaseRestController
+class TranslationEntryController extends Controller
 {
-
+    use RestControllerTrait;
     /**
      * @Route("/compact", methods="GET")
      *
@@ -25,7 +27,7 @@ class TranslationEntryController extends BaseRestController
     {
         $data = $translationEntryService->listCompactTranslationEntries();
 
-        return $this->prepareJsonResponse($data);
+        return $this->renderResponse($data);
     }
 
     /**
@@ -41,7 +43,7 @@ class TranslationEntryController extends BaseRestController
     {
         $data = $translationEntryService->getTranslationEntry($id);
 
-        return $this->prepareJsonResponse($data);
+        return $this->renderResponse($data);
     }
 
     /**
@@ -56,7 +58,7 @@ class TranslationEntryController extends BaseRestController
     {
         $data = $translationEntryService->listTranslationEntries();
 
-        return $this->prepareJsonResponse($data);
+        return $this->renderResponse($data);
     }
 
     /**
@@ -73,7 +75,7 @@ class TranslationEntryController extends BaseRestController
 
         $successful = $translationEntryService->newTranslationEntry($data);
 
-        return $this->prepareJsonResponse($successful);
+        return $this->renderResponse($successful);
     }
 
     /**
@@ -89,7 +91,7 @@ class TranslationEntryController extends BaseRestController
         $data = $request->getContent();
         $successful = $translationEntryService->updateTranslationEntry($data);
 
-        return $this->prepareJsonResponse($successful);
+        return $this->renderResponse($successful);
     }
 
     /**
@@ -109,7 +111,7 @@ class TranslationEntryController extends BaseRestController
 
         $translationEntryService->deleteById($id);
 
-        return $this->prepareJsonResponse([]);
+        return $this->renderResponse([]);
     }
 
     /**

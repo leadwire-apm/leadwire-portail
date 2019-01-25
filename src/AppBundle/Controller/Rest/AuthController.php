@@ -3,7 +3,7 @@
 namespace AppBundle\Controller\Rest;
 
 use AppBundle\Service\AuthService;
-use FOS\RestBundle\Controller\Annotations\Route;
+use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;

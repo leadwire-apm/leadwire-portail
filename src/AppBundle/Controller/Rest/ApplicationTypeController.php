@@ -4,7 +4,7 @@ namespace AppBundle\Controller\Rest;
 
 use AppBundle\Service\ApplicationTypeService;
 use ATS\CoreBundle\Controller\Rest\RestControllerTrait;
-use FOS\RestBundle\Controller\Annotations\Route;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;

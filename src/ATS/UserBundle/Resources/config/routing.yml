@@ -1,6 +1,0 @@
-app_rest_auth:
-    resource: "@UserBundle/Controller/AuthController.php"
-    type: "rest"
-    prefix: "/auth"
-    options:
-        expose: true

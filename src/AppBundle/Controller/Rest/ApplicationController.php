@@ -6,7 +6,7 @@ use AppBundle\Service\ApplicationService;
 use AppBundle\Service\ElasticSearchService;
 use AppBundle\Service\StatService;
 use ATS\CoreBundle\Controller\Rest\RestControllerTrait;
-use FOS\RestBundle\Controller\Annotations\Route;
+use Symfony\Component\Routing\Annotation\Route;
 use MongoDuplicateKeyException;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;

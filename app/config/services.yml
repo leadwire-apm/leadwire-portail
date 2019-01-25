@@ -41,10 +41,6 @@ services:
         resource: '../../src/AppBundle/Controller'
         tags: ['controller.service_arguments']
 
-    ATS\UserBundle\Controller\:
-        resource: '../../src/ATS/UserBundle/Controller'
-        tags: ['controller.service_arguments']
-
     AppBundle\Service\LdapService:
         arguments:
             $settings: '%ldap%'
