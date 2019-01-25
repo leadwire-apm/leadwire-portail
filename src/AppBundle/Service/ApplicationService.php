@@ -1,4 +1,4 @@
-<?php declare (strict_types=1);
+<?php declare (strict_types = 1);
 
 namespace AppBundle\Service;
 
@@ -9,8 +9,8 @@ use JMS\Serializer\DeserializationContext;
 use JMS\Serializer\SerializerInterface;
 use Psr\Log\LoggerInterface;
 use Ramsey\Uuid\Uuid;
-use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 /**
  * Service class for App entities
@@ -209,9 +209,9 @@ class ApplicationService
         $ldapEntryCreationStatus = $this->ldapService->createAppEntry($user->getIndex(), $app->getUuid());
 
         // !Dashboard creation is bogus
-        $dashboardsCreationStatus = true ; //$this->kibana->createDashboards($app);
+        $dashboardsCreationStatus = true; //$this->kibana->createDashboards($app);
 
-        if ( $ldapEntryCreationStatus === true && $dashboardsCreationStatus === true) {
+        if ($ldapEntryCreationStatus === true && $dashboardsCreationStatus === true) {
             return $app;
         } else {
             $this->applicationManager->delete($app);

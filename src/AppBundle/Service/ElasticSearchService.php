@@ -32,10 +32,10 @@ class ElasticSearchService
     /**
      * ElasticSearchService constructor.
      * @param LoggerInterface $logger
-     * @param array $settings
      * @param string $env
+     * @param array $settings
      */
-    public function __construct(LoggerInterface $logger, array $settings = [], string $env)
+    public function __construct(LoggerInterface $logger, string $env, array $settings = [])
     {
         $this->settings = $settings;
         $this->logger = $logger;
