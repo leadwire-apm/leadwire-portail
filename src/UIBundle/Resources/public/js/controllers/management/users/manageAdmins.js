@@ -1,11 +1,12 @@
 (function (angular) {
-    angular.module('leadwireApp').controller('ManageAdminsController', [
-        'UserService',
-        'toastr',
-        'MESSAGES_CONSTANTS',
-        '$state',
-        ManageAdminsCtrlFN,
-    ]);
+    angular.module('leadwireApp')
+        .controller('ManageAdminsController', [
+            'UserService',
+            'toastr',
+            'MESSAGES_CONSTANTS',
+            '$state',
+            ManageAdminsCtrlFN,
+        ]);
 
     /**
      * Handle add new application logic
@@ -26,48 +27,30 @@
 
         vm.deleteUser = function (id) {
             vm.flipActivityIndicator('isSaving');
-            UserService.delete(id).then(function (response) {
-                vm.flipActivityIndicator('isSaving');
+            UserService.delete(id)
+                .then(function (response) {
+                    vm.flipActivityIndicator('isSaving');
 
-            }).catch(function (err) {
-                vm.flipActivityIndicator('isSaving');
-            });
+                })
+                .catch(function (err) {
+                    vm.flipActivityIndicator('isSaving');
+                });
         };
 
         vm.loadAdmins = function () {
             vm.flipActivityIndicator('isLoading');
             // should send some criteria
-            UserService.list().then(function (response) {
-                vm.flipActivityIndicator('isLoading');
-                vm.users = response.data;
-            }).catch(function (err) {
-                vm.flipActivityIndicator('isLoading');
-                // TODO Remove this
-                vm.admins = [
-                    {
-                        id: 1,
-                        name: 'Ibra',
-                        email: 'ibra@gmail.com',
-                        active: true,
-                        role: ['ROLE_USER', 'ROLE_ADMIN'],
-                    },
-                    {
-                        id: 2,
-                        name: 'dali',
-                        email: 'dali@gmail.com',
-                        active: false,
-                        role: ['ROLE_USER'],
-                    },
-                    {
-                        id: 3,
-                        name: 'omar',
-                        email: 'omar@gmail.com',
-                        active: true,
-                        role: ['ROLE_USER', 'ROLE_ADMIN'],
-                    },
-                ];
+            UserService.list()
+                .then(function (admins) {
+                    vm.flipActivityIndicator('isLoading');
+                    vm.admins = admins;
+                })
+                .catch(function (err) {
+                    vm.flipActivityIndicator('isLoading');
+                    // TODO Remove this
+                    vm.admins = [];
 
-            });
+                });
         };
 
         vm.isAdmin = function (admin) {
@@ -76,21 +59,14 @@
         };
 
         vm.handleChangePermission = function (admin) {
-
-            swal({
-                title: 'Are you sure?',
-                className: 'text-center',
-                icon: 'warning',
-                buttons: true,
-                dangerMode: true,
-            }).then(function (willDelete) {
-                if (willDelete) {
-                    vm.changePermission(admin);
-                } else {
-                    swal.close();
-                }
-            });
-
+            swal(MESSAGES_CONSTANTS.SWEET_ALERT_VALIDATION)
+                .then(function (willDelete) {
+                    if (willDelete) {
+                        vm.changePermission(admin);
+                    } else {
+                        swal.close();
+                    }
+                });
         };
 
         vm.changePermission = function (admin) {
@@ -103,15 +79,18 @@
             } else {
                 user.roles.push(ROLE_ADMIN);
             }
-            UserService.update(user).then(function (response) {
-                toastr.success(MESSAGES_CONSTANTS.SUCCESS);
-                vm.loadAdmins();
-                vm.flipActivityIndicator('isSaving' + admin.id);
+            UserService.update(
+                { id: user.id, email: user.email, roles: user.roles })
+                .then(function (response) {
+                    toastr.success(MESSAGES_CONSTANTS.SUCCESS);
+                    vm.loadAdmins();
+                    vm.flipActivityIndicator('isSaving' + admin.id);
 
-            }).catch(function (error) {
-                toastr.error(MESSAGES_CONSTANTS.ERROR);
-                vm.flipActivityIndicator('isSaving' + admin.id);
-            });
+                })
+                .catch(function (error) {
+                    toastr.error(MESSAGES_CONSTANTS.ERROR);
+                    vm.flipActivityIndicator('isSaving' + admin.id);
+                });
         };
 
         vm.init = function () {
@@ -120,7 +99,7 @@
                     isSaving: false,
                     isLoading: false,
                 },
-                users: [],
+                admins: [],
             });
             vm.loadAdmins();
         };

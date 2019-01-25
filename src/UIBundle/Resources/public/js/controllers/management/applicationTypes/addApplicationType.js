@@ -25,12 +25,15 @@
         };
 
         vm.saveAppType = function () {
+            vm.flipActivityIndicator('isSaving');
             ApplicationTypeService.create(vm.applicationType)
                 .then(function () {
+                    vm.flipActivityIndicator('isSaving');
                     toastr.success(MESSAGES_CONSTANTS.SUCCESS);
                     $state.go('app.management.applicationTypes');
                 })
                 .catch(function () {
+                    vm.flipActivityIndicator('isSaving');
                     toastr.error(MESSAGES_CONSTANTS.ERROR);
 
                 });
@@ -44,6 +47,7 @@
                 applicationType: {
                     name: '',
                     agent: '',
+                    installation: '',
                 },
             });
         };

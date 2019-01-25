@@ -26,13 +26,11 @@
 <div class="form-group">
     <label class="col-sm-2 control-label">Installation *</label>
     <div class="col-sm-10">
-
-        <textarea id="summernote" name="installation"
+        <textarea name="installation"
                   data-ng-model="ctrl.applicationType.installation"
-                  required></textarea>
+                  simplemde></textarea>
         <span class="text-red"
-              ng-show="applicationTypeForm.installation.$error.required && !applicationTypeForm.installation.$pristine">
+              ng-show="(applicationTypeForm.installation.$error.required || !ctrl.applicationType.installation) && !applicationTypeForm.installation.$pristine">
             This field is required</span>
-
     </div>
 </div>

@@ -8,9 +8,11 @@
                 <form class="form-horizontal bordered-group"
                       name="applicationTypeForm" ng-submit="ctrl.saveAppType()"
                       role="form"
+                      novalidate
                 >
                     <div ng-include="'management/applicationTypes/form.html'"></div>
-                    <button type="submit" ng-disabled="applicationTypeForm.$invalid"
+                    <button type="submit"
+                            ng-disabled="applicationForm.$invalid || !ctrl.applicationType.installation"
                             class="btn btn-primary pull-right">
                         <spinner is-loading="ctrl.ui.isSaving"></spinner>
                         Save

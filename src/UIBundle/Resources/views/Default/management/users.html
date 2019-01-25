@@ -1,6 +1,6 @@
 <div class="panel" ng-init="ctrl.init()">
     <div class="panel-heading">
-        <h4>Manage Users [WIP/Mock List]</h4>
+        <h4>Manage Users </h4>
         <hr>
     </div>
     <div class="panel-body">
@@ -34,18 +34,18 @@
                             </td>
                             <td data-title="Status" data-label="Status">
                                 <span
-                                        data-ng-class="user.blocked ? 'label label-success' : 'label label-danger'"
+                                        data-ng-class="user.locked ? 'label label-danger' : 'label label-success'"
                                         style="vertical-align: center">
-                                    [[user.blocked ? 'Activated' : 'Blocked']]
+                                    [[user.locked ? 'Blocked' : 'Activated']]
                                 </span>
 
                             </td>
                             <td data-title="Actions" data-label="Actions"
                                 class="text-center"
                             >
-                                <button data-ng-class="user.blocked ? 'btn btn-danger' : 'btn btn-success'"
+                                <button data-ng-class="user.locked ? 'btn btn-success' : 'btn btn-danger'"
                                         ng-click="ctrl.handleOnToggleLock(user)">
-                                    [[user.blocked ? 'Block' : 'Activate']]
+                                    [[user.locked ? 'Activate' : 'Block']]
                                 </button>
 
                                 <button class="btn btn-info"

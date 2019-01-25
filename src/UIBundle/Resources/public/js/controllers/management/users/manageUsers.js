@@ -97,26 +97,7 @@
                 }).catch(function (err) {
                     vm.flipActivityIndicator('isLoading');
                     // TODO Remove This
-                    vm.users = [
-                        {
-                            id: 1,
-                            name: 'Ibra',
-                            email: 'ibra@gmail.com',
-                            active: true,
-                        },
-                        {
-                            id: 2,
-                            name: 'dali',
-                            email: 'dali@gmail.com',
-                            active: false,
-                        },
-                        {
-                            id: 3,
-                            name: 'omar',
-                            email: 'omar@gmail.com',
-                            active: true,
-                        },
-                    ];
+                    vm.users = [];
                 });
             };
             vm.goDetail = function (id) {

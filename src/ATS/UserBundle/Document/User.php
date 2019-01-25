@@ -66,6 +66,7 @@ class User implements AdvancedUserInterface, \Serializable
      * @var array
      *
      * @ODM\Field(type="hash")
+     * @JMS\Type("array")
      * @JMS\Expose
      */
     private $roles;

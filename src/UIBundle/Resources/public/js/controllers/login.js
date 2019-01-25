@@ -39,7 +39,6 @@ function LoginControllerFN (
 
     function authenticate (provider) {
         vm.isChecking = true;
-
         $auth.authenticate(provider)
             .then(function () {
                 return invitationId;
@@ -78,13 +77,14 @@ function LoginControllerFN (
     }
 
     function handleLoginFailure (error) {
-        console.log(error);
         vm.isChecking = false;
         var message = null;
         if (error.message) {
             message = error.message;
-        } else if (error.data) {
+        } else if (error.data && error.data.message) {
             message = error.data.message;
+        } else if (error.data && error.data.error) {
+            message = error.data.error.message;
         } else {
             message = error;
         }
