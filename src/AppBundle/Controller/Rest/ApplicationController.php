@@ -32,7 +32,7 @@ class ApplicationController extends Controller
     {
         $data = $applicationService->getApplication($id);
 
-        return $this->renderResponse($data, 200, ["Default"]);
+        return $this->renderResponse($data, Response::HTTP_OK, ["Default"]);
     }
 
     /**
@@ -73,7 +73,7 @@ class ApplicationController extends Controller
 
         return $this->renderResponse(
             $statService->getStats(['app.$id' => $app->getId()]),
-            200,
+            Response::HTTP_OK,
             ["Default"]
         );
     }
@@ -92,7 +92,7 @@ class ApplicationController extends Controller
         $app = $applicationService->activateApplication($id, json_decode($request->getContent()));
 
         if ($app !== null) {
-            return $this->renderResponse($app, 200, ["Default"]);
+            return $this->renderResponse($app, Response::HTTP_OK, ["Default"]);
         } else {
             return $this->renderResponse($app, 400, ["Default"]);
         }
@@ -111,24 +111,7 @@ class ApplicationController extends Controller
         $user = $this->getUser();
         $data = array_merge($applicationService->invitedListApps($user), $applicationService->listApps($user));
 
-        return $this->renderResponse($data, 200, ["Default"]);
-    }
-
-    /**
-     * @Route("/all", methods="GET")
-     *
-     * @param Request $request
-     * @param ApplicationService $applicationService
-     *
-     * @return Response
-     */
-    public function getAllApplicationsAction(Request $request, ApplicationService $applicationService)
-    {
-        $this->denyAccessUnlessGranted([User::ROLE_ADMIN, User::ROLE_SUPER_ADMIN]);
-
-        $applications = $applicationService->getApps();
-
-        return $this->renderResponse($applications, 200, ["Default"]);
+        return $this->renderResponse($data, Response::HTTP_OK, ["Default"]);
     }
 
     /**
@@ -206,11 +189,45 @@ class ApplicationController extends Controller
     {
         $applicationService->deleteApp($id);
 
-        return $this->renderResponse(null, 200);
+        return $this->renderResponse(null, Response::HTTP_OK);
     }
 
     private function exception($message, $status = 400)
     {
         return $this->renderResponse(array('message' => $message), $status);
+    }
+
+    /**
+     * @Route("/all", methods="GET")
+     *
+     * @param Request $request
+     * @param ApplicationService $applicationService
+     *
+     * @return Response
+     */
+    public function getAllApplicationsAction(Request $request, ApplicationService $applicationService)
+    {
+        $this->denyAccessUnlessGranted([User::ROLE_ADMIN, User::ROLE_SUPER_ADMIN]);
+
+        $applications = $applicationService->getApps();
+
+        return $this->renderResponse($applications, Response::HTTP_OK, ["Default"]);
+    }
+
+    /**
+     * @Route("/{id}/activate-toggle", methods="PUT")
+     *
+     * @param Request $request
+     * @param ApplicationService $applicationService
+     *
+     * @return Response
+     */
+    public function toggleApplicationActivationAction(Request $request, ApplicationService $applicationService, $id)
+    {
+        $this->denyAccessUnlessGranted([User::ROLE_ADMIN, User::ROLE_SUPER_ADMIN]);
+
+        $successful = $applicationService->toggleActivation($id);
+
+        return $this->renderResponse($successful, Response::HTTP_OK);
     }
 }

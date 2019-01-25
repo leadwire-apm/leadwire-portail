@@ -74,7 +74,7 @@
                  */
                 toggleEnabled: function (id) {
                     return $http.put(
-                        CONFIG.BASE_URL + 'api/app/' + id + '/lock-toggle',
+                        CONFIG.BASE_URL + 'api/app/' + id + '/activate-toggle',
                     );
                 },
                 /**

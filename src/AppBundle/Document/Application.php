@@ -323,6 +323,17 @@ class Application
     }
 
     /**
+     *
+     * @return self
+     */
+    public function toggleEnabled(): self
+    {
+        $this->enabled = !$this->enabled;
+
+        return $this;
+    }
+
+    /**
      * Get removed
      *
      * @return boolean

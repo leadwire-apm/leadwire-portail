@@ -10,6 +10,7 @@ use JMS\Serializer\SerializerInterface;
 use Psr\Log\LoggerInterface;
 use Ramsey\Uuid\Uuid;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Service class for App entities
@@ -257,11 +258,34 @@ class ApplicationService
     {
         $application = $this->applicationManager->getOneBy(['id' => $id]);
         if ($application === null) {
-            throw new HttpException(404, "Application not Found");
+            throw new HttpException(Response::HTTP_NOT_FOUND, "Application not Found");
         } else {
             $application->setRemoved(true);
 
             $this->applicationManager->update($application);
         }
+    }
+
+    /**
+     *
+     * @param string $id
+     *
+     * @return boolean
+     */
+    public function toggleActivation(string $id): bool
+    {
+        $isSuccessful = false;
+
+        $application = $this->applicationManager->getOneBy(['id' => $id]);
+
+        if ($application instanceof Application) {
+            $application->toggleEnabled();
+            $this->applicationManager->update($application);
+            $isSuccessful = true;
+        } else {
+            throw new HttpException(Response::HTTP_NOT_FOUND, "Application not Found");
+        }
+
+        return $isSuccessful;
     }
 }
