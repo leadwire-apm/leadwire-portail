@@ -84,7 +84,12 @@ function LoginControllerFN (
         } else if (error.data && error.data.message) {
             message = error.data.message;
         } else if (error.data && error.data.error) {
-            message = error.data.error.message;
+            if (error.data.error.exception &&
+                error.data.error.exception.length) {
+                message = error.data.error.exception[0].message;
+            } else {
+                message = error.data.error.message;
+            }
         } else {
             message = error;
         }
