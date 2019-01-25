@@ -2,16 +2,17 @@
 
 namespace AppBundle\Controller\Rest;
 
+use AppBundle\Document\User;
 use AppBundle\Service\ApplicationService;
 use AppBundle\Service\ElasticSearchService;
 use AppBundle\Service\StatService;
 use ATS\CoreBundle\Controller\Rest\RestControllerTrait;
-use Symfony\Component\Routing\Annotation\Route;
 use MongoDuplicateKeyException;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\Routing\Annotation\Route;
 
 class ApplicationController extends Controller
 {
@@ -109,7 +110,25 @@ class ApplicationController extends Controller
     {
         $user = $this->getUser();
         $data = array_merge($applicationService->invitedListApps($user), $applicationService->listApps($user));
+
         return $this->renderResponse($data, 200, ["Default"]);
+    }
+
+    /**
+     * @Route("/all", methods="GET")
+     *
+     * @param Request $request
+     * @param ApplicationService $applicationService
+     *
+     * @return Response
+     */
+    public function getAllApplicationsAction(Request $request, ApplicationService $applicationService)
+    {
+        $this->denyAccessUnlessGranted([User::ROLE_ADMIN, User::ROLE_SUPER_ADMIN]);
+
+        $applications = $applicationService->getApps();
+
+        return $this->renderResponse($applications, 200, ["Default"]);
     }
 
     /**

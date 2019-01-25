@@ -26,7 +26,7 @@ class PlanController extends Controller
     {
         $data = $planService->getPlan($id);
 
-        return $this->prepareJsonResponse($data);
+        return $this->renderResponse($data);
     }
 
     /**
@@ -41,7 +41,7 @@ class PlanController extends Controller
     {
         $data = $planService->listPlans();
 
-        return $this->prepareJsonResponse($data);
+        return $this->renderResponse($data);
     }
 
     /**
@@ -66,6 +66,6 @@ class PlanController extends Controller
     ) {
         $pageResult = $planService->paginate($pageNumber, $itemsPerPage);
 
-        return $this->prepareJsonResponse($pageResult);
+        return $this->renderResponse($pageResult);
     }
 }
