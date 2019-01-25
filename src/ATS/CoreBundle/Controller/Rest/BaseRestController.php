@@ -14,7 +14,6 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class BaseRestController extends FOSRestController
 {
-
     /**
      * Prepares a JSON Response
      *
