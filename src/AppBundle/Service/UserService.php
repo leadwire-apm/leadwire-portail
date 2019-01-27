@@ -123,11 +123,13 @@ class UserService
         $users = [];
         switch ($role) {
             case 'admin':
-                $users = $this->userManager->getBy([
-                    'roles' => [
-                        '$all' => [User::ROLE_ADMIN],
-                    ],
-                ]);
+                $users = $this->userManager->getBy(
+                    [
+                        'roles' => [
+                            '$all' => [User::ROLE_ADMIN],
+                        ],
+                    ]
+                );
                 break;
 
             default:
