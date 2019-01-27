@@ -151,7 +151,6 @@ abstract class AbstractManager
      */
     public function getBy(array $criteria, array $orderBy = null, $limit = 0, $offset = 0)
     {
-
         return $this
             ->getDocumentRepository()
             ->findBy($criteria, $orderBy, $limit, $offset);

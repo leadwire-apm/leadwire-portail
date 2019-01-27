@@ -2,13 +2,11 @@
 
 namespace AppBundle\Repository;
 
-use ATS\CoreBundle\Repository\BaseDocumentRepository;
+use ATS\UserBundle\Repository\UserRepository as BaseUserRepository;
 
 /**
  * Repository class for User entities
- *
- * @see \ATS\CoreBundle\Repository\BaseDocumentRepository
  */
-class UserRepository extends BaseDocumentRepository
+class UserRepository extends BaseUserRepository
 {
 }

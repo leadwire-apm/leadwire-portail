@@ -10,7 +10,7 @@ use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 use JMS\Serializer\Annotation as JMS;
 
 /**
- * @ODM\Document(repositoryClass="ATS\UserBundle\Repository\UserRepository")
+ * @ODM\Document(repositoryClass="AppBundle\Repository\UserRepository")
  * @ODM\HasLifecycleCallbacks
  * @JMS\ExclusionPolicy("all")
  * @Unique(fields={"username"})
@@ -141,7 +141,9 @@ class User extends \ATS\UserBundle\Document\User
 
     /**
      * @ODM\ReferenceMany(targetDocument="Application", mappedBy="owner")
-     * @JMS\Groups({"full","Default"})
+     * @JMS\Type("array<AppBundle\Document\Application>")
+     * @JMS\Expose
+     * @JMS\Groups({"Default", "full"})
      */
     public $myApps;
 
@@ -201,6 +203,15 @@ class User extends \ATS\UserBundle\Document\User
      * @JMS\Expose
      */
     private $lockMessage;
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        parent::__construct();
+        $this->locked = false;
+    }
 
     /**
      * Get id
