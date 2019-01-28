@@ -2,11 +2,6 @@ security:
     role_hierarchy:
         ROLE_SUPER_ADMIN: [ ROLE_USER, ROLE_ALLOWED_TO_SWITCH ]
 
-    encoders:
-        ATS\UserBundle\Document\User:
-            algorithm: bcrypt
-            cost: 12
-
     providers:
         simple_user_provider:
             id: ATS\UserBundle\Provider\SimpleUserProvider

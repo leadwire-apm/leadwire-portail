@@ -1,5 +1,4 @@
-<?php
-
+<?php declare (strict_types = 1);
 namespace AppBundle\Document;
 
 use AppBundle\Document\Application;
@@ -8,6 +7,7 @@ use ATS\PaymentBundle\Document\Plan;
 use Doctrine\Bundle\MongoDBBundle\Validator\Constraints\Unique;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 use JMS\Serializer\Annotation as JMS;
+use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 
 /**
  * @ODM\Document(repositoryClass="ATS\UserBundle\Repository\UserRepository")
@@ -16,11 +16,67 @@ use JMS\Serializer\Annotation as JMS;
  * @Unique(fields={"username"})
  * @Unique(fields={"email"})
  */
-
-class User extends \ATS\UserBundle\Document\User
+class User implements AdvancedUserInterface
 {
+    const DEFAULT_ROLE = "ROLE_USER";
     const ROLE_SUPER_ADMIN = 'ROLE_SUPER_ADMIN';
     const ROLE_ADMIN = 'ROLE_ADMIN';
+
+    /**
+     * @var \MongoId
+     *
+     * @ODM\Id("strategy=auto")
+     * @JMS\Expose
+     * @JMS\Type("string")
+     */
+    protected $id;
+
+    /**
+     * @var string
+     * @JMS\Expose
+     * @JMS\Groups({"full","Default"})
+     * @JMS\Type("string")
+     * @ODM\Field(type="string")
+     */
+    protected $username;
+
+    /**
+     * @var string
+     *
+     * @ODM\Field(type="string")
+     */
+    private $password;
+
+    /**
+     * @var string
+     *
+     * @ODM\Field(type="string")
+     */
+    private $salt;
+
+    /**
+     * @var bool
+     *
+     * @ODM\Field(type="boolean")
+     * @JMS\Expose
+     */
+    private $active;
+
+    /**
+     * @var \DateTime
+     *
+     * @ODM\Field(type="date")
+     */
+    private $expireAt;
+
+    /**
+     * @var array
+     *
+     * @ODM\Field(type="hash")
+     * @JMS\Type("array")
+     * @JMS\Expose
+     */
+    private $roles;
 
     /**
      * @var string
@@ -43,15 +99,6 @@ class User extends \ATS\UserBundle\Document\User
      * @JMS\Groups({"full","Default"})
      */
     private $avatar;
-
-    /**
-     * @var string
-     * @JMS\Expose
-     * @JMS\Groups({"full","Default"})
-     * @JMS\Type("string")
-     * @ODM\Field(type="string")
-     */
-    protected $username;
 
     /**
      * @var string
@@ -202,6 +249,11 @@ class User extends \ATS\UserBundle\Document\User
      */
     private $lockMessage;
 
+    public function __construct()
+    {
+        $this->roles = [];
+    }
+
     /**
      * Get id
      *
@@ -251,6 +303,194 @@ class User extends \ATS\UserBundle\Document\User
     public function getUsername()
     {
         return $this->username;
+    }
+
+    /**
+     * Set salt
+     *
+     * @param string $salt
+     *
+     * @return User
+     */
+    public function setSalt($salt)
+    {
+        $this->salt = $salt;
+
+        return $this;
+    }
+
+    /**
+     * Get salt
+     *
+     * @return string
+     */
+    public function getSalt()
+    {
+        return $this->salt;
+    }
+
+    /**
+     * Set active
+     *
+     * @param bool $active
+     *
+     * @return User
+     */
+    public function setActive($active)
+    {
+        $this->active = $active;
+
+        return $this;
+    }
+
+    /**
+     * Get active
+     *
+     * @return bool
+     */
+    public function getActive()
+    {
+        return $this->active;
+    }
+
+    /**
+     * Set password
+     *
+     * @param string $password
+     *
+     * @return User
+     */
+    public function setPassword($password)
+    {
+        $this->password = $password;
+
+        return $this;
+    }
+
+    /**
+     * Get password
+     *
+     * @return string
+     */
+    public function getPassword()
+    {
+        return $this->password;
+    }
+
+    /**
+     * Activates a user
+     *
+     * @return User
+     */
+    public function activate()
+    {
+        return $this->setActive(true);
+    }
+
+    /**
+     * Deactivates a user
+     *
+     * @return User
+     */
+    public function deactivate()
+    {
+        return $this->setActive(false);
+    }
+
+    /**
+     * Set roles
+     *
+     * @param array $roles
+     *
+     * @return User
+     */
+    public function setRoles(array $roles)
+    {
+        $this->roles = $roles;
+
+        return $this;
+    }
+
+    /**
+     * Get roles
+     *
+     * @return array
+     */
+    public function getRoles()
+    {
+
+        if (in_array(self::DEFAULT_ROLE, $this->roles) === false) {
+            array_push($this->roles, self::DEFAULT_ROLE);
+        }
+
+        return $this->roles;
+    }
+
+    /**
+     * @param string $role
+     * @return bool
+     */
+    public function hasRole($role)
+    {
+        return in_array($role, $this->roles);
+    }
+
+    /**
+     * Promote user roles
+     *
+     * @param string $role
+     *
+     * @return User
+     */
+    public function promote($role)
+    {
+        if (in_array($role, $this->roles) === false) {
+            array_push($this->roles, $role);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Revoke user roles
+     *
+     * @param string $role
+     *
+     * @return User
+     */
+    public function revoke($role)
+    {
+        if (null === $this->roles) {
+            $this->roles = [];
+        }
+
+        $this->roles = array_diff($this->roles, [$role]);
+
+        return $this;
+    }
+
+    /**
+     * Set expireAt
+     *
+     * @param \DateTime $expireAt
+     *
+     * @return User
+     */
+    public function setExpireAt(\DateTime $expireAt)
+    {
+        $this->expireAt = $expireAt;
+
+        return $this;
+    }
+
+    /**
+     * Get expireAt
+     *
+     * @return \DateTime
+     */
+    public function getExpireAt()
+    {
+        return $this->expireAt;
     }
 
     public function setName($name)
@@ -600,5 +840,50 @@ class User extends \ATS\UserBundle\Document\User
         $this->lockMessage = $lockMessage;
 
         return $this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function eraseCredentials()
+    {
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function isAccountNonExpired()
+    {
+        if ($this->getExpireAt() == null) {
+            return true;
+        }
+
+        return $this->getExpireAt() > (new \DateTime());
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function isAccountNonLocked()
+    {
+        return true;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function isCredentialsNonExpired()
+    {
+        return true;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @JMS\VirtualProperty()
+     */
+    public function isEnabled()
+    {
+        return $this->active;
     }
 }
