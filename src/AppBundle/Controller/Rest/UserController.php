@@ -33,13 +33,13 @@ class UserController extends Controller
     }
 
     /**
-     * @Route("/list", methods="GET")
+     * @Route("/list/{role}", methods="GET", defaults={"role"="all"}, requirements={"role"="all|admin"})
      *
      * @return Response
      */
-    public function listUsersAction(Request $request, UserService $userService)
+    public function listUsersAction(Request $request, UserService $userService, $role)
     {
-        $users = $userService->listUsers();
+        $users = $userService->listUsersByRole($role);
 
         return $this->renderResponse($users);
     }

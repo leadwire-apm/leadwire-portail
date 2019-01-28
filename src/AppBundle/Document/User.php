@@ -10,7 +10,7 @@ use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 
 /**
- * @ODM\Document(repositoryClass="ATS\UserBundle\Repository\UserRepository")
+ * @ODM\Document(repositoryClass="AppBundle\Repository\UserRepository")
  * @ODM\HasLifecycleCallbacks
  * @JMS\ExclusionPolicy("all")
  * @Unique(fields={"username"})
@@ -188,7 +188,9 @@ class User implements AdvancedUserInterface
 
     /**
      * @ODM\ReferenceMany(targetDocument="Application", mappedBy="owner")
-     * @JMS\Groups({"full","Default"})
+     * @JMS\Type("array<AppBundle\Document\Application>")
+     * @JMS\Expose
+     * @JMS\Groups({"Default", "full"})
      */
     public $myApps;
 
@@ -249,9 +251,13 @@ class User implements AdvancedUserInterface
      */
     private $lockMessage;
 
+    /**
+     * Constructor
+     */
     public function __construct()
     {
         $this->roles = [];
+        $this->locked = false;
     }
 
     /**

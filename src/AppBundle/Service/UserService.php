@@ -111,6 +111,35 @@ class UserService
         return $this->userManager->getAll();
     }
 
+    /**
+     * List users by role
+     *
+     * @param string $role
+     *
+     * @return array
+     */
+    public function listUsersByRole($role)
+    {
+        $users = [];
+        switch ($role) {
+            case 'admin':
+                $users = $this->userManager->getBy(
+                    [
+                        'roles' => [
+                            '$all' => [User::ROLE_ADMIN],
+                        ],
+                    ]
+                );
+                break;
+
+            default:
+                $users = $this->userManager->getAll();
+                break;
+        }
+
+        return $users;
+    }
+
     public function subscribe($data, User $user)
     {
         /** @var string $json */

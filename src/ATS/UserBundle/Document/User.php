@@ -242,7 +242,7 @@ class User implements AdvancedUserInterface, \Serializable
      */
     public function setRoles(array $roles)
     {
-        $this->roles = $roles;
+        $this->roles = array_values($roles);
 
         return $this;
     }
