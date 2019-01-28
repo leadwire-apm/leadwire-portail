@@ -72,7 +72,7 @@ class User implements AdvancedUserInterface
     /**
      * @var array
      *
-     * @ODM\Field(type="hash")
+     * @ODM\Field(type="collection")
      * @JMS\Type("array")
      * @JMS\Expose
      */
