@@ -77,7 +77,7 @@ class ApplicationController extends Controller
         }
 
         return $this->renderResponse(
-            $statService->getStats(['app.$id' => $app->getId()]),
+            $statService->getStats(['application.id' => $app->getId()]),
             Response::HTTP_OK,
             ["Default"]
         );

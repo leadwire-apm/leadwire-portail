@@ -62,7 +62,7 @@ app_uuid;jour;nb_tx'
                     for ($c = 1; $c < $num; $c++) {
                         if (false === isset($apps[$data[0]])) {
                             $apps[$data[0]] = $this->applicationManager->getOneBy(['uuid' => $data[0]]);
-                            if ($apps[$data[0]] === false) {
+                            if ($apps[$data[0]] === null) {
                                 $output->writeln(
                                     "<fg=red> App with uuid = '"
                                     . $data[0]
@@ -71,6 +71,7 @@ app_uuid;jour;nb_tx'
                                 continue;
                             }
                         }
+                        $stats[$row] = new Stat();
                         $timezone = new \DateTimeZone('Europe/London');
                         $date = DateTime::createFromFormat('Ymd', $data[1], $timezone);
                         if ($date instanceof DateTime) {
@@ -78,7 +79,6 @@ app_uuid;jour;nb_tx'
                         } else {
                             throw new \Exception(sprintf("Bad value for DateTime object [%s]", $data[1]));
                         }
-                        $stats[$row] = new Stat();
                         $stats[$row]->setNbr($data[2])
                             ->setApplication($apps[$data[0]]);
 
