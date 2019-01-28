@@ -492,7 +492,7 @@ class User implements AdvancedUserInterface
     /**
      * Get expireAt
      *
-     * @return \DateTime
+     * @return \DateTime|null
      */
     public function getExpireAt()
     {
