@@ -36,11 +36,11 @@ doctrine_mongodb:
                 username: '%database_user%'
                 password: '%database_pass%'
                 connect: true
-                db: 'ATSBoilerPlateTestDB'
+                db: 'leadwire_test_db'
     document_managers:
         default:
             connection: default
-            database: 'ATSBoilerPlateTestDB'
+            database: 'leadwire_test_db'
             auto_mapping: true
             logging: false
 

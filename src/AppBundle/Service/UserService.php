@@ -374,19 +374,6 @@ class UserService
     }
 
     /**
-     * Performs a full text search on  User
-     *
-     * @param string $term
-     * @param string $lang
-     *
-     * @return array
-     */
-    public function textSearch($term, $lang)
-    {
-        return $this->userManager->textSearch($term, $lang);
-    }
-
-    /**
      * @param User $user
      */
     public function sendVerificationEmail(User $user)
