@@ -860,7 +860,7 @@ class User implements AdvancedUserInterface
      */
     public function isAccountNonExpired()
     {
-        if ($this->getExpireAt() == null) {
+        if ($this->getExpireAt() === null) {
             return true;
         }
 
