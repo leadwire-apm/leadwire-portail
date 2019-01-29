@@ -28,7 +28,7 @@ class ApplicationController extends Controller
      *
      * @return Response
      */
-    public function getAppAction(Request $request, ApplicationService $applicationService, $id)
+    public function getApplicationAction(Request $request, ApplicationService $applicationService, $id)
     {
         $data = $applicationService->getApplication($id);
 
@@ -68,7 +68,7 @@ class ApplicationController extends Controller
      *
      * @return Response
      */
-    public function getStatsAction(StatService $statService, ApplicationService $applicationService, $id)
+    public function getApplicationStatsAction(StatService $statService, ApplicationService $applicationService, $id)
     {
         $app = $applicationService->getApplication($id);
 
@@ -94,7 +94,8 @@ class ApplicationController extends Controller
      */
     public function activateAppAction(Request $request, ApplicationService $applicationService, $id)
     {
-        $app = $applicationService->activateApplication($id, json_decode($request->getContent()));
+        $activationCode = json_decode($request->getContent())->code;
+        $app = $applicationService->activateApplication($id, $activationCode);
 
         if ($app !== null) {
             return $this->renderResponse($app, Response::HTTP_OK, ["Default"]);
@@ -114,7 +115,7 @@ class ApplicationController extends Controller
     public function listAppsAction(Request $request, ApplicationService $applicationService)
     {
         $user = $this->getUser();
-        $data = array_merge($applicationService->invitedListApps($user), $applicationService->listApps($user));
+        $data = array_merge($applicationService->listInvitedToApplications($user), $applicationService->listOwnedApplications($user));
 
         return $this->renderResponse($data, Response::HTTP_OK, ["Default"]);
     }
@@ -129,7 +130,7 @@ class ApplicationController extends Controller
      */
     public function invitedListAppsAction(Request $request, ApplicationService $applicationService)
     {
-        $data = $applicationService->invitedListApps($this->getUser());
+        $data = $applicationService->listInvitedToApplications($this->getUser());
 
         return $this->renderResponse($data);
     }
@@ -144,7 +145,7 @@ class ApplicationController extends Controller
      *
      * @throws \Exception
      */
-    public function newAppAction(Request $request, ApplicationService $applicationService)
+    public function newApplicationAction(Request $request, ApplicationService $applicationService)
     {
         try {
             $data = $request->getContent();
@@ -169,7 +170,7 @@ class ApplicationController extends Controller
      * @param string $id
      * @return Response
      */
-    public function updateAppAction(Request $request, ApplicationService $applicationService, string $id)
+    public function updateApplicationAction(Request $request, ApplicationService $applicationService, string $id)
     {
         try {
             $data = $request->getContent();
@@ -190,7 +191,7 @@ class ApplicationController extends Controller
      *
      * @return Response
      */
-    public function deleteAppAction(Request $request, ApplicationService $applicationService, $id)
+    public function deleteApplicationAction(Request $request, ApplicationService $applicationService, $id)
     {
         $applicationService->deleteApp($id);
 
@@ -214,7 +215,7 @@ class ApplicationController extends Controller
     {
         $this->denyAccessUnlessGranted([User::ROLE_ADMIN, User::ROLE_SUPER_ADMIN]);
 
-        $applications = $applicationService->getApps();
+        $applications = $applicationService->getApplications();
 
         return $this->renderResponse($applications, Response::HTTP_OK, ["Default"]);
     }

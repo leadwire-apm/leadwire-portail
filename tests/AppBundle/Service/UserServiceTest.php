@@ -5,25 +5,38 @@ namespace Tests\AppBundle\Service;
 use AppBundle\Document\User;
 use AppBundle\Service\UserService;
 use Tests\AppBundle\BaseFunctionalTest;
+use ATS\CoreBundle\Service\Util\StringWrapper;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use function GuzzleHttp\json_encode;
 
 
 class UserServiceTest extends BaseFunctionalTest
 {
     public function testListUsersByRole()
     {
+        $this->userManager->deleteAll();
+
         for ($i = 0; $i < 50; $i++) {
             $user = new User("user$i", "user$i@test.com");
+            $user->setUuid(StringWrapper::random(32));
+            if ($i === 0) {
+                $user->setRoles([USer::ROLE_SUPER_ADMIN]);
+            }
+            if ($i === 1) {
+                $user->setRoles([USer::ROLE_ADMIN]);
+            }
             if ($i < 10) {
-                $user->setEnabled(true);
+                $user->setActive(true);
             }
             $this->documentManager->persist($user);
         }
         $this->documentManager->flush();
 
-        $users = $this->userService->listUsersByRole(User::DEFAULT_ROLE);
-
+        $users = $this->userService->listUsersByRole('whatever');
         $this->assertCount(50, $users);
+
+        $users = $this->userService->listUsersByRole('admin');
+        $this->assertCount(1, $users);
     }
 
     // public function testSubscribe()
@@ -46,25 +59,72 @@ class UserServiceTest extends BaseFunctionalTest
     // {
     // }
 
-    // public function testGetUser()
-    // {
-    // }
+    public function testGetUser()
+    {
+        $this->userManager->deleteAll();
+        $user =  new User();
+        $user->setUsername('user1');
+        $this->documentManager->persist($user);
+        $this->documentManager->flush();
+        $fetched = $this->userService->getUser($user->getId());
 
-    // public function testGetUsers()
-    // {
-    // }
+        $this->assertEquals($user->getUsername(), $fetched->getUsername());
+    }
 
-    // public function testNewUser()
-    // {
-    // }
+    public function testGetUsers()
+    {
+        $this->userManager->deleteAll();
+
+        for ($i = 0; $i < 50; $i++) {
+            $user = new User("user$i", "user$i@test.com");
+            $user->setUuid(StringWrapper::random(32));
+            if ($i < 10) {
+                $user->setActive(true);
+            }
+            $this->documentManager->persist($user);
+        }
+        $this->documentManager->flush();
+
+        $users = $this->userService->getUsers();
+        $this->assertCount(50, $users);
+    }
+
+    public function testNewUser()
+    {
+        $this->userManager->deleteAll();
+        $user =  new User();
+        $user->setUsername('user1');
+
+        $json = $this->serializer->serialize($user, 'json');
+
+        $success = $this->userService->newUser($json);
+
+        $this->assertTrue($success);
+
+        $fetched = $this->userManager->getOneBy(['username' => 'user1']);
+
+        $this->assertEquals($fetched->getUsername(), $user->getUsername());
+
+    }
 
     // public function testUpdateUser()
     // {
     // }
 
-    // public function testDeleteUser()
-    // {
-    // }
+    public function testDeleteUser()
+    {
+        $this->userManager->deleteAll();
+        $user =  new User();
+        $user->setUsername('user1');
+        $this->documentManager->persist($user);
+        $this->documentManager->flush();
+
+        $this->userService->deleteUser($user->getId());
+        $users = $this->userManager->getAll();
+
+        $this->assertCount(0, $users);
+
+    }
 
     // public function testSendVerificationEmail()
     // {

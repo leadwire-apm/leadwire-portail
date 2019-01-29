@@ -382,7 +382,7 @@ class UserService
                     'link' => $this->router->generate('verify_email', ['email' => $user->getEmail()], UrlGeneratorInterface::ABSOLUTE_URL),
                 ]
             );
-        $this->mailer->send($mail, false);
+        $this->mailer->send($mail, true);
     }
 
     /**

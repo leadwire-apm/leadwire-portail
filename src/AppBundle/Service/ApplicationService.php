@@ -75,29 +75,31 @@ class ApplicationService
     }
 
     /**
-     * List all apps
+     * List all apps owned by a given user
      *
      * @param User $user
      *
      * @return array
      */
-    public function listApps(User $user)
+    public function listOwnedApplications(User $user): array
     {
         return $this->applicationManager->getBy(['owner' => $user, 'removed' => false]);
     }
 
     /**
-     * @var USer $user
+     * Lists all the applications that the user holds an invitation to
+     *
+     * @var User $user
      *
      * @return array
      */
-    public function invitedListApps(User $user)
+    public function listInvitedToApplications(User $user): array
     {
         $apps = [];
 
         foreach ($user->invitations as $invitation) {
             $app = $invitation->getApplication();
-            if ($app->isRemoved() === false) {
+            if ($app->isRemoved() !== false) {
                 $apps[] = $app;
             }
         }
@@ -128,6 +130,7 @@ class ApplicationService
      */
     public function getApplication($id): ?Application
     {
+        // Very bad programming
         return $this->applicationManager->getOneBy(['_id' => $id, 'removed' => false]);
     }
 
@@ -135,17 +138,15 @@ class ApplicationService
      * Activate Disabled App
      *
      * @param string $id
-     * @param \stdClass $body
+     * @param string $activationCode
      *
      * @return ?Application
      */
-    public function activateApplication($id, $body): ?Application
+    public function activateApplication($id, $activationCode): ?Application
     {
-        $code = $body->code;
-
-        if ((strlen($code) === 6) && (substr($code, 1, 1) === 'B') &&
-            (substr($code, 4, 1) === '7') &&
-            (strtoupper($code) === $code)) {
+        if ((strlen($activationCode) === 6) && (substr($activationCode, 1, 1) === 'B') &&
+            (substr($activationCode, 4, 1) === '7') &&
+            (strtoupper($activationCode) === $activationCode)) {
             $app = $this->getApplication($id);
 
             if ($app instanceof Application) {
@@ -169,7 +170,7 @@ class ApplicationService
      *
      * @return array
      */
-    public function getApps(array $criteria = [])
+    public function getApplications(array $criteria = [])
     {
         return $this->applicationManager->getBy($criteria);
     }

@@ -2,8 +2,8 @@
 
 namespace Tests\ATS\CoreBundle\Manager;
 
+use AppBundle\Document\User;
 use AppBundle\Manager\UserManager;
-use ATS\CoreBundle\Tests\Document\User;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 class AbstractManagerTest extends KernelTestCase
@@ -39,19 +39,18 @@ class AbstractManagerTest extends KernelTestCase
         for ($i = 0; $i < 50; $i++) {
             $user = new User("user$i", "user$i@test.com");
             if ($i < 10) {
-                $user->setEnabled(true);
+                $user->setActive(true);
             }
             $this->documentManager->persist($user);
         }
         $this->documentManager->flush();
 
-        $pageItems = $this->userManager->paginate(['enabled' => true]);
+        $pageItems = $this->userManager->paginate(['active' => true]);
         $this->assertCount(10, $pageItems);
         $pageItems = $this->userManager->paginate();
         $this->assertCount(20, $pageItems);
         $pageItems = $this->userManager->paginate([], 1);
         $this->assertCount(20, $pageItems);
-        $this->assertEquals('user49', $pageItems[0]->getUsername());
     }
 
     /**
@@ -63,12 +62,12 @@ class AbstractManagerTest extends KernelTestCase
     {
         $this->userManager->deleteAll();
 
-        $user = new User('toto', 'toto@test.com');
+        $user = new User();
+        $user->setUsername('toto');
         $this->userManager->update($user);
         $fetched = $this->documentManager->getRepository(User::class)->findBy([]);
         $this->assertCount(1, $fetched);
         $this->assertEquals('toto', $fetched[0]->getUsername());
-
     }
 
     /**
@@ -83,8 +82,8 @@ class AbstractManagerTest extends KernelTestCase
         $this->userManager->deleteAll();
         $this->assertCount(0, $this->documentManager->getRepository(User::class)->findBy([]));
 
-        $user = new User('testDelete', 'testDelete@test.com');
-
+        $user = new User();
+        $user->setUsername('testDelete');
         $this->userManager->update($user);
         $userId = $user->getId();
         $this->assertCount(1, $this->documentManager->getRepository(User::class)->findBy([]));
@@ -105,7 +104,8 @@ class AbstractManagerTest extends KernelTestCase
     public function testDeleteById()
     {
         $this->userManager->deleteAll();
-        $user = new User('deleteById', 'stringValue');
+        $user = new User();
+        $user->setUsername('deleteById');
         $this->userManager->update($user);
         $this->assertCount(1, $this->documentManager->getRepository(User::class)->findBy([]));
         $this->userManager->deleteById($user->getId());
@@ -141,9 +141,11 @@ class AbstractManagerTest extends KernelTestCase
     {
         $this->userManager->deleteAll();
         $user = new User('getAll', 'getAll@test.com');
+        $user->setUsername('getAll');
         $this->userManager->update($user);
         $this->assertCount(1, $this->userManager->getAll());
         $user = new User('getAll2', 'getAll2@test.com');
+        $user->setUsername('getAll2');
         $this->userManager->update($user);
         $this->assertCount(2, $this->userManager->getAll());
         $this->assertEquals("getAll", $this->userManager->getAll()[0]->getUsername());
@@ -159,7 +161,8 @@ class AbstractManagerTest extends KernelTestCase
     public function testGetBy()
     {
         $this->userManager->deleteAll();
-        $user = new User('getBy', 'getBy@test.com');
+        $user = new User();
+        $user->setUsername('getBy');
         $this->userManager->update($user);
         $users = $this->userManager->getBy(['username' => "getBy"]);
         $this->assertCount(1, $users);
@@ -175,55 +178,22 @@ class AbstractManagerTest extends KernelTestCase
     {
         $this->userManager->deleteAll();
         $user = new User('user1', 'user1');
-        $user->setEnabled(true);
+        $user->setActive(true);
         $this->userManager->update($user);
         $user = new User('user2', 'user2');
-        $user->setEnabled(true);
+        $user->setActive(true);
         $this->userManager->update($user);
         $user = new User('user3', 'user3');
-        $user->setEnabled(false);
+        $user->setUsername('user3');
+        $user->setActive(false);
         $this->userManager->update($user);
-        $users = $this->userManager->getBy(['enabled' => true]);
+        $users = $this->userManager->getBy(['active' => true]);
         $this->assertCount(2, $users);
-        $users = $this->userManager->getBy(['enabled' => false]);
+        $users = $this->userManager->getBy(['active' => false]);
         $this->assertCount(1, $users);
         $this->assertEquals('user3', $users[0]->getUsername());
     }
 
-    /**
-     * @uses ATS\CoreBundle\Repository\BaseDocumentRepository::save
-     * @uses ATS\CoreBundle\Repository\BaseDocumentRepository::deleteAll
-     * @uses ATS\CoreBundle\Repository\BaseDocumentRepository::textSearch
-     *
-     * @return void
-     */
-    public function testTextSearch()
-    {
-        $this->documentManager->getRepository(User::class)->deleteAll();
-        $user = new User();
-        $user->setUsername("test_username");
-        $user->setEmail("user@test.com");
-        $user->setEnabled(true);
-        $this->documentManager->getRepository(User::class)->save($user);
-        $user = new User();
-        $user->setUsername("toto");
-        $user->setEmail("toto@test.com");
-        $user->setEnabled(true);
-        $this->documentManager->getRepository(User::class)->save($user);
-
-        // Ensure indexes are created
-        $this->documentManager
-            ->getConnection()
-            ->getMongoClient()
-            ->selectDB('core_test')
-            ->selectCollection('User')
-            ->createIndex(['username' => 'text']);
-
-        $found = $this->userManager->textSearch("test_username");
-        $this->assertCount(1, $found);
-
-        $this->assertEquals('test_username', $found[0]->getUsername());
-    }
 
     /**
      * @uses ATS\CoreBundle\Repository\BaseDocumentRepository::deleteAll

@@ -4,7 +4,10 @@ namespace Tests\AppBundle;
 
 use Firebase\JWT\JWT;
 use JMS\serializer\Serializer;
+use AppBundle\Manager\UserManager;
 use AppBundle\Service\UserService;
+use JMS\Serializer\SerializerInterface;
+use AppBundle\Service\ApplicationService;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -33,6 +36,21 @@ abstract class BaseFunctionalTest extends BaseKernelTestCase
     protected $userService;
 
     /**
+     * @var UserManager
+     */
+    protected $userManager;
+
+    /**
+     * @var ApplicationService
+     */
+    protected $applicationService;
+
+    /**
+     * @var SerializerInterface
+     */
+    protected $serializer;
+
+    /**
      * {@inheritDoc}
      */
     public function setUp()
@@ -40,8 +58,11 @@ abstract class BaseFunctionalTest extends BaseKernelTestCase
         self::bootKernel();
         $this->container = self::$kernel->getContainer();
         $this->documentManager = $this->container->get('doctrine_mongodb.odm.document_manager');
-
+        $this->serializer = $this->container->get('jms_serializer');
+        $this->userManager = $this->container->get(UserManager::class);
         $this->userService = $this->container->get(UserService::class);
+
+        $this->applicationService = $this->container->get(ApplicationService::class);
 
         $this->documentManager->getSchemaManager()->dropDatabases();
         $this->documentManager->getSchemaManager()->updateIndexes();
