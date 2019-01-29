@@ -84,7 +84,7 @@ deploy:test:
             eval $(ssh-agent -s) &&
             git pull origin develop &&
             ssh-add ~/.ssh/deploy_rsa &&
-            composer update --no-dev --no-scripts &&
+            composer install --no-dev --no-scripts &&
             app/console assets:install --env prod &&
             app/console assetic:dump --env prod &&
             app/console cache:clear --env prod

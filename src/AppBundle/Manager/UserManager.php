@@ -33,7 +33,18 @@ class UserManager extends AbstractManager
         return $user;
     }
 
-    public function create($username, $uuid, $avatar, $name, $roles = [], $active = true)
+    /**
+     *
+     * @param string $username
+     * @param string $uuid
+     * @param string $avatar
+     * @param string $name
+     * @param array $roles
+     * @param boolean $active
+     *
+     * @return void
+     */
+    public function create($username, $uuid, $avatar, $name, $roles = [], $active = true): void
     {
         $user = new User();
         $user
