@@ -4,7 +4,7 @@ security:
 
     providers:
         simple_user_provider:
-            id: ATS\UserBundle\Provider\SimpleUserProvider
+            id: APpBundle\Provider\SimpleUserProvider
 
     firewalls:
         dev:

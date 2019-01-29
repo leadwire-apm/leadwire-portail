@@ -10,7 +10,7 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 class UserServiceTest extends BaseFunctionalTest
 {
-    public function testListUsers()
+    public function testListUsersByRole()
     {
         for ($i = 0; $i < 50; $i++) {
             $user = new User("user$i", "user$i@test.com");
@@ -21,14 +21,10 @@ class UserServiceTest extends BaseFunctionalTest
         }
         $this->documentManager->flush();
 
-        $users = $this->userService->listUsers();
+        $users = $this->userService->listUsersByRole(User::DEFAULT_ROLE);
 
         $this->assertCount(50, $users);
     }
-
-    // public function testListUsersByRole()
-    // {
-    // }
 
     // public function testSubscribe()
     // {

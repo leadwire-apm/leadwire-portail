@@ -94,15 +94,3 @@ doctrine_mongodb:
             database: '%database_name%'
             auto_mapping: true
             logging: false
-
-fos_oauth_server:
-    db_driver: mongodb
-    client_class:        ATS\UserBundle\Document\Client
-    access_token_class:  ATS\UserBundle\Document\AccessToken
-    refresh_token_class: ATS\UserBundle\Document\RefreshToken
-    auth_code_class:     ATS\UserBundle\Document\AuthCode
-    service:
-        user_provider: ATS\UserBundle\Provider\SimpleUserProvider
-        options:
-            supported_scopes: user
-            access_token_lifetime: 3600 # 1 hour in seconds

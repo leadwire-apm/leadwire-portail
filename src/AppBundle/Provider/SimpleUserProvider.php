@@ -1,15 +1,20 @@
-<?php declare(strict_types=1);
+<?php declare (strict_types = 1);
 
-namespace ATS\UserBundle\Provider;
+namespace AppBundle\Provider;
 
-use ATS\UserBundle\Document\User;
-use ATS\UserBundle\Manager\UserManager;
-use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Security\Core\User\UserProviderInterface;
+use AppBundle\Document\User;
+use AppBundle\Manager\UserManager;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\User\UserProviderInterface;
 
-class ApiKeyUserProvider implements UserProviderInterface
+/**
+ * Simple user provider
+ *
+ * @author Wajih WERIEMI <wweriemi@ats-digital.com>
+ */
+class SimpleUserProvider implements UserProviderInterface
 {
     /**
      * @var UserManager
@@ -26,17 +31,13 @@ class ApiKeyUserProvider implements UserProviderInterface
         $this->userManager = $userManager;
     }
 
-    public function getUsernameForApiKey($apiKey)
-    {
-        $user = $this->userManager->getUserByApiKey($apiKey);
-
-        return $user ? $user->getUsername() : null;
-    }
-
+    /**
+     * {@inheritDoc}
+     */
     public function loadUserByUsername($username)
     {
         $user = $this->userManager->getUserByUsername($username);
-        if ($user) {
+        if ($user !== null) {
             return $user;
         }
 
@@ -45,15 +46,24 @@ class ApiKeyUserProvider implements UserProviderInterface
         );
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function refreshUser(UserInterface $user)
     {
-        // this is used for storing authentication in the session
-        // but in this example, the token is sent in each request,
-        // so authentication can be stateless. Throwing this exception
-        // is proper to make things stateless
-        throw new UnsupportedUserException();
+        $class = get_class($user);
+        if ($this->supportsClass($class) === false) {
+            throw new UnsupportedUserException(
+                sprintf('Instances of "%s" are not supported.', $class)
+            );
+        }
+
+        return $this->loadUserByUsername($user->getUsername());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function supportsClass($class)
     {
         return User::class === $class;

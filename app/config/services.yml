@@ -27,10 +27,6 @@ services:
         resource: '../../src/ATS/EmailBundle/*'
         exclude: '../../src/ATS/EmailBundle/{Document,Repository}'
 
-    ATS\UserBundle\:
-        resource: '../../src/ATS/UserBundle/*'
-        exclude: '../../src/ATS/UserBundle/{Document,Repository}'
-
     ATS\TranslationBundle\:
         resource: '../../src/ATS/TranslationBundle/*'
         exclude: '../../src/ATS/TranslationBundle/{Document,Repository}'

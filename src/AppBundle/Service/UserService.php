@@ -102,16 +102,6 @@ class UserService
     }
 
     /**
-     * List all users
-     *
-     * @return array
-     */
-    public function listUsers()
-    {
-        return $this->userManager->getAll();
-    }
-
-    /**
      * List users by role
      *
      * @param string $role
