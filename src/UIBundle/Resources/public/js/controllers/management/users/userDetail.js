@@ -34,21 +34,7 @@
                 })
                 .catch(function (err) {
                     vm.flipActivityIndicator('isLoading');
-                    // TODO Remove This
-                    vm.user = {
-                        id: 1,
-                        name: 'Ibra',
-                        email: 'ibra@gmail.com',
-                        active: true,
-                        role: ['ROLE_USER', 'ROLE_ADMIN'],
-                        plans: [
-                            { id: 1, name: 'Premium' },
-                            { id: 2, name: 'BASIC' }],
-                        applications: [
-                            { name: 'App 1 ' },
-                            { name: 'App 2' },
-                            { name: 'App 3' }],
-                    };
+                    vm.user = {};
                 });
         };
 

@@ -33,43 +33,38 @@ angular.module('leadwireApp')
                 },
             ];
 
-            var loginRequired = [
-                '$q',
-                '$location',
-                '$auth',
-                function ($q, $location, $auth) {
-                    var deferred = $q.defer();
-                    if ($auth.isAuthenticated()) {
+            var loginRequired = function ($q,
+                                          $location, $auth, $rootScope,
+                                          MenuFactory) {
+                var deferred = $q.defer();
+                if ($auth.isAuthenticated()) {
+                    $rootScope.menus = MenuFactory.get('SETTINGS');
+                    deferred.resolve();
+                } else {
+                    $location.path('/login');
+                }
+                return deferred.promise;
+            };
+
+            var adminRequired = function (
+                $q, UserService, $location, $auth, $localStorage) {
+                var deferred = $q.defer();
+                var roles = $localStorage.user.roles;
+                if ($auth.isAuthenticated()) {
+                    if (roles && (UserService.isAdmin($localStorage.user)
+                    )) {
                         deferred.resolve();
                     } else {
-                        $location.path('/login');
+                        deferred.reject('UNAUTHORIZED');
+                        $location.path('/');
                     }
-                    return deferred.promise;
-                },
-            ];
+                } else {
+                    $location.path('/login');
+                    deferred.reject();
+                }
+                return deferred.promise;
 
-            var adminRequired = [
-                '$q',
-                '$location',
-                '$auth',
-                '$localStorage',
-                function ($q, $location, $auth, $localStorage) {
-                    var deferred = $q.defer();
-                    if ($auth.isAuthenticated()) {
-                        if ($localStorage.user.roles
-                            &&
-                            $localStorage.user.roles.indexOf('ROLE_ADMIN') !==
-                            -1) {
-                            deferred.resolve();
-                        } else {
-                            $location.path('/');
-                        }
-                    } else {
-                        $location.path('/login');
-                    }
-                    return deferred.promise;
-                },
-            ];
+            };
 
             // Application routes
             $stateProvider.state('app', {
@@ -139,7 +134,7 @@ angular.module('leadwireApp')
                     templateUrl: 'application/list.html',
                     resolve: {
                         permissions: loginRequired,
-                        menu: updateMenuItems('SETTINGS'),
+                        deps: updateMenuItems('SETTINGS'),
                         beforeMount: [
                             '$rootScope',
                             'UserService',
@@ -506,14 +501,10 @@ angular.module('leadwireApp')
                 });
 
             function updateMenuItems (key) {
-                return [
-                    'MenuFactory',
-                    '$rootScope',
-                    function (MenuFactory, $rootScope) {
-                        $rootScope.menus = MenuFactory.get(key);
-                        return Promise.resolve();
-                    },
-                ];
+                return function (MenuFactory, $rootScope) {
+                    $rootScope.menus = MenuFactory.get(key);
+                    return Promise.resolve();
+                };
             }
         },
     ])

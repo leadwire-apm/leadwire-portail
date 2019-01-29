@@ -10,6 +10,7 @@
             '$http',
             '$localStorage',
             'ApplicationService',
+            'UserService',
             'DashboardService',
             'MESSAGES_CONSTANTS',
             'toastr',
@@ -26,6 +27,7 @@
         $http,
         $localStorage,
         AppService,
+        UserService,
         DashboardService,
         MESSAGES_CONSTANTS,
         toastr,
@@ -170,6 +172,9 @@
                 isConfigOpen: false,
             };
 
+            $scope.isAdmin = function () {
+                return UserService.isAdmin($localStorage.user);
+            };
             $rootScope.user = $localStorage.user;
             $scope.applications = $localStorage.applications;
             $scope.selectedAppId = $localStorage.selectedAppId;

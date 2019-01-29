@@ -23,8 +23,8 @@
                 <i class="fa fa-circle-thin"></i>
             </a>
         </li>
-        <li class="pull-left hidden-xs" ng-if="user.roles.indexOf('ROLE_ADMIN')!==-1">
-            <a ui-sref="app.management.users">
+        <li class="pull-left hidden-xs" ng-if="isAdmin()">
+            <a ui-sref="app.management.users"> [[text]]
                 <i class="fa fa-dashboard"></i>
             </a>
         </li>
@@ -39,7 +39,8 @@
         </li>
         <li class="dropdown hidden" dropdown>
 
-            <a href="javascript:;" class="dropdown-toggle isDisabled "> <!--dropdown-toggle-->
+            <a href="javascript:;" class="dropdown-toggle isDisabled ">
+                <!--dropdown-toggle-->
                 <i class="fa fa-bell-o"></i>
                 <div class="status bg-danger border-danger animated bounce"></div>
             </a>

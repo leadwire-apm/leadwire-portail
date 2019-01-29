@@ -19,7 +19,6 @@
             $state,
         ) {
             var vm = this;
-            var ROLE_ADMIN = 'ROLE_ADMIN';
 
             vm.flipActivityIndicator = function (key) {
                 vm.ui[key] = !vm.ui[key];
@@ -29,15 +28,15 @@
                 swal(MESSAGES_CONSTANTS.SWEET_ALERT_VALIDATION())
                     .then(function (willDelete) {
                         if (willDelete) {
-                            vm.flipActivityIndicator('isDeleting' + id);
+                            vm.flipActivityIndicator('isProcessing');
                             UserService.delete(id)
                                 .then(function (response) {
-                                    vm.flipActivityIndicator('isDeleting' + id);
+                                    vm.flipActivityIndicator('isProcessing');
                                     toastr.success(MESSAGES_CONSTANTS.SUCCESS);
 
                                 })
                                 .catch(function (err) {
-                                    vm.flipActivityIndicator('isDeleting' + id);
+                                    vm.flipActivityIndicator('isProcessing');
                                     toastr.error(MESSAGES_CONSTANTS.ERROR);
                                 });
                         } else {
@@ -78,7 +77,8 @@
             };
 
             vm.isAdmin = function (admin) {
-                return (admin && admin.roles && admin.roles.indexOf(ROLE_ADMIN) !==
+                return (admin && admin.roles &&
+                    admin.roles.indexOf(UserService.getRoles().ADMIN) !==
                     -1);
             };
 
@@ -95,36 +95,39 @@
             };
 
             vm.changePermission = function (admin) {
-                vm.flipActivityIndicator('isSaving' + admin.id);
+                vm.flipActivityIndicator('isProcessing');
                 const user = angular.extend({}, admin);
                 if (vm.isAdmin(user)) {
                     user.roles = user.roles.filter(function (role) {
-                        return role !== ROLE_ADMIN;
+                        return role !== UserService.getRoles().ADMIN;
                     });
                 } else {
-                    user.roles.push(ROLE_ADMIN);
+                    user.roles.push(UserService.getRoles().ADMIN);
                 }
                 UserService.update(
                     { id: user.id, email: user.email, roles: user.roles })
                     .then(function (response) {
                         toastr.success(MESSAGES_CONSTANTS.SUCCESS);
-                        vm.flipActivityIndicator('isSaving' + admin.id);
+                        vm.flipActivityIndicator('isProcessing');
                     })
                     .then(vm.loadUsers)
                     .catch(function (error) {
                         toastr.error(MESSAGES_CONSTANTS.ERROR);
-                        vm.flipActivityIndicator('isSaving' + admin.id);
+                        vm.flipActivityIndicator('isProcessing');
                     });
             };
 
             vm.toggleUserStatus = function (id, message) {
+                vm.flipActivityIndicator('isProcessing');
                 return UserService.toggleStatus(id, message)
                     .then(function (response) {
+                        vm.flipActivityIndicator('isProcessing');
                         toastr.success(MESSAGES_CONSTANTS.SUCCESS);
                         return response;
                     })
                     .then(vm.loadUsers)
                     .catch(function (err) {
+                        vm.flipActivityIndicator('isProcessing');
                         toastr.error(MESSAGES_CONSTANTS.ERROR);
                         vm.flipActivityIndicator('isSaving');
                     });
@@ -154,6 +157,7 @@
                     ui: {
                         isSaving: false,
                         isLoading: false,
+                        isProcessing: false,
                     },
                     users: [],
                 });

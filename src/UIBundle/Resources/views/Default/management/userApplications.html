@@ -1,7 +1,24 @@
 <div class="col-md-12">
-    <h4>Application</h4>
+    <div class="header">
+        <h3>Application</h3>
+    </div>
     <hr>
-    <ul class="list-group">
-        <li class="list-group-item" ng-repeat="app in ctrl.user.applications"> [[app.name]]</li>
-    </ul>
+    <div class="col-sm-12">
+        <div class="col-sm-4 panel panel-bordered bordered" ng-repeat="app in ctrl.user.myApps">
+            <div class="panel-title">
+                <h4>Application name : [[app.name]] </h4>
+                <hr>
+            </div>
+            <div class="panel-body">
+
+                <p><label> Description : </label> [[app.description]]</p>
+                <p><label>Status : </label> <span
+                        data-ng-class="app.enabled ? 'label label-success' : 'label label-danger'">
+                [[app.enabled ? 'Activated' : 'Deactivated']]
+            </span>
+                </p>
+            </div>
+
+        </div>
+    </div>
 </div>

@@ -97,12 +97,12 @@ function LoginControllerFN (
     }
 
     function handleAfterRedirect (user) {
-        const isAdmin = user.roles.indexOf('ROLE_ADMIN') !== -1;
-        const isSuperAdmin = user.roles.indexOf('ROLE_SUPER_ADMIN') !== -1;
+        const isAdmin = UserService.isAdmin(user);
+        const isSuperAdmin = user.roles.indexOf(
+            UserService.getRoles().SUPER_ADMIN) !== -1;
         if (isAdmin) {
             $localStorage.currentMenu = MenuFactory.get('MANAGEMENT');
             return { path: 'app.management.users' };
-
         } else if (isSuperAdmin) {
             // TODO
         } else {
