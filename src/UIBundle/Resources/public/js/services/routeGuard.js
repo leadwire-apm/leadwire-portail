@@ -3,13 +3,14 @@
         .module('leadwireApp')
         .service('RouteGuard', [
             '$q',
+            'UserService',
             '$location',
             '$auth',
             '$localStorage',
-            RouteGuardFN
+            RouteGuardFN,
         ]);
 
-    function RouteGuardFN($q, $location, $auth, $localStorage) {
+    function RouteGuardFN ($q, UserService, $location, $auth, $localStorage) {
 
         var service = this;
         service.loginRequired = function () {
@@ -26,7 +27,7 @@
             var deferred = $q.defer();
             if ($auth.isAuthenticated()) {
                 if ($localStorage.user.roles
-                    && $localStorage.user.roles.indexOf('ROLE_ADMIN') !== -1) {
+                    && UserService.isAdmin($localStorage.user)) {
                     deferred.resolve();
                 } else {
                     $location.path('/');
@@ -35,9 +36,9 @@
                 $location.path('/login');
             }
             return deferred.promise;
-        }
+        };
 
-        return service
+        return service;
     }
 
 })(window.angular);

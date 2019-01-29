@@ -1,10 +1,10 @@
-(function() {
+(function () {
     if (!Array.prototype.reduce) {
         Object.defineProperty(Array.prototype, 'reduce', {
-            value: function(callback /*, initialValue*/) {
+            value: function (callback /*, initialValue*/) {
                 if (this === null) {
                     throw new TypeError(
-                        'Array.prototype.reduce called on null or undefined'
+                        'Array.prototype.reduce called on null or undefined',
                     );
                 }
                 if (typeof callback !== 'function') {
@@ -32,7 +32,7 @@
                     // a TypeError exception.
                     if (k >= len) {
                         throw new TypeError(
-                            'Reduce of empty array with no initial value'
+                            'Reduce of empty array with no initial value',
                         );
                     }
                     value = o[k++];
@@ -56,16 +56,16 @@
 
                 // 9. Return accumulator.
                 return value;
-            }
+            },
         });
     }
 
     if (!Object.keys) {
-        Object.keys = (function() {
+        Object.keys = (function () {
             'use strict';
             var hasOwnProperty = Object.prototype.hasOwnProperty,
                 hasDontEnumBug = !{ toString: null }.propertyIsEnumerable(
-                    'toString'
+                    'toString',
                 ),
                 dontEnums = [
                     'toString',
@@ -74,11 +74,11 @@
                     'hasOwnProperty',
                     'isPrototypeOf',
                     'propertyIsEnumerable',
-                    'constructor'
+                    'constructor',
                 ],
                 dontEnumsLength = dontEnums.length;
 
-            return function(obj) {
+            return function (obj) {
                 if (
                     typeof obj !== 'function' &&
                     (typeof obj !== 'object' || obj === null)
@@ -110,7 +110,7 @@
 
     if (!Array.prototype.find) {
         Object.defineProperty(Array.prototype, 'find', {
-            value: function(predicate) {
+            value: function (predicate) {
                 // 1. Let O be ? ToObject(this value).
                 if (this == null) {
                     throw new TypeError('"this" is null or not defined');
@@ -150,7 +150,33 @@
                 return undefined;
             },
             configurable: true,
-            writable: true
+            writable: true,
         });
+    }
+
+    if (!Array.prototype.some) {
+        Array.prototype.some = function (fun, thisArg) {
+            'use strict';
+
+            if (this == null) {
+                throw new TypeError(
+                    'Array.prototype.some called on null or undefined');
+            }
+
+            if (typeof fun !== 'function') {
+                throw new TypeError();
+            }
+
+            var t = Object(this);
+            var len = t.length >>> 0;
+
+            for (var i = 0; i < len; i++) {
+                if (i in t && fun.call(thisArg, t[i], i, t)) {
+                    return true;
+                }
+            }
+
+            return false;
+        };
     }
 })();

@@ -47,13 +47,11 @@ angular.module('leadwireApp')
             };
 
             var adminRequired = function (
-                $q, $location, $auth, $localStorage) {
+                $q, UserService, $location, $auth, $localStorage) {
                 var deferred = $q.defer();
                 var roles = $localStorage.user.roles;
                 if ($auth.isAuthenticated()) {
-                    if (roles && (
-                        roles.indexOf('ROLE_ADMIN') !== -1 ||
-                        roles.indexOf('ROLE_SUPER_ADMIN') !== -1
+                    if (roles && (UserService.isAdmin($localStorage.user)
                     )) {
                         deferred.resolve();
                     } else {

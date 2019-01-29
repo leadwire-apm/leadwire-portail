@@ -43,26 +43,32 @@
                             <td data-title="Actions" data-label="Actions"
                                 class="text-center"
                             >
+                                <button class="btn btn-default"
+                                        data-ng-class="ctrl.isAdmin(user) ? 'text-red' : 'text-green'"
+                                        data-ng-disabled="ctrl.ui.isProcessing"
+                                        ng-click="ctrl.handleChangePermission(user)">
+                                    <i class="fa fa-cogs"></i> [[ctrl.isAdmin(user) ?
+                                    'Revoke ' : 'Promote']]
+                                </button>
                                 <button data-ng-class="user.locked ? 'btn btn-success' : 'btn btn-danger'"
-                                        ng-click="ctrl.handleOnToggleLock(user)">
-                                  <i class="fa fa-lock"></i>  [[user.locked ? 'Activate' : 'Block']]
+                                        ng-click="ctrl.handleOnToggleLock(user)"
+                                        data-ng-disabled="ctrl.ui.isProcessing"
+                                >
+                                    <i class="fa fa-lock"></i> [[user.locked ? 'Activate'
+                                    : 'Block']]
                                 </button>
 
                                 <button class="btn btn-info"
-                                        ng-click="ctrl.goDetail(user.id)">
+                                        ng-click="ctrl.goDetail(user.id)"
+                                        data-ng-disabled="ctrl.ui.isProcessing"
+                                >
                                     <i class="fa fa-info-circle"></i> Detail
                                 </button>
-                                <button class="btn btn-default"
-                                        ng-click="ctrl.handleChangePermission(user)">
-                                   <i class="fa fa-cogs"></i> [[ctrl.isAdmin(user) ? 'Revoke ' : 'Promote']]
-                                    <spinner
-                                            is-loading="ctrl.ui['isSaving'+user.id]"></spinner>
-                                </button>
                                 <button class="btn btn-danger bg-red"
-                                        ng-click="ctrl.handleDeleteUser(user.id)">
+                                        ng-click="ctrl.handleDeleteUser(user.id)"
+                                        data-ng-disabled="ctrl.ui.isProcessing"
+                                >
                                     <i class="fa fa-trash"></i> Delete
-                                    <spinner
-                                            is-loading="ctrl.ui['isDeleting'+user.id]"></spinner>
                                 </button>
 
                             </td>
