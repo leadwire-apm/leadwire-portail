@@ -1,4 +1,4 @@
-(function(angular, swal, moment) {
+(function (angular, swal, moment) {
     angular
         .module('leadwireApp')
         .controller('applicationDetailCtrl', [
@@ -9,33 +9,35 @@
             'CONFIG',
             'toastr',
             'MESSAGES_CONSTANTS',
-            applicationDetailCtrlFN
+            applicationDetailCtrlFN,
         ]);
 
-    function applicationDetailCtrlFN(
+    function applicationDetailCtrlFN (
         ApplicationFactory,
         InvitationFactory,
         $stateParams,
         $rootScope,
         CONSTANTS,
         toastr,
-        MESSAGES_CONSTANTS
+        MESSAGES_CONSTANTS,
     ) {
         var vm = this;
 
-        vm.getApp = function() {
-            ApplicationFactory.get($stateParams.id).then(function(res) {
-                vm.app = res.data;
-            });
+        vm.getApp = function () {
+            ApplicationFactory.get($stateParams.id)
+                .then(function (res) {
+                    vm.app = res.data;
+                });
         };
-        vm.loadStats = function() {
-            ApplicationFactory.stats($stateParams.id).then(function(response) {
-                vm.appStats = response.data;
-            });
+        vm.loadStats = function () {
+            ApplicationFactory.stats($stateParams.id)
+                .then(function (response) {
+                    vm.appStats = response.data;
+                });
         };
 
-        vm.handleInviteUser = function() {
-            var invitedEmails = vm.app.invitations.map(function(invitation) {
+        vm.handleInviteUser = function () {
+            var invitedEmails = vm.app.invitations.map(function (invitation) {
                 return invitation.email ? invitation.email.toLowerCase() : null;
             });
             if (
@@ -45,21 +47,21 @@
                 InvitationFactory.save({
                     email: vm.invitedUser.email,
                     application: {
-                        id: vm.app.id
-                    }
+                        id: vm.app.id,
+                    },
                 })
-                    .then(function() {
+                    .then(function () {
                         toastr.success(MESSAGES_CONSTANTS.INVITE_USER_SUCCESS);
                         vm.getApp();
                         vm.flipActivityIndicator();
                         vm.invitedUser.email = '';
                     })
-                    .catch(function(error) {
+                    .catch(function (error) {
                         vm.flipActivityIndicator();
                         toastr.error(
                             error.message ||
-                                MESSAGES_CONSTANTS.INVITE_USER_FAILURE ||
-                                MESSAGES_CONSTANTS.ERROR
+                            MESSAGES_CONSTANTS.INVITE_USER_FAILURE ||
+                            MESSAGES_CONSTANTS.ERROR,
                         );
                     });
             } else {
@@ -67,7 +69,7 @@
             }
         };
 
-        vm.deleteInvitation = function(id) {
+        vm.deleteInvitation = function (id) {
             var body = document.createElement('h5');
             body.innerText =
                 'Once deleted, you will not be able to recover this Invitation!';
@@ -79,49 +81,50 @@
                 content: body,
                 icon: 'warning',
                 buttons: true,
-                dangerMode: true
-            }).then(function(willDelete) {
-                if (willDelete) {
-                    InvitationFactory.remove(id)
-                        .then(function() {
-                            swal.close();
-                            toastr.success(
-                                MESSAGES_CONSTANTS.DELETE_INVITATION_SUCCESS
-                            );
-                            vm.getApp();
-                        })
-                        .catch(function(error) {
-                            swal.close();
-                            toastr.error(
-                                error.message ||
+                dangerMode: true,
+            })
+                .then(function (willDelete) {
+                    if (willDelete) {
+                        InvitationFactory.remove(id)
+                            .then(function () {
+                                swal.close();
+                                toastr.success(
+                                    MESSAGES_CONSTANTS.DELETE_INVITATION_SUCCESS,
+                                );
+                                vm.getApp();
+                            })
+                            .catch(function (error) {
+                                swal.close();
+                                toastr.error(
+                                    error.message ||
                                     MESSAGES_CONSTANTS.DELETE_INVITATION_FAILURE ||
-                                    MESSAGES_CONSTANTS.ERROR
-                            );
-                        });
-                } else {
-                    swal('Your Invitation is safe!');
-                }
-            });
+                                    MESSAGES_CONSTANTS.ERROR,
+                                );
+                            });
+                    } else {
+                        swal('Your Invitation is safe!');
+                    }
+                });
         };
 
-        vm.flipActivityIndicator = function(suffix) {
+        vm.flipActivityIndicator = function (suffix) {
             suffix = typeof suffix !== 'undefined' ? suffix : '';
             vm.ui['isSaving' + suffix] = !vm.ui['isSaving' + suffix];
         };
 
-        vm.onLoad = function() {
+        vm.onLoad = function () {
             $rootScope.currentNav = 'settings';
             vm = angular.extend(vm, {
                 ui: {
-                    isSaving: false
+                    isSaving: false,
                 },
                 invitedUser: {
-                    email: ''
+                    email: '',
                 },
                 CONSTANTS: CONSTANTS,
                 moment: moment,
                 retention: $rootScope.user.plan.retention,
-                DOWNLOAD_URL: CONSTANTS.DOWNLOAD_URL
+                DOWNLOAD_URL: CONSTANTS.DOWNLOAD_URL,
             });
             vm.getApp();
             vm.loadStats();

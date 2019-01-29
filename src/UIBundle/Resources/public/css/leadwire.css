@@ -559,7 +559,7 @@ blockquote p {
   bottom: 0;
   width: 100%;
   overflow-x: hidden;
-  overflow-y: scroll;
+  overflow-y: auto;
 }
 .sidebar-panel > nav ul {
   padding: 0;

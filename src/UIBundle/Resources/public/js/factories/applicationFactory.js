@@ -15,7 +15,7 @@
                  * @returns {Promise}
                  */
                 findAll: function () {
-                    return $http.get(CONFIG.BASE_URL + 'api/app/list');
+                    return $http.get(CONFIG.BASE_URL + 'api/app/all');
                 },
                 /**
                  *

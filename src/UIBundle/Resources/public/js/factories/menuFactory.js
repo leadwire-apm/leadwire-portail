@@ -130,21 +130,25 @@
             MANAGEMENT: [
                 {
                     route: 'app.management.users',
+                    abstractRoute: 'app.management',
                     icon: 'fa fa-user',
                     label: 'Manage Users',
                 },
                 {
                     route: 'app.management.plans',
+                    abstractRoute: 'app.management',
                     icon: 'fa fa-money',
                     label: 'Manage plans',
                 },
                 {
                     route: 'app.management.applications',
+                    abstractRoute: 'app.management',
                     icon: 'fa fa-desktop',
                     label: 'Manage applications',
                 },
                 {
                     route: 'app.management.applicationTypes',
+                    abstractRoute: 'app.management',
                     icon: 'fa fa-desktop',
                     label: 'Manage types',
                 },

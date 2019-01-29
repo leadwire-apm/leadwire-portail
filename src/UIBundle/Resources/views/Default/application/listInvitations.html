@@ -13,6 +13,7 @@
             </div>
             <div class="col-sm-4 col-xs-12 text-center">
                 <button class="btn btn-danger"
+                        disabled="ctrl.ui.isDeleting"
                         ng-click="ctrl.deleteInvitation(invitation.id)">
                     <i ng-if="!ctrl.ui.isDeleting" class="fa fa-trash"></i>
                     <spinner is-loading="ctrl.ui.isDeleting"></spinner>
@@ -40,7 +41,7 @@
 
             <span class="input-group-btn">
                  <button class="btn btn-primary" type="submit"
-                         ng-disabled="inviteUserForm.$invalid">
+                         ng-disabled="inviteUserForm.$invalid || ctrl.ui.isSaving">
                         <spinner is-loading="ctrl.ui.isSaving"></spinner>
                         <i ng-if="!ctrl.ui.isSaving" class="fa fa-user-plus">
                         </i> Invite user
