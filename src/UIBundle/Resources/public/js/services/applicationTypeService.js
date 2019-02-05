@@ -15,7 +15,7 @@
                     });
             };
 
-            service.get = function (id) {
+            service.find = function (id) {
                 return ApplicationTypeFactory.get(id)
                     .then(function (response) {
                         return response.data;

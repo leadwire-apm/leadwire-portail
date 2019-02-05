@@ -1,0 +1,95 @@
+<div class="panel" ng-init="ctrl.init()">
+    <div class="panel-heading">
+        <h4>Manage Users </h4>
+        <hr>
+    </div>
+    <div class="panel-body">
+        <div class="row no-margin">
+            <div class="row mb30">
+                <div class="col-sm-offset-10" style="display: flex">
+                    <label for="search">Only administrators :</label>
+                    <label for="search" class="switch switch-sm ml10">
+                        <input id="search" type="checkbox" data-ng-model="ctrl.onlyAdmins">
+                        <span><i class="handle"></i></span>
+                    </label>
+
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12 ">
+                    <div class="no-more-tables">
+                        <table class="table table-striped mb0">
+                            <thead>
+                            <tr>
+                                <th class="text-center">Name</th>
+                                <th class="text-center">Email</th>
+                                <th class="text-center">Status</th>
+                                <th colspan="3" class="text-center">Actions</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr ng-if="ctrl.ui.isLoading" class="text-center">
+                                <td colspan="6">
+                                    <spinner is-loading="ctrl.ui.isLoading"
+                                             size="24"></spinner>
+                                </td>
+                            </tr>
+                            <tr ng-repeat="user in ctrl.users | inArray:ctrl.onlyAdmins:'roles':'ROLE_ADMIN'"
+                                class="text-center"
+
+                            >
+                                <td data-title="Name" data-label="Name">
+                                    [[user.name]]
+                                </td>
+                                <td data-title="Email" data-label="Email">
+                                    [[user.email]]
+                                </td>
+                                <td data-title="Status" data-label="Status">
+                                <span
+                                        data-ng-class="user.locked ? 'label label-danger' : 'label label-success'"
+                                        style="vertical-align: center">
+                                    [[user.locked ? 'Blocked' : 'Active']]
+                                </span>
+
+                                </td>
+                                <td data-title="Actions" data-label="Actions"
+                                    class="text-center"
+                                >
+                                    <button class="btn btn-default"
+                                            data-ng-class="ctrl.isAdmin(user) ? 'text-red' : 'text-green'"
+                                            data-ng-disabled="ctrl.ui.isProcessing"
+                                            ng-click="ctrl.handleChangePermission(user)">
+                                        <i class="fa fa-cogs"></i> [[ctrl.isAdmin(user) ?
+                                        'Revoke ' : 'Promote']]
+                                    </button>
+                                    <button data-ng-class="user.locked ? 'btn btn-success' : 'btn btn-danger'"
+                                            ng-click="ctrl.handleOnToggleLock(user)"
+                                            data-ng-disabled="ctrl.ui.isProcessing"
+                                    >
+                                        <i class="fa fa-lock"></i> [[user.locked ? 'Activate'
+                                        : 'Block']]
+                                    </button>
+
+                                    <button class="btn btn-info"
+                                            ng-click="ctrl.goDetail(user.id)"
+                                            data-ng-disabled="ctrl.ui.isProcessing"
+                                    >
+                                        <i class="fa fa-info-circle"></i> Detail
+                                    </button>
+                                    <button class="btn btn-danger bg-red"
+                                            ng-click="ctrl.handleDeleteUser(user.id)"
+                                            data-ng-disabled="ctrl.ui.isProcessing"
+                                    >
+                                        <i class="fa fa-trash"></i> Delete
+                                    </button>
+
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,6 +1,6 @@
 <div class="panel" ng-init="ctrl.init()">
     <div class="panel-heading">
-        <h4>Manage Applications [WIP/Mock List]</h4>
+        <h4>Manage Applications </h4>
         <hr>
     </div>
     <div class="panel-body">
@@ -52,6 +52,13 @@
                                    data-ng-class="application.enabled ? 'fa-lock' : 'fa-unlock'"></i>
                                 [[application.enabled ? 'Deactivate' : 'Activate']]
                             </button>
+                            <a ui-sref="app.management.applicationDetail({id:application.id})"
+                               class="btn btn-info"
+                            >
+                                <i class="fa fa-info-circle"></i>
+                                Detail
+                            </a>
+
 
                             <button class="btn bg-red"
                                     data-ng-disabled="application.removed"
