@@ -66,3 +66,7 @@ services:
     AppBundle\Service\ApplicationTypeService:
         arguments:
             $dataRootPath: "%kernel.project_dir%/app/Resources/Kibana"
+
+    AppBundle\Service\ActivationCodeService:
+        arguments:
+            $rule: "%activation_code_regex%"

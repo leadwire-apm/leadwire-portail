@@ -27,3 +27,8 @@ app_rest_applicationtype:
     resource: "@AppBundle/Controller/Rest/ApplicationTypeController.php"
     type: "annotation"
     prefix: "/%internal_api_prefix%/applicationType"
+
+app_rest_activation_code:
+    resource: "@AppBundle/Controller/Rest/ActivationCodeController.php"
+    type: "annotation"
+    prefix: "/%internal_api_prefix%/activation-code"

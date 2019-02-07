@@ -4,7 +4,7 @@ security:
 
     providers:
         simple_user_provider:
-            id: APpBundle\Provider\SimpleUserProvider
+            id: AppBundle\Provider\SimpleUserProvider
 
     firewalls:
         dev:
@@ -18,7 +18,7 @@ security:
                 authenticators:
                     - AppBundle\Security\TokenAuthenticator
 
-    access_control:
-        - { path: ^/login,                             roles: [ IS_AUTHENTICATED_ANONYMOUSLY ] }
-        - { path: ^/core/%internal_api_prefix%,        roles: [ ROLE_USER ] }
-        - { path: ^/%internal_api_prefix%,             roles: [ ROLE_USER ] }
+    # access_control:
+    #     - { path: ^/login,                             roles: [ IS_AUTHENTICATED_ANONYMOUSLY ] }
+    #     - { path: ^/core/%internal_api_prefix%,        roles: [ ROLE_USER ] }
+    #     - { path: ^/%internal_api_prefix%,             roles: [ ROLE_USER ] }

@@ -124,6 +124,15 @@ class Application
     public $invitations;
 
     /**
+     * @ODM\Field(type="bool")
+     * @JMS\Type("boolean")
+     * @JMS\Expose
+     * @JMS\Groups({"full"})
+     *
+     * @var bool
+     */
+    private $demo;
+    /**
      * Constructor
      */
     public function __construct()
@@ -383,5 +392,29 @@ class Application
     public function __toString()
     {
         return (string) $this->id;
+    }
+
+    /**
+     * Get the value of demo
+     *
+     * @return  bool|null
+     */
+    public function isDemo(): ?bool
+    {
+        return $this->demo;
+    }
+
+    /**
+     * Set the value of demo
+     *
+     * @param  bool  $demo
+     *
+     * @return  self
+     */
+    public function setDemo(bool $demo): self
+    {
+        $this->demo = $demo;
+
+        return $this;
     }
 }

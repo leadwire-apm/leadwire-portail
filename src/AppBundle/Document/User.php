@@ -768,9 +768,9 @@ class User implements AdvancedUserInterface
     /**
      * Get the value of deleted
      *
-     * @return  bool
+     * @return  bool|null
      */
-    public function isDeleted()
+    public function isDeleted(): ?bool
     {
         return $this->deleted;
     }
@@ -792,9 +792,9 @@ class User implements AdvancedUserInterface
     /**
      * Get the value of locked
      *
-     * @return  bool
+     * @return  bool|null
      */
-    public function isLocked(): bool
+    public function isLocked(): ?bool
     {
         return $this->locked;
     }

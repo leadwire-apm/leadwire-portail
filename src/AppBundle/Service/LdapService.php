@@ -2,7 +2,9 @@
 
 namespace AppBundle\Service;
 
+use AppBundle\Document\Application;
 use AppBundle\Document\Invitation;
+use AppBundle\Manager\ApplicationManager;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Ldap\Entry;
 use Symfony\Component\Ldap\Exception\LdapException;
@@ -15,6 +17,9 @@ use Symfony\Component\Ldap\Ldap;
  */
 class LdapService
 {
+    const ALL_USER_TENANT_PREFIX = 'all_user_';
+    const USER_NAME_PREFIX = 'user_';
+
     /**
      * @var array
      */
@@ -26,14 +31,21 @@ class LdapService
     private $logger;
 
     /**
+     * @var ApplicationManager
+     */
+    private $applicationManager;
+
+    /**
      * LdapService constructor.
      *
      * @param LoggerInterface $logger
+     * @param ApplicationManager $applicationManager
      * @param array $settings
      */
-    public function __construct(LoggerInterface $logger, array $settings)
+    public function __construct(LoggerInterface $logger, ApplicationManager $applicationManager, array $settings)
     {
         $this->settings = $settings;
+        $this->applicationManager = $applicationManager;
         $this->logger = $logger;
     }
 
@@ -146,6 +158,7 @@ class LdapService
 
     /**
      * Save Ldap entry
+     *
      * @param Entry $entry
      *
      * @return bool
@@ -168,6 +181,97 @@ class LdapService
 
                 return false;
             }
+        }
+    }
+
+    /**
+     * Create LDAP entries for new users
+     *
+     * @param string $uuid
+     *
+     * @return boolean
+     */
+    public function createNewUser(string $uuid): bool
+    {
+        $allUserTenant = self::ALL_USER_TENANT_PREFIX . $uuid;
+        $userName = self::USER_NAME_PREFIX . $uuid;
+        $status = true;
+
+        // ALL_USER entry
+        $entry = new Entry(
+            "dn: cn=$allUserTenant,ou=Group,dc=leadwire,dc=io",
+            [
+                'cn' => "$allUserTenant",
+                'objectClass' => ['groupofnames'],
+                'member' => "cn=leadwire-apm,ou=People,dc=leadwire,dc=io",
+                'description' => 'appname',
+            ]
+        );
+
+        $status = $this->saveEntry($entry);
+
+        // People entry
+        $entry = new Entry(
+            "dn: cn=$userName,ou=People,dc=leadwire,dc=io",
+            [
+                "cn" => $userName,
+                "gidNumber" => " 789",
+                "objectclass" => ['posixGroup', 'top'],
+                "description" => "username",
+            ]
+        );
+
+        $status = $status && $this->saveEntry($entry);
+
+        // ADD MEMBER TO ALL_USER GROUP
+        $entry = new Entry(
+            "dn: cn=$allUserTenant,ou=Group,dc=leadwire,dc=io",
+            [
+                "changetype" => "modify",
+                "add" => "member",
+                "member" => "cn=$userName,ou=People,dc=leadwire,dc=io",
+            ]
+        );
+
+        $status = $status && $this->saveEntry($entry);
+
+        return $status;
+    }
+
+    /**
+     * Register demonstration applications for newly created user
+     *
+     * @param string $uuid
+     *
+     * @return void
+     */
+    public function registerDemoApplications(string $uuid)
+    {
+        $userName = self::USER_NAME_PREFIX . $uuid;
+
+        $demoApplications = $this->applicationManager->getBy(['demo' => true]);
+
+        /** @var Application $application */
+        foreach ($demoApplications as $application) {
+            $entry = new Entry(
+                "dn: cn=app_{$application->getUuid()},ou=Group,dc=leadwire,dc=io",
+                [
+                    "changetype" => "modify",
+                    "add" => "member",
+                    "member" => "cn=$userName,ou=People,dc=leadwire,dc=io",
+                ]
+            );
+            $this->saveEntry($entry);
+
+            $entry = new Entry(
+                "dn: cn=shared_{$application->getUuid()},ou=Group,dc=leadwire,dc=io",
+                [
+                    "changetype" => "modify",
+                    "add" => "member",
+                    "member" => "cn=$userName,ou=People,dc=leadwire,dc=io",
+                ]
+            );
+            $this->saveEntry($entry);
         }
     }
 }

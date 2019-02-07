@@ -2,13 +2,15 @@
 
 namespace AppBundle\Service;
 
-use AppBundle\Document\Application;
+use Ramsey\Uuid\Uuid;
 use AppBundle\Document\User;
+use Psr\Log\LoggerInterface;
+use AppBundle\Document\Application;
+use JMS\Serializer\SerializerInterface;
 use AppBundle\Manager\ApplicationManager;
 use JMS\Serializer\DeserializationContext;
-use JMS\Serializer\SerializerInterface;
-use Psr\Log\LoggerInterface;
-use Ramsey\Uuid\Uuid;
+use AppBundle\Manager\ActivationCodeManager;
+use AppBundle\Service\ActivationCodeService;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
@@ -22,6 +24,11 @@ class ApplicationService
      * @var ApplicationManager
      */
     private $applicationManager;
+
+    /**
+     * @var ActivationCodeManager
+    */
+    private $activationCodeManager;
 
     /**
      * @var SerializerInterface
@@ -49,29 +56,40 @@ class ApplicationService
     private $appTypeService;
 
     /**
+     * @var ActivationCodeService
+     */
+    private $activationCodeService;
+
+    /**
      * Constructor
      *
      * @param ApplicationManager $applicationManager
+     * @param ActivationCodeManager $activationCodeManager
      * @param SerializerInterface $serializer
      * @param LoggerInterface $logger
      * @param LdapService $ldapService
      * @param KibanaService $kibana
      * @param ApplicationTypeService $appTypeService
+     * @param ActivationCodeService $activationCodeService
      */
     public function __construct(
         ApplicationManager $applicationManager,
+        ActivationCodeManager $activationCodeManager,
         SerializerInterface $serializer,
         LoggerInterface $logger,
         LdapService $ldapService,
         KibanaService $kibana,
-        ApplicationTypeService $appTypeService
+        ApplicationTypeService $appTypeService,
+        ActivationCodeService $activationCodeService
     ) {
         $this->applicationManager = $applicationManager;
+        $this->activationCodeManager = $activationCodeManager;
         $this->serializer = $serializer;
         $this->logger = $logger;
         $this->ldapService = $ldapService;
         $this->kibana = $kibana;
         $this->appTypeService = $appTypeService;
+        $this->activationCodeService = $activationCodeService;
     }
 
     /**
@@ -138,29 +156,30 @@ class ApplicationService
      * Activate Disabled App
      *
      * @param string $id
-     * @param string $activationCode
+     * @param string $code
      *
      * @return ?Application
      */
-    public function activateApplication($id, $activationCode): ?Application
+    public function activateApplication($id, $code): ?Application
     {
-        if ((strlen($activationCode) === 6) && (substr($activationCode, 1, 1) === 'B') &&
-            (substr($activationCode, 4, 1) === '7') &&
-            (strtoupper($activationCode) === $activationCode)) {
-            $app = $this->getApplication($id);
+        $result = null;
+        $activationCode = $this->activationCodeService->getByCode($code);
+        $app = $this->getApplication($id);
 
-            if ($app instanceof Application) {
+        if ($activationCode !== null && $app !== null) {
+            $valid = $this->activationCodeService->validateActivationCode($activationCode);
+
+            if ($valid === true) {
                 $app->setEnabled(true);
-            } else {
-                throw new \Exception(sprintf("Unknow application %s", $id));
+                $activationCode->setApplication($app);
+                $activationCode->setUsed(true);
+                $this->applicationManager->update($app);
+                $this->activationCodeManager->update($activationCode);
+                $result = $app;
             }
-
-            $this->applicationManager->update($app);
-
-            return $app;
-        } else {
-            return null;
         }
+
+        return $result;
     }
 
     /**

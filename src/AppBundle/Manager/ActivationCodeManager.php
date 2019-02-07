@@ -1,17 +1,12 @@
-<?php declare(strict_types=1);
+<?php declare (strict_types = 1);
 
 namespace AppBundle\Manager;
 
+use AppBundle\Document\ActivationCode;
 use ATS\CoreBundle\Manager\AbstractManager;
 use Doctrine\Bundle\MongoDBBundle\ManagerRegistry;
-use AppBundle\Document\ApplicationType;
 
-/**
- * Manager class for ApplicationType entities
- *
- * @see \ATS\CoreBundle\Manager\AbstractManager
- */
-class ApplicationTypeManager extends AbstractManager
+class ActivationCodeManager extends AbstractManager
 {
     /**
      * @codeCoverageIgnore
@@ -21,6 +16,6 @@ class ApplicationTypeManager extends AbstractManager
      */
     public function __construct(ManagerRegistry $managerRegistry, $managerName = null)
     {
-        parent::__construct($managerRegistry, ApplicationType::class, $managerName);
+        parent::__construct($managerRegistry, ActivationCode::class, $managerName);
     }
 }

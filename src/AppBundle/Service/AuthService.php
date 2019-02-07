@@ -29,7 +29,7 @@ class AuthService
     /**
      * @var ElasticSearchService
      */
-    private $elastic;
+    private $esService;
 
     /**
      * @var LoggerInterface
@@ -49,14 +49,14 @@ class AuthService
     public function __construct(
         UserManager $userManage,
         LdapService $ldapService,
-        ElasticSearchService $elastic,
+        ElasticSearchService $esService,
         LoggerInterface $logger,
         string $appDomain,
         array $authProviderSettings
     ) {
         $this->userManager = $userManage;
         $this->ldapService = $ldapService;
-        $this->elastic = $elastic;
+        $this->esService = $esService;
         $this->logger = $logger;
         $this->appDomain = $appDomain;
         $this->authProviderSettings = $authProviderSettings;
@@ -94,21 +94,21 @@ class AuthService
             if ($user !== false) {
                 // New user has been created.
                 // Should create LDAP & ElasticSearch entries
-
-                $this->ldapService->createUserEntry($user->getUuid());
-                $this->elastic->resetUserIndexes($user);
-                $this->elastic->createDefaultApplications($user);
+                $this->ldapService->createNewUser($user->getUuid());
+                $this->ldapService->registerDemoApplications($user->getUuid());
+                $this->esService->resetUserIndexes($user);
+                $this->esService->createDefaultApplications($user);
             }
-        }
+        } else {
+            // Check if user has been deleted
+            if ($user->isDeleted() === true) {
+                throw new AccessDeniedHttpException("User is deleted");
+            }
 
-        // Check if user has been deleted
-        if ($user->isDeleted() === true) {
-            throw new AccessDeniedHttpException("User is deleted");
-        }
-
-        // Check if user is locked
-        if ($user->isLocked() === true) {
-            throw new AccessDeniedHttpException($user->getLockMessage());
+            // Check if user is locked
+            if ($user->isLocked() === true) {
+                throw new AccessDeniedHttpException($user->getLockMessage());
+            }
         }
 
         return $user;

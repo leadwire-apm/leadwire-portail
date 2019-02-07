@@ -157,7 +157,7 @@ class ApplicationController extends Controller
                 return $this->renderResponse(false);
             }
         } catch (MongoDuplicateKeyException $e) {
-            return $this->exception("App Name is not Unique");
+            return $this->exception("Application Name is not Unique");
         }
     }
 

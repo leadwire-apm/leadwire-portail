@@ -22,6 +22,7 @@
     },
     "require": {
         "php": ">=7.0",
+        "ext-ldap": "*",
         "alcaeus/mongo-php-adapter": "^1.1",
         "doctrine/mongodb-odm": "^1.1.7",
         "doctrine/mongodb-odm-bundle": "^3.4.0",
@@ -30,6 +31,7 @@
         "friendsofsymfony/oauth-server-bundle": "dev-master",
         "gedmo/doctrine-extensions": "^2.4",
         "guzzlehttp/guzzle": "^6.3",
+        "hoa/regex": "~1.0",
         "incenteev/composer-parameter-handler": "^2.1",
         "jms/serializer-bundle": "~2.3",
         "league/omnipay": "^3.0",
