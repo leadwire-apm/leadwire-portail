@@ -199,26 +199,44 @@
 <script type="text/ng-template" id="manageDashboards.html">
     {% include 'manageDashboards.html' %}
 </script>
-<script type="text/ng-template" id="management/users.html">
-    {% include 'management/users.html' %}
+<script type="text/ng-template" id="management/users/users.html">
+    {% include 'management/users/users.html' %}
 </script>
-<script type="text/ng-template" id="management/userDetail.html">
-    {% include 'management/userDetail.html' %}
+<script type="text/ng-template" id="management/users/userDetail.html">
+    {% include 'management/users/userDetail.html' %}
 </script>
-<script type="text/ng-template" id="management/userPlans.html">
-    {% include 'management/userPlans.html' %}
+<script type="text/ng-template" id="management/users/userPlans.html">
+    {% include 'management/users/userPlans.html' %}
 </script>
-<script type="text/ng-template" id="management/userApplications.html">
-    {% include 'management/userApplications.html' %}
+<script type="text/ng-template" id="management/users/userApplications.html">
+    {% include 'management/users/userApplications.html' %}
 </script>
 
 
-<script type="text/ng-template" id="management/plans.html">
-    {% include 'management/plans.html' %}
+<script type="text/ng-template" id="management/plans/list.html">
+    {% include 'management/plans/list.html' %}
 </script>
-<script type="text/ng-template" id="management/applications.html">
-    {% include 'management/applications.html' %}
+<script type="text/ng-template" id="management/plans/form.html">
+    {% include 'management/plans/form.html' %}
 </script>
+<script type="text/ng-template" id="management/plans/add.html">
+    {% include 'management/plans/add.html' %}
+</script>
+<script type="text/ng-template" id="management/plans/edit.html">
+    {% include 'management/plans/edit.html' %}
+</script>
+
+<script type="text/ng-template" id="management/applications/list.html">
+    {% include 'management/applications/list.html' %}
+</script>
+<script type="text/ng-template" id="management/applications/detail.html">
+    {% include 'management/applications/detail.html' %}
+</script>
+<script type="text/ng-template" id="management/applications/stats.html">
+    {% include 'management/applications/stats.html' %}
+</script>
+
+{#Application types#}
 
 <script type="text/ng-template" id="management/applicationTypes/list.html">
     {% include 'management/applicationTypes/list.html' %}
@@ -234,6 +252,20 @@
 
 <script type="text/ng-template" id="management/applicationTypes/form.html">
     {% include 'management/applicationTypes/form.html' %}
+</script>
+
+<script type="text/ng-template" id="management/templates/list.html">
+    {% include 'management/templates/list.html' %}
+</script>
+<script type="text/ng-template" id="management/templates/add.html">
+    {% include 'management/templates/add.html' %}
+</script>
+<script type="text/ng-template" id="management/templates/edit.html">
+    {% include 'management/templates/edit.html' %}
+</script>
+
+<script type="text/ng-template" id="management/templates/form.html">
+    {% include 'management/templates/form.html' %}
 </script>
 
 
@@ -293,6 +325,8 @@
         'bundles/ui/js/lib/toastr.min.js'
         'bundles/ui/js/lib/angular-toastr.tpls.min.js'
         'bundles/ui/js/lib/simplemde-angular.js'
+        'bundles/ui/js/lib/jsoneditor.min.js'
+        'bundles/ui/js/lib/jsoneditor-angular.js'
 
         'bundles/ui/js/lib/ui-utils-ieshiv.min.js'
         'bundles/ui/js/lib/perfect-scrollbar.jquery.js'
@@ -321,6 +355,7 @@
         'bundles/ui/js/factories/invitationFactory.js'
         'bundles/ui/js/factories/menuFactory.js'
         'bundles/ui/js/factories/codeFactory.js'
+        'bundles/ui/js/factories/templateFactory.js'
 
         'bundles/ui/js/services/applicationService.js'
         'bundles/ui/js/services/config.js'
@@ -333,6 +368,7 @@
         'bundles/ui/js/services/planService.js'
         'bundles/ui/js/services/applicationTypeService.js'
         'bundles/ui/js/services/codeService.js'
+        'bundles/ui/js/services/templateService.js'
         'bundles/ui/js/services/routeGuard.js'
 
         'bundles/ui/js/directives/anchor-scroll.js'
@@ -358,6 +394,8 @@
         'bundles/ui/js/directives/spinner.js'
         'bundles/ui/js/directives/vector.js'
 
+        'bundles/ui/js/filters/inArray.js'
+
         'bundles/ui/js/controllers/addApplication.js'
         'bundles/ui/js/controllers/alerts.js'
         'bundles/ui/js/controllers/businessTransactions.js'
@@ -380,10 +418,17 @@
         'bundles/ui/js/controllers/management/users/manageUsers.js'
         'bundles/ui/js/controllers/management/users/userDetail.js'
         'bundles/ui/js/controllers/management/applications/manageApplications.js'
-        'bundles/ui/js/controllers/management/plans/managePlans.js'
-        'bundles/ui/js/controllers/management/applicationTypes/manageApplicationTypes.js'
-        'bundles/ui/js/controllers/management/applicationTypes/addApplicationType.js'
-        'bundles/ui/js/controllers/management/applicationTypes/editApplicationType.js'
+        'bundles/ui/js/controllers/management/applications/detail.js'
+        'bundles/ui/js/controllers/management/plans/list.js'
+        'bundles/ui/js/controllers/management/plans/add.js'
+        'bundles/ui/js/controllers/management/plans/edit.js'
+        'bundles/ui/js/controllers/management/applicationTypes/list.js'
+        'bundles/ui/js/controllers/management/applicationTypes/add.js'
+        'bundles/ui/js/controllers/management/applicationTypes/edit.js'
+        'bundles/ui/js/controllers/management/templates/list.js'
+        'bundles/ui/js/controllers/management/templates/add.js'
+        'bundles/ui/js/controllers/management/templates/edit.js'
+
 
         'bundles/ui/js/controllers/realUserMonitoring.js'
         'bundles/ui/js/controllers/advices.js'

@@ -159,6 +159,7 @@
                         isLoading: false,
                         isProcessing: false,
                     },
+                    onlyAdmins:false,
                     users: [],
                 });
                 vm.loadUsers();

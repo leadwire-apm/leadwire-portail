@@ -150,7 +150,13 @@
                     route: 'app.management.applicationTypes',
                     abstractRoute: 'app.management',
                     icon: 'fa fa-desktop',
-                    label: 'Manage types',
+                    label: 'Manage application types',
+                },
+                {
+                    route: 'app.management.templates',
+                    abstractRoute: 'app.management',
+                    icon: 'fa fa-desktop',
+                    label: 'Manage templates',
                 },
             ],
         });

@@ -64,7 +64,27 @@
             service.toggleEnabled = function (applicationId) {
                 return ApplicationFactory.toggleEnabled(applicationId)
                     .then(function (response) {
-                        return (response.data);
+                        return response.data;
+                    })
+                    .catch(function (err) {
+                        throw new Error(err);
+                    });
+            };
+
+            service.find = function (id) {
+                return ApplicationFactory.get(id)
+                    .then(function (res) {
+                        return res.data;
+                    })
+                    .catch(function (err) {
+                        throw new Error(err);
+                    });
+
+            };
+            service.getStats = function (applicationId) {
+                return ApplicationFactory.stats(applicationId)
+                    .then(function (response) {
+                        return response.data;
                     })
                     .catch(function (err) {
                         throw new Error(err);

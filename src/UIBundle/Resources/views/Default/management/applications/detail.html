@@ -1,0 +1,63 @@
+<div class="panel" ng-init="ctrl.init()">
+    <div class="panel-heading">
+        <h4>
+            <a ui-sref="app.management.applications"><i class="fa fa-arrow-left"></i></a>
+            Application detail</h4>
+        <hr>
+    </div>
+    <div class="panel-body panel-danger">
+        <div class="col-md-12 col-sm-12" ng-init="ctrl.init()">
+            <tabset justified="true" class="box-tab justified ">
+                <tab heading="Detail Application">
+                    <section ng-include="'application/applicationInfo.html'">
+                    </section>
+                </tab>
+                <tab heading="Stats">
+                    <section ng-include="'management/applications/stats.html'"></section>
+                </tab>
+            </tabset>
+        </div>
+    </div>
+
+
+    <style>
+
+        .box-tab .nav-tabs.nav-justified > li.active {
+            border-bottom: 2px solid #4C516A;
+        }
+
+        .tab-accordion-header, .tab-accordion-header.active {
+            display: none;
+        }
+
+        @media (max-width: 400px) {
+            ul.nav-tabs {
+                display: none;
+            }
+
+            .tab-accordion-header {
+                background-color: #666666;
+                color: #ffffff;
+                padding: 10px;
+                width: 100%;
+                margin: 1px 0;
+                display: block;
+            }
+
+            .tab-accordion-header.active {
+                display: block;
+                background-color: #dd3333;
+            }
+
+            .tab-content {
+                border-top: 0px transparent none;
+            }
+
+            /**
+            Add this to make them always open
+            .tab-content > .tab-pane {
+                display:block;
+            }
+            */
+        }
+    </style>

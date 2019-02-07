@@ -5,17 +5,17 @@
             <section  ng-include="'application/applicationInfo.html'">
             </section>
         </tab>
-        <tab heading="Invited Users" ng-if="user.id == ctrl.app.owner.id"
+        <tab heading="Invited Users" ng-if="user.id == ctrl.application.owner.id"
         >
             <section class="widget bg-white post-comments"
                      ng-include="'application/listInvitations.html'">
             </section>
         </tab>
-        <tab heading="Installation" ng-if="user.id == ctrl.app.owner.id">
+        <tab heading="Installation" ng-if="user.id == ctrl.application.owner.id">
             <section ng-include="'application/installation.html'">
             </section>
         </tab>
-        <tab heading="Stats" ng-if="user.id == ctrl.app.owner.id">
+        <tab heading="Stats" ng-if="user.id == ctrl.application.owner.id">
             <section ng-include="'application/stats.html'">
             </section>
         </tab>

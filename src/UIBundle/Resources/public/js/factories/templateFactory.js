@@ -1,14 +1,14 @@
 (function (angular) {
     angular
         .module('leadwireApp')
-        .factory('PlanFactory', function ($http, CONFIG) {
+        .factory('TemplateFactory', function ($http, CONFIG) {
             return {
                 /**
                  *
                  * @returns {Promise}
                  */
                 findAll: function () {
-                    return $http.get(CONFIG.BASE_URL + 'api/plan/list');
+                    return $http.get(CONFIG.BASE_URL + 'api/template/list');
                 },
                 /**
                  *
@@ -16,24 +16,24 @@
                  */
                 get: function (id) {
                     return $http.get(
-                        CONFIG.BASE_URL + 'api/plan/' + id + '/get');
+                        CONFIG.BASE_URL + 'api/template/' + id + '/get');
                 },
                 /**
                  *
                  * @returns {Promise}
                  */
-                new: function (newPlan) {
-                    return $http.post(CONFIG.BASE_URL + 'api/plan/new',
-                        newPlan);
+                new: function (newTemplate) {
+                    return $http.post(CONFIG.BASE_URL + 'api/template/new',
+                        newTemplate);
                 },
                 /**
                  *
                  * @returns {Promise}
                  */
-                update: function (updatedPlan) {
+                update: function (updatedTemplate) {
                     return $http.put(
-                        CONFIG.BASE_URL + 'api/plan/' + updatedPlan.id +
-                        '/update', updatedPlan);
+                        CONFIG.BASE_URL + 'api/template/' + updatedTemplate.id +
+                        '/update', updatedTemplate);
                 },
                 /**
                  *
@@ -41,7 +41,7 @@
                  */
                 delete: function (id) {
                     return $http.delete(
-                        CONFIG.BASE_URL + 'api/plan/' + id + '/delete');
+                        CONFIG.BASE_URL + 'api/template/' + id + '/delete');
                 },
             };
         });

@@ -26,18 +26,18 @@
         vm.getApp = function () {
             ApplicationFactory.get($stateParams.id)
                 .then(function (res) {
-                    vm.app = res.data;
+                    vm.application = res.data;
                 });
         };
         vm.loadStats = function () {
             ApplicationFactory.stats($stateParams.id)
                 .then(function (response) {
-                    vm.appStats = response.data;
+                    vm.applicationStats = response.data;
                 });
         };
 
         vm.handleInviteUser = function () {
-            var invitedEmails = vm.app.invitations.map(function (invitation) {
+            var invitedEmails = vm.application.invitations.map(function (invitation) {
                 return invitation.email ? invitation.email.toLowerCase() : null;
             });
             if (
@@ -47,7 +47,7 @@
                 InvitationFactory.save({
                     email: vm.invitedUser.email,
                     application: {
-                        id: vm.app.id,
+                        id: vm.application.id,
                     },
                 })
                     .then(function () {

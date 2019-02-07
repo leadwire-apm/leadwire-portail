@@ -27,7 +27,7 @@
         };
 
         vm.loadApplicationType = function (id) {
-            ApplicationTypeService.get(id)
+            ApplicationTypeService.find(id)
                 .then(function (appType) {
                     vm.applicationType = appType;
                 });

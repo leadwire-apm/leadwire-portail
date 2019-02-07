@@ -255,7 +255,7 @@ angular.module('leadwireApp')
                 })
                 .state('app.management.users', {
                     url: '/users/list',
-                    templateUrl: 'management/users.html',
+                    templateUrl: 'management/users/users.html',
                     resolve: {
                         permissions: adminRequired,
                         menu: updateMenuItems('MANAGEMENT'),
@@ -268,7 +268,7 @@ angular.module('leadwireApp')
                 })
                 .state('app.management.userDetail', {
                     url: '/users/:id/detail',
-                    templateUrl: 'management/userDetail.html',
+                    templateUrl: 'management/users/userDetail.html',
                     resolve: {
                         permissions: adminRequired,
                         menu: updateMenuItems('MANAGEMENT'),
@@ -278,7 +278,7 @@ angular.module('leadwireApp')
                 })
                 .state('app.management.plans', {
                     url: '/plans/list',
-                    templateUrl: 'management/plans.html',
+                    templateUrl: 'management/plans/list.html',
                     resolve: {
                         permissions: adminRequired,
                         menu: updateMenuItems('MANAGEMENT'),
@@ -286,9 +286,29 @@ angular.module('leadwireApp')
                     controller: 'PlanListController',
                     controllerAs: 'ctrl',
                 })
+                .state('app.management.addPlan', {
+                    url: '/plans/new',
+                    templateUrl: 'management/plans/add.html',
+                    resolve: {
+                        permissions: adminRequired,
+                        menu: updateMenuItems('MANAGEMENT'),
+                    },
+                    controller: 'AddPlanController',
+                    controllerAs: 'ctrl',
+                })
+                .state('app.management.editPlan', {
+                    url: '/plans/:id/edit',
+                    templateUrl: 'management/plans/edit.html',
+                    resolve: {
+                        permissions: adminRequired,
+                        menu: updateMenuItems('MANAGEMENT'),
+                    },
+                    controller: 'EditPlanController',
+                    controllerAs: 'ctrl',
+                })
                 .state('app.management.applications', {
                     url: '/applications/list',
-                    templateUrl: 'management/applications.html',
+                    templateUrl: 'management/applications/list.html',
                     resolve: {
                         permissions: adminRequired,
                         menu: updateMenuItems('MANAGEMENT'),
@@ -296,18 +316,28 @@ angular.module('leadwireApp')
                     controller: 'ManageApplicationsController',
                     controllerAs: 'ctrl',
                 })
+                .state('app.management.applicationDetail', {
+                    url: '/applications/:id/detail',
+                    templateUrl: 'management/applications/detail.html',
+                    resolve: {
+                        permissions: adminRequired,
+                        menu: updateMenuItems('MANAGEMENT'),
+                    },
+                    controller: 'ManageApplicationsDetailController',
+                    controllerAs: 'ctrl',
+                })
                 .state('app.management.applicationTypes', {
-                    url: '/applicationType/list',
+                    url: '/applicationTypes/list',
                     templateUrl: 'management/applicationTypes/list.html',
                     resolve: {
                         permissions: adminRequired,
                         menu: updateMenuItems('MANAGEMENT'),
                     },
-                    controller: 'ManageApplicationTypesController',
+                    controller: 'ListApplicationTypesController',
                     controllerAs: 'ctrl',
                 })
                 .state('app.management.addApplicationTypes', {
-                    url: '/applicationType/new',
+                    url: '/applicationTypes/new',
                     templateUrl: 'management/applicationTypes/add.html',
                     resolve: {
                         permissions: adminRequired,
@@ -317,7 +347,7 @@ angular.module('leadwireApp')
                     controllerAs: 'ctrl',
                 })
                 .state('app.management.editApplicationTypes', {
-                    url: '/applicationType/edit/:id',
+                    url: '/applicationTypes/edit/:id',
                     templateUrl: 'management/applicationTypes/edit.html',
                     resolve: {
                         permissions: adminRequired,
@@ -326,6 +356,38 @@ angular.module('leadwireApp')
                     controller: 'EditApplicationTypeController',
                     controllerAs: 'ctrl',
                 })
+
+                .state('app.management.templates', {
+                    url: '/templates/list',
+                    templateUrl: 'management/templates/list.html',
+                    resolve: {
+                        permissions: adminRequired,
+                        menu: updateMenuItems('MANAGEMENT'),
+                    },
+                    controller: 'ListTemplateController',
+                    controllerAs: 'ctrl',
+                })
+                .state('app.management.addTemplate', {
+                    url: '/templates/new',
+                    templateUrl: 'management/templates/add.html',
+                    resolve: {
+                        permissions: adminRequired,
+                        menu: updateMenuItems('MANAGEMENT'),
+                    },
+                    controller: 'AddTemplateController',
+                    controllerAs: 'ctrl',
+                })
+                .state('app.management.editTemplate', {
+                    url: '/templates/:id/edit',
+                    templateUrl: 'management/templates/edit.html',
+                    resolve: {
+                        permissions: adminRequired,
+                        menu: updateMenuItems('MANAGEMENT'),
+                    },
+                    controller: 'EditTemplateController',
+                    controllerAs: 'ctrl',
+                })
+
                 .state('app.infrastructureMonitoring', {
                     url: '/infrastructureMonitoring',
                     templateUrl: 'infrastructureMonitoring.html',

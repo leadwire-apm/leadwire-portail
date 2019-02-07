@@ -5,6 +5,12 @@
     </div>
     <div class="panel-body">
         <div class="row no-margin">
+            <div class="row mb30">
+                <a ui-sref="app.management.addPlan"
+                   class="btn btn-success pull-right">
+                    <i class="fa fa-plus"></i> Add new Plan</a>
+            </div>
+
             <div class="col-lg-12 ">
                 <div class="no-more-tables">
                     <table class="table table-striped mb0">
@@ -38,9 +44,9 @@
 
                             </td>
                             <td data-title="Status" data-label="Status">
-                                <button class="btn btn-warning" ng-click="ctrl.editPlan(plan)">
+                                <a class="btn btn-warning" ui-sref="app.management.editPlan(plan)">
                                     Edit
-                                </button>
+                                </a>
                                 <button class="btn btn-danger" ng-click="ctrl.deletePlan(plan.id)">
                                     Delete
                                 </button>
