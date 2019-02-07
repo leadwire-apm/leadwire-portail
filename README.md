@@ -114,7 +114,7 @@ Check /var/run/php-fpm/php-fpm.sock
 $ ./scripts/get_composer.sh
 
 ```
-### git Setup
+### Git Setup
 ```sh
 $ yum install git
 ```

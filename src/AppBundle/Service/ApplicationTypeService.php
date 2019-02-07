@@ -56,6 +56,7 @@ class ApplicationTypeService
 
     /**
      * List all applicationTypes
+     * @codeCoverageIgnore
      *
      * @return array
      */
@@ -66,6 +67,8 @@ class ApplicationTypeService
 
     /**
      * Paginates through ApplicationTypes
+     *
+     * @codeCoverageIgnore
      *
      * @param int $pageNumber
      * @param int $itemsPerPage
@@ -81,6 +84,7 @@ class ApplicationTypeService
     /**
      * Get a specific applicationType
      *
+     * @codeCoverageIgnore
      * @param string $id
      *
      * @return ApplicationType
@@ -93,6 +97,7 @@ class ApplicationTypeService
     /**
      * Get specific applicationTypes
      *
+     * @codeCoverageIgnore
      * @param array $criteria
      *
      * @return array
@@ -105,6 +110,7 @@ class ApplicationTypeService
     /**
      * Creates a new applicationType from JSON data
      *
+     * @codeCoverageIgnore
      * @param string $json
      *
      * @return bool
@@ -116,6 +122,8 @@ class ApplicationTypeService
 
     /**
      * Updates a specific applicationType from JSON data
+     *
+     * @codeCoverageIgnore
      *
      * @param string $json
      *
@@ -138,6 +146,8 @@ class ApplicationTypeService
 
     /**
      * Deletes a specific applicationType from JSON data
+     *
+     * @codeCoverageIgnore
      *
      * @param string $id
      *

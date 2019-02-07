@@ -31,6 +31,8 @@ class StatService
     /**
      * Constructor
      *
+     * @codeCoverageIgnore
+     *
      * @param StatManager $statManager
      * @param SerializerInterface $serializer
      * @param LoggerInterface $logger
@@ -45,6 +47,8 @@ class StatService
     /**
      * List all stats
      *
+     * @codeCoverageIgnore
+     *
      * @return array
      */
     public function listStats()
@@ -54,6 +58,8 @@ class StatService
 
     /**
      * Paginates through Stats
+     *
+     * @codeCoverageIgnore
      *
      * @param int $pageNumber
      * @param int $itemsPerPage
@@ -69,6 +75,8 @@ class StatService
     /**
      * Get a specific stat
      *
+     * @codeCoverageIgnore
+     *
      * @param string $id
      *
      * @return Stat
@@ -80,6 +88,8 @@ class StatService
 
     /**
      * Get specific stats
+     *
+     * @codeCoverageIgnore
      *
      * @param array $criteria
      *
@@ -93,6 +103,8 @@ class StatService
     /**
      * Creates a new stat from JSON data
      *
+     * @codeCoverageIgnore
+     *
      * @param string $json
      *
      * @return bool
@@ -104,6 +116,8 @@ class StatService
 
     /**
      * Updates a specific stat from JSON data
+     *
+     * @codeCoverageIgnore
      *
      * @param string $json
      *
@@ -127,6 +141,8 @@ class StatService
 
     /**
      * Deletes a specific stat from JSON data
+     *
+     * @codeCoverageIgnore
      *
      * @param string $id
      *

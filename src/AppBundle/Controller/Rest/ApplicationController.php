@@ -157,7 +157,7 @@ class ApplicationController extends Controller
                 return $this->renderResponse(false);
             }
         } catch (MongoDuplicateKeyException $e) {
-            return $this->exception("Application Name is not Unique");
+            return $this->renderResponse(['message' => "Application's name must be unique"], Response::HTTP_UNAUTHORIZED);
         }
     }
 
@@ -178,7 +178,7 @@ class ApplicationController extends Controller
 
             return $this->renderResponse($successful);
         } catch (MongoDuplicateKeyException $e) {
-            return $this->exception("App Name is not Unique");
+            return $this->renderResponse(['message' => "Application's name must be unique"], Response::HTTP_UNAUTHORIZED);
         }
     }
 
@@ -193,14 +193,11 @@ class ApplicationController extends Controller
      */
     public function deleteApplicationAction(Request $request, ApplicationService $applicationService, $id)
     {
+        $this->denyAccessUnlessGranted([User::ROLE_SUPER_ADMIN]);
+
         $applicationService->deleteApp($id);
 
         return $this->renderResponse(null, Response::HTTP_OK);
-    }
-
-    private function exception($message, $status = Response::HTTP_BAD_REQUEST)
-    {
-        return $this->renderResponse(array('message' => $message), $status);
     }
 
     /**

@@ -108,23 +108,4 @@ class StringWrapper
 
         return $random;
     }
-
-    /**
-     * Infers what PHP variable type
-     *
-     * @return string
-     */
-
-    public function inferPhpType()
-    {
-        if ($this->endsWith('At')) {
-            return 'datetime';
-        } elseif ($this->startsWith('is')) {
-            return 'bool';
-        } elseif ($this->endsWith('s')) {
-            return 'array';
-        }
-
-        return 'string';
-    }
 }

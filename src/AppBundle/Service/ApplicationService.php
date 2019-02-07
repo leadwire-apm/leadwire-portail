@@ -128,6 +128,7 @@ class ApplicationService
     /**
      * Paginates through Apps
      *
+     * @codeCoverageIgnore
      * @param int $pageNumber
      * @param int $itemsPerPage
      * @param array $criteria
@@ -185,6 +186,7 @@ class ApplicationService
     /**
      * Get specific apps
      *
+     * @codeCoverageIgnore
      * @param array $criteria
      *
      * @return array

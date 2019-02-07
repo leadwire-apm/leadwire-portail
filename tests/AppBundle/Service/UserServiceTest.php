@@ -107,10 +107,6 @@ class UserServiceTest extends BaseFunctionalTest
 
     }
 
-    // public function testUpdateUser()
-    // {
-    // }
-
     public function testDeleteUser()
     {
         $this->userManager->deleteAll();

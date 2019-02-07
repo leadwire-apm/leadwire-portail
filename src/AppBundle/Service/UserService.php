@@ -208,6 +208,8 @@ class UserService
      */
     public function updateSubscription(User $user, $data)
     {
+        // TODO MAJOR REWORK NEEDED
+
         if ($user->getCustomer() === null) {
             throw new \Exception(sprintf("Customer for user %s is null", $user->getId()));
         }
@@ -235,13 +237,19 @@ class UserService
                 }
 
                 if (is_string($token) === true) {
-                    if ($user->getPlan()->getPrice() < $plan->getPrice() &&
+                    $userPlan = $user->getPlan();
+
+                    if ($userPlan === null) {
+                        throw new \Exception("User plan not found {$user->getId()}");
+                    }
+
+                    if ($userPlan->getPrice() < $plan->getPrice() &&
                         $subscription["plan"]["interval"] . 'ly' !== $data['billingType']
                     ) {
                         $anchorCycle = 'now';
                     }
 
-                    if ($user->getPlan()->getPrice() === 0.0) {
+                    if ($userPlan->getPrice() === 0.0) {
                         $data = $this->subscriptionService->create(
                             $token,
                             $user->getCustomer()

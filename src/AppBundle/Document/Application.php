@@ -3,10 +3,11 @@
 namespace AppBundle\Document;
 
 use AppBundle\Document\User;
-use Doctrine\Bundle\MongoDBBundle\Validator\Constraints\Unique;
-use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 use JMS\Serializer\Annotation as JMS;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Doctrine\Bundle\MongoDBBundle\Validator\Constraints\Unique;
 
 /**
  * @ODM\Document(repositoryClass="AppBundle\Repository\ApplicationRepository")
@@ -137,7 +138,9 @@ class Application
      */
     public function __construct()
     {
-        $this->invitations = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->invitations = new ArrayCollection();
+        $this->enabled = false;
+        $this->removed = false;
     }
 
     /**

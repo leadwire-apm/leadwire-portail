@@ -27,22 +27,4 @@ class UserRepository extends BaseDocumentRepository
 
         return $user;
     }
-
-    /**
-     * Get by apiKey
-     *
-     * @param string $apiKey
-     *
-     * @return User
-     */
-    public function getByApiKey($apiKey)
-    {
-        /** @var User $user */
-        $user = $this->createQueryBuilder()
-            ->field('apiKey')->equals($apiKey)
-            ->getQuery()
-            ->getSingleResult();
-
-        return $user;
-    }
 }

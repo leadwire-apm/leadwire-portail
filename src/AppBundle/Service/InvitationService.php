@@ -95,6 +95,8 @@ class InvitationService
     /**
      * List all invitations
      *
+     * @codeCoverageIgnore
+     *
      * @return array
      */
     public function listInvitations()
@@ -105,6 +107,7 @@ class InvitationService
     /**
      * Paginates through Invitations
      *
+     * @codeCoverageIgnore
      * @param int $pageNumber
      * @param int $itemsPerPage
      * @param array $criteria
@@ -119,6 +122,7 @@ class InvitationService
     /**
      * Get a specific invitation
      *
+     * @codeCoverageIgnore
      * @param string $id
      *
      * @return Invitation
@@ -131,6 +135,7 @@ class InvitationService
     /**
      * Get specific invitations
      *
+     * @codeCoverageIgnore
      * @param array $criteria
      *
      * @return array
@@ -142,6 +147,8 @@ class InvitationService
 
     /**
      * Creates a new invitation from JSON data
+     *
+     * @codeCoverageIgnore
      *
      * @param string $json
      *
@@ -199,6 +206,8 @@ class InvitationService
 
     /**
      * Deletes a specific invitation from JSON data
+     *
+     * @codeCoverageIgnore
      *
      * @param string $id
      *

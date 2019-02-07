@@ -6,7 +6,8 @@ use AppBundle\Document\Application;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 
 /**
- * @ODM\Document()
+ * @ODM\Document(repositoryClass="AppBundle\Repository\ActivationCodeRepository")
+ * @ODM\ChangeTrackingPolicy("DEFERRED_EXPLICIT")
  */
 class ActivationCode
 {

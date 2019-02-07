@@ -205,7 +205,7 @@ class User implements AdvancedUserInterface
     private $defaultApplication = null;
 
     /**
-     * @var Plan
+     * @var Plan|null
      *
      * @ODM\ReferenceOne(targetDocument="ATS\PaymentBundle\Document\Plan", name="plan", cascade={"persist"})
      * @JMS\Type("ATS\PaymentBundle\Document\Plan")
@@ -215,7 +215,7 @@ class User implements AdvancedUserInterface
     private $plan = null;
 
     /**
-     * @var Customer
+     * @var Customer|null
      *
      * @ODM\ReferenceOne(targetDocument="ATS\PaymentBundle\Document\Customer", name="customer", cascade={"persist"})
      * @JMS\Type("ATS\PaymentBundle\Document\Customer")
@@ -726,21 +726,22 @@ class User implements AdvancedUserInterface
      *
      * @return User
      */
-    public function setdefaultApplication($defaultApplication): self
+    public function setDefaultApplication($defaultApplication): self
     {
         $this->defaultApplication = $defaultApplication;
 
         return $this;
     }
 
-    public function getPlan(): Plan
+    public function getPlan(): ?Plan
     {
         return $this->plan;
     }
 
-    public function setPlan(Plan $plan): User
+    public function setPlan(?Plan $plan): self
     {
         $this->plan = $plan;
+
         return $this;
     }
 
@@ -754,7 +755,7 @@ class User implements AdvancedUserInterface
         return $this->customer;
     }
 
-    public function setCustomer(Customer $customer): User
+    public function setCustomer(?Customer $customer): self
     {
         $this->customer = $customer;
         return $this;

@@ -5,7 +5,9 @@ namespace Tests\AppBundle\Service;
 
 use AppBundle\Document\User;
 use AppBundle\Document\Application;
+use AppBundle\Document\ActivationCode;
 use Tests\AppBundle\BaseFunctionalTest;
+use AppBundle\Manager\ApplicationManager;
 use ATS\CoreBundle\Service\Util\StringWrapper;
 
 
@@ -34,6 +36,11 @@ class ApplicationServiceTest extends BaseFunctionalTest
         $activatedApp = $this->applicationService->activateApplication($app->getId(), "XBXX7x");
         $this->assertEquals(null, $activatedApp);
 
+        $activationCode = new ActivationCode();
+        $activationCode->setCode("XBXX7X");
+        $activationCode->setUsed(false);
+        $this->documentManager->persist($activationCode);
+        $this->documentManager->flush();
         $activatedApp = $this->applicationService->activateApplication($app->getId(), "XBXX7X");
         $this->assertTrue($activatedApp->isEnabled());
     }
@@ -63,5 +70,40 @@ class ApplicationServiceTest extends BaseFunctionalTest
 
         $this->assertCount(1, $myApps);
         $this->assertEquals('app0', $myApps[0]->getName());
+    }
+
+    public function testDeleteApplication()
+    {
+        $am = $this->container->get(ApplicationManager::class);
+        $am->deleteAll();
+        $this->assertCount(0, $am->getAll());
+
+        $app = new Application();
+        $app->setName("app_name")->setUuid(StringWrapper::random(32));
+        $this->documentManager->persist($app);
+        $this->documentManager->flush();
+        $this->assertCount(1, $am->getAll());
+        $this->applicationService->deleteApp($app->getId());
+        $this->assertCount(1, $am->getAll());
+
+        $this->expectException('Symfony\Component\HttpKernel\Exception\HttpException');
+        $this->applicationService->deleteApp("someInvalidId");
+    }
+
+    public function testToggleActivation()
+    {
+        $app = new Application();
+        $app->setName("app_name")->setUuid(StringWrapper::random(32));
+        $this->documentManager->persist($app);
+        $this->documentManager->flush();
+
+        $this->assertFalse($app->isEnabled());
+
+        $success = $this->applicationService->toggleActivation($app->getId());
+
+        $this->assertTrue($success);
+        $dbApp = $this->applicationService->getApplication($app->getId());
+
+        $this->assertTrue($dbApp->isEnabled());
     }
 }
