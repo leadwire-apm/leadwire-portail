@@ -100,7 +100,7 @@ class Application
     /**
      * @var User
      *
-     * @ODM\ReferenceOne(targetDocument="AppBundle\Document\User", name="owner", cascade={"persist"}, inversedBy="myApps")
+     * @ODM\ReferenceOne(targetDocument="AppBundle\Document\User", name="owner", cascade={"persist"}, inversedBy="applications")
      * @JMS\Type("AppBundle\Document\User")
      * @JMS\Expose
      * @JMS\Groups({"full", "Default"})

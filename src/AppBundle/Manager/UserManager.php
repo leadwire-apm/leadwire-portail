@@ -42,9 +42,9 @@ class UserManager extends AbstractManager
      * @param array $roles
      * @param boolean $active
      *
-     * @return void
+     * @return User
      */
-    public function create($username, $uuid, $avatar, $name, $roles = [], $active = true): void
+    public function create($username, $uuid, $avatar, $name, $roles = [], $active = true): User
     {
         $user = new User();
         $user
@@ -58,5 +58,7 @@ class UserManager extends AbstractManager
             ->setPassword("");
 
         $this->update($user);
+
+        return $user;
     }
 }

@@ -14,6 +14,7 @@ security:
             pattern:  ^(/core)?/%internal_api_prefix%((?!/translation|/context))
             provider: simple_user_provider
             stateless: true
+            security: true
             guard:
                 authenticators:
                     - AppBundle\Security\TokenAuthenticator

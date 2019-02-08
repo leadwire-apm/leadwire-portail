@@ -78,8 +78,8 @@
 
             vm.isAdmin = function (admin) {
                 return (admin && admin.roles &&
-                    admin.roles.indexOf(UserService.getRoles().ADMIN) !==
-                    -1);
+                    (admin.roles.indexOf(UserService.getRoles().ADMIN) !== -1 ||
+                    admin.roles.indexOf(UserService.getRoles().SUPER_ADMIN) !== -1));
             };
 
             vm.handleChangePermission = function (admin) {

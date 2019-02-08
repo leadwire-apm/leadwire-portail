@@ -2,15 +2,16 @@
 
 namespace AppBundle\Service;
 
-use Ramsey\Uuid\Uuid;
-use AppBundle\Document\User;
-use Psr\Log\LoggerInterface;
 use AppBundle\Document\Application;
-use JMS\Serializer\SerializerInterface;
-use AppBundle\Manager\ApplicationManager;
-use JMS\Serializer\DeserializationContext;
+use AppBundle\Document\User;
 use AppBundle\Manager\ActivationCodeManager;
+use AppBundle\Manager\ApplicationManager;
+use AppBundle\Manager\UserManager;
 use AppBundle\Service\ActivationCodeService;
+use JMS\Serializer\DeserializationContext;
+use JMS\Serializer\SerializerInterface;
+use Psr\Log\LoggerInterface;
+use Ramsey\Uuid\Uuid;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
@@ -27,8 +28,13 @@ class ApplicationService
 
     /**
      * @var ActivationCodeManager
-    */
+     */
     private $activationCodeManager;
+
+    /**
+     * @var UserManager
+     */
+    private $userManager;
 
     /**
      * @var SerializerInterface
@@ -75,6 +81,7 @@ class ApplicationService
     public function __construct(
         ApplicationManager $applicationManager,
         ActivationCodeManager $activationCodeManager,
+        UserManager $userManager,
         SerializerInterface $serializer,
         LoggerInterface $logger,
         LdapService $ldapService,
@@ -84,6 +91,7 @@ class ApplicationService
     ) {
         $this->applicationManager = $applicationManager;
         $this->activationCodeManager = $activationCodeManager;
+        $this->userManager = $userManager;
         $this->serializer = $serializer;
         $this->logger = $logger;
         $this->ldapService = $ldapService;
@@ -123,6 +131,11 @@ class ApplicationService
         }
 
         return $apps;
+    }
+
+    public function listDempApplications(): array
+    {
+        return $this->applicationManager->getBy(['demo' => true]);
     }
 
     /**
@@ -314,5 +327,68 @@ class ApplicationService
         }
 
         return $isSuccessful;
+    }
+
+    /**
+     * @return void
+     */
+    public function createDemoApplications(): void
+    {
+        $demoAppOwner = $this->userManager->getOneBy(['username' => 'demoAppUser']);
+        $applicationType = $this->appTypeService->getApplicationTypes(['name' => 'Java'])[0];
+        if ($demoAppOwner === null) {
+            $demoAppOwner = $this->userManager->create("demoAppUser", Uuid::uuid1()->toString(), '', 'dempAppUser');
+        }
+
+        $app = $this->applicationManager->getOneBy(['uuid' => "a16274f8-dbd2-11e8-b444-fa163e30b6da"]);
+
+        if ($app === null) {
+            $app = new Application();
+            $app->setUuid("a16274f8-dbd2-11e8-b444-fa163e30b6da") // * UUID has to be hardcoded since it will be used on Kibana and stuff
+                ->setName("jpetstore")
+                ->setDescription("A web application built on top of MyBatis 3, Spring 3 and Stripes")
+                ->setEmail("wassim.dhib@leadwire.io")
+                ->setEnabled(true)
+                ->setDemo(true)
+                ->setRemoved(false)
+                ->setOwner($demoAppOwner)
+                ->setType($applicationType);
+
+            $this->applicationManager->update($app);
+        }
+
+        $app = $this->applicationManager->getOneBy(['uuid' => "f007bb9a-dbd2-11e8-87b3-fa163e30b6da"]);
+
+        if ($app === null) {
+            $app = new Application();
+            $app->setUuid("f007bb9a-dbd2-11e8-87b3-fa163e30b6da") // * UUID has to be hardcoded since it will be used on Kibana and stuff
+                ->setName("squash")
+                ->setDescription("Squash TM est un outil open source de gestion de référentiels de tests : gestion des exigences, cas de test, campagnes, etc. Squash est full web et nativement inter-projets.")
+                ->setEmail("wassim.dhib@leadwire.io")
+                ->setEnabled(true)
+                ->setDemo(true)
+                ->setRemoved(false)
+                ->setOwner($demoAppOwner)
+                ->setType($applicationType);
+
+            $this->applicationManager->update($app);
+        }
+    }
+
+    /**
+     *
+     * @param User $user
+     *
+     * @return void
+     */
+    public function registerDemoApplications(User $user): void
+    {
+        $demoApplications = $this->applicationManager->getBy(['demo' => true]);
+
+        foreach ($demoApplications as $demoApplication) {
+            $user->addApplication($demoApplication);
+        }
+
+        $this->userManager->update($user);
     }
 }

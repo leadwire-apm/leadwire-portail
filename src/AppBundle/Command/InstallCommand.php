@@ -2,17 +2,22 @@
 
 namespace AppBundle\Command;
 
+use AppBundle\Service\ApplicationService;
 use AppBundle\Service\ApplicationTypeService;
 use ATS\PaymentBundle\Service\PlanService;
 use Doctrine\ODM\MongoDB\DocumentManager;
+use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\ArrayInput;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class InstallCommand extends Command
+class InstallCommand extends ContainerAwareCommand
 {
+    /**
+     * @var ApplicationService
+     */
+    private $applicationService;
     /**
      * @var ApplicationTypeService
      */
@@ -28,10 +33,12 @@ class InstallCommand extends Command
     private $dm;
 
     public function __construct(
+        ApplicationService $applicationService,
         ApplicationTypeService $applicationTypeService,
         PlanService $planService,
         DocumentManager $doctrine
     ) {
+        $this->applicationService = $applicationService;
         $this->applicationTypeService = $applicationTypeService;
         $this->planService = $planService;
         $this->dm = $doctrine;
@@ -51,49 +58,49 @@ Load default Application Type. Insert template for Kibana and more..'
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        /** @var bool $debug */
+        $debug = $this->getContainer()->getParameter('kernel.debug');
         /**
          * Assets install and dump.
          */
         $commands = [
             "Install Assets" => [
                 'command' => "assets:install",
-                '--symlink' => true,
+                '--symlink' => $debug,
+                '--env' => $debug === true ? 'dev' : 'prod',
             ],
             "Assetic Dump" => [
                 'command' => "assetic:dump",
+                '--env' => $debug === true ? 'dev' : 'prod',
             ],
         ];
 
+        $output->writeln("Installing Assets");
         foreach ($commands as $step => $arguments) {
             $output->writeln($step);
             $command = $this->getApplication()->find($arguments['command']);
-            $greetInput = new ArrayInput($arguments);
-            $command->run($greetInput, $output);
+            $input = new ArrayInput($arguments);
+            $command->run($input, $output);
         }
 
-        $output->writeln("Create Application Type if not set yet");
-
         try {
+            $output->writeln("Create Default Application Type if not set");
             $defaultType = $this->applicationTypeService->createDefaultType();
-        } catch (\Exception $e) {
-            $output->writeln("<fg=red>" . $e->getMessage() . "</>");
-            return;
-        }
-        $output->writeln("<fg=green>Application Type: " . $defaultType->getName() . "</>");
-
-        $output->writeln("Create Plans if not set");
-
-        try {
+            $output->writeln("<fg=green>OK</>");
+            $output->writeln("Create Demo applications");
+            $this->applicationService->createDemoApplications();
+            $output->writeln("<fg=green>OK</>");
+            $output->writeln("Create Plans if not set");
             $this->planService->createDefaulPlans();
-            $output->writeln("<fg=green> 3 Plans  are created !</>");
+            $output->writeln("<fg=green> 3 Plans are created !</>");
+
+            $output->writeln("Creating MongoDB Indexes");
+            $this->dm->getSchemaManager()->ensureIndexes();
+            $output->writeln("");
+            $output->writeln("");
+            $output->writeln("<fg=green>All OK</>");
         } catch (\Exception $e) {
             $output->writeln("<fg=red>" . $e->getMessage() . "</>");
-            return;
         }
-
-        $output->writeln("Creating Indexes");
-        $this->dm->getSchemaManager()->ensureIndexes();
-
-        $output->writeln("<fg=green>It's done!</>");
     }
 }

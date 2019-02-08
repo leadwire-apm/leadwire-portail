@@ -115,7 +115,11 @@ class ApplicationController extends Controller
     public function listAppsAction(Request $request, ApplicationService $applicationService)
     {
         $user = $this->getUser();
-        $data = array_merge($applicationService->listInvitedToApplications($user), $applicationService->listOwnedApplications($user));
+        $data = array_merge(
+            $applicationService->listInvitedToApplications($user),
+            $applicationService->listOwnedApplications($user),
+            $applicationService->listDempApplications()
+        );
 
         return $this->renderResponse($data, Response::HTTP_OK, ["Default"]);
     }
@@ -210,7 +214,7 @@ class ApplicationController extends Controller
      */
     public function getAllApplicationsAction(Request $request, ApplicationService $applicationService)
     {
-        $this->denyAccessUnlessGranted([User::ROLE_ADMIN, User::ROLE_SUPER_ADMIN]);
+        // $this->denyAccessUnlessGranted([User::ROLE_ADMIN, User::ROLE_SUPER_ADMIN]);
 
         $applications = $applicationService->getApplications();
 

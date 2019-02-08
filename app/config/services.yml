@@ -62,6 +62,7 @@ services:
         arguments:
             $appDomain: "%app_domain%"
             $authProviderSettings: "%auth_providers%"
+            $superAdminUsername: "%super_admin_username%"
 
     AppBundle\Service\ApplicationTypeService:
         arguments:

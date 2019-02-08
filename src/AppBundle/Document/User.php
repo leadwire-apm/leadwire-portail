@@ -2,11 +2,12 @@
 namespace AppBundle\Document;
 
 use AppBundle\Document\Application;
-use ATS\PaymentBundle\Document\Customer;
 use ATS\PaymentBundle\Document\Plan;
-use Doctrine\Bundle\MongoDBBundle\Validator\Constraints\Unique;
-use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 use JMS\Serializer\Annotation as JMS;
+use ATS\PaymentBundle\Document\Customer;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
+use Doctrine\Bundle\MongoDBBundle\Validator\Constraints\Unique;
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 
 /**
@@ -192,7 +193,7 @@ class User implements AdvancedUserInterface
      * @JMS\Expose
      * @JMS\Groups({"Default", "full"})
      */
-    public $myApps;
+    private $applications;
 
     /**
      * @var ?Application
@@ -258,6 +259,8 @@ class User implements AdvancedUserInterface
     {
         $this->roles = [];
         $this->locked = false;
+
+        $this->applications = new ArrayCollection();
     }
 
     /**
@@ -821,7 +824,7 @@ class User implements AdvancedUserInterface
      */
     public function toggleLock(): self
     {
-        $this->locked = ! $this->locked;
+        $this->locked = !$this->locked;
 
         return $this;
     }
@@ -892,5 +895,34 @@ class User implements AdvancedUserInterface
     public function isEnabled()
     {
         return $this->active;
+    }
+
+    /**
+     * Get the value of applications
+     */
+    public function getApplications()
+    {
+        return $this->applications;
+    }
+
+    /**
+     * Set the value of applications
+     *
+     * @return  self
+     */
+    public function setApplications($applications)
+    {
+        $this->applications = $applications;
+
+        return $this;
+    }
+
+    public function addApplication(Application $application): self
+    {
+        if ($this->applications !== null && $this->applications->contains($application) === false) {
+            $this->applications->addElement($application);
+        }
+
+        return $this;
     }
 }

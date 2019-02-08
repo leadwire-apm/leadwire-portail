@@ -27,6 +27,11 @@ class AuthService
     private $ldapService;
 
     /**
+     * @var ApplicationService
+     */
+    private $applicationService;
+
+    /**
      * @var ElasticSearchService
      */
     private $esService;
@@ -46,20 +51,29 @@ class AuthService
      */
     private $authProviderSettings;
 
+    /**
+     * @var string
+     */
+    private $superAdminUsername;
+
     public function __construct(
         UserManager $userManage,
+        ApplicationService $applicationService,
         LdapService $ldapService,
         ElasticSearchService $esService,
         LoggerInterface $logger,
         string $appDomain,
-        array $authProviderSettings
+        array $authProviderSettings,
+        string $superAdminUsername
     ) {
         $this->userManager = $userManage;
+        $this->applicationService = $applicationService;
         $this->ldapService = $ldapService;
         $this->esService = $esService;
         $this->logger = $logger;
         $this->appDomain = $appDomain;
         $this->authProviderSettings = $authProviderSettings;
+        $this->superAdminUsername = $superAdminUsername;
     }
 
     /**
@@ -95,6 +109,7 @@ class AuthService
                 // New user has been created.
                 // Should create LDAP & ElasticSearch entries
                 $this->ldapService->createNewUser($user->getUuid());
+                $this->applicationService->registerDemoApplications($user);
                 $this->ldapService->registerDemoApplications($user->getUuid());
                 $this->esService->resetUserIndexes($user);
                 $this->esService->createDefaultApplications($user);
@@ -109,6 +124,8 @@ class AuthService
             if ($user->isLocked() === true) {
                 throw new AccessDeniedHttpException($user->getLockMessage());
             }
+
+            $this->checkSuperAdminRoles($user);
         }
 
         return $user;
@@ -184,5 +201,20 @@ class AuthService
         $token = $this->decodeToken($jwt[1]);
 
         return $this->userManager->getOneBy(['uuid' => str_replace("user_", "", $token->user)]);
+    }
+
+    /**
+     * Makes sure that the user with the configured super admin username has the right access role
+     *
+     * @param User $user
+     *
+     * @return void
+     */
+    private function checkSuperAdminRoles(User $user): void
+    {
+        if ($user->getUsername() === $this->superAdminUsername) {
+            $user->promote(User::ROLE_SUPER_ADMIN);
+            $this->userManager->update($user);
+        }
     }
 }
