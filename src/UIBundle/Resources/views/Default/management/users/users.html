@@ -9,7 +9,8 @@
                 <div class="col-sm-offset-10" style="display: flex">
                     <label for="search">Only administrators :</label>
                     <label for="search" class="switch switch-sm ml10">
-                        <input id="search" type="checkbox" data-ng-model="ctrl.onlyAdmins">
+                        <input id="search" type="checkbox"
+                               data-ng-model="ctrl.onlyAdmins">
                         <span><i class="handle"></i></span>
                     </label>
 
@@ -34,7 +35,7 @@
                                              size="24"></spinner>
                                 </td>
                             </tr>
-                            <tr ng-repeat="user in ctrl.users | inArray:ctrl.onlyAdmins:'roles':'ROLE_ADMIN'"
+                            <tr ng-repeat="user in ctrl.users | inArray:ctrl.onlyAdmins:'roles':ctrl.ADMINS"
                                 class="text-center"
 
                             >
@@ -66,7 +67,8 @@
                                             ng-click="ctrl.handleOnToggleLock(user)"
                                             data-ng-disabled="ctrl.ui.isProcessing"
                                     >
-                                        <i class="fa fa-lock"></i> [[user.locked ? 'Activate'
+                                        <i class="fa fa-lock"></i> [[user.locked ?
+                                        'Activate'
                                         : 'Block']]
                                     </button>
 
@@ -78,7 +80,7 @@
                                     </button>
                                     <button class="btn btn-danger bg-red"
                                             ng-click="ctrl.handleDeleteUser(user.id)"
-                                            data-ng-disabled="ctrl.ui.isProcessing"
+                                            data-ng-disabled="user.deleted || ctrl.ui.isProcessing"
                                     >
                                         <i class="fa fa-trash"></i> Delete
                                     </button>

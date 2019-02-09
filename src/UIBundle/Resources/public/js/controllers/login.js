@@ -132,27 +132,32 @@ function LoginControllerFN (
 
     function onLoad () {
         if ($auth.isAuthenticated()) {
-            if (invitationId !== undefined && $localStorage.user) {
-                InvitationService.acceptInvitation(
-                    invitationId,
-                    $localStorage.user.id,
-                )
-                    .then(function (app) {
-                        toastr.success(
-                            MESSAGES_CONSTANTS.INVITATION_ACCEPTED,
-                        );
-                        (
-                            $localStorage.applications ||
-                            ($localStorage.applications = [])
-                        ).push(app);
-                        $state.go('app.applicationsList');
-                    })
-                    .catch(function (error) {
-                        toastr.error(MESSAGES_CONSTANTS.ERROR);
-                        console.log('onLoad Login', error);
-                    });
+            if ($localStorage.user) {
+                if (invitationId !== undefined) {
+                    InvitationService.acceptInvitation(
+                        invitationId,
+                        $localStorage.user.id,
+                    )
+                        .then(function (app) {
+                            toastr.success(
+                                MESSAGES_CONSTANTS.INVITATION_ACCEPTED,
+                            );
+                            (
+                                $localStorage.applications ||
+                                ($localStorage.applications = [])
+                            ).push(app);
+                            $state.go('app.applicationsList');
+                        })
+                        .catch(function (error) {
+                            toastr.error(MESSAGES_CONSTANTS.ERROR);
+                            console.log('onLoad Login', error);
+                        });
+                } else {
+                    $state.go('app.applicationsList');
+                }
             } else {
-                $state.go('app.applicationsList');
+                $state.go('login');
+
             }
         }
     }

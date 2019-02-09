@@ -90,7 +90,7 @@ class Application
 
     /**
      * @var boolean
-     * @JMS\Groups({"never"})
+     * @JMS\Groups({})
      * @JMS\Expose
      * @JMS\Type("boolean")
      * @ODM\Field(type="boolean", name="removed")

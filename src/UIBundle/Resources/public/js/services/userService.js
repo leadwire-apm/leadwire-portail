@@ -22,6 +22,7 @@
     ) {
         var service = this;
         var sep = '###';
+        var ADMINS = ['ROLE_SUPER_ADMIN', 'ROLE_ADMIN'];
 
         /**
          * refresh user stored in localStorage
@@ -317,8 +318,6 @@
             return UserFactory.toggleStatus(id, { message: message });
         };
 
-        const ADMINS = ['ROLE_SUPER_ADMIN', 'ROLE_ADMIN'];
-
         service.getRoles = function () {
             return {
                 SUPER_ADMIN: 'ROLE_SUPER_ADMIN',
@@ -326,9 +325,11 @@
             };
         };
         service.isAdmin = function (user) {
-            return ADMINS.some(role => user.roles
-                .includes(role));
+            return ADMINS.some(function (role) {
+                return user.roles.includes(role);
+            });
         };
 
+        service.ADMINS = ADMINS;
     }
 })(window.angular);
