@@ -8,14 +8,22 @@
             service.create = function (appType) {
                 return CodeFactory.new(appType)
                     .then(function (response) {
-                        return response.data;
+                        return response.data.code;
                     })
                     .catch(function (error) {
                         throw new Error(error);
                     });
             };
 
-
+            service.list = function () {
+                return CodeFactory.findAll()
+                    .then(function (response) {
+                        return response.data;
+                    })
+                    .catch(function (error) {
+                        throw new Error(error);
+                    });
+            };
 
             return service;
         });

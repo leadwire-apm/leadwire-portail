@@ -54,8 +54,9 @@
                 .then(function (willGenerate) {
                     if (willGenerate) {
                         CodeService.create()
-                            .then(function () {
-                                toastr.success(MESSAGES_CONSTANTS.SUCCESS);
+                            .then(function (code) {
+                                swal('Code generated  successfully!', code);
+                                // toastr.success(MESSAGES_CONSTANTS.SUCCESS);
                             })
                             .catch(function () {
                                 toastr.error(MESSAGES_CONSTANTS.ERROR);
