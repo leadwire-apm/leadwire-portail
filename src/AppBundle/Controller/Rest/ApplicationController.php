@@ -118,7 +118,7 @@ class ApplicationController extends Controller
         $data = array_merge(
             $applicationService->listInvitedToApplications($user),
             $applicationService->listOwnedApplications($user),
-            $applicationService->listDempApplications()
+            $applicationService->listDemoApplications()
         );
 
         return $this->renderResponse($data, Response::HTTP_OK, ["Default"]);

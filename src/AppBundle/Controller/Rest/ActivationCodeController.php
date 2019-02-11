@@ -14,27 +14,34 @@ class ActivationCodeController extends Controller
 {
 
     /**
-     * @Route("/new/{sendEmail}", methods="POST", defaults={"sendEmail"=false})
+     * @Route("/new", methods="POST")
      *
      * @param Request $request
      * @param ActivationCodeService $acs
-     * @param bool $sendEmail
      *
      * @return Response
      */
-    public function newActivationCodeAction(Request $request, ActivationCodeService $acs, bool $sendEmail)
+    public function newActivationCodeAction(Request $request, ActivationCodeService $acs)
     {
-        $this->denyAccessUnlessGranted([User::ROLE_ADMIN, User::ROLE_SUPER_ADMIN]);
+        // Only super Admin can do this
+        $this->denyAccessUnlessGranted([User::ROLE_SUPER_ADMIN]);
 
-        if ($sendEmail === false) {
-            // Only super Admin can do this
-            $this->denyAccessUnlessGranted([User::ROLE_SUPER_ADMIN]);
+        return new JsonResponse(['code' => $acs->generateNewCode()->getCode()]);
+    }
 
-            return new JsonResponse(['code' => $acs->generateNewCode()->getCode()]);
-        } else {
-            $activationCode = $acs->generateNewCode();
-            // TODO: Send Email
-            // ? To which user
-        }
+    /**
+     * @Route("/list")
+     *
+     * @param Request $request
+     * @param ActivationCodeService $acs
+     *
+     * @return Response
+     */
+    public function listActivationCodeAction(Request $request, ActivationCodeService $acs)
+    {
+        // Only super Admin can do this
+        $this->denyAccessUnlessGranted([User::ROLE_SUPER_ADMIN]);
+
+        return new JsonResponse($acs->listActivationCodes());
     }
 }

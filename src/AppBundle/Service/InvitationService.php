@@ -182,10 +182,10 @@ class InvitationService
             /** @var Invitation $invitation */
             $invitation = $this->serializer->deserialize($json, Invitation::class, 'json');
 
-            /** @var Application $application */
+            /** @var Application|null $application */
             $application = $this->applicationService->getApplication((string) $invitation->getApplication()->getId());
 
-            if ($application instanceof Application) {
+            if ($application !== null) {
                 $invitation->setApplication($application);
             } else {
                 throw new \Exception(sprintf("Unknown application %s", $invitation->getApplication()->getId()));

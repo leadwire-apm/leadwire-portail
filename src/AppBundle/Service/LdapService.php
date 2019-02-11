@@ -6,6 +6,7 @@ use AppBundle\Document\Application;
 use AppBundle\Document\Invitation;
 use AppBundle\Manager\ApplicationManager;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Ldap\Adapter\EntryManagerInterface;
 use Symfony\Component\Ldap\Entry;
 use Symfony\Component\Ldap\Exception\LdapException;
 use Symfony\Component\Ldap\Ldap;
@@ -36,6 +37,16 @@ class LdapService
     private $applicationManager;
 
     /**
+     * @var Ldap
+     */
+    private $ldap;
+
+    /**
+     * @var EntryManagerInterface
+     */
+    private $entryManager;
+
+    /**
      * LdapService constructor.
      *
      * @param LoggerInterface $logger
@@ -47,6 +58,17 @@ class LdapService
         $this->settings = $settings;
         $this->applicationManager = $applicationManager;
         $this->logger = $logger;
+
+        $this->ldap = Ldap::create(
+            'ext_ldap',
+            [
+                'connection_string' => 'ldap://' . $this->settings['host'] . ':' . $this->settings['port'],
+            ]
+        );
+
+        $this->ldap->bind($this->settings['dn_user'], $this->settings['mdp']);
+
+        $this->entryManager = $this->ldap->getEntryManager();
     }
 
     /**
@@ -138,25 +160,6 @@ class LdapService
     }
 
     /**
-     * instantiateLdap
-     *
-     * @return Ldap
-     */
-    protected function instantiateLdap(): Ldap
-    {
-        $ldap = Ldap::create(
-            'ext_ldap',
-            [
-                'connection_string' => 'ldap://' . $this->settings['host'] . ':' . $this->settings['port'],
-            ]
-        );
-
-        $ldap->bind($this->settings['dn_user'], $this->settings['mdp']);
-
-        return $ldap;
-    }
-
-    /**
      * Save Ldap entry
      *
      * @param Entry $entry
@@ -166,9 +169,7 @@ class LdapService
     protected function saveEntry(Entry $entry)
     {
         try {
-            $ldap = $this->instantiateLdap();
-            $entryManager = $ldap->getEntryManager();
-            $entryManager->add($entry);
+            $this->entryManager->add($entry);
 
             return true;
         } catch (LdapException $e) {
@@ -191,45 +192,36 @@ class LdapService
      *
      * @return boolean
      */
-    public function createNewUser(string $uuid): bool
+    public function createNewUserEntries(string $uuid): bool
     {
         $allUserTenant = self::ALL_USER_TENANT_PREFIX . $uuid;
         $userName = self::USER_NAME_PREFIX . $uuid;
         $status = true;
 
-        // ALL_USER entry
-        $entry = new Entry(
-            "dn: cn=$allUserTenant,ou=Group,dc=leadwire,dc=io",
-            [
-                'cn' => "$allUserTenant",
-                'objectClass' => ['groupofnames'],
-                'member' => "cn=leadwire-apm,ou=People,dc=leadwire,dc=io",
-                'description' => 'appname',
-            ]
-        );
-
-        $status = $this->saveEntry($entry);
-
         // People entry
         $entry = new Entry(
-            "dn: cn=$userName,ou=People,dc=leadwire,dc=io",
+            "cn=$userName,ou=People,dc=leadwire,dc=io",
             [
                 "cn" => $userName,
-                "gidNumber" => " 789",
+                "gidNumber" => "789",
                 "objectclass" => ['posixGroup', 'top'],
                 "description" => "username",
             ]
         );
 
-        $status = $status && $this->saveEntry($entry);
+        $status = $this->saveEntry($entry);
 
-        // ADD MEMBER TO ALL_USER GROUP
+        // ALL_USER entry
         $entry = new Entry(
-            "dn: cn=$allUserTenant,ou=Group,dc=leadwire,dc=io",
+            "cn=$allUserTenant,ou=Group,dc=leadwire,dc=io",
             [
-                "changetype" => "modify",
-                "add" => "member",
-                "member" => "cn=$userName,ou=People,dc=leadwire,dc=io",
+                'cn' => "$allUserTenant",
+                'objectClass' => ['groupofnames'],
+                'member' => [
+                    "cn=leadwire-apm,ou=People,dc=leadwire,dc=io",
+                    "cn=$userName,ou=People,dc=leadwire,dc=io",
+                ],
+                'description' => 'appname',
             ]
         );
 
@@ -253,24 +245,57 @@ class LdapService
 
         /** @var Application $application */
         foreach ($demoApplications as $application) {
+            $result = $this->ldap->query('ou=Group,dc=leadwire,dc=io', "(cn=app_{$application->getUuid()})")->execute();
+            $entry = $result[0];
+            if ($entry instanceof Entry) {
+                $oldValue = $entry->getAttribute('member') !== null ? $entry->getAttribute('member') : [];
+                $entry->setAttribute('member', array_merge($oldValue, ["cn=$userName,ou=People,dc=leadwire,dc=io"]));
+                $this->entryManager->update($entry);
+            } else {
+                throw new \Exception("Unable to find LDAP records for demo applications app tenant");
+            }
+
+            $result = $this->ldap->query('ou=Group,dc=leadwire,dc=io', "(cn=shared_{$application->getUuid()})")->execute();
+
+            $entry = $result[0];
+            if ($entry instanceof Entry) {
+                $oldValue = $entry->getAttribute('member') !== null ? $entry->getAttribute('member') : [];
+                $entry->setAttribute('member', array_merge($oldValue, ["cn=$userName,ou=People,dc=leadwire,dc=io"]));
+                $this->entryManager->update($entry);
+            } else {
+                throw new \Exception("Unable to find LDAP records for demo applications shared tenant");
+            }
+        }
+    }
+
+    public function createDemoApplicationsEntries()
+    {
+        $demoApplications = $this->applicationManager->getBy(['demo' => true]);
+        foreach ($demoApplications as $application) {
+            // app_ tenant
             $entry = new Entry(
-                "dn: cn=app_{$application->getUuid()},ou=Group,dc=leadwire,dc=io",
+                "cn=app_{$application->getUuid()},ou=Group,dc=leadwire,dc=io",
                 [
-                    "changetype" => "modify",
-                    "add" => "member",
-                    "member" => "cn=$userName,ou=People,dc=leadwire,dc=io",
+                    "objectClass" => "groupofnames",
+                    "cn" => "app_{$application->getUuid()}",
+                    "member" => "cn=leadwire-apm,ou=People,dc=leadwire,dc=io",
+                    "description" => "appname",
                 ]
             );
+
             $this->saveEntry($entry);
 
+            // shared_ tenant
             $entry = new Entry(
-                "dn: cn=shared_{$application->getUuid()},ou=Group,dc=leadwire,dc=io",
+                "cn=shared_{$application->getUuid()},ou=Group,dc=leadwire,dc=io",
                 [
-                    "changetype" => "modify",
-                    "add" => "member",
-                    "member" => "cn=$userName,ou=People,dc=leadwire,dc=io",
+                    "objectClass" => "groupofnames",
+                    "cn" => "shared_{$application->getUuid()}",
+                    "member" => "cn=leadwire-apm,ou=People,dc=leadwire,dc=io",
+                    "description" => "appname",
                 ]
             );
+
             $this->saveEntry($entry);
         }
     }

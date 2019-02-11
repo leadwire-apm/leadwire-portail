@@ -65,6 +65,12 @@ class ActivationCodeService
         return $activationCode;
     }
 
+    /**
+     *
+     * @param ActivationCode $activationCode
+     *
+     * @return boolean
+     */
     public function validateActivationCode(ActivationCode $activationCode): bool
     {
 
@@ -73,8 +79,22 @@ class ActivationCodeService
         return $valid;
     }
 
+    /**
+     *
+     * @param string $code
+     *
+     * @return ActivationCode|null
+     */
     public function getByCode(string $code): ?ActivationCode
     {
         return $this->acm->getOneBy(['code' => $code]);
+    }
+
+    /**
+     * @return array
+     */
+    public function listActivationCodes(): array
+    {
+        return $this->acm->getAll();
     }
 }

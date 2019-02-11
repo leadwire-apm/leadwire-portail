@@ -43,30 +43,6 @@ swiftmailer:
         - "%dev_delivery_address%"
     logging: true
 
-nelmio_api_doc:
-    documentation:
-        host: "%app_domain%"
-        schemes: ["%app_schemes%"]
-        info:
-            title: "%app_title%"
-            description: "%app_description%"
-            version: "%app_version%"
-        securityDefinitions:
-            Bearer:
-                type: apiKey
-                description: 'Value: Bearer {jwt}'
-                name: Authorization
-                in: header
-        security:
-            - Bearer: []
-    areas:
-        default: ~
-        core:
-            path_patterns:
-                - ^/%internal_api_prefix%(?!/doc$)
-        translation:
-            path_patterns:
-                - ^/translation/%internal_api_prefix%
 nelmio_cors:
     paths:
         '^/login':

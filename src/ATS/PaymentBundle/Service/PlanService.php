@@ -83,9 +83,9 @@ class PlanService
      *
      * @param string $id
      *
-     * @return Plan
+     * @return Plan|null
      */
-    public function getPlan($id)
+    public function getPlan($id): ?Plan
     {
         return $this->planManager->getOneBy(['id' => $id]);
     }

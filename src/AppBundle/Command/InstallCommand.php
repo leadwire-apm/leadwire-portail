@@ -4,6 +4,7 @@ namespace AppBundle\Command;
 
 use AppBundle\Service\ApplicationService;
 use AppBundle\Service\ApplicationTypeService;
+use AppBundle\Service\LdapService;
 use ATS\PaymentBundle\Service\PlanService;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
@@ -18,10 +19,17 @@ class InstallCommand extends ContainerAwareCommand
      * @var ApplicationService
      */
     private $applicationService;
+
+    /**
+     * @var LdapService
+     */
+    private $ldapService;
+
     /**
      * @var ApplicationTypeService
      */
     private $applicationTypeService;
+
     /**
      * @var PlanService
      */
@@ -35,11 +43,13 @@ class InstallCommand extends ContainerAwareCommand
     public function __construct(
         ApplicationService $applicationService,
         ApplicationTypeService $applicationTypeService,
+        LdapService $ldapService,
         PlanService $planService,
         DocumentManager $doctrine
     ) {
         $this->applicationService = $applicationService;
         $this->applicationTypeService = $applicationTypeService;
+        $this->ldapService = $ldapService;
         $this->planService = $planService;
         $this->dm = $doctrine;
         parent::__construct();
@@ -89,6 +99,7 @@ Load default Application Type. Insert template for Kibana and more..'
             $output->writeln("<fg=green>OK</>");
             $output->writeln("Create Demo applications");
             $this->applicationService->createDemoApplications();
+            $this->ldapService->createDemoApplicationsEntries();
             $output->writeln("<fg=green>OK</>");
             $output->writeln("Create Plans if not set");
             $this->planService->createDefaulPlans();

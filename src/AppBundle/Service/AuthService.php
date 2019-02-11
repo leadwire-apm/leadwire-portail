@@ -103,16 +103,16 @@ class AuthService
         $user = $this->userManager->getOneBy(['username' => $data['login']]);
 
         if ($user === null) {
+            // We're dealing with a new user
             $user = $this->addUser($data);
 
-            if ($user !== false) {
-                // New user has been created.
+            if ($user !== null) {
+                // User creation in DB is successful
                 // Should create LDAP & ElasticSearch entries
-                $this->ldapService->createNewUser($user->getUuid());
-                $this->applicationService->registerDemoApplications($user);
+                $this->ldapService->createNewUserEntries($user->getUuid());
                 $this->ldapService->registerDemoApplications($user->getUuid());
+                $this->applicationService->registerDemoApplications($user);
                 $this->esService->resetUserIndexes($user);
-                $this->esService->createDefaultApplications($user);
             }
         } else {
             // Check if user has been deleted
@@ -124,9 +124,9 @@ class AuthService
             if ($user->isLocked() === true) {
                 throw new AccessDeniedHttpException($user->getLockMessage());
             }
-
-            $this->checkSuperAdminRoles($user);
         }
+
+        $this->checkSuperAdminRoles($user);
 
         return $user;
     }
@@ -169,11 +169,17 @@ class AuthService
         return $token;
     }
 
-    protected function addUser(array $userData)
+    /**
+     *
+     * @param array $userData
+     *
+     * @return User|null
+     */
+    protected function addUser(array $userData): ?User
     {
         try {
             $uuid1 = Uuid::uuid1();
-            $this->userManager->create(
+            $user = $this->userManager->create(
                 $userData['login'],
                 $uuid1->toString(),
                 $userData['avatar_url'],
@@ -181,19 +187,18 @@ class AuthService
                 [User::DEFAULT_ROLE],
                 true
             );
-            $dbUser = $this->userManager->getUserByUsername($userData['login']);
 
-            return $dbUser;
+            return $user;
         } catch (\Exception $e) {
-            $this->logger->critical("Exception on User creation ", ['exception' => $e]);
+            $this->logger->critical($e->getMessage());
 
-            return false;
+            return null;
         }
     }
 
     /**
      * @param string $authorization
-     * @return array|User
+     * @return User|null
      */
     public function getUserFromToken($authorization)
     {
@@ -212,7 +217,9 @@ class AuthService
      */
     private function checkSuperAdminRoles(User $user): void
     {
-        if ($user->getUsername() === $this->superAdminUsername) {
+        if ($user->getUsername() === $this->superAdminUsername &&
+            $user->hasRole(User::ROLE_SUPER_ADMIN) === false
+        ) {
             $user->promote(User::ROLE_SUPER_ADMIN);
             $this->userManager->update($user);
         }

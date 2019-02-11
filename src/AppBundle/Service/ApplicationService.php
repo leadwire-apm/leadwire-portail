@@ -133,7 +133,7 @@ class ApplicationService
         return $apps;
     }
 
-    public function listDempApplications(): array
+    public function listDemoApplications(): array
     {
         return $this->applicationManager->getBy(['demo' => true]);
     }

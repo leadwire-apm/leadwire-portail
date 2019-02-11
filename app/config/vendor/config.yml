@@ -1,6 +1,5 @@
 # Vendors
 imports:
-    - { resource: application.yml }
     - { resource: doctrine/config.yml }
     - { resource: doctrine/extensions.yml }
     - { resource: jms_serializer/config.yml }
