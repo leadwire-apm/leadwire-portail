@@ -8,7 +8,8 @@
                  * @returns {Promise}
                  */
                 new: function (newCode) {
-                    return $http.post(CONFIG.BASE_URL + 'api/activation-code/new',
+                    return $http.post(
+                        CONFIG.BASE_URL + 'api/activation-code/new',
                         newCode);
                 },
                 /**
