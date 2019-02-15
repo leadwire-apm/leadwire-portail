@@ -387,7 +387,16 @@ angular.module('leadwireApp')
                     controller: 'EditTemplateController',
                     controllerAs: 'ctrl',
                 })
-
+                .state('app.management.codes', {
+                    url: '/codes/list',
+                    templateUrl: 'management/codes/list.html',
+                    resolve: {
+                        permissions: adminRequired,
+                        menu: updateMenuItems('MANAGEMENT'),
+                    },
+                    controller: 'ListCodeController',
+                    controllerAs: 'ctrl',
+                })
                 .state('app.infrastructureMonitoring', {
                     url: '/infrastructureMonitoring',
                     templateUrl: 'infrastructureMonitoring.html',

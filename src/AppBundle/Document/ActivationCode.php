@@ -1,13 +1,15 @@
-<?php declare (strict_types = 1);
+<?php declare (strict_types=1);
 
 namespace AppBundle\Document;
 
 use AppBundle\Document\Application;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
+use JMS\Serializer\Annotation as JMS;
 
 /**
  * @ODM\Document(repositoryClass="AppBundle\Repository\ActivationCodeRepository")
  * @ODM\ChangeTrackingPolicy("DEFERRED_EXPLICIT")
+ * @JMS\ExclusionPolicy("all")
  */
 class ActivationCode
 {
@@ -22,6 +24,10 @@ class ActivationCode
     /**
      * @ODM\Field(type="string")
      * @ODM\UniqueIndex()
+     * @JMS\Expose
+     * @JMS\Groups({})
+     * @JMS\Type("string")
+     *
      * @var string
      */
     private $code;
@@ -35,6 +41,9 @@ class ActivationCode
 
     /**
      * @ODM\Field(type="bool")
+     * @JMS\Expose
+     * @JMS\Groups({})
+     * @JMS\Type("boolean")
      *
      * @var boolean
      */
@@ -52,6 +61,7 @@ class ActivationCode
         $this->used = false;
         $this->application = null;
     }
+
     /**
      * Get the value of id
      *
@@ -75,7 +85,7 @@ class ActivationCode
     /**
      * Set the value of code
      *
-     * @param  string  $code
+     * @param  string $code
      *
      * @return  self
      */
@@ -99,7 +109,7 @@ class ActivationCode
     /**
      * Set the value of createdAt
      *
-     * @param  \DateTime  $createdAt
+     * @param  \DateTime $createdAt
      *
      * @return  self
      */
@@ -123,7 +133,7 @@ class ActivationCode
     /**
      * Set the value of used
      *
-     * @param  boolean  $used
+     * @param  boolean $used
      *
      * @return  self
      */
@@ -147,7 +157,7 @@ class ActivationCode
     /**
      * Set the value of application
      *
-     * @param  Application  $application
+     * @param  Application $application
      *
      * @return  self
      */

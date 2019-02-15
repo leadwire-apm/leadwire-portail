@@ -17,7 +17,7 @@
                  * @returns {Promise}
                  */
                 findAll: function () {
-                    return $http.get(CONFIG.BASE_URL + 'api/code/list');
+                    return $http.get(CONFIG.BASE_URL + 'api/activation-code/list');
                 },
             };
         });

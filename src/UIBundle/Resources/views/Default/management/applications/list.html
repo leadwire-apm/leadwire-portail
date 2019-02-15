@@ -40,7 +40,8 @@
                             [[application.owner.name]]
                         </td>
                         <td data-title="Status" data-label="Status">
-                                <span data-ng-class="application.removed || !application.enabled ? 'label label-danger' : 'label label-success'">
+                                <span class="label"
+                                      data-ng-class="application.removed ? 'label-danger' : !application.enabled ? 'label-warning' : 'label-success'">
                                     [[application.removed ? 'Removed' : application.enabled ? 'Activated' : 'Deactivated']]
                                 </span>
                         </td>

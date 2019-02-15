@@ -158,6 +158,12 @@
                     icon: 'fa fa-desktop',
                     label: 'Manage templates',
                 },
+                {
+                    route: 'app.management.codes',
+                    abstractRoute: 'app.management',
+                    icon: 'fa fa-desktop',
+                    label: 'List codes',
+                },
             ],
         });
 })(window.angular);

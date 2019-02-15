@@ -9,10 +9,11 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use ATS\CoreBundle\Controller\Rest\RestControllerTrait;
 
 class ActivationCodeController extends Controller
 {
-
+    use RestControllerTrait;
     /**
      * @Route("/new", methods="POST")
      *
@@ -26,7 +27,7 @@ class ActivationCodeController extends Controller
         // Only super Admin can do this
         $this->denyAccessUnlessGranted([User::ROLE_SUPER_ADMIN]);
 
-        return new JsonResponse(['code' => $acs->generateNewCode()->getCode()]);
+        return $this->renderResponse(['code' => $acs->generateNewCode()->getCode()]);
     }
 
     /**
@@ -42,6 +43,6 @@ class ActivationCodeController extends Controller
         // Only super Admin can do this
         $this->denyAccessUnlessGranted([User::ROLE_SUPER_ADMIN]);
 
-        return new JsonResponse($acs->listActivationCodes());
+        return $this->renderResponse($acs->listActivationCodes());
     }
 }
