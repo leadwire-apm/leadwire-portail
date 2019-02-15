@@ -27,18 +27,22 @@
         };
 
         vm.fetchCodes = function () {
+            vm.flipActivityIndicator('isLoading');
             CodeService.list()
                 .then(function (codes) {
                     vm.codes = codes;
+                    vm.flipActivityIndicator('isLoading');
                 })
                 .catch(function (err) {
                     // todo
+                    vm.flipActivityIndicator('isLoading');
                 });
         };
 
         vm.copyCode = function (code) {
             // console.log(code);
-            CodeService.copyToClipboard(code);
+            CodeService.copyToClipboard(code.code);
+            toastr.info(MESSAGES_CONSTANTS.CODE_COPIED);
         };
 
         vm.init = function () {
