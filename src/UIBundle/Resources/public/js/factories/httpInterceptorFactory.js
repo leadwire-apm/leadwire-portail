@@ -20,22 +20,25 @@
                     },
                     responseError: function (response) {
                         console.log('status: ', response.status);
-                        if (response.status === 401 || response.status ===
-                            403) {
+                        // response.status === 401 ||
+                        if (response.status === 403) {
                             $localStorage.$reset();
                             $location.path('/login');
                             throw {
                                 data: response.data,
-                                error: new Error(MESSAGES_CONSTANTS.ERROR),
+                                error: new Error(response.data.message ||
+                                    MESSAGES_CONSTANTS.ERROR),
                             };
                         } else if (response.status === 500) {
-                            throw new Error(MESSAGES_CONSTANTS.ERROR);
+                            throw new Error(response.data.message ||
+                                MESSAGES_CONSTANTS.ERROR);
                         } else if (response.status === 400) {
                             //TODO NEED TO GET MESSAGES
                             return response;
                         } else {
                             // return response || $q.when(response);
-                            throw new Error(MESSAGES_CONSTANTS.ERROR);
+                            throw new Error(response.data.message ||
+                                MESSAGES_CONSTANTS.ERROR);
                         }
                     },
                 };
