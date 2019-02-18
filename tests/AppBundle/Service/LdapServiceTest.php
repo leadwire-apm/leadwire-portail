@@ -15,12 +15,14 @@ class LdapServiceTest extends BaseFunctionalTest
     public function testCreateNewUserEntries()
     {
         $uuid = 'ldap_test';
+        $user = new User();
+        $user->setUserName("test_user")->setUuid($uuid);
         $ldapSettings = $this->container->getParameter('ldap');
 
         /** @var LdapService $ldapService */
         $ldapService = $this->container->get(LdapService::class);
 
-        $ldapService->createNewUserEntries($uuid);
+        $ldapService->createNewUserEntries($user);
 
         $ldap = Ldap::create(
             'ext_ldap',

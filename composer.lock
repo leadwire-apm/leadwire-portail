@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1b600674f71916e7544aad13c0acef8f",
+    "content-hash": "978163f8a8b7e140fea6f3c7c887b717",
     "packages": [
         {
             "name": "alcaeus/mongo-php-adapter",
@@ -6543,16 +6543,16 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "0.11.1",
+            "version": "0.11.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "a138b8a2731b2c19f1dffa2f1411984a638fe977"
+                "reference": "8e185a74004920419ee97bf9dc62e6a175e8dca5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/a138b8a2731b2c19f1dffa2f1411984a638fe977",
-                "reference": "a138b8a2731b2c19f1dffa2f1411984a638fe977",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/8e185a74004920419ee97bf9dc62e6a175e8dca5",
+                "reference": "8e185a74004920419ee97bf9dc62e6a175e8dca5",
                 "shasum": ""
             },
             "require": {
@@ -6612,7 +6612,7 @@
                 "MIT"
             ],
             "description": "PHPStan - PHP Static Analysis Tool",
-            "time": "2019-01-19T20:23:08+00:00"
+            "time": "2019-02-12T14:54:38+00:00"
         },
         {
             "name": "phpstan/phpstan-deprecation-rules",
@@ -6662,23 +6662,23 @@
         },
         {
             "name": "phpstan/phpstan-symfony",
-            "version": "0.11",
+            "version": "0.11.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan-symfony.git",
-                "reference": "6f200b03f1dff57291e8fcb7c23d3d8cec92d151"
+                "reference": "c5f7d3d7fe9b599ac083f481fc082af166926cf8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan-symfony/zipball/6f200b03f1dff57291e8fcb7c23d3d8cec92d151",
-                "reference": "6f200b03f1dff57291e8fcb7c23d3d8cec92d151",
+                "url": "https://api.github.com/repos/phpstan/phpstan-symfony/zipball/c5f7d3d7fe9b599ac083f481fc082af166926cf8",
+                "reference": "c5f7d3d7fe9b599ac083f481fc082af166926cf8",
                 "shasum": ""
             },
             "require": {
                 "ext-simplexml": "*",
                 "nikic/php-parser": "^4.0",
                 "php": "^7.1",
-                "phpstan/phpstan": "^0.11"
+                "phpstan/phpstan": "^0.11.1"
             },
             "conflict": {
                 "symfony/framework-bundle": "<3.0"
@@ -6693,7 +6693,8 @@
                 "phpunit/phpunit": "^7.0",
                 "slevomat/coding-standard": "^4.5.2",
                 "squizlabs/php_codesniffer": "^3.3.2",
-                "symfony/framework-bundle": "^3.0 || ^4.0"
+                "symfony/framework-bundle": "^3.0 || ^4.0",
+                "symfony/serializer": "^3|^4"
             },
             "type": "library",
             "extra": {
@@ -6718,7 +6719,7 @@
                 }
             ],
             "description": "Symfony Framework extensions and rules for PHPStan",
-            "time": "2019-01-16T09:15:02+00:00"
+            "time": "2019-02-13T19:42:11+00:00"
         },
         {
             "name": "sensio/generator-bundle",

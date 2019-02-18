@@ -3,16 +3,17 @@
 namespace AppBundle\Controller\Rest;
 
 use AppBundle\Document\User;
+use MongoDuplicateKeyException;
+use AppBundle\Service\StatService;
 use AppBundle\Service\ApplicationService;
 use AppBundle\Service\ElasticSearchService;
-use AppBundle\Service\StatService;
-use ATS\CoreBundle\Controller\Rest\RestControllerTrait;
-use MongoDuplicateKeyException;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\Routing\Annotation\Route;
+use ATS\CoreBundle\Controller\Rest\RestControllerTrait;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpKernel\Exception\HttpException;
+use AppBundle\Exception\DuplicateApplicationNameException;
 
 class ApplicationController extends Controller
 {
@@ -160,8 +161,8 @@ class ApplicationController extends Controller
             } else {
                 return $this->renderResponse(false);
             }
-        } catch (MongoDuplicateKeyException $e) {
-            return $this->renderResponse(['message' => "Application's name must be unique"], Response::HTTP_UNAUTHORIZED);
+        } catch (DuplicateApplicationNameException $e) {
+            return $this->renderResponse(['message' => $e->getMessage()], Response::HTTP_NOT_ACCEPTABLE);
         }
     }
 
