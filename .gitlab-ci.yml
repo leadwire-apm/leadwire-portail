@@ -145,7 +145,7 @@ deploy:test:
         name: test
         url: http://leadwire.test.ats-digital.com
     only:
-        - test
+        - develop
     script:
         - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
         - eval $(ssh-agent -s)
