@@ -66,7 +66,7 @@ services:
 
     AppBundle\Service\ApplicationTypeService:
         arguments:
-            $dataRootPath: "%kernel.project_dir%/app/Resources/Kibana"
+            $dataRootPath: "%kernel.project_dir%/app/Resources/templates"
 
     AppBundle\Service\ActivationCodeService:
         arguments:

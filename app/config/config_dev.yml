@@ -2,6 +2,9 @@ imports:
     - { resource: config.yml }
     - { resource: services_dev.yml }
 
+parameters:
+    dev_delivery_address: aturki@ats-digital.com
+
 framework:
     router:
         resource: '%kernel.root_dir%/config/routing_dev.yml'

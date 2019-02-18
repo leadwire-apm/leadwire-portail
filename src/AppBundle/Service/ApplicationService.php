@@ -2,18 +2,19 @@
 
 namespace AppBundle\Service;
 
-use AppBundle\Document\Application;
-use AppBundle\Document\User;
-use AppBundle\Manager\ActivationCodeManager;
-use AppBundle\Manager\ApplicationManager;
-use AppBundle\Manager\UserManager;
-use AppBundle\Service\ActivationCodeService;
-use JMS\Serializer\DeserializationContext;
-use JMS\Serializer\SerializerInterface;
-use Psr\Log\LoggerInterface;
 use Ramsey\Uuid\Uuid;
+use AppBundle\Document\User;
+use Psr\Log\LoggerInterface;
+use AppBundle\Manager\UserManager;
+use AppBundle\Document\Application;
+use JMS\Serializer\SerializerInterface;
+use AppBundle\Manager\ApplicationManager;
+use JMS\Serializer\DeserializationContext;
+use AppBundle\Manager\ActivationCodeManager;
+use AppBundle\Service\ActivationCodeService;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use AppBundle\Exception\DuplicateApplicationNameException;
 
 /**
  * Service class for App entities
@@ -121,16 +122,16 @@ class ApplicationService
      */
     public function listInvitedToApplications(User $user): array
     {
-        $apps = [];
+        $applications = [];
 
         foreach ($user->invitations as $invitation) {
-            $app = $invitation->getApplication();
-            if ($app->isRemoved() !== false) {
-                $apps[] = $app;
+            $application = $invitation->getApplication();
+            if ($application->isRemoved() !== false) {
+                $applications[] = $application;
             }
         }
 
-        return $apps;
+        return $applications;
     }
 
     public function listDemoApplications(): array
@@ -178,18 +179,18 @@ class ApplicationService
     {
         $result = null;
         $activationCode = $this->activationCodeService->getByCode($code);
-        $app = $this->getApplication($id);
+        $application = $this->getApplication($id);
 
-        if ($activationCode !== null && $app !== null) {
+        if ($activationCode !== null && $application !== null) {
             $valid = $this->activationCodeService->validateActivationCode($activationCode);
 
             if ($valid === true) {
-                $app->setEnabled(true);
-                $activationCode->setApplication($app);
+                $application->setEnabled(true);
+                $activationCode->setApplication($application);
                 $activationCode->setUsed(true);
-                $this->applicationManager->update($app);
+                $this->applicationManager->update($application);
                 $this->activationCodeManager->update($activationCode);
-                $result = $app;
+                $result = $application;
             }
         }
 
@@ -223,39 +224,46 @@ class ApplicationService
     {
         $context = new DeserializationContext();
         $context->setGroups(['Default']);
-        /** @var Application $app */
-        $app = $this
+        /** @var Application $application */
+        $application = $this
             ->serializer
             ->deserialize($json, Application::class, 'json', $context);
 
+        $dbApplication = $this->applicationManager->getOneBy(['name' => $application->getName()]);
+
+        if ($dbApplication !== null) {
+            throw new DuplicateApplicationNameException("An application with the same name already exists");
+        }
+
         $uuid1 = Uuid::uuid1();
-        $app
+        $application
             ->setOwner($user)
             ->setEnabled(false)
             ->setUuid($uuid1->toString())
             ->setRemoved(false);
 
         /** @var string $applicationTypeId */
-        $applicationTypeId = $app->getType()->getId();
+        $applicationTypeId = $application->getType()->getId();
         $ap = $this->appTypeService->getApplicationType($applicationTypeId);
-        $app->setType($ap);
-        $this->applicationManager->update($app);
+        $application->setType($ap);
+        $this->applicationManager->update($application);
 
-        $ldapEntryCreationStatus = $this->ldapService->createAppEntry($user->getIndex(), $app->getUuid());
+        $ldapStatus = $this->ldapService->createApplicationEntry($application);
+        $ldapStatus = $ldapStatus && $this->ldapService->registerApplication($user, $application);
 
         // !Dashboard creation is bogus
-        $dashboardsCreationStatus = true; //$this->kibana->createDashboards($app);
+        $dashboardsCreationStatus = true; //$this->kibana->createDashboards($application);
 
-        if ($ldapEntryCreationStatus === true && $dashboardsCreationStatus === true) {
-            return $app;
+        if ($ldapStatus === true && $dashboardsCreationStatus === true) {
+            return $application;
         } else {
-            $this->applicationManager->delete($app);
+            $this->applicationManager->delete($application);
             $this->logger->critical("Application was removed due to error in Ldap/Kibana or Elastic search");
 
             return null;
         }
 
-        return $app;
+        return $application;
     }
 
     /**
@@ -276,8 +284,8 @@ class ApplicationService
             }
             $context = new DeserializationContext();
             $context->setGroups(['Default']);
-            $app = $this->serializer->deserialize($json, Application::class, 'json', $context);
-            $this->applicationManager->update($app);
+            $application = $this->serializer->deserialize($json, Application::class, 'json', $context);
+            $this->applicationManager->update($application);
             $isSuccessful = true;
         } catch (\Exception $e) {
             $this->logger->error($e->getMessage());
@@ -340,11 +348,11 @@ class ApplicationService
             $demoAppOwner = $this->userManager->create("demoAppUser", Uuid::uuid1()->toString(), '', 'dempAppUser');
         }
 
-        $app = $this->applicationManager->getOneBy(['uuid' => "a16274f8-dbd2-11e8-b444-fa163e30b6da"]);
+        $application = $this->applicationManager->getOneBy(['uuid' => "a16274f8-dbd2-11e8-b444-fa163e30b6da"]);
 
-        if ($app === null) {
-            $app = new Application();
-            $app->setUuid("a16274f8-dbd2-11e8-b444-fa163e30b6da") // * UUID has to be hardcoded since it will be used on Kibana and stuff
+        if ($application === null) {
+            $application = new Application();
+            $application->setUuid("a16274f8-dbd2-11e8-b444-fa163e30b6da") // * UUID has to be hardcoded since it will be used on Kibana and stuff
                 ->setName("jpetstore")
                 ->setDescription("A web application built on top of MyBatis 3, Spring 3 and Stripes")
                 ->setEmail("wassim.dhib@leadwire.io")
@@ -354,14 +362,14 @@ class ApplicationService
                 ->setOwner($demoAppOwner)
                 ->setType($applicationType);
 
-            $this->applicationManager->update($app);
+            $this->applicationManager->update($application);
         }
 
-        $app = $this->applicationManager->getOneBy(['uuid' => "f007bb9a-dbd2-11e8-87b3-fa163e30b6da"]);
+        $application = $this->applicationManager->getOneBy(['uuid' => "f007bb9a-dbd2-11e8-87b3-fa163e30b6da"]);
 
-        if ($app === null) {
-            $app = new Application();
-            $app->setUuid("f007bb9a-dbd2-11e8-87b3-fa163e30b6da") // * UUID has to be hardcoded since it will be used on Kibana and stuff
+        if ($application === null) {
+            $application = new Application();
+            $application->setUuid("f007bb9a-dbd2-11e8-87b3-fa163e30b6da") // * UUID has to be hardcoded since it will be used on Kibana and stuff
                 ->setName("squash")
                 ->setDescription("Squash TM est un outil open source de gestion de référentiels de tests : gestion des exigences, cas de test, campagnes, etc. Squash est full web et nativement inter-projets.")
                 ->setEmail("wassim.dhib@leadwire.io")
@@ -371,7 +379,7 @@ class ApplicationService
                 ->setOwner($demoAppOwner)
                 ->setType($applicationType);
 
-            $this->applicationManager->update($app);
+            $this->applicationManager->update($application);
         }
     }
 

@@ -32,3 +32,8 @@ app_rest_activation_code:
     resource: "@AppBundle/Controller/Rest/ActivationCodeController.php"
     type: "annotation"
     prefix: "/%internal_api_prefix%/activation-code"
+
+app_rest_template:
+    resource: "@AppBundle/Controller/Rest/TemplateController.php"
+    type: "annotation"
+    prefix: "/%internal_api_prefix%/template"

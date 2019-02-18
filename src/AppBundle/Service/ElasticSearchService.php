@@ -70,6 +70,7 @@ class ElasticSearchService
         } else {
             // for dev use only
             $tenants = ["apptest", "adm-portail", "share_" . $app->getUuid()];
+            $tenants = $app->getIndexes();
         }
 
         foreach ($tenants as $index => $tenant) {

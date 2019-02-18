@@ -109,8 +109,8 @@ class AuthService
             if ($user !== null) {
                 // User creation in DB is successful
                 // Should create LDAP & ElasticSearch entries
-                $this->ldapService->createNewUserEntries($user->getUuid());
-                $this->ldapService->registerDemoApplications($user->getUuid());
+                $this->ldapService->createNewUserEntries($user);
+                $this->ldapService->registerDemoApplications($user);
                 $this->applicationService->registerDemoApplications($user);
                 $this->esService->resetUserIndexes($user);
             }

@@ -2,16 +2,17 @@
 
 namespace AppBundle\Command;
 
-use AppBundle\Service\ApplicationService;
-use AppBundle\Service\ApplicationTypeService;
 use AppBundle\Service\LdapService;
-use ATS\PaymentBundle\Service\PlanService;
+use AppBundle\Service\TemplateService;
+use AppBundle\Service\ApplicationService;
 use Doctrine\ODM\MongoDB\DocumentManager;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use ATS\PaymentBundle\Service\PlanService;
+use AppBundle\Service\ApplicationTypeService;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 
 class InstallCommand extends ContainerAwareCommand
 {
@@ -36,6 +37,11 @@ class InstallCommand extends ContainerAwareCommand
     private $planService;
 
     /**
+     * @var TemplateService
+     */
+    private $templateService;
+
+    /**
      * @var DocumentManager
      */
     private $dm;
@@ -45,12 +51,14 @@ class InstallCommand extends ContainerAwareCommand
         ApplicationTypeService $applicationTypeService,
         LdapService $ldapService,
         PlanService $planService,
+        TemplateService $templateService,
         DocumentManager $doctrine
     ) {
         $this->applicationService = $applicationService;
         $this->applicationTypeService = $applicationTypeService;
         $this->ldapService = $ldapService;
         $this->planService = $planService;
+        $this->templateService = $templateService;
         $this->dm = $doctrine;
         parent::__construct();
     }
@@ -97,18 +105,26 @@ Load default Application Type. Insert template for Kibana and more..'
             $output->writeln("Create Default Application Type if not set");
             $defaultType = $this->applicationTypeService->createDefaultType();
             $output->writeln("<fg=green>OK</>");
+
             $output->writeln("Create Demo applications");
             $this->applicationService->createDemoApplications();
             $this->ldapService->createDemoApplicationsEntries();
+            // $this->esService->createDempAppliactionsIndexPatterns();
             $output->writeln("<fg=green>OK</>");
+
             $output->writeln("Create Plans if not set");
             $this->planService->createDefaulPlans();
             $output->writeln("<fg=green> 3 Plans are created !</>");
+
+            $output->writeln("Create default templates");
+            $this->templateService->createDefaultTemplates($this->getContainer()->getParameter('kernel.project_dir').'/app/Resources/templates');
+            $output->writeln("<fg=green> OK</>");
 
             $output->writeln("Creating MongoDB Indexes");
             $this->dm->getSchemaManager()->ensureIndexes();
             $output->writeln("");
             $output->writeln("");
+
             $output->writeln("<fg=green>All OK</>");
         } catch (\Exception $e) {
             $output->writeln("<fg=red>" . $e->getMessage() . "</>");

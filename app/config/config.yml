@@ -1,5 +1,4 @@
 imports:
-    - { resource: parameters.yml }
     - { resource: security.yml }
     - { resource: services.yml }
     - { resource: vendor/config.yml}
@@ -10,7 +9,44 @@ imports:
 
 # Parameters Configuration
 parameters:
-    locale: '%app_locale%'
+    locale: en
+    app_version: 1.0.0
+    app_domain: '%env(APP_DOMAIN)%'
+    app_schemes: '%env(APP_SCHEME)%'
+    activation_code_regex: '[A-Z0-9]B[A-Z0-9]{2}7[A-Z0-9]'
+    default_lock_message: 'Your account has been locked'
+    secret: 06abd8f87b9d3b88feb152891421cb20017e56dd
+    internal_api_prefix: api
+    payment_api_key: '%env(STRIPE_PAYMENT_API_KEY)%'
+    secret_key: '%env(STRIPE_SECRET_KEY)%'
+    providerName: Stripe
+    super_admin_username: '%env(SUPER_USER_ADMIN_NAME)%'
+    mailer_transport: '%env(MAILER_TRANSPORT)%'
+    mailer_user: '%env(MAILER_USER)%'
+    mailer_password: '%env(MAILER_PASSWORD)%'
+    sender: "%mailer_user%"
+    github_client_id: '%env(GITHUB_CLIENT_ID)%'
+    auth_providers:
+        github:
+            github_access_token_url: 'https://github.com/login/oauth/access_token'
+            github_users_api_url: 'https://api.github.com/user'
+            github_client_secret: '%env(GITHUB_CLIENT_SECRET)%'
+        settings:
+            token_secret: '%env(JWT_TOKEN_SECRET)%'
+    ldap:
+        host: '%env(LDAP_HOST)%'
+        port: '%env(LDAP_PORT)%'
+        dn_user: '%env(LDAP_DN_USER)%'
+        mdp: '%env(LDAP_PASSWORD)%'
+    kibana:
+        username: '%env(KIBANA_USERNAME)%'
+        password: '%env(KIBANA_PASSWORD)%'
+        host: '%env(KIBANA_HOST)%'
+        template_folder: '%kernel.project_dir%/app/Resources/Kibana'
+    elastic:
+        username: '%env(ES_USERNAME)%'
+        password: '%env(ES_PASSWORD)%'
+        host: '%env(ES_PASSWORD)%'
 
 # Framework Configuration
 framework:
@@ -19,8 +55,6 @@ framework:
     router:
         resource:            '%kernel.root_dir%/config/routing.yml'
         strict_requirements: ~
-        http_port:           3000
-        https_port:          8443
     form:
         enabled:             true
     csrf_protection:
@@ -34,7 +68,7 @@ framework:
         cookie_lifetime:     31536000
         save_path:           '%kernel.project_dir%/var/sessions/app/%kernel.environment%'
         cookie_domain:       '%app_domain%'
-        name:                '%app_id%_%kernel.environment%'
+        name:                'leadwire_%kernel.environment%'
         use_cookies:         true
     fragments:    ~
     http_method_override:    true
@@ -50,8 +84,8 @@ twig:
         UPLOAD_URL: '%app_schemes%://%app_domain%/uploads/'
         DOWNLOAD_URL: '%app_schemes%://%app_domain%/core/api/resource/'
         GITHUB_CLIENT_ID: '%github_client_id%'
-        # 'GITHUB_CLIENT_ID': '5ae68ff984489a4ed647' /*prod*/
         # 'GITHUB_CLIENT_ID': 'a5b3aee9593a1aaa5046', /*test*/
+        # 'GITHUB_CLIENT_ID': '5ae68ff984489a4ed647' /*prod*/
         DATE_DEFAULT_FORMAT: 'YYYY-MM-DD[T]HH:mm:ssZZ'
         EN_DATE_FORMAT: 'YYYY-DD-MM'
         FR_DATE_FORMAT: 'DD-MM-YYYY'
@@ -68,29 +102,23 @@ assetic:
 
     filters:
         cssrewrite: ~
-    #     yui_css:
-    #         jar: '%yui_compressor_path%'
-    #     yui_js:
-    #         jar: '%yui_compressor_path%'
-    #     jsqueeze: ~
-    # write_to: '%kernel.root_dir%/../web/assets'
 
 doctrine_mongodb:
     auto_generate_hydrator_classes: true
-    default_database: '%database_name%'
+    default_database: '%env(DATABASE_NAME)%'
     default_connection: default
     default_document_manager: default
     connections:
         default:
-            server: 'mongodb://%database_host%:%database_port%'
+            server: 'mongodb://%env(DATABASE_HOST)%:%env(DATABASE_PORT)%'
             options:
-                username: '%database_user%'
-                password: '%database_pass%'
+                username: ~
+                password: ~
                 connect: true
-                db: '%database_name%'
+                db: '%env(DATABASE_NAME)%'
     document_managers:
         default:
             connection: default
-            database: '%database_name%'
+            database: '%env(DATABASE_NAME)%'
             auto_mapping: true
             logging: false

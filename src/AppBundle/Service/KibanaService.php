@@ -35,17 +35,17 @@ class KibanaService
     }
 
     /**
-     * @param Application $app
+     * @param Application $application
      *
      * @return int|bool
      */
-    public function createDashboards(Application $app)
+    public function createDashboards(Application $application)
     {
         $isSuccess = $this->elastic->deleteIndex();
-        $isSuccess &= $this->elastic->resetAppIndexes($app);
+        $isSuccess &= $this->elastic->resetAppIndexes($application);
 
         $client = new Client(['defaults' => ['verify' => false]]);
-        $json_template = json_encode($app->getType()->getTemplate());
+        $json_template = json_encode($application->getType()->getTemplate());
         $url = $this->settings['host'] . "/api/kibana/dashboards/import";
 
         try {
@@ -62,7 +62,7 @@ class KibanaService
                 ]
             );
 
-            $isSuccess &= $this->elastic->copyIndex($app->getIndex());
+            $isSuccess &= $this->elastic->copyIndex($application->getIndex());
             return $isSuccess;
         } catch (\Exception $e) {
             $this->logger->error("error on import", ["exception" => $e]);
