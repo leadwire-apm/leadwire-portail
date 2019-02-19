@@ -27,6 +27,7 @@
         };
 
         vm.handleOnSubmit = function () {
+            vm.flipActivityIndicator('isSaving');
             PlanService.create(vm.plan)
                 .then(vm.handleOnResolve)
                 .catch(function () {

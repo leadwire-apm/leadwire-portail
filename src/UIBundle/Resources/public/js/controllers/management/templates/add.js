@@ -27,7 +27,17 @@
         };
 
         vm.handleOnSubmit = function () {
-            console.log(vm.template);
+            vm.flipActivityIndicator('isSaving');
+            TemplateService.create(vm.template)
+                .then(function () {
+                    vm.flipActivityIndicator('isSaving');
+                    toastr.success(MESSAGES_CONSTANTS.SUCCESS);
+                    $state.go('app.management.templates')
+                })
+                .catch(function (error) {
+                    vm.flipActivityIndicator('isSaving');
+                    toastr.error(error.message || MESSAGES_CONSTANTS.ERROR);
+                });
         };
 
         vm.init = function () {

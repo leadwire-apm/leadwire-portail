@@ -18,6 +18,7 @@ class Template
     /**
      * @ODM\Id(strategy="auto")
      * @JMS\Expose
+     * @JMS\Type("string")
      *
      * @var \MongoId
      */
@@ -26,6 +27,7 @@ class Template
     /**
      * @ODM\Field(type="string")
      * @JMS\Expose
+     * @JMS\Type("string")
      *
      * @var string
      */
@@ -34,6 +36,7 @@ class Template
     /**
      * @ODM\Field(type="string")
      * @JMS\Expose
+     * @JMS\Type("string")
      *
      * @var string
      */
@@ -42,6 +45,7 @@ class Template
     /**
      * @ODM\Field(type="int")
      * @JMS\Expose
+     * @JMS\Type("int")
      *
      * @var int
      */

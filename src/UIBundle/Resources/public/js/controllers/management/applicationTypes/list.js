@@ -57,8 +57,7 @@
         vm.deleteType = function (id) {
             ApplicationTypeService.delete(id)
                 .then(function () {
-                    toastr.success(
-                        MESSAGES_CONSTANTS.SUCCESS);
+                    toastr.success(MESSAGES_CONSTANTS.SUCCESS);
                 })
                 .then(vm.loadApplicationTypes)
                 .catch(function () {

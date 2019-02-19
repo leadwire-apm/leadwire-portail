@@ -22,28 +22,42 @@
     ) {
         var vm = this;
 
+        /**
+         *
+         * @param {"isLoading","isSaving"} key
+         */
         vm.flipActivityIndicator = function (key) {
             vm.ui[key] = !vm.ui[key];
         };
 
         vm.getTemplate = function (id) {
-            vm.flipActivityIndicator('isLoading')
+            vm.flipActivityIndicator('isLoading');
             TemplateService.find(id)
-                .then(function (app) {
+                .then(function (template) {
                     if (app === null) {
-                        $state.go('app.management.templates');
+                        throw new Error();
                     }
-                    vm.flipActivityIndicator('isLoading')
-                    vm.template = app;
+                    vm.flipActivityIndicator('isLoading');
+                    vm.template = template;
                 })
                 .catch(function () {
-                    vm.flipActivityIndicator('isLoading')
+                    vm.flipActivityIndicator('isLoading');
                     $state.go('app.management.templates');
                 });
         };
 
         vm.handleOnSubmit = function () {
-            console.log(vm.template);
+            vm.flipActivityIndicator('isSaving');
+            TemplateService.update(vm.template)
+                .then(function () {
+                    vm.flipActivityIndicator('isSaving');
+                    toastr.success(MESSAGES_CONSTANTS.SUCCESS);
+                    $state.go('app.management.templates');
+                })
+                .catch(function (error) {
+                    vm.flipActivityIndicator('isSaving');
+                    toastr.error(error.message || MESSAGES_CONSTANTS.ERROR);
+                });
         };
 
         vm.init = function () {
@@ -51,6 +65,7 @@
             vm = angular.extend(vm, {
                 ui: {
                     isLoading: false,
+                    isSaving: false,
                     editor: {
                         options: {
                             mode: 'code',
@@ -61,7 +76,7 @@
                 template: null,
             });
 
-            // vm.getTemplate(appId);
+            vm.getTemplate(templateId);
         };
 
     }
