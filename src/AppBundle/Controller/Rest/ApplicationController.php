@@ -3,17 +3,17 @@
 namespace AppBundle\Controller\Rest;
 
 use AppBundle\Document\User;
-use MongoDuplicateKeyException;
-use AppBundle\Service\StatService;
+use AppBundle\Exception\DuplicateApplicationNameException;
 use AppBundle\Service\ApplicationService;
 use AppBundle\Service\ElasticSearchService;
+use AppBundle\Service\StatService;
+use ATS\CoreBundle\Controller\Rest\RestControllerTrait;
+use MongoDuplicateKeyException;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
-use ATS\CoreBundle\Controller\Rest\RestControllerTrait;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpKernel\Exception\HttpException;
-use AppBundle\Exception\DuplicateApplicationNameException;
+use Symfony\Component\Routing\Annotation\Route;
 
 class ApplicationController extends Controller
 {
@@ -198,11 +198,22 @@ class ApplicationController extends Controller
      */
     public function deleteApplicationAction(Request $request, ApplicationService $applicationService, $id)
     {
-        $this->denyAccessUnlessGranted([User::ROLE_SUPER_ADMIN]);
+        $application = $applicationService->getApplication($id);
 
-        $applicationService->deleteApp($id);
+        if ($application !== null) {
+            $accessGrantedByRole = $this->getUser()->hasRole(User::ROLE_ADMIN) || $this->getUser()->hasRole(User::ROLE_SUPER_ADMIN);
+            $accessGrantedByOwnership = $application->getOwner()->getId() === $this->getUser()->getId();
 
-        return $this->renderResponse(null, Response::HTTP_OK);
+            if ($accessGrantedByOwnership === true || $accessGrantedByRole === true) {
+                $applicationService->deleteApp($id);
+
+                return $this->renderResponse(null, Response::HTTP_OK);
+            } else {
+                throw new \Exception("Access Denied", Response::HTTP_FORBIDDEN);
+            }
+        } else {
+            throw new \Exception("Application [$id] not found", Response::HTTP_NOT_FOUND);
+        }
     }
 
     /**
@@ -215,7 +226,7 @@ class ApplicationController extends Controller
      */
     public function getAllApplicationsAction(Request $request, ApplicationService $applicationService)
     {
-        // $this->denyAccessUnlessGranted([User::ROLE_ADMIN, User::ROLE_SUPER_ADMIN]);
+        $this->denyAccessUnlessGranted([User::ROLE_ADMIN, User::ROLE_SUPER_ADMIN]);
 
         $applications = $applicationService->getApplications();
 

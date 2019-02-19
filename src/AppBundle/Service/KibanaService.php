@@ -41,33 +41,36 @@ class KibanaService
      */
     public function createDashboards(Application $application)
     {
-        $isSuccess = $this->elastic->deleteIndex();
-        $isSuccess &= $this->elastic->resetAppIndexes($application);
+        // TODO: REVIEW THIS
+        return true;
 
-        $client = new Client(['defaults' => ['verify' => false]]);
-        $json_template = json_encode($application->getType()->getTemplate());
-        $url = $this->settings['host'] . "/api/kibana/dashboards/import";
+        // $isSuccess = $this->elastic->deleteIndex();
+        // $isSuccess &= $this->elastic->resetAppIndexes($application);
 
-        try {
-            $response = $client->post(
-                $url,
-                [
-                    'body' => $json_template,
-                    'headers' => [
-                        'Content-type' => 'application/json',
-                        'kbn-xsrf' => 'true',
-                        'x-tenants-enabled' => true,
-                    ],
-                    'auth' => $this->getAuth(),
-                ]
-            );
+        // $client = new Client(['defaults' => ['verify' => false]]);
+        // $json_template = json_encode($application->getType()->getTemplate());
+        // $url = $this->settings['host'] . "/api/kibana/dashboards/import";
 
-            $isSuccess &= $this->elastic->copyIndex($application->getIndex());
-            return $isSuccess;
-        } catch (\Exception $e) {
-            $this->logger->error("error on import", ["exception" => $e]);
-            return false;
-        }
+        // try {
+        //     $response = $client->post(
+        //         $url,
+        //         [
+        //             'body' => $json_template,
+        //             'headers' => [
+        //                 'Content-type' => 'application/json',
+        //                 'kbn-xsrf' => 'true',
+        //                 'x-tenants-enabled' => true,
+        //             ],
+        //             'auth' => $this->getAuth(),
+        //         ]
+        //     );
+
+        //     $isSuccess &= $this->elastic->copyIndex($application->getIndex());
+        //     return $isSuccess;
+        // } catch (\Exception $e) {
+        //     $this->logger->error("error on import", ["exception" => $e]);
+        //     return false;
+        // }
     }
 
     private function getAuth()

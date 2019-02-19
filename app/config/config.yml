@@ -46,7 +46,7 @@ parameters:
     elastic:
         username: '%env(ES_USERNAME)%'
         password: '%env(ES_PASSWORD)%'
-        host: '%env(ES_PASSWORD)%'
+        host: '%env(ES_HOST)%'
 
 # Framework Configuration
 framework:

@@ -39,12 +39,30 @@ class TemplateService
         return $id;
     }
 
+    public function updateTemplate($json)
+    {
+        /** @var Template $template */
+        $template = $this->serializer->deserialize($json, Template::class, 'json');
+
+        $this->templateManager->update($template);
+    }
+
     /**
      * @return array
      */
     public function listTemplates(): array
     {
         return $this->templateManager->getAll();
+    }
+
+    /**
+     * @param string $id
+     *
+     * @return void
+     */
+    public function deleteTemplate(string $id)
+    {
+        $this->templateManager->delete($id);
     }
 
     public function createDefaultTemplates(string $folderPath)

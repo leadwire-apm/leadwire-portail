@@ -155,14 +155,14 @@
                 {
                     route: 'app.management.templates',
                     abstractRoute: 'app.management',
-                    icon: 'fa fa-desktop',
+                    icon: 'fa fa-file-text',
                     label: 'Manage templates',
                 },
                 {
                     route: 'app.management.codes',
                     abstractRoute: 'app.management',
-                    icon: 'fa fa-desktop',
-                    label: 'List codes',
+                    icon: 'fa fa-qrcode',
+                    label: 'Activation codes',
                 },
             ],
         });

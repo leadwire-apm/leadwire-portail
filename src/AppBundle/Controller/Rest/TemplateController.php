@@ -36,6 +36,25 @@ class TemplateController extends Controller
     }
 
     /**
+     * @Route("/update", methods="PUT")
+     *
+     * @param Request $request
+     * @param TemplateService $templateService
+     *
+     * @return Response
+     */
+    public function updateTemplateAction(Request $request, TemplateService $templateService)
+    {
+        // Only super Admin can do this
+        $this->denyAccessUnlessGranted([User::ROLE_SUPER_ADMIN]);
+
+        $data = $request->getContent();
+        $successful = $templateService->updateTemplate($data);
+
+        return $this->renderResponse($successful);
+    }
+
+    /**
      * @Route("/list")
      *
      * @param Request $request
@@ -49,5 +68,24 @@ class TemplateController extends Controller
         $this->denyAccessUnlessGranted([User::ROLE_ADMIN, User::ROLE_SUPER_ADMIN]);
 
         return $this->renderResponse($templateService->listTemplates());
+    }
+
+    /**
+     * @Route("/{id}/delete", methods="DELETE")
+     *
+     * @param Request $request
+     * @param TemplateService $templateService
+     * @param string $id
+     *
+     * @return Response
+     */
+    public function deleteTemplateAction(Request $request, TemplateService $templateService, string $id)
+    {
+        // Only super Admin can do this
+        $this->denyAccessUnlessGranted([User::ROLE_ADMIN, User::ROLE_SUPER_ADMIN]);
+
+        $templateService->deleteTemplate($id);
+
+        return $this->renderResponse(null, Response::HTTP_OK);
     }
 }

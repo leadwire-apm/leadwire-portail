@@ -7,6 +7,7 @@ use AppBundle\Document\User;
 use GuzzleHttp\Client;
 use Psr\Log\LoggerInterface;
 use SensioLabs\Security\Exception\HttpException;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Class ElasticSearchService Service. Manage connexions with Kibana Rest API.
@@ -29,6 +30,12 @@ class ElasticSearchService
      * @var string
      */
     private $env;
+
+    /**
+     * @var Client
+     */
+    private $httpClient;
+
     /**
      * ElasticSearchService constructor.
      * @param LoggerInterface $logger
@@ -40,6 +47,7 @@ class ElasticSearchService
         $this->settings = $settings;
         $this->logger = $logger;
         $this->env = $env;
+        $this->httpClient = new Client(['defaults' => ['verify' => false]]);
     }
 
     /**
@@ -247,22 +255,28 @@ class ElasticSearchService
         return $id;
     }
 
-    public function deleteIndex()
-    {
-        try {
-            $client = new Client(['defaults' => ['verify' => false]]);
-            $client->delete(
-                $this->settings['host'] . ".kibana_adm-portail",
-                [
-                    'auth' => $this->getAuth(),
-                ]
-            );
-            return true;
-        } catch (\Exception $e) {
-            $this->logger->warning("Error when deleting index", ['exception' => $e]);
-            return false;
-        }
-    }
+    /**
+     * @deprecated
+     *
+     * Kept for history
+     *
+     */
+    // public function deleteIndex()
+    // {
+    //     try {
+    //         $client = new Client(['defaults' => ['verify' => false]]);
+    //         $client->delete(
+    //             $this->settings['host'] . ".kibana_adm-portail",
+    //             [
+    //                 'auth' => $this->getAuth(),
+    //             ]
+    //         );
+    //         return true;
+    //     } catch (\Exception $e) {
+    //         $this->logger->warning("Error when deleting index", ['exception' => $e]);
+    //         return false;
+    //     }
+    // }
 
     public function copyIndex($index)
     {
@@ -301,5 +315,56 @@ class ElasticSearchService
             $this->settings['username'],
             $this->settings['password'],
         ];
+    }
+
+    /**
+     * curl --insecure -u $es_admin_user:$es_admin_password -XGET https://es.leadwire.io/.kibana_${tenant_name}
+     *
+     * Returns the content of the index if it is found, FALSE otherwise
+     *
+     * @param string $tenantName
+     *
+     * @return bool|string
+     */
+    public function getIndex(string $tenantName)
+    {
+        $response = $this->httpClient->get(
+            $this->settings['host'] . ".kibana_$tenantName",
+            [
+                'auth' => $this->getAuth(),
+            ]
+        );
+
+        if ($response->getStatusCode() === Response::HTTP_OK) {
+            return $response->getBody()->getContents();
+        } elseif ($response->getStatusCode() === Response::HTTP_NOT_FOUND) {
+            return false;
+        } else {
+            throw new \Exception("Got {$response->getStatusCode()} from Guzzle", Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    /**
+     * curl --insecure -u $es_admin_user:$es_admin_password -XDELETE https://es.leadwire.io/.kibana_${tenant_name}
+     *
+     * @param string $tenantName
+     *
+     * @return bool
+     */
+    public function deleteIndex(string $tenantName): bool
+    {
+        $response = $this->httpClient->delete(
+            $this->settings['host'] . ".kibana_$tenantName",
+            [
+                'auth' => $this->getAuth(),
+            ]
+        );
+
+        return true;
+        // TODO: Some checks here for success/fail
+    }
+
+    public function createAlias()
+    {
     }
 }

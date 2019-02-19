@@ -51,7 +51,7 @@ class ActivationCode
 
     /**
      * @ODM\ReferenceOne(targetDocument="AppBundle\Document\Application")
-     *
+     * @JMS\Expose
      * @var ?Application
      */
     private $application;

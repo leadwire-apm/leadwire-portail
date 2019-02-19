@@ -2,8 +2,9 @@
 
 namespace AppBundle\Document;
 
-use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 use JMS\Serializer\Annotation as JMS;
+use AppBundle\Document\ApplicationType;
+use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 
 /**
  * @ODM\Document(repositoryClass="AppBundle\Repository\TemplateRepository")
@@ -47,6 +48,13 @@ class Template
     private $version;
 
     /**
+     * @ODM\ReferenceOne(targetDocument="AppBundle\Document\ApplicationType")
+     *
+     * @var ApplicationType
+     */
+    private $applicationType;
+
+    /**
      * Get the value of id
      *
      * @return  \MongoId
@@ -83,9 +91,9 @@ class Template
     /**
      * Get the value of content
      *
-     * @return  string
+     * @return string
      */
-    public function getContent()
+    public function getContent(): string
     {
         return $this->content;
     }
@@ -95,9 +103,9 @@ class Template
      *
      * @param  string  $content
      *
-     * @return  self
+     * @return self
      */
-    public function setContent(string $content)
+    public function setContent(string $content): self
     {
         $this->content = $content;
 
@@ -109,7 +117,7 @@ class Template
      *
      * @return  int
      */
-    public function getVersion()
+    public function getVersion(): int
     {
         return $this->version;
     }
@@ -121,9 +129,33 @@ class Template
      *
      * @return  self
      */
-    public function setVersion(int $version)
+    public function setVersion(int $version): self
     {
         $this->version = $version;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of applicationType
+     *
+     * @return  ApplicationType
+     */
+    public function getApplicationType(): ApplicationType
+    {
+        return $this->applicationType;
+    }
+
+    /**
+     * Set the value of applicationType
+     *
+     * @param  ApplicationType  $applicationType
+     *
+     * @return  self
+     */
+    public function setApplicationType(ApplicationType $applicationType): self
+    {
+        $this->applicationType = $applicationType;
 
         return $this;
     }
