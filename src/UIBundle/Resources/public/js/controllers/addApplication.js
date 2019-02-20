@@ -1,4 +1,4 @@
-(function(angular) {
+(function (angular) {
     angular
         .module('leadwireApp')
         .controller('addApplicationCtrl', [
@@ -8,7 +8,7 @@
             'toastr',
             'MESSAGES_CONSTANTS',
             '$state',
-            addApplicationCtrlFN
+            addApplicationCtrlFN,
         ]);
 
     /**
@@ -21,16 +21,16 @@
      * @param MESSAGES_CONSTANTS
      * @param $state
      */
-    function addApplicationCtrlFN(
+    function addApplicationCtrlFN (
         ApplicationFactory,
         ApplicationService,
         ApplicationTypeFactory,
         toastr,
         MESSAGES_CONSTANTS,
-        $state
+        $state,
     ) {
         var vm = this;
-        vm.saveApp = function() {
+        vm.saveApp = function () {
             vm.flipActivityIndicator();
             ApplicationFactory.save(vm.application)
                 .then(ApplicationService.handleSaveOnSuccess)
@@ -38,37 +38,37 @@
                 .catch(handleOnFailure);
         };
 
-        vm.flipActivityIndicator = function() {
+        vm.flipActivityIndicator = function () {
             vm.ui.isSaving = !vm.ui.isSaving;
         };
 
-        vm.loadApplicationTypes = function() {
-            ApplicationTypeFactory.findAll().then(function(response) {
-                vm.applicationTypes = response.data;
-            });
+        vm.loadApplicationTypes = function () {
+            ApplicationTypeFactory.findAll()
+                .then(function (response) {
+                    vm.applicationTypes = response.data;
+                });
         };
 
-        vm.onLoad = function() {
+        vm.onLoad = function () {
             vm = angular.extend(vm, {
                 ui: {
-                    isSaving: false
-                }
+                    isSaving: false,
+                },
             });
             vm.loadApplicationTypes();
         };
 
-        function handleAfterSuccess(success) {
+        function handleAfterSuccess (success) {
             if (success) {
                 vm.flipActivityIndicator();
                 $state.go('app.applicationsList');
             }
         }
 
-        function handleOnFailure(error) {
+        function handleOnFailure (error) {
             toastr.error(
-                error.message ||
-                    MESSAGES_CONSTANTS.ADD_APP_FAILURE ||
-                    MESSAGES_CONSTANTS.ERROR
+                error.message || MESSAGES_CONSTANTS.ADD_APP_FAILURE ||
+                MESSAGES_CONSTANTS.ERROR,
             );
             vm.flipActivityIndicator();
         }

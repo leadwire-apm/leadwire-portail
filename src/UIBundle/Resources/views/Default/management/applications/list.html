@@ -47,7 +47,9 @@
                         </td>
                         <td data-title="Actions" data-label="Actions"
                             class="text-center">
-                            <button data-ng-class="application.enabled ? 'btn btn-danger' : 'btn btn-success'"
+                            <button
+                                    data-ng-disabled="application.removed"
+                                    data-ng-class="application.enabled ? 'btn btn-danger' : 'btn btn-success'"
                                     ng-click="ctrl.handleOnToggleStatus(application)">
                                 <i class="fa"
                                    data-ng-class="application.enabled ? 'fa-lock' : 'fa-unlock'"></i>

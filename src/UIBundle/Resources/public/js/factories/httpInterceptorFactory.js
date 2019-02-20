@@ -20,8 +20,8 @@
                     },
                     responseError: function (response) {
                         console.log('status: ', response.status);
-                        // response.status === 401 ||
-                        if (response.status === 403) {
+                        if (response.status === 403 || response.status ===
+                            401) {
                             $localStorage.$reset();
                             $location.path('/login');
                             throw {

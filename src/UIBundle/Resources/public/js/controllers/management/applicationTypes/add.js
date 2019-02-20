@@ -32,9 +32,9 @@
                     toastr.success(MESSAGES_CONSTANTS.SUCCESS);
                     $state.go('app.management.applicationTypes');
                 })
-                .catch(function () {
+                .catch(function (error) {
                     vm.flipActivityIndicator('isSaving');
-                    toastr.error(MESSAGES_CONSTANTS.ERROR);
+                    toastr.error(error.message || MESSAGES_CONSTANTS.ERROR);
 
                 });
         };

@@ -32,7 +32,7 @@
                 .then(vm.handleOnResolve)
                 .catch(function () {
                     vm.flipActivityIndicator('isSaving');
-                    toastr.error(MESSAGES_CONSTANTS.ERROR);
+                    toastr.error(error.message || MESSAGES_CONSTANTS.ERROR);
                 });
         };
 
