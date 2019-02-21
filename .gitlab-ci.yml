@@ -154,6 +154,7 @@ deploy:test:
         - ssh -t ats@test.ats-digital.com 'cd /apps/leadwire_lot2 &&
             pwd &&
             touch .env &&
+            echo "TEST=test" >> .env &&
             echo "DATABASE_NAME=$TEST_DATABASE_NAME" >> .env &&
             echo "DATABASE_HOST=$TEST_DATABASE_HOST" >> .env &&
             echo "DATABASE_PORT=$TEST_DATABASE_PORT" >> .env &&
