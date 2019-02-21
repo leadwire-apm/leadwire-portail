@@ -62,7 +62,7 @@
                 })
                 .then(vm.loadApplicationTypes)
                 .catch(function (error) {
-                    toastr.success(error.message || MESSAGES_CONSTANTS.ERROR);
+                    toastr.error(error.message || MESSAGES_CONSTANTS.ERROR);
                 });
         };
 

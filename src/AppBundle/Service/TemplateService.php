@@ -81,4 +81,15 @@ class TemplateService
             $this->templateManager->update($template);
         }
     }
+
+
+    /**
+     * @param string $id
+     *
+     * @return Template|null
+     */
+    public function getTemplate(string $id)
+    {
+        return $this->templateManager->getOneBy(['id' => $id]);
+    }
 }

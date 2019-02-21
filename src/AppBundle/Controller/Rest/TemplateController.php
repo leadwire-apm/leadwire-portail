@@ -36,7 +36,7 @@ class TemplateController extends Controller
     }
 
     /**
-     * @Route("/update", methods="PUT")
+     * @Route("/{id}/update", methods="PUT")
      *
      * @param Request $request
      * @param TemplateService $templateService
@@ -87,5 +87,21 @@ class TemplateController extends Controller
         $templateService->deleteTemplate($id);
 
         return $this->renderResponse(null, Response::HTTP_OK);
+    }
+
+    /**
+     * @Route("/{id}/get", methods="GET")
+     *
+     * @param Request $request
+     * @param TemplateService $templateService
+     * @param string  $id
+     *
+     * @return Response
+     */
+    public function getApplicationAction(Request $request, TemplateService $templateService, $id)
+    {
+        $data = $templateService->getTemplate($id);
+
+        return $this->renderResponse($data, Response::HTTP_OK, ["Default"]);
     }
 }

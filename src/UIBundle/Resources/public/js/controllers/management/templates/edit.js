@@ -34,7 +34,7 @@
             vm.flipActivityIndicator('isLoading');
             TemplateService.find(id)
                 .then(function (template) {
-                    if (app === null) {
+                    if (template === null) {
                         throw new Error();
                     }
                     vm.flipActivityIndicator('isLoading');
