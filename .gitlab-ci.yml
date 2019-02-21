@@ -21,7 +21,6 @@ phpunit:
     stage: test
     before_script:
         - touch .env
-        - touch .env
         - echo "DATABASE_NAME=leadwire" >> .env
         - echo "DATABASE_HOST=mongo" >> .env
         - echo "DATABASE_PORT=27017" >> .env
