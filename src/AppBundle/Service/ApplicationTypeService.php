@@ -171,20 +171,20 @@ class ApplicationTypeService
             $defaultType = new ApplicationType();
             $defaultType->setName("Java");
             $defaultType->setInstallation($response->getBody()->read(10000));
-            $content = file_get_contents(
-                $this->dataRootPath . "/apm-dashboards.json"
-            );
+            // $content = file_get_contents(
+            //     $this->dataRootPath . "/apm-dashboards.json"
+            // );
 
-            if ($content !== false) {
-                $defaultType->setTemplate(json_decode($content));
-            } else {
-                throw new \Exception(
-                    sprintf(
-                        "Bad content from file %s",
-                        $this->dataRootPath . "/apm-dashboards.json"
-                    )
-                );
-            }
+            // if ($content !== false) {
+            //     $defaultType->setTemplate(json_decode($content));
+            // } else {
+            //     throw new \Exception(
+            //         sprintf(
+            //             "Bad content from file %s",
+            //             $this->dataRootPath . "/apm-dashboards.json"
+            //         )
+            //     );
+            // }
             $defaultType->setAgent($url);
             $this->applicationTypeManager->update($defaultType);
         }

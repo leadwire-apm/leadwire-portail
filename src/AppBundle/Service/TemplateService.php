@@ -3,9 +3,12 @@
 namespace AppBundle\Service;
 
 use AppBundle\Document\Template;
-use AppBundle\Manager\TemplateManager;
-use JMS\Serializer\SerializerInterface;
 use Symfony\Component\Finder\Finder;
+use AppBundle\Manager\TemplateManager;
+use AppBundle\Document\ApplicationType;
+use JMS\Serializer\SerializerInterface;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class TemplateService
 {
@@ -58,14 +61,19 @@ class TemplateService
     /**
      * @param string $id
      *
-     * @return void
+     * @return \MongoId
      */
     public function deleteTemplate(string $id)
     {
-        $this->templateManager->delete($id);
+        $template = $this->templateManager->getOneBy(['id' => $id]);
+        if ($template === null) {
+            throw new HttpException(Response::HTTP_NOT_FOUND, "Template not Found");
+        } else {
+            return $this->templateManager->delete($template);
+        }
     }
 
-    public function createDefaultTemplates(string $folderPath)
+    public function createDefaultTemplates(string $folderPath, ApplicationType $defaultType)
     {
         $finder = new Finder();
         $finder->files()->in($folderPath);
@@ -77,11 +85,11 @@ class TemplateService
             $template = new Template();
             $template->setName(str_replace(".json", "", $file->getFilename()));
             $template->setContent((string) file_get_contents($file->getRealPath()));
+            $template->setApplicationType($defaultType);
             $template->setVersion(1);
             $this->templateManager->update($template);
         }
     }
-
 
     /**
      * @param string $id

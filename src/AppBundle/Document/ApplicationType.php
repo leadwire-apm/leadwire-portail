@@ -29,7 +29,6 @@ class ApplicationType
      * @ODM\Field(type="string", name="name")
      * @JMS\Type("string")
      * @JMS\Expose
-     * @JMS\Groups({"Default"})
      */
     private $name;
 
@@ -44,9 +43,11 @@ class ApplicationType
     private $installation;
 
     /**
-     * @ODM\Field(type="raw", name="template")
+     * @ODM\ReferenceMany(targetDocument="AppBundle\Document\Template", mappedBy="applicationType")
+     *
+     * @var array
      */
-    private $template;
+    private $templates;
 
     /**
      * @var string
@@ -59,7 +60,7 @@ class ApplicationType
     private $agent;
 
     /**
-     * @ODM\ReferenceMany(targetDocument="Application", inversedBy="type")
+     * @ODM\ReferenceMany(targetDocument="AppBundle\Document\Application", inversedBy="type")
      * @JMS\Groups({"full"})
      */
     public $apps;
@@ -130,20 +131,21 @@ class ApplicationType
      * Get template
      *
      */
-    public function getTemplate()
+    public function getTemplates()
     {
-        return $this->template;
+        return $this->templates;
     }
 
     /**
      * Set template
-     * @param string $template
+     * @param array $templates
      *
      * @return ApplicationType
      */
-    public function setTemplate($template)
+    public function setTemplates($templates)
     {
-        $this->template = $template;
+        $this->templates = $templates;
+
         return $this;
     }
 

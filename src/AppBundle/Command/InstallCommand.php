@@ -117,7 +117,7 @@ Load default Application Type. Insert template for Kibana and more..'
             $output->writeln("<fg=green> 3 Plans are created !</>");
 
             $output->writeln("Create default templates");
-            $this->templateService->createDefaultTemplates($this->getContainer()->getParameter('kernel.project_dir').'/app/Resources/templates');
+            $this->templateService->createDefaultTemplates($this->getContainer()->getParameter('kernel.project_dir').'/app/Resources/templates', $defaultType);
             $output->writeln("<fg=green> OK</>");
 
             $output->writeln("Creating MongoDB Indexes");

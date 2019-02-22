@@ -52,8 +52,9 @@ class Template
     private $version;
 
     /**
-     * @ODM\ReferenceOne(targetDocument="AppBundle\Document\ApplicationType")
-     *
+     * @ODM\ReferenceOne(targetDocument="AppBundle\Document\ApplicationType", inversedBy="templates")
+     * @JMS\Expose
+     * @JMS\Type("AppBundle\Document\ApplicationType")
      * @var ApplicationType
      */
     private $applicationType;
