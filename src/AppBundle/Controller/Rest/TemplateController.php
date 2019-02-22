@@ -98,7 +98,7 @@ class TemplateController extends Controller
      *
      * @return Response
      */
-    public function getApplicationAction(Request $request, TemplateService $templateService, $id)
+    public function getTemplateAction(Request $request, TemplateService $templateService, $id)
     {
         $data = $templateService->getTemplate($id);
 
