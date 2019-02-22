@@ -13,12 +13,10 @@ class ApplicationTypeTest extends TestCase
         $applicationType
             ->setName("TypeName")
             ->setInstallation("installation")
-            ->setTemplate("someTemplate")
             ->setAgent("SomeAgent");
 
         $this->assertEquals("TypeName", $applicationType->getName());
         $this->assertEquals("installation", $applicationType->getInstallation());
-        $this->assertEquals("someTemplate", $applicationType->getTemplate());
         $this->assertEquals("SomeAgent", $applicationType->getAgent());
     }
 }
