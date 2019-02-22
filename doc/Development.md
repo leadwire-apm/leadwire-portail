@@ -21,3 +21,17 @@ $ composer install  # Instead of php ./composer.phar install
 $ bin/console assetic:watch
 ```
 At this point every change made to the assets (i.e. any JS or CSS file) will trigger a rebuild of the assets
+
+# Configuration
+The application can be configured either by providing a `.env` file or by providing the necessary configuration keys as envvars (as per the 12-factor app paradigm)
+
+In development environment, it's easier to use a `.env` file. A template file is provided (`.env.dist`) which contains all the variables that need to be defined for the application to work properly.
+
+# Quality assurance
+
+Software quality is enforced by:
+- PHPCS: A Coding Standard checker for PHP
+- PHPSTAN: A static code analysis tool for PHP
+- PHPUnit: Unit testing framework for PHP
+
+For usage reference on how to issue those commands, check the `.gitlab-ci.yml` file
