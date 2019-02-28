@@ -227,7 +227,7 @@ class AuthService
         return $token;
     }
 
-        /**
+    /**
      *
      * @param array $userData
      *
@@ -237,7 +237,7 @@ class AuthService
     {
         try {
             $uuid1 = Uuid::uuid1();
-            $user = $this->userManager->create(
+            $user = $this->userManager->createWithEmail(
                 $userData['username'],
                 $uuid1->toString(),
                 'https://www.pngarts.com/files/3/Avatar-PNG-Image.png',
