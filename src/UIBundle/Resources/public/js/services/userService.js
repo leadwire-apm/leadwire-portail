@@ -8,8 +8,8 @@
             '$ocLazyLoad',
             '$modal',
             'FileService',
+            'CONFIG',
             UserServiceFN,
-            CONFIG
         ]);
 
     function UserServiceFN (
@@ -20,6 +20,7 @@
         $ocLazyLoad,
         $modal,
         FileService,
+        CONFIG
     ) {
         var service = this;
         var sep = '###';
