@@ -63,7 +63,7 @@ function LoginControllerFN (
     }
 
     function loginAuthenticate (provider) {
-        
+
         vm.isChecking = true;
 
         $auth.login({'username': vm.login})
@@ -206,6 +206,7 @@ function LoginControllerFN (
             'ApplicationFactory',
             '$rootScope',
             '$state',
+            'CONFIG',
             LoginControllerFN,
         ]);
 })(window.angular);
