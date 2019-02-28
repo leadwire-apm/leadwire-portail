@@ -27,6 +27,7 @@ parameters:
     sender: "%mailer_user%"
     github_client_id: '%env(GITHUB_CLIENT_ID)%'
     login_method: '%env(LOGIN_METHOD)%'
+    stripe_enabled: '%env(STRIPE_ENABLED)%'
     auth_providers:
         github:
             github_access_token_url: 'https://github.com/login/oauth/access_token'
@@ -92,6 +93,7 @@ twig:
         FR_DATE_FORMAT: 'DD-MM-YYYY'
         TAX: 20
         LOGIN_METHOD: '%login_method%'
+        STRIPE_ENABLED: '%stripe_enabled%'
 
     paths:
         '%kernel.project_dir%/src/UIBundle/Resources/views/Default': ~

@@ -30,7 +30,7 @@
         var vm = this;
         var YEARLY_BILLING_TEXT = 'Yearly bill total';
         var MONTHLY_BILLING_TEXT = 'Monthly bill total';
-        //onLoad();
+        onLoad();
         vm.flipActivityIndicator = function() {
             vm.ui.isSaving = !vm.ui.isSaving;
         };

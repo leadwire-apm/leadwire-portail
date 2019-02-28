@@ -9,6 +9,7 @@
             '$modal',
             'FileService',
             UserServiceFN,
+            CONFIG
         ]);
 
     function UserServiceFN (
@@ -217,16 +218,18 @@
             if (connectedUser.id &&
                 (!connectedUser.email || !connectedUser.plan)) {
                 // show modal
-                $modal.open({
-                    ariaLabelledBy: 'User-form',
-                    size: 'lg',
-                    keyboard: false,
-                    backdrop: 'static',
-                    ariaDescribedBy: 'User-form',
-                    templateUrl: 'wizard.html',
-                    controller: 'profileModalCtrl',
-                    controllerAs: 'ctrl',
-                });
+                if(CONFIG.STRIPE_ENABLED){
+                    $modal.open({
+                        ariaLabelledBy: 'User-form',
+                        size: 'lg',
+                        keyboard: false,
+                        backdrop: 'static',
+                        ariaDescribedBy: 'User-form',
+                        templateUrl: 'wizard.html',
+                        controller: 'profileModalCtrl',
+                        controllerAs: 'ctrl',
+                    });
+                }
             }
         };
 
