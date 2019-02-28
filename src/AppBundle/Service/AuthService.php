@@ -237,9 +237,11 @@ class AuthService
     {
         try {
             $uuid1 = Uuid::uuid1();
-
-            $role = [User::DEFAULT_ROLE];
-            if($userData['group'] == 'admin'){
+            
+            if($userData['group'] == 'utilisateur'){
+                $role = [User::DEFAULT_ROLE];
+            }
+            else if($userData['group'] == 'administrateur'){
                 $role = [User::ROLE_SUPER_ADMIN];
             }
 
