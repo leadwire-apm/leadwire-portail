@@ -86,7 +86,9 @@ class UserManager extends AbstractManager
             ->setUsername($username)
             ->setRoles($roles)
             ->setActive($active)
-            ->setPassword("");
+            ->setContactPreference('Email')
+            ->setPassword("")
+            ->setAcceptNewsLetter(true);
 
         $this->update($user);
 
