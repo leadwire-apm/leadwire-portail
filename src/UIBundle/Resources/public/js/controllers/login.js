@@ -91,7 +91,7 @@ function LoginControllerFN (
         var headers = UserService.getProxyHeaders();
         var userInfos = {};
 
-        if(angular.isUndedined(headers.username) || angular.isUndedined(headers.group) || angular.isUndedined(headers.email)
+        if(angular.isUndefined(headers.username) || angular.isUndefined(headers.group) || angular.isUndefined(headers.email)
          || !headers.username || !headers.group || !headers.email){
             toastr.error(MESSAGES_CONSTANTS.PROXY_HEADER_REQUIRED);
         }

@@ -330,7 +330,7 @@
             });
         };
         service.getProxyHeaders = function(){
-            return UserFactory.getProxyHeaders()
+            UserFactory.getProxyHeaders()
             .success(function(data, status, headers, config) {
                 return headers();
               })
