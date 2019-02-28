@@ -64,6 +64,11 @@ function LoginControllerFN (
 
     function loginAuthenticate (provider) {
 
+        if(!vm.login || !vm.password){
+            toastr.success(MESSAGES_CONSTANTS.LOGIN_SUCCESS(provider));
+            return;
+        }
+
         vm.isChecking = true;
 
         $auth.login({'username': vm.login})
@@ -82,7 +87,7 @@ function LoginControllerFN (
 
     function handleLoginSuccess (provider) {
         return function (response) {
-            toastr.success(MESSAGES_CONSTANTS.LOGIN_SUCCESS(provider));
+            toastr.error(MESSAGES_CONSTANTS.LOGIN_REQUIRED(provider));
             // clear query string (?invitationId=***)
             $location.search({});
             vm.isChecking = false;

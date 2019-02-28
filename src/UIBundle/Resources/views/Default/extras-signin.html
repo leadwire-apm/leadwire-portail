@@ -5,18 +5,19 @@
                 <img data-ng-src="/images/logo01 ft.png" height="60" alt="">
             </div>
                 <br>
-                <div class="form-group has-feedback" ng-if="ctrl.loginMethod === 'login'">
-                    <input class="form-control input-lg" type="text" name="text" ng-model="ctrl.login"
-                        placeholder="Login" required autofocus>
-                    <span class="ion-at form-control-feedback"></span>
-                </div>
-
-                <div class="form-group has-feedback" ng-if="ctrl.loginMethod === 'login'">
-                    <input class="form-control input-lg" type="password" name="password" ng-model="ctrl.password"
-                        placeholder="Password" required>
-                    <span class="ion-key form-control-feedback"></span>
-                </div>
-            
+                <form name="form">
+                    <div class="form-group has-feedback" ng-if="ctrl.loginMethod === 'login'">
+                        <input class="form-control input-lg" type="text" name="text" ng-model="ctrl.login" placeholder="Login" required
+                            autofocus>
+                        <span class="ion-at form-control-feedback"></span>
+                    </div>
+                
+                    <div class="form-group has-feedback" ng-if="ctrl.loginMethod === 'login'">
+                        <input class="form-control input-lg" type="password" name="password" ng-model="ctrl.password"
+                            placeholder="Password" required>
+                        <span class="ion-key form-control-feedback"></span>
+                    </div>
+                </form>
             <div class="panel-body text-center mt20">
                 <button id="github-button" style="font-size: larger" class="btn btn-block btn-social btn-github"
                   ng-click="ctrl.authenticate()">
