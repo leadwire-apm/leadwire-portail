@@ -49,7 +49,7 @@ angular.module('leadwireApp', [
         EN_DATE_FORMAT: EN_DATE_FORMAT,
         FR_DATE_FORMAT: FR_DATE_FORMAT,
         TAX: TAX,
-        LOGIN_METHOD: LOGIN_METHOD
+        LOGIN_METHOD: LOGIN_METHOD,
     })
     .constant('MESSAGES_CONSTANTS', {
         ERROR: 'Something went wrong,please try again.',
