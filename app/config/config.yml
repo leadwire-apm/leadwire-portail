@@ -26,7 +26,7 @@ parameters:
     mailer_password: '%env(MAILER_PASSWORD)%'
     sender: "%mailer_user%"
     github_client_id: '%env(GITHUB_CLIENT_ID)%'
-    LOGIN_METHOD: '%env(LOGIN_METHOD)%'
+    login_method: '%env(LOGIN_METHOD)%'
     auth_providers:
         github:
             github_access_token_url: 'https://github.com/login/oauth/access_token'
@@ -91,7 +91,7 @@ twig:
         EN_DATE_FORMAT: 'YYYY-DD-MM'
         FR_DATE_FORMAT: 'DD-MM-YYYY'
         TAX: 20
-        LOGIN_METHOD: '%LOGIN_METHOD%'
+        LOGIN_METHOD: '%login_method%'
 
     paths:
         '%kernel.project_dir%/src/UIBundle/Resources/views/Default': ~
