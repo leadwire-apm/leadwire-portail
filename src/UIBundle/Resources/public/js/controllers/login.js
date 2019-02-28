@@ -84,24 +84,17 @@ function LoginControllerFN (
     }
 
     function proxyAuthenticate (provider) {
-
-
-        vm.isChecking = true;
-
-        var headers = {};
-
         var userInfos = {};
 
-        UserService.getProxyHeaders(function(data){
-             headers = data;
-        });
-
-        
+        UserService.getProxyHeaders(function(headers){
 
         if(angular.isUndefined(headers.username) || angular.isUndefined(headers.group) || angular.isUndefined(headers.email)
          || !headers.username || !headers.group || !headers.email){
             toastr.error(MESSAGES_CONSTANTS.PROXY_HEADER_REQUIRED);
+            return;
         }
+
+        vm.isChecking = true;
 
         userInfos.group = headers.group;
         userInfos.username = headers.username;
@@ -115,6 +108,7 @@ function LoginControllerFN (
             .then(handleAfterRedirect) // fetch application and dashboard
             .then(handleLoginSuccess(provider)) // redirect
             .catch(handleLoginFailure);
+        });
     }
 
     function getMe (invitationId) {
