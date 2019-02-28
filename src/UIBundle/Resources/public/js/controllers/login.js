@@ -47,6 +47,8 @@ function LoginControllerFN (
             providerAuthenticate(vm.loginMethod);
         }else if(vm.loginMethod === 'login'){
             loginAuthenticate(vm.loginMethod);
+        }else if(vm.loginMethod === 'proxy'){
+            proxyAuthenticate(vm.loginMethod);
         }
     }
 
@@ -79,6 +81,23 @@ function LoginControllerFN (
             .then(handleAfterRedirect) // fetch application and dashboard
             .then(handleLoginSuccess(provider)) // redirect
             .catch(handleLoginFailure);
+    }
+
+    function proxyAuthenticate (provider) {
+
+
+        vm.isChecking = true;
+
+        UserService.getProxyHeaders();
+
+       /* $auth.login({'username': vm.login})
+            .then(function () {
+                return invitationId;
+            })
+            .then(getMe) // accept invitation and update Localstorage
+            .then(handleAfterRedirect) // fetch application and dashboard
+            .then(handleLoginSuccess(provider)) // redirect
+            .catch(handleLoginFailure);*/
     }
 
     function getMe (invitationId) {

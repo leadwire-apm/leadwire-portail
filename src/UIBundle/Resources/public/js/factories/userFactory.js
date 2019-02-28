@@ -57,6 +57,10 @@
                     body,
                 );
             },
+            getProxyHeaders: function(){
+                return $http.get( CONFIG.BASE_URL 
+                );
+            },
         };
     }
 })(window.angular);

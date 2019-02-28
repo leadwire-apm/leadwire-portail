@@ -329,6 +329,21 @@
                 return user.roles.includes(role);
             });
         };
+        service.getProxyHeaders = function(){
+            return UserFactory.getProxyHeaders().getProxyHeaders
+            .success(function(data, status, headers, config) {
+                console.log(data);
+                console.log(status);
+                console.log(headers);
+                console.log(config);
+              })
+              .error(function(data, status, headers, config) {
+                console.log('err ',data);
+                console.log('err ',status);
+                console.log('err ',headers);
+                console.log('err ',config);
+              });
+        }
 
         service.ADMINS = ADMINS;
     }
