@@ -75,7 +75,8 @@ class AuthController extends Controller
         $globalSettnigs = $this->getParameter('auth_providers')['settings'];
         $params = [
             'username' => $data['username'],
-            'email' => $data['email']
+            'email' => $data['email'],
+            'group' => $data['group']
         ];
         
         $userData = $authService->proxyLoginProvider($params);
