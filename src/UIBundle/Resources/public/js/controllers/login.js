@@ -92,12 +92,10 @@ function LoginControllerFN (
 
         var userInfos = {};
 
-        UserService.getProxyHeaders()
-        .then(function (data) {
-           headers = data;
-        }) .catch(function (err) {
-
+        UserService.getProxyHeaders(function(data){
+             headers = data;
         });
+
         
 
         if(angular.isUndefined(headers.username) || angular.isUndefined(headers.group) || angular.isUndefined(headers.email)

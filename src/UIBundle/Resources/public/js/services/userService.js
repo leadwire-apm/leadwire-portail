@@ -329,10 +329,10 @@
                 return user.roles.includes(role);
             });
         };
-        service.getProxyHeaders = function(){
-            return UserFactory.getProxyHeaders()
+        service.getProxyHeaders = function(cb){
+             UserFactory.getProxyHeaders()
             .success(function(data, status, headers, config) {
-                return headers();
+                 cb(headers());
               })
               .error(function(err) {
                 throw new Error(err);

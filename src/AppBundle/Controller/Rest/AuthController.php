@@ -78,7 +78,7 @@ class AuthController extends Controller
             'email' => $data['email']
         ];
         
-        $userData = $authService->proxyProvider($params);
+        $userData = $authService->proxyLoginProvider($params);
 
         return new JsonResponse(
             [
