@@ -88,16 +88,26 @@ function LoginControllerFN (
 
         vm.isChecking = true;
 
-        UserService.getProxyHeaders();
+        var headers = UserService.getProxyHeaders();
+        var userInfos = {};
 
-       /* $auth.login({'username': vm.login})
+        if(angular.isUndedined(headers.username) || angular.isUndedined(headers.group) || angular.isUndedined(headers.email)
+         || !headers.username || !headers.group || !headers.email){
+            toastr.error(MESSAGES_CONSTANTS.PROXY_HEADER_REQUIRED);
+        }
+
+        userInfos.group = headers.group;
+        userInfos.username = headers.username;
+        userInfos.email = headers.email;
+
+        $auth.login(userInfos)
             .then(function () {
                 return invitationId;
             })
             .then(getMe) // accept invitation and update Localstorage
             .then(handleAfterRedirect) // fetch application and dashboard
             .then(handleLoginSuccess(provider)) // redirect
-            .catch(handleLoginFailure);*/
+            .catch(handleLoginFailure);
     }
 
     function getMe (invitationId) {

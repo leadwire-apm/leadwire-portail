@@ -65,6 +65,7 @@ angular.module('leadwireApp', [
         DELETE_INVITATION_SUCCESS: 'The invitation has been deleted.',
         CODE_COPIED:'The code was copied successfully',
         LOGIN_REQUIRED: 'Please enter your username and password',
+        PROXY_HEADER_REQUIRED: 'Proxy headers informations not found',
         ADD_APP_SUCCESS:
             'Your app has been added successfully. You need to activate your app',
         LOGIN_SUCCESS: function (provider) {

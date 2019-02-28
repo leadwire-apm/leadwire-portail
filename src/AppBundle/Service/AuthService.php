@@ -155,6 +155,39 @@ class AuthService
         }
         return $user;
     }
+    
+    function proxyLoginProvider(array $params){
+
+        $user = $this->userManager->getOneBy($params);
+
+        if ($user === null) {
+            // We're dealing with a new user
+            $user = $this->addUserWithEmail($params);
+
+            if ($user !== null) {
+                // User creation in DB is successful
+                // Should create LDAP & ElasticSearch entries
+                $this->ldapService->createNewUserEntries($user);
+                $this->ldapService->registerDemoApplications($user);
+                $this->applicationService->registerDemoApplications($user);
+                $this->esService->resetUserIndexes($user);
+            }
+        } else {
+            // Check if user has been deleted
+            if ($user->isDeleted() === true) {
+                throw new AccessDeniedHttpException("User is deleted");
+            }
+
+            // Check if user is locked
+            if ($user->isLocked() === true) {
+                throw new AccessDeniedHttpException($user->getLockMessage());
+            }
+        }
+
+        $this->checkSuperAdminRoles($user);
+
+        return $user;
+    }
 
     /**
      *
@@ -192,6 +225,34 @@ class AuthService
         }
 
         return $token;
+    }
+
+        /**
+     *
+     * @param array $userData
+     *
+     * @return User|null
+     */
+    protected function addUserWithEmail(array $userData): ?User
+    {
+        try {
+            $uuid1 = Uuid::uuid1();
+            $user = $this->userManager->create(
+                $userData['username'],
+                $uuid1->toString(),
+                'https://www.pngarts.com/files/3/Avatar-PNG-Image.png',
+                $userData['username'],//name
+                [User::DEFAULT_ROLE],
+                true,
+                $userData['email']
+            );
+
+            return $user;
+        } catch (\Exception $e) {
+            $this->logger->critical($e->getMessage());
+
+            return null;
+        }
     }
 
     /**
