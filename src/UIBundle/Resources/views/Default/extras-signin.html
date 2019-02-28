@@ -1,17 +1,30 @@
 <div class="container">
     <div class="row">
-        <div class="col-sm-5 col-xs-12 col-sm-offset-4 center-form panel login-panel"
-        >
+        <div class="col-sm-5 col-xs-12 col-sm-offset-4 center-form panel login-panel">
             <div class="brand-logo text-center" style="margin-top: 20px">
                 <img data-ng-src="/images/logo01 ft.png" height="60" alt="">
             </div>
+            
+                <div class="form-group has-feedback" ng-if="ctrl.loginMethod === 'login'">
+                    <input class="form-control input-lg" type="text" name="text" ng-model="ctrl.login"
+                        placeholder="Login" required autofocus>
+                    <span class="ion-at form-control-feedback"></span>
+                </div>
+
+                <div class="form-group has-feedback" ng-if="ctrl.loginMethod === 'login'">
+                    <input class="form-control input-lg" type="password" name="password" ng-model="ctrl.password"
+                        placeholder="Password" required>
+                    <span class="ion-key form-control-feedback"></span>
+                </div>
+            
             <div class="panel-body text-center mt20">
                 <button id="github-button" style="font-size: larger" class="btn btn-block btn-social btn-github"
-                        ng-click="ctrl.authenticate('github')">
+                  ng-click="ctrl.authenticate()">
                     <spinner is-loading="ctrl.isChecking"></spinner>
-                    <i ng-if="!ctrl.isChecking" class="fa fa-github"></i> <span>Sign in with GitHub</span>
+                    <i ng-if="!ctrl.isChecking && ctrl.loginMethod === 'github'" class="fa fa-github"></i> <span>Sign in with GitHub</span>
+                    <i ng-if="!ctrl.isChecking  && ctrl.loginMethod === 'login'" class="fa fa-user-circle"></i> <span>Sign in</span>
+                    <i ng-if="!ctrl.isChecking && ctrl.loginMethod === 'proxy'" class="fa fa-server"></i> <span>Sign in with Proxy</span>
                 </button>
-
             </div>
         </div>
     </div>

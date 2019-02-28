@@ -132,6 +132,31 @@ class AuthService
     }
 
     /**
+     * @param array $params
+     */
+    public function loginProvider(array $params)
+    {
+        $user = $this->userManager->getOneBy($params);
+
+        if ($user === null) {
+          throw new AccessDeniedHttpException("User is undefined");
+        } else {
+            // Check if user has been deleted
+            if ($user->isDeleted() === true) {
+                throw new AccessDeniedHttpException("User is deleted");
+            }
+
+            // Check if user is locked
+            if ($user->isLocked() === true) {
+                throw new AccessDeniedHttpException($user->getLockMessage());
+            }
+
+            $this->checkSuperAdminRoles($user);
+        }
+        return $user;
+    }
+
+    /**
      *
      * @param User $user
      * @param string $tokenSecret

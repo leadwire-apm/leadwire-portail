@@ -39,11 +39,28 @@ class AuthController extends Controller
             'client_secret' => $parameters["github_client_secret"],
             'code' => $data['code'],
         ];
-        $userData = $authService->githubProvider(
+       $userData = $authService->githubProvider(
             $params,
             $parameters["github_access_token_url"],
             $parameters["github_users_api_url"]
         );
+	
+        return new JsonResponse(
+            [
+                "token" => $authService->generateToken($userData, $globalSettnigs['token_secret']),
+            ]
+        );
+    }
+
+    public function loginAction(Request $request, AuthService $authService)
+    {
+        $data = json_decode($request->getContent(), true);
+        $globalSettnigs = $this->getParameter('auth_providers')['settings'];
+        $params = [
+            'username' => $data['username']
+        ];
+        
+        $userData = $authService->loginProvider($params);
 
         return new JsonResponse(
             [

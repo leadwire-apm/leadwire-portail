@@ -13,6 +13,7 @@
  * @param ApplicationFactory
  * @param $rootScope
  * @param $state
+ * @param CONFIG
  * @constructor
  */
 function LoginControllerFN (
@@ -28,6 +29,7 @@ function LoginControllerFN (
     ApplicationFactory,
     $rootScope,
     $state,
+    CONFIG
 ) {
     var vm = this;
     var invitationId =
@@ -36,10 +38,35 @@ function LoginControllerFN (
             : undefined;
     onLoad();
     vm.authenticate = authenticate;
+    vm.loginAuthenticate = loginAuthenticate;
 
-    function authenticate (provider) {
+    vm.loginMethod = CONFIG.LOGIN_METHOD;
+
+    function authenticate () {
+        if(vm.loginMethod === 'github'){
+            providerAuthenticate(vm.loginMethod);
+        }else if(vm.loginMethod === 'login'){
+            loginAuthenticate(vm.loginMethod);
+        }
+    }
+
+    function providerAuthenticate (provider) {
         vm.isChecking = true;
         $auth.authenticate(provider)
+            .then(function () {
+                return invitationId;
+            })
+            .then(getMe) // accept invitation and update Localstorage
+            .then(handleAfterRedirect) // fetch application and dashboard
+            .then(handleLoginSuccess(provider)) // redirect
+            .catch(handleLoginFailure);
+    }
+
+    function loginAuthenticate (provider) {
+        
+        vm.isChecking = true;
+
+        $auth.login({'username': vm.login})
             .then(function () {
                 return invitationId;
             })

@@ -19,6 +19,9 @@ angular.module('leadwireApp')
                 url: CONFIG.BASE_URL + 'login/github',
             });
 
+            $authProvider.loginUrl = 'login/login';
+            $authProvider.baseUrl = CONFIG.BASE_URL;
+
             var skipIfLoggedIn = [
                 '$q',
                 '$auth',
