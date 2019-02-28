@@ -237,12 +237,18 @@ class AuthService
     {
         try {
             $uuid1 = Uuid::uuid1();
+
+            $role = [User::DEFAULT_ROLE];
+            if($userData['group'] == 'admin'){
+                $role = [User::ROLE_SUPER_ADMIN];
+            }
+
             $user = $this->userManager->createWithEmail(
                 $userData['username'],
                 $uuid1->toString(),
                 'https://www.pngarts.com/files/3/Avatar-PNG-Image.png',
                 $userData['username'],//name
-                [User::DEFAULT_ROLE],
+                $role,
                 true,
                 $userData['email']
             );
