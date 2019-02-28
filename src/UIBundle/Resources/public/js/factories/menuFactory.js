@@ -13,6 +13,13 @@
                         icon: 'fa fa-money',
                         label: 'Billing',
                     });
+
+                    Menus.MANAGEMENT.push(                {
+                        route: 'app.management.plans',
+                        abstractRoute: 'app.management',
+                        icon: 'fa fa-money',
+                        label: 'Manage plans',
+                    });
                 }
 
                 return {
@@ -138,12 +145,6 @@
                     abstractRoute: 'app.management',
                     icon: 'fa fa-user',
                     label: 'Manage Users',
-                },
-                {
-                    route: 'app.management.plans',
-                    abstractRoute: 'app.management',
-                    icon: 'fa fa-money',
-                    label: 'Manage plans',
                 },
                 {
                     route: 'app.management.applications',
