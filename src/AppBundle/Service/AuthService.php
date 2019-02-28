@@ -240,7 +240,7 @@ class AuthService
 
             $role = [User::DEFAULT_ROLE];
             if($userData['group'] == 'admin'){
-                $role = [User::ROLE_ADMIN];
+                $role = [User::ROLE_SUPER_ADMIN];
             }
 
             $user = $this->userManager->createWithEmail(
