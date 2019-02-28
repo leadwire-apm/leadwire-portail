@@ -4,7 +4,8 @@
         .factory('MenuFactory', [
             'Menus',
             '$state',
-            function (Menus, $state) {
+            'CONFIG',
+            function (Menus, $state, CONFIG) {
                 return {
                     get: function (menuKey) {
                         return Menus[menuKey]
