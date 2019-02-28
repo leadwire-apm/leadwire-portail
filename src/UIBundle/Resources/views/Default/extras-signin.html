@@ -21,9 +21,15 @@
                 <button id="github-button" style="font-size: larger" class="btn btn-block btn-social btn-github"
                   ng-click="ctrl.authenticate()">
                     <spinner is-loading="ctrl.isChecking"></spinner>
-                    <i ng-if="!ctrl.isChecking && ctrl.loginMethod === 'github'" class="fa fa-github"></i> <span>Sign in with GitHub</span>
-                    <i ng-if="!ctrl.isChecking  && ctrl.loginMethod === 'login'" class="fa fa-user-circle"></i> <span>Sign in</span>
-                    <i ng-if="!ctrl.isChecking && ctrl.loginMethod === 'proxy'" class="fa fa-server"></i> <span>Sign in with Proxy</span>
+                   
+                    <i ng-if="!ctrl.isChecking && ctrl.loginMethod === 'github'" class="fa fa-github"></i>
+                     <span ng-if="ctrl.loginMethod === 'github">Sign in with GitHub</span>
+                   
+                     <i ng-if="!ctrl.isChecking  && ctrl.loginMethod === 'login'" class="fa fa-user-circle"></i> 
+                    <span ng-if="ctrl.loginMethod === 'login'">Sign in</span>
+                    
+                    <i ng-if="!ctrl.isChecking && ctrl.loginMethod === 'proxy'" class="fa fa-server"></i>
+                    <span ng-if="ctrl.loginMethod === 'proxy'">Sign in with Proxy</span>
                 </button>
             </div>
         </div>
