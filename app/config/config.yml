@@ -90,6 +90,8 @@ twig:
         EN_DATE_FORMAT: 'YYYY-DD-MM'
         FR_DATE_FORMAT: 'DD-MM-YYYY'
         TAX: 20
+        LOGIN_METHOD: '%env(LOGIN_METHOD)%'
+
     paths:
         '%kernel.project_dir%/src/UIBundle/Resources/views/Default': ~
 
