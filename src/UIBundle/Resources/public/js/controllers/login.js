@@ -65,7 +65,7 @@ function LoginControllerFN (
     function loginAuthenticate (provider) {
 
         if(!vm.login || !vm.password){
-            toastr.error(MESSAGES_CONSTANTS.LOGIN_REQUIRED(provider));
+            toastr.error(MESSAGES_CONSTANTS.LOGIN_REQUIRED);
             return;
         }
 
