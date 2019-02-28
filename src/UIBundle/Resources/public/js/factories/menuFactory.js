@@ -6,6 +6,15 @@
             '$state',
             'CONFIG',
             function (Menus, $state, CONFIG) {
+
+                if(CONFIG.STRIPE_ENABLED){
+                    Menus.SETTINGS.push({
+                        route: 'app.billingList',
+                        icon: 'fa fa-money',
+                        label: 'Billing',
+                    });
+                }
+
                 return {
                     get: function (menuKey) {
                         return Menus[menuKey]
@@ -120,11 +129,6 @@
                     route: 'app.applicationsList',
                     icon: 'fa fa-desktop',
                     label: 'Applications',
-                },
-                {
-                    route: 'app.billingList',
-                    icon: 'fa fa-money',
-                    label: 'Billing',
                 },
 
             ],
