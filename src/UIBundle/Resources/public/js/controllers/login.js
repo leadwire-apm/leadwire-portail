@@ -88,8 +88,17 @@ function LoginControllerFN (
 
         vm.isChecking = true;
 
-        var headers = UserService.getProxyHeaders();
+        var headers = {};
+
         var userInfos = {};
+
+        UserService.getProxyHeaders()
+        .then(function (data) {
+           headers = data;
+        }) .catch(function (err) {
+
+        });
+        
 
         if(angular.isUndefined(headers.username) || angular.isUndefined(headers.group) || angular.isUndefined(headers.email)
          || !headers.username || !headers.group || !headers.email){
