@@ -219,7 +219,7 @@
             if (connectedUser.id &&
                 (!connectedUser.email || !connectedUser.plan)) {
                 // show modal
-                if(CONFIG.STRIPE_ENABLED){
+                if(CONFIG.STRIPE_ENABLED === "true"){
                     $modal.open({
                         ariaLabelledBy: 'User-form',
                         size: 'lg',

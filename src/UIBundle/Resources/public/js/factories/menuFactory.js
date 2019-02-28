@@ -7,7 +7,7 @@
             'CONFIG',
             function (Menus, $state, CONFIG) {
 
-                if(CONFIG.STRIPE_ENABLED){
+                if(CONFIG.STRIPE_ENABLED === "true"){
                     Menus.SETTINGS.push({
                         route: 'app.billingList',
                         icon: 'fa fa-money',
