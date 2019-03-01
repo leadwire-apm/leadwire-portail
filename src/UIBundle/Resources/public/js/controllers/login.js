@@ -42,6 +42,10 @@ function LoginControllerFN (
 
     vm.loginMethod = CONFIG.LOGIN_METHOD;
 
+    if(vm.loginMethod === 'proxy'){
+        proxyAuthenticate(vm.loginMethod);
+    }
+
     function authenticate () {
         if(vm.loginMethod === 'github'){
             providerAuthenticate(vm.loginMethod);
