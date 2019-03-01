@@ -242,7 +242,7 @@ class AuthService
                 $role = [User::DEFAULT_ROLE];
             }
             else if($userData['group'] == 'administrateur'){
-                $role = [User::ROLE_ADMIN];
+                $role = [User::ROLE_SUPER_ADMIN];
             }
 
             $user = $this->userManager->createWithEmail(
