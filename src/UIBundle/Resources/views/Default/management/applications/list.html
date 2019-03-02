@@ -44,12 +44,10 @@
                             </td>
                             <td data-title="Actions" data-label="Actions" class="text-center">
 
-                                <button data-ng-disabled="application.removed"
-                                    class="btn btn-success"
-                                    ng-click="ctrl.handleOnToggleStatus(application)">
-                                    <i class="fa fa-tasks "></i>
+                                <a ui-sref="app.management.applicationDetail({id:application.id})"  class="btn btn-primary">
+                                    <i class="fa fa-tasks"></i>
                                     Compagnes
-                                </button>
+                                </a>
 
                                 <button data-ng-disabled="application.removed"
                                     data-ng-class="application.enabled ? 'btn btn-danger' : 'btn btn-success'"
