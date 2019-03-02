@@ -22,7 +22,7 @@
     ) {
         var vm = this;
 
-        vm.compagneId = $stateParams.id;
+        vm.applicationId = $stateParams.id;
 
         vm.flipActivityIndicator = function (key) {
             vm.ui[key] = !vm.ui[key];
