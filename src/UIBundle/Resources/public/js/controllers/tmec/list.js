@@ -5,6 +5,7 @@
             'toastr',
             'MESSAGES_CONSTANTS',
             '$state',
+            '$stateParams',
             ListCompagnesCtrlFN,
         ]);
 
@@ -17,8 +18,12 @@
         toastr,
         MESSAGES_CONSTANTS,
         $state,
+        $stateParams,
     ) {
         var vm = this;
+
+        vm.applicationId = $stateParams.id;
+        console.log("testtttt", vm.applicationId);
 
         vm.flipActivityIndicator = function (key) {
             vm.ui[key] = !vm.ui[key];
