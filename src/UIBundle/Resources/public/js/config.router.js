@@ -579,10 +579,14 @@ angular.module('leadwireApp')
                     url: '/tmec/list',
                     templateUrl: 'tmec/list.html',
                     resolve: {
-                        permissions: adminRequired
+                        permissions: adminRequired,
+                        menu: updateMenuItems('MANAGEMENT'),
                     },
                     controller: 'ListCompagnesController',
                     controllerAs: 'ctrl',
+                    data: {
+                        title: 'Management / Users',
+                    },
                 });
 
             function updateMenuItems (key) {
