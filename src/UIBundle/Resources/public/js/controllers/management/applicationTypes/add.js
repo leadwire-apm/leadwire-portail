@@ -5,7 +5,6 @@
             'toastr',
             'MESSAGES_CONSTANTS',
             '$state',
-            '$stateParams',
             AddApplicationTypeCtrlFN,
         ]);
 
@@ -18,10 +17,12 @@
         toastr,
         MESSAGES_CONSTANTS,
         $state,
-        $stateParams,
     ) {
-        
         var vm = this;
+
+        vm.flipActivityIndicator = function (key) {
+            vm.ui[key] = !vm.ui[key];
+        };
 
         vm.saveAppType = function () {
             vm.flipActivityIndicator('isSaving');
@@ -43,18 +44,13 @@
                 ui: {
                     isSaving: false,
                 },
-                compagne: {
-                    version: '',
-                    description: '',
-                    startDate: '',
-                    endDate: '',
-                    applicationId:''
+                applicationType: {
+                    name: '',
+                    agent: '',
+                    installation: '',
                 },
             });
         };
-
-        vm.compagne.applicationId = $stateParams.id;
-
 
     }
 })(window.angular);

@@ -5,6 +5,7 @@
             'toastr',
             'MESSAGES_CONSTANTS',
             '$state',
+            '$stateParams',
             AddCompagnesCtrlFN,
         ]);
 
@@ -17,6 +18,7 @@
         toastr,
         MESSAGES_CONSTANTS,
         $state,
+        $stateParams,
     ) {
         var vm = this;
 
@@ -44,13 +46,17 @@
                 ui: {
                     isSaving: false,
                 },
-                applicationType: {
-                    name: '',
-                    agent: '',
-                    installation: '',
+                compagne: {
+                    version: '',
+                    description: '',
+                    startDate: '',
+                    endDate: '',
+                    applicationId:''
                 },
             });
         };
+
+        vm.compagne.applicationId = $stateParams.id;
 
     }
 })(window.angular);
