@@ -588,7 +588,7 @@ angular.module('leadwireApp')
 
                 .state('app.management.addTmecs', {
                     url: '/tmec/add',
-                    templateUrl: 'tmec/add.html',
+                    templateUrl: 'tmec/add.html/:id',
                     resolve: {
                         permissions: adminRequired,
                         menu: updateMenuItems('MANAGEMENT'),
@@ -598,7 +598,7 @@ angular.module('leadwireApp')
                 })
 
                 .state('app.management.editTmecs', {
-                    url: '/tmec/edit',
+                    url: '/tmec/edit/:id',
                     templateUrl: 'tmec/edit.html',
                     resolve: {
                         permissions: adminRequired,
