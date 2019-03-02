@@ -51,12 +51,9 @@
                     description: '',
                     startDate: '',
                     endDate: '',
-                    applicationId:''
+                    applicationId:$stateParams.id
                 },
             });
         };
-
-        vm.compagne.applicationId = $stateParams.id;
-
     }
 })(window.angular);
