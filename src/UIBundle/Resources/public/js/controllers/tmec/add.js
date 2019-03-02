@@ -1,18 +1,18 @@
 (function (angular) {
     angular.module('leadwireApp')
-        .controller('AddApplicationTypeController', [
+        .controller('AddCompagnesController', [
             'ApplicationTypeService',
             'toastr',
             'MESSAGES_CONSTANTS',
             '$state',
-            AddApplicationTypeCtrlFN,
+            AddACompagnesCtrlFN,
         ]);
 
     /**
      * Handle add new application logic
      *
      */
-    function AddApplicationTypeCtrlFN (
+    function AddCompagnesCtrlFN (
         ApplicationTypeService,
         toastr,
         MESSAGES_CONSTANTS,

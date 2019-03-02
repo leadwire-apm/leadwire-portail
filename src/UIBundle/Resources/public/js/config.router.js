@@ -584,10 +584,30 @@ angular.module('leadwireApp')
                     },
                     controller: 'ListCompagnesController',
                     controllerAs: 'ctrl',
-                    data: {
-                        title: 'Management / Users',
+                })
+
+                .state('app.management.addTmecs', {
+                    url: '/tmec/add',
+                    templateUrl: 'tmec/add.html',
+                    resolve: {
+                        permissions: adminRequired,
+                        menu: updateMenuItems('MANAGEMENT'),
                     },
-                });
+                    controller: 'AddCompagnesController',
+                    controllerAs: 'ctrl',
+                })
+
+                .state('app.management.editTmecs', {
+                    url: '/tmec/edit',
+                    templateUrl: 'tmec/edit.html',
+                    resolve: {
+                        permissions: adminRequired,
+                        menu: updateMenuItems('MANAGEMENT'),
+                    },
+                    controller: 'EditCompagnesController',
+                    controllerAs: 'ctrl',
+                })
+                //END TMEC
 
             function updateMenuItems (key) {
                 return function (MenuFactory, $rootScope) {
