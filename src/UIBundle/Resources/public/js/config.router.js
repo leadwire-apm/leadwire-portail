@@ -576,7 +576,7 @@ angular.module('leadwireApp')
 
                 //TMEC
                 .state('app.application.tmecList', {
-                    url: '/temc/list',
+                    url: '/tmec/list',
                     templateUrl: 'tmec/list.html',
                     resolve: {
                         permissions: adminRequired
