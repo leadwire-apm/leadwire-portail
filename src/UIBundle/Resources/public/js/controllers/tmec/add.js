@@ -1,7 +1,7 @@
 (function (angular) {
     angular.module('leadwireApp')
         .controller('AddCompagnesController', [
-            'ApplicationTypeService',
+            'TmecFactory',
             'toastr',
             'MESSAGES_CONSTANTS',
             '$state',
@@ -14,7 +14,7 @@
      *
      */
     function AddCompagnesCtrlFN (
-        ApplicationTypeService,
+        TmecFactory,
         toastr,
         MESSAGES_CONSTANTS,
         $state,
@@ -28,7 +28,8 @@
 
         vm.saveAppType = function () {
             vm.flipActivityIndicator('isSaving');
-            /*ApplicationTypeService.create(vm.applicationType)
+            console.log("eeeeeeeeeeeeeeee", vm.compagne)
+           /* TmecFactory.create(vm.compagne)
                 .then(function () {
                     vm.flipActivityIndicator('isSaving');
                     toastr.success(MESSAGES_CONSTANTS.SUCCESS);
@@ -37,7 +38,6 @@
                 .catch(function (error) {
                     vm.flipActivityIndicator('isSaving');
                     toastr.error(error.message || MESSAGES_CONSTANTS.ERROR);
-
                 });*/
         };
 
