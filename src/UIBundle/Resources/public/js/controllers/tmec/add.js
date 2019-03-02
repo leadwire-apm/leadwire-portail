@@ -5,7 +5,7 @@
             'toastr',
             'MESSAGES_CONSTANTS',
             '$state',
-            AddACompagnesCtrlFN,
+            AddCompagnesCtrlFN,
         ]);
 
     /**
