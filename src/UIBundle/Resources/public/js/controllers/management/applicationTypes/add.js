@@ -20,13 +20,8 @@
         $state,
         $stateParams,
     ) {
+        
         var vm = this;
-
-        vm.applicationId = $stateParams.id;
-
-        vm.flipActivityIndicator = function (key) {
-            vm.ui[key] = !vm.ui[key];
-        };
 
         vm.saveAppType = function () {
             vm.flipActivityIndicator('isSaving');
@@ -48,13 +43,18 @@
                 ui: {
                     isSaving: false,
                 },
-                applicationType: {
-                    name: '',
-                    agent: '',
-                    installation: '',
+                compagne: {
+                    version: '',
+                    description: '',
+                    startDate: '',
+                    endDate: '',
+                    applicationId:''
                 },
             });
         };
+
+        vm.compagne.applicationId = $stateParams.id;
+
 
     }
 })(window.angular);
