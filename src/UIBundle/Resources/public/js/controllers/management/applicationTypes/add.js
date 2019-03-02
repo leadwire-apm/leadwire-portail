@@ -5,6 +5,7 @@
             'toastr',
             'MESSAGES_CONSTANTS',
             '$state',
+            '$stateParams',
             AddApplicationTypeCtrlFN,
         ]);
 
@@ -17,6 +18,7 @@
         toastr,
         MESSAGES_CONSTANTS,
         $state,
+        $stateParams,
     ) {
         var vm = this;
 
