@@ -572,6 +572,17 @@ angular.module('leadwireApp')
                 .state('static.aboutUs', {
                     url: '/page/about-us',
                     templateUrl: 'static/aboutUs.html',
+                })
+
+                //TMEC
+                .state('app.application.tmecList', {
+                    url: '/temc/list',
+                    templateUrl: 'tmec/list.html',
+                    resolve: {
+                        permissions: adminRequired
+                    },
+                    controller: 'ListCompagnesCtrlFN',
+                    controllerAs: 'ctrl',
                 });
 
             function updateMenuItems (key) {
