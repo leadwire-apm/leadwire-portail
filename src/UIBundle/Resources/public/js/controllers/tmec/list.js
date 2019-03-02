@@ -1,6 +1,6 @@
 (function (angular) {
     angular.module('leadwireApp')
-        .controller('ListApplicationTypesController', [
+        .controller('ListCompagnesController', [
             'ApplicationTypeService',
             'toastr',
             'MESSAGES_CONSTANTS',

@@ -581,7 +581,7 @@ angular.module('leadwireApp')
                     resolve: {
                         permissions: adminRequired
                     },
-                    controller: 'ListCompagnesCtrlFN',
+                    controller: 'ListCompagnesController',
                     controllerAs: 'ctrl',
                 });
 
