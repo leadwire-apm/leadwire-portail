@@ -28,7 +28,7 @@
 
         vm.saveAppType = function () {
             vm.flipActivityIndicator('isSaving');
-            ApplicationTypeService.create(vm.applicationType)
+            /*ApplicationTypeService.create(vm.applicationType)
                 .then(function () {
                     vm.flipActivityIndicator('isSaving');
                     toastr.success(MESSAGES_CONSTANTS.SUCCESS);
@@ -38,7 +38,7 @@
                     vm.flipActivityIndicator('isSaving');
                     toastr.error(error.message || MESSAGES_CONSTANTS.ERROR);
 
-                });
+                });*/
         };
 
         vm.init = function () {
