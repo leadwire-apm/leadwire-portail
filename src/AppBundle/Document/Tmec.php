@@ -50,9 +50,10 @@ class Tmec
     private $startdate;
 
     /**
-     * @var \DateTime
-     *
      * @ODM\Field(type="date")
+     * @JMS\Expose
+     * 
+     * @var \DateTime
      */
     private $enddate;
 
