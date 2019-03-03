@@ -45,17 +45,16 @@ class TmecController extends Controller
     }
 
     /**
-     * @Route("/list", methods="GET")
+     * @Route("/list{application}", methods="GET")
      *
      * @param Request $request
      * @param TmecService $tmecService
      *
      * @return Response
      */
-    public function listTmecAction(Request $request, TmecService $tmecService)
+    public function listTmecAction(Request $request, TmecService $tmecService, $application)
     {
-        $data = json_decode($request->getContent(), true);
-        $tmec = $tmecService->listTmec($data);
+        $tmec = $tmecService->listTmec($application);
         return $this->renderResponse($tmec);
     }
 
