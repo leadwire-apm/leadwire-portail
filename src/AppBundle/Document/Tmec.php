@@ -44,14 +44,14 @@ class Tmec
     /**
      * @var \DateTime
      *
-     * @ODM\Field(type="datetime")
+     * @ODM\Field(type="date")
      */
     private $startdate;
 
     /**
      * @var \DateTime
      *
-     * @ODM\Field(type="datetime")
+     * @ODM\Field(type="date")
      */
     private $endDate;
 
@@ -127,7 +127,7 @@ class Tmec
      *
      * @param \DateTime $startdate
      *
-     * @return User
+     * @return Tmec
      */
     public function setStartDate(\DateTime $startdate)
     {
@@ -151,7 +151,7 @@ class Tmec
      *
      * @param \DateTime $enddate
      *
-     * @return User
+     * @return Tmec
      */
     public function setEndDate(\DateTime $enddate)
     {
