@@ -37,7 +37,12 @@ class TmecService
         $tmec = $this->tmecManager->getOneBy(['version' => $params['version']]);
 
         if ($tmec === null) {
-            $tmec = $this->tmecManager->create($params);
+            $tmec = $this->tmecManager->create(
+                $params['version'],
+                $params['description'],
+                $params['startDate'],
+                $params['endDate'],
+                $params['applicationId']);
         } else {
             throw new AccessDeniedHttpException("Version is already exist");
         }
