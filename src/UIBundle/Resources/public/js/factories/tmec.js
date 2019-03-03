@@ -17,7 +17,7 @@
                  * @returns {Promise}
                  */
                 list: function (application) {
-                    return $http.get(CONFIG.BASE_URL + 'api/tmec/list/' + application);
+                    return $http.get(CONFIG.BASE_URL + 'api/tmec/list/' + application.application);
                 },
             };
         });
