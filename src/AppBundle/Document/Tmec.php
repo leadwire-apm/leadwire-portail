@@ -42,11 +42,11 @@ class Tmec
     private $description;
 
     /**
-     * @var \DateTime
-     *
      * @ODM\Field(type="date")
      * @JMS\Expose
      * @JMS\Type("date")
+     * 
+     * @var \DateTime
      */
     private $startdate;
 
@@ -143,7 +143,7 @@ class Tmec
      *
      * @return \DateTime|null
      */
-    public function getStartDate()
+    public function getStartdate()
     {
         return $this->startdate;
     }
