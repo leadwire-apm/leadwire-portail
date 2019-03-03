@@ -34,7 +34,7 @@ class TmecService
      */
     public function newTmec(array $params)
     {
-        $tmec = $this->tmecManager->getOneBy([['version' => $params['version']]);
+        $tmec = $this->tmecManager->getOneBy(['version' => $params['version']]);
 
         if ($tmec === null) {
             $tmec = $this->tmecManager->create($params);

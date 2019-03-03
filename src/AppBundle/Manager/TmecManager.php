@@ -19,6 +19,21 @@ class TmecManager extends AbstractManager
     }
 
     /**
+     * Get tmec by its version
+     *
+     * @param string $version
+     *
+     * @return User
+     */
+    public function getUserByVersion($version)
+    {
+        /** @var Tmec $tmec */
+        $tmec = $this->getDocumentRepository()->findOneBy(['version' => $version]);
+
+        return $tmec;
+    }
+
+    /**
      *
      * @param string $version
      * @param string $description
