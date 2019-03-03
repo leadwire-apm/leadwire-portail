@@ -1,7 +1,7 @@
 (function (angular) {
     angular.module('leadwireApp')
         .controller('AddCompagnesController', [
-            'TmecFactory',
+            'TmecService',
             'toastr',
             'MESSAGES_CONSTANTS',
             '$state',
@@ -14,7 +14,7 @@
      *
      */
     function AddCompagnesCtrlFN (
-        TmecFactory,
+        TmecService,
         toastr,
         MESSAGES_CONSTANTS,
         $state,
@@ -28,7 +28,7 @@
 
         vm.save = function () {
            vm.flipActivityIndicator('isSaving');
-           TmecFactory.new(vm.compagne)
+           TmecService.new(vm.compagne)
                 .then(function () {
                     vm.flipActivityIndicator('isSaving');
                     toastr.success(MESSAGES_CONSTANTS.SUCCESS);

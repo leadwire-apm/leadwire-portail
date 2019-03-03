@@ -16,7 +16,7 @@
                  *
                  * @returns {Promise}
                  */
-                getAllByApplicationId: function (applicationId) {
+                list: function (applicationId) {
                     return $http.get(CONFIG.BASE_URL + 'api/tmec/list',
                     applicationId);
                 },

@@ -1,7 +1,7 @@
 (function (angular) {
     angular.module('leadwireApp')
         .controller('ListCompagnesController', [
-            'TmecFactory',
+            'TmecService',
             'toastr',
             'MESSAGES_CONSTANTS',
             '$state',
@@ -14,7 +14,7 @@
      *
      */
     function ListCompagnesCtrlFN (
-        TmecFactory,
+        TmecService,
         toastr,
         MESSAGES_CONSTANTS,
         $state,
@@ -43,10 +43,10 @@
         vm.load = function () {
             vm.flipActivityIndicator('isLoading');
             // should send some criteria
-            TmecFactory.list({"applicationId": vm.applicationId})
-                .then(function (appTypes) {
+            TmecService.list({"application": vm.applicationId})
+                .then(function (compagnes) {
                     vm.flipActivityIndicator('isLoading');
-                    vm.appTypes = appTypes;
+                    vm.compagnes = compagnes;
                 })
                 .catch(function (error) {
                     vm.flipActivityIndicator('isLoading');
@@ -59,7 +59,7 @@
         };
 
         vm.deleteType = function (id) {
-            TmecFactory.delete(id)
+            TmecService.delete(id)
                 .then(function () {
                     toastr.success(MESSAGES_CONSTANTS.SUCCESS);
                 })
@@ -77,7 +77,7 @@
                 },
                 compagnes: [],
             });
-            //vm.load();
+            vm.load();
         };
 
     }

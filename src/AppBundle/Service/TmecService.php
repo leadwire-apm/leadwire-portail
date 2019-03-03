@@ -34,7 +34,7 @@ class TmecService
      */
     public function newTmec(array $params)
     {
-        $tmec = $this->tmecManager->getOneBy(['version' => $params['version']]);
+        $tmec = $this->tmecManager->getTmecByVersion(['version' => $params['version']]);
 
         if ($tmec === null) {
             $tmec = $this->tmecManager->create(
@@ -47,5 +47,14 @@ class TmecService
             throw new AccessDeniedHttpException("Version is already exist");
         }
         return $tmec;
+    }
+
+    /**
+     * @param array $params
+     */
+    public function listTmec(array $params)
+    {
+        $tmecList = $this->tmecManager->getTmecByApplication(['application' => $params['application']]);
+        return $tmecList;
     }
 }

@@ -5,8 +5,8 @@
         ) {
             var service = {};
 
-            service.list = function (applicationId) {
-                return TmecFactory.getAllByApplicationId(applicationId)
+            service.list = function (application) {
+                return TmecFactory.getAllByApplicationId(application)
                     .then(function (response) {
                         return response.data;
                     })
