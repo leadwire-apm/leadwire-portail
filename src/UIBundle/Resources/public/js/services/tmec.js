@@ -6,7 +6,7 @@
             var service = {};
 
             service.list = function (application) {
-                return TmecFactory.getAllByApplicationId(application)
+                return TmecFactory.list(application)
                     .then(function (response) {
                         return response.data;
                     })

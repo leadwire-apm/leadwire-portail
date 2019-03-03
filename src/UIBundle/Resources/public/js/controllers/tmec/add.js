@@ -28,7 +28,7 @@
 
         vm.save = function () {
            vm.flipActivityIndicator('isSaving');
-           TmecService.new(vm.compagne)
+           TmecService.create(vm.compagne)
                 .then(function () {
                     vm.flipActivityIndicator('isSaving');
                     toastr.success(MESSAGES_CONSTANTS.SUCCESS);
