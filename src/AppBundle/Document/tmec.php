@@ -3,7 +3,6 @@
 namespace AppBundle\Document;
 
 use JMS\Serializer\Annotation as JMS;
-use AppBundle\Document\Application;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 
 /**
@@ -57,10 +56,11 @@ class Tmec
     private $endDate;
 
     /**
-     * @ODM\ReferenceOne(targetDocument="AppBundle\Document\Application", inversedBy="templates")
+     * @ODM\Field(type="string")
      * @JMS\Expose
-     * @JMS\Type("AppBundle\Document\Application")
-     * @var Application
+     * @JMS\Type("string")
+     * 
+     * @var string
      */
     private $application;
 
@@ -129,7 +129,7 @@ class Tmec
      *
      * @return User
      */
-    public function setStartdate(\DateTime $startdate)
+    public function setStartDate(\DateTime $startdate)
     {
         $this->startdate = $startdate;
 
@@ -141,7 +141,7 @@ class Tmec
      *
      * @return \DateTime|null
      */
-    public function getStartdate()
+    public function getStartDate()
     {
         return $this->startdate;
     }
@@ -153,7 +153,7 @@ class Tmec
      *
      * @return User
      */
-    public function setEnddate(\DateTime $enddate)
+    public function setEndDate(\DateTime $enddate)
     {
         $this->enddate = $enddate;
 
@@ -165,7 +165,7 @@ class Tmec
      *
      * @return \DateTime|null
      */
-    public function getEnddate()
+    public function getEndDate()
     {
         return $this->enddate;
     }
@@ -174,21 +174,21 @@ class Tmec
     /**
      * Get the value of application
      *
-     * @return  Application
+     * @return  string
      */
-    public function getApplication(): Application
+    public function getApplication()
     {
-        return $this->application;
+        return $this->string;
     }
 
     /**
      * Set the value of application
      *
-     * @param  Application  $application
+     * @param  string  $application
      *
      * @return  self
      */
-    public function setApplicationType(Application $application): self
+    public function setApplication(string $application)
     {
         $this->application = $application;
 
