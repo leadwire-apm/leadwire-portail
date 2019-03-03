@@ -45,11 +45,12 @@ class TmecController extends Controller
     }
 
     /**
-     * @Route("/list{application}", methods="GET")
+     * @Route("/list/{application}", methods="GET")
      *
      * @param Request $request
      * @param TmecService $tmecService
-     *
+     * @param string $application
+     * 
      * @return Response
      */
     public function listTmecAction(Request $request, TmecService $tmecService, $application)
