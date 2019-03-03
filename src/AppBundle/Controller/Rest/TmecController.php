@@ -55,7 +55,7 @@ class TmecController extends Controller
     public function listTmecAction(Request $request, TmecService $tmecService)
     {
         $data = json_decode($request->getContent(), true);
-        $tmec = $tmecService->newTmec($data);
+        $tmec = $tmecService->listTmec($data);
         return $this->renderResponse($tmec);
     }
 

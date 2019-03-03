@@ -16,9 +16,9 @@
                  *
                  * @returns {Promise}
                  */
-                list: function (applicationId) {
+                list: function (application) {
                     return $http.get(CONFIG.BASE_URL + 'api/tmec/list',
-                    applicationId);
+                    application);
                 },
             };
         });
