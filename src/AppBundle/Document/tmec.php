@@ -123,16 +123,6 @@ class Tmec
     }
 
     /**
-     * Get the value of version
-     *
-     * @return  int
-     */
-    public function getVersion()
-    {
-        return $this->version;
-    }
-
-    /**
      * Set startdate
      *
      * @param \DateTime $startdate
