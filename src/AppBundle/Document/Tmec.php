@@ -45,6 +45,8 @@ class Tmec
      * @var \DateTime
      *
      * @ODM\Field(type="date")
+     * @JMS\Expose
+     * @JMS\Type("date")
      */
     private $startdate;
 
