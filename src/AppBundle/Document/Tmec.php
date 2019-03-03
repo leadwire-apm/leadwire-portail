@@ -44,14 +44,14 @@ class Tmec
     /**
      * @var \DateTime
      *
-     * @ODM\Field(type="date")
+     * @ODM\Field(type="datetime")
      */
     private $startdate;
 
     /**
      * @var \DateTime
      *
-     * @ODM\Field(type="date")
+     * @ODM\Field(type="datetime")
      */
     private $endDate;
 
