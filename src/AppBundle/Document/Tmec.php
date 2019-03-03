@@ -53,7 +53,7 @@ class Tmec
      *
      * @ODM\Field(type="date")
      */
-    private $endDate;
+    private $enddate;
 
     /**
      * @ODM\Field(type="string")
