@@ -51,7 +51,7 @@
                                    ui-sref="app.management.editTmecs({id:compagne.id})">
                                     Edit
                                 </a>
-                                <button class="btn btn-danger" ng-click="ctrl.handleOnDelete(compagne.id)">
+                                <button class="btn btn-danger" ng-click="ctrl.delete(compagne.id)">
                                     Delete
                                     <spinner is-loading="ctrl.ui['isDeleting'+appType.id]"></spinner>
                                 </button>

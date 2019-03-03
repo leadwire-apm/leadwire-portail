@@ -7,17 +7,18 @@
                  *
                  * @returns {Promise}
                  */
-                new: function (newCode) {
+                new: function (tmec) {
                     return $http.post(
                         CONFIG.BASE_URL + 'api/tmec/new',
-                        newCode);
+                        tmec);
                 },
                 /**
                  *
                  * @returns {Promise}
                  */
-                getAllById: function () {
-                    return $http.get(CONFIG.BASE_URL + 'api/tmec/list');
+                getAllByApplicationId: function (applicationId) {
+                    return $http.get(CONFIG.BASE_URL + 'api/tmec/list',
+                    applicationId);
                 },
             };
         });

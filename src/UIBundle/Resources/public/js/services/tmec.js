@@ -5,8 +5,8 @@
         ) {
             var service = {};
 
-            service.list = function () {
-                return TmecFactory.findAll()
+            service.list = function (applicationId) {
+                return TmecFactory.getAllByApplicationId(applicationId)
                     .then(function (response) {
                         return response.data;
                     })
@@ -15,8 +15,8 @@
                     });
             };
 
-            service.create = function (plan) {
-                return TmecFactory.new(plan)
+            service.create = function (tmec) {
+                return TmecFactory.new(tmec)
                     .then(function (response) {
                         return response.data;
                     })
@@ -25,24 +25,8 @@
                     });
             };
 
-
-
-            service.find = function (id) {
-                return PlanFactory.get(id)
-                    .then(function (response) {
-                        return response.data;
-                    })
-                    .catch(function (err) {
-                        throw new Error(err);
-                    });
-            };
-
-            service.delete = function (id) {
-
-            };
-
-            service.update = function (plan) {
-                return TmecFactory.update(plan)
+            service.update = function (tmec) {
+                return TmecFactory.update(tmec)
                     .then(function (response) {
                         return response.data;
                     })

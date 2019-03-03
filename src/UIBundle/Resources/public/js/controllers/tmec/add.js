@@ -26,19 +26,18 @@
             vm.ui[key] = !vm.ui[key];
         };
 
-        vm.saveAppType = function () {
-            vm.flipActivityIndicator('isSaving');
-            console.log("eeeeeeeeeeeeeeee", vm.compagne)
-           /* TmecFactory.create(vm.compagne)
+        vm.save = function () {
+           vm.flipActivityIndicator('isSaving');
+           TmecFactory.create(vm.compagne)
                 .then(function () {
                     vm.flipActivityIndicator('isSaving');
                     toastr.success(MESSAGES_CONSTANTS.SUCCESS);
-                    $state.go('app.management.applicationTypes');
+                    $state.go('app.management.tmecs');
                 })
                 .catch(function (error) {
                     vm.flipActivityIndicator('isSaving');
                     toastr.error(error.message || MESSAGES_CONSTANTS.ERROR);
-                });*/
+                });
         };
 
         vm.init = function () {
