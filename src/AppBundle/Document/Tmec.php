@@ -42,9 +42,9 @@ class Tmec
     private $description;
 
     /**
-     * @var \DateTime
-     *
      * @ODM\Field(type="date")
+     * 
+     * @var \DateTime
      */
     private $startdate;
 
