@@ -40,8 +40,8 @@ class TmecService
             $tmec = $this->tmecManager->create(
                 $params['version'],
                 $params['description'],
-                $params['startDate'],
-                $params['endDate'],
+                new \DateTime($params['startDate']),
+                new \DateTime($params['endDate']),
                 $params['applicationId']);
         } else {
             throw new AccessDeniedHttpException("Version is already exist");
