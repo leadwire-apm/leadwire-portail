@@ -51,20 +51,20 @@ class TmecManager extends AbstractManager
      *
      * @param string $version
      * @param \DateTime $description
-     * @param \DteTime $startdate
-     * @param string $enddate
+     * @param \DteTime $startDate
+     * @param string $endDate
      * @param stirng $application
      *
      * @return Tmec
      */
-    public function create($version, $description, $startdate, $enddate, $application): Tmec
+    public function create($version, $description, $startDate, $endDate, $application): Tmec
     {
         $tmec = new Tmec();
         $tmec
             ->setVersion($version)
             ->setDescription($description)
-            ->setStartDate($startdate)
-            ->setEndDate($enddate)
+            ->setStartDate($startDate)
+            ->setEndDate($endDate)
             ->setApplication($application);
 
         $this->update($tmec);

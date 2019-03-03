@@ -47,7 +47,7 @@ class Tmec
      * 
      * @var \DateTime
      */
-    private $startdate;
+    private $startDate;
 
     /**
      * @ODM\Field(type="date")
@@ -55,7 +55,7 @@ class Tmec
      * 
      * @var \DateTime
      */
-    private $enddate;
+    private $endDate;
 
     /**
      * @ODM\Field(type="string")
@@ -125,51 +125,51 @@ class Tmec
     }
 
     /**
-     * Set startdate
+     * Set startDate
      *
-     * @param \DateTime $startdate
+     * @param \DateTime $startDate
      *
      * @return Tmec
      */
-    public function setStartDate(\DateTime $startdate)
+    public function setStartDate(\DateTime $startDate)
     {
-        $this->startdate = $startdate;
+        $this->startDate = $startDate;
 
         return $this;
     }
 
     /**
-     * Get startdate
+     * Get startDate
      *
      * @return \DateTime|null
      */
-    public function getStartdate()
+    public function getStartDate()
     {
-        return $this->startdate;
+        return $this->startDate;
     }
 	
 	/**
-     * Set enddate
+     * Set endDate
      *
-     * @param \DateTime $enddate
+     * @param \DateTime $endDate
      *
      * @return Tmec
      */
-    public function setEndDate(\DateTime $enddate)
+    public function setEndDate(\DateTime $endDate)
     {
-        $this->enddate = $enddate;
+        $this->endDate = $endDate;
 
         return $this;
     }
 
     /**
-     * Get enddate
+     * Get endDate
      *
      * @return \DateTime|null
      */
     public function getEndDate()
     {
-        return $this->enddate;
+        return $this->endDate;
     }
 
 
