@@ -43,6 +43,7 @@ class Tmec
 
     /**
      * @ODM\Field(type="date")
+     * @JMS\Expose
      * 
      * @var \DateTime
      */
