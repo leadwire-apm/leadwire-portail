@@ -28,7 +28,7 @@ class TmecManager extends AbstractManager
     public function getTmecByVersion($version)
     {
         /** @var Tmec $tmec */
-        $tmec = $this->getDocumentRepository()->findOneBy(['version' => $version]);
+        $tmec = $this->findOneBy(['version' => $version]);
 
         return $tmec;
     }
@@ -43,7 +43,7 @@ class TmecManager extends AbstractManager
     public function getTmecByApplication($application)
     {
         /** @var Tmec $tmec */
-        $tmecList = $this->getDocumentRepository()->findBy(['application' => $application]);
+        $tmecList = $this->findBy(['application' => $application]);
         return $tmecList;
     }
 

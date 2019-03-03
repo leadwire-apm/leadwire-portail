@@ -34,7 +34,7 @@ class TmecService
      */
     public function newTmec(array $params)
     {
-        $tmec = $this->tmecManager->getTmecByVersion(['version' => $params['version']]);
+        $tmec = $this->tmecManager->getTmecByVersion($params['version']);
 
         if ($tmec === null) {
             $tmec = $this->tmecManager->create(
@@ -54,7 +54,7 @@ class TmecService
      */
     public function listTmec(array $params)
     {
-        $tmecList = $this->tmecManager->getTmecByApplication(['application' => $params['application']]);
+        $tmecList = $this->tmecManager->getTmecByApplication($params['application']]);
         return $tmecList;
     }
 }
