@@ -30,6 +30,8 @@
             TmecService.find(id)
                 .then(function (compagne) {
                     vm.compagne = compagne;
+                    vm.compagne.startDate = new Date(vm.compagne.startDate);
+                    vm.compagne.endDate = new Date(vm.compagne.endDate);
                 });
 
         };
@@ -40,7 +42,7 @@
                 .then(function () {
                     vm.flipActivityIndicator('isSaving')
                     toastr.success(MESSAGES_CONSTANTS.SUCCESS);
-                    $state.go('app.management.applicationTypes');
+                    $state.go('app.management.tmecs');
                 })
                 .catch(function () {
                     vm.flipActivityIndicator('isSaving')
