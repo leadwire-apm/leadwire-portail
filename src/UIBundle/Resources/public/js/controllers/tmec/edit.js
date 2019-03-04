@@ -26,10 +26,10 @@
             vm.ui[key] = !vm.ui[key];
         };
 
-        vm.loadApplicationType = function (id) {
+        vm.loadCompagne = function (id) {
             TmecService.find(id)
-                .then(function (appType) {
-                    vm.applicationType = appType;
+                .then(function (compagne) {
+                    vm.compagne = compagne;
                 });
 
         };
@@ -54,13 +54,15 @@
                     isSaving: false,
                     isLoading: false,
                 },
-                applicationType: {
-                    name: '',
-                    agent: '',
-                    installation: '',
+                compagne: {
+                    version: '',
+                    description: '',
+                    startDate: '',
+                    endDate: '',
+                    applicationId: ''
                 },
             });
-            vm.loadApplicationType($stateParams.id);
+            vm.loadCompagne($stateParams.id);
         };
 
     }

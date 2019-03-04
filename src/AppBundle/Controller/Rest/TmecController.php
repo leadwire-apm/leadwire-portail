@@ -60,7 +60,7 @@ class TmecController extends Controller
         return $this->renderResponse($tmec);
     }
 
-        /**
+    /**
      * @Route("/find/{id}", methods="GET")
      *
      * @param Request $request
