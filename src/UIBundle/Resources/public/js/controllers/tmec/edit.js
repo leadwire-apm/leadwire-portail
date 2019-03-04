@@ -38,7 +38,7 @@
 
         vm.edit = function () {
             vm.flipActivityIndicator('isSaving')
-            TmecService.update(vm.applicationType)
+            TmecService.update(vm.compagne)
                 .then(function () {
                     vm.flipActivityIndicator('isSaving')
                     toastr.success(MESSAGES_CONSTANTS.SUCCESS);
