@@ -25,6 +25,16 @@
                     });
             };
 
+            service.find = function (id) {
+                return TmecFactory.find(id)
+                    .then(function (response) {
+                        return response.data;
+                    })
+                    .catch(function (err) {
+                        throw new Error(err);
+                    });
+            };
+
             service.update = function (tmec) {
                 return TmecFactory.update(tmec)
                     .then(function (response) {

@@ -1,7 +1,7 @@
 (function (angular) {
     angular.module('leadwireApp')
         .controller('EditCompagnesController', [
-            'ApplicationTypeService',
+            'TmecService',
             '$stateParams',
             'MESSAGES_CONSTANTS',
             '$state',
@@ -14,7 +14,7 @@
      *
      */
     function EditCompagnesCtrlFN (
-        ApplicationTypeService,
+        TmecService,
         $stateParams,
         MESSAGES_CONSTANTS,
         $state,
@@ -27,7 +27,7 @@
         };
 
         vm.loadApplicationType = function (id) {
-            ApplicationTypeService.find(id)
+            TmecService.find(id)
                 .then(function (appType) {
                     vm.applicationType = appType;
                 });
@@ -36,7 +36,7 @@
 
         vm.editAppType = function () {
             vm.flipActivityIndicator('isSaving')
-            ApplicationTypeService.update(vm.applicationType)
+            TmecService.update(vm.applicationType)
                 .then(function () {
                     vm.flipActivityIndicator('isSaving')
                     toastr.success(MESSAGES_CONSTANTS.SUCCESS);

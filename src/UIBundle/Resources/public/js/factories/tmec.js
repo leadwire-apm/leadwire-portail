@@ -19,6 +19,13 @@
                 list: function (application) {
                     return $http.get(CONFIG.BASE_URL + 'api/tmec/list/' + application.application);
                 },
+                /**
+                 *
+                 * @returns {Promise}
+                 */
+                find: function (id) {
+                    return $http.get(CONFIG.BASE_URL + 'api/tmec/find/' + id);
+                },
             };
         });
 })(window.angular);

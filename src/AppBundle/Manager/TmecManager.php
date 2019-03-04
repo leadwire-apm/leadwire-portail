@@ -34,6 +34,21 @@ class TmecManager extends AbstractManager
     }
 
     /**
+     * Get tmec by its id
+     *
+     * @param string $id
+     *
+     * @return User
+     */
+    public function getTmecById($id)
+    {
+        /** @var Tmec $tmec */
+        $tmec = $this->getDocumentRepository()->findOneBy(['id' => $id]);
+
+        return $tmec;
+    }
+
+    /**
      * Get tmec by its application
      *
      * @param string $application

@@ -57,4 +57,13 @@ class TmecService
         $tmecList = $this->tmecManager->getTmecByApplication($params['application']);
         return $tmecList;
     }
+
+    /**
+     * @param string $params
+     */
+    public function getTmec(string $params)
+    {
+        $tmec = $this->tmecManager->getTmecById($params);
+        return $tmec;
+    }
 }
