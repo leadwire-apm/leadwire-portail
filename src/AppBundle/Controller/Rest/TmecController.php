@@ -32,7 +32,7 @@ class TmecController extends Controller
     }
 
     /**
-     * @Route("/{id}/update", methods="PUT")
+     * @Route("/update", methods="PUT")
      *
      * @param Request $request
      * @param TmecService $tmecService
@@ -41,7 +41,9 @@ class TmecController extends Controller
      */
     public function updateTmecAction(Request $request, TmecService $tmecService)
     {
-        // Only super Admin can do this
+        $data = json_decode($request->getContent(), true);
+        $tmec = $tmecService->updateTmec($data);
+        return $this->renderResponse($tmec);
     }
 
     /**
@@ -74,5 +76,4 @@ class TmecController extends Controller
         $tmec = $tmecService->getTmec($id);
         return $this->renderResponse($tmec);
     }
-
 }

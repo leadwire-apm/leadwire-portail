@@ -86,4 +86,17 @@ class TmecManager extends AbstractManager
 
         return $tmec;
     }
+
+    /**
+     *
+     * @param array $params
+     *
+     * @return Tmec
+     */
+    public function update($params): Tmec
+    {
+        $tmec = $this->getDocumentRepository()->update($params);
+        return $tmec;
+    }
+
 }

@@ -52,6 +52,15 @@ class TmecService
     /**
      * @param array $params
      */
+    public function updateTmec(array $params)
+    {
+        $tmec = $this->tmecManager->updateTmec($params);
+        return $tmec;
+    }
+
+    /**
+     * @param array $params
+     */
     public function listTmec(array $params)
     {
         $tmecList = $this->tmecManager->getTmecByApplication($params['application']);

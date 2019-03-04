@@ -26,6 +26,14 @@
                 find: function (id) {
                     return $http.get(CONFIG.BASE_URL + 'api/tmec/find/' + id);
                 },
+                 /**
+                 *
+                 * @returns {Promise}
+                 */
+                update: function (tmec) {
+                    return $http.post(
+                        CONFIG.BASE_URL + 'api/tmec/update', tmec);
+                },
             };
         });
 })(window.angular);

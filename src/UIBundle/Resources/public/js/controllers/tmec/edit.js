@@ -36,7 +36,7 @@
 
         };
 
-        vm.editAppType = function () {
+        vm.edit = function () {
             vm.flipActivityIndicator('isSaving')
             TmecService.update(vm.applicationType)
                 .then(function () {
