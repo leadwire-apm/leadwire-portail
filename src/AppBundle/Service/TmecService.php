@@ -54,7 +54,13 @@ class TmecService
      */
     public function updateTmec(array $params)
     {
-        $tmec = $this->tmecManager->update($params);
+        $tmec = $this->tmecManager->update(
+            $params['id'],
+            $params['version'],
+            $params['description'],
+            new \DateTime($params['startDate']),
+            new \DateTime($params['endDate']),
+            $params['applicationId']);
         return $tmec;
     }
 

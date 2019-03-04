@@ -77,6 +77,20 @@ class Tmec
     }
 
     /**
+     * Set the value of id
+     *
+     * @param  string  $id
+     *
+     * @return  self
+     */
+    public function setId(string $id)
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
+    /**
      * Get the value of version
      *
      * @return  string
