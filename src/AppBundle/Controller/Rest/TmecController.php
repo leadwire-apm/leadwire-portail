@@ -32,7 +32,7 @@ class TmecController extends Controller
     }
 
     /**
-     * @Route("/update", methods="PUT")
+     * @Route("/update", methods="POST")
      *
      * @param Request $request
      * @param TmecService $tmecService
