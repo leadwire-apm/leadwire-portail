@@ -54,7 +54,7 @@ class TmecService
      */
     public function updateTmec(array $params)
     {
-        $tmec = $this->tmecManager->updateTmec($params);
+        $tmec = $this->tmecManager->update($params);
         return $tmec;
     }
 
