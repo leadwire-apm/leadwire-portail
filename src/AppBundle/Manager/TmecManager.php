@@ -88,6 +88,7 @@ class TmecManager extends AbstractManager
     }
 
     /**
+     * @param string $id
      * @param string $version
      * @param \DateTime $description
      * @param \DteTime $startDate
