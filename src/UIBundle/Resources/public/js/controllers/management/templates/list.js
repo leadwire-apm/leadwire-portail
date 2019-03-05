@@ -60,7 +60,7 @@
                 .then(function () {
                     toastr.success(MESSAGES_CONSTANTS.SUCCESS);
                 })
-                .then(vm.loadApplicationTypes)
+                .then(vm.fetchTemplates)
                 .catch(function (error) {
                     toastr.error(error.message || MESSAGES_CONSTANTS.ERROR);
                 });

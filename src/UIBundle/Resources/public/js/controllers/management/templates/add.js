@@ -2,6 +2,7 @@
     angular.module('leadwireApp')
         .controller('AddTemplateController', [
             'TemplateService',
+            'ApplicationTypeFactory',
             'toastr',
             'CONFIG',
             'MESSAGES_CONSTANTS',
@@ -15,6 +16,7 @@
      */
     function AddTemplateCtrlFN (
         TemplateService,
+        ApplicationTypeFactory,
         toastr,
         CONSTANTS,
         MESSAGES_CONSTANTS,
@@ -50,7 +52,17 @@
                         },
                     },
                 },
-                template: null,
+                template: {
+                    name: null,
+                    content: null,
+                    applicationType: {
+                        id: null
+                    }
+                },
+            });
+
+            ApplicationTypeFactory.findAll().then(function (response) {
+                vm.applicationTypes = response.data;
             });
 
         };

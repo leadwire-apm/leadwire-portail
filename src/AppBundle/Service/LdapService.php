@@ -81,19 +81,31 @@ class LdapService
      */
     public function createInvitationEntry(Invitation $invitation): bool
     {
-        // TODO review this
+        $appIndex = $invitation->getApplication()->getUuid();
+        $userName = self::USER_NAME_PREFIX . $invitation->getUser()->getUuid();
 
-        $uuid = $invitation->getUser()->getUuid();
-        $entry = new Entry(
-            "cn=app_{$invitation->getApplication()->getUuid()},ou=Group,dc=leadwire,dc=io",
-            [
-                "changetype" => "modify",
-                "add" => "user_$uuid",
-                "memberUid" => "user_$uuid",
-            ]
-        );
+        $appRecord = $this->ldap->query('ou=Group,dc=leadwire,dc=io', "(cn=app_$appIndex)")->execute();
+        $entry = $appRecord[0];
 
-        $this->saveEntry($entry);
+        if ($entry instanceof Entry) {
+            $oldValue = $entry->getAttribute('member') !== null ? $entry->getAttribute('member') : [];
+            $entry->setAttribute('member', array_merge($oldValue, ["cn=$userName,ou=People,dc=leadwire,dc=io"]));
+            $this->entryManager->update($entry);
+        } else {
+            throw new \Exception("Unable to find LDAP records for applications app tenant");
+        }
+
+        $sharedRecord = $this->ldap->query('ou=Group,dc=leadwire,dc=io', "(cn=shared_$appIndex)")->execute();
+
+        $entry = $appRecord[0];
+
+        if ($entry instanceof Entry) {
+            $oldValue = $entry->getAttribute('member') !== null ? $entry->getAttribute('member') : [];
+            $entry->setAttribute('member', array_merge($oldValue, ["cn=$userName,ou=People,dc=leadwire,dc=io"]));
+            $this->entryManager->update($entry);
+        } else {
+            throw new \Exception("Unable to find LDAP records for applications shared tenant");
+        }
     }
 
     /**
@@ -157,7 +169,7 @@ class LdapService
                 'cn' => "$allUserTenant",
                 'objectClass' => ['groupofnames'],
                 'member' => [
-                    "cn=leadwire-apm,ou=People,dc=leadwire,dc=io",
+                    "cn=adm-portail,ou=People,dc=leadwire,dc=io",
                     "cn=$userName,ou=People,dc=leadwire,dc=io",
                 ],
                 'description' => 'appname',
@@ -235,7 +247,7 @@ class LdapService
             [
                 "objectClass" => "groupofnames",
                 "cn" => "app_{$application->getUuid()}",
-                "member" => "cn=leadwire-apm,ou=People,dc=leadwire,dc=io",
+                "member" => "cn=adm-portail,ou=People,dc=leadwire,dc=io",
                 "description" => "appname",
             ]
         );
@@ -248,7 +260,7 @@ class LdapService
             [
                 "objectClass" => "groupofnames",
                 "cn" => "shared_{$application->getUuid()}",
-                "member" => "cn=leadwire-apm,ou=People,dc=leadwire,dc=io",
+                "member" => "cn=adm-portail,ou=People,dc=leadwire,dc=io",
                 "description" => "appname",
             ]
         );

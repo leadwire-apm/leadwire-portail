@@ -37,6 +37,16 @@ class TemplateService
             ->serializer
             ->deserialize($json, Template::class, 'json');
 
+        $oldTemplate = $this->templateManager->getOneBy(['applicationType.id' => $template->getApplicationType()->getId(), 'name' => $template->getName()]);
+
+        if ($oldTemplate instanceof Template) {
+            $version = $oldTemplate->getVersion() + 1;
+        } else {
+            $version = 1;
+        }
+
+        $template->setVersion($version);
+
         $id = $this->templateManager->update($template);
 
         return $id;

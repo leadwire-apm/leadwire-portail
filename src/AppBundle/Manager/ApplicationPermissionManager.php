@@ -6,6 +6,7 @@ use AppBundle\Document\User;
 use ATS\CoreBundle\Manager\AbstractManager;
 use AppBundle\Document\ApplicationPermission;
 use Doctrine\Bundle\MongoDBBundle\ManagerRegistry;
+use AppBundle\Document\Application;
 
 /**
  * Manager class for App entities
@@ -27,14 +28,11 @@ class ApplicationPermissionManager extends AbstractManager
 
     public function getPermissionsForUser(User $user)
     {
-        return $this
-            ->qb()
-            ->find()
-            ->field('access')
-            ->notEqual(ApplicationPermission::ACCESS_DENIED)
-            ->field('user.id')->equals($user->getId())
-            ->getQuery()
-            ->execute()
-            ->toArray(false);
+        return $this->getDocumentRepository()->findUserAccessible($user);
+    }
+
+    public function getGrantedAccessForApplication(Application $application)
+    {
+        return $this->getDocumentRepository()->findGrantedAccessForApplication($application);
     }
 }

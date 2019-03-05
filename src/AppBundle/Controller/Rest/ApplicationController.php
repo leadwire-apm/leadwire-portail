@@ -164,6 +164,7 @@ class ApplicationController extends Controller
 
             if ($application !== null) { // Application created in MongoDB. proceed with LDAP & ES entries
                 $status = $ldapService->createApplicationEntry($application);
+                $status = $ldapService->registerApplication($this->getUser(), $application);
                 $status = $status && $ldapService->registerApplication($this->getUser(), $application);
                 $status = $status && $esService->deleteIndex("app_{$application->getUuid()}");
                 $status = $status && $esService->deleteIndex("shared_{$application->getUuid()}");
