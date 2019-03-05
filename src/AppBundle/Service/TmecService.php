@@ -50,8 +50,13 @@ class TmecService
     }
 
 
-    public function update($json)
+    public function update($jsonString)
     {
+        $data = json_decode($jsonString, true);
+        $data['startDate'] = new \DateTime($data['startDate']);
+        $data['endDate'] = new \DateTime($data['endDate']);
+        $json = json_encode($data);
+
         /** @var Tmec $tmec */
         $tmec = $this->serializer->deserialize($json, Tmec::class, 'json');
         $this->tmecManager->update($tmec);
