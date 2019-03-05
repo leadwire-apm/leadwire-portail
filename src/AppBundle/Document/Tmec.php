@@ -44,7 +44,7 @@ class Tmec
     /**
      * @ODM\Field(type="date")
      * @JMS\Expose
-     * @JMS\Type("date")
+     * @Serializer\Type("DateTime<'Y-m-d\TH:i:s.uT'>")
      * 
      * @var \DateTime
      */
@@ -53,7 +53,7 @@ class Tmec
     /**
      * @ODM\Field(type="date")
      * @JMS\Expose
-     * @JMS\Type("date")
+     * @Serializer\Type("DateTime<'Y-m-d\TH:i:s.uT'>")
      * 
      * @var \DateTime
      */
