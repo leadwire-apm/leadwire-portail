@@ -10,7 +10,7 @@
         ]);
 
     /**
-     * Handle add new application logic
+     * Handle add new compagnes logic
      *
      */
     function AddCompagnesCtrlFN (
