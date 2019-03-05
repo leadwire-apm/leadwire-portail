@@ -575,6 +575,18 @@ angular.module('leadwireApp')
                 })
 
                 //TMEC
+
+                .state('tmecs', {
+                    url: '/compagnes/list/:id',
+                    templateUrl: 'application/tmecsList.html',
+                    resolve: {
+                        permissions: adminRequired,
+                        menu: updateMenuItems('MANAGEMENT'),
+                    },
+                    controller: 'ListCompagnesController',
+                    controllerAs: 'ctrl',
+                })
+
                 .state('app.management.tmecs', {
                     url: '/tmec/list/:id',
                     templateUrl: 'tmec/list.html',
