@@ -581,6 +581,7 @@ angular.module('leadwireApp')
                     templateUrl: 'application/tmecsList.html',
                     resolve: {
                         permissions: loginRequired,
+                        menu: updateMenuItems('SETTINGS'),
                     },
                     controller: 'ListCompagnesController',
                     controllerAs: 'ctrl',
