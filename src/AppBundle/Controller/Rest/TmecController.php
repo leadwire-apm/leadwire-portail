@@ -90,7 +90,7 @@ class TmecController extends Controller
      *
      * @return Response
      */
-    public function delete(Request $request, TemplateService $templateService, string $id)
+    public function delete(Request $request, tmecService $tmecService, string $id)
     {
         // Only super Admin can do this
         $this->denyAccessUnlessGranted([User::ROLE_ADMIN, User::ROLE_SUPER_ADMIN]);
