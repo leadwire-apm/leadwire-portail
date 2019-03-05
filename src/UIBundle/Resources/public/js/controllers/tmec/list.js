@@ -37,7 +37,6 @@
                         swal.close();
                     }
                 });
-
         };
 
         vm.load = function () {
@@ -63,7 +62,7 @@
                 .then(function () {
                     toastr.success(MESSAGES_CONSTANTS.SUCCESS);
                 })
-                .then(vm.loadApplicationTypes)
+                .then(vm.load)
                 .catch(function () {
                     toastr.success(MESSAGES_CONSTANTS.ERROR);
                 });
