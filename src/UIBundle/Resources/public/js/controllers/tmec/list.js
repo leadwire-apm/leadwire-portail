@@ -32,7 +32,7 @@
             swal(MESSAGES_CONSTANTS.SWEET_ALERT_VALIDATION())
                 .then(function (willDelete) {
                     if (willDelete) {
-                        vm.delete(id);
+                        vm.deleteCompagne(id);
                     } else {
                         swal.close();
                     }
@@ -58,7 +58,7 @@
 
         };
 
-        vm.delete = function (id) {
+        vm.deleteCompagne = function (id) {
             TmecService.delete(id)
                 .then(function () {
                     toastr.success(MESSAGES_CONSTANTS.SUCCESS);
