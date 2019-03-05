@@ -20,7 +20,7 @@ class AppKernel extends Kernel
             new Nelmio\CorsBundle\NelmioCorsBundle(),
             new ATS\CoreBundle\CoreBundle(),
             new ATS\EmailBundle\EmailBundle(),
-            // new ATS\TranslationBundle\TranslationBundle(),
+            new ATS\TranslationBundle\TranslationBundle(),
             new AppBundle\AppBundle(),
             new UIBundle\UIBundle(),
             new ATS\PaymentBundle\PaymentBundle(),

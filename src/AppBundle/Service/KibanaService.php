@@ -14,6 +14,11 @@ use Symfony\Component\HttpFoundation\Response;
  * Class Kibana Service. Manage connexions with Kibana Rest API.
  * @package AppBundle\Service
  * @author Anis Ksontini <aksontini@ats-digital.com>
+ *
+ * Note:
+ *  * ALL communication with Kibana is done with a JWT token in Authorization header
+ *  * ALL communication with ElasticSearch is done with Basic Auth
+ *
  */
 class KibanaService
 {
@@ -172,7 +177,7 @@ class KibanaService
     }
 
     /**
-     * curl --insecure  -H "Authorization: Bearer ${authorization}"  -XGET "https://kibana.leadwire.io/api/saved_objects/index-pattern/${appname}" -H 'kbn-xsrf: true' -H 'Content-Type: application/json'
+     * * curl --insecure  -H "Authorization: Bearer ${authorization}"  -XGET "https://kibana.leadwire.io/api/saved_objects/index-pattern/${appname}" -H 'kbn-xsrf: true' -H 'Content-Type: application/json'
      *
      * @param string $applicationName
      * @param User $user
@@ -197,7 +202,7 @@ class KibanaService
     }
 
     /**
-     * curl --insecure -H "Authorization: Bearer ${authorization}" -X POST "$protocol://$host:$port/api/kibana/settings/defaultIndex"  -d"{\"value\":\"$appname\"}" -H 'kbn-xsrf: true' -H 'Content-Type: application/json'
+     * * curl --insecure -H "Authorization: Bearer ${authorization}" -X POST "$protocol://$host:$port/api/kibana/settings/defaultIndex"  -d"{\"value\":\"$appname\"}" -H 'kbn-xsrf: true' -H 'Content-Type: application/json'
      *
      * @param string $applicationName
      * @param USer $user
@@ -221,6 +226,7 @@ class KibanaService
             ]
         );
     }
+
     private function getAuth()
     {
         return [

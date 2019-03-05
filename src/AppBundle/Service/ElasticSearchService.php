@@ -2,19 +2,24 @@
 
 namespace AppBundle\Service;
 
-use GuzzleHttp\Client;
-use AppBundle\Document\User;
-use Psr\Log\LoggerInterface;
 use AppBundle\Document\Application;
+use AppBundle\Document\User;
 use AppBundle\Manager\TemplateManager;
-use AppBundle\Service\TemplateService;
-use Symfony\Component\HttpFoundation\Response;
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\ClientException;
+use Psr\Log\LoggerInterface;
 use SensioLabs\Security\Exception\HttpException;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Class ElasticSearchService Service. Manage connexions with Kibana Rest API.
  * @package AppBundle\Service
  * @author Anis Ksontini <aksontini@ats-digital.com>
+ *
+ * Note:
+ *  * ALL communication with Kibana is done with a JWT token in Authorization header
+ *  * ALL communication with ElasticSearch is done with Basic Auth
+ *
  */
 class ElasticSearchService
 {
@@ -165,6 +170,8 @@ class ElasticSearchService
     /**
      * @param Application $app
      *
+     * @deprecated
+     *
      * @return bool
      */
     public function resetAppIndexes(Application $app)
@@ -307,7 +314,7 @@ class ElasticSearchService
     }
 
     /**
-     * curl --insecure -u $es_admin_user:$es_admin_password -XGET https://es.leadwire.io/.kibana_${tenant_name}
+     * * curl --insecure -u $es_admin_user:$es_admin_password -XGET https://es.leadwire.io/.kibana_${tenant_name}
      *
      * Returns the content of the index if it is found, FALSE otherwise
      *
@@ -317,20 +324,23 @@ class ElasticSearchService
      */
     public function getIndex(string $tenantName)
     {
-        $response = $this->httpClient->get(
-            $this->settings['host'] . ".kibana_$tenantName",
-            [
-                'auth' => $this->getAuth(),
-            ]
-        );
+        try {
+            $response = $this->httpClient->get(
+                $this->settings['host'] . ".kibana_$tenantName",
+                [
+                    'auth' => $this->getAuth(),
+                ]
+            );
+        } catch (ClientException $e) {
+            $response = $e->getResponse();
+            if ($response !== null && $response->getStatusCode() === Response::HTTP_NOT_FOUND) {
+                return false;
+            }
 
-        if ($response->getStatusCode() === Response::HTTP_OK) {
-            return $response->getBody()->getContents();
-        } elseif ($response->getStatusCode() === Response::HTTP_NOT_FOUND) {
-            return false;
-        } else {
-            throw new \Exception("Got {$response->getStatusCode()} from Guzzle", Response::HTTP_INTERNAL_SERVER_ERROR);
+            throw $e;
         }
+
+        return true;
     }
 
     /**
@@ -342,11 +352,11 @@ class ElasticSearchService
      */
     public function indexExists(string $tenantName): bool
     {
-        return false !== $this->getIndex($tenantName);
+        return true === $this->getIndex($tenantName);
     }
 
     /**
-     * curl --insecure -u $es_admin_user:$es_admin_password -XDELETE https://es.leadwire.io/.kibana_${tenant_name}
+     * * curl --insecure -u $es_admin_user:$es_admin_password -XDELETE https://es.leadwire.io/.kibana_${tenant_name}
      *
      * @param string $tenantName
      *
@@ -354,15 +364,23 @@ class ElasticSearchService
      */
     public function deleteIndex(string $tenantName): bool
     {
-        $response = $this->httpClient->delete(
-            $this->settings['host'] . ".kibana_$tenantName",
-            [
-                'auth' => $this->getAuth(),
-            ]
-        );
+        try {
+            $response = $this->httpClient->delete(
+                $this->settings['host'] . ".kibana_$tenantName",
+                [
+                    'auth' => $this->getAuth(),
+                ]
+            );
+        } catch (ClientException $e) {
+            $response = $e->getResponse();
+            if ($response !== null && $response->getStatusCode() === Response::HTTP_NOT_FOUND) {
+                return false;
+            }
+
+            throw $e;
+        }
 
         return true;
-        // TODO: Some checks here for success/fail
     }
 
     /**
@@ -392,6 +410,7 @@ class ElasticSearchService
     }
 
     /**
+     * * curl --insecure -u $es_admin_user:$es_admin_password -XGET https://es.leadwire.io/_alias/${appname}
      *
      * @param string $applicationName
      *
