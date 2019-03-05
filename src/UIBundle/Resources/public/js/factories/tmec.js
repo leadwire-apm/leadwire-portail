@@ -40,7 +40,7 @@
                  */
                 delete: function (id) {
                     return $http.delete(
-                        CONFIG.BASE_URL + 'api/tmec/delete/', id);
+                        CONFIG.BASE_URL + 'api/tmec/delete/' + id);
                 },
             };
         });
