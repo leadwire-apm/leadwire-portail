@@ -42,20 +42,20 @@ class Tmec
     private $description;
 
     /**
-     * @var \DateTime
-     *
-     * @ODM\Field(type="date", name="startDate")
-     * @JMS\Type("date")
+     * @ODM\Field(type="string")
      * @JMS\Expose
+     * @JMS\Type("string")
+     *
+     * @var string
      */
     private $startDate;
 
     /**
-     * @var \DateTime
-     *
-     * @ODM\Field(type="date", name="endDate")
-     * @JMS\Type("date")
+     * @ODM\Field(type="string")
      * @JMS\Expose
+     * @JMS\Type("string")
+     *
+     * @var string
      */
     private $endDate;
 
@@ -143,11 +143,11 @@ class Tmec
     /**
      * Set startDate
      *
-     * @param \DateTime $startDate
+     * @param string $startDate
      *
      * @return Tmec
      */
-    public function setStartDate(\DateTime $startDate)
+    public function setStartDate(string $startDate)
     {
         $this->startDate = $startDate;
 
@@ -157,7 +157,7 @@ class Tmec
     /**
      * Get startDate
      *
-     * @return \DateTime|null
+     * @return string
      */
     public function getStartDate()
     {
@@ -167,11 +167,11 @@ class Tmec
 	/**
      * Set endDate
      *
-     * @param \DateTime $endDate
+     * @param string $endDate
      *
      * @return Tmec
      */
-    public function setEndDate(\DateTime $endDate)
+    public function setEndDate(string $endDate)
     {
         $this->endDate = $endDate;
 
@@ -181,7 +181,7 @@ class Tmec
     /**
      * Get endDate
      *
-     * @return \DateTime|null
+     * @return string
      */
     public function getEndDate()
     {

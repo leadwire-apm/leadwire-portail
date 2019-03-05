@@ -40,8 +40,8 @@ class TmecService
             $tmec = $this->tmecManager->create(
                 $params['version'],
                 $params['description'],
-                new \DateTime($params['startDate']),
-                new \DateTime($params['endDate']),
+                $params['startDate'],
+                $params['endDate'],
                 $params['applicationId']);
         } else {
             throw new AccessDeniedHttpException("Version is already exist");
@@ -50,13 +50,8 @@ class TmecService
     }
 
 
-    public function update($jsonString)
+    public function update($json)
     {
-        $data = json_decode($jsonString, true);
-        $data['startDate'] = new \DateTime($data['startDate']);
-        $data['endDate'] = new \DateTime($data['endDate']);
-        $json = json_encode($data);
-
         /** @var Tmec $tmec */
         $tmec = $this->serializer->deserialize($json, Tmec::class, 'json');
         $this->tmecManager->update($tmec);
