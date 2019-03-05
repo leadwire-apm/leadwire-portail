@@ -581,7 +581,6 @@ angular.module('leadwireApp')
                     resolve: {
                         permissions: loginRequired,
                         menu: updateMenuItems('SETTINGS'),
-                        deps: updateMenuItems('SETTINGS'),
                         beforeMount: [
                             '$rootScope',
                             'UserService',
