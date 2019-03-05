@@ -49,19 +49,12 @@ class TmecService
         return $tmec;
     }
 
-    /**
-     * @param array $params
-     */
-    public function updateTmec(array $params)
+
+    public function update($json)
     {
-        $tmec = $this->tmecManager->update(
-            $params['id'],
-            $params['version'],
-            $params['description'],
-            new \DateTime($params['startDate']),
-            new \DateTime($params['endDate']),
-            $params['application']);
-        return $tmec;
+        /** @var Tmec $tmec */
+        $tmec = $this->serializer->deserialize($json, Tmec::class, 'json');
+        $this->tmecManager->update($tmec);
     }
 
     /**

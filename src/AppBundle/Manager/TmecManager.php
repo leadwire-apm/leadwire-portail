@@ -86,31 +86,4 @@ class TmecManager extends AbstractManager
 
         return $tmec;
     }
-
-    /**
-     * @param string $id
-     * @param string $version
-     * @param \DateTime $description
-     * @param \DteTime $startDate
-     * @param string $endDate
-     * @param stirng $application
-     *
-     * @return Tmec
-     */
-    public function update($id, $version, $description, $startDate, $endDate, $application): Tmec
-    {
-        $tmec = new Tmec();
-        $tmec
-            ->setId($id)
-            ->setVersion($version)
-            ->setDescription($description)
-            ->setStartDate($startDate)
-            ->setEndDate($endDate)
-            ->setApplication($application);
-
-        $this->update($tmec);
-
-        return $tmec;
-    }
-
 }

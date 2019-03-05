@@ -41,9 +41,9 @@ class TmecController extends Controller
      */
     public function updateTmecAction(Request $request, TmecService $tmecService)
     {
-        $data = json_decode($request->getContent(), true);
-        $tmec = $tmecService->updateTmec($data);
-        return $this->renderResponse($tmec);
+        $data = $request->getContent();
+        $successful = $tmecService->update($data);
+        return $this->renderResponse($successful);
     }
 
     /**
