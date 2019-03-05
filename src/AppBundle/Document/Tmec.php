@@ -45,9 +45,8 @@ class Tmec
      * @var \DateTime
      *
      * @ODM\Field(type="date", name="startDate")
-     * @JMS\Type("DateTime")
+     * @JMS\Type("date")
      * @JMS\Expose
-     * @JMS\Groups({})
      */
     private $startDate;
 
@@ -55,9 +54,8 @@ class Tmec
      * @var \DateTime
      *
      * @ODM\Field(type="date", name="endDate")
-     * @JMS\Type("DateTime")
+     * @JMS\Type("date")
      * @JMS\Expose
-     * @JMS\Groups({})
      */
     private $endDate;
 
