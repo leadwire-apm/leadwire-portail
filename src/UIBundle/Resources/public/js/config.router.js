@@ -580,8 +580,7 @@ angular.module('leadwireApp')
                     url: '/compagnes/list/:id',
                     templateUrl: 'application/tmecsList.html',
                     resolve: {
-                        permissions: adminRequired,
-                        menu: updateMenuItems('MANAGEMENT'),
+                        permissions: loginRequired,
                     },
                     controller: 'ListCompagnesController',
                     controllerAs: 'ctrl',
