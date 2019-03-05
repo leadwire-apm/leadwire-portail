@@ -2,12 +2,14 @@
 
 namespace AppBundle\Service;
 
-use AppBundle\Document\Application;
-use AppBundle\Document\User;
 use GuzzleHttp\Client;
+use AppBundle\Document\User;
 use Psr\Log\LoggerInterface;
-use SensioLabs\Security\Exception\HttpException;
+use AppBundle\Document\Application;
+use AppBundle\Manager\TemplateManager;
+use AppBundle\Service\TemplateService;
 use Symfony\Component\HttpFoundation\Response;
+use SensioLabs\Security\Exception\HttpException;
 
 /**
  * Class ElasticSearchService Service. Manage connexions with Kibana Rest API.
@@ -37,14 +39,24 @@ class ElasticSearchService
     private $httpClient;
 
     /**
+     * @var TemplateManager
+     */
+    private $templateManager;
+
+    /**
      * ElasticSearchService constructor.
      * @param LoggerInterface $logger
      * @param string $env
      * @param array $settings
      */
-    public function __construct(LoggerInterface $logger, string $env, array $settings = [])
-    {
+    public function __construct(
+        LoggerInterface $logger,
+        TemplateManager $templateManager,
+        string $env,
+        array $settings = []
+    ) {
         $this->settings = $settings;
+        $this->templateManager = $templateManager;
         $this->logger = $logger;
         $this->env = $env;
         $this->httpClient = new Client(['defaults' => ['verify' => false]]);
@@ -255,29 +267,6 @@ class ElasticSearchService
         return $id;
     }
 
-    /**
-     * @deprecated
-     *
-     * Kept for history
-     *
-     */
-    // public function deleteIndex()
-    // {
-    //     try {
-    //         $client = new Client(['defaults' => ['verify' => false]]);
-    //         $client->delete(
-    //             $this->settings['host'] . ".kibana_adm-portail",
-    //             [
-    //                 'auth' => $this->getAuth(),
-    //             ]
-    //         );
-    //         return true;
-    //     } catch (\Exception $e) {
-    //         $this->logger->warning("Error when deleting index", ['exception' => $e]);
-    //         return false;
-    //     }
-    // }
-
     public function copyIndex($index)
     {
         try {
@@ -345,6 +334,18 @@ class ElasticSearchService
     }
 
     /**
+     * Wrapper function
+     *
+     * @param string $tenantName
+     *
+     * @return boolean
+     */
+    public function indexExists(string $tenantName): bool
+    {
+        return false !== $this->getIndex($tenantName);
+    }
+
+    /**
      * curl --insecure -u $es_admin_user:$es_admin_password -XDELETE https://es.leadwire.io/.kibana_${tenant_name}
      *
      * @param string $tenantName
@@ -364,7 +365,48 @@ class ElasticSearchService
         // TODO: Some checks here for success/fail
     }
 
-    public function createAlias()
+    /**
+     * * curl --insecure -u $es_admin_user:$es_admin_password -H 'Content-Type: application/json' -XPOST https://es.leadwire.io/_aliases -d"{\"actions\":[{\"add\":{\"index\":\"$index_pattern_name\",\"alias\":\"$appname\"}}]}"
+     *
+     * @param string $applicationName
+     *
+     * @return bool
+     */
+    public function createAlias(string $applicationName): bool
     {
+        $bodyString = '{"actions":[{"add":{"index":"$index_pattern_name","alias":"$appname"}}]}';
+        $body = json_decode($bodyString, false);
+        $body->actions[0]->add->index = "*-$applicationName-*";
+        $body->actions[0]->add->alias = $applicationName;
+
+        $response = $this->httpClient->post(
+            $this->settings['host'] . "_aliases",
+            [
+                'headers' => ['Content-Type' => 'application/json'],
+                'auth' => $this->getAuth(),
+                'body' => json_encode($body),
+            ]
+        );
+
+        return $response->getStatusCode() === Response::HTTP_OK;
+    }
+
+    /**
+     *
+     * @param string $applicationName
+     *
+     * @return boolean
+     */
+    public function getAlias(string $applicationName): bool
+    {
+        $response = $this->httpClient->get($this->settings['host'] . "_alias/$applicationName", ['auth' => $this->getAuth()]);
+
+        if ($response->getStatusCode() === Response::HTTP_OK) {
+            return true;
+        } elseif ($response->getStatusCode() === Response::HTTP_NOT_FOUND) {
+            return false;
+        } else {
+            throw new \Exception("Got {$response->getStatusCode()} from Guzzle", Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
     }
 }

@@ -227,15 +227,26 @@ class InvitationService
             ->setSenderAddress($this->sender)
             ->setTemplate('AppBundle:Mail:AppInvitation.html.twig')
             ->setRecipientAddress($invitation->getEmail())
+            ->setSentAt(new \DateTime())
             ->setMessageParameters(
                 [
-                    'inviter' => $user->getUsername(),
+                    'inviter' => $user->getName(),
+                    'application' => $invitation->getApplication()->getName(),
                     'email' => $invitation->getEmail(),
-                    'invitation' => $invitation->getId(),
-                    'link' => $this->router->generate('angular_endPoint', [], UrlGeneratorInterface::ABSOLUTE_URL)
+                    'link' => $this->router->generate('accept_invitation', ['id' => $invitation->getId()], UrlGeneratorInterface::ABSOLUTE_URL)
                 ]
             );
 
         $this->mailer->send($mail, true);
+    }
+
+    public function acceptInvitation($id)
+    {
+        $invitation = $this->invitationManager->getOneBy(['id' => $id, 'isPending' => true]);
+
+        if ($invitation instanceof Invitation) {
+            $invitation->setPending(false);
+            $this->invitationManager->update($invitation);
+        }
     }
 }

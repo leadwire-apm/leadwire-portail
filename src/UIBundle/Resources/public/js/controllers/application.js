@@ -42,16 +42,34 @@
                 willDelete,
             ) {
                 if (willDelete) {
-                    ApplicationFactory.remove(id).then(function () {
+                    ApplicationFactory.delete(id).then(function () {
                         vm.getApps();
-                        // $localStorage.applications = (
-                        //     $localStorage.applications ||
-                        //     ($localStorage.applications = [])
-                        // ).filter(function(currApp) {
-                        //     return currApp.id !== id;
-                        // });
                         swal.close();
                         toastr.success(MESSAGES_CONSTANTS.DELETE_APP_SUCCESS);
+                    }).catch(function (error) {
+                        swal.close();
+
+                        toastr.error(
+                            error.message ||
+                            MESSAGES_CONSTANTS.DELETE_APP_FAILURE ||
+                            MESSAGES_CONSTANTS.ERROR,
+                        );
+                    });
+                } else {
+                    swal('Your App is safe!');
+                }
+            });
+        };
+
+        vm.removeApp = function (id) {
+            swal(MESSAGES_CONSTANTS.SWEET_ALERT_REMOVE_MODE).then(function (
+                willDelete,
+            ) {
+                if (willDelete) {
+                    ApplicationFactory.remove(id).then(function () {
+                        vm.getApps();
+                        swal.close();
+                        toastr.success(MESSAGES_CONSTANTS.REMOVE_APP_SUCCESS);
                     }).catch(function (error) {
                         swal.close();
 

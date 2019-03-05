@@ -41,7 +41,7 @@ class UserController extends Controller
     {
         $users = $userService->listUsersByRole($role);
 
-        return $this->renderResponse($users);
+        return $this->renderResponse($users, Response::HTTP_OK, ['admin']);
     }
 
     /**

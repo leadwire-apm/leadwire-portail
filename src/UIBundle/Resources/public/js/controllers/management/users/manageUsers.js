@@ -62,9 +62,6 @@
                     swal(MESSAGES_CONSTANTS.SWEET_ALERT_WITH_INPUT(
                         'Please enter a message to show when the user tries to login'))
                         .then(function (message) {
-                            if (!message) {
-                                throw null;
-                            }
                             return vm.toggleUserStatus(user.id, message);
                         })
                         .then(() => {

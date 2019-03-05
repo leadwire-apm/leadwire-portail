@@ -13,6 +13,7 @@ use Symfony\Component\HttpFoundation\Response;
 class InvitationController extends Controller
 {
     use RestControllerTrait;
+
     /**
      * @Route("/{id}/get", methods="GET")
      *

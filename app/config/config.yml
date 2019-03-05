@@ -26,6 +26,7 @@ parameters:
     mailer_password: '%env(MAILER_PASSWORD)%'
     sender: "%mailer_user%"
     github_client_id: '%env(GITHUB_CLIENT_ID)%'
+    auth_providers.settings.token_secret: '%env(JWT_TOKEN_SECRET)%'
     auth_providers:
         github:
             github_access_token_url: 'https://github.com/login/oauth/access_token'

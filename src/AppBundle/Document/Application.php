@@ -117,12 +117,12 @@ class Application
      */
     private $type;
 
-    /** @ODM\ReferenceMany(targetDocument="Invitation", mappedBy="app")
+    /**
+     * @ODM\ReferenceMany(targetDocument="AppBundle\Document\Invitation", mappedBy="app")
      * @JMS\Type("array<AppBundle\Document\Invitation>")
      * @JMS\Expose
-     * @JMS\Groups({"full", "Default"})
      */
-    public $invitations;
+    private $invitations;
 
     /**
      * @ODM\Field(type="bool")
@@ -419,5 +419,13 @@ class Application
         $this->demo = $demo;
 
         return $this;
+    }
+
+    /**
+     * Get the value of invitations
+     */
+    public function getInvitations()
+    {
+        return $this->invitations;
     }
 }

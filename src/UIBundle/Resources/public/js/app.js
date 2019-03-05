@@ -61,6 +61,7 @@ angular.module('leadwireApp', [
         INVITE_USER_VALIDATION: 'This email has been already invited.',
         INVITATION_ACCEPTED: 'The invitation has been accepted',
         DELETE_APP_SUCCESS: 'The app has been deleted.',
+        REMOVE_APP_SUCCESS: 'The app has been removed.',
         DELETE_INVITATION_SUCCESS: 'The invitation has been deleted.',
         CODE_COPIED:'The code was copied successfully',
         ADD_APP_SUCCESS:
@@ -72,6 +73,13 @@ angular.module('leadwireApp', [
         SWEET_ALERT_DELETE_MODE: {
             title: 'Are you sure?',
             text: 'Once deleted, you will not be able to recover this App!',
+            icon: 'warning',
+            buttons: true,
+            dangerMode: true,
+        },
+        SWEET_ALERT_REMOVE_MODE: {
+            title: 'Are you sure?',
+            text: 'Once removed, you will not be able to recover this App!',
             icon: 'warning',
             buttons: true,
             dangerMode: true,

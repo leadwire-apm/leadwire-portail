@@ -2,19 +2,21 @@
 
 namespace AppBundle\Service;
 
-use Ramsey\Uuid\Uuid;
-use AppBundle\Document\User;
-use Psr\Log\LoggerInterface;
-use AppBundle\Manager\UserManager;
 use AppBundle\Document\Application;
-use JMS\Serializer\SerializerInterface;
-use AppBundle\Manager\ApplicationManager;
-use JMS\Serializer\DeserializationContext;
+use AppBundle\Document\ApplicationPermission;
+use AppBundle\Document\User;
+use AppBundle\Exception\DuplicateApplicationNameException;
 use AppBundle\Manager\ActivationCodeManager;
+use AppBundle\Manager\ApplicationManager;
+use AppBundle\Manager\ApplicationPermissionManager;
+use AppBundle\Manager\UserManager;
 use AppBundle\Service\ActivationCodeService;
+use JMS\Serializer\DeserializationContext;
+use JMS\Serializer\SerializerInterface;
+use Psr\Log\LoggerInterface;
+use Ramsey\Uuid\Uuid;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
-use AppBundle\Exception\DuplicateApplicationNameException;
 
 /**
  * Service class for App entities
@@ -38,6 +40,11 @@ class ApplicationService
     private $userManager;
 
     /**
+     * @var ApplicationPermissionManager
+     */
+    private $apManager;
+
+    /**
      * @var SerializerInterface
      */
     private $serializer;
@@ -46,16 +53,6 @@ class ApplicationService
      * @var LoggerInterface
      */
     private $logger;
-
-    /**
-     * @var LdapService
-     */
-    private $ldapService;
-
-    /**
-     * @var KibanaService
-     */
-    private $kibana;
 
     /**
      * @var ApplicationTypeService
@@ -72,31 +69,28 @@ class ApplicationService
      *
      * @param ApplicationManager $applicationManager
      * @param ActivationCodeManager $activationCodeManager
+     * @param ApplicationPermissionManager $apManager
      * @param SerializerInterface $serializer
      * @param LoggerInterface $logger
-     * @param LdapService $ldapService
-     * @param KibanaService $kibana
      * @param ApplicationTypeService $appTypeService
      * @param ActivationCodeService $activationCodeService
      */
     public function __construct(
         ApplicationManager $applicationManager,
         ActivationCodeManager $activationCodeManager,
+        ApplicationPermissionManager $apManager,
         UserManager $userManager,
         SerializerInterface $serializer,
         LoggerInterface $logger,
-        LdapService $ldapService,
-        KibanaService $kibana,
         ApplicationTypeService $appTypeService,
         ActivationCodeService $activationCodeService
     ) {
         $this->applicationManager = $applicationManager;
         $this->activationCodeManager = $activationCodeManager;
+        $this->apManager = $apManager;
         $this->userManager = $userManager;
         $this->serializer = $serializer;
         $this->logger = $logger;
-        $this->ldapService = $ldapService;
-        $this->kibana = $kibana;
         $this->appTypeService = $appTypeService;
         $this->activationCodeService = $activationCodeService;
     }
@@ -137,6 +131,27 @@ class ApplicationService
     public function listDemoApplications(): array
     {
         return $this->applicationManager->getBy(['demo' => true]);
+    }
+
+    /**
+     *
+     * @param User $user
+     *
+     * @return Application[]
+     */
+    public function listUserAccessibleApplciations(User $user): array
+    {
+        $accessibleApplications = [];
+        $permissions = $this->apManager->getPermissionsForUser($user);
+
+        /** @var ApplicationPermission $permission */
+        foreach ($permissions as $permission) {
+            if ($permission->getApplication()->isRemoved() === false) {
+                $accessibleApplications[] = $permission->getApplication();
+            }
+        }
+
+        return $accessibleApplications;
     }
 
     /**
@@ -220,7 +235,7 @@ class ApplicationService
      *
      * @throws \Exception
      */
-    public function newApp($json, User $user): ?Application
+    public function newApplication($json, User $user): ?Application
     {
         $context = new DeserializationContext();
         $context->setGroups(['Default']);
@@ -247,21 +262,14 @@ class ApplicationService
         $ap = $this->appTypeService->getApplicationType($applicationTypeId);
         $application->setType($ap);
         $this->applicationManager->update($application);
+        $applicationPermission = new ApplicationPermission();
+        $applicationPermission
+            ->setUser($user)
+            ->setApplication($application)
+            ->setAccess(ApplicationPermission::ACCESS_OWNER)
+            ->setModifiedAt(new \DateTime());
 
-        $ldapStatus = $this->ldapService->createApplicationEntry($application);
-        $ldapStatus = $ldapStatus && $this->ldapService->registerApplication($user, $application);
-
-        // !Dashboard creation is bogus
-        $dashboardsCreationStatus = true; //$this->kibana->createDashboards($application);
-
-        if ($ldapStatus === true && $dashboardsCreationStatus === true) {
-            return $application;
-        } else {
-            $this->applicationManager->delete($application);
-            $this->logger->critical("Application was removed due to error in Ldap/Kibana or Elastic search");
-
-            return null;
-        }
+        $this->apManager->update($applicationPermission);
 
         return $application;
     }
@@ -302,7 +310,7 @@ class ApplicationService
      *
      * @return void
      */
-    public function deleteApp($id)
+    public function deleteApplication($id)
     {
         $application = $this->applicationManager->getOneBy(['id' => $id]);
         if ($application === null) {
@@ -311,6 +319,16 @@ class ApplicationService
             $application->setRemoved(true);
 
             $this->applicationManager->update($application);
+        }
+    }
+
+    public function removeUserApplication(string $id, User $user)
+    {
+        $applicationPermission = $this->apManager->getOneBy(['application.id' => $id, 'user.id' => $user->getId()]);
+
+        if ($applicationPermission !== null) {
+            $applicationPermission->setAccess(ApplicationPermission::ACCESS_DENIED);
+            $this->apManager->update($applicationPermission);
         }
     }
 
@@ -392,11 +410,15 @@ class ApplicationService
     public function registerDemoApplications(User $user): void
     {
         $demoApplications = $this->applicationManager->getBy(['demo' => true]);
+        $now = new \DateTime();
 
         foreach ($demoApplications as $demoApplication) {
-            $user->addApplication($demoApplication);
+            $permission = new ApplicationPermission();
+            $permission->setApplication($demoApplication)
+                ->setUser($user)
+                ->setAccess(ApplicationPermission::ACCESS_DEMO)
+                ->setModifiedAt($now);
+            $this->apManager->update($permission);
         }
-
-        $this->userManager->update($user);
     }
 }

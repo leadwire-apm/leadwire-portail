@@ -83,11 +83,11 @@ class ApplicationServiceTest extends BaseFunctionalTest
         $this->documentManager->persist($app);
         $this->documentManager->flush();
         $this->assertCount(1, $am->getAll());
-        $this->applicationService->deleteApp($app->getId());
+        $this->applicationService->deleteApplication($app->getId());
         $this->assertCount(1, $am->getAll());
 
         $this->expectException('Symfony\Component\HttpKernel\Exception\HttpException');
-        $this->applicationService->deleteApp("someInvalidId");
+        $this->applicationService->deleteApplication("someInvalidId");
     }
 
     public function testToggleActivation()

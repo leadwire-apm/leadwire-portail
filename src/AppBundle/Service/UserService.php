@@ -383,6 +383,7 @@ class UserService
             ->setSenderAddress($this->sender)
             ->setTemplate('AppBundle:Mail:verif.html.twig')
             ->setRecipientAddress($user->getEmail())
+            ->setSentAt(new \DateTime())
             ->setMessageParameters(
                 [
                     'username' => $user->getUsername(),

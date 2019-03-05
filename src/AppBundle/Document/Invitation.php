@@ -11,7 +11,6 @@ use JMS\Serializer\Annotation as JMS;
  * @ODM\HasLifecycleCallbacks
  * @ODM\ChangeTrackingPolicy("DEFERRED_EXPLICIT")
  * @JMS\ExclusionPolicy("all")
- *
  */
 class Invitation
 {
@@ -30,7 +29,6 @@ class Invitation
      * @ODM\ReferenceOne(targetDocument="AppBundle\Document\Application", name="app", cascade={"persist"}, inversedBy="invitations")
      * @JMS\Type("AppBundle\Document\Application")
      * @JMS\Expose
-     * @JMS\Groups({"Default", "full"})
      */
     private $application;
 
@@ -40,7 +38,6 @@ class Invitation
      * @ODM\Field(type="string", name="email")
      * @JMS\Type("string")
      * @JMS\Expose
-     * @JMS\Groups({"Default"})
      */
     private $email;
 
@@ -50,7 +47,6 @@ class Invitation
      * @ODM\ReferenceOne(targetDocument="AppBundle\Document\User", name="user", cascade={"persist"}, inversedBy="otherApps")
      * @JMS\Type("AppBundle\Document\User")
      * @JMS\Expose
-     * @JMS\Groups({"full"})
      */
     private $user = null;
 
@@ -60,7 +56,6 @@ class Invitation
      * @ODM\Field(type="boolean", name="isPending")
      * @JMS\Type("boolean")
      * @JMS\Expose
-     * @JMS\Groups({"Default"})
      */
     private $pending = true;
 

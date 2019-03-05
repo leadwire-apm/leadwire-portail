@@ -29,15 +29,16 @@ class User implements AdvancedUserInterface
      * @ODM\Id("strategy=auto")
      * @JMS\Expose
      * @JMS\Type("string")
+     * @JMS\Groups({"admin"})
      */
     protected $id;
 
     /**
      * @var string
-     * @JMS\Expose
-     * @JMS\Groups({"full","Default"})
-     * @JMS\Type("string")
      * @ODM\Field(type="string")
+     * @JMS\Expose
+     * @JMS\Groups({"full","Default", "admin"})
+     * @JMS\Type("string")
      */
     protected $username;
 
@@ -76,6 +77,7 @@ class User implements AdvancedUserInterface
      * @ODM\Field(type="collection")
      * @JMS\Type("array")
      * @JMS\Expose
+     * @JMS\Groups({"admin"})
      */
     private $roles;
 
@@ -103,10 +105,10 @@ class User implements AdvancedUserInterface
 
     /**
      * @var string
-     * @JMS\Expose
-     * @JMS\Groups({"full", "Default"})
-     * @JMS\Type("string")
      * @ODM\Field(type="string")
+     * @JMS\Expose
+     * @JMS\Groups({"full", "Default", "admin"})
+     * @JMS\Type("string")
      */
     private $name;
 
@@ -155,7 +157,8 @@ class User implements AdvancedUserInterface
      *
      * @ODM\Field(type="boolean", name="isEmailValid")
      * @JMS\Type("boolean")
-     * @JMS\Groups({"full","Default"})
+     * @JMS\Expose
+     * @JMS\Groups({"admin"})
      */
     private $emailValid = false;
 
@@ -166,7 +169,7 @@ class User implements AdvancedUserInterface
 
      * @JMS\Type("string")
      * @JMS\Expose
-     * @JMS\Groups({"full","Default"})
+     * @JMS\Groups({"full","Default", "admin"})
      */
     private $email;
 
@@ -231,6 +234,7 @@ class User implements AdvancedUserInterface
      * @ODM\Field(type="bool")
      * @JMS\Type("boolean")
      * @JMS\Expose
+     * @JMS\Groups({"admin"})
      */
     private $deleted;
 
@@ -240,6 +244,7 @@ class User implements AdvancedUserInterface
      * @ODM\Field(type="bool")
      * @JMS\Type("boolean")
      * @JMS\Expose
+     * @JMS\Groups({"admin"})
      */
     private $locked;
 

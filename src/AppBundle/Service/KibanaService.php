@@ -1,9 +1,14 @@
 <?php
 namespace AppBundle\Service;
 
-use AppBundle\Document\Application;
 use GuzzleHttp\Client;
+use AppBundle\Document\User;
 use Psr\Log\LoggerInterface;
+use AppBundle\Service\JWTHelper;
+use AppBundle\Document\Application;
+use AppBundle\Manager\TemplateManager;
+use AppBundle\Document\ApplicationType;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Class Kibana Service. Manage connexions with Kibana Rest API.
@@ -27,52 +32,195 @@ class KibanaService
      */
     private $elastic;
 
-    public function __construct(LoggerInterface $logger, ElasticSearchService $elastic, array $settings = [])
-    {
+    /**
+     * @var TemplateManager
+     */
+    private $templateManager;
+
+    /**
+     * @var Client
+     */
+    private $httpClient;
+
+    /**
+     * @var JWTHelper
+     */
+    private $jwtHelper;
+
+    public function __construct(
+        LoggerInterface $logger,
+        ElasticSearchService $elastic,
+        TemplateManager $templateManager,
+        JWTHelper $jwtHelper,
+        array $settings = []
+    ) {
         $this->settings = $settings;
         $this->logger = $logger;
         $this->elastic = $elastic;
+        $this->templateManager = $templateManager;
+        $this->jwtHelper = $jwtHelper;
+        $this->httpClient = new Client(['defaults' => ['verify' => false]]);
     }
 
     /**
-     * @param Application $application
+     * * curl --insecure -u $es_admin_user:$es_admin_password  -X POST "$protocol://$host:$port/api/kibana/dashboards/import?exclude=index-pattern&force=true" -H 'kbn-xsrf: true' -H "tenant:$tenant_name" -H 'Content-Type: application/json' -d @/home/centos/pack_curl/apm-dashboards$$.json
      *
-     * @return int|bool
+     * @param string $applicationName
+     * @param string $tenantName
+     * @param string $template
+     * @param ApplicationType $applicationType
+     *
+     * @return bool
      */
-    public function createDashboards(Application $application)
+    private function createDashboards(string $applicationName, string $tenantName, string $template, ApplicationType $applicationType)
     {
-        // TODO: REVIEW THIS
-        return true;
+        $template = $this->templateManager->getOneBy(
+            [
+                'applicationType.id' => $applicationType->getId(),
+                'name' => $template,
+            ]
+        );
 
-        // $isSuccess = $this->elastic->deleteIndex();
-        // $isSuccess &= $this->elastic->resetAppIndexes($application);
+        if ($template !== null) {
+            $content = str_replace("__replace_token__", $applicationName, $template->getContent());
+            $content = str_replace("__replace_service__", $applicationName, $content);
 
-        // $client = new Client(['defaults' => ['verify' => false]]);
-        // $json_template = json_encode($application->getType()->getTemplate());
-        // $url = $this->settings['host'] . "/api/kibana/dashboards/import";
+            $response = $this->httpClient->post(
+                $this->settings['host'] . "/api/kibana/dashboards/import?exclude=index-pattern&force=true",
+                [
+                    'headers' => [
+                        'kbn-xsrf' => true,
+                        'tenant' => $tenantName,
+                        'Content-Type' => 'application/json',
+                    ],
+                    'body' => $content,
+                    'auth' => $this->getAuth()
+                ]
+            );
 
-        // try {
-        //     $response = $client->post(
-        //         $url,
-        //         [
-        //             'body' => $json_template,
-        //             'headers' => [
-        //                 'Content-type' => 'application/json',
-        //                 'kbn-xsrf' => 'true',
-        //                 'x-tenants-enabled' => true,
-        //             ],
-        //             'auth' => $this->getAuth(),
-        //         ]
-        //     );
-
-        //     $isSuccess &= $this->elastic->copyIndex($application->getIndex());
-        //     return $isSuccess;
-        // } catch (\Exception $e) {
-        //     $this->logger->error("error on import", ["exception" => $e]);
-        //     return false;
-        // }
+            return $response->getStatusCode() === Response::HTTP_OK;
+        } else {
+            throw new \Exception("Template (apm-dashboard) not found");
+        }
     }
 
+    /**
+     *
+     * @param string $applicationName
+     * @param string $tenantName
+     * @param ApplicationType $applicationType
+     *
+     * @return bool
+     */
+    public function createAllTenantDashboards(string $applicationName, string $tenantName, ApplicationType $applicationType): bool
+    {
+        return $this->createDashboards($applicationName, $tenantName, "apm-dashboards-all", $applicationType);
+    }
+
+    /**
+     *
+     * @param string $applicationName
+     * @param string $tenantName
+     * @param ApplicationType $applicationType
+     *
+     * @return bool
+     */
+    public function createTenantDashboards(string $applicationName, string $tenantName, ApplicationType $applicationType): bool
+    {
+        return $this->createDashboards($applicationName, $tenantName, "apm-dashboards", $applicationType);
+    }
+
+    /**
+     * * curl --insecure -H "Authorization: Bearer ${authorization}" -X POST "$protocol://$host:$port/api/saved_objects/index-pattern/$appname" -H 'kbn-xsrf: true' -H 'Content-Type: application/json' -d @/home/centos/pack_curl/apmserver$$.json
+     *
+     * @param string $applicationName
+     * @param ApplicationType $applicationType
+     * @param User $user
+     *
+     * @return bool
+     */
+    public function loadIndexPattern(string $applicationName, ApplicationType $applicationType, User $user): bool
+    {
+        $template = $this->templateManager->getOneBy(
+            [
+                'applicationType.id' => $applicationType->getId(),
+                'name' => 'apmserver',
+            ]
+        );
+
+        if ($template !== null) {
+            $content = str_replace("__replace_token__", $applicationName, $template->getContent());
+
+            $authorization = $this->jwtHelper->getAuthorizationHeader($user);
+
+            $response = $this->httpClient->post(
+                $this->settings['host'] . "/api/saved_objects/index-pattern/$applicationName",
+                [
+                    'headers' => [
+                        'kbn-xsrf' => true,
+                        'Content-Type' => 'application/json',
+                        'Authorization' => "Bearer $authorization"
+                    ],
+                    'body' => $content,
+                ]
+            );
+
+            return $response->getStatusCode() === Response::HTTP_OK;
+        } else {
+            throw new \Exception("Template (apmserver) not found");
+        }
+    }
+
+    /**
+     * curl --insecure  -H "Authorization: Bearer ${authorization}"  -XGET "https://kibana.leadwire.io/api/saved_objects/index-pattern/${appname}" -H 'kbn-xsrf: true' -H 'Content-Type: application/json'
+     *
+     * @param string $applicationName
+     * @param User $user
+     *
+     * @return bool
+     */
+    public function checkIndexPattern(string $applicationName, User $user): bool
+    {
+        $authorization = $this->jwtHelper->getAuthorizationHeader($user);
+        $response = $this->httpClient->get(
+            $this->settings['host'] . "/api/saved_objects/index-pattern/$applicationName",
+            [
+                'headers' => [
+                    'kbn-xsrf' => true,
+                    'Content-Type' => 'application/json',
+                    'Authorization' => "Bearer $authorization"
+                ]
+            ]
+        );
+
+        return $response->getStatusCode() === Response::HTTP_OK;
+    }
+
+    /**
+     * curl --insecure -H "Authorization: Bearer ${authorization}" -X POST "$protocol://$host:$port/api/kibana/settings/defaultIndex"  -d"{\"value\":\"$appname\"}" -H 'kbn-xsrf: true' -H 'Content-Type: application/json'
+     *
+     * @param string $applicationName
+     * @param USer $user
+     *
+     * @return void
+     */
+    public function makeDefaultIndex(string $applicationName, User $user)
+    {
+        $authorization = $this->jwtHelper->getAuthorizationHeader($user);
+        $response = $this->httpClient->post(
+            $this->settings['host'] . "/api/kibana/settings/defaultIndex",
+            [
+                'headers' => [
+                    'kbn-xsrf' => true,
+                    'Content-Type' => 'application/json',
+                    'Authorization' => "Bearer $authorization"
+                ],
+                'body' => [
+                    'value' => $applicationName
+                ],
+            ]
+        );
+    }
     private function getAuth()
     {
         return [

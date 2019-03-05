@@ -92,6 +92,16 @@
             };
 
             service.delete = function (applicationId) {
+                return ApplicationFactory.delete(applicationId)
+                    .then(function (response) {
+                        return response.data;
+                    })
+                    .catch(function (err) {
+                        throw new Error(err);
+                    });
+            };
+
+            service.remove = function (applicationId) {
                 return ApplicationFactory.remove(applicationId)
                     .then(function (response) {
                         return response.data;

@@ -94,7 +94,7 @@ abstract class BaseFunctionalTest extends BaseKernelTestCase
         return $method->invokeArgs($object, $parameters);
     }
 
-    public function generateToken($username, $userIndex, $tokenSecret="52e431f6ed5a80ed700c04986b6ddf")
+    public function generateToken($username, $userIndex)
     {
         $token = [
             'host' => 'http://leadwire.local',
@@ -105,6 +105,6 @@ abstract class BaseFunctionalTest extends BaseKernelTestCase
             'nbf' => time(),
         ];
 
-        return JWT::encode($token, $tokenSecret);
+        return JWT::encode($token);
     }
 }

@@ -2,17 +2,18 @@
 
 namespace AppBundle\Service;
 
+use Ramsey\Uuid\Uuid;
+use \Firebase\JWT\JWT;
+use GuzzleHttp\Client;
 use AppBundle\Document\User;
+use Psr\Log\LoggerInterface;
+use AppBundle\Service\JWTHelper;
 use AppBundle\Manager\UserManager;
-use AppBundle\Service\ElasticSearchService;
 use AppBundle\Service\LdapService;
 use Firebase\JWT\ExpiredException;
-use GuzzleHttp\Client;
-use Psr\Log\LoggerInterface;
-use Ramsey\Uuid\Uuid;
+use AppBundle\Service\ElasticSearchService;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
-use \Firebase\JWT\JWT;
 
 class AuthService
 {
@@ -42,6 +43,11 @@ class AuthService
     private $logger;
 
     /**
+     * @var JWTHelper
+     */
+    private $jwtHelper;
+
+    /**
      * @var string
      */
     private $appDomain;
@@ -62,6 +68,7 @@ class AuthService
         LdapService $ldapService,
         ElasticSearchService $esService,
         LoggerInterface $logger,
+        JWTHelper $jwtHelper,
         string $appDomain,
         array $authProviderSettings,
         string $superAdminUsername
@@ -70,6 +77,7 @@ class AuthService
         $this->applicationService = $applicationService;
         $this->ldapService = $ldapService;
         $this->esService = $esService;
+        $this->jwtHelper = $jwtHelper;
         $this->logger = $logger;
         $this->appDomain = $appDomain;
         $this->authProviderSettings = $authProviderSettings;
@@ -134,11 +142,10 @@ class AuthService
     /**
      *
      * @param User $user
-     * @param string $tokenSecret
      *
      * @return string
      */
-    public function generateToken(User $user, $tokenSecret)
+    public function generateToken(User $user)
     {
         $token = [
             'host' => $this->appDomain,
@@ -149,24 +156,24 @@ class AuthService
             'nbf' => time(),
         ];
 
-        return JWT::encode($token, $tokenSecret);
+        return $this->jwtHelper->encode($user->getUsername(), $user->getIndex());
     }
 
     /**
      *
-     * @param string $jwt
+     * @param string $token
      *
      * @return mixed
      */
-    public function decodeToken($jwt)
+    public function decodeToken($token)
     {
-        $token = JWT::decode($jwt, $this->authProviderSettings['settings']['token_secret'], ['HS256']);
+        $decoded = $this->jwtHelper->decode($token, $this->authProviderSettings['settings']['token_secret']);
 
-        if (isset($token->host) === false || $token->host !== $this->appDomain) {
+        if (isset($decoded->host) === false || $decoded->host !== $this->appDomain) {
             throw new ExpiredException('Invalide token');
         }
 
-        return $token;
+        return $decoded;
     }
 
     /**

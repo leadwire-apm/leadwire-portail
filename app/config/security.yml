@@ -11,7 +11,7 @@ security:
             pattern:  ^/(_(profiler|wdt)|css|images|js|login)/
             security: false
         api:
-            pattern:  ^(/core)?/%internal_api_prefix%((?!/translation|/context))
+            pattern:  ^(/core)?/%internal_api_prefix%
             provider: simple_user_provider
             stateless: true
             security: true

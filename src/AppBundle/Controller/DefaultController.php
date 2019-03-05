@@ -3,9 +3,13 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Manager\UserManager;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\RedirectResponse;
+use AppBundle\Service\InvitationService;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class DefaultController extends Controller
 {
@@ -28,6 +32,22 @@ class DefaultController extends Controller
         $user->setActive(true);
         $user->setEmailValid(true);
         $um->update($user);
+
+        return $this->redirect('/');
+    }
+
+    /**
+     * @Route("/accept/{id}", methods="GET", name="accept_invitation")
+     *
+     * @param Request $request
+     * @param InvitationService $invitationService
+     * @param string  $id
+     *
+     * @return Response
+     */
+    public function acceptInvitationAction(Request $request, InvitationService $invitationService, string $id)
+    {
+        $invitationService->acceptInvitation($id);
 
         return $this->redirect('/');
     }

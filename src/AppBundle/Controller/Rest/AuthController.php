@@ -47,7 +47,7 @@ class AuthController extends Controller
 
         return new JsonResponse(
             [
-                "token" => $authService->generateToken($userData, $globalSettnigs['token_secret']),
+                "token" => $authService->generateToken($userData),
             ]
         );
     }

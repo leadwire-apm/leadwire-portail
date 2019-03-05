@@ -25,8 +25,7 @@
         </li>
         <li ng-repeat="menu in menus track by menu.route"
             ng-if="!isChangingContext"
-            ui-sref-active="active"
-        >
+            ui-sref-active="active">
             <a ng-href="[[menu.route]]">
                 <i class="[[menu.icon]]"></i>
                 <span>[[menu.label]]</span>

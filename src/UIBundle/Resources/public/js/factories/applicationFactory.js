@@ -63,9 +63,18 @@
                  *
                  * @returns {Promise}
                  */
-                remove: function (id) {
+                delete: function (id) {
                     return $http.delete(
                         CONFIG.BASE_URL + 'api/app/' + id + '/delete',
+                    );
+                },
+                /**
+                 *
+                 * @returns {Promise}
+                 */
+                remove: function (id) {
+                    return $http.delete(
+                        CONFIG.BASE_URL + 'api/app/' + id + '/remove',
                     );
                 },
                 /**

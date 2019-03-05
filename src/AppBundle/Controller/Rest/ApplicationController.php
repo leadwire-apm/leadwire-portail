@@ -13,7 +13,12 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use AppBundle\Service\LdapService;
+use AppBundle\Service\KibanaService;
 
 class ApplicationController extends Controller
 {
@@ -33,7 +38,7 @@ class ApplicationController extends Controller
     {
         $data = $applicationService->getApplication($id);
 
-        return $this->renderResponse($data, Response::HTTP_OK, ["Default"]);
+        return $this->renderResponse($data, Response::HTTP_OK);
     }
 
     /**
@@ -48,14 +53,14 @@ class ApplicationController extends Controller
     public function getApplicationDashboardsAction(
         Request $request,
         ApplicationService $applicationService,
-        ElasticSearchService $elastic,
+        ElasticSearchService $esService,
         $id
     ) {
         $app = $applicationService->getApplication($id);
         if ($app === null) {
             throw new HttpException(Response::HTTP_NOT_FOUND, "App not Found");
         } else {
-            $dashboards = $elastic->getDashboads($app);
+            $dashboards = $esService->getDashboads($app);
             return $this->renderResponse($dashboards);
         }
     }
@@ -113,16 +118,11 @@ class ApplicationController extends Controller
      *
      * @return Response
      */
-    public function listAppsAction(Request $request, ApplicationService $applicationService)
+    public function listUserApplicationsAction(Request $request, ApplicationService $applicationService)
     {
-        $user = $this->getUser();
-        $data = array_merge(
-            $applicationService->listInvitedToApplications($user),
-            $applicationService->listOwnedApplications($user),
-            $applicationService->listDemoApplications()
-        );
+        $applications = $applicationService->listUserAccessibleApplciations($this->getUser());
 
-        return $this->renderResponse($data, Response::HTTP_OK, ["Default"]);
+        return $this->renderResponse($applications, Response::HTTP_OK, ["Default"]);
     }
 
     /**
@@ -150,19 +150,37 @@ class ApplicationController extends Controller
      *
      * @throws \Exception
      */
-    public function newApplicationAction(Request $request, ApplicationService $applicationService)
-    {
+    public function newApplicationAction(
+        Request $request,
+        ApplicationService $applicationService,
+        LdapService $ldapService,
+        ElasticSearchService $esService,
+        KibanaService $kibanaService
+    ) {
+        $status = false;
         try {
             $data = $request->getContent();
-            $application = $applicationService->newApp($data, $this->getUser());
+            $application = $applicationService->newApplication($data, $this->getUser());
 
-            if ($application !== null) {
-                return $this->renderResponse($application);
-            } else {
-                return $this->renderResponse(false);
+            if ($application !== null) { // Application created in MongoDB. proceed with LDAP & ES entries
+                $status = $ldapService->createApplicationEntry($application);
+                $status = $status && $ldapService->registerApplication($this->getUser(), $application);
+                $status = $status && $esService->deleteIndex("app_{$application->getUuid()}");
+                $status = $status && $esService->deleteIndex("shared_{$application->getUuid()}");
+                $status = $status && $esService->deleteIndex("user_{$this->getUser()->getUuid()}");
+                $status = $status && $esService->deleteIndex("all_user_{$application->getUuid()}");
+                $status = $status && $esService->createAlias($application->getName());
+                $status = $status && $kibanaService->createTenantDashboards($application->getName(), "app_{$application->getUuid()}", $application->getType());
+                $status = $status && $kibanaService->createAllTenantDashboards($application->getName(), "app_{$application->getUuid()}", $application->getType());
             }
         } catch (DuplicateApplicationNameException $e) {
             return $this->renderResponse(['message' => $e->getMessage()], Response::HTTP_NOT_ACCEPTABLE);
+        }
+
+        if ($status === true) {
+            return $this->renderResponse($application);
+        } else {
+            return $this->renderResponse(false);
         }
     }
 
@@ -205,15 +223,31 @@ class ApplicationController extends Controller
             $accessGrantedByOwnership = $application->getOwner()->getId() === $this->getUser()->getId();
 
             if ($accessGrantedByOwnership === true || $accessGrantedByRole === true) {
-                $applicationService->deleteApp($id);
+                $applicationService->deleteApplication($id);
 
                 return $this->renderResponse(null, Response::HTTP_OK);
             } else {
-                throw new \Exception("Access Denied", Response::HTTP_FORBIDDEN);
+                throw new UnauthorizedHttpException('', "Unauthorized action");
             }
         } else {
-            throw new \Exception("Application [$id] not found", Response::HTTP_NOT_FOUND);
+            throw new NotFoundHttpException("Application [$id] not found");
         }
+    }
+
+    /**
+     * @Route("/{id}/remove", methods="DELETE")
+     *
+     * @param Request $request
+     * @param ApplicationService $applicationService
+     * @param string $id
+     *
+     * @return Response
+     */
+    public function removeApplicationAction(Request $request, ApplicationService $applicationService, $id)
+    {
+        $applicationService->removeUserApplication($id, $this->getUser());
+
+        return new JsonResponse(null, Response::HTTP_ACCEPTED);
     }
 
     /**

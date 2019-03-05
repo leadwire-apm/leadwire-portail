@@ -27,11 +27,11 @@ email:
     host:     "%app_domain%"
     schemes:  "%app_schemes%"
 
-translation:
-    resource: "@TranslationBundle/Resources/config/routing.yml"
-    prefix:   "/"
-    host:     "%app_domain%"
-    schemes:  "%app_schemes%"
+# translation:
+#     resource: "@TranslationBundle/Resources/config/routing.yml"
+#     prefix:   "/"
+#     host:     "%app_domain%"
+#     schemes:  "%app_schemes%"
 
 fos_js_routing:
     resource: "@FOSJsRoutingBundle/Resources/config/routing/routing.xml"

@@ -36,14 +36,13 @@
                                 </td>
                             </tr>
                             <tr ng-repeat="user in ctrl.users | inArray:ctrl.onlyAdmins:'roles':ctrl.ADMINS"
-                                class="text-center"
-
-                            >
+                                class="text-center">
                                 <td data-title="Name" data-label="Name">
                                     [[user.name]]
                                 </td>
                                 <td data-title="Email" data-label="Email">
                                     [[user.email]]
+                                    <span ng-if="user.emailValid" class="fa fa-check-circle" style="color: #2ECC71;"></span>
                                 </td>
                                 <td data-title="Status" data-label="Status">
                                 <span
@@ -53,9 +52,7 @@
                                 </span>
 
                                 </td>
-                                <td data-title="Actions" data-label="Actions"
-                                    class="text-center"
-                                >
+                                <td data-title="Actions" data-label="Actions" class="text-center">
                                     <button class="btn btn-default"
                                             data-ng-class="ctrl.isAdmin(user) ? 'text-red' : 'text-green'"
                                             data-ng-disabled="ctrl.ui.isProcessing"

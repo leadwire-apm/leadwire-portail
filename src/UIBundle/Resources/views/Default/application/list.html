@@ -73,7 +73,7 @@
 
                                    ui-sref="app.applicationEdit({id:app.id})"><i class="fa fa-pencil"></i></a>
                             </td>
-                            <td data-title="Delete" data-label="Delete">
+                            <td ng-if="app.owner.id == user.id" data-title="Delete" data-label="Delete">
                                 <button class="btn btn-danger"
                                         title="Delete application"
                                         data-placement="left"
@@ -82,7 +82,17 @@
                                         ng-click="ctrl.deleteApp(app.id)">
                                     <i ng-if="!ctrl.ui.isDeleting" class="fa fa-trash"></i>
                                     <spinner is-loading="ctrl.ui.isDeleting"></spinner>
+                                </button>
+                            </td>
+                            <td ng-if="app.owner.id != user.id" data-title="Remove" data-label="Remove">
+                                <button class="btn btn-warning"
+                                        title="Remove application"
+                                        data-placement="left"
+                                        data-toggle="tooltip"
 
+                                        ng-click="ctrl.removeApp(app.id)">
+                                    <i ng-if="!ctrl.ui.isRemoving" class="fa fa-times"></i>
+                                    <spinner is-loading="ctrl.ui.isRemoving"></spinner>
                                 </button>
                             </td>
                         </tr>
