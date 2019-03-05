@@ -575,14 +575,21 @@ angular.module('leadwireApp')
                 })
 
                 //TMEC
-
-                .state('tmecs', {
+                .state('app.tmecs', {
                     url: '/compagnes/list/:id',
                     templateUrl: 'application/tmecsList.html',
                     resolve: {
                         permissions: loginRequired,
                         menu: updateMenuItems('SETTINGS'),
                         deps: updateMenuItems('SETTINGS'),
+                        beforeMount: [
+                            '$rootScope',
+                            'UserService',
+                            function ($rootScope, UserService) {
+                                UserService.handleFirstLogin();
+                                return Promise.resolve();
+                            },
+                        ],
                     },
                     controller: 'ListCompagnesController',
                     controllerAs: 'ctrl',
