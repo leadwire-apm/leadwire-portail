@@ -39,7 +39,7 @@
                  * @returns {Promise}
                  */
                 delete: function (id) {
-                    return $http.post(
+                    return $http.delete(
                         CONFIG.BASE_URL + 'api/tmec/delete/', id);
                 },
             };
