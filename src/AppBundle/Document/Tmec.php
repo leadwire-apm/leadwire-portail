@@ -44,7 +44,7 @@ class Tmec
     /**
      * @ODM\Field(type="date")
      * @JMS\Expose
-     * @JMS\Type("DateTime<'Y-m-d\TH:i:sP'>")
+     * @JMS\Type("datetime")
      * 
      * @var \DateTime
      */
@@ -53,7 +53,7 @@ class Tmec
     /**
      * @ODM\Field(type="date")
      * @JMS\Expose
-     * @JMS\Type("DateTime<'Y-m-d\TH:i:sP'>")
+     * @JMS\Type("datetime")
      * 
      * @var \DateTime
      */
