@@ -42,20 +42,22 @@ class Tmec
     private $description;
 
     /**
-     * @ODM\Field(type="date")
-     * @JMS\Expose
-     * @JMS\Type("DateTime<'Y-m-d\TH:i:sP'>")
-     * 
      * @var \DateTime
+     *
+     * @ODM\Field(type="date", name="startDate")
+     * @JMS\Type("DateTime")
+     * @JMS\Expose
+     * @JMS\Groups({})
      */
     private $startDate;
 
     /**
-     * @ODM\Field(type="date")
-     * @JMS\Expose
-     * @JMS\Type("DateTime<'Y-m-d\TH:i:sP'>")
-     * 
      * @var \DateTime
+     *
+     * @ODM\Field(type="date", name="endDate")
+     * @JMS\Type("DateTime")
+     * @JMS\Expose
+     * @JMS\Groups({})
      */
     private $endDate;
 
