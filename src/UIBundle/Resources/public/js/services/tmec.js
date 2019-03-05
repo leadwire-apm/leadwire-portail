@@ -55,6 +55,16 @@
                     });
             };
 
+            service.delete = function (id) {
+                return TmecFactory.delete(id)
+                    .then(function (response) {
+                        return response.data;
+                    })
+                    .catch(function (err) {
+                        throw new Error(err);
+                    });
+            };
+
             return service;
         });
 })(window.angular);

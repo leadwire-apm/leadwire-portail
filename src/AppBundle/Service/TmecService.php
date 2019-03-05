@@ -74,4 +74,19 @@ class TmecService
         $tmec = $this->tmecManager->getTmecById($params);
         return $tmec;
     }
+
+    /**
+     * @param string $id
+     *
+     * @return \MongoId
+     */
+    public function delete(string $id)
+    {
+        $tmec = $this->tmecManager->getTmecById($id);
+        if ($tmec === null) {
+            throw new HttpException(Response::HTTP_NOT_FOUND, "Template not Found");
+        } else {
+            return $this->tmecManager->delete($tmec);
+        }
+    }
 }

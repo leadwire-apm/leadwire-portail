@@ -34,6 +34,14 @@
                     return $http.post(
                         CONFIG.BASE_URL + 'api/tmec/update', tmec);
                 },
+                /**
+                 *
+                 * @returns {Promise}
+                 */
+                delete: function (id) {
+                    return $http.post(
+                        CONFIG.BASE_URL + 'api/tmec/delete/', id);
+                },
             };
         });
 })(window.angular);

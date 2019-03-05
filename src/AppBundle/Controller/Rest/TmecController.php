@@ -26,6 +26,8 @@ class TmecController extends Controller
      */
     public function newTmecAction(Request $request, TmecService $tmecService)
     {
+         // Only super Admin can do this
+         $this->denyAccessUnlessGranted([User::ROLE_ADMIN, User::ROLE_SUPER_ADMIN]);
         $data = json_decode($request->getContent(), true);
         $tmec = $tmecService->newTmec($data);
         return $this->renderResponse($tmec);
@@ -41,6 +43,8 @@ class TmecController extends Controller
      */
     public function updateTmecAction(Request $request, TmecService $tmecService)
     {
+         // Only super Admin can do this
+         $this->denyAccessUnlessGranted([User::ROLE_ADMIN, User::ROLE_SUPER_ADMIN]);
         $data = $request->getContent();
         $successful = $tmecService->update($data);
         return $this->renderResponse($successful);
@@ -75,5 +79,24 @@ class TmecController extends Controller
     {
         $tmec = $tmecService->getTmec($id);
         return $this->renderResponse($tmec);
+    }
+
+        /**
+     * @Route("/delete/{id}", methods="DELETE")
+     *
+     * @param Request $request
+     * @param tmecService $tmecService
+     * @param string $id
+     *
+     * @return Response
+     */
+    public function delete(Request $request, TemplateService $templateService, string $id)
+    {
+        // Only super Admin can do this
+        $this->denyAccessUnlessGranted([User::ROLE_ADMIN, User::ROLE_SUPER_ADMIN]);
+
+        $tmecService->delete($id);
+
+        return $this->renderResponse(null, Response::HTTP_OK);
     }
 }
