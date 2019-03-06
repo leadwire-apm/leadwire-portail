@@ -28,6 +28,11 @@ class KibanaService
     private $settings;
 
     /**
+     * @var string
+     */
+    private $url;
+
+    /**
      * @var LoggerInterface
      */
     private $logger;
@@ -65,6 +70,7 @@ class KibanaService
         $this->templateManager = $templateManager;
         $this->jwtHelper = $jwtHelper;
         $this->httpClient = new Client(['defaults' => ['verify' => false]]);
+        $this->url = $settings['host'] . ":" . (string) $settings['port'] . "/";
     }
 
     /**
@@ -91,7 +97,7 @@ class KibanaService
             $content = str_replace("__replace_service__", $applicationName, $content);
 
             $response = $this->httpClient->post(
-                $this->settings['host'] . "/api/kibana/dashboards/import?exclude=index-pattern&force=true",
+                $this->url . "/api/kibana/dashboards/import?exclude=index-pattern&force=true",
                 [
                     'headers' => [
                         'kbn-xsrf' => true,
@@ -138,33 +144,34 @@ class KibanaService
     /**
      * * curl --insecure -H "Authorization: Bearer ${authorization}" -X POST "$protocol://$host:$port/api/saved_objects/index-pattern/$appname" -H 'kbn-xsrf: true' -H 'Content-Type: application/json' -d @/home/centos/pack_curl/apmserver$$.json
      *
-     * @param string $applicationName
-     * @param ApplicationType $applicationType
-     * @param User $user
-     *
      * @return bool
      */
-    public function loadIndexPattern(string $applicationName, ApplicationType $applicationType, User $user): bool
+    public function loadIndexPattern(Application $application, string $tenant, ?User $user = null): bool
     {
         $template = $this->templateManager->getOneBy(
             [
-                'applicationType.id' => $applicationType->getId(),
+                'applicationType.id' => $application->getType()->getId(),
                 'name' => 'apmserver',
             ]
         );
 
         if ($template !== null) {
-            $content = str_replace("__replace_token__", $applicationName, $template->getContent());
+            $content = str_replace("__replace_token__", $application->getName(), $template->getContent());
 
-            $authorization = $this->jwtHelper->getAuthorizationHeader($user);
+            if ($user === null) {
+                $authorization = null;
+            } else {
+                $authorization = $this->jwtHelper->getAuthorizationHeader($user);
+            }
 
             $response = $this->httpClient->post(
-                $this->settings['host'] . "/api/saved_objects/index-pattern/$applicationName",
+                $this->url . "/api/saved_objects/index-pattern/{$application->getName()}",
                 [
                     'headers' => [
                         'kbn-xsrf' => true,
                         'Content-Type' => 'application/json',
-                        'Authorization' => "Bearer $authorization"
+                        'Authorization' => "Bearer $authorization",
+                        'tenant' => $tenant
                     ],
                     'body' => $content,
                 ]
@@ -188,7 +195,7 @@ class KibanaService
     {
         $authorization = $this->jwtHelper->getAuthorizationHeader($user);
         $response = $this->httpClient->get(
-            $this->settings['host'] . "/api/saved_objects/index-pattern/$applicationName",
+            $this->url . "/api/saved_objects/index-pattern/$applicationName",
             [
                 'headers' => [
                     'kbn-xsrf' => true,
@@ -213,7 +220,7 @@ class KibanaService
     {
         $authorization = $this->jwtHelper->getAuthorizationHeader($user);
         $response = $this->httpClient->post(
-            $this->settings['host'] . "/api/kibana/settings/defaultIndex",
+            $this->url . "/api/kibana/settings/defaultIndex",
             [
                 'headers' => [
                     'kbn-xsrf' => true,

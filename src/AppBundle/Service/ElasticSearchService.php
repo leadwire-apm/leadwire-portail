@@ -3,6 +3,7 @@
 namespace AppBundle\Service;
 
 use AppBundle\Document\Application;
+use AppBundle\Document\ApplicationType;
 use AppBundle\Document\User;
 use AppBundle\Manager\TemplateManager;
 use GuzzleHttp\Client;
@@ -36,7 +37,7 @@ class ElasticSearchService
     /**
      * @var string
      */
-    private $env;
+    private $url;
 
     /**
      * @var Client
@@ -51,20 +52,20 @@ class ElasticSearchService
     /**
      * ElasticSearchService constructor.
      * @param LoggerInterface $logger
-     * @param string $env
+     * @param TemplateManager $templateManager
      * @param array $settings
      */
     public function __construct(
         LoggerInterface $logger,
         TemplateManager $templateManager,
-        string $env,
         array $settings = []
     ) {
         $this->settings = $settings;
         $this->templateManager = $templateManager;
         $this->logger = $logger;
-        $this->env = $env;
         $this->httpClient = new Client(['defaults' => ['verify' => false]]);
+
+        $this->url = $settings['host'] . ":" . (string) $settings['port'] . "/";
     }
 
     /**
@@ -90,20 +91,16 @@ class ElasticSearchService
         $client = new Client(['defaults' => ['verify' => false]]);
 
         // for prod use only
-        if ($this->env === 'prod') {
-            $tenants = $app->getIndexes();
-        } else {
-            // for dev use only
-            $tenants = ["apptest", "adm-portail", "share_" . $app->getUuid()];
-            $tenants = $app->getIndexes();
-        }
+        $tenants = $app->getIndexes();
+        // for dev use only
+        // $tenants = ["apptest", "adm-portail", "share_" . $app->getUuid()];
 
         foreach ($tenants as $index => $tenant) {
             try {
                 $key = $index === 0 ? "Default" : "Custom";
                 $res[$key] = isset($res[$key]) === true ? $res[$key] : [];
                 $response = $client->get(
-                    $this->settings['host'] . ".kibana_$tenant" . "/_search?pretty&from=0&size=10000",
+                    $this->url . ".kibana_$tenant" . "/_search?pretty&from=0&size=10000",
                     [
                         'headers' => [
                             'Content-type' => 'application/json',
@@ -168,40 +165,6 @@ class ElasticSearchService
     }
 
     /**
-     * @param Application $app
-     *
-     * @deprecated
-     *
-     * @return bool
-     */
-    public function resetAppIndexes(Application $app)
-    {
-        $tenants = $app->getIndexes();
-
-        if (false === $this->postIndex(
-            [
-                "indices" => ".kibana_app",
-                "ignore_unavailable" => "true",
-                "include_global_state" => false,
-                "rename_pattern" => ".kibana_(.+)",
-                "rename_replacement" => ".kibana_" . $tenants[0],
-            ]
-        ) ||
-            false === $this->postIndex(
-                [
-                    "indices" => ".kibana_shared",
-                    "ignore_unavailable" => "true",
-                    "include_global_state" => false,
-                    "rename_pattern" => ".kibana_(.+)",
-                    "rename_replacement" => ".kibana_" . $tenants[2],
-                ]
-            )) {
-            return false;
-        }
-        return true;
-    }
-
-    /**
      * @param User $user
      */
     public function resetUserIndexes(User $user)
@@ -217,39 +180,18 @@ class ElasticSearchService
         );
     }
 
-    public function importIndex(string $index = "adm-portail")
-    {
-        $client = new Client(['defaults' => ['verify' => false]]);
-        try {
-            $client->post(
-                $this->settings['host'] . ".kibana_" . $index . "/doc/index-pattern:apm-*",
-                [
-                    'body' => json_encode(
-                        [
-                            "type" => "index-pattern",
-                            "index-pattern" => [
-                                "title" => "apm-*",
-                                "timeFieldName" => "@timestamp",
-                            ],
-                        ]
-                    ),
-                    'headers' => [
-                        'Content-type' => 'application/json',
-                    ],
-                    'auth' => $this->getAuth(),
-                ]
-            );
-        } catch (\GuzzleHttp\Exception\ClientException $e) {
-            $this->logger->critical("Error on Import index", ['exception' => $e]);
-        }
-    }
-
+    /**
+     *
+     * @param array $options
+     *
+     * @return bool
+     */
     private function postIndex(array $options)
     {
         $client = new Client(['defaults' => ['verify' => false]]);
         try {
             $client->post(
-                $this->settings['host'] . "/_snapshot/my_backup/kibana_snapshot/_restore",
+                $this->url . "/_snapshot/my_backup/kibana_snapshot/_restore",
                 [
                     'body' => json_encode($options),
                     'headers' => [
@@ -274,38 +216,7 @@ class ElasticSearchService
         return $id;
     }
 
-    public function copyIndex($index)
-    {
-        try {
-            $client = new Client(['defaults' => ['verify' => false]]);
-            $client->post(
-                $this->settings['host'] . "_reindex",
-                [
-                    'body' => json_encode(
-                        [
-                            'source' => [
-                                "index" => ".kibana_adm-portail",
-                            ],
-                            'dest' => [
-                                "index" => ".kibana_$index",
-                            ],
-                        ]
-                    ),
-                    'headers' => [
-                        'Content-type' => 'application/json',
-
-                    ],
-                    'auth' => $this->getAuth(),
-                ]
-            );
-            return true;
-        } catch (\Exception $e) {
-            $this->logger->critical("Error when replacing indexes", ['exception' => $e]);
-            return false;
-        }
-    }
-
-    public function getAuth()
+    private function getAuth()
     {
         return [
             $this->settings['username'],
@@ -326,7 +237,7 @@ class ElasticSearchService
     {
         try {
             $response = $this->httpClient->get(
-                $this->settings['host'] . ".kibana_$tenantName",
+                $this->url . ".kibana_$tenantName",
                 [
                     'auth' => $this->getAuth(),
                 ]
@@ -366,7 +277,7 @@ class ElasticSearchService
     {
         try {
             $response = $this->httpClient->delete(
-                $this->settings['host'] . ".kibana_$tenantName",
+                $this->url . ".kibana_$tenantName",
                 [
                     'auth' => $this->getAuth(),
                 ]
@@ -398,7 +309,7 @@ class ElasticSearchService
         $body->actions[0]->add->alias = $applicationName;
 
         $response = $this->httpClient->post(
-            $this->settings['host'] . "_aliases",
+            $this->url . "_aliases",
             [
                 'headers' => ['Content-Type' => 'application/json'],
                 'auth' => $this->getAuth(),
@@ -418,7 +329,7 @@ class ElasticSearchService
      */
     public function getAlias(string $applicationName): bool
     {
-        $response = $this->httpClient->get($this->settings['host'] . "_alias/$applicationName", ['auth' => $this->getAuth()]);
+        $response = $this->httpClient->get($this->url . "_alias/$applicationName", ['auth' => $this->getAuth()]);
 
         if ($response->getStatusCode() === Response::HTTP_OK) {
             return true;
@@ -427,5 +338,49 @@ class ElasticSearchService
         } else {
             throw new \Exception("Got {$response->getStatusCode()} from Guzzle", Response::HTTP_INTERNAL_SERVER_ERROR);
         }
+    }
+
+    /**
+     * * curl --insecure -u $es_user:$es_password -XDELETE "https://es.leadwire.io/_template/apm-$index_template_version"
+     *
+     * * curl --insecure -u $es_user:$es_password -XPUT "https://es.leadwire.io/_template/apm-$index_template_version" --header "Content-Type: application/json"  -d@/home/centos/pack_curl/index-template.json
+     *
+     * @return void
+     */
+    public function createIndexTemplate(string $applicationName, ApplicationType $applicationType, array $activeApplications)
+    {
+        $template = $this->templateManager->getOneBy(
+            [
+                'applicationType.id' => $applicationType->getId(),
+                'name' => 'index-template',
+            ]
+        );
+
+        if ($template === null) {
+            throw new \Exception("Template (index-template) not found");
+        }
+
+        $content = $template->getContentObject();
+
+        foreach ($activeApplications as $application) {
+            $content->aliases->{$application->getName()} = [
+                "filter" => [
+                    "term" => ["context.service.name" => $application->getName()],
+                ],
+            ];
+        }
+
+        $this->httpClient->delete($this->url . "_template/apm-6.5.1", ['auth' => $this->getAuth()]);
+
+        $this->httpClient->put(
+            $this->url . "_template/apm-6.5.1",
+            [
+                'auth' => $this->getAuth(),
+                'headers' => [
+                    "Content-Type" => "application/json",
+                ],
+                'body' => json_encode($content),
+            ]
+        );
     }
 }

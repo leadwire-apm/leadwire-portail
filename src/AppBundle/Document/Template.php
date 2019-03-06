@@ -103,6 +103,11 @@ class Template
         return $this->content;
     }
 
+    public function getContentObject(): \stdClass
+    {
+        return json_decode($this->content, false);
+    }
+
     /**
      * Set the value of content
      *

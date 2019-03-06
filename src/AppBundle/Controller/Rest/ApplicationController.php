@@ -104,9 +104,9 @@ class ApplicationController extends Controller
         $app = $applicationService->activateApplication($id, $activationCode);
 
         if ($app !== null) {
-            return $this->renderResponse($app, Response::HTTP_OK, ["Default"]);
+            return $this->renderResponse($app, Response::HTTP_OK);
         } else {
-            return $this->renderResponse($app, Response::HTTP_BAD_REQUEST, ["Default"]);
+            return $this->renderResponse($app, Response::HTTP_BAD_REQUEST);
         }
     }
 
@@ -122,7 +122,7 @@ class ApplicationController extends Controller
     {
         $applications = $applicationService->listUserAccessibleApplciations($this->getUser());
 
-        return $this->renderResponse($applications, Response::HTTP_OK, ["Default"]);
+        return $this->renderResponse($applications, Response::HTTP_OK);
     }
 
     /**
@@ -163,16 +163,31 @@ class ApplicationController extends Controller
             $application = $applicationService->newApplication($data, $this->getUser());
 
             if ($application !== null) { // Application created in MongoDB. proceed with LDAP & ES entries
-                $status = $ldapService->createApplicationEntry($application);
-                $status = $ldapService->registerApplication($this->getUser(), $application);
-                $status = $status && $ldapService->registerApplication($this->getUser(), $application);
-                $status = $status && $esService->deleteIndex("app_{$application->getUuid()}");
-                $status = $status && $esService->deleteIndex("shared_{$application->getUuid()}");
-                $status = $status && $esService->deleteIndex("user_{$this->getUser()->getUuid()}");
-                $status = $status && $esService->deleteIndex("all_user_{$application->getUuid()}");
-                $status = $status && $esService->createAlias($application->getName());
-                $status = $status && $kibanaService->createTenantDashboards($application->getName(), "app_{$application->getUuid()}", $application->getType());
-                $status = $status && $kibanaService->createAllTenantDashboards($application->getName(), "app_{$application->getUuid()}", $application->getType());
+                $ldapService->createApplicationEntry($application);
+                $ldapService->registerApplication($this->getUser(), $application);
+                $esService->deleteIndex("app_{$application->getUuid()}");
+                $esService->deleteIndex("shared_{$application->getUuid()}");
+                $esService->deleteIndex("user_{$this->getUser()->getUuid()}");
+                $esService->deleteIndex("all_user_{$application->getUuid()}");
+                $esService->createIndexTemplate($application->getName(), $application->getType(), $applicationService->getActiveApplicationsNames());
+
+                $tenants = [
+                    "app_{$application->getUuid()}" => false,
+                    "shared_{$application->getUuid()}" => true,
+                    "user_{$this->getUser()->getUuid()}" => false,
+                    "all_user_{$this->getUser()->getUuid()}" => false,
+                ];
+                foreach ($tenants as $tenant => $shared) {
+                    if ($shared === true) {
+                        $kibanaService->loadIndexPattern($application, $tenant, null);
+                    } else {
+                        $kibanaService->loadIndexPattern($application, $tenant, $this->getUser());
+                    }
+
+                    $kibanaService->createTenantDashboards($application->getName(), $tenant, $application->getType());
+                    $kibanaService->createAllTenantDashboards($application->getName(), $tenant, $application->getType());
+                }
+                $status = true;
             }
         } catch (DuplicateApplicationNameException $e) {
             return $this->renderResponse(['message' => $e->getMessage()], Response::HTTP_NOT_ACCEPTABLE);
@@ -265,7 +280,7 @@ class ApplicationController extends Controller
 
         $applications = $applicationService->getApplications();
 
-        return $this->renderResponse($applications, Response::HTTP_OK, ["Default"]);
+        return $this->renderResponse($applications, Response::HTTP_OK);
     }
 
     /**

@@ -80,6 +80,7 @@ parameters:
     mailer_password: 'password'
     sender: "%mailer_user%"
     github_client_id: 'aa236b3900fb084b3ccf'
+    auth_providers.settings.token_secret: '52e431f6ed5a80ed700c04986b6ddf'
     auth_providers:
         github:
             github_access_token_url: 'https://github.com/login/oauth/access_token'

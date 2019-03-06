@@ -23,4 +23,15 @@ class ApplicationManager extends AbstractManager
     {
         parent::__construct($managerRegistry, Application::class, $managerName);
     }
+
+    public function getActiveApplicationsNames()
+    {
+        return $this
+            ->qb()
+            ->select('name')
+            ->field('removed')->equals(false)
+            ->getQuery()
+            ->execute()
+            ->toArray(false);
+    }
 }

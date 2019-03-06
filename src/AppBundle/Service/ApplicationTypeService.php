@@ -157,38 +157,4 @@ class ApplicationTypeService
     {
         $this->applicationTypeManager->deleteById($id);
     }
-
-    /**
-     * @return ApplicationType
-     */
-    public function createDefaultType()
-    {
-        $defaultType = $this->applicationTypeManager->getOneBy(['name' => "Java"]);
-        if ($defaultType === null) {
-            $client = new Client();
-            $url = "https://github.com/leadwire-apm/leadwire-javaagent";
-            $response = $client->get($url . "/raw/stable/README.md", ['stream' => true]);
-            $defaultType = new ApplicationType();
-            $defaultType->setName("Java");
-            $defaultType->setInstallation($response->getBody()->read(10000));
-            // $content = file_get_contents(
-            //     $this->dataRootPath . "/apm-dashboards.json"
-            // );
-
-            // if ($content !== false) {
-            //     $defaultType->setTemplate(json_decode($content));
-            // } else {
-            //     throw new \Exception(
-            //         sprintf(
-            //             "Bad content from file %s",
-            //             $this->dataRootPath . "/apm-dashboards.json"
-            //         )
-            //     );
-            // }
-            $defaultType->setAgent($url);
-            $this->applicationTypeManager->update($defaultType);
-        }
-
-        return $defaultType;
-    }
 }

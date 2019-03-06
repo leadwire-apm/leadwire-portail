@@ -43,11 +43,13 @@ parameters:
         username: '%env(KIBANA_USERNAME)%'
         password: '%env(KIBANA_PASSWORD)%'
         host: '%env(KIBANA_HOST)%'
+        port: '%env(KIBANA_PORT)%'
         template_folder: '%kernel.project_dir%/app/Resources/Kibana'
     elastic:
         username: '%env(ES_USERNAME)%'
         password: '%env(ES_PASSWORD)%'
         host: '%env(ES_HOST)%'
+        port: '%env(ES_PORT)%'
 
 # Framework Configuration
 framework:

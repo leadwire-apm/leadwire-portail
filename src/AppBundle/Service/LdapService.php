@@ -169,7 +169,7 @@ class LdapService
                 'cn' => "$allUserTenant",
                 'objectClass' => ['groupofnames'],
                 'member' => [
-                    "cn=adm-portail,ou=People,dc=leadwire,dc=io",
+                    "cn=leadwire-apm,ou=People,dc=leadwire,dc=io",
                     "cn=$userName,ou=People,dc=leadwire,dc=io",
                 ],
                 'description' => 'appname',
@@ -247,7 +247,7 @@ class LdapService
             [
                 "objectClass" => "groupofnames",
                 "cn" => "app_{$application->getUuid()}",
-                "member" => "cn=adm-portail,ou=People,dc=leadwire,dc=io",
+                "member" => "cn=leadwire-apm,ou=People,dc=leadwire,dc=io",
                 "description" => "appname",
             ]
         );
@@ -260,7 +260,7 @@ class LdapService
             [
                 "objectClass" => "groupofnames",
                 "cn" => "shared_{$application->getUuid()}",
-                "member" => "cn=adm-portail,ou=People,dc=leadwire,dc=io",
+                "member" => "cn=leadwire-apm,ou=People,dc=leadwire,dc=io",
                 "description" => "appname",
             ]
         );

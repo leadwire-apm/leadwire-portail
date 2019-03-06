@@ -355,50 +355,9 @@ class ApplicationService
         return $isSuccessful;
     }
 
-    /**
-     * @return void
-     */
-    public function createDemoApplications(): void
+    public function getActiveApplicationsNames()
     {
-        $demoAppOwner = $this->userManager->getOneBy(['username' => 'demoAppUser']);
-        $applicationType = $this->appTypeService->getApplicationTypes(['name' => 'Java'])[0];
-        if ($demoAppOwner === null) {
-            $demoAppOwner = $this->userManager->create("demoAppUser", Uuid::uuid1()->toString(), '', 'dempAppUser');
-        }
-
-        $application = $this->applicationManager->getOneBy(['uuid' => "a16274f8-dbd2-11e8-b444-fa163e30b6da"]);
-
-        if ($application === null) {
-            $application = new Application();
-            $application->setUuid("a16274f8-dbd2-11e8-b444-fa163e30b6da") // * UUID has to be hardcoded since it will be used on Kibana and stuff
-                ->setName("jpetstore")
-                ->setDescription("A web application built on top of MyBatis 3, Spring 3 and Stripes")
-                ->setEmail("wassim.dhib@leadwire.io")
-                ->setEnabled(true)
-                ->setDemo(true)
-                ->setRemoved(false)
-                ->setOwner($demoAppOwner)
-                ->setType($applicationType);
-
-            $this->applicationManager->update($application);
-        }
-
-        $application = $this->applicationManager->getOneBy(['uuid' => "f007bb9a-dbd2-11e8-87b3-fa163e30b6da"]);
-
-        if ($application === null) {
-            $application = new Application();
-            $application->setUuid("f007bb9a-dbd2-11e8-87b3-fa163e30b6da") // * UUID has to be hardcoded since it will be used on Kibana and stuff
-                ->setName("squash")
-                ->setDescription("Squash TM est un outil open source de gestion de référentiels de tests : gestion des exigences, cas de test, campagnes, etc. Squash est full web et nativement inter-projets.")
-                ->setEmail("wassim.dhib@leadwire.io")
-                ->setEnabled(true)
-                ->setDemo(true)
-                ->setRemoved(false)
-                ->setOwner($demoAppOwner)
-                ->setType($applicationType);
-
-            $this->applicationManager->update($application);
-        }
+        return $this->applicationManager->getActiveApplicationsNames();
     }
 
     /**

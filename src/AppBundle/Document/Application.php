@@ -382,8 +382,9 @@ class Application
     {
         return [
             $this->getIndex(),
-            $this->getOwner()->getIndex(),
+            'user_'. $this->owner->getUuid(),
             'shared_' . $this->getUuid(),
+            'all_user_'.$this->owner->getUuid(),
         ];
     }
 

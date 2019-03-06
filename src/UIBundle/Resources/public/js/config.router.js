@@ -259,6 +259,18 @@ angular.module('leadwireApp')
                     resolve: {
                         permissions: adminRequired,
                         menu: updateMenuItems('MANAGEMENT'),
+                        beforeMount: [
+                            'MenuFactory',
+                            '$rootScope',
+                            '$localStorage',
+                            'UserService',
+                            function (
+                                MenuFactory, $rootScope, $localStorage,
+                                UserService) {
+                                $rootScope.menus = $localStorage.currentMenu;
+                                UserService.handleFirstLogin();
+                            },
+                        ],
                     },
                     data: {
                         title: 'Management / Users',

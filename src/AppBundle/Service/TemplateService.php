@@ -83,24 +83,6 @@ class TemplateService
         }
     }
 
-    public function createDefaultTemplates(string $folderPath, ApplicationType $defaultType)
-    {
-        $finder = new Finder();
-        $finder->files()->in($folderPath);
-        /** @var \SplFileInfo $file */
-        foreach ($finder as $file) {
-            if ($file->getRealPath() === false) {
-                throw new \Exception("Error fetching file");
-            }
-            $template = new Template();
-            $template->setName(str_replace(".json", "", $file->getFilename()));
-            $template->setContent((string) file_get_contents($file->getRealPath()));
-            $template->setApplicationType($defaultType);
-            $template->setVersion(1);
-            $this->templateManager->update($template);
-        }
-    }
-
     /**
      * @param string $id
      *

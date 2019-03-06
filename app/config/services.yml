@@ -43,7 +43,6 @@ services:
 
     AppBundle\Service\ElasticSearchService:
         arguments:
-            $env: "%kernel.environment%"
             $settings: "%elastic%"
 
     AppBundle\Service\KibanaService:

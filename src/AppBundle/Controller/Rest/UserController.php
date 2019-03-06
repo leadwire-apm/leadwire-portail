@@ -29,7 +29,7 @@ class UserController extends Controller
             return $this->exception("Non Authorized", 401);
         }
 
-        return $this->renderResponse($user, 200, ["Default"]);
+        return $this->renderResponse($user, 200, []);
     }
 
     /**
@@ -41,7 +41,7 @@ class UserController extends Controller
     {
         $users = $userService->listUsersByRole($role);
 
-        return $this->renderResponse($users, Response::HTTP_OK, ['admin']);
+        return $this->renderResponse($users, Response::HTTP_OK, []);
     }
 
     /**

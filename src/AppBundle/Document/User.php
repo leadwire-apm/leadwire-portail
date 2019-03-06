@@ -29,7 +29,6 @@ class User implements AdvancedUserInterface
      * @ODM\Id("strategy=auto")
      * @JMS\Expose
      * @JMS\Type("string")
-     * @JMS\Groups({"admin"})
      */
     protected $id;
 
@@ -37,7 +36,6 @@ class User implements AdvancedUserInterface
      * @var string
      * @ODM\Field(type="string")
      * @JMS\Expose
-     * @JMS\Groups({"full","Default", "admin"})
      * @JMS\Type("string")
      */
     protected $username;
@@ -77,7 +75,6 @@ class User implements AdvancedUserInterface
      * @ODM\Field(type="collection")
      * @JMS\Type("array")
      * @JMS\Expose
-     * @JMS\Groups({"admin"})
      */
     private $roles;
 
@@ -88,7 +85,6 @@ class User implements AdvancedUserInterface
      * @ODM\Index(unique=true)
      * @JMS\Type("string")
      * @JMS\Expose
-     * @JMS\Groups({"full","Default"})
      */
     private $uuid;
 
@@ -99,7 +95,6 @@ class User implements AdvancedUserInterface
 
      * @JMS\Type("string")
      * @JMS\Expose
-     * @JMS\Groups({"full","Default"})
      */
     private $avatar;
 
@@ -107,7 +102,6 @@ class User implements AdvancedUserInterface
      * @var string
      * @ODM\Field(type="string")
      * @JMS\Expose
-     * @JMS\Groups({"full", "Default", "admin"})
      * @JMS\Type("string")
      */
     private $name;
@@ -118,7 +112,6 @@ class User implements AdvancedUserInterface
      * @ODM\Field(type="string", name="company")
      * @JMS\Type("string")
      * @JMS\Expose
-     * @JMS\Groups({"full","Default"})
      */
     private $company;
 
@@ -128,7 +121,6 @@ class User implements AdvancedUserInterface
      * @ODM\Field(type="string", name="contact")
      * @JMS\Type("string")
      * @JMS\Expose
-     * @JMS\Groups({"full","Default"})
      */
     private $contact;
 
@@ -138,7 +130,6 @@ class User implements AdvancedUserInterface
      * @ODM\Field(type="string", name="contactPreference")
      * @JMS\Type("string")
      * @JMS\Expose
-     * @JMS\Groups({"full","Default"})
      */
     private $contactPreference;
 
@@ -148,7 +139,6 @@ class User implements AdvancedUserInterface
      * @ODM\Field(type="string", name="subscriptionId")
      * @JMS\Type("string")
      * @JMS\Expose
-     * @JMS\Groups({"full","Default"})
      */
     private $subscriptionId;
 
@@ -158,7 +148,6 @@ class User implements AdvancedUserInterface
      * @ODM\Field(type="boolean", name="isEmailValid")
      * @JMS\Type("boolean")
      * @JMS\Expose
-     * @JMS\Groups({"admin"})
      */
     private $emailValid = false;
 
@@ -169,7 +158,6 @@ class User implements AdvancedUserInterface
 
      * @JMS\Type("string")
      * @JMS\Expose
-     * @JMS\Groups({"full","Default", "admin"})
      */
     private $email;
 
@@ -178,7 +166,6 @@ class User implements AdvancedUserInterface
      * @ODM\Field(type="boolean", name="acceptNewsLetter")
      * @JMS\Type("boolean")
      * @JMS\Expose
-     * @JMS\Groups({"full","Default"})
      */
     private $acceptNewsLetter;
 
@@ -186,7 +173,6 @@ class User implements AdvancedUserInterface
      * @ODM\ReferenceMany(targetDocument="Invitation", mappedBy="user")
      * @JMS\Type("array<AppBundle\Document\Invitation>")
      * @JMS\Expose
-     * @JMS\Groups({"full", "Default"})
      */
     public $invitations;
 
@@ -194,7 +180,6 @@ class User implements AdvancedUserInterface
      * @ODM\ReferenceMany(targetDocument="Application", mappedBy="owner")
      * @JMS\Type("array<AppBundle\Document\Application>")
      * @JMS\Expose
-     * @JMS\Groups({"Default", "full"})
      */
     private $applications;
 
@@ -204,7 +189,6 @@ class User implements AdvancedUserInterface
      * @ODM\ReferenceOne(targetDocument="AppBundle\Document\Application", name="defaultApp", cascade={"persist"}, nullable=true)
      * @JMS\Type("AppBundle\Document\Application")
      * @JMS\Expose
-     * @JMS\Groups({"Default", "full"})
      */
     private $defaultApplication = null;
 
@@ -214,7 +198,6 @@ class User implements AdvancedUserInterface
      * @ODM\ReferenceOne(targetDocument="ATS\PaymentBundle\Document\Plan", name="plan", cascade={"persist"})
      * @JMS\Type("ATS\PaymentBundle\Document\Plan")
      * @JMS\Expose
-     * @JMS\Groups({"Default", "full"})
      */
     private $plan = null;
 
@@ -224,7 +207,6 @@ class User implements AdvancedUserInterface
      * @ODM\ReferenceOne(targetDocument="ATS\PaymentBundle\Document\Customer", name="customer", cascade={"persist"})
      * @JMS\Type("ATS\PaymentBundle\Document\Customer")
      * @JMS\Expose
-     * @JMS\Groups({"Default", "full"})
      */
     private $customer = null;
 
@@ -234,7 +216,6 @@ class User implements AdvancedUserInterface
      * @ODM\Field(type="bool")
      * @JMS\Type("boolean")
      * @JMS\Expose
-     * @JMS\Groups({"admin"})
      */
     private $deleted;
 
@@ -244,7 +225,6 @@ class User implements AdvancedUserInterface
      * @ODM\Field(type="bool")
      * @JMS\Type("boolean")
      * @JMS\Expose
-     * @JMS\Groups({"admin"})
      */
     private $locked;
 
