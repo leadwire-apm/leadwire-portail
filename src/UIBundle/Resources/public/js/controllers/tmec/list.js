@@ -6,7 +6,6 @@
             'MESSAGES_CONSTANTS',
             '$state',
             '$stateParams',
-            '$uibModal',
             ListCompagnesCtrlFN,
         ]);
 
