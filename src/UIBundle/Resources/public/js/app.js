@@ -9,7 +9,7 @@
  * Main module of the application.
  */
 angular.module('leadwireApp', [
-    'ui.router',
+    'ngRoute',
     'ngAnimate',
     'ui.bootstrap',
     'oc.lazyLoad',
