@@ -9,7 +9,6 @@
  * Main module of the application.
  */
 angular.module('leadwireApp', [
-    'ngMaterial', 
     'ui.router',
     'ngAnimate',
     'ui.bootstrap',
@@ -24,6 +23,8 @@ angular.module('leadwireApp', [
     'simplemde',
     'ng.jsoneditor',
     'md-steppers',
+    'ngMessages', 
+
 ], function ($interpolateProvider) {
     $interpolateProvider.startSymbol('[[');
     $interpolateProvider.endSymbol(']]');
