@@ -22,7 +22,6 @@ angular.module('leadwireApp', [
     'toastr',
     'simplemde',
     'ng.jsoneditor',
-    'ngMaterial', 
 ], function ($interpolateProvider) {
     $interpolateProvider.startSymbol('[[');
     $interpolateProvider.endSymbol(']]');
