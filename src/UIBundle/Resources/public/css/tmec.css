@@ -1,21 +1,3 @@
-
-.left-nav,.right-nav{
-    float:left; 
- }
- .right-nav{
-   margin-left:20px;
- }
- a{
-   cursor:pointer; 
- }
-
-
-.modal-header {
-text-align: center;
-}
-
-
-
 /* @extend display-flex; */
 display-flex, .form-flex, .form-date-group, .steps ul, .title, .title .step-number, .actions ul li a, .form-radio-flex, .form-find {
 display: flex;
