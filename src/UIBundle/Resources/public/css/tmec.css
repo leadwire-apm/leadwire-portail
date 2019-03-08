@@ -40,7 +40,7 @@ src: local("Roboto Slab Bold"), local("RobotoSlab-Bold"), url("../fonts/roboto-s
 /* Legacy iOS */ }
 
 .actions {
-padding-top: 100px;
+padding-top: 300px;
 }
 .actions ul {
 padding-left: 45px;
@@ -78,7 +78,6 @@ text-decoration: none;
 }
 
 .main {
-padding: 50px 0;
 position: relative;
 z-index: 99; 
 }
