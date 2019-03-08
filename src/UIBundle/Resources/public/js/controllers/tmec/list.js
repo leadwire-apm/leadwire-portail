@@ -66,7 +66,7 @@
         MESSAGES_CONSTANTS,
         $state,
         $stateParams,
-        $uibModal,
+        $modal,
     ) {
         var vm = this;
 
