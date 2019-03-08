@@ -17,16 +17,16 @@
     function ModalContentCtrlFN($modalInstance){
         var vm = this;
         vm.stepData = [
-            { step: 1,  waiting: false, label:"Cadrage" },
-            { step: 2,  waiting: false, label:"Devis"  },
-            { step: 3,  waiting: false,  label:"CDC"  },
-            { step: 4,  waiting: false, label:"R7J"  },
-            { step: 5,  waiting: false, label:"Scipts Jdd"  },
-            { step: 6,  waiting: false,  label:"PP"  },
-            { step: 7,  waiting: false,  label:"Outils Tperf"},
-            { step: 8,  waiting: false, label:"Tuning"},
-            { step: 9,  waiting: false,  label:"Ref"},
-            { step: 10, waiting: false, label:"Rapport"},
+            { id: 1,  waiting: false, label:"Cadrage" },
+            { id: 2,  waiting: false, label:"Devis"  },
+            { id: 3,  waiting: false,  label:"CDC"  },
+            { id: 4,  waiting: false, label:"R7J"  },
+            { id: 5,  waiting: false, label:"Scipts Jdd"  },
+            { id: 6,  waiting: false,  label:"PP"  },
+            { id: 7,  waiting: false,  label:"Outils Tperf"},
+            { id: 8,  waiting: false, label:"Tuning"},
+            { id: 9,  waiting: false,  label:"Ref"},
+            { id: 10, waiting: false, label:"Rapport"},
         ];
         
         vm.stepProgress = 3;
