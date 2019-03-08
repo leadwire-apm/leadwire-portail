@@ -7,7 +7,7 @@ services:
 
 stages:
     - lint
-    - test
+    # - test
     # - sensio
     - deploy
 
@@ -16,40 +16,40 @@ cache:
     paths:
         - vendor/
 
-phpunit:
-    image: $CONTAINER_IMAGE
-    stage: test
-    before_script:
-        - touch .env
-        - echo "DATABASE_NAME=leadwire" >> .env
-        - echo "DATABASE_HOST=mongo" >> .env
-        - echo "DATABASE_PORT=27017" >> .env
-        - echo "STRIPE_SECRET_KEY=sk_test_BXblT1kn2Qgv9R2aTvltloU7" >> .env
-        - echo "STRIPE_PAYMENT_API_KEY=pk_test_cHbboCRT7xXYc1TAd9AyhgEI" >> .env
-        - echo "APP_DOMAIN=leadwire.local" >> .env
-        - echo "APP_SCHEME=http" >> .env
-        - echo "SUPER_USER_ADMIN_NAME=aturki" >> .env
-        - echo "MAILER_TRANSPORT=gmail" >> .env
-        - echo "MAILER_USER=contact@ats-digital.com" >> .env
-        - echo "MAILER_PASSWORD='ats-digital&1'" >> .env
-        - echo "GITHUB_CLIENT_ID=aa236b3900fb084b3ccf" >> .env
-        - echo "GITHUB_CLIENT_SECRET=74af1ceda97c9e2b0ee65e8df2dd9b35d129544c" >> .env
-        - echo "JWT_TOKEN_SECRET=52e431f6ed5a80ed700c04986b6ddf" >> .env
-        - echo "LDAP_HOST=145.239.158.168" >> .env
-        - echo "LDAP_PORT=389" >> .env
-        - echo "LDAP_DN_USER=cn=ldapadm,dc=leadwire,dc=io" >> .env
-        - echo "LDAP_PASSWORD=ldppassword123" >> .env
-        - echo "KIBANA_USERNAME=adm-portail" >> .env
-        - echo "KIBANA_PASSWORD=portail-adm" >> .env
-        - echo "KIBANA_HOST=https://kibana.leadwire.io" >> .env
-        - echo "ES_USERNAME=adm-portail" >> .env
-        - echo "ES_PASSWORD=portail-adm" >> .env
-        - echo "ES_HOST=https://es.leadwire.io/" >> .env
-        - composer install
-    tags:
-        - phpunit
-    script:
-        - ./vendor/bin/simple-phpunit --coverage-text --colors=never --strict-coverage --disallow-test-output -c phpunit.xml.dist
+# phpunit:
+#     image: $CONTAINER_IMAGE
+#     stage: test
+#     before_script:
+#         - touch .env
+#         - echo "DATABASE_NAME=leadwire" >> .env
+#         - echo "DATABASE_HOST=mongo" >> .env
+#         - echo "DATABASE_PORT=27017" >> .env
+#         - echo "STRIPE_SECRET_KEY=sk_test_BXblT1kn2Qgv9R2aTvltloU7" >> .env
+#         - echo "STRIPE_PAYMENT_API_KEY=pk_test_cHbboCRT7xXYc1TAd9AyhgEI" >> .env
+#         - echo "APP_DOMAIN=leadwire.local" >> .env
+#         - echo "APP_SCHEME=http" >> .env
+#         - echo "SUPER_USER_ADMIN_NAME=aturki" >> .env
+#         - echo "MAILER_TRANSPORT=gmail" >> .env
+#         - echo "MAILER_USER=contact@ats-digital.com" >> .env
+#         - echo "MAILER_PASSWORD='ats-digital&1'" >> .env
+#         - echo "GITHUB_CLIENT_ID=aa236b3900fb084b3ccf" >> .env
+#         - echo "GITHUB_CLIENT_SECRET=74af1ceda97c9e2b0ee65e8df2dd9b35d129544c" >> .env
+#         - echo "JWT_TOKEN_SECRET=52e431f6ed5a80ed700c04986b6ddf" >> .env
+#         - echo "LDAP_HOST=145.239.158.168" >> .env
+#         - echo "LDAP_PORT=389" >> .env
+#         - echo "LDAP_DN_USER=cn=ldapadm,dc=leadwire,dc=io" >> .env
+#         - echo "LDAP_PASSWORD=ldppassword123" >> .env
+#         - echo "KIBANA_USERNAME=adm-portail" >> .env
+#         - echo "KIBANA_PASSWORD=portail-adm" >> .env
+#         - echo "KIBANA_HOST=https://kibana.leadwire.io" >> .env
+#         - echo "ES_USERNAME=adm-portail" >> .env
+#         - echo "ES_PASSWORD=portail-adm" >> .env
+#         - echo "ES_HOST=https://es.leadwire.io/" >> .env
+#         - composer install
+#     tags:
+#         - phpunit
+#     script:
+#         - ./vendor/bin/simple-phpunit --coverage-text --colors=never --strict-coverage --disallow-test-output -c phpunit.xml.dist
 
 phpcs:
     image: $CONTAINER_IMAGE
@@ -77,9 +77,11 @@ phpcs:
         - echo "KIBANA_USERNAME=$TEST_KIBANA_USERNAME" >> .env
         - echo "KIBANA_PASSWORD=$TEST_KIBANA_PASSWORD" >> .env
         - echo "KIBANA_HOST=$TEST_KIBANA_HOST" >> .env
+        - echo "KIBANA_PORT=$TEST_KIBANA_PORT" >> .env
         - echo "ES_USERNAME=$TEST_ES_USERNAME" >> .env
         - echo "ES_PASSWORD=$TEST_ES_PASSWORD" >> .env
         - echo "ES_HOST=$TEST_ES_HOST" >> .env
+        - echo "ES_PORT=$TEST_ES_PORT" >> .env
         - composer install
     tags:
         - phpunit
@@ -112,9 +114,11 @@ phpstan:
         - echo "KIBANA_USERNAME=$TEST_KIBANA_USERNAME" >> .env
         - echo "KIBANA_PASSWORD=$TEST_KIBANA_PASSWORD" >> .env
         - echo "KIBANA_HOST=$TEST_KIBANA_HOST" >> .env
+        - echo "KIBANA_PORT=$TEST_KIBANA_PORT" >> .env
         - echo "ES_USERNAME=$TEST_ES_USERNAME" >> .env
         - echo "ES_PASSWORD=$TEST_ES_PASSWORD" >> .env
         - echo "ES_HOST=$TEST_ES_HOST" >> .env
+        - echo "ES_PORT=$TEST_ES_PORT" >> .env
         - composer install
     tags:
         - phpunit
@@ -168,9 +172,11 @@ deploy:test:
         - echo "KIBANA_USERNAME=$TEST_KIBANA_USERNAME" >> .env
         - echo "KIBANA_PASSWORD=$TEST_KIBANA_PASSWORD" >> .env
         - echo "KIBANA_HOST=$TEST_KIBANA_HOST" >> .env
+        - echo "KIBANA_PORT=$TEST_KIBANA_PORT" >> .env
         - echo "ES_USERNAME=$TEST_ES_USERNAME" >> .env
         - echo "ES_PASSWORD=$TEST_ES_PASSWORD" >> .env
         - echo "ES_HOST=$TEST_ES_HOST" >> .env
+        - echo "ES_PORT=$TEST_ES_PORT" >> .env
     script:
         - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
         - eval $(ssh-agent -s)

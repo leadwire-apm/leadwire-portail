@@ -85,6 +85,7 @@
             })
                 .then(function (willDelete) {
                     if (willDelete) {
+                        vm.ui.isDeleting = true;
                         InvitationFactory.remove(id)
                             .then(function () {
                                 swal.close();
@@ -92,6 +93,7 @@
                                     MESSAGES_CONSTANTS.DELETE_INVITATION_SUCCESS,
                                 );
                                 vm.getApp();
+                                vm.ui.isDeleting = false;
                             })
                             .catch(function (error) {
                                 swal.close();
@@ -117,6 +119,7 @@
             vm = angular.extend(vm, {
                 ui: {
                     isSaving: false,
+                    isDeleting: false,
                 },
                 invitedUser: {
                     email: '',

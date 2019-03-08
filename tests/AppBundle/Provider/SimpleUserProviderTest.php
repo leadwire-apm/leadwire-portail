@@ -5,7 +5,7 @@ namespace Tests\AppBundle\Provider;
 use AppBundle\Document\User;
 use Tests\AppBundle\BaseFunctionalTest;
 use AppBundle\Provider\SimpleUserProvider;
-use ATS\CoreBundle\Service\Util\StringWrapper;
+use ATS\CoreBundle\Service\Util\AString;
 
 
 class SimpleUserProviderTest extends BaseFunctionalTest
@@ -14,7 +14,7 @@ class SimpleUserProviderTest extends BaseFunctionalTest
     {
 
         $user = new User();
-        $user->setUuid(StringWrapper::random(32));
+        $user->setUuid(AString::random(32));
         $user->setUsername("me");
         $user->setEmail("me@company.com");
         $this->userManager->update($user);

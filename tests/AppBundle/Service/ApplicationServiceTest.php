@@ -8,7 +8,7 @@ use AppBundle\Document\Application;
 use AppBundle\Document\ActivationCode;
 use Tests\AppBundle\BaseFunctionalTest;
 use AppBundle\Manager\ApplicationManager;
-use ATS\CoreBundle\Service\Util\StringWrapper;
+use ATS\CoreBundle\Service\Util\AString;
 
 
 
@@ -19,7 +19,7 @@ class ApplicationServiceTest extends BaseFunctionalTest
         $user = new User();
         $user->setUsername('MyAwesomeUSerName');
         $this->documentManager->persist($user);
-        $uuid1 = StringWrapper::random(32);
+        $uuid1 = AString::random(32);
         $app = new Application();
         $app
             ->setOwner($user)
@@ -54,7 +54,7 @@ class ApplicationServiceTest extends BaseFunctionalTest
 
         for ($i = 0; $i < 10; $i++) {
             $app = new Application();
-            $app->setUuid(StringWrapper::random(32));
+            $app->setUuid(AString::random(32));
             $app->setName("app$i");
             $app->setRemoved(false);
             if ($i === 0) {
@@ -79,7 +79,7 @@ class ApplicationServiceTest extends BaseFunctionalTest
         $this->assertCount(0, $am->getAll());
 
         $app = new Application();
-        $app->setName("app_name")->setUuid(StringWrapper::random(32));
+        $app->setName("app_name")->setUuid(AString::random(32));
         $this->documentManager->persist($app);
         $this->documentManager->flush();
         $this->assertCount(1, $am->getAll());
@@ -93,7 +93,7 @@ class ApplicationServiceTest extends BaseFunctionalTest
     public function testToggleActivation()
     {
         $app = new Application();
-        $app->setName("app_name")->setUuid(StringWrapper::random(32));
+        $app->setName("app_name")->setUuid(AString::random(32));
         $this->documentManager->persist($app);
         $this->documentManager->flush();
 

@@ -1,13 +1,14 @@
 <?php
 namespace AppBundle\Service;
 
-use GuzzleHttp\Client;
-use AppBundle\Document\User;
-use Psr\Log\LoggerInterface;
-use AppBundle\Service\JWTHelper;
 use AppBundle\Document\Application;
-use AppBundle\Manager\TemplateManager;
 use AppBundle\Document\ApplicationType;
+use AppBundle\Document\User;
+use AppBundle\Manager\ApplicationManager;
+use AppBundle\Manager\TemplateManager;
+use AppBundle\Service\JWTHelper;
+use GuzzleHttp\Client;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -48,6 +49,11 @@ class KibanaService
     private $templateManager;
 
     /**
+     * @var ApplicationManager $applicationManager
+     */
+    private $applicationManager;
+
+    /**
      * @var Client
      */
     private $httpClient;
@@ -57,10 +63,21 @@ class KibanaService
      */
     private $jwtHelper;
 
+    /**
+     * Undocumented function
+     *
+     * @param LoggerInterface $logger
+     * @param ElasticSearchService $elastic
+     * @param TemplateManager $templateManager
+     * @param ApplicationManager $applicationManager
+     * @param JWTHelper $jwtHelper
+     * @param array $settings
+     */
     public function __construct(
         LoggerInterface $logger,
         ElasticSearchService $elastic,
         TemplateManager $templateManager,
+        ApplicationManager $applicationManager,
         JWTHelper $jwtHelper,
         array $settings = []
     ) {
@@ -68,77 +85,133 @@ class KibanaService
         $this->logger = $logger;
         $this->elastic = $elastic;
         $this->templateManager = $templateManager;
+        $this->applicationManager = $applicationManager;
         $this->jwtHelper = $jwtHelper;
         $this->httpClient = new Client(['defaults' => ['verify' => false]]);
         $this->url = $settings['host'] . ":" . (string) $settings['port'] . "/";
     }
 
-    /**
-     * * curl --insecure -u $es_admin_user:$es_admin_password  -X POST "$protocol://$host:$port/api/kibana/dashboards/import?exclude=index-pattern&force=true" -H 'kbn-xsrf: true' -H "tenant:$tenant_name" -H 'Content-Type: application/json' -d @/home/centos/pack_curl/apm-dashboards$$.json
-     *
-     * @param string $applicationName
-     * @param string $tenantName
-     * @param string $template
-     * @param ApplicationType $applicationType
-     *
-     * @return bool
-     */
-    private function createDashboards(string $applicationName, string $tenantName, string $template, ApplicationType $applicationType)
+    public function createAllUserDashboard(User $user)
     {
+        // TODO CHANGE THIS HACK
+        $application = $this->applicationManager->getDemoApplications()[0];
+
         $template = $this->templateManager->getOneBy(
             [
-                'applicationType.id' => $applicationType->getId(),
-                'name' => $template,
+                'applicationType.id' => $application->getType()->getId(),
+                'name' => 'apm-dashboards-all',
             ]
         );
 
         if ($template !== null) {
-            $content = str_replace("__replace_token__", $applicationName, $template->getContent());
-            $content = str_replace("__replace_service__", $applicationName, $content);
+            $content = str_replace("__replace_token__", 'all_user_' . $user->getUuid(), $template->getContent());
+            $content = str_replace("__replace_service__", 'all_user_' . $user->getUuid(), $content);
+
+            $authorization = $this->jwtHelper->getAuthorizationHeader(); // Default use leadwire-apm user
+
+            $headers = [
+                'kbn-xsrf' => true,
+                'Content-Type' => 'application/json',
+                'tenant' => "all_user_{$user->getUuid()}",
+                'X-Proxy-User' => "user_{$user->getUuid()}",
+                'Authorization' => "Bearer $authorization",
+            ];
 
             $response = $this->httpClient->post(
-                $this->url . "/api/kibana/dashboards/import?exclude=index-pattern&force=true",
+                $this->url . "api/kibana/dashboards/import?exclude=index-pattern&force=true",
                 [
-                    'headers' => [
-                        'kbn-xsrf' => true,
-                        'tenant' => $tenantName,
-                        'Content-Type' => 'application/json',
-                    ],
+                    'headers' => $headers,
                     'body' => $content,
-                    'auth' => $this->getAuth()
                 ]
             );
 
             return $response->getStatusCode() === Response::HTTP_OK;
         } else {
-            throw new \Exception("Template (apm-dashboard) not found");
+            throw new \Exception("Template ($template) not found");
         }
     }
 
     /**
      *
-     * @param string $applicationName
-     * @param string $tenantName
-     * @param ApplicationType $applicationType
+     * @param Application $application
+     * @param User $user
+     * @param boolean $shared
      *
-     * @return bool
+     * @return boolean
      */
-    public function createAllTenantDashboards(string $applicationName, string $tenantName, ApplicationType $applicationType): bool
+    public function createApplicationDashboards(Application $application, User $user, $shared = false): bool
     {
-        return $this->createDashboards($applicationName, $tenantName, "apm-dashboards-all", $applicationType);
+        if ($shared === true) {
+            $prefix = "shared_";
+            $authorization = $this->jwtHelper->getAuthorizationHeader(); // Default use leadwire-apm user
+        } else {
+            $prefix = "app_";
+            $authorization = $this->jwtHelper->getAuthorizationHeader($user);
+        }
+
+        $template = $this->templateManager->getOneBy(
+            [
+                'applicationType.id' => $application->getType()->getId(),
+                'name' => 'apm-dashboards',
+            ]
+        );
+
+        if ($template !== null) {
+            $content = str_replace("__replace_token__", $prefix . $application->getUuid(), $template->getContent());
+            $content = str_replace("__replace_service__", $prefix . $application->getUuid(), $content);
+
+            $headers = [
+                'kbn-xsrf' => true,
+                'Content-Type' => 'application/json',
+                'tenant' => "{$prefix}_{$user->getUuid()}",
+                'X-Proxy-User' => "user_{$user->getUuid()}",
+                'Authorization' => "Bearer $authorization",
+            ];
+
+            $response = $this->httpClient->post(
+                $this->url . "api/kibana/dashboards/import?exclude=index-pattern&force=true",
+                [
+                    'headers' => $headers,
+                    'body' => $content,
+                ]
+            );
+
+            return $response->getStatusCode() === Response::HTTP_OK;
+        } else {
+            throw new \Exception("Template ($template) not found");
+        }
     }
 
-    /**
-     *
-     * @param string $applicationName
-     * @param string $tenantName
-     * @param ApplicationType $applicationType
-     *
-     * @return bool
-     */
-    public function createTenantDashboards(string $applicationName, string $tenantName, ApplicationType $applicationType): bool
+    public function loadIndexPatternForAllUser(User $user)
     {
-        return $this->createDashboards($applicationName, $tenantName, "apm-dashboards", $applicationType);
+        // TODO CHANGE THIS HACK
+        $application = $this->applicationManager->getDemoApplications()[0];
+
+        $template = $this->templateManager->getOneBy(
+            [
+                'applicationType.id' => $application->getType()->getId(),
+                'name' => 'apmserver',
+            ]
+        );
+
+        if ($template !== null) {
+            $content = str_replace("__replace_token__", "all_user_{$user->getUuid()}", $template->getContent());
+            $headers = [
+                'kbn-xsrf' => true,
+                'Content-Type' => 'application/json',
+                'tenant' => "all_user_{$user->getUuid()}",
+                'X-Proxy-User' => "user_{$user->getUuid()}",
+                'Authorization' => "Bearer {$this->jwtHelper->getAuthorizationHeader($user)}",
+            ];
+
+            $response = $this->httpClient->post(
+                $this->url . "api/saved_objects/index-pattern/{$application->getName()}",
+                [
+                    'headers' => $headers,
+                    'body' => $content,
+                ]
+            );
+        }
     }
 
     /**
@@ -146,7 +219,7 @@ class KibanaService
      *
      * @return bool
      */
-    public function loadIndexPattern(Application $application, string $tenant, ?User $user = null): bool
+    public function loadIndexPatternForApplication(Application $application, User $user, string $tenant, bool $shared = false): bool
     {
         $template = $this->templateManager->getOneBy(
             [
@@ -158,31 +231,44 @@ class KibanaService
         if ($template !== null) {
             $content = str_replace("__replace_token__", $application->getName(), $template->getContent());
 
-            if ($user === null) {
-                $authorization = null;
+            $headers = [
+                'kbn-xsrf' => true,
+                'Content-Type' => 'application/json',
+                'tenant' => $tenant,
+                'X-Proxy-User' => "user_{$user->getUuid()}",
+            ];
+
+            if ($shared === true) {
+                $authorization = $this->jwtHelper->getAuthorizationHeader(); // Default use leadwire-apm user
             } else {
                 $authorization = $this->jwtHelper->getAuthorizationHeader($user);
             }
 
+            $headers['Authorization'] = "Bearer $authorization";
+
             $response = $this->httpClient->post(
-                $this->url . "/api/saved_objects/index-pattern/{$application->getName()}",
+                $this->url . "api/saved_objects/index-pattern/{$application->getName()}",
                 [
-                    'headers' => [
-                        'kbn-xsrf' => true,
-                        'Content-Type' => 'application/json',
-                        'Authorization' => "Bearer $authorization",
-                        'tenant' => $tenant
-                    ],
+                    'headers' => $headers,
                     'body' => $content,
                 ]
             );
 
-            return $response->getStatusCode() === Response::HTTP_OK;
+            return true;
         } else {
             throw new \Exception("Template (apmserver) not found");
         }
     }
 
+    public function loadIndexPatternForDemoApplications(User $user)
+    {
+        $demoApplications = $this->applicationManager->getDemoApplications();
+        foreach ($demoApplications as $demoApplication) {
+            $this->loadIndexPatternForApplication($demoApplication, $user, "user_{$user->getUuid()}", false);
+        }
+
+        $this->makeDefaultIndex('jpetstore', $user);
+    }
     /**
      * * curl --insecure  -H "Authorization: Bearer ${authorization}"  -XGET "https://kibana.leadwire.io/api/saved_objects/index-pattern/${appname}" -H 'kbn-xsrf: true' -H 'Content-Type: application/json'
      *
@@ -200,8 +286,8 @@ class KibanaService
                 'headers' => [
                     'kbn-xsrf' => true,
                     'Content-Type' => 'application/json',
-                    'Authorization' => "Bearer $authorization"
-                ]
+                    'Authorization' => "Bearer $authorization",
+                ],
             ]
         );
 
@@ -220,16 +306,16 @@ class KibanaService
     {
         $authorization = $this->jwtHelper->getAuthorizationHeader($user);
         $response = $this->httpClient->post(
-            $this->url . "/api/kibana/settings/defaultIndex",
+            $this->url . "api/kibana/settings/defaultIndex",
             [
                 'headers' => [
                     'kbn-xsrf' => true,
                     'Content-Type' => 'application/json',
-                    'Authorization' => "Bearer $authorization"
+                    'Authorization' => "Bearer $authorization",
+                    'tenant' => "user_{$user->getUuid()}",
+                    'X-Proxy-User' => "user_{$user->getUuid()}",
                 ],
-                'body' => [
-                    'value' => $applicationName
-                ],
+                'body' => json_encode(['value' => $applicationName]),
             ]
         );
     }

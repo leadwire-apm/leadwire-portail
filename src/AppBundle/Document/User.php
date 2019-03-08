@@ -244,6 +244,7 @@ class User implements AdvancedUserInterface
     {
         $this->roles = [];
         $this->locked = false;
+        $this->deleted = false;
 
         $this->applications = new ArrayCollection();
     }

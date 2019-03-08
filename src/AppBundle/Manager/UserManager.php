@@ -61,4 +61,16 @@ class UserManager extends AbstractManager
 
         return $user;
     }
+
+    public function getActiveUsers()
+    {
+        return $this
+            ->qb()
+            ->find()
+            ->field('deleted')->equals(false)
+            ->field('locked')->equals(false)
+            ->getQuery()
+            ->execute()
+            ->toArray(false);
+    }
 }

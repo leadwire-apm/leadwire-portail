@@ -11,6 +11,7 @@ use AppBundle\Service\JWTHelper;
 use AppBundle\Manager\UserManager;
 use AppBundle\Service\LdapService;
 use Firebase\JWT\ExpiredException;
+use AppBundle\Service\KibanaService;
 use AppBundle\Service\ElasticSearchService;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
@@ -36,6 +37,11 @@ class AuthService
      * @var ElasticSearchService
      */
     private $esService;
+
+    /**
+     * @var KibanaService
+     */
+    private $kibanaService;
 
     /**
      * @var LoggerInterface
@@ -67,6 +73,7 @@ class AuthService
         ApplicationService $applicationService,
         LdapService $ldapService,
         ElasticSearchService $esService,
+        KibanaService $kibanaService,
         LoggerInterface $logger,
         JWTHelper $jwtHelper,
         string $appDomain,
@@ -77,6 +84,7 @@ class AuthService
         $this->applicationService = $applicationService;
         $this->ldapService = $ldapService;
         $this->esService = $esService;
+        $this->kibanaService = $kibanaService;
         $this->jwtHelper = $jwtHelper;
         $this->logger = $logger;
         $this->appDomain = $appDomain;
@@ -120,7 +128,13 @@ class AuthService
                 $this->ldapService->createNewUserEntries($user);
                 $this->ldapService->registerDemoApplications($user);
                 $this->applicationService->registerDemoApplications($user);
-                $this->esService->resetUserIndexes($user);
+
+                $this->esService->deleteIndex("user_".$user->getUuid());
+                $this->kibanaService->loadIndexPatternForDemoApplications($user);
+
+                $this->esService->deleteIndex("all_user_".$user->getUuid());
+                $this->kibanaService->loadIndexPatternForAllUser($user);
+                $this->kibanaService->createAllUserDashboard($user);
             }
         } else {
             // Check if user has been deleted

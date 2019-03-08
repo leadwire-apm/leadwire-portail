@@ -5,7 +5,7 @@ namespace Tests\AppBundle\Service;
 use AppBundle\Document\User;
 use AppBundle\Service\UserService;
 use Tests\AppBundle\BaseFunctionalTest;
-use ATS\CoreBundle\Service\Util\StringWrapper;
+use ATS\CoreBundle\Service\Util\AString;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use function GuzzleHttp\json_encode;
 
@@ -18,7 +18,7 @@ class UserServiceTest extends BaseFunctionalTest
 
         for ($i = 0; $i < 50; $i++) {
             $user = new User("user$i", "user$i@test.com");
-            $user->setUuid(StringWrapper::random(32));
+            $user->setUuid(AString::random(32));
             if ($i === 0) {
                 $user->setRoles([USer::ROLE_SUPER_ADMIN]);
             }
@@ -77,7 +77,7 @@ class UserServiceTest extends BaseFunctionalTest
 
         for ($i = 0; $i < 50; $i++) {
             $user = new User("user$i", "user$i@test.com");
-            $user->setUuid(StringWrapper::random(32));
+            $user->setUuid(AString::random(32));
             if ($i < 10) {
                 $user->setActive(true);
             }

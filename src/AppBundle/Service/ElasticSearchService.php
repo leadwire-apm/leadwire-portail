@@ -2,15 +2,16 @@
 
 namespace AppBundle\Service;
 
-use AppBundle\Document\Application;
-use AppBundle\Document\ApplicationType;
-use AppBundle\Document\User;
-use AppBundle\Manager\TemplateManager;
 use GuzzleHttp\Client;
-use GuzzleHttp\Exception\ClientException;
+use AppBundle\Document\User;
 use Psr\Log\LoggerInterface;
-use SensioLabs\Security\Exception\HttpException;
+use AppBundle\Document\Application;
+use AppBundle\Manager\TemplateManager;
+use AppBundle\Document\ApplicationType;
+use AppBundle\Manager\ApplicationManager;
+use GuzzleHttp\Exception\ClientException;
 use Symfony\Component\HttpFoundation\Response;
+use SensioLabs\Security\Exception\HttpException;
 
 /**
  * Class ElasticSearchService Service. Manage connexions with Kibana Rest API.
@@ -80,6 +81,186 @@ class ElasticSearchService
             throw new HttpException("An error has occurred while executing your request.", 500);
         }
     }
+
+    /*********************************************
+     *          LOWER LEVEL ACTIONS              *
+    *********************************************/
+
+    /**
+     * * curl --insecure -u $es_admin_user:$es_admin_password -XGET https://es.leadwire.io/.kibana_${tenant_name}
+     *
+     * Returns the content of the index if it is found, FALSE otherwise
+     *
+     * @param string $tenantName
+     *
+     * @return bool|string
+     */
+    protected function getIndex(string $tenantName)
+    {
+        try {
+            $response = $this->httpClient->get(
+                $this->url . ".kibana_$tenantName",
+                [
+                    'auth' => $this->getAuth(),
+                ]
+            );
+        } catch (ClientException $e) {
+            $response = $e->getResponse();
+            if ($response !== null && $response->getStatusCode() === Response::HTTP_NOT_FOUND) {
+                return false;
+            }
+
+            throw $e;
+        }
+
+        return true;
+    }
+
+    /**
+     * Wrapper function
+     *
+     * @param string $tenantName
+     *
+     * @return boolean
+     */
+    public function indexExists(string $tenantName): bool
+    {
+        return true === $this->getIndex($tenantName);
+    }
+
+    /**
+     * * curl --insecure -u $es_admin_user:$es_admin_password -XDELETE https://es.leadwire.io/.kibana_${tenant_name}
+     *
+     * Deletes an index ($tenantName) and returns true if the request succeeded. Returns false if the index was not found
+     *
+     * @param string $tenantName
+     *
+     * @return bool
+     */
+    public function deleteIndex(string $tenantName): bool
+    {
+        try {
+            $response = $this->httpClient->delete(
+                $this->url . ".kibana_$tenantName",
+                [
+                    'auth' => $this->getAuth(),
+                ]
+            );
+        } catch (ClientException $e) {
+            $response = $e->getResponse();
+            if ($response !== null && $response->getStatusCode() === Response::HTTP_NOT_FOUND) {
+                return false;
+            }
+
+            throw $e;
+        }
+
+        return true;
+    }
+
+    /*********************************************
+     *          HIGHER LEVEL ACTIONS             *
+    *********************************************/
+
+    /**
+     * * curl --insecure -u $es_admin_user:$es_admin_password -XGET https://es.leadwire.io/_alias/${appname}
+     *
+     * @param string $applicationName
+     *
+     * @return boolean
+     */
+    public function getAlias(string $applicationName): bool
+    {
+        $response = $this->httpClient->get($this->url . "_alias/$applicationName", ['auth' => $this->getAuth()]);
+
+        if ($response->getStatusCode() === Response::HTTP_OK) {
+            return true;
+        } elseif ($response->getStatusCode() === Response::HTTP_NOT_FOUND) {
+            return false;
+        } else {
+            throw new \Exception("Got {$response->getStatusCode()} from Guzzle", Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    /**
+     * * curl --insecure -u $es_admin_user:$es_admin_password -H 'Content-Type: application/json' -XPOST https://es.leadwire.io/_aliases -d"{\"actions\":[{\"add\":{\"index\":\"$index_pattern_name\",\"alias\":\"$appname\"}}]}"
+     *
+     * @param string $applicationName
+     *
+     * @return bool
+     */
+    public function createAlias(string $applicationName): bool
+    {
+        $bodyString = '{"actions":[{"add":{"index":"$index_pattern_name","alias":"$appname"}}]}';
+        $body = json_decode($bodyString, false);
+        $body->actions[0]->add->index = "*-$applicationName-*";
+        $body->actions[0]->add->alias = $applicationName;
+
+        $response = $this->httpClient->post(
+            $this->url . "_aliases",
+            [
+                'headers' => ['Content-Type' => 'application/json'],
+                'auth' => $this->getAuth(),
+                'body' => json_encode($body),
+            ]
+        );
+
+        return $response->getStatusCode() === Response::HTTP_OK;
+    }
+
+    public function deleteApplicationIndexes(Application $application)
+    {
+        $this->deleteIndex("app_{$application->getUuid()}");
+        $this->deleteIndex("shared_{$application->getUuid()}");
+    }
+
+    /**
+     * * curl --insecure -u $es_user:$es_password -XDELETE "https://es.leadwire.io/_template/apm-$index_template_version"
+     *
+     * * curl --insecure -u $es_user:$es_password -XPUT "https://es.leadwire.io/_template/apm-$index_template_version" --header "Content-Type: application/json"  -d@/home/centos/pack_curl/index-template.json
+     *
+     * @return void
+     */
+    public function createIndexTemplate(Application $application, array $activeApplications)
+    {
+        $template = $this->templateManager->getOneBy(
+            [
+                'applicationType.id' => $application->getType()->getId(),
+                'name' => 'index-template',
+            ]
+        );
+
+        if ($template === null) {
+            throw new \Exception("Template (index-template) not found");
+        }
+
+        $content = $template->getContentObject();
+
+        foreach ($activeApplications as $app) {
+            $content->aliases->{$app->getName()} = [
+                "filter" => [
+                    "term" => ["context.service.name" => $app->getName()],
+                ],
+            ];
+        }
+
+        $this->httpClient->delete($this->url . "_template/apm-6.5.1", ['auth' => $this->getAuth()]);
+
+        $this->httpClient->put(
+            $this->url . "_template/apm-6.5.1",
+            [
+                'auth' => $this->getAuth(),
+                'headers' => [
+                    "Content-Type" => "application/json",
+                ],
+                'body' => json_encode($content),
+            ]
+        );
+    }
+
+    /*********************************************
+     *          HELPER METHODS                   *
+    *********************************************/
 
     /**
      * @param Application $app
@@ -164,49 +345,6 @@ class ElasticSearchService
         ];
     }
 
-    /**
-     * @param User $user
-     */
-    public function resetUserIndexes(User $user)
-    {
-        $this->postIndex(
-            [
-                "indices" => ".kibana_user",
-                "ignore_unavailable" => "true",
-                "include_global_state" => false,
-                "rename_pattern" => ".kibana_(.+)",
-                "rename_replacement" => ".kibana_" . $user->getIndex(),
-            ]
-        );
-    }
-
-    /**
-     *
-     * @param array $options
-     *
-     * @return bool
-     */
-    private function postIndex(array $options)
-    {
-        $client = new Client(['defaults' => ['verify' => false]]);
-        try {
-            $client->post(
-                $this->url . "/_snapshot/my_backup/kibana_snapshot/_restore",
-                [
-                    'body' => json_encode($options),
-                    'headers' => [
-                        'Content-type' => 'application/json',
-                    ],
-                    'auth' => $this->getAuth(),
-                ]
-            );
-            return true;
-        } catch (\GuzzleHttp\Exception\ClientException $e) {
-            $this->logger->critical("Error on reset index", ['exception' => $e]);
-            return false;
-        }
-    }
-
     protected function transformeId($id)
     {
         $searchs = ['dashboard:', 'visualization:'];
@@ -222,165 +360,5 @@ class ElasticSearchService
             $this->settings['username'],
             $this->settings['password'],
         ];
-    }
-
-    /**
-     * * curl --insecure -u $es_admin_user:$es_admin_password -XGET https://es.leadwire.io/.kibana_${tenant_name}
-     *
-     * Returns the content of the index if it is found, FALSE otherwise
-     *
-     * @param string $tenantName
-     *
-     * @return bool|string
-     */
-    public function getIndex(string $tenantName)
-    {
-        try {
-            $response = $this->httpClient->get(
-                $this->url . ".kibana_$tenantName",
-                [
-                    'auth' => $this->getAuth(),
-                ]
-            );
-        } catch (ClientException $e) {
-            $response = $e->getResponse();
-            if ($response !== null && $response->getStatusCode() === Response::HTTP_NOT_FOUND) {
-                return false;
-            }
-
-            throw $e;
-        }
-
-        return true;
-    }
-
-    /**
-     * Wrapper function
-     *
-     * @param string $tenantName
-     *
-     * @return boolean
-     */
-    public function indexExists(string $tenantName): bool
-    {
-        return true === $this->getIndex($tenantName);
-    }
-
-    /**
-     * * curl --insecure -u $es_admin_user:$es_admin_password -XDELETE https://es.leadwire.io/.kibana_${tenant_name}
-     *
-     * @param string $tenantName
-     *
-     * @return bool
-     */
-    public function deleteIndex(string $tenantName): bool
-    {
-        try {
-            $response = $this->httpClient->delete(
-                $this->url . ".kibana_$tenantName",
-                [
-                    'auth' => $this->getAuth(),
-                ]
-            );
-        } catch (ClientException $e) {
-            $response = $e->getResponse();
-            if ($response !== null && $response->getStatusCode() === Response::HTTP_NOT_FOUND) {
-                return false;
-            }
-
-            throw $e;
-        }
-
-        return true;
-    }
-
-    /**
-     * * curl --insecure -u $es_admin_user:$es_admin_password -H 'Content-Type: application/json' -XPOST https://es.leadwire.io/_aliases -d"{\"actions\":[{\"add\":{\"index\":\"$index_pattern_name\",\"alias\":\"$appname\"}}]}"
-     *
-     * @param string $applicationName
-     *
-     * @return bool
-     */
-    public function createAlias(string $applicationName): bool
-    {
-        $bodyString = '{"actions":[{"add":{"index":"$index_pattern_name","alias":"$appname"}}]}';
-        $body = json_decode($bodyString, false);
-        $body->actions[0]->add->index = "*-$applicationName-*";
-        $body->actions[0]->add->alias = $applicationName;
-
-        $response = $this->httpClient->post(
-            $this->url . "_aliases",
-            [
-                'headers' => ['Content-Type' => 'application/json'],
-                'auth' => $this->getAuth(),
-                'body' => json_encode($body),
-            ]
-        );
-
-        return $response->getStatusCode() === Response::HTTP_OK;
-    }
-
-    /**
-     * * curl --insecure -u $es_admin_user:$es_admin_password -XGET https://es.leadwire.io/_alias/${appname}
-     *
-     * @param string $applicationName
-     *
-     * @return boolean
-     */
-    public function getAlias(string $applicationName): bool
-    {
-        $response = $this->httpClient->get($this->url . "_alias/$applicationName", ['auth' => $this->getAuth()]);
-
-        if ($response->getStatusCode() === Response::HTTP_OK) {
-            return true;
-        } elseif ($response->getStatusCode() === Response::HTTP_NOT_FOUND) {
-            return false;
-        } else {
-            throw new \Exception("Got {$response->getStatusCode()} from Guzzle", Response::HTTP_INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    /**
-     * * curl --insecure -u $es_user:$es_password -XDELETE "https://es.leadwire.io/_template/apm-$index_template_version"
-     *
-     * * curl --insecure -u $es_user:$es_password -XPUT "https://es.leadwire.io/_template/apm-$index_template_version" --header "Content-Type: application/json"  -d@/home/centos/pack_curl/index-template.json
-     *
-     * @return void
-     */
-    public function createIndexTemplate(string $applicationName, ApplicationType $applicationType, array $activeApplications)
-    {
-        $template = $this->templateManager->getOneBy(
-            [
-                'applicationType.id' => $applicationType->getId(),
-                'name' => 'index-template',
-            ]
-        );
-
-        if ($template === null) {
-            throw new \Exception("Template (index-template) not found");
-        }
-
-        $content = $template->getContentObject();
-
-        foreach ($activeApplications as $application) {
-            $content->aliases->{$application->getName()} = [
-                "filter" => [
-                    "term" => ["context.service.name" => $application->getName()],
-                ],
-            ];
-        }
-
-        $this->httpClient->delete($this->url . "_template/apm-6.5.1", ['auth' => $this->getAuth()]);
-
-        $this->httpClient->put(
-            $this->url . "_template/apm-6.5.1",
-            [
-                'auth' => $this->getAuth(),
-                'headers' => [
-                    "Content-Type" => "application/json",
-                ],
-                'body' => json_encode($content),
-            ]
-        );
     }
 }

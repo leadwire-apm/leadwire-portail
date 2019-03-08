@@ -4,7 +4,7 @@ namespace Tests\ATS\CoreBundle\Controller;
 
 use AppBundle\Document\User;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use ATS\CoreBundle\Service\Util\StringWrapper;
+use ATS\CoreBundle\Service\Util\AString;
 
 class BaseDocumentRepositoryTest extends WebTestCase
 {
@@ -22,7 +22,7 @@ class BaseDocumentRepositoryTest extends WebTestCase
         $user = new User();
         $user->setUsername("test_username");
         $user->setEmail("user@test.com");
-        $user->setUuid(StringWrapper::random(32));
+        $user->setUuid(AString::random(32));
         $this->documentManager->getRepository(User::class)->save($user);
         $fetched = $this->documentManager->getRepository(User::class)->findOneBy(['username' => 'test_username']);
         $this->assertEquals($fetched->getEmail(), 'user@test.com');
@@ -34,7 +34,7 @@ class BaseDocumentRepositoryTest extends WebTestCase
         $user = new User();
         $user->setUsername("test_username");
         $user->setEmail("user@test.com");
-        $user->setUuid(StringWrapper::random(32));
+        $user->setUuid(AString::random(32));
         $this->documentManager->getRepository(User::class)->save($user);
         $fetched = $this->documentManager->getRepository(User::class)->findOneBy(['username' => 'test_username']);
         $this->assertEquals($fetched->getEmail(), 'user@test.com');

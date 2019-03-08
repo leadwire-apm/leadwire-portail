@@ -6,19 +6,19 @@ use AppBundle\Document\User;
 use AppBundle\Exception\DuplicateApplicationNameException;
 use AppBundle\Service\ApplicationService;
 use AppBundle\Service\ElasticSearchService;
+use AppBundle\Service\KibanaService;
+use AppBundle\Service\LdapService;
 use AppBundle\Service\StatService;
 use ATS\CoreBundle\Controller\Rest\RestControllerTrait;
 use MongoDuplicateKeyException;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use AppBundle\Service\LdapService;
-use AppBundle\Service\KibanaService;
 
 class ApplicationController extends Controller
 {
@@ -162,31 +162,30 @@ class ApplicationController extends Controller
             $data = $request->getContent();
             $application = $applicationService->newApplication($data, $this->getUser());
 
-            if ($application !== null) { // Application created in MongoDB. proceed with LDAP & ES entries
+            if ($application !== null) {
+                // Application created in MongoDB. proceed with LDAP & ES entries
                 $ldapService->createApplicationEntry($application);
                 $ldapService->registerApplication($this->getUser(), $application);
-                $esService->deleteIndex("app_{$application->getUuid()}");
-                $esService->deleteIndex("shared_{$application->getUuid()}");
-                $esService->deleteIndex("user_{$this->getUser()->getUuid()}");
-                $esService->deleteIndex("all_user_{$application->getUuid()}");
-                $esService->createIndexTemplate($application->getName(), $application->getType(), $applicationService->getActiveApplicationsNames());
 
-                $tenants = [
-                    "app_{$application->getUuid()}" => false,
-                    "shared_{$application->getUuid()}" => true,
-                    "user_{$this->getUser()->getUuid()}" => false,
-                    "all_user_{$this->getUser()->getUuid()}" => false,
-                ];
-                foreach ($tenants as $tenant => $shared) {
-                    if ($shared === true) {
-                        $kibanaService->loadIndexPattern($application, $tenant, null);
-                    } else {
-                        $kibanaService->loadIndexPattern($application, $tenant, $this->getUser());
-                    }
+                $esService->deleteIndex("app_" . $application->getUuid());
+                $esService->createIndexTemplate($application, $applicationService->getActiveApplicationsNames());
 
-                    $kibanaService->createTenantDashboards($application->getName(), $tenant, $application->getType());
-                    $kibanaService->createAllTenantDashboards($application->getName(), $tenant, $application->getType());
-                }
+                $kibanaService->loadIndexPatternForApplication(
+                    $application,
+                    $this->getUser(),
+                    'app_' . $application->getUuid()
+                );
+
+                $kibanaService->createApplicationDashboards($application, $this->getUser());
+
+                $esService->deleteIndex("shared_" . $application->getUuid());
+
+                $kibanaService->loadIndexPatternForApplication(
+                    $application,
+                    $this->getUser(),
+                    'shared_' . $application->getUuid()
+                );
+
                 $status = true;
             }
         } catch (DuplicateApplicationNameException $e) {

@@ -34,4 +34,11 @@ class ApplicationManager extends AbstractManager
             ->execute()
             ->toArray(false);
     }
+
+    public function getDemoApplications()
+    {
+        return $this
+            ->getDocumentRepository()
+            ->findBy(['demo' => true]);
+    }
 }

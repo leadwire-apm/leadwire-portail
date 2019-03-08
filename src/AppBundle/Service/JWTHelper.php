@@ -36,7 +36,7 @@ class JWTHelper
      *
      * @return string
      */
-    public function encode(string $username, string $userIndex): string
+    public function encode(string $username = "leadwire-apm", string $userIndex = "user_c3988d38-c754-11e8-9f50-fa163e30b6da"): string
     {
         $token = [
             'host' => $this->domain,
@@ -52,13 +52,19 @@ class JWTHelper
 
     /**
      *
+     * @param User $user
+     *
      * @return string
      */
-    public function getAuthorizationHeader(User $user)
+    public function getAuthorizationHeader(?User $user = null)
     {
-        return $this->encode(
-            $user->getUsername(),
-            $user->getIndex()
-        );
+        if ($user instanceof User) {
+            return $this->encode(
+                $user->getUsername(),
+                $user->getIndex()
+            );
+        }
+
+        return $this->encode();
     }
 }
