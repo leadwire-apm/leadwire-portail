@@ -6,15 +6,15 @@
             'MESSAGES_CONSTANTS',
             '$state',
             '$stateParams',
-            '$uibModal',
+            '$modal',
             ListCompagnesCtrlFN,
         ])
-       /* .controller('ModalContentCtrl',[
-            '$uibModalInstance',
+        .controller('ModalContentCtrl',[
+            '$modalInstance',
             ModalContentCtrlFN,
         ])
 
-    function ModalContentCtrlFN($uibModalInstance){
+    function ModalContentCtrlFN($modalInstance){
         var vm = this;
         vm.stepData = [
             { step: 1,  waiting: false, label:"Cadrage" },
@@ -49,14 +49,13 @@
         }
     
       vm.ok = function(){
-        $uibModalInstance.close("Ok");
+        $modalInstance.close("Ok");
       }
        
       vm.cancel = function(){
-        $uibModalInstance.dismiss();
-      } 
-    }
-
+        $modalInstance.dismiss();
+      }
+    } 
     /**
      * Handle add new application logic
      *
@@ -74,18 +73,21 @@
         vm.applicationId = $stateParams.id;
 
         vm.openModal = function() {
-            
-            var modalInstance =  $uibModal.open({
-              templateUrl: "tmec/tmecModal.html",
-              controller: "ModalContentCtrl",
-              size: 'lg',
-            });
-            
-            modalInstance.result.then(function(response){
-            });
-            
-        };
 
+            var modalInstance = $modal.open({
+                ariaLabelledBy: 'Stepper-form',
+                size: 'lg',
+                keyboard: false,
+                backdrop: 'static',
+                ariaDescribedBy: 'User-form',
+                templateUrl: 'tmec/tmecModal.html',
+                controller: 'ModalContentCtrl',
+                controllerAs: 'ctrl',
+            });
+
+            modalInstance.result.then(function () {
+            });
+        };
 
         vm.flipActivityIndicator = function (key) {
             vm.ui[key] = !vm.ui[key];
