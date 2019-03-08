@@ -9,7 +9,7 @@
             '$uibModal',
             ListCompagnesCtrlFN,
         ])
-        .controller(ModalContentCtrl,[
+        .controller('ModalContentCtrl',[
             '$scope',
             '$uibModalInstance',
             ModalContentCtrlFN,
