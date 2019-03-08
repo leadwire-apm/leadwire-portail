@@ -33,6 +33,7 @@
         <link rel="stylesheet" href="{{ asset_url }}"/>
     {% endstylesheets %}
     <link rel="stylesheet" href="bundles/ui/css/custom.css"/>
+    <link rel="stylesheet" href="bundles/ui/css/tmec.css"/>
 
 </head>
 <body data-ng-controller="AppCtrl" class="[[ app.layout.sidebarTheme ]] [[ app.layout.headerTheme ]]">
@@ -298,6 +299,9 @@
 </script>
 <script type="text/ng-template" id="tmec/form.html">
     {% include 'tmec/form.html' %}
+</script>
+<script type="text/ng-template" id="tmec/tmecModal.html">
+    {% include 'tmec/tmecModal.html' %}
 </script>
 <script type="text/ng-template" id="application/tmecsList.html">
     {% include 'application/tmecsList.html' %}

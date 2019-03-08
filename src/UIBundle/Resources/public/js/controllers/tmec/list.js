@@ -6,8 +6,56 @@
             'MESSAGES_CONSTANTS',
             '$state',
             '$stateParams',
+            '$uibModal',
             ListCompagnesCtrlFN,
-        ]);
+        ])
+        .controller(ModalContentCtrl,[
+            '$scope',
+            '$uibModalInstance',
+            ModalContentCtrlFN,
+        ])
+
+    function ModalContentCtrlFN($scope, $uibModalInstance){
+        $scope.stepData = [
+            { step: 1,  waiting: false, label:"Cadrage" },
+            { step: 2,  waiting: false, label:"Devis"  },
+            { step: 3,  waiting: false,  label:"CDC"  },
+            { step: 4,  waiting: false, label:"R7J"  },
+            { step: 5,  waiting: false, label:"Scipts Jdd"  },
+            { step: 6,  waiting: false,  label:"PP"  },
+            { step: 7,  waiting: false,  label:"Outils Tperf"},
+            { step: 8,  waiting: false, label:"Tuning"},
+            { step: 9,  waiting: false,  label:"Ref"},
+            { step: 10, waiting: false, label:"Rapport"},
+        ];
+        
+        $scope.stepProgress = 3;
+        $scope.finish = false;
+        
+        $scope.next = function(){
+            if($scope.stepProgress < $scope.stepData.length){
+              $scope.stepProgress ++;
+          }
+        }
+        
+        $scope.previous = function(){
+            if($scope.stepProgress > 0){
+              $scope.stepProgress --;
+          }
+        }
+        
+        $scope.finished = function(){
+            $scope.finish = true;
+        }
+    
+      $scope.ok = function(){
+        $uibModalInstance.close("Ok");
+      }
+       
+      $scope.cancel = function(){
+        $uibModalInstance.dismiss();
+      } 
+    }
 
     /**
      * Handle add new application logic
@@ -19,10 +67,25 @@
         MESSAGES_CONSTANTS,
         $state,
         $stateParams,
+        $uibModal,
     ) {
         var vm = this;
 
         vm.applicationId = $stateParams.id;
+
+        vm.openModal = function() {
+            
+            var modalInstance =  $uibModal.open({
+              templateUrl: "tmec/tmecModal.html",
+              controller: "ModalContentCtrl",
+              size: 'lg',
+            });
+            
+            modalInstance.result.then(function(response){
+            });
+            
+        };
+
 
         vm.flipActivityIndicator = function (key) {
             vm.ui[key] = !vm.ui[key];

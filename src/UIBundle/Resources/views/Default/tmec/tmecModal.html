@@ -1,0 +1,71 @@
+<div class="modal-header">
+    <h3>Compagnes process</h3>
+</div>
+<div class="modal-body">
+    <div class="main">
+
+        <div class="container">
+
+            <form  id="signup-form" class="signup-form">
+
+                <div role="application" class="wizard clearfix vertical" id="steps-uid-0">
+                    <div class="steps clearfix">
+
+                        <ul role="tablist">
+
+                            <li role="tab"
+                                ng-class="{'first': ($index == 0), 'last': ($index == stepData.length - 1), 'current': ( stepProgress == $index), 'completed': ( stepProgress > $index)}"
+                                ng-repeat="step in stepData">
+                                <a>
+                                    <div class="title">
+                                        <span class="step-number">{{$index}}</span>
+                                        <span class="step-text">{{step.label}}</span>
+                                    </div>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="content clearfix">
+                        <h3 id="steps-uid-0-h-0" tabindex="-1" class="title">Personal info</h3>
+                        <fieldset id="steps-uid-0-p-0" role="tabpanel" aria-labelledby="steps-uid-0-h-0" class="body">
+                            <div class="fieldset-content">
+                                <div class="form-row">
+                                    <label class="form-label">Name</label>
+                                    <div class="form-flex">
+                                        <div class="form-group">
+                                            <input type="checkbox" ng-model="waiting"> </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+                        <div class="actions">
+                            <ul role="menu" aria-label="Pagination">
+
+                                <li ng-show="stepProgress > 0">
+                                    <a role="menuitem" ng-click="previous()">Previous</a>
+                                </li>
+
+                                <li ng-show="stepProgress < stepData.length">
+                                    <a role="menuitem" ng-click="next()">Next</a>
+                                </li>
+
+                                <li ng-if="stepProgress === stepData.length">
+                                    <a role="menuitem" ng-click="finished()">Finish</a>
+                                </li>
+
+                            </ul>
+                        </div>
+                    </div>
+
+                </div>
+
+            </form>
+        </div>
+
+    </div>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-primary" ng-click="ok()">OK</button>
+    <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+</div>
