@@ -118,10 +118,6 @@
                 });
         };
 
-        vm.updateType = function (id) {
-
-        };
-
         vm.deleteCompagne = function (id) {
             TmecService.delete(id)
                 .then(function () {

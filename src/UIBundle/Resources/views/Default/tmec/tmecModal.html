@@ -15,7 +15,7 @@
 
                             <li role="tab"
                                 ng-class="{'first': ($index == 0), 'last': ($index == stepData.length - 1), 'current': ( stepProgress == $index), 'completed': ( stepProgress > $index)}"
-                                ng-repeat="step in stepData">
+                                ng-repeat="step in ctrl.stepData">
                                 <a>
                                     <div class="title">
                                         <span class="step-number">{{step.step}}</span>
@@ -31,10 +31,10 @@
                         <fieldset id="steps-uid-0-p-0" role="tabpanel" aria-labelledby="steps-uid-0-h-0" class="body">
                             <div class="fieldset-content">
                                 <div class="form-row">
-                                    <label class="form-label">Name</label>
+                                    <label class="form-label">waiting for informations : </label>
                                     <div class="form-flex">
                                         <div class="form-group">
-                                            <input type="checkbox" ng-model="waiting"> </div>
+                                            <input type="checkbox" ng-model="ctrl.waiting"> </div>
                                     </div>
                                 </div>
                             </div>
@@ -42,16 +42,16 @@
                         <div class="actions">
                             <ul role="menu" aria-label="Pagination">
 
-                                <li ng-show="stepProgress > 0">
-                                    <a role="menuitem" ng-click="previous()">Previous</a>
+                                <li ng-show="ctrl.stepProgress > 0">
+                                    <a role="menuitem" ng-click="ctrl.previous()">Previous</a>
                                 </li>
 
-                                <li ng-show="stepProgress < stepData.length">
-                                    <a role="menuitem" ng-click="next()">Next</a>
+                                <li ng-show="ctrl.stepProgress < ctrl.stepData.length">
+                                    <a role="menuitem" ng-click="ctrl.next()">Next</a>
                                 </li>
 
-                                <li ng-if="stepProgress === stepData.length">
-                                    <a role="menuitem" ng-click="finished()">Finish</a>
+                                <li ng-if="ctrl.stepProgress === ctrl.stepData.length">
+                                    <a role="menuitem" ng-click="ctrl.finished()">Finish</a>
                                 </li>
 
                             </ul>
