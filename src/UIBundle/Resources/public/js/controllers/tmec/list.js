@@ -75,11 +75,7 @@
         vm.openModal = function() {
 
             var modalInstance = $modal.open({
-                ariaLabelledBy: 'Stepper-form',
                 size: 'lg',
-                keyboard: false,
-                backdrop: 'static',
-                ariaDescribedBy: 'User-form',
                 templateUrl: 'tmec/tmecModal.html',
                 controller: 'ModalContentCtrl',
                 controllerAs: 'ctrl',
