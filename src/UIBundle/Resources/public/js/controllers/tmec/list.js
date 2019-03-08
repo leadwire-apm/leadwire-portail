@@ -10,13 +10,13 @@
             ListCompagnesCtrlFN,
         ])
         .controller('ModalContentCtrl',[
-            '$scope',
             '$uibModalInstance',
             ModalContentCtrlFN,
         ])
 
-    function ModalContentCtrlFN($scope, $uibModalInstance){
-        $scope.stepData = [
+    function ModalContentCtrlFN($uibModalInstance){
+        var vm = this;
+        vm.stepData = [
             { step: 1,  waiting: false, label:"Cadrage" },
             { step: 2,  waiting: false, label:"Devis"  },
             { step: 3,  waiting: false,  label:"CDC"  },
@@ -29,30 +29,30 @@
             { step: 10, waiting: false, label:"Rapport"},
         ];
         
-        $scope.stepProgress = 3;
-        $scope.finish = false;
+        vm.stepProgress = 3;
+        vm.finish = false;
         
-        $scope.next = function(){
-            if($scope.stepProgress < $scope.stepData.length){
-              $scope.stepProgress ++;
+        vm.next = function(){
+            if(vm.stepProgress < vm.stepData.length){
+              vm.stepProgress ++;
           }
         }
         
-        $scope.previous = function(){
-            if($scope.stepProgress > 0){
-              $scope.stepProgress --;
+        vm.previous = function(){
+            if(vm.stepProgress > 0){
+              vm.stepProgress --;
           }
         }
         
-        $scope.finished = function(){
-            $scope.finish = true;
+        vm.finished = function(){
+            vm.finish = true;
         }
     
-      $scope.ok = function(){
+      vm.ok = function(){
         $uibModalInstance.close("Ok");
       }
        
-      $scope.cancel = function(){
+      vm.cancel = function(){
         $uibModalInstance.dismiss();
       } 
     }
