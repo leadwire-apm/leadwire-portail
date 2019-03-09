@@ -6,9 +6,13 @@
         ]);
 
     function StepCtrlFN($modalInstance) {
+
         var vm = this;
+
+        vm.current = {};
+        
         vm.stepData = [
-            { id: 1, comment:"", waiting: false, label: "Cadrage" },
+            { id: 1, comment:"test test", waiting: false, label: "Cadrage" },
             { id: 2, comment:"", waiting: false, label: "Devis" },
             { id: 3, comment:"", waiting: false, label: "CDC" },
             { id: 4, comment:"", waiting: false, label: "R7J" },
@@ -20,7 +24,10 @@
             { id: 10, comment:"", waiting: false, label: "Rapport" },
         ];
 
-        vm.stepProgress = 3;
+        vm.stepProgress = 0;
+
+        vm.current = vm.stepData[vm.stepProgress];
+
         vm.finish = false;
 
         vm.next = function () {
