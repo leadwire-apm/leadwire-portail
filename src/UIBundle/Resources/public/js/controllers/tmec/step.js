@@ -61,7 +61,7 @@
         }
 
         vm.ok = function () {
-            angular.forEach(vm.stepData, function(stpe) {
+            angular.forEach(vm.stepData, function(step) {
                 TmecService.updateStep(step)
                 .then(function () {
                     toastr.success(MESSAGES_CONSTANTS.SUCCESS);
