@@ -93,15 +93,6 @@ class Step
         return $this;
     }
 
-    /**
-     * Get the value of compagne
-     *
-     * @return  string
-     */
-    public function getCompagne()
-    {
-        return $this->compagne;
-    }
 
     /**
      * Set the value of compagne
@@ -163,6 +154,16 @@ class Step
         $this->comment = $comment;
 
         return $this;
+    }
+
+    /**
+     * Get the value of comment
+     *
+     * @return  string
+     */
+    public function getComment()
+    {
+        return $this->comment;
     }
 
     /**
