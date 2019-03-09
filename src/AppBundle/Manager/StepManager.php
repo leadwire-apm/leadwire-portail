@@ -17,22 +17,7 @@ class StepManager extends AbstractManager
     {
         parent::__construct($managerRegistry, Step::class, $managerName);
     }
-
-
-    /**
-     * Get step by its compagne
-     *
-     * @param array $params
-     *
-     * @return Step
-     */
-    public function getBy($params)
-    {
-        /** @var Step $step */
-        $step = $this->getDocumentRepository()->findBy($params);
-        return $step;
-    }
-
+    
     /**
      *
      * @param string $compagne
