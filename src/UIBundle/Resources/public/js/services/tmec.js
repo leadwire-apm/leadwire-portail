@@ -65,6 +65,16 @@
                     });
             };
 
+            service.listSteps = function (id) {
+                return TmecFactory.listSteps(id)
+                    .then(function (response) {
+                        return response.data;
+                    })
+                    .catch((err) => {
+                        return [];
+                    });
+            }
+
             return service;
         });
 })(window.angular);

@@ -10,6 +10,7 @@
     function StepCtrlFN($modalInstance, TmecService, compagneId) {
 
         var vm = this;
+
         vm.current = {};
         
         vm.stepData = [
@@ -24,6 +25,14 @@
             { order: 9,  comment:"", waiting: false, label: "Ref" },
             { order: 10, comment:"", waiting: false, label: "Rapport" },
         ];
+
+        TmecService.listSteps(compagneId)
+        .then(function (steps) {
+            vm.steps = steps;
+            console.log(steps);
+        })
+        .catch(function (error) {
+        });
 
         vm.stepProgress = 0;
 

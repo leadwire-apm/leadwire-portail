@@ -60,7 +60,7 @@ class StepService
      */
     public function list(array $params)
     {
-        $step = $this->stepManager->getBy($compagne);
+        $step = $this->stepManager->getBy($params);
         return $step;
     }
 }

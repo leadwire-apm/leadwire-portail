@@ -41,7 +41,14 @@
                 delete: function (id) {
                     return $http.delete(
                         CONFIG.BASE_URL + 'api/tmec/delete/' + id);
-                },
+                },              
+                /**
+                *
+                * @returns {Promise}
+                */
+               listSteps: function (id) {
+                   return $http.get(CONFIG.BASE_URL + 'api/step/list/' + id);
+               },
             };
         });
 })(window.angular);
