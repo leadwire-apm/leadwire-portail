@@ -112,7 +112,7 @@ class Plan
     private $updatedAt;
 
     /**
-     * @ODM\EmbedMany(targetDocument="PricingPlan")
+     * @ODM\EmbedMany(targetDocument="ATS\PaymentBundle\Document\PricingPlan")
      * @JMS\Type("array<ATS\PaymentBundle\Document\PricingPlan>")
      * @JMS\Expose
      * @JMS\Groups({})

@@ -45,6 +45,19 @@ class PlanController extends Controller
     }
 
     /**
+     * @Route("/{id}/update", methods="PUT")
+     *
+     * @param Request $request
+     * @param PlanService $planService
+     *
+     * @return Response
+     */
+    public function updatePlan(Request $request, PlanService $planService, $id)
+    {
+        $data = $request->getContent();
+        $planService->modifyPlan($data);
+    }
+    /**
      * @Route(
      *    "/paginate/{pageNumber}/{itemsPerPage}",
      *    methods="GET",

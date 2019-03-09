@@ -197,14 +197,14 @@ class PlanService
                 return $elem['id'] === $second->getName() . "-month";
             });
 
-            if ($stripePlan === null) {
-                $plan = $this->gateway->createPlan([
+            if (empty($stripePlan) === true) {
+                $token = $this->gateway->createPlan([
                     "interval" => 'month',
                     "name" => $second->getName(),
                     "currency" => "eur",
                     "amount" => $second->getPrice(),
                     "id" => $second->getName() . "-month",
-                ])->send()->getData();
+                ])->send()->getData()['id'];
 
             } else {
                 $token = reset($stripePlan)['id'];
@@ -222,7 +222,7 @@ class PlanService
                 return $elem['id'] === $second->getName() . "-year";
             });
 
-            if ($stripePlan === null) {
+            if (empty($stripePlan) === true) {
                 $token = $this->gateway->createPlan([
                     "interval" => 'year',
                     "name" => $second->getName(),
@@ -260,7 +260,7 @@ class PlanService
                 return $elem['id'] === $third->getName() . "-month";
             });
 
-            if ($stripePlan === null) {
+            if (empty($stripePlan) === true) {
                 $token = $this->gateway->createPlan([
                     "interval" => 'month',
                     "name" => $third->getName(),
@@ -284,7 +284,7 @@ class PlanService
             $stripePlan = array_filter($createdPlans, function ($elem) use ($third) {
                 return $elem['id'] === $third->getName() . "-year";
             });
-            if ($stripePlan === null) {
+            if (empty($stripePlan) === true) {
                 $token = $this->gateway->createPlan([
                     "interval" => 'year',
                     "name" => $third->getName(),
@@ -303,5 +303,13 @@ class PlanService
 
             $this->planManager->update($third);
         }
+    }
+
+    public function modifyPlan($json)
+    {
+        $plan = $this->serializer->deserialize($json, Plan::class, 'json');
+
+        $this->planManager->update($plan);
+        dump($plan);
     }
 }

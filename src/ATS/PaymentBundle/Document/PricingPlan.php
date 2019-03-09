@@ -7,7 +7,6 @@ use JMS\Serializer\Annotation as JMS;
 
 /**
  * @ODM\EmbeddedDocument
- *
  */
 class PricingPlan
 {
@@ -17,7 +16,6 @@ class PricingPlan
      * @ODM\Field(type="string", name="name")
      * @JMS\Type("string")
      * @JMS\Expose
-     * @JMS\Groups({})
      */
     private $name;
 
@@ -27,7 +25,6 @@ class PricingPlan
      * @ODM\Field(type="string", name="token")
      * @JMS\Type("string")
      * @JMS\Expose
-     * @JMS\Groups({})
      */
     private $token;
 

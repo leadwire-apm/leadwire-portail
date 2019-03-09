@@ -282,7 +282,7 @@ class UserService
         } else {
             /** @var string $json */
             $json = json_encode(["name" => $user->getName(), "email" => $user->getEmail()]);
-            $data = json_decode($data, true);
+            // $data = json_decode($data, true);
 
             $customer = $this->customerService->newCustomer($json, $data);
             $user->setCustomer($customer);

@@ -14,6 +14,7 @@ class PlanFixture extends AbstractFixture implements OrderedFixtureInterface
 
     public function load(ObjectManager $manager)
     {
+        return ;
         $first = new Plan();
         $first->setName("BASIC")
             ->setIsCreditCard(false)

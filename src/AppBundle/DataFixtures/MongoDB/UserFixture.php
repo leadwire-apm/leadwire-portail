@@ -14,7 +14,7 @@ class UserFixture extends AbstractFixture implements OrderedFixtureInterface
 
     public function load(ObjectManager $manager)
     {
-        $plan = $this->getReference(PlanFixture::BASIC_PLAN);
+        // $plan = $this->getReference(PlanFixture::BASIC_PLAN);
 
         $user = new User();
         $user
@@ -30,7 +30,7 @@ class UserFixture extends AbstractFixture implements OrderedFixtureInterface
             ->setContact("33###0695683303")
             ->setContactPreference("Email")
             ->setEmail("aturki@ats-digital.com")
-            ->setPlan($plan);
+            ->setPlan(null);
 
         $manager->persist($user);
         $manager->flush();
