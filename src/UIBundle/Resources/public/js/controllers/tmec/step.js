@@ -37,6 +37,7 @@
             if (vm.stepProgress < vm.stepData.length) {
                 vm.stepData[vm.stepProgress].current = false;
                 vm.stepProgress++;
+                if(vm.stepProgress + 1 < 9)
                 vm.stepData[vm.stepProgress].current = true;
             }
         }
@@ -45,6 +46,7 @@
             if (vm.stepProgress > 0) {
                 vm.stepProgress--;
                 vm.stepData[vm.stepProgress].current = true;
+                if(vm.stepProgress + 1 < 9)
                 vm.stepData[vm.stepProgress+1].current = false;
             }
         }
