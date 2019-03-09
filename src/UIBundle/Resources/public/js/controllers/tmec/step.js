@@ -35,13 +35,17 @@
 
         vm.next = function () {
             if (vm.stepProgress < vm.stepData.length) {
+                vm.stepData[vm.stepProgress].current = false;
                 vm.stepProgress++;
+                vm.stepData[vm.stepProgress].current = true;
             }
         }
 
         vm.previous = function () {
             if (vm.stepProgress > 0) {
+                vm.stepData[vm.stepProgress].current = false;
                 vm.stepProgress--;
+                vm.stepData[vm.stepProgress].current = true;
             }
         }
 
