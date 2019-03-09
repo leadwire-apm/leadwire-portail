@@ -48,7 +48,7 @@ class StepService
         return null;
     }
 
-    public function update($json)
+    public function updateStep($json)
     {
         /** @var Step $step */
         $step = $this->serializer->deserialize($json, Step::class, 'json');
