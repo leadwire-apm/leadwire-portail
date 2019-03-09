@@ -2,6 +2,7 @@
     angular.module('leadwireApp')
         .controller('StepCtrl', [
             '$modalInstance',
+            'compagneId',
             'TmecService',
              StepCtrlFN,
         ]);
