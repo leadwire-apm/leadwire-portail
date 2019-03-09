@@ -33,7 +33,7 @@ class TmecService
         SerializerInterface $serializer
     ) {
         $this->tmecManager = $tmecManager;
-        $this->tepService = $stepService;
+        $this->stepService = $stepService;
         $this->serializer = $serializer;
     }
 
