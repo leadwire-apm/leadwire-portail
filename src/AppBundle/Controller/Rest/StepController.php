@@ -27,7 +27,7 @@ class StepController extends Controller
     public function updateStepAction(Request $request, StepService $stepService)
     {
         $data = $request->getContent();
-        $successful = $StepService->updateStep($data);
+        $successful = $stepService->updateStep($data);
         return $this->renderResponse($successful);
     }
 
