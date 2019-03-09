@@ -23,6 +23,10 @@
                     vm.stepProgress = value.order;
                 }
             });
+
+            if(vm.stepProgress === 0){
+                steps[0].current = true;
+            }
             vm.stepData = steps;
         })
         .catch(function (error) {
