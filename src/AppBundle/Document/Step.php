@@ -185,7 +185,7 @@ class Step
      *
      * @return bool
      */
-    public function isWaiting()
+    public function getWaiting()
     {
         return $this->waiting;
     }
