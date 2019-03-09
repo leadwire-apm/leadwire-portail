@@ -27,15 +27,17 @@
         vm.applicationId = $stateParams.id;
 
         vm.openModal = function(id) {
-            console.log(compagneId)
+            console.log(id)
             var modalInstance = $modal.open({
                 size: 'lg',
                 templateUrl: 'tmec/step.html',
                 controller: 'StepCtrl',
                 controllerAs: 'ctrl',
                 resolve: {
-                    compagneId: id
-                  }
+                    compagneId: function () {
+                        return id;
+                    }
+                }
             });
 
             modalInstance.result.then(function () {
