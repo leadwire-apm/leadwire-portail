@@ -42,3 +42,9 @@ app_rest_tmec:
     resource: "@AppBundle/Controller/Rest/TmecController.php"
     type: "annotation"
     prefix: "/%internal_api_prefix%/tmec"
+
+app_rest_step:
+    resource: "@AppBundle/Controller/Rest/StepController.php"
+    type: "annotation"
+    prefix: "/%internal_api_prefix%/step"
+    

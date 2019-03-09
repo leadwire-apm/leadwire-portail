@@ -10,20 +10,19 @@
     function StepCtrlFN($modalInstance, TmecService, compagneId) {
 
         var vm = this;
-        console.log(compagneId)
         vm.current = {};
         
         vm.stepData = [
-            { id: 1, comment:"", waiting: false, label: "Cadrage" },
-            { id: 2, comment:"", waiting: false, label: "Devis" },
-            { id: 3, comment:"", waiting: false, label: "CDC" },
-            { id: 4, comment:"", waiting: false, label: "R7J" },
-            { id: 5, comment:"", waiting: false, label: "Scipts Jdd" },
-            { id: 6, comment:"", waiting: false, label: "PP" },
-            { id: 7, comment:"", waiting: false, label: "Outils Tperf" },
-            { id: 8, comment:"", waiting: false, label: "Tuning" },
-            { id: 9, comment:"", waiting: false, label: "Ref" },
-            { id: 10, comment:"", waiting: false, label: "Rapport" },
+            { order: 1,  comment:"", waiting: false, label: "Cadrage" },
+            { order: 2,  comment:"", waiting: false, label: "Devis" },
+            { order: 3,  comment:"", waiting: false, label: "CDC" },
+            { order: 4,  comment:"", waiting: false, label: "R7J" },
+            { order: 5,  comment:"", waiting: false, label: "Scipts Jdd" },
+            { order: 6,  comment:"", waiting: false, label: "PP" },
+            { order: 7,  comment:"", waiting: false, label: "Outils Tperf" },
+            { order: 8,  comment:"", waiting: false, label: "Tuning" },
+            { order: 9,  comment:"", waiting: false, label: "Ref" },
+            { order: 10, comment:"", waiting: false, label: "Rapport" },
         ];
 
         vm.stepProgress = 0;
