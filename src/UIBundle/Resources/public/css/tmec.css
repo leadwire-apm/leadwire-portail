@@ -93,8 +93,8 @@ padding: 0px;
 margin: 0px;
 border: none;
 padding-left: 45px;
-padding-right: 55px;
-padding-top: 45px; 
+padding-right: 45px;
+padding-top: 15px; 
 }
 
 p.desc {
@@ -236,5 +236,7 @@ cursor: pointer;
 background-color: #4d4d4d; 
 }
 
-
+.all{
+    width: 100%;
+}
 /*# sourceMappingURL=style.css.map */
