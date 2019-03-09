@@ -8,54 +8,8 @@
             '$stateParams',
             '$modal',
             ListCompagnesCtrlFN,
-        ])
-        .controller('ModalContentCtrl',[
-            '$modalInstance',
-            ModalContentCtrlFN,
-        ])
+        ]);
 
-    function ModalContentCtrlFN($modalInstance){
-        var vm = this;
-        vm.stepData = [
-            { id: 1,  waiting: false, label:"Cadrage" },
-            { id: 2,  waiting: false, label:"Devis"  },
-            { id: 3,  waiting: false,  label:"CDC"  },
-            { id: 4,  waiting: false, label:"R7J"  },
-            { id: 5,  waiting: false, label:"Scipts Jdd"  },
-            { id: 6,  waiting: false,  label:"PP"  },
-            { id: 7,  waiting: false,  label:"Outils Tperf"},
-            { id: 8,  waiting: false, label:"Tuning"},
-            { id: 9,  waiting: false,  label:"Ref"},
-            { id: 10, waiting: false, label:"Rapport"},
-        ];
-        
-        vm.stepProgress = 3;
-        vm.finish = false;
-        
-        vm.next = function(){
-            if(vm.stepProgress < vm.stepData.length){
-              vm.stepProgress ++;
-          }
-        }
-        
-        vm.previous = function(){
-            if(vm.stepProgress > 0){
-              vm.stepProgress --;
-          }
-        }
-        
-        vm.finished = function(){
-            vm.finish = true;
-        }
-    
-      vm.ok = function(){
-        $modalInstance.close("Ok");
-      }
-       
-      vm.cancel = function(){
-        $modalInstance.dismiss();
-      }
-    } 
     /**
      * Handle add new application logic
      *
@@ -76,8 +30,8 @@
 
             var modalInstance = $modal.open({
                 size: 'lg',
-                templateUrl: 'tmec/tmecModal.html',
-                controller: 'ModalContentCtrl',
+                templateUrl: 'tmec/step.html',
+                controller: 'StepCtrl',
                 controllerAs: 'ctrl',
             });
 
