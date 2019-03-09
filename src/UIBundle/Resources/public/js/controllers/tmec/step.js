@@ -12,27 +12,18 @@
         var vm = this;
 
         vm.current = {};
-
-        vm.stepData = [
-            { order: 1,  comment:"", waiting: false, current: false, label: "Cadrage" },
-            { order: 2,  comment:"", waiting: false, current: false, label: "Devis" },
-            { order: 3,  comment:"", waiting: false, current: false, label: "CDC" },
-            { order: 4,  comment:"", waiting: false, current: false, label: "R7J" },
-            { order: 5,  comment:"", waiting: false, current: false, label: "Scipts Jdd" },
-            { order: 6,  comment:"", waiting: false, current: false, label: "PP" },
-            { order: 7,  comment:"", waiting: false, current: false, label: "Outils Tperf" },
-            { order: 8,  comment:"", waiting: false, current: false, label: "Tuning" },
-            { order: 9,  comment:"", waiting: false, current: false, label: "Ref" },
-            { order: 10, comment:"", waiting: false, current: false, label: "Rapport" },
-        ];
-
         vm.stepProgress = 0;
-        vm.current = vm.stepData[vm.stepProgress];
 
         TmecService.listSteps(compagneId)
         .then(function (steps) {
-            //vm.stepData = steps;
-            console.log(steps);
+
+            angular.forEach(steps, function(value, key) {
+                if(value.current === true){
+                    vm.current = value;
+                    vm.stepProgress = value.order;
+                }
+            });
+            vm.stepData = steps;
         })
         .catch(function (error) {
         });
