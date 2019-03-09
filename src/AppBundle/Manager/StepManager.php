@@ -34,7 +34,8 @@ class StepManager extends AbstractManager
             ->setLabel($label)
             ->setOrder($order)
             ->setComment("")
-            ->setWaiting(false);
+            ->setWaiting(false)
+            ->setCurrent(false);
 
         $this->update($step);
 
