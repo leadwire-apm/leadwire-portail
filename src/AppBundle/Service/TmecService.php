@@ -5,7 +5,7 @@ namespace AppBundle\Service;
 use AppBundle\Document\Tmec;
 use Symfony\Component\Finder\Finder;
 use AppBundle\Manager\TmecManager;
-use AppBundle\Manager\StepManager;
+use ATS\PaymentBundle\Service\StepService;
 use JMS\Serializer\SerializerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -18,9 +18,9 @@ class TmecService
     private $tmecManager;
 
     /**
-     * @var StepManager
+     * @var StepService
      */
-    private $stepanager;
+    private $stepService;
 
     /**
      * @var SerializerInterface
@@ -29,11 +29,11 @@ class TmecService
 
     public function __construct(
         TmecManager $tmecManager,
-        StepManager $stepManager,
+        StepService $stepService,
         SerializerInterface $serializer
     ) {
         $this->tmecManager = $tmecManager;
-        $this->stepManager = $stepManager;
+        $this->tepService = $stepService;
         $this->serializer = $serializer;
     }
 
@@ -52,7 +52,7 @@ class TmecService
                 $params['endDate'],
                 $params['applicationId']);
 
-            $this->stepManager->initSteps($tmec.getId());
+            $this->stepService->initSteps($tmec.getId());
         } else {
             throw new AccessDeniedHttpException("Version is already exist");
         }
