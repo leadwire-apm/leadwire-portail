@@ -2,17 +2,19 @@
     angular.module('leadwireApp')
         .controller('StepCtrl', [
             '$modalInstance',
+            'TmecService',
+            'compagneId',
              StepCtrlFN,
         ]);
 
-    function StepCtrlFN($modalInstance) {
+    function StepCtrlFN($modalInstance, TmecService, compagneId) {
 
         var vm = this;
-
+        console.log(compagneId)
         vm.current = {};
         
         vm.stepData = [
-            { id: 1, comment:"test test", waiting: false, label: "Cadrage" },
+            { id: 1, comment:"", waiting: false, label: "Cadrage" },
             { id: 2, comment:"", waiting: false, label: "Devis" },
             { id: 3, comment:"", waiting: false, label: "CDC" },
             { id: 4, comment:"", waiting: false, label: "R7J" },
