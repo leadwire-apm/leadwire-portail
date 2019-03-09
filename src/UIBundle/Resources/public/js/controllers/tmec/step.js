@@ -12,31 +12,30 @@
         var vm = this;
 
         vm.current = {};
-        
+
         vm.stepData = [
-            { order: 1,  comment:"", waiting: false, label: "Cadrage" },
-            { order: 2,  comment:"", waiting: false, label: "Devis" },
-            { order: 3,  comment:"", waiting: false, label: "CDC" },
-            { order: 4,  comment:"", waiting: false, label: "R7J" },
-            { order: 5,  comment:"", waiting: false, label: "Scipts Jdd" },
-            { order: 6,  comment:"", waiting: false, label: "PP" },
-            { order: 7,  comment:"", waiting: false, label: "Outils Tperf" },
-            { order: 8,  comment:"", waiting: false, label: "Tuning" },
-            { order: 9,  comment:"", waiting: false, label: "Ref" },
-            { order: 10, comment:"", waiting: false, label: "Rapport" },
+            { order: 1,  comment:"", waiting: false, current: false, label: "Cadrage" },
+            { order: 2,  comment:"", waiting: false, current: false, label: "Devis" },
+            { order: 3,  comment:"", waiting: false, current: false, label: "CDC" },
+            { order: 4,  comment:"", waiting: false, current: false, label: "R7J" },
+            { order: 5,  comment:"", waiting: false, current: false, label: "Scipts Jdd" },
+            { order: 6,  comment:"", waiting: false, current: false, label: "PP" },
+            { order: 7,  comment:"", waiting: false, current: false, label: "Outils Tperf" },
+            { order: 8,  comment:"", waiting: false, current: false, label: "Tuning" },
+            { order: 9,  comment:"", waiting: false, current: false, label: "Ref" },
+            { order: 10, comment:"", waiting: false, current: false, label: "Rapport" },
         ];
+
+        vm.stepProgress = 0;
+        vm.current = vm.stepData[vm.stepProgress];
 
         TmecService.listSteps(compagneId)
         .then(function (steps) {
-            vm.steps = steps;
+            //vm.stepData = steps;
             console.log(steps);
         })
         .catch(function (error) {
         });
-
-        vm.stepProgress = 0;
-
-        vm.current = vm.stepData[vm.stepProgress];
 
         vm.finish = false;
 

@@ -70,6 +70,16 @@ class Step
 
 
     /**
+     * @var bool
+     *
+     * @ODM\Field(type="bool")
+     * @JMS\Type("boolean")
+     * @JMS\Expose
+     */
+    private $current;
+
+
+    /**
      * Get the value of id
      *
      * @return  \MongoId
@@ -188,6 +198,30 @@ class Step
     public function getWaiting()
     {
         return $this->waiting;
+    }
+
+    /**
+     * Set waiting
+     *
+     * @param bool $current
+     *
+     * @return self
+     */
+    public function setCurrent($current): self
+    {
+        $this->current = $current;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of current
+     *
+     * @return  bool
+     */
+    public function getCurrent()
+    {
+        return $this->current;
     }
 
      /**
