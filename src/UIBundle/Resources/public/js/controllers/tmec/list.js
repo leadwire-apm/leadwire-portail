@@ -34,7 +34,9 @@
                 controller: 'StepCtrl',
                 controllerAs: 'ctrl',
                 resolve: {
-                    compagneId: id
+                    compagneId: function () {
+                        return id;
+                    }
                 }
             });
 
