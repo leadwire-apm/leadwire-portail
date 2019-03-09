@@ -75,6 +75,16 @@
                     });
             }
 
+            service.updateStep = function (step) {
+                return TmecFactory.updateStep(step)
+                    .then(function (response) {
+                        return response.data;
+                    })
+                    .catch(function (err) {
+                        throw new Error(err);
+                    });
+            };
+
             return service;
         });
 })(window.angular);

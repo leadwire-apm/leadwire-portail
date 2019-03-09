@@ -4,10 +4,12 @@
             '$modalInstance',
             'TmecService',
             'compagneId',
+            'MESSAGES_CONSTANTS',
+            '$state',
              StepCtrlFN,
         ]);
 
-    function StepCtrlFN($modalInstance, TmecService, compagneId) {
+    function StepCtrlFN($modalInstance, TmecService, compagneId, MESSAGES_CONSTANTS, $state) {
 
         var vm = this;
 
@@ -59,7 +61,15 @@
         }
 
         vm.ok = function () {
-            console.log(vm.stepData)
+            angular.forEach(vm.stepData, function(stpe) {
+                TmecService.updateStep(step)
+                .then(function () {
+                    toastr.success(MESSAGES_CONSTANTS.SUCCESS);
+                })
+                .catch(function () {
+                    toastr.error(MESSAGES_CONSTANTS.ERROR);
+                });
+            });
             $modalInstance.close("Ok");
         }
 

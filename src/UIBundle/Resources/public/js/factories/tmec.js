@@ -48,7 +48,14 @@
                 */
                listSteps: function (id) {
                    return $http.get(CONFIG.BASE_URL + 'api/step/list/' + id);
-               },
+               },                 /**
+               *
+               * @returns {Promise}
+               */
+              updateStep: function (step) {
+                  return $http.post(
+                      CONFIG.BASE_URL + 'api/step/update', step);
+              },
             };
         });
 })(window.angular);
