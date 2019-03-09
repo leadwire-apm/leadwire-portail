@@ -5,7 +5,7 @@ namespace AppBundle\Service;
 use AppBundle\Document\Tmec;
 use Symfony\Component\Finder\Finder;
 use AppBundle\Manager\TmecManager;
-use ATS\PaymentBundle\Service\StepService;
+use AppBundle\Service\StepService;
 use JMS\Serializer\SerializerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
