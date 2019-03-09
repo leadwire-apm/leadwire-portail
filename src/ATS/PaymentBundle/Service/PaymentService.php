@@ -2,21 +2,21 @@
 
 namespace ATS\PaymentBundle\Service;
 
-use ATS\PaymentBundle\Exception\OmnipayException;
-use ATS\PaymentBundle\Service\GateWay;
+use Psr\Log\LoggerInterface;
 use Omnipay\Common\CreditCard;
 use ATS\PaymentBundle\Document\Customer;
-use Psr\Log\LoggerInterface;
+use ATS\PaymentBundle\Service\CustomerService;
+use ATS\PaymentBundle\Exception\OmnipayException;
 
 class PaymentService
 {
     /**
-     * @var \ATS\PaymentBundle\Service\CustomerService
+     * @var CustomerService
      */
     private $customerService;
 
     /**
-     * @var \ATS\PaymentBundle\Service\GateWay
+     * @var CustomStripeGateway
      */
     private $gateway;
 
@@ -27,20 +27,19 @@ class PaymentService
 
     /**
      * PaymentService constructor.
-     * @param \ATS\PaymentBundle\Service\CustomerService $customerService
+     * @param CustomerService $customerService
      * @param LoggerInterface $logger
-     * @param GateWay $gateWay
+     * @param CustomStripeGateway $gateWay
      */
     public function __construct(
         CustomerService $customerService,
         LoggerInterface $logger,
-        GateWay $gateWay
+        CustomStripeGateway $gateWay
     ) {
         $this->customerService = $customerService;
         $this->logger = $logger;
         $this->gateway = $gateWay;
     }
-
 
     public function purchase($creditCardData, $customerEmail, $amount, $currency)
     {

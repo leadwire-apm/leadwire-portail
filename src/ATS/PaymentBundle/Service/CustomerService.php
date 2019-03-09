@@ -29,13 +29,13 @@ class CustomerService
      * @param CustomerManager $customerManager
      * @param SerializerInterface $serializer
      * @param LoggerInterface $logger
-     * @param GateWay $gateWay
+     * @param CustomStripeGateway $gateWay
      */
     public function __construct(
         CustomerManager $customerManager,
         SerializerInterface $serializer,
         LoggerInterface $logger,
-        GateWay $gateWay
+        CustomStripeGateway $gateWay
     ) {
         $this->customerManager = $customerManager;
         $this->serializer = $serializer;

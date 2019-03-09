@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c6937ad201b4002d66a126c189b8c992",
+    "content-hash": "5056e43a30d5f9f16f7753f048d305a7",
     "packages": [
         {
             "name": "alcaeus/mongo-php-adapter",
@@ -3459,11 +3459,17 @@
         },
         {
             "name": "omnipay/stripe",
-            "version": "dev-patch-1",
+            "version": "v3.0.1",
             "source": {
                 "type": "git",
-                "url": "https://github.com/aksontini/omnipay-stripe",
-                "reference": "a1f43acbc243697e18443a4e1ee4c448af100087"
+                "url": "https://github.com/thephpleague/omnipay-stripe.git",
+                "reference": "234c3ed149780ccda78aade17e8368b92e6c2428"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/thephpleague/omnipay-stripe/zipball/234c3ed149780ccda78aade17e8368b92e6c2428",
+                "reference": "234c3ed149780ccda78aade17e8368b92e6c2428",
+                "shasum": ""
             },
             "require": {
                 "omnipay/common": "^3"
@@ -3484,6 +3490,7 @@
                     "Omnipay\\Stripe\\": "src/"
                 }
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -3507,7 +3514,7 @@
                 "payment",
                 "stripe"
             ],
-            "time": "2018-09-18T17:00:28+00:00"
+            "time": "2018-05-15T08:30:49+00:00"
         },
         {
             "name": "paragonie/random_compat",
@@ -7069,8 +7076,7 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "friendsofsymfony/oauth-server-bundle": 20,
-        "omnipay/stripe": 20
+        "friendsofsymfony/oauth-server-bundle": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

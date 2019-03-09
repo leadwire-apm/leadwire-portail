@@ -15,6 +15,9 @@ use JMS\Serializer\Annotation as JMS;
  */
 class Plan
 {
+    const CURRENCY_EURO = "eur";
+    const CURRENCY_USD = "usd";
+
     /**
      * @var \MongoId
      *
@@ -353,6 +356,17 @@ class Plan
     {
         $this->prices[] = $price;
         return $this;
+    }
+
+    public function getPricingPlan(string $name): ?array
+    {
+        $filtered = array_filter($this->prices, function($pricingPlan) {$pricingPlan->getName() === $name;});
+
+        if (empty($filtered) === false) {
+            return reset($filtered);
+        }
+
+        return null;
     }
 
     /**

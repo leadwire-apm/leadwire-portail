@@ -1,9 +1,10 @@
 <?php declare (strict_types = 1);
 namespace ATS\PaymentBundle\Service;
 
+use Psr\Log\LoggerInterface;
 use ATS\PaymentBundle\Document\Customer;
 use ATS\PaymentBundle\Exception\OmnipayException;
-use Psr\Log\LoggerInterface;
+use ATS\PaymentBundle\Service\CustomStripeGateway;
 
 class Subscription
 {
@@ -13,7 +14,7 @@ class Subscription
     private $customerService;
 
     /**
-     * @var GateWay
+     * @var CustomStripeGateway
      */
     private $gateway;
 
@@ -26,12 +27,12 @@ class Subscription
      * PaymentService constructor.
      * @param \ATS\PaymentBundle\Service\CustomerService $customerService
      * @param LoggerInterface $logger
-     * @param GateWay $gateWay
+     * @param CustomStripeGateway $gateWay
      */
     public function __construct(
         CustomerService $customerService,
         LoggerInterface $logger,
-        GateWay $gateWay
+        CustomStripeGateway $gateWay
     ) {
         $this->customerService = $customerService;
         $this->logger = $logger;

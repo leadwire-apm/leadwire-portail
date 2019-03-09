@@ -56,6 +56,8 @@ class PlanController extends Controller
     {
         $data = $request->getContent();
         $planService->modifyPlan($data);
+
+        return $this->renderResponse(null);
     }
     /**
      * @Route(

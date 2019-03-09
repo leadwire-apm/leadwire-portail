@@ -40,7 +40,7 @@
         "jms/serializer-bundle": "~2.3",
         "league/omnipay": "^3.0",
         "nelmio/cors-bundle": "^1.5",
-        "omnipay/stripe": "dev-patch-1",
+        "omnipay/stripe": "^3.0",
         "ramsey/uuid": "^3.8",
         "sensio/distribution-bundle": "^5.0.19",
         "sensio/framework-extra-bundle": "^5.1",
@@ -89,11 +89,5 @@
         "symfony-var-dir": "var",
         "symfony-web-dir": "web",
         "symfony-assets-install": "symlink"
-    },
-    "repositories": [
-        {
-            "type": "git",
-            "url": "https://github.com/aksontini/omnipay-stripe"
-        }
-    ]
+    }
 }

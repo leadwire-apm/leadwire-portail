@@ -30,7 +30,7 @@ class PlanService
     private $logger;
 
     /**
-     * @var GateWay
+     * @var CustomStripeGateway
      */
     private $gateway;
 
@@ -40,13 +40,13 @@ class PlanService
      * @param PlanManager $planManager
      * @param SerializerInterface $serializer
      * @param LoggerInterface $logger
-     * @param GateWay $gateway
+     * @param CustomStripeGateway $gateway
      */
     public function __construct(
         PlanManager $planManager,
         SerializerInterface $serializer,
         LoggerInterface $logger,
-        GateWay $gateway
+        CustomStripeGateway $gateway
     ) {
         $this->planManager = $planManager;
         $this->serializer = $serializer;
@@ -201,7 +201,7 @@ class PlanService
                 $token = $this->gateway->createPlan([
                     "interval" => 'month',
                     "name" => $second->getName(),
-                    "currency" => "eur",
+                    "currency" => Plan::CURRENCY_EURO,
                     "amount" => $second->getPrice(),
                     "id" => $second->getName() . "-month",
                 ])->send()->getData()['id'];
@@ -226,7 +226,7 @@ class PlanService
                 $token = $this->gateway->createPlan([
                     "interval" => 'year',
                     "name" => $second->getName(),
-                    "currency" => "eur",
+                    "currency" => Plan::CURRENCY_EURO,
                     "amount" => $second->getYearlyPrice(),
                     "id" => $second->getName() . "-year",
                 ])->send()->getData()['id'];
@@ -264,7 +264,7 @@ class PlanService
                 $token = $this->gateway->createPlan([
                     "interval" => 'month',
                     "name" => $third->getName(),
-                    "currency" => "eur",
+                    "currency" => Plan::CURRENCY_EURO,
                     "amount" => $third->getPrice(),
                     "id" => $third->getName() . "-month",
                 ])->send()->getData()['id'];
@@ -288,7 +288,7 @@ class PlanService
                 $token = $this->gateway->createPlan([
                     "interval" => 'year',
                     "name" => $third->getName(),
-                    "currency" => "eur",
+                    "currency" => Plan::CURRENCY_EURO,
                     "amount" => $third->getYearlyPrice(),
                     "id" => $third->getName() . "-year",
                 ])->send()->getData()['id'];
@@ -305,11 +305,41 @@ class PlanService
         }
     }
 
-    public function modifyPlan($json)
+    /**
+     * @see https://stripe.com/docs/api/plans/update
+     * ! By design, you cannot change a plan’s ID, amount, currency, or billing cycle.
+     *
+     * @param string $json
+     *
+     * @return void
+     */
+    public function modifyPlan(string $json)
     {
+        /** @var Plan $plan */
         $plan = $this->serializer->deserialize($json, Plan::class, 'json');
 
+        $data = [
+            "interval" => 'month',
+            "name" => $plan->getName(),
+            "currency" => Plan::CURRENCY_EURO,
+            "amount" => $plan->getPrice(),
+            "id" => $plan->getName() . "-month",
+        ];
+        // Monthly plan
+        $this->gateway->deletePlan($data)->send($data);
+        $this->gateway->createPlan($data)->send($data);
+
+        $data = [
+            "interval" => 'year',
+            "name" => $plan->getName(),
+            "currency" => Plan::CURRENCY_EURO,
+            "amount" => $plan->getYearlyPrice(),
+            "id" => $plan->getName() . "-year",
+        ];
+
+        $this->gateway->deletePlan($data)->send();
+        $this->gateway->createPlan($data)->send($data);
+
         $this->planManager->update($plan);
-        dump($plan);
     }
 }

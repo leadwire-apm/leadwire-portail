@@ -6,7 +6,7 @@ services:
 
   ATS\PaymentBundle\:
     resource: '../../*'
-    exclude: '../../{Document,Repository}'
+    exclude: '../../{Document,Repository,Message}'
 
   ats_payment.customer_service:
     class: ATS\PaymentBundle\Service\CustomerService
@@ -16,14 +16,8 @@ services:
     class: ATS\PaymentBundle\Service\PaymentService
     autowire: true
 
-  ats_payment.gateway:
-    class: "ATS\\PaymentBundle\\Service\\GateWay"
-    autowire: false
+  ats_payment.custom_stripe_gateway:
+    class: ATS\PaymentBundle\Service\CustomStripeGateway
     arguments:
-      - "%payment_api_key%"
       - "%secret_key%"
-      - "%providerName%"
-
-  ATS\PaymentBundle\Service\GateWay: "@ats_payment.gateway"
-
-
+  ATS\PaymentBundle\Service\CustomStripeGateway: "@ats_payment.custom_stripe_gateway"
