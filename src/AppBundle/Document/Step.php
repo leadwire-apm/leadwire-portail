@@ -183,9 +183,9 @@ class Step
     /**
      * Get the value of waiting
      *
-     * @return  bool|false
+     * @return  bool
      */
-    public function isWaiting(): ?bool
+    public function getWaiting()
     {
         return $this->waiting;
     }
