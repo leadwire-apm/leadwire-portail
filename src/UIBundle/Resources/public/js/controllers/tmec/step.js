@@ -3,7 +3,6 @@
         .controller('StepCtrl', [
             '$modalInstance',
             'TmecService',
-            'compagneId',
              StepCtrlFN,
         ]);
 
