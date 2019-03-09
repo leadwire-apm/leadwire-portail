@@ -26,9 +26,6 @@ class StepController extends Controller
      */
     public function updateStepAction(Request $request, StepService $stepService)
     {
-        // Only super Admin can do this
-        $this->denyAccessUnlessGranted([User::ROLE_ADMIN, User::ROLE_SUPER_ADMIN]);
-
         $data = $request->getContent();
         $successful = $StepService->update($data);
         return $this->renderResponse($successful);
