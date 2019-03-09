@@ -32,7 +32,7 @@ class StepService
     /**
      * @param string $compagne
      */
-    public function initSteps(array $compagne)
+    public function initSteps(string $compagne)
     {
         $step = $this->stepManager->getBy(['compagne'=> $compagne]);
 
