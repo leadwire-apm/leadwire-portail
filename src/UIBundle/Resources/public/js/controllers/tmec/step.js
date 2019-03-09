@@ -28,11 +28,10 @@
                 steps[0].current = true;
             }
             vm.stepData = steps;
+            console.log(vm.stepData);
         })
         .catch(function (error) {
         });
-
-        vm.finish = false;
 
         vm.next = function () {
             if (vm.stepProgress < vm.stepData.length) {
