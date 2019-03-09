@@ -28,16 +28,16 @@ class StepManager extends AbstractManager
      */
     public function create($compagne, $label, $order): Step
     {
-        $tmec = new Tmec();
-        $tmec
+        $step = new Step();
+        $step
             ->setCompagne($compagne)
             ->setLabel($label)
             ->setOrder($order)
             ->setComment("")
             ->setWaiting(false);
 
-        $this->update($tmec);
+        $this->update($step);
 
-        return $tmec;
+        return $step;
     }
 }
