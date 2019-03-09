@@ -48,7 +48,7 @@
                 vm.stepProgress--;
                 vm.stepData[vm.stepProgress].current = true;
                 vm.current = vm.stepData[vm.stepProgress];
-                
+
                 if(vm.stepProgress + 1 < 10)
                 vm.stepData[vm.stepProgress+1].current = false;
             }
@@ -59,6 +59,7 @@
         }
 
         vm.ok = function () {
+            console.log(vm.stepData)
             $modalInstance.close("Ok");
         }
 
