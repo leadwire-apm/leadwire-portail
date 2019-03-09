@@ -52,7 +52,7 @@ class TmecService
                 $params['endDate'],
                 $params['applicationId']);
 
-            $this->stepService->initSteps($tmec.getId());
+            $this->stepService->initSteps($tmec->getId());
         } else {
             throw new AccessDeniedHttpException("Version is already exist");
         }
