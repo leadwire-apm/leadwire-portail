@@ -187,7 +187,7 @@ class Step
      */
     public function getWaiting()
     {
-        return $this->waiting;
+        return $this->$waiting;
     }
 
      /**
