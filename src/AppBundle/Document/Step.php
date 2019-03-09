@@ -60,11 +60,11 @@ class Step
     private $comment;
 
     /**
-     * @var boolean
+     * @var bool
      *
-     * @ODM\Field(type="boolean", name="waiting")
+     * @ODM\Field(type="bool")
      * @JMS\Type("boolean")
-     * @JMS\Groups({"full","Default"})
+     * @JMS\Expose
      */
     private $waiting;
 
@@ -181,13 +181,13 @@ class Step
     }
 
     /**
-     * Get waiting
+     * Get the value of waiting
      *
-     * @return bool
+     * @return  bool|false
      */
-    public function isWaiting(): bool
+    public function isWaiting(): ?bool
     {
-        return $this->$waiting;
+        return $this->waiting;
     }
 
      /**
