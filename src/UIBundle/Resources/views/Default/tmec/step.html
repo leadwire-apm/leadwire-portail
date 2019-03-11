@@ -62,7 +62,7 @@
                                     <a role="menuitem" ng-click="ctrl.previous()">Previous</a>
                                 </li>
 
-                                <li ng-show="ctrl.stepProgress < ctrl.stepData.length -1" ng-disabled="ctrl.current.waiting">
+                                <li ng-show="ctrl.stepProgress < ctrl.stepData.length -1" ng-disabled="ctrl.current.waiting === true">
                                     <a role="menuitem"  ng-click="ctrl.next()">Next</a>
                                 </li>
 
