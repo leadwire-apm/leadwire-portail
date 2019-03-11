@@ -42,7 +42,7 @@
                 vm.stepData[vm.stepProgress].current = false;
                 vm.stepProgress++;
                 vm.current = vm.stepData[vm.stepProgress];
-                if(vm.stepProgress + 1 < 9)
+                if(vm.stepProgress + 1 < 10)
                 vm.stepData[vm.stepProgress].current = true;
             }
         }
@@ -73,9 +73,9 @@
                 });
             });
             if(error > 0){
-                toastr.success(MESSAGES_CONSTANTS.SUCCESS);
-            }else{
                 toastr.error(MESSAGES_CONSTANTS.ERROR);
+            }else{
+                toastr.success(MESSAGES_CONSTANTS.SUCCESS);
             }
             $modalInstance.close("Ok");
         }
