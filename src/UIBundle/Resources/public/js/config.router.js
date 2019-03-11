@@ -626,6 +626,17 @@ angular.module('leadwireApp')
                     controller: 'EditCompagnesController',
                     controllerAs: 'ctrl',
                 })
+
+                .state('app.management.overview', {
+                    url: '/tmec/overview',
+                    templateUrl: 'tmec/overview.html',
+                    resolve: {
+                        permissions: adminRequired,
+                        menu: updateMenuItems('MANAGEMENT'),
+                    },
+                    controller: 'TmecOverviewController',
+                    controllerAs: 'ctrl',
+                })
                 //END TMEC
 
             function updateMenuItems (key) {

@@ -22,6 +22,15 @@
                     });
                 }
 
+                if(CONFIG.COMPAGNE_ENABLED){
+                    Menus.MANAGEMENT.push(                {
+                        route: 'app.management.overview',
+                        abstractRoute: 'app.management',
+                        icon: 'fa fa-table',
+                        label: 'Compagnes overview',
+                    });
+                }
+
                 return {
                     get: function (menuKey) {
                         return Menus[menuKey]
