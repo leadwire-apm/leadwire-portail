@@ -128,7 +128,7 @@ class TmecService
             }
 
             $tmec = $this->tmecManager->getTmecById($id);
-            array_push($item['compagnes'], $tmec);
+            array_push($item->compagnes, $tmec);
         }
         return $applications;
     }
