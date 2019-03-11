@@ -56,7 +56,7 @@ class TmecController extends Controller
      * @param Request $request
      * @param TmecService $tmecService
      * @param string $application
-     * @param boolean $completed
+     * @param string $completed
      * 
      * @return Response
      */
