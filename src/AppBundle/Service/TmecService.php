@@ -123,8 +123,8 @@ class TmecService
 
         foreach($applications as $item) {
             $id = $item->getId();
-            $item->compagnes = $this->tmecManager->getTmecByApplication($id, false);
-            array_push($app,$item);
+            $item->createProperty('compagnes',$this->tmecManager->getTmecByApplication($id, "false"));
+            array_push($app, $item);
         }
         return $app;
     }
