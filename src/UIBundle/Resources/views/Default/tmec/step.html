@@ -31,7 +31,7 @@
                                     <div class="form-flex">
                                         <div class="form-group all">
                                             <label class="form-label">Comments : </label>
-                                            <textarea class="form-control" ng-model="ctrl.current.comment" rows="6" disabled="!vm.isAdmin"></textarea>
+                                            <textarea class="form-control" ng-model="ctrl.current.comment" rows="6" disabled="!ctrl.isAdmin"></textarea>
                                         </div>
                                     </div>
                                 </div>
@@ -40,7 +40,7 @@
                                     <div class="form-flex">
                                         <div class="form-group">
                                             <label class="form-label">Load file : </label>
-                                            <input type="file" ng-model="ctrl.file" class="form-control-file" disabled="!vm.isAdmin">
+                                            <input type="file" ng-model="ctrl.file" class="form-control-file" disabled="!ctrl.isAdmin">
                                         </div>
                                     </div>
                                 </div>
@@ -49,13 +49,13 @@
                                     <div class="form-flex">
                                         <div class="form-group">
                                             <label class="form-label">waiting for informations : </label>
-                                            <input type="checkbox" ng-model="ctrl.current.waiting" disabled="!vm.isAdmin">
+                                            <input type="checkbox" ng-model="ctrl.current.waiting" disabled="!ctrl.isAdmin">
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </fieldset>
-                        <div class="actions" ng-if="vm.isAdmin === true">
+                        <div class="actions" ng-if="ctrl.isAdmin">
                             <ul role="menu" aria-label="Pagination">
 
                                 <li ng-show="ctrl.stepProgress > 0">
