@@ -89,6 +89,7 @@
                 });
             } else {
                 vm.completed = false;
+                vm.compagne.completed = false;
             }
         }
 
