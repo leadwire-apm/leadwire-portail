@@ -59,7 +59,7 @@
                     .then(function (compagnes) {
                         compagnes.forEach(compagne => {
                             getSteps(compagne.id, function (steps) {
-                                compagne.steps = steps;
+                                compagne.steps = stepRec(steps);
                             })
                         });
                         application.compagnes = compagnes;
