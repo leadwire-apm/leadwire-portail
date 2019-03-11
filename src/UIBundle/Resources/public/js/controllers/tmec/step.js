@@ -6,10 +6,11 @@
             'compagneId',
             'MESSAGES_CONSTANTS',
             'UserService',
+            '$localStorage',
              StepCtrlFN,
         ]);
 
-    function StepCtrlFN($modalInstance, TmecService, compagneId, MESSAGES_CONSTANTS, UserService) {
+    function StepCtrlFN($modalInstance, TmecService, compagneId, MESSAGES_CONSTANTS, UserService, $localStorage) {
 
         var vm = this;
 
