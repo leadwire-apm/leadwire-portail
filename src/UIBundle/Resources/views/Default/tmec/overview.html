@@ -46,11 +46,10 @@
     <div class="col-lg-12">
         <h4>[[application.name]]</h4>
     </div>
-    <div class="w-100"></div>
     <div ng-repeat="compagne in application.compagnes"  class=" col-md-offset-1 col-lg-11">
         <h5>[[compagne.version]]</h5>
         <div ng-repeat="step in compagne.steps">
-            <div class="col-md-offset-1 col-lg-1">
+            <div class="col-lg-1">
                     <h6>[[step.label]]</h6>
             </div>
         </div>
