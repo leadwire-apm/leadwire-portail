@@ -123,7 +123,7 @@ class TmecService
         foreach($applications as $item) {
             $id = $item['id'];
 
-            if (!isset($item['compagnes']){
+            if (!isset($item['compagnes'])){
                 $item['compagnes'] = array();
             }
 
