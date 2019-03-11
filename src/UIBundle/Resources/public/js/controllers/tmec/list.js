@@ -4,9 +4,10 @@
             'TmecService',
             'toastr',
             'MESSAGES_CONSTANTS',
-            '$state',
+            'UserService',
             '$stateParams',
             '$modal',
+            '$localStorage',
             ListCompagnesCtrlFN,
         ]);
 
@@ -18,30 +19,51 @@
         TmecService,
         toastr,
         MESSAGES_CONSTANTS,
-        $state,
+        UserService,
         $stateParams,
         $modal,
+        $localStorage,
     ) {
         var vm = this;
 
         vm.applicationId = $stateParams.id;
 
-        vm.openModal = function(id) {
+        var isAdmin = UserService.isAdmin($localStorage.user);
 
-            var modalInstance = $modal.open({
-                size: 'lg',
-                templateUrl: 'tmec/step.html',
-                controller: 'StepCtrl',
-                controllerAs: 'ctrl',
-                resolve: {
-                    compagneId: function () {
-                        return id;
+
+        vm.openModal = function(id, from) {
+
+            var modalInstance = {}
+
+            if(angular.isDefined(from) && from){
+                modalInstance = $modal.open({
+                    size: 'lg',
+                    templateUrl: 'tmec/step.html',
+                    controller: 'StepCtrl',
+                    controllerAs: 'ctrl',
+                    resolve: {
+                        compagneId: function () {
+                            return id;
+                        }
                     }
-                }
-            });
+                });
+    
+                modalInstance.result.then(function () {
+                });
+            } else{
+                modalInstance = $modal.open({
+                    size: 'lg',
+                    templateUrl: 'tmec/stepSimpleUser.html',
+                    controller: 'StepSimpleUserCtrl',
+                    controllerAs: 'ctrl',
+                    resolve: {
+                        compagneId: function () {
+                            return id;
+                        }
+                    }
+                });
+            }
 
-            modalInstance.result.then(function () {
-            });
         };
 
         vm.flipActivityIndicator = function (key) {
