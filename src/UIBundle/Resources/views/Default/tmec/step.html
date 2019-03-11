@@ -62,12 +62,12 @@
                                     <a role="menuitem" ng-click="ctrl.previous()">Previous</a>
                                 </li>
 
-                                <li ng-show="ctrl.stepProgress < ctrl.stepData.length -1 ">
-                                    <a role="menuitem" ng-disabled="ctrl.current.waiting" ng-click="ctrl.next()">Next</a>
+                                <li ng-show="ctrl.stepProgress < ctrl.stepData.length -1" ng-disabled="ctrl.current.waiting">
+                                    <a role="menuitem"  ng-click="ctrl.next()">Next</a>
                                 </li>
 
-                                <li ng-if="ctrl.stepProgress === ctrl.stepData.length -1 ">
-                                    <a role="menuitem" ng-disabled="ctrl.current.waiting" ng-click="ctrl.finished()">Finish</a>
+                                <li ng-if="ctrl.stepProgress === ctrl.stepData.length -1"  ng-disabled="ctrl.current.waiting">
+                                    <a role="menuitem" ng-click="ctrl.finished()">Finish</a>
                                 </li>
 
                             </ul>
