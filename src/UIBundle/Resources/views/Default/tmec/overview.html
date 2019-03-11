@@ -16,7 +16,7 @@
                     <div class=" col-md-offset-1" style="background-color:white">
                         <div ng-repeat="step in compagne.steps">
                             <div class="col-lg-2">
-                                <span ng-class="ctrl.getClass(step)">[[step.label]]</span>
+                                <span ng-class="ctrl.getClass(compagne.steps, step)">[[step.label]]</span>
                             </div>
                         </div>
                     </div>

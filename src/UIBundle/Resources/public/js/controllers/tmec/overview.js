@@ -25,12 +25,22 @@
 
         var vm = this;
 
-        vm.getClass = function (step) {
+        vm.getClass = function (steps, step) {
+
+            var label = "label label-danger";
+
+            steps.forEach(st => {
+                if (st.current === true && st.order > step.order ) {
+                    i = step.order;
+                    label = "label label-success";
+                }
+            });
+
             if (step.waiting) {
-                return "label label-warning";
-            } else if (step.current) {
-                return "label label-warning";
-            }
+                label = "label label-warning";
+            } 
+
+            return label;
         }
 
         vm.flipActivityIndicator = function (key) {
@@ -59,7 +69,7 @@
                     .then(function (compagnes) {
                         compagnes.forEach(compagne => {
                             getSteps(compagne.id, function (steps) {
-                                compagne.steps = stepRec(steps);
+                                compagne.steps = steps;
                             })
                         });
                         application.compagnes = compagnes;
@@ -80,21 +90,6 @@
                 .catch(function (error) {
                     cb([]);
                 });
-        }
-
-        var stepRec = function (steps) {
-            var i = 0;
-            steps.forEach(step => {
-                if (step.current === true) {
-                    i = step.order;
-                }
-            });
-
-            steps.forEach(step => {
-                if (step.order <= i) {
-                    step.current = true;
-                }
-            });
         }
 
         vm.init = function () {
