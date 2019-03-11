@@ -121,7 +121,7 @@ class TmecService
         $applications =  $this->applicationManager->getBy([]);
 
         foreach($applications as $item) {
-            $id = $item->id;
+            $id = $item->getId();
 
             if (!isset($item['compagnes'])){
                 $item['compagnes'] = array();
