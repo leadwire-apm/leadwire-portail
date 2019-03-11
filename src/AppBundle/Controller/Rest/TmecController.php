@@ -82,7 +82,7 @@ class TmecController extends Controller
         return $this->renderResponse($tmec);
     }
 
-        /**
+    /**
      * @Route("/delete/{id}", methods="DELETE")
      *
      * @param Request $request
