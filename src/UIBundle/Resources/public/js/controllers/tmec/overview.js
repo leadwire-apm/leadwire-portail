@@ -1,19 +1,20 @@
 (function (angular) {
     angular.module('leadwireApp')
         .controller('TmecOverviewController', [
+            'ApplicationService',
             'TmecService',
             'toastr',
             'MESSAGES_CONSTANTS',
             '$stateParams',
             '$modal',
-            OverviewControllerFN,
+            CtrlOverviewControllerFN,
         ]);
 
     /**
      * Handle add new application logic
      *
      */
-    function OverviewControllerFN (
+    function CtrlOverviewControllerFN (
         ApplicationService,
         TmecService,
         toastr,
@@ -21,19 +22,7 @@
         $stateParams,
         $modal,
     ) {
-        var vm = this;
-
-            /**
-     * Handle add new application logic
-     *
-     */
-    function ManageApplicationsCtrlFN (
-        ApplicationService,
-        CodeService,
-        toastr,
-        MESSAGES_CONSTANTS,
-        $state,
-    ) {
+    
         var vm = this;
 
         vm.flipActivityIndicator = function (key) {
@@ -65,5 +54,4 @@
             vm.loadApplications();
         }
     }
-}
 })(window.angular);
