@@ -30,7 +30,7 @@
             var label = "label label-danger";
 
             steps.forEach(st => {
-                if (st.current === true && st.order >= step.order) {
+                if (st.current === true && st.order >= step.order  || step.order === 1) {
                     label = "label label-success";
                 }
             });
