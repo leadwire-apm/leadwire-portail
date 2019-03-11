@@ -49,6 +49,9 @@
             vm.applications.forEach(application => {
                 TmecService.list({"application": application.id, "completed": false})
                 .then(function (compagnes) {
+                    compagnes.forEach(compagne => {
+                        compagne.steps = getSteps(compagne.id)
+                    });
                     application.compagnes = compagnes;
                     vm.flipActivityIndicator('isLoading');
                     console.log(vm.applications)
@@ -56,6 +59,16 @@
                 .catch(function (error) {
                     vm.flipActivityIndicator('isLoading');
                 });
+            });
+        }
+
+        var getSteps = function(compagneId){
+            TmecService.listSteps(compagneId)
+            .then(function (steps) {
+                return steps;
+            })
+            .catch(function (error) {
+                return [];
             });
         }
 
