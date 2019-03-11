@@ -68,7 +68,14 @@
         }
 
         vm.finished = function () {
-            vm.finish = true;
+            swal(MESSAGES_CONSTANTS.COMPAGNE_VALIDATE)
+            .then(function (willFinish) {
+                if (willFinish) {
+                    vm.finish = true;
+                } else {
+                    swal.close();
+                }
+            });
         }
 
         vm.ok = function () {

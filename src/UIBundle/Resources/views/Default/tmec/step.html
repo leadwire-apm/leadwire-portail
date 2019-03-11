@@ -66,8 +66,8 @@
                                     <a role="menuitem"  ng-click="ctrl.next()">Next</a>
                                 </li>
 
-                                <li ng-if="ctrl.stepProgress === ctrl.stepData.length -1">
-                                    <a role="menuitem" ng-click="ctrl.finished()">Finish</a>
+                                <li ng-if="ctrl.stepProgress === ctrl.stepData.length -1" ng-if="!ctrl.finish">
+                                    <a role="menuitem" ng-click="ctrl.finished()" ng-if="!ctrl.finish">Finish</a>
                                 </li>
 
                             </ul>
@@ -82,6 +82,6 @@
     </div>
 </div>
 <div class="modal-footer">
-    <button class="btn btn-primary" ng-click="ctrl.ok()">OK</button>
+    <button class="btn btn-primary" ng-click="ctrl.ok()" ng-if="!ctrl.finish">OK</button>
     <button class="btn btn-warning" ng-click="ctrl.cancel()">Cancel</button>
 </div>

@@ -71,6 +71,7 @@ angular.module('leadwireApp', [
         ADD_APP_SUCCESS:
             'Your app has been added successfully. You need to activate your app',
         GO_NEXT_STEP: 'The state must not be waiting, please uncheck the box before continuing',
+        COMPAGNE_VALIDATE: 'If you validate the companion will be archived',
         LOGIN_SUCCESS: function (provider) {
             return 'You have successfully signed in with ' + provider;
         },
