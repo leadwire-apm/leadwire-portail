@@ -42,7 +42,9 @@
                 .then(function () {
                     vm.flipActivityIndicator('isSaving')
                     toastr.success(MESSAGES_CONSTANTS.SUCCESS);
-                    $state.go('app.management.applications');
+                    $state.go('app.management.tmecs', {
+                        id: $stateParams.id,
+                    });
                 })
                 .catch(function () {
                     vm.flipActivityIndicator('isSaving')

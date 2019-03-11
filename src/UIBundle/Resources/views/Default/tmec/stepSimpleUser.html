@@ -11,7 +11,7 @@
                         <ul role="tablist">
 
                             <li role="tab"
-                                ng-class="{'first': ($index == 0), 'last': ($index == ctrl.stepData.length - 1), 'current': (step.current), 'completed': ( ctrl.max > 0)}"
+                                ng-class="{'first': ($index == 0), 'last': ($index == ctrl.stepData.length - 1), 'current': (step.current), 'completed': ( ctrl.max > $index)}"
                                 ng-repeat="step in ctrl.stepData">
                                 <a>
                                     <div class="title">
