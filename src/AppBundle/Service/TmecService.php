@@ -42,7 +42,7 @@ class TmecService
     ) {
         $this->tmecManager = $tmecManager;
         $this->stepService = $stepService;
-        $this->applicationManager = $applicationManager
+        $this->applicationManager = $applicationManager;
         $this->serializer = $serializer;
     }
 
