@@ -72,18 +72,20 @@
 
         vm.ok = function () {
             var error = 0;
-            angular.forEach(vm.stepData, function(step) {
-                TmecService.updateStep(step)
-                .then(function () {
-                })
-                .catch(function () {
-                    error++;
+            if(vm.isAdmin){
+                angular.forEach(vm.stepData, function(step) {
+                    TmecService.updateStep(step)
+                    .then(function () {
+                    })
+                    .catch(function () {
+                        error++;
+                    });
                 });
-            });
-            if(error > 0){
-                toastr.error(MESSAGES_CONSTANTS.ERROR);
-            }else{
-                toastr.success(MESSAGES_CONSTANTS.SUCCESS);
+                if(error > 0){
+                    toastr.error(MESSAGES_CONSTANTS.ERROR);
+                }else{
+                    toastr.success(MESSAGES_CONSTANTS.SUCCESS);
+                }
             }
             $modalInstance.close("Ok");
         }
