@@ -51,6 +51,7 @@ angular.module('leadwireApp', [
         FR_DATE_FORMAT: FR_DATE_FORMAT,
         TAX: TAX,
         LOGIN_METHOD: LOGIN_METHOD,
+        COMPAGNE_ENABLED: COMPAGNE_ENABLED,
         STRIPE_ENABLED: STRIPE_ENABLED,
     })
     .constant('MESSAGES_CONSTANTS', {
