@@ -41,7 +41,7 @@
         .catch(function (error) {
         });
 
-        TmecService.find(id)
+        TmecService.find(compagneId)
         .then(function (compagne) {
             vm.compagne = compagne;
             vm.compagne.startDate = new Date(vm.compagne.startDate);
