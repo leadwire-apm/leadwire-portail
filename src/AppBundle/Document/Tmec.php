@@ -243,6 +243,6 @@ class Tmec
      */
     public function getCompleted()
     {
-        return $this->waiticompletedng;
+        return $this->completed;
     }
 }
