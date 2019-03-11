@@ -120,15 +120,15 @@ class TmecService
     {
         $applications =  $this->applicationManager->getBy([]);
 
-        foreach($arr as $applications) { //foreach element in $arr
+        foreach($arr as $applications) {
             $id = $item['id'];
 
-            if (!isset($item['compagnes'])){
-                $item['compagnes'] = [];
+            if (!isset($item['compagnes']){
+                $item['compagnes'] = array();
             }
 
             $tmec = $this->tmecManager->getTmecById($id);
-            array_push($item['compagnes'], $tmec)
+            array_push($item['compagnes'], $tmec);
         }
         return $applications;
     }
