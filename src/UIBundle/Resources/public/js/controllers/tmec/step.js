@@ -39,7 +39,7 @@
 
         vm.next = function () {
 
-            if( vm.current === true){
+            if( vm.current.waiting === true){
                 toastr.error(MESSAGES_CONSTANTS.GO_NEXT_STEP);
                 return;
             }
