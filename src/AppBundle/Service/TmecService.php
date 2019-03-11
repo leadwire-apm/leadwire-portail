@@ -119,7 +119,7 @@ class TmecService
     public function getApplications()
     {
         $applications =  $this->applicationManager->getBy([]);
-
+        $app = [];
         foreach($applications as $item) {
             $id = $item->getId();
 
@@ -127,9 +127,10 @@ class TmecService
                 $item->compagnes= [];
             }
 
-            $tmec = $this->tmecManager->getTmecById($id);
+            $tmec = $this->tmecManager->getTmecByApplication($id, false);
             array_push($item->compagnes, $tmec);
+            array_push($app,$item);
         }
-        return $applications;
+        return $app;
     }
 }
