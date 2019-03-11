@@ -14,6 +14,7 @@
      *
      */
     function OverviewControllerFN (
+        ApplicationService,
         TmecService,
         toastr,
         MESSAGES_CONSTANTS,
