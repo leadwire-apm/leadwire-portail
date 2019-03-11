@@ -123,8 +123,8 @@ class TmecService
         foreach($applications as $item) {
             $id = $item->getId();
 
-            if (!isset($item['compagnes'])){
-                $item['compagnes'] = array();
+            if (!isset($item->compagnes)){
+                $item->compagnes= [];
             }
 
             $tmec = $this->tmecManager->getTmecById($id);
