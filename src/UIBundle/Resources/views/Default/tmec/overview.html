@@ -39,12 +39,16 @@
         </div>
     </div>
 </div>
+
+
 <div class="container">
-        <div class="row">
-          <div class="col">Column</div>
-          <div class="col">Column</div>
-          <div class="w-100"></div>
-          <div class="col">Column</div>
-          <div class="col">Column</div>
-        </div>
-      </div>
+  <div class="row" ng-repeat="application in ctrl.applications">
+    <div class="col-lg-12">
+        <h2>[[application.name]]</h2>
+    </div>
+    <div class="w-100"></div>
+    <div ng-repeat="compagne in application.compagnes"  class=" col-md-offset-1 col-lg-11">
+        <h3>[[compagne.version]]</h3>
+    </div>
+  </div>
+</div>
