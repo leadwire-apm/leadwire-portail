@@ -4,10 +4,8 @@
             'TmecService',
             'toastr',
             'MESSAGES_CONSTANTS',
-            'UserService',
             '$stateParams',
             '$modal',
-            '$localStorage',
             ListCompagnesCtrlFN,
         ]);
 
@@ -19,17 +17,13 @@
         TmecService,
         toastr,
         MESSAGES_CONSTANTS,
-        UserService,
         $stateParams,
         $modal,
-        $localStorage,
     ) {
         var vm = this;
 
         vm.applicationId = $stateParams.id;
-
-        var isAdmin = UserService.isAdmin($localStorage.user);
-
+        vm.all = false;
 
         vm.openModal = function(id, from) {
 
