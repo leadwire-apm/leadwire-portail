@@ -5,13 +5,15 @@
             'TmecService',
             'compagneId',
             'MESSAGES_CONSTANTS',
-            '$state',
+            'UserService',
              StepCtrlFN,
         ]);
 
-    function StepCtrlFN($modalInstance, TmecService, compagneId, MESSAGES_CONSTANTS, $state) {
+    function StepCtrlFN($modalInstance, TmecService, compagneId, MESSAGES_CONSTANTS, UserService) {
 
         var vm = this;
+
+        vm.isAdmin = UserService.isAdmin($localStorage.user);
 
         vm.current = {};
         vm.stepProgress = 0;
