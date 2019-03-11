@@ -50,7 +50,9 @@
                 TmecService.list({"application": application.id, "completed": false})
                 .then(function (compagnes) {
                     compagnes.forEach(compagne => {
-                        compagne.steps = getSteps(compagne.id)
+                         getSteps(compagne.id, function(steps){
+                            compagne.steps;
+                         })
                     });
                     application.compagnes = compagnes;
                     vm.flipActivityIndicator('isLoading');
@@ -62,13 +64,13 @@
             });
         }
 
-        var getSteps = function(compagneId){
+        var getSteps = function(compagneId, cb){
             TmecService.listSteps(compagneId)
             .then(function (steps) {
-                return steps;
+                cb(steps);
             })
             .catch(function (error) {
-                return [];
+                cb([]);
             });
         }
 
