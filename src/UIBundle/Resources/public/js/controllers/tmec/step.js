@@ -42,7 +42,7 @@
                 vm.stepData[vm.stepProgress].current = false;
                 vm.stepProgress++;
                 vm.current = vm.stepData[vm.stepProgress];
-                if(vm.stepProgress + 1 < 11)
+                if(vm.stepProgress + 1 < 10)
                 vm.stepData[vm.stepProgress].current = true;
             }
         }
