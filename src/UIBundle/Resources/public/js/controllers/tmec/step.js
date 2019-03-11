@@ -63,15 +63,20 @@
         }
 
         vm.ok = function () {
+            var error = 0;
             angular.forEach(vm.stepData, function(step) {
                 TmecService.updateStep(step)
                 .then(function () {
-                    toastr.success(MESSAGES_CONSTANTS.SUCCESS);
                 })
                 .catch(function () {
-                    toastr.error(MESSAGES_CONSTANTS.ERROR);
+                    error++;
                 });
             });
+            if(error > 0){
+                toastr.success(MESSAGES_CONSTANTS.SUCCESS);
+            }else{
+                toastr.error(MESSAGES_CONSTANTS.ERROR);
+            }
             $modalInstance.close("Ok");
         }
 
