@@ -200,11 +200,11 @@ color: #999;
 }
 
 .current .title .step-number {
-background: #4966b1;
+background: #4966b1 !important;
 color: #fff; 
 }
 .current .title .step-text {
-color: #4966b1;
+color: #4966b1 !important;
 }
 
 .completed .title .step-number {
