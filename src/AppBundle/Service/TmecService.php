@@ -119,6 +119,17 @@ class TmecService
     public function getApplications()
     {
         $applications =  $this->applicationManager->getBy([]);
+
+        foreach($arr as $applications) { //foreach element in $arr
+            $id = $item['id'];
+
+            if (!isset($item['compagnes'])){
+                $item['compagnes'] = [];
+            }
+
+            $tmec = $this->tmecManager->getTmecById($id);
+            array_push($item['compagnes'], $tmec)
+        }
         return $applications;
     }
 }
