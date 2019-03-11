@@ -35,19 +35,20 @@
             // should send some criteria
             TmecService.all()
                 .then(function (applications) {
-                    applications.forEach(application => {
+                    vm.flipActivityIndicator('isLoading');
+                    vm.applications = applications;
+                    vm.applications.forEach(application => {
                         TmecService.list({"application": application.id, "completed": false})
                         .then(function (compagnes) {
                             application.compagnes = compagnes;
                         })
                         .catch(function (error) {
                         });
+                        vm.flipActivityIndicator('isLoading');
+
                     });
-                    vm.flipActivityIndicator('isLoading');
-                    vm.applications = applications;
                 })
                 .catch(function (error) {
-                    vm.flipActivityIndicator('isLoading');
                     vm.applications = [];
                 });
         };
