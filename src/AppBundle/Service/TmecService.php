@@ -119,5 +119,6 @@ class TmecService
     public function getApplications()
     {
         $applications =  $this->applicationManager->getBy();
+        return $applications;
     }
 }
