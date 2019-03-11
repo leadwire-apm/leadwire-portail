@@ -51,7 +51,7 @@
                 .then(function (compagnes) {
                     compagnes.forEach(compagne => {
                          getSteps(compagne.id, function(steps){
-                            compagne.steps;
+                            compagne.steps = steps;
                          })
                     });
                     application.compagnes = compagnes;
