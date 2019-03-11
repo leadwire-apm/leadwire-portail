@@ -38,6 +38,12 @@
         });
 
         vm.next = function () {
+
+            if( vm.current === true){
+                toastr.error(MESSAGES_CONSTANTS.GO_NEXT_STEP);
+                return;
+            }
+
             if (vm.stepProgress < vm.stepData.length) {
                 vm.stepData[vm.stepProgress].current = false;
                 vm.stepProgress++;

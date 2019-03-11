@@ -70,6 +70,7 @@ angular.module('leadwireApp', [
         PROXY_HEADER_REQUIRED: 'Proxy headers informations not found',
         ADD_APP_SUCCESS:
             'Your app has been added successfully. You need to activate your app',
+        GO_NEXT_STEP: 'The state must not be waiting',
         LOGIN_SUCCESS: function (provider) {
             return 'You have successfully signed in with ' + provider;
         },
