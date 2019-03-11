@@ -25,9 +25,11 @@
                                     [[application.name]]
                                 </td>                                  
 
-                                <td ng-repeat="compagne in application.compagnes" class="text-center">
+                                <tr  class="text-center">
+                                    <td data-title="Version" data-label="Version" ng-repeat="compagne in application.compagnes"> 
                                         [[compagne.version]]
-                                </td>
+                                    </td>
+                                </tr>
 
                         </tr>
                         </tbody>
