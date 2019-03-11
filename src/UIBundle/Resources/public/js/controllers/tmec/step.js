@@ -18,6 +18,7 @@
 
         vm.current = {};
         vm.stepProgress = 0;
+        vm.compagne = {};
 
         TmecService.listSteps(compagneId)
         .then(function (steps) {
@@ -38,6 +39,13 @@
             console.log(vm.stepData);
         })
         .catch(function (error) {
+        });
+
+        TmecService.find(id)
+        .then(function (compagne) {
+            vm.compagne = compagne;
+            vm.compagne.startDate = new Date(vm.compagne.startDate);
+            vm.compagne.endDate = new Date(vm.compagne.endDate);
         });
 
         vm.next = function () {
@@ -68,14 +76,17 @@
         }
 
         vm.finished = function () {
-            swal(MESSAGES_CONSTANTS.COMPAGNE_VALIDATE)
-            .then(function (willFinish) {
-                if (willFinish) {
-                    vm.finish = true;
-                } else {
-                    swal.close();
-                }
-            });
+            if(vm.completed === true){
+                swal(MESSAGES_CONSTANTS.COMPAGNE_VALIDATE)
+                .then(function (willFinish) {
+                    if (willFinish) {
+                        vm.compagne.completed = true;
+                    } else {
+                        swal.close();
+                        vm.completed = false;
+                    }
+                });
+            }
         }
 
         vm.ok = function () {
@@ -88,6 +99,13 @@
                 .catch(function () {
                     error++;
                 });
+            });
+
+            TmecService.update(vm.compagne)
+            .then(function () {
+            })
+            .catch(function () {
+                err++;
             });
 
             if(error > 0){

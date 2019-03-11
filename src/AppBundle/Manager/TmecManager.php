@@ -81,7 +81,8 @@ class TmecManager extends AbstractManager
             ->setDescription($description)
             ->setStartDate($startDate)
             ->setEndDate($endDate)
-            ->setApplication($application);
+            ->setApplication($application)
+            ->setCompleted(false);
 
         $this->update($tmec);
 

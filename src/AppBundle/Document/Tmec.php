@@ -69,6 +69,15 @@ class Tmec
     private $application;
 
     /**
+     * @var bool
+     *
+     * @ODM\Field(type="bool")
+     * @JMS\Type("boolean")
+     * @JMS\Expose
+     */
+    private $completed;
+
+    /**
      * Get the value of id
      *
      * @return  \MongoId
@@ -211,5 +220,29 @@ class Tmec
         $this->application = $application;
 
         return $this;
+    }
+
+     /**
+     * Set completed
+     *
+     * @param bool $completed
+     *
+     * @return self
+     */
+    public function setCompleted($completed): self
+    {
+        $this->completed = $completed;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of completed
+     *
+     * @return  bool
+     */
+    public function getCompleted()
+    {
+        return $this->waiticompletedng;
     }
 }
