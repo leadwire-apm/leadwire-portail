@@ -198,6 +198,14 @@ font-weight: bold;
 font-weight: bold;
 color: #999; 
 }
+.inProgress .title .step-number {
+    background: #DAA520;
+    color: #fff; 
+}
+
+.inProgress .title .step-text {
+    color: #DAA520;
+}
 
 .current .title .step-number {
 background: #4966b1 !important;
