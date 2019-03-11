@@ -43,7 +43,7 @@
                     vm.flipActivityIndicator('isSaving')
                     toastr.success(MESSAGES_CONSTANTS.SUCCESS);
                     $state.go('app.management.tmecs', {
-                        id: compagne.applicationId,
+                        id: vm.compagne.applicationId,
                     });
                 })
                 .catch(function () {
