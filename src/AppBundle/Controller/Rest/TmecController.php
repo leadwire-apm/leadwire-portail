@@ -51,7 +51,7 @@ class TmecController extends Controller
     }
 
     /**
-     * @Route("/list/{application}/{completed}"", methods="GET")
+     * @Route("/list/{application}/{completed}", methods="GET")
      *
      * @param Request $request
      * @param TmecService $tmecService
