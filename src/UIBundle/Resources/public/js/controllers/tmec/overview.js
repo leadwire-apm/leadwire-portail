@@ -35,7 +35,7 @@
             // should send some criteria
             TmecService.all()
                 .then(function (applications) {
-                    applications.array.forEach(application => {
+                    applications.forEach(application => {
                         TmecService.list({"application": application.id, "completed": false})
                         .then(function (compagnes) {
                             application.compagnes = compagnes;
