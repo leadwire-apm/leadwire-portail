@@ -49,8 +49,10 @@
     <div class="w-100"></div>
     <div ng-repeat="compagne in application.compagnes"  class=" col-md-offset-1 col-lg-11">
         <h5>[[compagne.version]]</h5>
-        <div ng-repeat="step in compagne.steps" class=" col-md-offset-2 col-1">
-            <h6>[[step.label]]</h6>
+        <div ng-repeat="step in compagne.steps">
+            <div class="col-md-offset-2 col-lg-1">
+                    <h6>[[step.label]]</h6>
+            </div>
         </div>
     </div>
   </div>
