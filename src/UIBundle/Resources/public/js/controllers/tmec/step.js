@@ -22,7 +22,9 @@
             angular.forEach(steps, function(value, key) {
                 if(value.current === true){
                     vm.current = value;
-                    vm.stepProgress = value.order;
+                   
+                    if(value.order > 0)
+                    vm.stepProgress = value.order - 1;
                 }
             });
 
