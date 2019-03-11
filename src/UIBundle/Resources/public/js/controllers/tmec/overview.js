@@ -37,21 +37,27 @@
                 .then(function (applications) {
                     vm.flipActivityIndicator('isLoading');
                     vm.applications = applications;
-                    vm.applications.forEach(application => {
-                        TmecService.list({"application": application.id, "completed": false})
-                        .then(function (compagnes) {
-                            application.compagnes = compagnes;
-                        })
-                        .catch(function (error) {
-                        });
-                        vm.flipActivityIndicator('isLoading');
-
-                    });
+                    getCompagnes();
                 })
                 .catch(function (error) {
+                    vm.flipActivityIndicator('isLoading');
                     vm.applications = [];
                 });
         };
+
+        var getCompagnes = function(){
+            vm.applications.forEach(application => {
+                TmecService.list({"application": application.id, "completed": false})
+                .then(function (compagnes) {
+                    application.compagnes = compagnes;
+                    vm.flipActivityIndicator('isLoading');
+                    console.log(vm.applications)
+                })
+                .catch(function (error) {
+                    vm.flipActivityIndicator('isLoading');
+                });
+            });
+        }
 
         vm.init = function () {
             vm = angular.extend(vm, {
