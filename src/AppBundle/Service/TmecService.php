@@ -72,7 +72,7 @@ class TmecService
      */
     public function listTmec(array $params)
     {
-        $tmecList = $this->tmecManager->getTmecByApplication($params['application']);
+        $tmecList = $this->tmecManager->getTmecByApplication($params);
         return $tmecList;
     }
 

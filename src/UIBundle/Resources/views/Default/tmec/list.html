@@ -1,6 +1,6 @@
 <div class="panel" ng-init="ctrl.init()">
     <div class="panel-heading">
-        <h4>Manage Companion</h4>
+        <h4>Manage Companions</h4>
         <hr>
     </div>
     <div class="panel-body">
@@ -8,10 +8,9 @@
             <div class="col-lg-12 ">
                 <div class="row mb30">
                         <div class="col-sm-4" style="display: flex">
-                            <label for="search">Only administrators :</label>
+                            <label for="search">All Companions :</label>
                             <label for="search" class="switch switch-sm ml10">
-                                <input id="search" type="checkbox"
-                                        data-ng-model="ctrl.onlyAdmins">
+                                <input id="search" type="checkbox" ng-change="ctrl.load()" data-ng-model="ctrl.all">
                                 <span><i class="handle"></i></span>
                             </label>
                         </div>
