@@ -63,11 +63,11 @@
                                 </li>
 
                                 <li ng-show="ctrl.stepProgress < ctrl.stepData.length -1 ">
-                                    <a role="menuitem" ng-click="ctrl.next()">Next</a>
+                                    <a role="menuitem" ng-disabled="ctrl.current.waiting" ng-click="ctrl.next()">Next</a>
                                 </li>
 
                                 <li ng-if="ctrl.stepProgress === ctrl.stepData.length -1 ">
-                                    <a role="menuitem" ng-click="ctrl.finished()">Finish</a>
+                                    <a role="menuitem" ng-disabled="ctrl.current.waiting" ng-click="ctrl.finished()">Finish</a>
                                 </li>
 
                             </ul>
