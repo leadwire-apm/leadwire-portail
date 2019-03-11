@@ -60,7 +60,7 @@ class TmecManager extends AbstractManager
     public function getTmecByApplication($application)
     {
         /** @var Tmec $tmec */
-        $tmecList = $this->getDocumentRepository()->findBy(['application' => $application, 'completed' => false]);
+        $tmecList = $this->getDocumentRepository()->findBy(['application' => $application, 'completed' => (boolean)$completed]);
         return $tmecList;
     }
 
