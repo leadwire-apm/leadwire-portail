@@ -56,6 +56,13 @@
                   return $http.post(
                       CONFIG.BASE_URL + 'api/step/update', step);
               },
+             /*
+              * @returns {Promise}
+              */
+             all: function () {
+                 return $http.get(
+                     CONFIG.BASE_URL + 'api/tmec/all');
+             },
             };
         });
 })(window.angular);

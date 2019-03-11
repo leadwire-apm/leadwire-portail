@@ -33,7 +33,7 @@
         vm.loadApplications = function () {
             vm.flipActivityIndicator('isLoading');
             // should send some criteria
-            ApplicationService.all()
+            TmecService.all()
                 .then(function (applications) {
                     vm.flipActivityIndicator('isLoading');
                     vm.applications = applications;

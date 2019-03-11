@@ -9,6 +9,8 @@ use AppBundle\Service\StepService;
 use JMS\Serializer\SerializerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use AppBundle\Manager\ApplicationManager;
+use AppBundle\Document\Application;
 
 class TmecService
 {
@@ -23,6 +25,11 @@ class TmecService
     private $stepService;
 
     /**
+     * @var ApplicationManager
+     */
+    private $applicationManager;
+
+    /**
      * @var SerializerInterface
      */
     private $serializer;
@@ -30,10 +37,12 @@ class TmecService
     public function __construct(
         TmecManager $tmecManager,
         StepService $stepService,
+        ApplicationManager $applicationManager,
         SerializerInterface $serializer
     ) {
         $this->tmecManager = $tmecManager;
         $this->stepService = $stepService;
+        $this->applicationManager = $applicationManager
         $this->serializer = $serializer;
     }
 
@@ -98,5 +107,17 @@ class TmecService
         } else {
             return $this->tmecManager->delete($tmec);
         }
+    }
+
+    /**
+     * Get specific apps
+     *
+     * @codeCoverageIgnore
+     *
+     * @return array
+     */
+    public function getApplications()
+    {
+        $applications =  $this->applicationManager->getBy();
     }
 }

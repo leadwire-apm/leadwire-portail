@@ -86,12 +86,12 @@ class TmecController extends Controller
      * @Route("/delete/{id}", methods="DELETE")
      *
      * @param Request $request
-     * @param tmecService $tmecService
+     * @param TmecService $tmecService
      * @param string $id
      *
      * @return Response
      */
-    public function delete(Request $request, tmecService $tmecService, string $id)
+    public function delete(Request $request, TmecService $tmecService, string $id)
     {
         // Only super Admin can do this
         $this->denyAccessUnlessGranted([User::ROLE_ADMIN, User::ROLE_SUPER_ADMIN]);
@@ -100,4 +100,22 @@ class TmecController extends Controller
 
         return $this->renderResponse(null, Response::HTTP_OK);
     }
+
+    /**
+     * @Route("/all", methods="GET")
+     *
+     * @param Request $request
+     * @param TmecService $tmecService
+     *
+     * @return Response
+     */
+    public function getAllApplicationsAction(Request $request, TmecService $tmecService)
+    {
+        $this->denyAccessUnlessGranted([User::ROLE_ADMIN, User::ROLE_SUPER_ADMIN]);
+
+        $applications = $tmecService->getApplications();
+
+        return $this->renderResponse($applications, Response::HTTP_OK, ["Default"]);
+    }
+
 }
