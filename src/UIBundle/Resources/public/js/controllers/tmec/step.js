@@ -85,9 +85,10 @@
                         vm.compagne.completed = true;
                     } else {
                         swal.close();
-                        vm.completed = false;
                     }
                 });
+            } else {
+                vm.completed = false;
             }
         }
 
