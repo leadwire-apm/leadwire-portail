@@ -57,7 +57,7 @@ class TmecManager extends AbstractManager
      *
      * @return Tmec
      */
-    public function getTmecByApplication($application)
+    public function getTmecByApplication($application, $completed)
     {
         /** @var Tmec $tmec */
         if($completed == true){
