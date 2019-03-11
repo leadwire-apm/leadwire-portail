@@ -52,7 +52,7 @@ class TmecManager extends AbstractManager
     /**
      * Get tmec by its application
      *
-     * @param string $params
+     * @param array $params
      *
      * @return Tmec
      */
