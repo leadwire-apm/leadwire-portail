@@ -14,6 +14,7 @@
 
         vm.current = {};
         vm.stepProgress = 0;
+        vm.max = 0;
 
         TmecService.listSteps(compagneId)
         .then(function (steps) {
@@ -22,8 +23,10 @@
                 if(value.current === true){
                     vm.current = value;
                    
-                    if(value.order > 0)
-                    vm.stepProgress = value.order - 1;
+                    if(value.order > 0){
+                        vm.stepProgress = value.order - 1;
+                        vm.max = value.order - 1;
+                    }
                 }
             });
 
