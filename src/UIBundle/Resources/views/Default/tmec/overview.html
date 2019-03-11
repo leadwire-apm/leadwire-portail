@@ -1,33 +1,48 @@
 <div class="panel" ng-init="ctrl.init()">
-        <div class="panel-heading">
-            <h4>Compagnes Overview</h4>
-            <hr>
-        </div>
-        <div class="panel-body">
-            <div class="row no-margin">
-                <div class="col-lg-12 ">
-                    <div class="no-more-tables">
-                        <table class="table table-striped mb0">
-                            <thead>
+    <div class="panel-heading">
+        <h4>Compagnes Overview</h4>
+        <hr>
+    </div>
+    <div class="panel-body">
+        <div class="row no-margin">
+            <div class="col-lg-12 ">
+                <div class="no-more-tables">
+                    <table class="table table-striped mb0">
+                        <thead>
                             <tr>
                                 <th class="text-center">Application Name</th>
                             </tr>
-                            </thead>
-                            <tbody>
+                        </thead>
+                        <tbody>
                             <tr ng-if="ctrl.ui.isLoading" class="text-center">
                                 <td colspan="6">
                                     <spinner is-loading="ctrl.ui.isLoading" size="24"></spinner>
                                 </td>
                             </tr>
-                            <tr  ng-repeat="application in ctrl.applications" class="text-center">
+                            <tr ng-repeat="application in ctrl.applications" class="text-center">
                                 <td data-title="Name" data-label="Name">
                                     [[application.name]]
                                 </td>
+                                <td>
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center">Vesrion</th>
+                                        </tr>
+                                    </thead>
+                        <tbody>
+                            <tr ng-repeat="compagne in application.compagnes" class="text-center">
+                                <td data-title="Version" data-label="Version">
+                                    [[compagne.version]]
+                                </td>
                             </tr>
-                            </tbody>
-                        </table>
-                    </div>
+                        </tbody>
+
+                        </td>
+                        </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
     </div>
+</div>
