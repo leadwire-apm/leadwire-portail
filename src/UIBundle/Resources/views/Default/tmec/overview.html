@@ -44,11 +44,11 @@
 <div class="container">
   <div class="row" ng-repeat="application in ctrl.applications">
     <div class="col-lg-12">
-        <h2>[[application.name]]</h2>
+        <h4>[[application.name]]</h4>
     </div>
     <div class="w-100"></div>
     <div ng-repeat="compagne in application.compagnes"  class=" col-md-offset-1 col-lg-11">
-        <h3>[[compagne.version]]</h3>
+        <h5>[[compagne.version]]</h5>
     </div>
   </div>
 </div>
