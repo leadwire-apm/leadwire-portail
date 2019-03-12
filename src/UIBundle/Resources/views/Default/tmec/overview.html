@@ -25,22 +25,21 @@
         </div>
     </div>
 
-
-    <div class="accordion" id="accordionExample">
-            <div class="card" ng-repeat="application in ctrl.applications">
-              <div class="card-header" id="headingOne">
-                <h5 class="mb-0">
-                  <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#[[application.id]]" aria-expanded="true" 
-                  aria-controls="collapseOne">
-                    [[application.name]]
-                  </button>
-                </h5>
-              </div>
-              <div id="[[application.id]]" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
-                <div class="card-body">
-                  Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+    <div class="bs-example">
+            <div class="panel-group" id="accordion">
+                <div class="panel panel-default" ng-repeat="application in ctrl.applications">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a data-toggle="collapse" data-parent="#accordion" href="#[[application.name]]">1. What is HTML?</a>
+                        </h4>
+                    </div>
+                    <div id="[[application.name]]" class="panel-collapse collapse in">
+                        <div class="panel-body">
+                            <p>HTML stands for HyperText Markup Language. HTML is the standard markup language for describing the structure of web pages. <a href="https://www.tutorialrepublic.com/html-tutorial/" target="_blank">Learn more.</a></p>
+                        </div>
+                    </div>
                 </div>
-              </div>
-              </div>
-          </div>
+            </div>
+        </div>                                		                            
+    
 </div>
