@@ -26,7 +26,21 @@
         };
 
         vm.deletePlan = function (id) {
-            console.log(id);
+            swal(MESSAGES_CONSTANTS.SWEET_ALERT_VALIDATION())
+                .then(function (willDelete) {
+                    if (willDelete) {
+                        PlanService.delete(id)
+                        .then(function () {
+                            toastr.success(MESSAGES_CONSTANTS.SUCCESS);
+                        })
+                        .then(vm.loadPlans)
+                        .catch(function (error) {
+                            toastr.error(error.message || MESSAGES_CONSTANTS.ERROR);
+                        });
+                    } else {
+                        swal.close();
+                    }
+                });
         };
 
         vm.loadPlans = function () {

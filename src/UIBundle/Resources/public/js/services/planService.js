@@ -38,7 +38,13 @@
             };
 
             service.delete = function (id) {
-
+                return PlanFactory.delete(id)
+                .then(function (response) {
+                    return response.data;
+                })
+                .catch(function (err) {
+                    throw new Error(err);
+                });
             };
 
             service.update = function (plan) {

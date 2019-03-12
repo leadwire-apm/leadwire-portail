@@ -40,9 +40,26 @@
         };
 
         vm.copyCode = function (code) {
-            // console.log(code);
             CodeService.copyToClipboard(code.code);
             toastr.info(MESSAGES_CONSTANTS.CODE_COPIED);
+        };
+
+        vm.generateCode = function () {
+            swal(MESSAGES_CONSTANTS.SWEET_ALERT_VALIDATION())
+                .then(function (willGenerate) {
+                    if (willGenerate) {
+                        CodeService.create()
+                            .then(function (code) {
+                                swal('Code generated successfully!', code);
+                                vm.fetchCodes;
+                            })
+                            .catch(function () {
+                                toastr.error(MESSAGES_CONSTANTS.ERROR);
+                            });
+                    } else {
+                        swal.close();
+                    }
+                });
         };
 
         vm.init = function () {

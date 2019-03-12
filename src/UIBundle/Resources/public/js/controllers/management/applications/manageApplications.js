@@ -49,24 +49,6 @@
                 });
         };
 
-        vm.generateCode = function () {
-            swal(MESSAGES_CONSTANTS.SWEET_ALERT_VALIDATION())
-                .then(function (willGenerate) {
-                    if (willGenerate) {
-                        CodeService.create()
-                            .then(function (code) {
-                                swal('Code generated  successfully!', code);
-                                // toastr.success(MESSAGES_CONSTANTS.SUCCESS);
-                            })
-                            .catch(function () {
-                                toastr.error(MESSAGES_CONSTANTS.ERROR);
-                            });
-                    } else {
-                        swal.close();
-                    }
-                });
-        };
-
         vm.loadApplications = function () {
             vm.flipActivityIndicator('isLoading');
             // should send some criteria

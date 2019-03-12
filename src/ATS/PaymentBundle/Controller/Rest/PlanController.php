@@ -59,6 +59,38 @@ class PlanController extends Controller
 
         return $this->renderResponse(null);
     }
+
+    /**
+     * @Route("/{id}/delete", methods="DELETE")
+     *
+     * @param Request $request
+     * @param PlanService $planService
+     *
+     * @return Response
+     */
+    public function deletePlan(Request $request, PlanService $planService, $id)
+    {
+        $planService->deletePlan($id);
+
+        return $this->renderResponse(null);
+    }
+
+    /**
+     * @Route("/new", methods="POST")
+     *
+     * @param Request $request
+     * @param PlanService $planService
+     *
+     * @return Response
+     */
+    public function newPlan(Request $request, PlanService $planService)
+    {
+        $data = $request->getContent();
+        $planService->createNewPlan($data);
+
+        return $this->renderResponse(null);
+    }
+
     /**
      * @Route(
      *    "/paginate/{pageNumber}/{itemsPerPage}",

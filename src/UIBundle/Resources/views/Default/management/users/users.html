@@ -37,20 +37,20 @@
                             </tr>
                             <tr ng-repeat="user in ctrl.users | inArray:ctrl.onlyAdmins:'roles':ctrl.ADMINS"
                                 class="text-center">
-                                <td data-title="Name" data-label="Name">
-                                    [[user.name]]
+                                <td data-title="Name" data-label="Name" class="text-left">
+                                    <span ng-if="ctrl.isAdmin(user)" class="fa fa-unlock" data-toggle="tooltip" data-placement="top" title="This user has administrative privileges"></span>
+                                    <span>
+                                        [[user.name]]
+                                    </span>
                                 </td>
                                 <td data-title="Email" data-label="Email">
                                     [[user.email]]
                                     <span ng-if="user.emailValid" class="fa fa-check-circle" style="color: #2ECC71;" data-toggle="tooltip" data-placement="top" title="User email is verified"></span>
                                 </td>
                                 <td data-title="Status" data-label="Status">
-                                <span
-                                        data-ng-class="user.locked ? 'label label-danger' : 'label label-success'"
-                                        style="vertical-align: center">
+                                <span data-ng-class="user.locked ? 'label label-danger' : 'label label-success'" style="vertical-align: center">
                                     [[user.locked ? 'Blocked' : 'Active']]
                                 </span>
-
                                 </td>
                                 <td data-title="Actions" data-label="Actions" class="text-center">
                                     <button class="btn btn-default"

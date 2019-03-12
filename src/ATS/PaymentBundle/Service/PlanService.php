@@ -146,20 +146,14 @@ class PlanService
      */
     public function deletePlan($id)
     {
-        $this->planManager->deleteById($id);
-    }
+        /** @var ?Plan $plan */
+        $plan = $this->planManager->getOneBy(['id' => $id]);
 
-    /**
-     * Performs a full text search on  Plan
-     *
-     * @param string $term
-     * @param string $lang
-     *
-     * @return array
-     */
-    public function textSearch($term, $lang)
-    {
-        return $this->planManager->textSearch($term, $lang);
+        if ($plan instanceof Plan) {
+            $this->gateway->deletePlan(["id" => $plan->getName() . "-month"])->send();
+            $this->gateway->deletePlan(["id" => $plan->getName() . "-year"])->send();
+            $this->planManager->deleteById($id);
+        }
     }
 
     public function createDefaulPlans()
@@ -326,8 +320,8 @@ class PlanService
             "id" => $plan->getName() . "-month",
         ];
         // Monthly plan
-        $this->gateway->deletePlan($data)->send($data);
-        $this->gateway->createPlan($data)->send($data);
+        $this->gateway->deletePlan($data)->send();
+        $this->gateway->createPlan($data)->send();
 
         $data = [
             "interval" => 'year',
@@ -338,7 +332,35 @@ class PlanService
         ];
 
         $this->gateway->deletePlan($data)->send();
-        $this->gateway->createPlan($data)->send($data);
+        $this->gateway->createPlan($data)->send();
+
+        $this->planManager->update($plan);
+    }
+
+    public function createNewPlan(string $json)
+    {
+        /** @var Plan $plan */
+        $plan = $this->serializer->deserialize($json, Plan::class, 'json');
+
+        $data = [
+            "interval" => 'month',
+            "name" => $plan->getName(),
+            "currency" => Plan::CURRENCY_EURO,
+            "amount" => $plan->getPrice(),
+            "id" => $plan->getName() . "-month",
+        ];
+
+        $this->gateway->createPlan($data)->send();
+
+        $data = [
+            "interval" => 'year',
+            "name" => $plan->getName(),
+            "currency" => Plan::CURRENCY_EURO,
+            "amount" => $plan->getYearlyPrice(),
+            "id" => $plan->getName() . "-year",
+        ];
+
+        $this->gateway->createPlan($data)->send();
 
         $this->planManager->update($plan);
     }

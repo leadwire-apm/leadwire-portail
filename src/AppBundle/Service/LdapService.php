@@ -48,6 +48,11 @@ class LdapService
     private $entryManager;
 
     /**
+     * @var bool
+     */
+    private $initialized;
+
+    /**
      * LdapService constructor.
      *
      * @param LoggerInterface $logger
@@ -60,16 +65,21 @@ class LdapService
         $this->applicationManager = $applicationManager;
         $this->logger = $logger;
 
-        $this->ldap = Ldap::create(
-            'ext_ldap',
-            [
-                'connection_string' => 'ldap://' . $this->settings['host'] . ':' . $this->settings['port'],
-            ]
-        );
+        try {
+            $this->ldap = Ldap::create(
+                'ext_ldap',
+                [
+                    'connection_string' => 'ldap://' . $this->settings['host'] . ':' . $this->settings['port'],
+                ]
+            );
 
-        $this->ldap->bind($this->settings['dn_user'], $this->settings['mdp']);
+            $this->ldap->bind($this->settings['dn_user'], $this->settings['mdp']);
 
-        $this->entryManager = $this->ldap->getEntryManager();
+            $this->entryManager = $this->ldap->getEntryManager();
+            $this->initialized = true;
+        } catch (\Exception $e) {
+            $this->initialized = false;
+        }
     }
 
     /**

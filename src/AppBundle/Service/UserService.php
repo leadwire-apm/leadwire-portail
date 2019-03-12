@@ -324,7 +324,19 @@ class UserService
      */
     public function newUser($json)
     {
-        return $this->updateUser($json, null);
+        $context = new DeserializationContext();
+        $context->setSerializeNull(true);
+
+        /** @var User $user */
+        $user = $this
+            ->serializer
+            ->deserialize($json, User::class, 'json', $context);
+
+        $this->userManager->update($user);
+
+        $this->sendVerificationEmail($user);
+
+        return true;
     }
 
     /**
@@ -347,9 +359,7 @@ class UserService
                 ->deserialize($json, User::class, 'json', $context);
 
             $this->userManager->update($user);
-            if ($user instanceof User && $user->isEmailValid() === false) {
-                $this->sendVerificationEmail($user);
-            }
+
             $isSuccessful = true;
         } catch (\Exception $e) {
             $this->logger->error($e->getMessage());
