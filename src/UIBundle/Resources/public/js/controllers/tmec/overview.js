@@ -118,7 +118,7 @@ setTimeout(() => {
           }
         });
       });
-}, 500);
+}, 800);
    
       
 })(window.angular);
