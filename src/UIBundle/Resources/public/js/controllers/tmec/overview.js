@@ -101,7 +101,7 @@
             vm.loadApplications();
         }
     }
-
+setTimeout(() => {
     $(document).ready(function() {
         //toggle the component with class accordion_body
         $(".accordion_head").click(function() {
@@ -118,5 +118,7 @@
           }
         });
       });
+}, 5000);
+   
       
 })(window.angular);
