@@ -24,4 +24,31 @@
             </div>
         </div>
     </div>
+
+
+    <!--Accordion wrapper-->
+<div class="accordion md-accordion" id="[[application.id]]" role="tablist" aria-multiselectable="true" ng-repeat="application in ctrl.applications">
+
+        <!-- Accordion card -->
+        <div class="card">
+      
+          <!-- Card header -->
+          <div class="card-header" role="tab" id="[[application.name]]">
+            <a class="collapsed" data-toggle="collapse" data-parent="#[[application.id]]" href="#[[application.name]]"aria-expanded="false" aria-controls="[[application.name]]">
+              <h5 class="mb-0">
+                Collapsible Group Item #1 <i class="fas fa-angle-down rotate-icon"></i>
+              </h5>
+            </a>
+          </div>
+      
+          <!-- Card body -->
+          <div id="[[application.name]]" class="collapse" role="tabpanel" aria-labelledby="[[application.name]]" data-parent="[[application.id]]">
+            <div class="card-body">
+              Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3
+            </div>
+          </div>
+      
+        </div>
+        </div>
+        <!-- Accordion card -->
 </div>
