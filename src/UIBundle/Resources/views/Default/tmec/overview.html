@@ -25,21 +25,13 @@
         </div>
     </div>
 
-    <div class="bs-example">
-            <div class="panel-group" id="accordion">
-                <div class="panel panel-default" ng-repeat="application in ctrl.applications">
-                    <div class="panel-heading">
-                        <h4 class="panel-title">
-                            <a data-toggle="collapse" data-parent="#accordion" href="#[[application.name]]">1. What is HTML?</a>
-                        </h4>
-                    </div>
-                    <div id="[[application.name]]" class="panel-collapse collapse">
-                        <div class="panel-body">
-                            <p>HTML stands for HyperText Markup Language. HTML is the standard markup language for describing the structure of web pages. <a href="https://www.tutorialrepublic.com/html-tutorial/" target="_blank">Learn more.</a></p>
-                        </div>
-                    </div>
-                </div>
+    <div class="accordion_container" ng-repeat="application in ctrl.applications">
+            <div class="accordion_head">[[application.name]]<span class="plusminus">+</span></div>
+            <div class="accordion_body" style="display: none;">
+              <p>First Accordian Body, it will have description</p>
             </div>
-        </div>                                		                            
+          </div>
+          
+                               		                            
     
 </div>
