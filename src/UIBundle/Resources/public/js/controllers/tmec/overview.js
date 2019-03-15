@@ -29,13 +29,9 @@
 
             var label = "label label-danger";
 
-            steps.forEach(st => {
-                if (st.current === true && st.order >= step.order  || step.order === 1) {
-                    label = "label label-success";
-                }
-            });
-
-            if (step.waiting) {
+            if (step.current) {
+                label = "label label-success";
+            } else if (step.waiting) {
                 label = "label label-warning";
             } 
 
@@ -46,72 +42,44 @@
             vm.ui[key] = !vm.ui[key];
         };
 
+        getAllApplications = function (cb) {
+            TmecService.all()
+                .then(function (applications) {
+                    var appIds = [];
+                    applications.forEach(application => {
+                        appIds.push(application.id)
+                    });
+                    cb(appIds)
+                })
+                .catch(function (error) {
+                });
+        }
+
 
         vm.loadApplications = function () {
             vm.flipActivityIndicator('isLoading');
-            // should send some criteria
-            TmecService.all()
-                .then(function (applications) {
+
+            getAllApplications(function(appIds){
+                TmecService.list({ "completed": vm.all, "ids": appIds })
+                .then(function (compagnes) {
                     vm.flipActivityIndicator('isLoading');
-                    vm.applications = applications;
-                    getCompagnes();
+                    vm.compagnes = compagnes;
+                    console.log(compagnes)
                 })
                 .catch(function (error) {
                     vm.flipActivityIndicator('isLoading');
-                    vm.applications = [];
                 });
+            })
         };
-
-        var getCompagnes = function () {
-            vm.applications.forEach(application => {
-                TmecService.list({ "application": application.id, "completed": false })
-                    .then(function (compagnes) {
-                        console.log(compagnes)
-                    })
-                    .catch(function (error) {
-                        vm.flipActivityIndicator('isLoading');
-                    });
-            });
-        }
-
-        var getSteps = function (compagneId, cb) {
-            TmecService.listSteps(compagneId)
-                .then(function (steps) {
-                    cb(steps);
-                })
-                .catch(function (error) {
-                    cb([]);
-                });
-        }
 
         vm.init = function () {
             vm = angular.extend(vm, {
                 ui: {
                     isLoading: false
                 },
-                applications: [],
+                compagnes: [],
             });
             vm.loadApplications();
         }
-    }
-setTimeout(() => {
-    $(document).ready(function() {
-        //toggle the component with class accordion_body
-        $(".accordion_head").click(function() {
-          if ($('.accordion_body').is(':visible')) {
-            $(".accordion_body").slideUp(300);
-            $(".plusminus").text('+');
-          }
-          if ($(this).next(".accordion_body").is(':visible')) {
-            $(this).next(".accordion_body").slideUp(300);
-            $(this).children(".plusminus").text('+');
-          } else {
-            $(this).next(".accordion_body").slideDown(300);
-            $(this).children(".plusminus").text('-');
-          }
-        });
-      });
-}, 800);
-   
-      
+    } 
 })(window.angular);
