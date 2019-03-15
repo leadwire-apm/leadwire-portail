@@ -7,7 +7,7 @@
                        $state,
                        MenuFactory,
                        $location) {
-            $rootScope.menus = $localStorage.currentMenu;
+            // $rootScope.menus = $localStorage.currentMenu;
             $rootScope.applications = $localStorage.applications;
             $rootScope.dashboards = $localStorage.dashboards;
             $rootScope.ASSETS_BASE_URL = CONFIG.ASSETS_BASE_URL;

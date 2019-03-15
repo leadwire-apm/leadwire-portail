@@ -7,13 +7,16 @@
             function (Menus, $state) {
                 return {
                     get: function (menuKey) {
-                        return Menus[menuKey]
-                            ? Menus[menuKey].map(function (menu) {
+                        if (menuKey in Menus) {
+                            menus = Menus[menuKey].map(function (menu) {
                                 return angular.extend({}, menu, {
                                     route: $state.href(menu.route),
                                 });
-                            })
-                            : [];
+                            });
+                        } else {
+                            menus = [];
+                        }
+                        return menus;
                     },
                     set: function (
                         menus,

@@ -222,7 +222,8 @@ angular.module('leadwireApp')
                             function (
                                 MenuFactory, $rootScope, $localStorage,
                                 UserService) {
-                                $rootScope.menus = $localStorage.currentMenu;
+                                // $rootScope.menus = $localStorage.currentMenu;
+                                $rootScope.menus = MenuFactory.get('SETTINGS');;
                                 UserService.handleFirstLogin();
                             },
                         ],
@@ -267,7 +268,8 @@ angular.module('leadwireApp')
                             function (
                                 MenuFactory, $rootScope, $localStorage,
                                 UserService) {
-                                $rootScope.menus = $localStorage.currentMenu;
+                                // $rootScope.menus = $localStorage.currentMenu;
+                                $rootScope.menus = MenuFactory.get('MANAGEMENT');;
                                 UserService.handleFirstLogin();
                             },
                         ],

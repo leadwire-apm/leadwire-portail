@@ -7,12 +7,13 @@
 
     angular.module('leadwireApp').factory('ConfigService', ConfigService);
 
-    ConfigService.$inject = ['$http', '$auth', '$localStorage'];
+    ConfigService.$inject = ['$http', '$auth', '$localStorage', 'CONFIG'];
 
-    function ConfigService($http, $auth, $localStorage) {
+    function ConfigService($http, $auth, $localStorage, CONFIG) {
         var service = {};
 
-        service.baseUrl = 'https://kibana.leadwire.io/';
+        service.baseUrl = CONFIG.KIBANA_BASE_URL;
+        // service.baseUrl = 'https://kibana.leadwire.io/';
 
         service.getUrl = function(tenantPrefix, dashboardId, hasParameters) {
             var tenant = '';
@@ -22,6 +23,7 @@
                     tenant = tenantPrefix + $localStorage.selectedApp.uuid;
                     break;
                 case 'user_':
+                case 'all_user_':
                     tenant = tenantPrefix + $localStorage.user.uuid;
                     break;
                 default:

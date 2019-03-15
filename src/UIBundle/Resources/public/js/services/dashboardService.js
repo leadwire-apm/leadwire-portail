@@ -50,7 +50,8 @@
                     return menu.icon || 'fa fa-dashboard';
                 },
             );
-            $rootScope.menus = $localStorage.currentMenu;
+            // $rootScope.menus = $localStorage.currentMenu;
+            $rootScope.menus = MenuFactory.get('DASHBOARD');;
         };
 
         /**
