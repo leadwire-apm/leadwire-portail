@@ -59,7 +59,8 @@ class TmecService
                 $params['description'],
                 $params['startDate'],
                 $params['endDate'],
-                $params['applicationId']);
+                $params['application'],
+                $params['applicationName']);
 
             $this->stepService->initSteps($tmec);
         } else {

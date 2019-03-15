@@ -34,14 +34,12 @@
                    cm.compagne.applicationName = element.name;
                }
            });
-           
+
            TmecService.create(vm.compagne)
                 .then(function () {
                     vm.flipActivityIndicator('isSaving');
                     toastr.success(MESSAGES_CONSTANTS.SUCCESS);
-                    $state.go('app.management.tmecs', {
-                        id: $stateParams.id,
-                    });
+                    $state.go('app.management.tmecs');
                 })
                 .catch(function (error) {
                     vm.flipActivityIndicator('isSaving');
