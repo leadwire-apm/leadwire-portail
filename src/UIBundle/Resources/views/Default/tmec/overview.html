@@ -12,22 +12,27 @@
                             <tr>
                                 <th class="text-center">Application Name</th>
                                 <th class="text-center">Version</th>
+                                <th class="text-center">Satate</th>
                             </tr>
                             </thead>
-                            <tbody ng-repeat="compagne in ctrl.compagnes">
+                            <tbody >
                             <tr ng-if="ctrl.ui.isLoading" class="text-center">
                                 <td colspan="6">
                                     <spinner is-loading="ctrl.ui.isLoading" size="24"></spinner>
                                 </td>
                             </tr>
-                            <tr ng-repeat="step in compagne.steps" class="text-center">
+                            <tr ng-repeat="compagne in ctrl.compagnes" class="text-center">
                                 
                                 <td data-title="Name" data-label="Name">
                                     [[compagne.applicationName]]
                                 </td>
 
                                 <td data-title="version" data-label="version">
-                                    [[step.version]]
+                                    [[compagne.version]]
+                                </td>
+
+                                <td data-title="version" data-label="version">
+                                    <span ng-repeat="step in compagne.steps" ng-class="ctrl.getClass(sstep)">[[step.label]]</span>
                                 </td>
 
                             </tr>

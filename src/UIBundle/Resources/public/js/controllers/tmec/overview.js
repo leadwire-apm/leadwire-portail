@@ -25,7 +25,7 @@
 
         var vm = this;
 
-        vm.getClass = function (steps, step) {
+        vm.getClass = function (step) {
 
             var label = "label label-danger";
 
