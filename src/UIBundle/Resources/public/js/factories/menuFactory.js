@@ -39,7 +39,7 @@
                     );
 
                     Menus.SETTINGS.push({
-                        route: 'app.app.tmecs',
+                        route: 'app.tmecs',
                         icon: 'fa fa-table',
                         label: 'Compagnes',
                     });
