@@ -13,7 +13,7 @@
      * Handle add new application logic
      *
      */
-    function ListCompagnesCtrlFN (
+    function ListCompagnesCtrlFN(
         TmecService,
         toastr,
         MESSAGES_CONSTANTS,
@@ -25,11 +25,11 @@
         vm.applicationId = $stateParams.id;
         vm.all = false;
 
-        vm.openModal = function(id, from) {
+        vm.openModal = function (id, from) {
 
             var modalInstance = {}
 
-            if(angular.isDefined(from) && from){
+            if (angular.isDefined(from) && from) {
                 modalInstance = $modal.open({
                     size: 'lg',
                     templateUrl: 'tmec/step.html',
@@ -41,10 +41,10 @@
                         }
                     }
                 });
-    
+
                 modalInstance.result.then(function () {
                 });
-            } else{
+            } else {
                 modalInstance = $modal.open({
                     size: 'lg',
                     templateUrl: 'tmec/stepSimpleUser.html',
@@ -75,19 +75,28 @@
                 });
         };
 
+        getAllApplications = function (cb) {
+            TmecService.all()
+                .then(function (applications) {
+                    var appIds = [];
+
+                    applications.forEach(application => {
+                        appIds.push(application.id)
+                    });
+                    cb(appIds)
+                    vm.flipActivityIndicator('isLoading');
+                })
+                .catch(function (error) {
+                    vm.flipActivityIndicator('isLoading');
+
+                });
+        }
+
         vm.load = function () {
             vm.flipActivityIndicator('isLoading');
-            // should send some criteria
 
-            TmecService.all()
-            .then(function (applications) {
-                var appIds = [];
-                
-                applications.forEach(application => {
-                    appIds.push(application.id)
-                });
-
-                TmecService.list({"completed": vm.all, "ids":appIds})
+            getAllApplications(function(appIds){
+                TmecService.list({ "completed": vm.all, "ids": appIds })
                 .then(function (compagnes) {
                     vm.flipActivityIndicator('isLoading');
                     vm.compagnes = compagnes;
@@ -96,12 +105,7 @@
                     vm.flipActivityIndicator('isLoading');
 
                 });
-                vm.flipActivityIndicator('isLoading');
             })
-            .catch(function (error) {
-                vm.flipActivityIndicator('isLoading');
-
-            });
         };
 
         vm.deleteCompagne = function (id) {
