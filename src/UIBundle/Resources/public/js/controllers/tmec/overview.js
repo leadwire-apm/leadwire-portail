@@ -29,7 +29,7 @@
 
             var label = "label label-danger";
 
-            if (step.current) {
+            if (step.current  || step.completed) {
                 label = "label label-success";
             } else if (step.waiting) {
                 label = "label label-warning";
