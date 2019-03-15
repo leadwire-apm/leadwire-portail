@@ -29,12 +29,9 @@
             vm.compagne.steps.forEach(function(element){
                 if(element.current){
                     vm.current = element;
+                    vm.stepProgress = element.id - 1;
                 }
             });
-
-            if(angular.isUndefined(vm.current.id)){
-                vm.compagne.steps[0];
-            }
         });
 
         vm.next = function () {

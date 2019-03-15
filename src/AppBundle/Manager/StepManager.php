@@ -24,10 +24,11 @@ class StepManager extends AbstractManager
      * @param Tmec $tmec
      * @param string $label
      * @param int $order
+     * @param boolean $current
      *
      * @return Step
      */
-    public function create($tmec, $label, $order): Step
+    public function create($tmec, $label, $order, $current): Step
     {
         $step = new Step();
         $step
@@ -36,7 +37,7 @@ class StepManager extends AbstractManager
             ->setOrder($order)
             ->setComment("")
             ->setWaiting(false)
-            ->setCurrent(false)
+            ->setCurrent($current)
             ->setCompleted(false);
 
         $this->update($step);

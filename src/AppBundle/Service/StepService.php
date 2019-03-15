@@ -36,16 +36,16 @@ class StepService
     public function initSteps(Tmec $tmec)
     {
 
-        $this->stepManager->create($tmec, "Cadrage", 1);
-        $this->stepManager->create($tmec, "Devis", 2);
-        $this->stepManager->create($tmec, "CDC", 3);
-        $this->stepManager->create($tmec, "R7J", 4);
-        $this->stepManager->create($tmec, "Scipts Jdd", 5);
-        $this->stepManager->create($tmec, "PP", 6);
-        $this->stepManager->create($tmec, "Outils Tperf", 7);
-        $this->stepManager->create($tmec, "Tuning", 8);
-        $this->stepManager->create($tmec, "Ref", 9);
-        $this->stepManager->create($tmec, "Rapport", 10);
+        $this->stepManager->create($tmec, "Cadrage", 1, true);
+        $this->stepManager->create($tmec, "Devis", 2, false);
+        $this->stepManager->create($tmec, "CDC", 3), false;
+        $this->stepManager->create($tmec, "R7J", 4, false);
+        $this->stepManager->create($tmec, "Scipts Jdd", 5, false);
+        $this->stepManager->create($tmec, "PP", 6, false);
+        $this->stepManager->create($tmec, "Outils Tperf", 7, false);
+        $this->stepManager->create($tmec, "Tuning", 8, false);
+        $this->stepManager->create($tmec, "Ref", 9, false);
+        $this->stepManager->create($tmec, "Rapport", 10, false);
         return null;
     }
 
