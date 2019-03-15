@@ -52,9 +52,4 @@ class LdapServiceTest extends BaseFunctionalTest
         $entryManager->remove($entryUserAll);
         $entryManager->remove($entryUser);
     }
-
-    public function testSaveEntry()
-    {
-
-    }
 }
