@@ -49,15 +49,6 @@ class Step
      *
      * @var string
      */
-    private $compagne;
-
-    /**
-     * @ODM\Field(type="string")
-     * @JMS\Expose
-     * @JMS\Type("string")
-     *
-     * @var string
-     */
     private $comment;
 
     /**
@@ -115,7 +106,7 @@ class Step
      *
      * @return Tmec
      */
-    public function setApplication(Tmec $tmec)
+    public function setTmec(Tmec $tmec)
     {
         $this->tmec = $tmec;
 
@@ -145,31 +136,6 @@ class Step
         $this->id = $id;
 
         return $this;
-    }
-
-
-    /**
-     * Set the value of compagne
-     *
-     * @param  string  $compagne
-     *
-     * @return  self
-     */
-    public function setCompagne(string $compagne)
-    {
-        $this->compagne = $compagne;
-
-        return $this;
-    }
-
-    /**
-     * Get the value of compagne
-     *
-     * @return  string
-     */
-    public function getCompagne()
-    {
-        return $this->compagne;
     }
 
     /**

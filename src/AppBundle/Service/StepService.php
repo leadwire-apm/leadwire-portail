@@ -3,6 +3,7 @@
 namespace AppBundle\Service;
 
 use AppBundle\Document\Step;
+use AppBundle\Document\Tmec;
 use Symfony\Component\Finder\Finder;
 use AppBundle\Manager\StepManager;
 use JMS\Serializer\SerializerInterface;
@@ -30,21 +31,21 @@ class StepService
     }
 
     /**
-     * @param string $compagne
+     * @param Tmec $tmec
      */
-    public function initSteps(string $compagne)
+    public function initSteps(Tmec $tmec)
     {
 
-        $this->stepManager->create($compagne, "Cadrage", 1);
-        $this->stepManager->create($compagne, "Devis", 2);
-        $this->stepManager->create($compagne, "CDC", 3);
-        $this->stepManager->create($compagne, "R7J", 4);
-        $this->stepManager->create($compagne, "Scipts Jdd", 5);
-        $this->stepManager->create($compagne, "PP", 6);
-        $this->stepManager->create($compagne, "Outils Tperf", 7);
-        $this->stepManager->create($compagne, "Tuning", 8);
-        $this->stepManager->create($compagne, "Ref", 9);
-        $this->stepManager->create($compagne, "Rapport", 10);
+        $this->stepManager->create($tmec, "Cadrage", 1);
+        $this->stepManager->create($tmec, "Devis", 2);
+        $this->stepManager->create($tmec, "CDC", 3);
+        $this->stepManager->create($tmec, "R7J", 4);
+        $this->stepManager->create($tmec, "Scipts Jdd", 5);
+        $this->stepManager->create($tmec, "PP", 6);
+        $this->stepManager->create($tmec, "Outils Tperf", 7);
+        $this->stepManager->create($tmec, "Tuning", 8);
+        $this->stepManager->create($tmec, "Ref", 9);
+        $this->stepManager->create($tmec, "Rapport", 10);
         return null;
     }
 
