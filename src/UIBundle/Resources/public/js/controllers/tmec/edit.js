@@ -37,7 +37,14 @@
         };
 
         vm.edit = function () {
-            vm.flipActivityIndicator('isSaving')
+            vm.flipActivityIndicator('isSaving');
+
+            vm.applications.forEach(element => {
+                if(element.id === vm.compagne.application){
+                    vm.compagne.applicationName = element.name;
+                }
+            });
+
             TmecService.update(vm.compagne)
                 .then(function () {
                     vm.flipActivityIndicator('isSaving')
