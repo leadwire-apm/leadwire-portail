@@ -87,7 +87,7 @@ class TmecService
 
         foreach($applications as $applications)
         {
-             array_push($ids, $application.getId());
+             array_push($ids, $application->getId());
         }
 
         return new JsonResponse($output);
