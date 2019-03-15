@@ -80,14 +80,14 @@
         vm.ok = function () {
             var error = 0;
 
-            /*angular.forEach(vm.stepData, function(step) {
+            angular.forEach(vm.compagne.steps, function(step) {
                 TmecService.updateStep(step)
                 .then(function () {
                 })
                 .catch(function () {
                     error++;
                 });
-            });*/
+            });
 
             TmecService.update(vm.compagne)
             .then(function () {
