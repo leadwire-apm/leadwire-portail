@@ -45,7 +45,7 @@
                                     </div>
                                 </div>
 
-                                <div class="form-row"  ng-if="ctrl.stepProgress === ctrl.stepData.length - 1">
+                                <div class="form-row"  ng-if="ctrl.stepProgress ===  ctrl.compagnes.steps.length - 1">
                                     <div class="form-flex">
                                         <div class="form-group">
                                             <label class="form-label">Completed : </label>
@@ -63,7 +63,7 @@
                                     <a role="menuitem" ng-click="ctrl.previous()">Previous</a>
                                 </li>
 
-                                <li ng-show="ctrl.stepProgress < ctrl.stepData.length -1">
+                                <li ng-show="ctrl.stepProgress < ctrl.compagnes.steps.length -1">
                                     <a role="menuitem"  ng-click="ctrl.next()">Next</a>
                                 </li>
                             </ul>

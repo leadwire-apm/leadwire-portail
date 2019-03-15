@@ -30,7 +30,11 @@
                 if(element.current){
                     vm.current = element;
                 }
-            })
+            });
+
+            if(angular.isUndefined(vm.current.id)){
+                vm.compagne.steps[0];
+            }
         });
 
         vm.next = function () {
