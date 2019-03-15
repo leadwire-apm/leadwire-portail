@@ -78,7 +78,7 @@
         vm.load = function () {
             vm.flipActivityIndicator('isLoading');
             // should send some criteria
-            TmecService.list({vm.all)
+            TmecService.list(vm.all)
                 .then(function (compagnes) {
                     vm.flipActivityIndicator('isLoading');
                     vm.compagnes = compagnes;
