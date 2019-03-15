@@ -82,12 +82,12 @@ class TmecService
     public function listTmec(array $params)
     {
         $applications =  $this->applicationManager->getBy([]);
-
-        $ids = array();
+        
+        $ids = array("");
 
         foreach($applications as $application)
         {
-             $ids[] = $application->getId();
+             array_push($ids, $application->getId());
         }
 
         return new JsonResponse($output);
