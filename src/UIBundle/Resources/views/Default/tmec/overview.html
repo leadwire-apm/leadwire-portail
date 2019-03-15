@@ -14,8 +14,8 @@
                                 <th class="text-center">Version</th>
                             </tr>
                             </thead>
-                            <tbody ng-rep>
-                            <tr ng-if="compagne in ctrl.compagnes" class="text-center">
+                            <tbody ng-repeat="compagne in ctrl.compagnes">
+                            <tr ng-if="ctrl.ui.isLoading" class="text-center">
                                 <td colspan="6">
                                     <spinner is-loading="ctrl.ui.isLoading" size="24"></spinner>
                                 </td>
