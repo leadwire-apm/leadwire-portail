@@ -638,7 +638,7 @@ angular.module('leadwireApp')
                     controllerAs: 'ctrl',
                 })
 
-                .state('app.compagnes.overview', {
+                .state('app.overview', {
                     url: '/tmec/overview',
                     templateUrl: 'tmec/overview.html',
                     resolve: {

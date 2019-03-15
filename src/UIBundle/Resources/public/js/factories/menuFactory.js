@@ -44,7 +44,7 @@
                         label: 'Compagnes',
                     },
                     {
-                        route: 'app.compagnes.overview',
+                        route: 'app.overview',
                         icon: 'fa fa-eye',
                         label: 'Compagnes',
                     });
