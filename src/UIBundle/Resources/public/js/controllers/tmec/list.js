@@ -82,7 +82,7 @@
                     applications.forEach(application => {
                         appIds.push(application.id)
                     });
-                    cb(appIds)
+                    cb({'application': appIds})
                 })
                 .catch(function (error) {
                 });
