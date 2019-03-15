@@ -79,16 +79,12 @@
             TmecService.all()
                 .then(function (applications) {
                     var appIds = [];
-
                     applications.forEach(application => {
                         appIds.push(application.id)
                     });
                     cb(appIds)
-                    vm.flipActivityIndicator('isLoading');
                 })
                 .catch(function (error) {
-                    vm.flipActivityIndicator('isLoading');
-
                 });
         }
 
@@ -103,7 +99,6 @@
                 })
                 .catch(function (error) {
                     vm.flipActivityIndicator('isLoading');
-
                 });
             })
         };
