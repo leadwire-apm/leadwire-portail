@@ -45,7 +45,7 @@ class TmecController extends Controller
     {
          // Only super Admin can do this
          $this->denyAccessUnlessGranted([User::ROLE_ADMIN, User::ROLE_SUPER_ADMIN]);
-        $data = json_decode($request->getContent(), true);
+        $data = $request->getContent();
         $successful = $tmecService->update($data);
         return $this->renderResponse($successful);
     }
@@ -60,7 +60,7 @@ class TmecController extends Controller
      */
     public function listTmecAction(Request $request, TmecService $tmecService)
     {
-        $data = $request->getContent();
+        $data = json_decode($request->getContent(), true);
         $tmec = $tmecService->listTmec($data);
         return $this->renderResponse($tmec);
     }
