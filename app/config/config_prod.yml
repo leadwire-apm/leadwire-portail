@@ -8,6 +8,28 @@ monolog:
             action_level: error
             max_files: 10
             level: error
+            channels: ['!kibana', '!es', '!ldap']
+        kibana:
+            type: rotating_file
+            action_level: notice
+            max_files: 10
+            level: notice
+            path:     '%kernel.logs_dir%/kibana.log'
+            channels: [kibana]
+        es:
+            type: rotating_file
+            action_level: notice
+            max_files: 10
+            level: notice
+            path:     '%kernel.logs_dir%/es.log'
+            channels: [es]
+        ldap:
+            type: rotating_file
+            action_level: notice
+            max_files: 10
+            level: notice
+            path:     '%kernel.logs_dir%/ldap.log'
+            channels: [ldap]
         nested:
             type: stream
             path: '%kernel.logs_dir%/%kernel.environment%.log'

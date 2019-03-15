@@ -2,15 +2,15 @@
 
 namespace AppBundle\Service;
 
-use AppBundle\Document\User;
-use Psr\Log\LoggerInterface;
-use Symfony\Component\Ldap\Ldap;
-use Symfony\Component\Ldap\Entry;
-use AppBundle\Document\Invitation;
 use AppBundle\Document\Application;
+use AppBundle\Document\Invitation;
+use AppBundle\Document\User;
 use AppBundle\Manager\ApplicationManager;
-use Symfony\Component\Ldap\Exception\LdapException;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Ldap\Adapter\EntryManagerInterface;
+use Symfony\Component\Ldap\Entry;
+use Symfony\Component\Ldap\Exception\LdapException;
+use Symfony\Component\Ldap\Ldap;
 
 /**
  * Class Ldap Service. Manage Ldap connexion and entries
@@ -78,6 +78,7 @@ class LdapService
             $this->entryManager = $this->ldap->getEntryManager();
             $this->initialized = true;
         } catch (\Exception $e) {
+            $this->logger->emergency('leadwire.ldap.__construct', ['error' => $e->getMessage()]);
             $this->initialized = false;
         }
     }

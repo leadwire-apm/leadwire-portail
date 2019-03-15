@@ -124,7 +124,7 @@ class KibanaService
                 ]
             );
 
-            $this->logger->debug(
+            $this->logger->notice(
                 "leadwire.kibana.createAllUserDashboard",
                 [
                     'url' => $this->url . "api/kibana/dashboards/import?exclude=index-pattern&force=true",
@@ -186,7 +186,7 @@ class KibanaService
                 ]
             );
 
-            $this->logger->debug(
+            $this->logger->notice(
                 "leadwire.kibana.createApplicationDashboards",
                 [
                     'url' => $this->url . "api/kibana/dashboards/import?exclude=index-pattern&force=true",
@@ -233,7 +233,7 @@ class KibanaService
                 ]
             );
 
-            $this->logger->debug(
+            $this->logger->notice(
                 "leadwire.kibana.loadIndexPatternForAllUser",
                 [
                     'url' => $this->url . "api/saved_objects/index-pattern/{$application->getName()}",
@@ -285,7 +285,7 @@ class KibanaService
                 ]
             );
 
-            $this->logger->debug(
+            $this->logger->notice(
                 "leadwire.kibana.loadIndexPatternForApplication",
                 [
                     'url' => $this->url . "api/saved_objects/index-pattern/{$application->getName()}",
@@ -334,7 +334,7 @@ class KibanaService
             ]
         );
 
-        $this->logger->debug(
+        $this->logger->notice(
             "leadwire.kibana.checkIndexPattern",
             [
                 'url' => $this->url . "/api/saved_objects/index-pattern/$applicationName",
@@ -375,7 +375,7 @@ class KibanaService
             ]
         );
 
-        $this->logger->debug(
+        $this->logger->notice(
             "leadwire.kibana.makeDefaultIndex",
             [
                 'url' => $this->url . "api/kibana/settings/defaultIndex",

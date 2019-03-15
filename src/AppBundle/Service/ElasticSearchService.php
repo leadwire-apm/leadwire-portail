@@ -2,16 +2,14 @@
 
 namespace AppBundle\Service;
 
-use GuzzleHttp\Client;
-use AppBundle\Document\User;
-use Psr\Log\LoggerInterface;
 use AppBundle\Document\Application;
+use AppBundle\Document\User;
 use AppBundle\Manager\TemplateManager;
-use AppBundle\Document\ApplicationType;
-use AppBundle\Manager\ApplicationManager;
+use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
-use Symfony\Component\HttpFoundation\Response;
+use Psr\Log\LoggerInterface;
 use SensioLabs\Security\Exception\HttpException;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Class ElasticSearchService Service. Manage connexions with Kibana Rest API.
@@ -64,7 +62,7 @@ class ElasticSearchService
         $this->settings = $settings;
         $this->templateManager = $templateManager;
         $this->logger = $logger;
-        $this->httpClient = new Client(['curl' => array( CURLOPT_SSL_VERIFYPEER => false ),'verify' => false]);
+        $this->httpClient = new Client(['curl' => array(CURLOPT_SSL_VERIFYPEER => false), 'verify' => false]);
 
         $this->url = $settings['host'] . ":" . (string) $settings['port'] . "/";
     }
@@ -84,7 +82,7 @@ class ElasticSearchService
 
     /*********************************************
      *          LOWER LEVEL ACTIONS              *
-    *********************************************/
+     *********************************************/
 
     /**
      * * curl --insecure -u $es_admin_user:$es_admin_password -XGET https://es.leadwire.io/.kibana_${tenant_name}
@@ -104,11 +102,23 @@ class ElasticSearchService
                     'auth' => $this->getAuth(),
                 ]
             );
+
+            $this->logger->notice(
+                "leadwire.es.getIndex",
+                [
+                    'url' => $this->url . ".kibana_$tenantName",
+                    'verb' => 'GET',
+                    'status_code' => $response->getStatusCode(),
+                ]
+            );
         } catch (ClientException $e) {
             $response = $e->getResponse();
             if ($response !== null && $response->getStatusCode() === Response::HTTP_NOT_FOUND) {
+                $this->logger->warning("leadwire.es.getIndex", ['url' => $this->url . ".kibana_$tenantName", 'status_code' => $response->getStatusCode()]);
+
                 return false;
             }
+            $this->logger->error("leadwire.es.getIndex", ['error' => $e->getMessage()]);
 
             throw $e;
         }
@@ -146,11 +156,22 @@ class ElasticSearchService
                     'auth' => $this->getAuth(),
                 ]
             );
+            $this->logger->notice(
+                "leadwire.es.deleteIndex",
+                [
+                    'url' => $this->url . ".kibana_$tenantName",
+                    'verb' => 'DELETE',
+                    'status_code' => $response->getStatusCode(),
+                ]
+            );
         } catch (ClientException $e) {
             $response = $e->getResponse();
             if ($response !== null && $response->getStatusCode() === Response::HTTP_NOT_FOUND) {
+                $this->logger->warning("leadwire.es.deleteIndex", ['url' => $this->url . ".kibana_$tenantName", 'status_code' => $response->getStatusCode()]);
+
                 return false;
             }
+            $this->logger->error("leadwire.es.getIndex", ['error' => $e->getMessage()]);
 
             throw $e;
         }
@@ -160,7 +181,7 @@ class ElasticSearchService
 
     /*********************************************
      *          HIGHER LEVEL ACTIONS             *
-    *********************************************/
+     *********************************************/
 
     /**
      * * curl --insecure -u $es_admin_user:$es_admin_password -XGET https://es.leadwire.io/_alias/${appname}
@@ -173,11 +194,22 @@ class ElasticSearchService
     {
         $response = $this->httpClient->get($this->url . "_alias/$applicationName", ['auth' => $this->getAuth()]);
 
+        $this->logger->notice(
+            "leadwire.es.getAlias",
+            [
+                'url' => $this->url . "_alias/$applicationName",
+                'verb' => 'GET',
+                'status_code' => $response->getStatusCode(),
+            ]
+        );
+
         if ($response->getStatusCode() === Response::HTTP_OK) {
             return true;
         } elseif ($response->getStatusCode() === Response::HTTP_NOT_FOUND) {
             return false;
         } else {
+            $this->logger->error("leadwire.es.getAlias", ['reason' => $response->getReasonPhrase()]);
+
             throw new \Exception("Got {$response->getStatusCode()} from Guzzle", Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -196,12 +228,23 @@ class ElasticSearchService
         $body->actions[0]->add->index = "*-$applicationName-*";
         $body->actions[0]->add->alias = $applicationName;
 
+        $content = json_encode($body);
         $response = $this->httpClient->post(
             $this->url . "_aliases",
             [
                 'headers' => ['Content-Type' => 'application/json'],
                 'auth' => $this->getAuth(),
-                'body' => json_encode($body),
+                'body' => $content,
+            ]
+        );
+
+        $this->logger->notice(
+            "leadwire.es.getAlias",
+            [
+                'url' => $this->url . "_aliases",
+                'verb' => 'GET',
+                'body' => $content,
+                'status_code' => $response->getStatusCode(),
             ]
         );
 
@@ -244,9 +287,18 @@ class ElasticSearchService
             ];
         }
 
-        $this->httpClient->delete($this->url . "_template/apm-6.5.1", ['auth' => $this->getAuth()]);
+        $response = $this->httpClient->delete($this->url . "_template/apm-6.5.1", ['auth' => $this->getAuth()]);
 
-        $this->httpClient->put(
+        $this->logger->notice(
+            "leadwire.es.createIndexTemplate",
+            [
+                'url' => $this->url . "_template/apm-6.5.1",
+                'verb' => 'DELETE',
+                'status_code' => $response->getStatusCode(),
+            ]
+        );
+
+        $response = $this->httpClient->put(
             $this->url . "_template/apm-6.5.1",
             [
                 'auth' => $this->getAuth(),
@@ -256,11 +308,21 @@ class ElasticSearchService
                 'body' => json_encode($content),
             ]
         );
+
+        $this->logger->notice(
+            "leadwire.es.createIndexTemplate",
+            [
+                'url' => $this->url . "_template/apm-6.5.1",
+                'verb' => 'PUT',
+                'body' => json_encode($content),
+                'status_code' => $response->getStatusCode(),
+            ]
+        );
     }
 
     /*********************************************
      *          HELPER METHODS                   *
-    *********************************************/
+     *********************************************/
 
     /**
      * @param Application $app
@@ -302,7 +364,7 @@ class ElasticSearchService
                     }
                 }
             } catch (\GuzzleHttp\Exception\ClientException $e) {
-                $this->logger->error($e->getMessage());
+                $this->logger->error('leadwire.es.getRawDashboards', ['error' => $e->getMessage()]);
             }
         }
         return $res;
@@ -342,10 +404,9 @@ class ElasticSearchService
 
     protected function transformeId($id)
     {
-        $searchs = ['dashboard:', 'visualization:'];
-        foreach ($searchs as $search) {
-            $id = str_replace($search, "", $id);
-        }
+        $id = str_replace('dashboard:', "", $id);
+        $id = str_replace('visualization:', "", $id);
+
         return $id;
     }
 

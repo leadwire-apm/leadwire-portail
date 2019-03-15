@@ -40,14 +40,20 @@ services:
     AppBundle\Service\LdapService:
         arguments:
             $settings: '%ldap%'
+        tags:
+            - { name: monolog.logger, channel: ldap }
 
     AppBundle\Service\ElasticSearchService:
         arguments:
             $settings: "%elastic%"
+        tags:
+            - { name: monolog.logger, channel: es }
 
     AppBundle\Service\KibanaService:
         arguments:
             $settings: "%kibana%"
+        tags:
+            - { name: monolog.logger, channel: kibana }
 
     AppBundle\Service\InvitationService:
         arguments:
