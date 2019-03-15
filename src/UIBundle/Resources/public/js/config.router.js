@@ -637,6 +637,25 @@ angular.module('leadwireApp')
                     controller: 'TmecOverviewController',
                     controllerAs: 'ctrl',
                 })
+
+                .state('app.compagnes.overview', {
+                    url: '/tmec/overview',
+                    templateUrl: 'tmec/overview.html',
+                    resolve: {
+                        permissions: loginRequired,
+                        menu: updateMenuItems('SETTINGS'),
+                        beforeMount: [
+                            '$rootScope',
+                            'UserService',
+                            function ($rootScope, UserService) {
+                                UserService.handleFirstLogin();
+                                return Promise.resolve();
+                            },
+                        ],
+                    },
+                    controller: 'TmecOverviewController',
+                    controllerAs: 'ctrl',
+                })
                 //END TMEC
 
             function updateMenuItems (key) {
