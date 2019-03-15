@@ -11,6 +11,7 @@ use AppBundle\Manager\UserManager;
 use AppBundle\SearchGuard\SgRoles;
 use AppBundle\SearchGuard\SgRolesMapping;
 use JMS\Serializer\SerializerInterface;
+use Symfony\Component\Filesystem\Filesystem;
 
 class SearchGuardService
 {
@@ -34,16 +35,20 @@ class SearchGuardService
      */
     private $userManager;
 
+    private $sgConfig;
+
     public function __construct(
         SerializerInterface $serializer,
         ApplicationManager $applicationManager,
         ApplicationPermissionManager $permissionManager,
-        UserManager $userManager
+        UserManager $userManager,
+        array $sgConfig
     ) {
         $this->serializer = $serializer;
         $this->applicationManager = $applicationManager;
         $this->permissionManager = $permissionManager;
         $this->userManager = $userManager;
+        $this->sgConfig = $sgConfig;
     }
 
     public function prepareMappingsConfig()
@@ -135,18 +140,46 @@ class SearchGuardService
                         "READ",
                         "indices:data/read/field_caps[index]",
                         "indices:data/read/field_caps",
-                    ]
+                    ],
                 ];
             }
 
             $serialized .= $this->serializer->serialize(
                 [
-                    "sg_user_{$user->getUuid()}" => $indices
+                    "sg_user_{$user->getUuid()}" => $indices,
                 ],
                 'yml'
             );
         }
 
         return $serialized;
+    }
+
+    /**
+     * * sh /usr/share/elasticsearch/plugins/search-guard-6/tools/sgadmin.sh -cd /usr/share/elasticsearch/plugins/search-guard-6/sgconfig/ -icl -nhnv -cacert /certificates/root-ca.pem -cert /certificates/leadwire-apm.pem -key /certificates/leadwire-apm.key -keypass changeit
+     *
+     * @return void
+     */
+    public function updateSearchGuardConfig()
+    {
+        $fs = new Filesystem();
+        $configDir = $this->sgConfig['config_dirpath'];
+
+        $sgRolesData = $this->prepareConfig();
+        $sgRolesMappingsData = $this->prepareMappingsConfig();
+
+        // Delete previous files if any
+        if (is_file($configDir . 'sg_roles.yml') === true) {
+            \unlink($configDir . 'sg_roles.yml');
+        }
+        if (is_file($configDir . 'sg_roles_mapping.yml') === true) {
+            \unlink($configDir . 'sg_roles_mapping.yml');
+        }
+
+        $fs->dumpFile($configDir . 'sg_roles.yml', $sgRolesData);
+        $fs->dumpFile($configDir . 'sg_roles_mapping.yml', $sgRolesMappingsData);
+
+        // ! Hard coded on purpose
+        shell_exec("sh /usr/share/elasticsearch/plugins/search-guard-6/tools/sgadmin.sh -cd /usr/share/elasticsearch/plugins/search-guard-6/sgconfig/ -icl -nhnv -cacert /certificates/root-ca.pem -cert /certificates/leadwire-apm.pem -key /certificates/leadwire-apm.key -keypass changeit &");
     }
 }

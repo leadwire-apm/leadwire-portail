@@ -152,7 +152,7 @@ class CreatePlanRequest extends AbstractRequest
             'currency' => $this->getCurrency(),
             'interval' => $this->getInterval(),
             'product' => array(
-                'name' => $this->getName(),
+                'id' => $this->getName(),
             ),
         );
 

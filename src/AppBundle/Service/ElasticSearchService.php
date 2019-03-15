@@ -64,7 +64,7 @@ class ElasticSearchService
         $this->settings = $settings;
         $this->templateManager = $templateManager;
         $this->logger = $logger;
-        $this->httpClient = new Client(['defaults' => ['verify' => false]]);
+        $this->httpClient = new Client(['curl' => array( CURLOPT_SSL_VERIFYPEER => false ),'verify' => false]);
 
         $this->url = $settings['host'] . ":" . (string) $settings['port'] . "/";
     }
@@ -269,18 +269,13 @@ class ElasticSearchService
     {
         $res = [];
 
-        $client = new Client(['defaults' => ['verify' => false]]);
-
-        // for prod use only
         $tenants = $app->getIndexes();
-        // for dev use only
-        // $tenants = ["apptest", "adm-portail", "share_" . $app->getUuid()];
 
         foreach ($tenants as $index => $tenant) {
             try {
                 $key = $index === 0 ? "Default" : "Custom";
                 $res[$key] = isset($res[$key]) === true ? $res[$key] : [];
-                $response = $client->get(
+                $response = $this->httpClient->get(
                     $this->url . ".kibana_$tenant" . "/_search?pretty&from=0&size=10000",
                     [
                         'headers' => [

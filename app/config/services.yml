@@ -75,3 +75,7 @@ services:
         arguments:
             $domain: "%app_domain%"
             $secret: "%auth_providers.settings.token_secret%"
+
+    AppBundle\Service\SearchGuardService:
+        arguments:
+            $sgConfig: "%sg%"

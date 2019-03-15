@@ -2,21 +2,18 @@
     angular.module('leadwireApp').controller('dashboardCtrl', [
         '$sce',
         '$scope',
-        'ConfigService',
+        'DashboardService',
         '$localStorage',
         '$state',
         dashboardCtrl,
     ]);
 
-    function dashboardCtrl($sce, $scope, ConfigService, $localStorage, $state) {
+    function dashboardCtrl($sce, $scope, DashboardService, $localStorage, $state) {
         var vm = this;
         vm.applications = $localStorage.applications;
 
-        if (!!$state.params.id) {
-            var tenant = $state.params.tenant || 'app_';
-            vm.dashboardLink = $sce.trustAsResourceUrl(
-                ConfigService.getDashboard(tenant, $state.params.id, false),
-            );
-        }
+        vm.dashboardLink = $sce.trustAsResourceUrl(
+            DashboardService.getDashboard($state.params.tenant, $state.params.id),
+        );
     }
 })(window.angular);

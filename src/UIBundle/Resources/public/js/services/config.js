@@ -30,23 +30,25 @@
                     tenant = tenantPrefix;
             }
 
-            if (hasParameters === true) {
-                return (
-                    service.baseUrl +
-                    tenant +
-                    '&token=' +
-                    $auth.getToken() +
-                    dashboardId
-                );
-            } else {
-                return (
-                    service.baseUrl +
-                    tenant +
-                    '?token=' +
-                    $auth.getToken() +
-                    dashboardId
-                );
-            }
+            return service.baseUrl + tenant + '?token=' + $auth.getToken() + '#/dashboard/' + dashboardId;
+
+            // if (hasParameters === true) {
+            //     return (
+            //         service.baseUrl +
+            //         tenant +
+            //         '&token=' +
+            //         $auth.getToken() +
+            //         dashboardId
+            //     );
+            // } else {
+            //     return (
+            //         service.baseUrl +
+            //         tenant +
+            //         '?token=' +
+            //         $auth.getToken() +
+            //         dashboardId
+            //     );
+            // }
         };
 
         service.getDashboard = function(

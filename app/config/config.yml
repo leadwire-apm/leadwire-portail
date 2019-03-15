@@ -27,6 +27,8 @@ parameters:
     sender: "%mailer_user%"
     github_client_id: '%env(GITHUB_CLIENT_ID)%'
     auth_providers.settings.token_secret: '%env(JWT_TOKEN_SECRET)%'
+    kibana.host: '%env(KIBANA_HOST)%'
+    kibana.port: '%env(KIBANA_PORT)%'
     auth_providers:
         github:
             github_access_token_url: 'https://github.com/login/oauth/access_token'
@@ -40,8 +42,6 @@ parameters:
         dn_user: '%env(LDAP_DN_USER)%'
         mdp: '%env(LDAP_PASSWORD)%'
     kibana:
-        username: '%env(KIBANA_USERNAME)%'
-        password: '%env(KIBANA_PASSWORD)%'
         host: '%env(KIBANA_HOST)%'
         port: '%env(KIBANA_PORT)%'
         template_folder: '%kernel.project_dir%/app/Resources/Kibana'
@@ -50,6 +50,9 @@ parameters:
         password: '%env(ES_PASSWORD)%'
         host: '%env(ES_HOST)%'
         port: '%env(ES_PORT)%'
+    sg:
+        executable_path: '/usr/share/elasticsearch/plugins/search-guard-6/tools/sgadmin.sh'
+        config_dirpath: '/usr/share/elasticsearch/plugins/search-guard-6/sgconfig/'
 
 # Framework Configuration
 framework:
@@ -87,6 +90,7 @@ twig:
         UPLOAD_URL: '%app_schemes%://%app_domain%/uploads/'
         DOWNLOAD_URL: '%app_schemes%://%app_domain%/core/api/resource/'
         GITHUB_CLIENT_ID: '%github_client_id%'
+        KIBANA_BASE_URL: '%kibana.host%:5605/'
         # 'GITHUB_CLIENT_ID': 'a5b3aee9593a1aaa5046', /*test*/
         # 'GITHUB_CLIENT_ID': '5ae68ff984489a4ed647' /*prod*/
         DATE_DEFAULT_FORMAT: 'YYYY-MM-DD[T]HH:mm:ssZZ'
@@ -125,6 +129,3 @@ doctrine_mongodb:
             database: '%env(DATABASE_NAME)%'
             auto_mapping: true
             logging: false
-
-sentry:
-    dsn: "https://918b5864b38348e0948bcb7099ad6824:c59d5742338342198b7de15cde31843c@sentry.test.ats-digital.com/4"

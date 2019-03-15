@@ -7,6 +7,8 @@
             '$rootScope',
             '$localStorage',
             '$state',
+            '$auth',
+            'CONFIG',
             DashboardServiceFN,
         ]);
 
@@ -26,6 +28,8 @@
         $rootScope,
         $localStorage,
         $state,
+        $auth,
+        CONFIG,
     ) {
         var service = this;
 
@@ -54,6 +58,9 @@
             $rootScope.menus = MenuFactory.get('DASHBOARD');
         };
 
+        service.getDashboard = function(tenant, dashboardId) {
+            return CONFIG.KIBANA_BASE_URL + tenant + '?token=' + $auth.getToken() + '#/dashboard/' + dashboardId;
+        };
         /**
          *
          * @param appId

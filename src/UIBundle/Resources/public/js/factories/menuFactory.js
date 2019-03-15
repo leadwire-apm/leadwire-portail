@@ -42,11 +42,11 @@
         ])
         .constant('Menus', {
             DASHBOARD: [
-                {
-                    icon: 'fa fa-dashboard',
-                    label: 'Dashboard',
-                    route: 'app.dashboard.home',
-                },
+                // {
+                //     icon: 'fa fa-dashboard',
+                //     label: 'Dashboard',
+                //     route: 'app.dashboard.home',
+                // },
                 {
                     icon: 'fa fa-eye',
                     label: 'Real User Monitoring',
@@ -67,11 +67,11 @@
                     label: 'Custom Reports',
                     route: 'app.customReports',
                 },
-                {
-                    icon: 'fa fa-table',
-                    label: 'Data Browser',
-                    route: 'app.dataBrowser',
-                },
+                // {
+                //     icon: 'fa fa-table',
+                //     label: 'Data Browser',
+                //     route: 'app.dataBrowser',
+                // },
                 {
                     icon: 'fa fa-briefcase',
                     label: 'Business Transactions',
@@ -82,11 +82,11 @@
                     label: 'Architecture Discovery',
                     route: 'app.architectureDiscovery',
                 },
-                {
-                    icon: 'fa fa-exclamation-triangle',
-                    label: 'Alerts',
-                    route: 'app.alerts',
-                },
+                // {
+                //     icon: 'fa fa-exclamation-triangle',
+                //     label: 'Alerts',
+                //     route: 'app.alerts',
+                // },
                 // {
                 //     icon: 'fa fa-book',
                 //     label: 'Documentation',

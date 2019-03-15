@@ -9,6 +9,7 @@ use ATS\PaymentBundle\Message\ListInvoicesRequest;
 use ATS\PaymentBundle\Message\UpdateSubscriptionRequest;
 use ATS\PaymentBundle\Message\UpdatePlanRequest;
 use Omnipay\Stripe\Message\DeletePlanRequest;
+use ATS\PaymentBundle\Message\CreateProductRequest;
 
 
 
@@ -58,5 +59,10 @@ class CustomStripeGateway extends Gateway
     {
         $this->createRequest(DeletePlanRequest::class, $parameters);
         // return $this->createRequest(UpdatePlanRequest::class, $parameters);
+    }
+
+    public function createProduct(array $parameters = [])
+    {
+        return $this->createRequest(CreateProductRequest::class, $parameters);
     }
 }

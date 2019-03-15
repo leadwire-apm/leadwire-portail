@@ -195,25 +195,20 @@ class LdapService
     {
         $userName = self::USER_NAME_PREFIX . $user->getUuid();
 
-        $result = $this->ldap->query('ou=Group,dc=leadwire,dc=io', "(cn=app_{$application->getUuid()})")->execute();
-        $entry = $result[0];
-        if ($entry instanceof Entry) {
-            $oldValue = $entry->getAttribute('member') !== null ? $entry->getAttribute('member') : [];
-            $entry->setAttribute('member', array_merge($oldValue, ["cn=$userName,ou=People,dc=leadwire,dc=io"]));
-            $this->entryManager->update($entry);
-        } else {
-            throw new \Exception("Unable to find LDAP records for demo applications app tenant");
-        }
-
-        $result = $this->ldap->query('ou=Group,dc=leadwire,dc=io', "(cn=shared_{$application->getUuid()})")->execute();
-
-        $entry = $result[0];
-        if ($entry instanceof Entry) {
-            $oldValue = $entry->getAttribute('member') !== null ? $entry->getAttribute('member') : [];
-            $entry->setAttribute('member', array_merge($oldValue, ["cn=$userName,ou=People,dc=leadwire,dc=io"]));
-            $this->entryManager->update($entry);
-        } else {
-            throw new \Exception("Unable to find LDAP records for demo applications shared tenant");
+        foreach (['app_', 'shared_'] as $tenantPrefix) {
+            $result = $this->ldap->query('ou=Group,dc=leadwire,dc=io', "(cn={$tenantPrefix}{$application->getUuid()})")->execute();
+            $entry = $result[0];
+            if ($entry instanceof Entry) {
+                $oldValue = $entry->getAttribute('member') !== null ? $entry->getAttribute('member') : [];
+                if (in_array("cn=$userName,ou=People,dc=leadwire,dc=io", $oldValue) === false) {
+                    $entry->setAttribute('member', array_merge($oldValue, ["cn=$userName,ou=People,dc=leadwire,dc=io"]));
+                    $this->entryManager->update($entry);
+                } else {
+                    $this->logger->debug("Entry already up to date [cn=$userName,ou=People,dc=leadwire,dc=io] in [cn=app_{$application->getUuid()}]");
+                }
+            } else {
+                throw new \Exception("Unable to find LDAP records for demo applications app tenant");
+            }
         }
 
         return true;

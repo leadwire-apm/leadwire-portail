@@ -96,14 +96,14 @@
             $scope.isChangingContext = true;
             DashboardService.fetchDashboardsByAppId(app.id)
                 .then(function (response) {
-                    $rootScope.menus = [];MenuFactory.get("DASHBOARD");
-                    console.log(response);
+                    $rootScope.menus = MenuFactory.get("DASHBOARD");
                     $scope.isChangingContext = false;
                     $scope.selectedAppId = response.appId;
                     if (response.dashboards && response.dashboards.length) {
-                        var firstDashboardLink =
-                            '/dashboard/' + response.dashboards[0].id + '/';
-                        $location.path(firstDashboardLink);
+                        $state.go('app.dashboard.home', {
+                            id: response.dashboards[0].id,
+                            tenant: response.dashboards[0].tenant
+                        });
                     } else {
                         $location.path('/dashboard/custom');
                     }

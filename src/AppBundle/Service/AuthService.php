@@ -68,6 +68,11 @@ class AuthService
      */
     private $superAdminUsername;
 
+    /**
+     * @var SearchGuardService
+     */
+    private $sgService;
+
     public function __construct(
         UserManager $userManage,
         ApplicationService $applicationService,
@@ -76,6 +81,7 @@ class AuthService
         KibanaService $kibanaService,
         LoggerInterface $logger,
         JWTHelper $jwtHelper,
+        SearchGuardService $sgService,
         string $appDomain,
         array $authProviderSettings,
         string $superAdminUsername
@@ -90,6 +96,7 @@ class AuthService
         $this->appDomain = $appDomain;
         $this->authProviderSettings = $authProviderSettings;
         $this->superAdminUsername = $superAdminUsername;
+        $this->sgService = $sgService;
     }
 
     /**
@@ -135,6 +142,8 @@ class AuthService
                 $this->esService->deleteIndex("all_user_".$user->getUuid());
                 $this->kibanaService->loadIndexPatternForAllUser($user);
                 $this->kibanaService->createAllUserDashboard($user);
+
+                $this->sgService->updateSearchGuardConfig();
             }
         } else {
             // Check if user has been deleted

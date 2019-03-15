@@ -2,7 +2,6 @@
 namespace AppBundle\Service;
 
 use AppBundle\Document\Application;
-use AppBundle\Document\ApplicationType;
 use AppBundle\Document\User;
 use AppBundle\Manager\ApplicationManager;
 use AppBundle\Manager\TemplateManager;
@@ -87,7 +86,7 @@ class KibanaService
         $this->templateManager = $templateManager;
         $this->applicationManager = $applicationManager;
         $this->jwtHelper = $jwtHelper;
-        $this->httpClient = new Client(['defaults' => ['verify' => false]]);
+        $this->httpClient = new Client(['curl' => array(CURLOPT_SSL_VERIFYPEER => false), 'verify' => false]);
         $this->url = $settings['host'] . ":" . (string) $settings['port'] . "/";
     }
 
@@ -125,6 +124,17 @@ class KibanaService
                 ]
             );
 
+            $this->logger->debug(
+                "leadwire.kibana.createAllUserDashboard",
+                [
+                    'url' => $this->url . "api/kibana/dashboards/import?exclude=index-pattern&force=true",
+                    'verb' => 'POST',
+                    'headers' => $headers,
+                    'body' => $content,
+                    'status_code' => $response->getStatusCode(),
+                ]
+            );
+
             return $response->getStatusCode() === Response::HTTP_OK;
         } else {
             throw new \Exception("Template ($template) not found");
@@ -157,13 +167,13 @@ class KibanaService
         );
 
         if ($template !== null) {
-            $content = str_replace("__replace_token__", $prefix . $application->getUuid(), $template->getContent());
-            $content = str_replace("__replace_service__", $prefix . $application->getUuid(), $content);
+            $content = str_replace("__replace_token__", $prefix . $application->getName(), $template->getContent());
+            $content = str_replace("__replace_service__", $prefix . $application->getName(), $content);
 
             $headers = [
                 'kbn-xsrf' => true,
                 'Content-Type' => 'application/json',
-                'tenant' => "{$prefix}_{$user->getUuid()}",
+                'tenant' => "{$prefix}{$user->getUuid()}",
                 'X-Proxy-User' => "user_{$user->getUuid()}",
                 'Authorization' => "Bearer $authorization",
             ];
@@ -173,6 +183,16 @@ class KibanaService
                 [
                     'headers' => $headers,
                     'body' => $content,
+                ]
+            );
+
+            $this->logger->debug(
+                "leadwire.kibana.createApplicationDashboards",
+                [
+                    'url' => $this->url . "api/kibana/dashboards/import?exclude=index-pattern&force=true",
+                    'verb' => 'POST',
+                    'headers' => $headers,
+                    'status_code' => $response->getStatusCode(),
                 ]
             );
 
@@ -196,12 +216,13 @@ class KibanaService
 
         if ($template !== null) {
             $content = str_replace("__replace_token__", "all_user_{$user->getUuid()}", $template->getContent());
+            $authorization = $this->jwtHelper->getAuthorizationHeader($user);
             $headers = [
                 'kbn-xsrf' => true,
                 'Content-Type' => 'application/json',
                 'tenant' => "all_user_{$user->getUuid()}",
                 'X-Proxy-User' => "user_{$user->getUuid()}",
-                'Authorization' => "Bearer {$this->jwtHelper->getAuthorizationHeader($user)}",
+                'Authorization' => "Bearer $authorization",
             ];
 
             $response = $this->httpClient->post(
@@ -209,6 +230,16 @@ class KibanaService
                 [
                     'headers' => $headers,
                     'body' => $content,
+                ]
+            );
+
+            $this->logger->debug(
+                "leadwire.kibana.loadIndexPatternForAllUser",
+                [
+                    'url' => $this->url . "api/saved_objects/index-pattern/{$application->getName()}",
+                    'verb' => 'POST',
+                    'headers' => $headers,
+                    'status_code' => $response->getStatusCode(),
                 ]
             );
         }
@@ -254,6 +285,16 @@ class KibanaService
                 ]
             );
 
+            $this->logger->debug(
+                "leadwire.kibana.loadIndexPatternForApplication",
+                [
+                    'url' => $this->url . "api/saved_objects/index-pattern/{$application->getName()}",
+                    'verb' => 'POST',
+                    'headers' => $headers,
+                    'status_code' => $response->getStatusCode(),
+                ]
+            );
+
             return true;
         } else {
             throw new \Exception("Template (apmserver) not found");
@@ -280,14 +321,26 @@ class KibanaService
     public function checkIndexPattern(string $applicationName, User $user): bool
     {
         $authorization = $this->jwtHelper->getAuthorizationHeader($user);
+        $headers = [
+            'kbn-xsrf' => true,
+            'Content-Type' => 'application/json',
+            'Authorization' => "Bearer $authorization",
+        ];
+
         $response = $this->httpClient->get(
             $this->url . "/api/saved_objects/index-pattern/$applicationName",
             [
-                'headers' => [
-                    'kbn-xsrf' => true,
-                    'Content-Type' => 'application/json',
-                    'Authorization' => "Bearer $authorization",
-                ],
+                'headers' => $headers,
+            ]
+        );
+
+        $this->logger->debug(
+            "leadwire.kibana.checkIndexPattern",
+            [
+                'url' => $this->url . "/api/saved_objects/index-pattern/$applicationName",
+                'verb' => 'GET',
+                'headers' => $headers,
+                'status_code' => $response->getStatusCode(),
             ]
         );
 
@@ -305,26 +358,32 @@ class KibanaService
     public function makeDefaultIndex(string $applicationName, User $user)
     {
         $authorization = $this->jwtHelper->getAuthorizationHeader($user);
+        $headers = [
+            'kbn-xsrf' => true,
+            'Content-Type' => 'application/json',
+            'Authorization' => "Bearer $authorization",
+            'tenant' => "user_{$user->getUuid()}",
+            'X-Proxy-User' => "user_{$user->getUuid()}",
+        ];
+        $content = json_encode(['value' => $applicationName]);
+
         $response = $this->httpClient->post(
             $this->url . "api/kibana/settings/defaultIndex",
             [
-                'headers' => [
-                    'kbn-xsrf' => true,
-                    'Content-Type' => 'application/json',
-                    'Authorization' => "Bearer $authorization",
-                    'tenant' => "user_{$user->getUuid()}",
-                    'X-Proxy-User' => "user_{$user->getUuid()}",
-                ],
-                'body' => json_encode(['value' => $applicationName]),
+                'headers' => $headers,
+                'body' => $content,
             ]
         );
-    }
 
-    private function getAuth()
-    {
-        return [
-            $this->settings['username'],
-            $this->settings['password'],
-        ];
+        $this->logger->debug(
+            "leadwire.kibana.makeDefaultIndex",
+            [
+                'url' => $this->url . "api/kibana/settings/defaultIndex",
+                'verb' => 'POST',
+                'headers' => $headers,
+                'content' => $content,
+                'status_code' => $response->getStatusCode(),
+            ]
+        );
     }
 }

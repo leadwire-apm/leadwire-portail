@@ -39,8 +39,6 @@ cache:
 #         - echo "LDAP_PORT=389" >> .env
 #         - echo "LDAP_DN_USER=cn=ldapadm,dc=leadwire,dc=io" >> .env
 #         - echo "LDAP_PASSWORD=ldppassword123" >> .env
-#         - echo "KIBANA_USERNAME=adm-portail" >> .env
-#         - echo "KIBANA_PASSWORD=portail-adm" >> .env
 #         - echo "KIBANA_HOST=https://kibana.leadwire.io" >> .env
 #         - echo "ES_USERNAME=adm-portail" >> .env
 #         - echo "ES_PASSWORD=portail-adm" >> .env
@@ -74,8 +72,6 @@ phpcs:
         - echo "LDAP_PORT=$TEST_LDAP_PORT" >> .env
         - echo "LDAP_DN_USER=$TEST_LDAP_DN_USER" >> .env
         - echo "LDAP_PASSWORD=$TEST_LDAP_PASSWORD" >> .env
-        - echo "KIBANA_USERNAME=$TEST_KIBANA_USERNAME" >> .env
-        - echo "KIBANA_PASSWORD=$TEST_KIBANA_PASSWORD" >> .env
         - echo "KIBANA_HOST=$TEST_KIBANA_HOST" >> .env
         - echo "KIBANA_PORT=$TEST_KIBANA_PORT" >> .env
         - echo "ES_USERNAME=$TEST_ES_USERNAME" >> .env
@@ -111,8 +107,6 @@ phpstan:
         - echo "LDAP_PORT=$TEST_LDAP_PORT" >> .env
         - echo "LDAP_DN_USER=$TEST_LDAP_DN_USER" >> .env
         - echo "LDAP_PASSWORD=$TEST_LDAP_PASSWORD" >> .env
-        - echo "KIBANA_USERNAME=$TEST_KIBANA_USERNAME" >> .env
-        - echo "KIBANA_PASSWORD=$TEST_KIBANA_PASSWORD" >> .env
         - echo "KIBANA_HOST=$TEST_KIBANA_HOST" >> .env
         - echo "KIBANA_PORT=$TEST_KIBANA_PORT" >> .env
         - echo "ES_USERNAME=$TEST_ES_USERNAME" >> .env
@@ -169,8 +163,6 @@ deploy:test:
         - echo "LDAP_PORT=$TEST_LDAP_PORT" >> .env
         - echo "LDAP_DN_USER=$TEST_LDAP_DN_USER" >> .env
         - echo "LDAP_PASSWORD=$TEST_LDAP_PASSWORD" >> .env
-        - echo "KIBANA_USERNAME=$TEST_KIBANA_USERNAME" >> .env
-        - echo "KIBANA_PASSWORD=$TEST_KIBANA_PASSWORD" >> .env
         - echo "KIBANA_HOST=$TEST_KIBANA_HOST" >> .env
         - echo "KIBANA_PORT=$TEST_KIBANA_PORT" >> .env
         - echo "ES_USERNAME=$TEST_ES_USERNAME" >> .env

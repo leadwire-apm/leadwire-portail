@@ -156,7 +156,7 @@ class PlanService
         }
     }
 
-    public function createDefaulPlans()
+    public function createDefaultPlans()
     {
 
         $createdPlans = $this->gateway->listPlans()->send()->getData()['data'];

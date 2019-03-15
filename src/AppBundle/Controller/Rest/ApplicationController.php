@@ -19,6 +19,7 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Symfony\Component\Routing\Annotation\Route;
+use AppBundle\Service\SearchGuardService;
 
 class ApplicationController extends Controller
 {
@@ -145,17 +146,20 @@ class ApplicationController extends Controller
      *
      * @param Request $request
      * @param ApplicationService $applicationService
+     * @param LdapService $ldapService
+     * @param ElasticSearchService $esService
+     * @param KibanaService $kibanaService
+     * @param SearchGuardService $sgService
      *
-     * @return Response
-     *
-     * @throws \Exception
+     * @return JsonResponse
      */
     public function newApplicationAction(
         Request $request,
         ApplicationService $applicationService,
         LdapService $ldapService,
         ElasticSearchService $esService,
-        KibanaService $kibanaService
+        KibanaService $kibanaService,
+        SearchGuardService $sgService
     ) {
         $status = false;
         try {
@@ -186,6 +190,7 @@ class ApplicationController extends Controller
                     'shared_' . $application->getUuid()
                 );
 
+                $sgService->updateSearchGuardConfig();
                 $status = true;
             }
         } catch (DuplicateApplicationNameException $e) {

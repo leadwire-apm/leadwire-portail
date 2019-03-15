@@ -15,3 +15,6 @@ monolog:
         console:
             type: console
             process_psr_3_messages: false
+
+sentry:
+    dsn: "https://918b5864b38348e0948bcb7099ad6824:c59d5742338342198b7de15cde31843c@sentry.test.ats-digital.com/4"

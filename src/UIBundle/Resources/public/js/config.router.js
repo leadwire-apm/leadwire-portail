@@ -454,7 +454,6 @@ angular.module('leadwireApp')
                 })
 
                 // Synthetic Monitoring
-
                 .state('app.syntheticMonitoring', {
                     url: '/syntheticMonitoring',
                     templateUrl: 'syntheticMonitoring.html',
