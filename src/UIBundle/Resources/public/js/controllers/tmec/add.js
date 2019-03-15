@@ -31,7 +31,7 @@
           
            vm.applications.forEach(element => {
                if(element.id === vm.compagne.application){
-                   cm.compagne.applicationName = element.name;
+                   vm.compagne.applicationName = element.name;
                }
            });
 
