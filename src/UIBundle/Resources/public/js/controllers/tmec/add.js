@@ -56,13 +56,11 @@
         }
 
         vm.init = function () {
-
-            loadApplications();
-
             vm = angular.extend(vm, {
                 ui: {
                     isSaving: false,
                 },
+                applications: [],
                 compagne: {
                     version: '',
                     description: '',
@@ -72,6 +70,7 @@
                     applicationName:''
                 },
             });
+            loadApplications();
         };
     }
 })(window.angular);

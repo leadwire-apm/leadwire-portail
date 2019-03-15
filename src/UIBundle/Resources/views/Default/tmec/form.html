@@ -2,7 +2,7 @@
     <label class="col-sm-2 control-label">Applicatiion *</label>
     <div class="col-sm-10">
         <select ng-model="ctrl.compagne.application" name="application" ng-change="ctrl.change(application.name)">
-            <option ng-repeat="application in ctrl.applications" value="{{application.id}}">{{application.name}}</option>
+            <option ng-repeat="application in ctrl.applications" value="[[application.id]]">[[application.name]]</option>
         </select>
         <span class="text-red" ng-show="compagneForm.application.$error.required && !compagneForm.version.$pristine">
             This field is required
