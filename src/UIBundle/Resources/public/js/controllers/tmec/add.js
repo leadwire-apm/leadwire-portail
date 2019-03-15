@@ -28,6 +28,13 @@
 
         vm.save = function () {
            vm.flipActivityIndicator('isSaving');
+          
+           vm.applications.forEach(element => {
+               if(element.id === vm.compagne.application){
+                   cm.compagne.applicationName = element.name;
+               }
+           });
+           
            TmecService.create(vm.compagne)
                 .then(function () {
                     vm.flipActivityIndicator('isSaving');
@@ -41,10 +48,6 @@
                     toastr.error(error.message || MESSAGES_CONSTANTS.ERROR);
                 });
         };
-
-        vm.change = function(applicationName){
-            vm.compagne.applicationName = applicationName;
-        }
 
         function loadApplications(){
             TmecService.all()
