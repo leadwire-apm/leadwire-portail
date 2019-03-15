@@ -606,7 +606,7 @@ angular.module('leadwireApp')
                 })
 
                 .state('app.management.addTmecs', {
-                    url: '/tmec/add/:id',
+                    url: '/tmec/add',
                     templateUrl: 'tmec/add.html',
                     resolve: {
                         permissions: adminRequired,

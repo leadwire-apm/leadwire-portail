@@ -42,7 +42,23 @@
                 });
         };
 
+        vm.change = function(applicationName){
+            vm.compagne.applicationName = applicationName;
+        }
+
+        function loadApplications(){
+            TmecService.all()
+            .then(function (applications) {
+                vm.applications = applications;
+            })
+            .catch(function (error) {
+            });
+        }
+
         vm.init = function () {
+
+            loadApplications();
+
             vm = angular.extend(vm, {
                 ui: {
                     isSaving: false,
@@ -52,7 +68,8 @@
                     description: '',
                     startDate: '',
                     endDate: '',
-                    applicationId:$stateParams.id
+                    application:'',
+                    applicationName:''
                 },
             });
         };
