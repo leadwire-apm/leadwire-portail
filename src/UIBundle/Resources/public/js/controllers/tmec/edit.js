@@ -73,7 +73,8 @@
                     description: '',
                     startDate: '',
                     endDate: '',
-                    applicationId: ''
+                    application: '',
+                    applicationName: ''
                 },
             });
             vm.loadCompagne($stateParams.id);
