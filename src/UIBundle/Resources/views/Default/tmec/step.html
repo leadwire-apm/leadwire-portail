@@ -46,11 +46,12 @@
                                 </div>
 
                                 <div class="form-row"  ng-if="ctrl.stepProgress ===  ctrl.compagne.steps.length - 1">
-                                    <div class="form-flex">
-                                        <div class="form-group">
-                                            <label class="form-label">Completed : </label>
-                                            <input type="checkbox" ng-model="ctrl.completed" ng-click="ctrl.finished()">
-                                        </div>
+                                    <div class="col-sm-4" style="display: flex">
+                                        <label for="Completed">Completed :</label>
+                                        <label for="Completed" class="switch switch-sm ml10">
+                                            <input id="Completed" type="checkbox"  data-ng-model="ctrl.completed">
+                                            <span><i class="handle"></i></span>
+                                        </label>
                                     </div>
                                 </div>
 

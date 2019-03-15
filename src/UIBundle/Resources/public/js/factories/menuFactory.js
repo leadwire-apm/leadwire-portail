@@ -46,7 +46,7 @@
                     {
                         route: 'app.overview',
                         icon: 'fa fa-eye',
-                        label: 'Compagnes',
+                        label: 'Compagnes overview',
                     });
                 }
 
