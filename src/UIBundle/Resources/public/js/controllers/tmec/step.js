@@ -38,12 +38,13 @@
             }
 
             if (vm.stepProgress < vm.compagne.steps.length) {
+                vm.compagne.steps[vm.stepProgress].completed = true;
                 vm.compagne.steps[vm.stepProgress].current = false;
                 vm.stepProgress++;
                 vm.current = vm.compagne.steps[vm.stepProgress];
 
                 if(vm.stepProgress + 1 <= 10){
-                    vm.compagne.steps[vm.stepProgress].completed = true;
+                    vm.compagne.steps[vm.stepProgress].current = true;
                 }
             }
         }
@@ -55,9 +56,8 @@
                 vm.compagne.steps[vm.stepProgress].current = true;
                 vm.current = vm.compagne.steps[vm.stepProgress];
 
-                if(vm.stepProgress + 1 < 10){
-                    vm.compagne.steps[vm.stepProgress+1].current = false;
-                }
+                if(vm.stepProgress + 1 < 10)
+                vm.compagne.steps[vm.stepProgress+1].current = false;
             }
         }
 
