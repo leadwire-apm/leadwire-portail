@@ -83,8 +83,7 @@ class TmecService
     
     {   
          var_dump($params);
-         $tmecList = $this->tmecManager->findby($params);
-        //$tmecList = $this->tmecManager->getTmecByApplication($params['completed'], $params['ids']);
+        $tmecList = $this->tmecManager->getTmecByApplication($params['completed'], $params['ids']);
         return $tmecList;
     }
 
