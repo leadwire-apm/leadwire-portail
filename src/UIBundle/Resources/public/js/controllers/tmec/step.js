@@ -13,9 +13,7 @@
     function StepCtrlFN($modalInstance, TmecService, compagneId, MESSAGES_CONSTANTS, UserService, $localStorage) {
 
         var vm = this;
-
-        vm.isAdmin = UserService.isAdmin($localStorage.user);
-
+        
         vm.current = {};
         vm.stepProgress = 0;
         vm.compagne = {};
@@ -41,23 +39,23 @@
                 return;
             }
 
-            if (vm.stepProgress < vm.stepData.length) {
-                vm.stepData[vm.stepProgress].current = false;
+            if (vm.stepProgress < vm.compagne.steps.length) {
+                vm.compagne.steps[vm.stepProgress].current = false;
                 vm.stepProgress++;
-                vm.current = vm.stepData[vm.stepProgress];
+                vm.current = vm.compagne.steps[vm.stepProgress];
                 if(vm.stepProgress + 1 <= 10)
-                vm.stepData[vm.stepProgress].current = true;
+                vm.compagne.steps[vm.stepProgress].current = true;
             }
         }
 
         vm.previous = function () {
             if (vm.stepProgress > 0) {
                 vm.stepProgress--;
-                vm.stepData[vm.stepProgress].current = true;
-                vm.current = vm.stepData[vm.stepProgress];
+                vm.compagne.steps[vm.stepProgress].current = true;
+                vm.current = vm.compagne.steps[vm.stepProgress];
 
                 if(vm.stepProgress + 1 < 10)
-                vm.stepData[vm.stepProgress+1].current = false;
+                vm.compagne.steps[vm.stepProgress+1].current = false;
             }
         }
 
