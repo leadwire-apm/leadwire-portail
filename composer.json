@@ -59,7 +59,6 @@
     "require-dev": {
         "fzaninotto/faker": "^1.7",
         "kint-php/kint": "^2.2",
-        "nelmio/api-doc-bundle": "^3.2",
         "phpstan/phpstan": "^0.11",
         "phpstan/phpstan-deprecation-rules": "^0.11",
         "phpstan/phpstan-symfony": "^0.11",
