@@ -29,31 +29,44 @@
                             <div class="fieldset-content">
                                 <div class="form-row">
                                     <div class="form-flex">
-                                    <div class="form-group all">
-                                    <div class="col-lg-12" style="display: flex">
-                                         <label class="form-label">Comments : </label>
-                                        <textarea class="form-control" ng-model="ctrl.current.comment" rows="6"></textarea>
+                                        <div class="form-group all">
+                                            <div class="col-lg-12" style="display: flex">
+                                                <label class="form-label">Comments : </label>
+                                                <textarea class="form-control" ng-model="ctrl.current.comment" rows="6"></textarea>
+                                            </div>
+                                        </div>
                                     </div>
-                                    </div></div>
                                 </div>
 
                                 <div class="form-row">
                                     <div class="col-lg-12" style="display: flex">
-                                            <label for="Completed">waiting for informations :</label>
-                                            <label for="Completed" class="switch switch-sm ml10">
-                                                <input id="Completed" type="checkbox"  data-ng-model="ctrl.current.waiting">
-                                                <span><i class="handle"></i></span>
-                                            </label>
+                                        <div class="form-row">
+                                            <div class="form-flex">
+                                                <div class="form-group all">
+                                                    <label for="Completed">waiting for informations :</label>
+                                                    <label for="Completed" class="switch switch-sm ml10">
+                                                        <input id="Completed" type="checkbox" data-ng-model="ctrl.current.waiting">
+                                                        <span><i class="handle"></i></span>
+                                                    </label>
+                                                </div>
+                                            </div>
                                         </div>
+                                    </div>
                                 </div>
 
-                                <div class="form-row"  ng-if="ctrl.stepProgress ===  ctrl.compagne.steps.length - 1">
+                                <div class="form-row" ng-if="ctrl.stepProgress ===  ctrl.compagne.steps.length - 1">
                                     <div class="col-lg-12" style="display: flex">
-                                        <label for="Completed">Completed :</label>
-                                        <label for="Completed" class="switch switch-sm ml10">
-                                            <input id="Completed" type="checkbox"  data-ng-model="ctrl.completed" ng-click="ctrl.finished()">
-                                            <span><i class="handle"></i></span>
-                                        </label>
+                                        <div class="form-row">
+                                            <div class="form-flex">
+                                                <div class="form-group all">
+                                                    <label for="Completed">Completed :</label>
+                                                    <label for="Completed" class="switch switch-sm ml10">
+                                                        <input id="Completed" type="checkbox" data-ng-model="ctrl.completed" ng-click="ctrl.finished()">
+                                                        <span><i class="handle"></i></span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
 
