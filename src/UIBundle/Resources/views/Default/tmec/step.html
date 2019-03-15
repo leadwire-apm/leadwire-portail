@@ -26,39 +26,39 @@
                     <div class="content clearfix">
                         <h3 id="steps-uid-0-h-0" tabindex="-1" class="title">Info</h3>
                         <fieldset id="steps-uid-0-p-0" role="tabpanel" aria-labelledby="steps-uid-0-h-0" class="body">
-                            <div class="fieldset-content">
-                                <div class="form-row">
-                                    <div class="form-flex">
-                                    <div class="form-group all">
-                                    <div class="col-lg-12" style="display: flex">
-                                         <label class="form-label">Comments : </label>
-                                        <textarea class="form-control" ng-model="ctrl.current.comment" rows="6"></textarea>
-                                    </div>
-                                    </div></div>
-                                </div>
-
-                                <div class="form-row">
-                                    <div class="col-lg-12" style="display: flex">
-                                            <label for="Completed">waiting for informations :</label>
-                                            <label for="Completed" class="switch switch-sm ml10">
-                                                <input id="Completed" type="checkbox"  data-ng-model="ctrl.current.waiting">
-                                                <span><i class="handle"></i></span>
-                                            </label>
+                                <div class="fieldset-content">
+                                    <div class="form-row">
+                                        <div class="form-flex">
+                                            <div class="form-group all">
+                                                <label class="form-label">Comments : </label>
+                                                <textarea class="form-control" ng-model="ctrl.current.comment" rows="6"></textarea>
+                                            </div>
                                         </div>
-                                </div>
-
-                                <div class="form-row"  ng-if="ctrl.stepProgress ===  ctrl.compagne.steps.length - 1">
-                                    <div class="col-lg-12" style="display: flex">
-                                        <label for="Completed">Completed :</label>
-                                        <label for="Completed" class="switch switch-sm ml10">
-                                            <input id="Completed" type="checkbox"  data-ng-model="ctrl.completed" ng-click="ctrl.finished()">
-                                            <span><i class="handle"></i></span>
-                                        </label>
+                                    </div>
+    
+                                    <div class="form-row">
+                                        <div class="form-flex">
+                                            <div class="form-group">
+                                                <label class="form-label">waiting for informations : </label>
+                                                <input type="checkbox" ng-model="ctrl.current.waiting">
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-
-                            </div>
-                        </fieldset>
+                                
+                                <div class="form-row">
+                                        <div class="form-flex">
+                                            <div class="form-group">
+                                               <label for="Completed">Completed :</label>
+                                                <label for="Completed" class="switch switch-sm ml10">
+                                                    <input id="Completed" type="checkbox"  data-ng-model="ctrl.completed" ng-click="ctrl.finished()">
+                                                    <span><i class="handle"></i></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset>
                         <div class="actions">
                             <ul role="menu" aria-label="Pagination">
 
