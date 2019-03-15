@@ -16,28 +16,18 @@
         vm.stepProgress = 0;
         vm.max = 0;
 
-        TmecService.listSteps(compagneId)
-        .then(function (steps) {
-
-            angular.forEach(steps, function(value, key) {
-                if(value.current === true){
-                    vm.current = value;
-                   
-                    if(value.order > 0){
-                        vm.stepProgress = value.order - 1;
-                        vm.max = value.order - 1;
-                    }
+        TmecService.find(compagneId)
+        .then(function (compagne) {
+            vm.stepData = compagne.steps;
+            vm.stepData.forEach(function(element){
+                if(element.current){
+                    vm.current = element;
+                    vm.stepProgress = element.order - 1;
+                    vm.max = element.order - 1;;
                 }
             });
-
-            if(vm.stepProgress === 0){
-                steps[0].current = true;
-            }
-            vm.stepData = steps;
-            console.log(vm.stepData);
-        })
-        .catch(function (error) {
         });
+
 
         vm.next = function () {
 
