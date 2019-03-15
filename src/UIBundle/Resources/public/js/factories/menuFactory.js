@@ -14,7 +14,7 @@
                         label: 'Billing',
                     });
 
-                    Menus.MANAGEMENT.push(                {
+                    Menus.MANAGEMENT.push({
                         route: 'app.management.plans',
                         abstractRoute: 'app.management',
                         icon: 'fa fa-money',
@@ -37,6 +37,12 @@
                         label: 'Manage Compagnes',
                     }
                     );
+
+                    Menus.SETTINGS.push({
+                        route: 'app.app.tmecs',
+                        icon: 'fa fa-table',
+                        label: 'Compagnes',
+                    });
                 }
 
                 return {
