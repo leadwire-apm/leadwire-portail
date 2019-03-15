@@ -5,8 +5,8 @@
         ) {
             var service = {};
 
-            service.list = function (application) {
-                return TmecFactory.list(application)
+            service.list = function (completed) {
+                return TmecFactory.list(completed)
                     .then(function (response) {
                         return response.data;
                     })

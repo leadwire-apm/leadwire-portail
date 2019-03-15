@@ -23,12 +23,20 @@
                 }
 
                 if(CONFIG.COMPAGNE_ENABLED){
-                    Menus.MANAGEMENT.push(                {
+                    Menus.MANAGEMENT.push(                
+                    {
                         route: 'app.management.overview',
                         abstractRoute: 'app.management',
                         icon: 'fa fa-table',
                         label: 'Compagnes overview',
-                    });
+                    },
+                    {
+                        route: 'app.management.tmecs',
+                        abstractRoute: 'app.management',
+                        icon: 'fa fa-table',
+                        label: 'Manage Compagnes',
+                    }
+                    );
                 }
 
                 return {

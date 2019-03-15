@@ -68,6 +68,16 @@ class Tmec
      */
     private $application;
 
+
+    /**
+     * @ODM\Field(type="string")
+     * @JMS\Expose
+     * @JMS\Type("string")
+     * 
+     * @var string
+     */
+    private $applicationName;
+
     /**
      * @var bool
      *
@@ -212,7 +222,7 @@ class Tmec
      */
     public function getApplication()
     {
-        return $this->string;
+        return $this->application;
     }
 
     /**
@@ -251,5 +261,29 @@ class Tmec
     public function getCompleted()
     {
         return $this->completed;
+    }
+
+    /**
+     * Get the value of applicationName
+     *
+     * @return  string
+     */
+    public function getApplicationName()
+    {
+        return $this->applicationName;
+    }
+
+    /**
+     * Set the value of applicationName
+     *
+     * @param  string  $applicationName
+     *
+     * @return  self
+     */
+    public function setApplicationName(string $applicationName)
+    {
+        $this->applicationName = $applicationName;
+
+        return $this;
     }
 }

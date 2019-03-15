@@ -81,7 +81,18 @@ class TmecService
      */
     public function listTmec(array $params)
     {
-        $tmecList = $this->tmecManager->getTmecByApplication($params['application'], $params['completed']);
+        $applications =  $this->applicationManager->getBy([]);
+
+        $ids = array();
+
+        foreach($applications as $applications)
+        {
+             array_push($ids, $applications.getId);
+        }
+
+        return new JsonResponse($output);
+
+        $tmecList = $this->tmecManager->getTmecByApplication($params['completed'], $ids);
         return $tmecList;
     }
 

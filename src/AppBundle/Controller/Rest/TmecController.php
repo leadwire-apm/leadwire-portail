@@ -51,18 +51,17 @@ class TmecController extends Controller
     }
 
     /**
-     * @Route("/list/{application}/{completed}", methods="GET")
+     * @Route("/list/{completed}", methods="GET")
      *
      * @param Request $request
      * @param TmecService $tmecService
-     * @param string $application
      * @param string $completed
      * 
      * @return Response
      */
     public function listTmecAction(Request $request, TmecService $tmecService, $application, $completed)
     {
-        $params = [ 'application' => $application, 'completed' => $completed];
+        $params = ['completed' => $completed];
         $tmec = $tmecService->listTmec($params);
         return $this->renderResponse($tmec);
     }
