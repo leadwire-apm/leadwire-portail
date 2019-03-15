@@ -71,7 +71,9 @@ phpcs:
         - echo "LDAP_DN_USER=$TEST_LDAP_DN_USER" >> .env
         - echo "LDAP_PASSWORD=$TEST_LDAP_PASSWORD" >> .env
         - echo "KIBANA_HOST=$TEST_KIBANA_HOST" >> .env
+        - echo "KIBANA_IFRAME_HOST=$TEST_KIBANA_HOST" >> .env
         - echo "KIBANA_PORT=$TEST_KIBANA_PORT" >> .env
+        - echo "KIBANA_IFRAME_PORT=$TEST_KIBANA_PORT" >> .env
         - echo "ES_USERNAME=$TEST_ES_USERNAME" >> .env
         - echo "ES_PASSWORD=$TEST_ES_PASSWORD" >> .env
         - echo "ES_HOST=$TEST_ES_HOST" >> .env
@@ -105,7 +107,9 @@ phpstan:
         - echo "LDAP_DN_USER=$TEST_LDAP_DN_USER" >> .env
         - echo "LDAP_PASSWORD=$TEST_LDAP_PASSWORD" >> .env
         - echo "KIBANA_HOST=$TEST_KIBANA_HOST" >> .env
+        - echo "KIBANA_IFRAME_HOST=$TEST_KIBANA_HOST" >> .env
         - echo "KIBANA_PORT=$TEST_KIBANA_PORT" >> .env
+        - echo "KIBANA_IFRAME_PORT=$TEST_KIBANA_PORT" >> .env
         - echo "ES_USERNAME=$TEST_ES_USERNAME" >> .env
         - echo "ES_PASSWORD=$TEST_ES_PASSWORD" >> .env
         - echo "ES_HOST=$TEST_ES_HOST" >> .env
@@ -160,7 +164,9 @@ deploy:test:
         - echo "LDAP_DN_USER=$TEST_LDAP_DN_USER" >> .env
         - echo "LDAP_PASSWORD=$TEST_LDAP_PASSWORD" >> .env
         - echo "KIBANA_HOST=$TEST_KIBANA_HOST" >> .env
+        - echo "KIBANA_IFRAME_HOST=$TEST_KIBANA_HOST" >> .env
         - echo "KIBANA_PORT=$TEST_KIBANA_PORT" >> .env
+        - echo "KIBANA_IFRAME_PORT=$TEST_KIBANA_PORT" >> .env
         - echo "ES_USERNAME=$TEST_ES_USERNAME" >> .env
         - echo "ES_PASSWORD=$TEST_ES_PASSWORD" >> .env
         - echo "ES_HOST=$TEST_ES_HOST" >> .env
