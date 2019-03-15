@@ -5,15 +5,13 @@
             'TmecService',
             'compagneId',
             'MESSAGES_CONSTANTS',
-            'UserService',
-            '$localStorage',
              StepCtrlFN,
         ]);
 
-    function StepCtrlFN($modalInstance, TmecService, compagneId, MESSAGES_CONSTANTS, UserService, $localStorage) {
+    function StepCtrlFN($modalInstance, TmecService, compagneId, MESSAGES_CONSTANTS) {
 
         var vm = this;
-        
+
         vm.current = {};
         vm.stepProgress = 0;
         vm.compagne = {};
@@ -27,7 +25,7 @@
             vm.compagne.steps.forEach(function(element){
                 if(element.current){
                     vm.current = element;
-                    vm.stepProgress = element.id - 1;
+                    vm.stepProgress = element.order - 1;
                 }
             });
         });
