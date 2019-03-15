@@ -13,7 +13,8 @@ if (is_readable(__DIR__.'/../.env')) {
     $dotenv->load(__DIR__.'/../.env');
 }
 
-$kernel = new AppKernel('prod', false);
+//$kernel = new AppKernel('prod', false);
+$kernel = new AppKernel('dev', true);
 if (PHP_VERSION_ID < 70000) {
     $kernel->loadClassCache();
 }
