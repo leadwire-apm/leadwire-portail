@@ -32,7 +32,9 @@
                                 </td>
 
                                 <td data-title="version" data-label="version">
-                                    <span ng-repeat="step in compagne.steps" ng-class="ctrl.getClass(step)">[[step.label]]</span>
+                                    <div>
+                                        <span ng-repeat="step in compagne.steps" ng-class="ctrl.getClass(step)">[[step.label]]</span>
+                                    </div>
                                 </td>
 
                             </tr>
