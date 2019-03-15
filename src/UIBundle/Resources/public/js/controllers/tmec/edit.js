@@ -52,12 +52,22 @@
                 });
         };
 
+        function loadApplications(){
+            TmecService.all()
+            .then(function (applications) {
+                vm.applications = applications;
+            })
+            .catch(function (error) {
+            });
+        }
+
         vm.init = function () {
             vm = angular.extend(vm, {
                 ui: {
                     isSaving: false,
                     isLoading: false,
                 },
+                applications: [],
                 compagne: {
                     version: '',
                     description: '',
@@ -67,6 +77,7 @@
                 },
             });
             vm.loadCompagne($stateParams.id);
+            loadApplications();
         };
 
     }
