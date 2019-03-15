@@ -1,44 +1,40 @@
 <div class="panel" ng-init="ctrl.init()">
-    <div class="panel-heading">
-        <h4>Compagnes Overview</h4>
-        <hr>
-    </div>
-    <div class="panel-body">
-        <div class="container">
-           <!-- <div class="row" ng-repeat="application in ctrl.applications">
-                <div class="col-lg-12" style="background-color:lavender;">
-                    <h4>[[application.name]]</h4>
-                </div>
-                <div ng-repeat="compagne in application.compagnes" class=" col-md-offset-1 col-lg-11">
-                    <div>
-                        <h5 style="background-color:lavenderblush;">[[compagne.version]]</h5>
-                    </div>
-                    <div class=" col-md-offset-1" style="background-color:white">
-                        <div ng-repeat="step in compagne.steps">
-                            <div class="col-lg-2">
-                                <span ng-class="ctrl.getClass(compagne.steps, step)">[[step.label]]</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>-->
-            <div class="accordion_container" ng-repeat="application in ctrl.applications">
-                    <div class="accordion_head">[[application.name]]<span class="plusminus">+</span></div>
-                    <div class="accordion_body row" style="display: none;">
-                        <div ng-repeat="compagne in application.compagnes" class="col-lg-12">
-                            <div>
-                                <h5 style="background-color:lavender;">[[compagne.version]]</h5>
-                            </div>
-                            <div class=" col-md-offset-1" style="background-color:white">
-                                <div ng-repeat="step in compagne.steps">
-                                    <div class="col-lg-2">
-                                        <span ng-class="ctrl.getClass(compagne.steps, step)">[[step.label]]</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+        <div class="panel-heading">
+            <h4>Compagnes Overview</h4>
+            <hr>
+        </div>
+        <div class="panel-body">
+            <div class="row no-margin">
+                <div class="col-lg-12 ">
+                    <div class="no-more-tables">
+                        <table class="table table-striped mb0">
+                            <thead>
+                            <tr>
+                                <th class="text-center">Application Name</th>
+                                <th class="text-center">Version</th>
+                            </tr>
+                            </thead>
+                            <tbody ng-rep>
+                            <tr ng-if="compagne in ctrl.compagnes" class="text-center">
+                                <td colspan="6">
+                                    <spinner is-loading="ctrl.ui.isLoading" size="24"></spinner>
+                                </td>
+                            </tr>
+                            <tr ng-repeat="step in compagne.steps" class="text-center">
+                                
+                                <td data-title="Name" data-label="Name">
+                                    [[compagne.applicationName]]
+                                </td>
+
+                                <td data-title="version" data-label="version">
+                                    [[step.version]]
+                                </td>
+
+                            </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
+            </div>
         </div>
     </div>
-</div>
