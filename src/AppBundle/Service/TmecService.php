@@ -80,8 +80,8 @@ class TmecService
      * @param array $params
      */
     public function listTmec(array $params)
-    {    
-        $tmecList = $this->tmecManager->getTmecByApplication($params['completed'], $params['ids']);
+    {    $tmecList = $this->tmecManager->findby(['application' =>  $params['ids']])
+        //$tmecList = $this->tmecManager->getTmecByApplication($params['completed'], $params['ids']);
         return $tmecList;
     }
 
