@@ -45,72 +45,72 @@
                 {
                     icon: 'fa fa-dashboard',
                     label: 'Dashboard',
-                    route: 'app.realUserMonitoring',
+                    route: 'app.dashboard.home',
                 },
                 {
                     icon: 'fa fa-eye',
                     label: 'Real User Monitoring',
-                    route: 'app.syntheticMonitoring',
+                    route: 'app.realUserMonitoring',
                 },
                 {
                     icon: 'fa fa-exchange',
                     label: 'Synthetic Monitoring',
-                    route: 'app.infrastructureMonitoring',
+                    route: 'app.syntheticMonitoring',
                 },
                 {
                     icon: 'fa fa-search',
                     label: 'Infrastructure Monitoring',
-                    route: 'app.customReports ',
+                    route: 'app.infrastructureMonitoring',
                 },
                 {
                     icon: 'fa fa-file-text',
-                    label: 'Custom Reports ',
-                    route: 'app.realUserMonitoring',
+                    label: 'Custom Reports',
+                    route: 'app.customReports',
                 },
                 {
                     icon: 'fa fa-table',
                     label: 'Data Browser',
-                    route: 'app.realUserMonitoring',
+                    route: 'app.dataBrowser',
                 },
                 {
                     icon: 'fa fa-briefcase',
                     label: 'Business Transactions',
-                    route: 'app.realUserMonitoring',
+                    route: 'app.businessTransactions',
                 },
                 {
                     icon: 'fa fa-sitemap',
                     label: 'Architecture Discovery',
-                    route: 'app.realUserMonitoring',
+                    route: 'app.architectureDiscovery',
                 },
                 {
                     icon: 'fa fa-exclamation-triangle',
                     label: 'Alerts',
-                    route: 'app.realUserMonitoring',
+                    route: 'app.alerts',
                 },
-                {
-                    icon: 'fa fa-book',
-                    label: 'Documentation',
-                    route: 'app.realUserMonitoring',
-                },
-                {
-                    icon: 'fa fa-support',
-                    label: 'Support',
-                    route: 'app.realUserMonitoring',
-                },
-                {
-                    icon: 'fa fa-gears',
-                    label: 'Administration',
-                    children: [
-                        {
-                            route: 'app.administration.visualisations',
-                            label: 'Visualisations',
-                        },
-                        {
-                            route: 'app.administration.reports',
-                            label: 'Reports',
-                        },
-                    ],
-                },
+                // {
+                //     icon: 'fa fa-book',
+                //     label: 'Documentation',
+                //     route: 'app.realUserMonitoring',
+                // },
+                // {
+                //     icon: 'fa fa-support',
+                //     label: 'Support',
+                //     route: 'app.realUserMonitoring',
+                // },
+                // {
+                //     icon: 'fa fa-gears',
+                //     label: 'Administration',
+                //     children: [
+                //         {
+                //             route: 'app.administration.visualisations',
+                //             label: 'Visualisations',
+                //         },
+                //         {
+                //             route: 'app.administration.reports',
+                //             label: 'Reports',
+                //         },
+                //     ],
+                // },
             ],
             SETTINGS: [
                 {

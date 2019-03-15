@@ -9,7 +9,7 @@
             '$location',
             '$http',
             '$localStorage',
-            'ApplicationService',
+            'MenuFactory',
             'UserService',
             'DashboardService',
             'MESSAGES_CONSTANTS',
@@ -26,7 +26,7 @@
         $location,
         $http,
         $localStorage,
-        AppService,
+        MenuFactory,
         UserService,
         DashboardService,
         MESSAGES_CONSTANTS,
@@ -96,6 +96,7 @@
             $scope.isChangingContext = true;
             DashboardService.fetchDashboardsByAppId(app.id)
                 .then(function (response) {
+                    $rootScope.menus = [];MenuFactory.get("DASHBOARD");
                     console.log(response);
                     $scope.isChangingContext = false;
                     $scope.selectedAppId = response.appId;

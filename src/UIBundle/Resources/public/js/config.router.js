@@ -38,7 +38,7 @@ angular.module('leadwireApp')
                                           MenuFactory) {
                 var deferred = $q.defer();
                 if ($auth.isAuthenticated()) {
-                    $rootScope.menus = MenuFactory.get('SETTINGS');
+                    // $rootScope.menus = MenuFactory.get('SETTINGS');
                     deferred.resolve();
                 } else {
                     $location.path('/login');
@@ -214,19 +214,7 @@ angular.module('leadwireApp')
                     templateUrl: 'dashboard.html',
                     resolve: {
                         permissions: loginRequired,
-                        beforeMount: [
-                            'MenuFactory',
-                            '$rootScope',
-                            '$localStorage',
-                            'UserService',
-                            function (
-                                MenuFactory, $rootScope, $localStorage,
-                                UserService) {
-                                // $rootScope.menus = $localStorage.currentMenu;
-                                $rootScope.menus = MenuFactory.get('SETTINGS');;
-                                UserService.handleFirstLogin();
-                            },
-                        ],
+                        menu: updateMenuItems('DASHBOARD'),
                     },
                     controller: 'dashboardCtrl',
                     controllerAs: 'ctrl',
@@ -238,7 +226,8 @@ angular.module('leadwireApp')
                     controllerAs: 'ctrl',
                     resolve: {
                         permissions: loginRequired,
-                    },
+                        menu: updateMenuItems('DASHBOARD'),
+                    }
                 })
                 .state('app.dashboard.manageDashboard', {
                     url: '/dashboard/manage/{tenant}',

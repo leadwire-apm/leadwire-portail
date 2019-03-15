@@ -18,7 +18,7 @@
         service.loginRequired = function () {
             var deferred = $q.defer();
             if ($auth.isAuthenticated()) {
-                $rootScope.menus = MenuFactory.get('SETTINGS');
+                // $rootScope.menus = MenuFactory.get('SETTINGS');
                 deferred.resolve();
             } else {
                 $location.path('/login');
