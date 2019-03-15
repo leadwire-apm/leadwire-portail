@@ -26,6 +26,11 @@
             vm.compagne.startDate = new Date(vm.compagne.startDate);
             vm.compagne.endDate = new Date(vm.compagne.endDate);
             vm.completed =  vm.compagne.completed || false;
+            vm.compagne.steps.forEach(function(element){
+                if(element.current){
+                    vm.current = element;
+                }
+            })
         });
 
         vm.next = function () {
