@@ -85,7 +85,7 @@ class TmecService
 
         $ids = array();
 
-        foreach($applications as $applications)
+        foreach($applications as $application)
         {
              array_push($ids, $application->getId());
         }
