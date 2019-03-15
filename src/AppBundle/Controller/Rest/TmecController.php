@@ -43,8 +43,8 @@ class TmecController extends Controller
      */
     public function updateTmecAction(Request $request, TmecService $tmecService)
     {
-         // Only super Admin can do this
-         $this->denyAccessUnlessGranted([User::ROLE_ADMIN, User::ROLE_SUPER_ADMIN]);
+        // Only super Admin can do this
+        $this->denyAccessUnlessGranted([User::ROLE_ADMIN, User::ROLE_SUPER_ADMIN]);
         $data = $request->getContent();
         $successful = $tmecService->update($data);
         return $this->renderResponse($successful);
