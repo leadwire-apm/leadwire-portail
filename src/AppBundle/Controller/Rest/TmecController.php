@@ -59,7 +59,7 @@ class TmecController extends Controller
      * 
      * @return Response
      */
-    public function listTmecAction(Request $request, TmecService $tmecService, $application, $completed)
+    public function listTmecAction(Request $request, TmecService $tmecService, $completed)
     {
         $params = ['completed' => $completed];
         $tmec = $tmecService->listTmec($params);
