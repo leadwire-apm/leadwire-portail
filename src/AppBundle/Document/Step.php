@@ -4,6 +4,7 @@ namespace AppBundle\Document;
 
 use JMS\Serializer\Annotation as JMS;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
+use AppBundle\Document\Tmec;
 
 /**
  * @ODM\Document(repositoryClass="AppBundle\Repository\TemplateRepository")
@@ -77,6 +78,49 @@ class Step
      * @JMS\Expose
      */
     private $current;
+
+    /**
+     * @var bool
+     *
+     * @ODM\Field(type="bool")
+     * @JMS\Type("boolean")
+     * @JMS\Expose
+     */
+    private $completed;
+
+    /**
+     * @var Tmec
+     *
+     * @ODM\ReferenceOne(targetDocument="AppBundle\Document\Tmec", name="compagne", cascade={"persist"}, inversedBy="steps")
+     * @JMS\Type("AppBundle\Document\Tmec")
+     * @JMS\Expose
+     * @JMS\Groups({"Default", "full"})
+     */
+    private $tmec;
+
+
+    /**
+     * Get tmec
+     *
+     * @return Tmec
+     */
+    public function getTmec()
+    {
+        return $this->tmec;
+    }
+
+    /**
+     * Set tmec
+     * @param Tmec $tmec
+     *
+     * @return Tmec
+     */
+    public function setApplication(Tmec $tmec)
+    {
+        $this->tmec = $tmec;
+
+        return $this;
+    }
 
 
     /**
@@ -246,5 +290,29 @@ class Step
         $this->order = $order;
 
         return $this;
+    }
+
+    /**
+     * Set completed
+     *
+     * @param bool $completed
+     *
+     * @return self
+     */
+    public function setCompleted($completed): self
+    {
+        $this->completed = $completed;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of completed
+     *
+     * @return  bool
+     */
+    public function getCompleted()
+    {
+        return $this->completed;
     }
 }

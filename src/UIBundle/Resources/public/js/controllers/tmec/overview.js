@@ -54,6 +54,8 @@
                 .then(function (applications) {
                     vm.flipActivityIndicator('isLoading');
                     vm.applications = applications;
+                    console.log(applications)
+
                     getCompagnes();
                 })
                 .catch(function (error) {
@@ -73,7 +75,6 @@
                         });
                         application.compagnes = compagnes;
                         vm.flipActivityIndicator('isLoading');
-                        console.log(vm.applications)
                     })
                     .catch(function (error) {
                         vm.flipActivityIndicator('isLoading');

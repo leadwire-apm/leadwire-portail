@@ -77,6 +77,13 @@ class Tmec
      */
     private $completed;
 
+    /** @ODM\ReferenceMany(targetDocument="Step", mappedBy="compagne")
+     * @JMS\Type("array<AppBundle\Document\Step>")
+     * @JMS\Expose
+     * @JMS\Groups({"full", "Default"})
+     */
+    public $steps;
+
     /**
      * Get the value of id
      *
