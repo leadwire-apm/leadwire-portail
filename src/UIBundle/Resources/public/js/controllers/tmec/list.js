@@ -78,7 +78,16 @@
         vm.load = function () {
             vm.flipActivityIndicator('isLoading');
             // should send some criteria
-            TmecService.list(vm.all)
+
+            TmecService.all()
+            .then(function (applications) {
+                var appIds = [];
+                
+                applications.forEach(application => {
+                    appIds.push(application.id)
+                });
+
+                TmecService.list({"completed": vm.all, "ids":appIds})
                 .then(function (compagnes) {
                     vm.flipActivityIndicator('isLoading');
                     vm.compagnes = compagnes;
@@ -87,6 +96,12 @@
                     vm.flipActivityIndicator('isLoading');
 
                 });
+                vm.flipActivityIndicator('isLoading');
+            })
+            .catch(function (error) {
+                vm.flipActivityIndicator('isLoading');
+
+            });
         };
 
         vm.deleteCompagne = function (id) {
