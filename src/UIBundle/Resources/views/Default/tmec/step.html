@@ -11,8 +11,8 @@
                         <ul role="tablist">
 
                             <li role="tab"
-                                ng-class="{'first': ($index == 0), 'last': ($index == ctrl.stepData.length - 1), 'current': (step.current), 'completed': ( ctrl.stepProgress > $index)}"
-                                ng-repeat="step in ctrl.stepData">
+                                ng-class="{'first': ($index == 0), 'last': ($index == ctrl.compagne.steps.length - 1), 'current': (step.current), 'completed': (step.completed)}"
+                                ng-repeat="step in ctrl.compagne.steps">
                                 <a>
                                     <div class="title">
                                         <span class="step-number">[[step.order]]</span>
@@ -32,15 +32,6 @@
                                         <div class="form-group all">
                                             <label class="form-label">Comments : </label>
                                             <textarea class="form-control" ng-model="ctrl.current.comment" rows="6"></textarea>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="form-row">
-                                    <div class="form-flex">
-                                        <div class="form-group">
-                                            <label class="form-label">Load file : </label>
-                                            <input type="file" ng-model="ctrl.file" class="form-control-file">
                                         </div>
                                     </div>
                                 </div>
