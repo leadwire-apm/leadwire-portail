@@ -17,7 +17,7 @@
                  * @returns {Promise}
                  */
                 list: function (options) {
-                    return $http.post(CONFIG.BASE_URL + 'api/tmec/list/' + options );
+                    return $http.post(CONFIG.BASE_URL + 'api/tmec/list' + options );
                 },
                 /**
                  *
