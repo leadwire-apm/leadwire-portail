@@ -39,8 +39,11 @@
                                     <div class="form-row">
                                         <div class="form-flex">
                                             <div class="form-group">
-                                                <label class="form-label">waiting for informations : </label>
-                                                <input type="checkbox" ng-model="ctrl.current.waiting">
+                                                <label for="search">waiting for informations :</label>
+                                                <label for="search" class="switch switch-sm ml10">
+                                                    <input id="search" type="checkbox" ng-model="ctrl..current.waiting">
+                                                    <span><i class="handle"></i></span>
+                                                </label>
                                             </div>
                                         </div>
                                     </div>
@@ -48,8 +51,7 @@
                                     <div class="form-row"  ng-if="ctrl.stepProgress ===  ctrl.compagne.steps.length - 1">
                                         <div class="form-flex">
                                             <div class="form-group">
-                                               
-                                                <label for="search">Completed :</label>
+                                               <label for="search">Completed :</label>
                                                 <label for="search" class="switch switch-sm ml10">
                                                     <input id="search" type="checkbox" ng-click="ctrl.finished()" ng-model="ctrl.completed">
                                                     <span><i class="handle"></i></span>
