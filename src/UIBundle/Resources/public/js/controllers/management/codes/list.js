@@ -51,8 +51,9 @@
                         CodeService.create()
                             .then(function (code) {
                                 swal('Code generated successfully!', code);
-                                vm.fetchCodes;
+
                             })
+                            .then(vm.fetchCodes)
                             .catch(function () {
                                 toastr.error(MESSAGES_CONSTANTS.ERROR);
                             });
