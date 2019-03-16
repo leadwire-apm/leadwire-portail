@@ -29,7 +29,7 @@
         });
 
         vm.goToStep = function(stepNumber){
-            if(stepNumber -1 > vm.stepProgress && stepNumber < vm.max){
+            if(stepNumber -1 > vm.stepProgress && stepNumber - 1 === vm.max){
                 while(stepNumber -1 > vm.stepProgress)
                 vm.next();
             }else if(stepNumber -1 < vm.stepProgress){
