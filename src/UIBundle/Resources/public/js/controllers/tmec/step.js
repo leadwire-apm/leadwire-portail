@@ -42,10 +42,10 @@
 
         vm.next = function () {
 
-            if( vm.current.waiting === true){
+            /*if( vm.current.waiting === true){
                 toastr.error(MESSAGES_CONSTANTS.GO_NEXT_STEP);
                 return;
-            }
+            }*/
 
             if (vm.stepProgress < vm.compagne.steps.length) {
                 vm.compagne.steps[vm.stepProgress].completed = true;
