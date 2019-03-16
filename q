@@ -1,0 +1,11 @@
+steps 
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+#
+# On branch proxyMode
+# Your branch is up to date with 'origin/proxyMode'.
+#
+# Changes to be committed:
+#	modified:   src/UIBundle/Resources/public/js/controllers/tmec/overview.js
+#	modified:   src/UIBundle/Resources/views/Default/tmec/overview.html
+#

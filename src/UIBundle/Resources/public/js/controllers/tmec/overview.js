@@ -25,6 +25,28 @@
 
         var vm = this;
 
+        var margins = {
+            top: 70,
+            bottom: 40,
+            left: 30,
+            width: 550
+          };
+
+        vm.generatePdf = function () {
+            var pdf = new jsPDF('p', 'pt', 'a4');
+            pdf.setFontSize(18);
+            pdf.fromHTML(document.getElementById('panel'),
+                margins.left, // x coord
+                margins.top,
+                {
+                    // y coord
+                    width: margins.width// max width of content on PDF
+                }, function (dispose) {
+                    pdf.save('overview.pdf');
+                },
+                margins);
+        }
+
         vm.getClass = function (step) {
 
             var label = "label label-danger";
