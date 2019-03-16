@@ -13,7 +13,7 @@
                             <li role="tab"
                                 ng-class="{'first': ($index == 0), 'last': ($index == ctrl.stepData.length - 1), 'current': (step.current), 'completed': ( step.completed), 'inProgress': ( ctrl.max === $index)}"
                                 ng-repeat="step in ctrl.stepData">
-                                <a>
+                                <a ng-click="ctrl.goToStep(step.order)">
                                     <div class="title">
                                         <span class="step-number">[[step.order]]</span>
                                         <span class="step-text">[[step.label]]</span>
