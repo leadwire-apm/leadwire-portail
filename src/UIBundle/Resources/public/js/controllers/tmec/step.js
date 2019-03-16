@@ -30,6 +30,12 @@
             });
         });
 
+        vm.goToStep = function(stepNumber){
+            while(stepNumber -1 > vm.stepProgress){
+                vm.next();
+            }
+        }
+
         vm.next = function () {
 
             if( vm.current.waiting === true){
