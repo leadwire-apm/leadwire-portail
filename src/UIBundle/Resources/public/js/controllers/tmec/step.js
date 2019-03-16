@@ -31,8 +31,12 @@
         });
 
         vm.goToStep = function(stepNumber){
-            while(stepNumber -1 > vm.stepProgress){
+            if(stepNumber -1 > vm.stepProgress){
+                while(stepNumber -1 > vm.stepProgress)
                 vm.next();
+            }else if(stepNumber -1 < vm.stepProgress){
+                while(stepNumber -1 < vm.stepProgress)
+                vm.previous();
             }
         }
 
