@@ -33,15 +33,18 @@
           };
 
         vm.generatePdf = function () {
-            html2canvas($("#panel"), {
-                onrendered: function(canvas) {         
-                    var imgData = canvas.toDataURL(
-                        'image/png');              
-                    var doc = new jsPDF('p', 'mm');
-                    doc.addImage(imgData, 'PNG', 10, 10);
-                    doc.save('overvie<.pdf');
-                }
-            });
+            var pdf = new jsPDF('p', 'pt', 'a4');
+            pdf.setFontSize(18);
+            pdf.fromHTML(document.getElementById('panel'),
+                margins.left, // x coord
+                margins.top,
+                {
+                    // y coord
+                    width: margins.width// max width of content on PDF
+                }, function (dispose) {
+                    pdf.save('overview.pdf');
+                },
+                margins);
         }
 
         vm.getClass = function (step) {
