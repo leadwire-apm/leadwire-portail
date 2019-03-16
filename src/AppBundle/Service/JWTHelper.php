@@ -23,7 +23,7 @@ class JWTHelper
      *
      * @return object
      */
-    public function decode(string $jwt, string $secret): object
+    public function decode(string $jwt, string $secret)
     {
         $token = JWT::decode($jwt, $secret, ['HS256']);
 
