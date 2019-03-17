@@ -15,6 +15,7 @@
             'MESSAGES_CONSTANTS',
             'toastr',
             'Paginator',
+            'CONFIG',
             AppCtrlFN,
         ]);
 
@@ -32,9 +33,12 @@
         MESSAGES_CONSTANTS,
         toastr,
         Paginator,
+        CONFIG,
     ) {
         onLoad();
 
+        $scope.JENKINS_URL = CONFIG.JENKINS_URL;
+        
         $scope.$on('user:updated', function (event, data) {
             $rootScope.user = data;
         });

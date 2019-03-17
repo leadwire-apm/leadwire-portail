@@ -52,6 +52,7 @@ angular.module('leadwireApp', [
         TAX: TAX,
         LOGIN_METHOD: LOGIN_METHOD,
         COMPAGNE_ENABLED: COMPAGNE_ENABLED,
+        JENKINS_URL: JENKINS_URL,
         STRIPE_ENABLED: STRIPE_ENABLED,
     })
     .constant('MESSAGES_CONSTANTS', {
