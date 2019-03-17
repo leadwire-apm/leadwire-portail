@@ -248,7 +248,7 @@ class AuthService
             $user = $this->userManager->createWithEmail(
                 $userData['username'],
                 $uuid1->toString(),
-                'https://www.pngarts.com/files/3/Avatar-PNG-Image.png',
+                'https://img.icons8.com/metro/26/000000/administrator-male.png',
                 $userData['username'],//name
                 $role,
                 true,
