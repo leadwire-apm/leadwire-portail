@@ -636,14 +636,6 @@ angular.module('leadwireApp')
                     resolve: {
                         permissions: loginRequired,
                         menu: updateMenuItems('SETTINGS'),
-                        beforeMount: [
-                            '$rootScope',
-                            'UserService',
-                            function ($rootScope, UserService) {
-                                UserService.handleFirstLogin();
-                                return Promise.resolve();
-                            },
-                        ],
                     },
                     controller: 'TmecOverviewController',
                     controllerAs: 'ctrl',

@@ -109,8 +109,6 @@ class TmecController extends Controller
      */
     public function getAllApplicationsAction(Request $request, TmecService $tmecService)
     {
-        $this->denyAccessUnlessGranted([User::ROLE_ADMIN, User::ROLE_SUPER_ADMIN]);
-
         $applications = $tmecService->getApplications();
 
         return $this->renderResponse($applications, Response::HTTP_OK, ["Default"]);
