@@ -580,15 +580,7 @@ angular.module('leadwireApp')
                     templateUrl: 'application/tmecsList.html',
                     resolve: {
                         permissions: loginRequired,
-                        menu: updateMenuItems('SETTINGS'),
-                        beforeMount: [
-                            '$rootScope',
-                            'UserService',
-                            function ($rootScope, UserService) {
-                                UserService.handleFirstLogin();
-                                return Promise.resolve();
-                            },
-                        ],
+                        menu: updateMenuItems('SETTINGS')
                     },
                     controller: 'ListCompagnesController',
                     controllerAs: 'ctrl',
