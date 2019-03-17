@@ -28,8 +28,8 @@ parameters:
     github_client_id: '%env(GITHUB_CLIENT_ID)%'
     login_method: '%env(LOGIN_METHOD)%'
     compagne_enbaled: '%env(COMPAGNE_ENABLED)%'
-    jenkins_url: '%env(COMPAGNE_ENABLED)%'
-    stripe_enabled: '%env(JENKINS_URL)%'
+    jenkins_url: '%env(JENKINS_URL)%'
+    stripe_enabled: '%env(STRIPE_ENABLED)%'
     auth_providers:
         github:
             github_access_token_url: 'https://github.com/login/oauth/access_token'
