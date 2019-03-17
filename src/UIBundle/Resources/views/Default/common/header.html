@@ -14,12 +14,24 @@
 
     <ul class="nav navbar-nav navbar-right pull-right">
 
+            <li class="dropdown pull-left" dropdown>
+                    <a href="javascript:;" class="dropdown-toggle" dropdown-toggle>
+                            <i class="fa-paper-plane"></i>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a ui-sref="app.user">Overview</a>
+                        </li>
+                        <li>
+                            <a ui-sref="app.user">Lunch</a>
+                        </li>
+     
+                    </ul>
+        
+                </li>
+
         <li class="pull-left">
-            <a href="javascript:;"
-               title="Change application"
-               data-placement="left"
-               data-toggle="tooltip"
-               quick-launch>
+            <a href="javascript:;" title="Change application" data-placement="left" data-toggle="tooltip" quick-launch>
                 <i class="fa fa-circle-thin"></i>
             </a>
         </li>
@@ -29,11 +41,7 @@
             </a>
         </li>
         <li class="pull-left hidden-xs">
-            <a ui-sref="app.user"
-               title="Settings"
-               data-placement="left"
-               data-toggle="tooltip"
-            >
+            <a ui-sref="app.user" title="Settings" data-placement="left" data-toggle="tooltip">
                 <i style="font-size: 15px;" class="fa fa-cog"></i>
             </a>
         </li>
@@ -52,11 +60,11 @@
                     <ul class="notifications-list">
                         <li>
                             <a href="javascript:;">
-              <span class="pull-left mt2 mr15">
-                  <span class="img-circle">
-                <img data-ng-src="images/avatar.jpg" class="avatar avatar-xs" alt="">
-                      </span>
-              </span>
+                                <span class="pull-left mt2 mr15">
+                                    <span class="img-circle">
+                                        <img data-ng-src="images/avatar.jpg" class="avatar avatar-xs" alt="">
+                                    </span>
+                                </span>
                                 <div class="overflow-hidden">
                                     <span>Sean launched a new application</span>
                                     <span class="time">2 seconds ago</span>
@@ -78,10 +86,9 @@
                         </li>
                         <li>
                             <a href="javascript:;">
-              <span class="pull-left mt2 mr15">
-                                <img data-ng-src="images/face3.jpg"
-                                     class="avatar avatar-xs img-circle" alt="">
-                            </span>
+                                <span class="pull-left mt2 mr15">
+                                    <img data-ng-src="images/face3.jpg" class="avatar avatar-xs img-circle" alt="">
+                                </span>
                                 <div class="overflow-hidden">
                                     <span class="text-muted">Jack Hunt has registered</span>
                                     <span class="time">9 hours ago</span>
@@ -98,12 +105,11 @@
 
         <li class="dropdown pull-left" dropdown>
             <a href="javascript:;" class="dropdown-toggle" dropdown-toggle>
-            <span class="img-circle ml10">
-                <img http-src="[[user.avatar]]"
-                     class="header-avatar " alt="[[user.name]]" title="[[user.name]]">
-            </span>
+                <span class="img-circle ml10">
+                    <img http-src="[[user.avatar]]" class="header-avatar " alt="[[user.name]]" title="[[user.name]]">
+                </span>
                 <span class="pull-left">[[user.fname]]
-      </span>
+                </span>
             </a>
             <ul class="dropdown-menu">
                 <li>
