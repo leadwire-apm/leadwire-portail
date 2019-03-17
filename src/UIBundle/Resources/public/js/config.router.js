@@ -619,17 +619,6 @@ angular.module('leadwireApp')
                     controllerAs: 'ctrl',
                 })
 
-                .state('app.management.overview', {
-                    url: '/tmec/overview',
-                    templateUrl: 'tmec/overview.html',
-                    resolve: {
-                        permissions: adminRequired,
-                        menu: updateMenuItems('MANAGEMENT'),
-                    },
-                    controller: 'TmecOverviewController',
-                    controllerAs: 'ctrl',
-                })
-
                 .state('app.overview', {
                     url: '/tmec/overview',
                     templateUrl: 'tmec/overview.html',

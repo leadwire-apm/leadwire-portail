@@ -28,25 +28,14 @@
                             route: 'app.management.tmecs',
                             abstractRoute: 'app.management',
                             icon: 'fa fa-table',
-                            label: 'Manage Compagnes',
-                        },               
-                        {
-                            route: 'app.management.overview',
-                            abstractRoute: 'app.management',
-                            icon: 'fa fa-eye',
-                            label: 'Compagnes overview',
-                        }
+                            label: 'Manage Campaigns',
+                        },
                     );
 
                     Menus.SETTINGS.push({
                         route: 'app.tmecs',
                         icon: 'fa fa-table',
-                        label: 'Compagnes',
-                    },
-                    {
-                        route: 'app.overview',
-                        icon: 'fa fa-eye',
-                        label: 'Compagnes overview',
+                        label: 'Campaigns',
                     });
                 }
 
