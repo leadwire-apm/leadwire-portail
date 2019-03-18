@@ -196,6 +196,5 @@ class SearchGuardService
         } catch (IOException $e) {
             $this->logger->critical($e->getMessage());
         }
-
     }
 }
