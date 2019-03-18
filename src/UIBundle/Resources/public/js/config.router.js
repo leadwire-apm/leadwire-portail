@@ -5,8 +5,14 @@ angular.module('leadwireApp')
         '$stateProvider',
         '$urlRouterProvider',
         '$authProvider',
+        'MenuEnum',
         'CONFIG',
-        function ($stateProvider, $urlRouterProvider, $authProvider, CONFIG) {
+        function (
+            $stateProvider,
+            $urlRouterProvider,
+            $authProvider,
+            MenuEnum,
+            CONFIG) {
             // For unmatched routes
             $urlRouterProvider.otherwise('/applications/list');
 
@@ -18,53 +24,6 @@ angular.module('leadwireApp')
                 clientId: CONFIG.GITHUB_CLIENT_ID,
                 url: CONFIG.BASE_URL + 'login/github',
             });
-
-            var skipIfLoggedIn = [
-                '$q',
-                '$auth',
-                function ($q, $auth) {
-                    var deferred = $q.defer();
-                    if ($auth.isAuthenticated()) {
-                        deferred.reject();
-                    } else {
-                        deferred.resolve();
-                    }
-                    return deferred.promise;
-                },
-            ];
-
-            var loginRequired = function ($q,
-                                          $location, $auth, $rootScope,
-                                          MenuFactory) {
-                var deferred = $q.defer();
-                if ($auth.isAuthenticated()) {
-                    // $rootScope.menus = MenuFactory.get('SETTINGS');
-                    deferred.resolve();
-                } else {
-                    $location.path('/login');
-                }
-                return deferred.promise;
-            };
-
-            var adminRequired = function (
-                $q, UserService, $location, $auth, $localStorage) {
-                var deferred = $q.defer();
-                var roles = $localStorage.user.roles;
-                if ($auth.isAuthenticated()) {
-                    if (roles && (UserService.isAdmin($localStorage.user)
-                    )) {
-                        deferred.resolve();
-                    } else {
-                        deferred.reject('UNAUTHORIZED');
-                        $location.path('/');
-                    }
-                } else {
-                    $location.path('/login');
-                    deferred.reject();
-                }
-                return deferred.promise;
-
-            };
 
             // Application routes
             $stateProvider.state('app', {
@@ -87,8 +46,10 @@ angular.module('leadwireApp')
                         isModal: function () {
                             return false;
                         },
-                        permissions: loginRequired,
-                        menu: updateMenuItems('SETTINGS'),
+                        permissions: function (RouteGuard) {
+                            return RouteGuard.loginRequired();
+                        },
+                        menu: updateMenuItems(MenuEnum.SETTINGS),
                     },
                     data: {
                         title: 'Settings',
@@ -100,8 +61,10 @@ angular.module('leadwireApp')
                     url: '/applications/add',
                     templateUrl: 'application/add.html',
                     resolve: {
-                        permissions: loginRequired,
-                        menu: updateMenuItems('SETTINGS'),
+                        permissions: function (RouteGuard) {
+                            return RouteGuard.loginRequired();
+                        },
+                        menu: updateMenuItems(MenuEnum.SETTINGS),
                     },
                     data: {
                         title: 'Add Application',
@@ -113,7 +76,9 @@ angular.module('leadwireApp')
                     url: '/term-of-contract',
                     templateUrl: 'toc.html',
                     resolve: {
-                        permissions: loginRequired,
+                        permissions: function (RouteGuard) {
+                            return RouteGuard.loginRequired();
+                        },
                     },
                     data: {
                         title: 'Term of Contract',
@@ -123,7 +88,9 @@ angular.module('leadwireApp')
                     url: '/term-of-service',
                     templateUrl: 'tos.html',
                     resolve: {
-                        permissions: loginRequired,
+                        permissions: function (RouteGuard) {
+                            return RouteGuard.loginRequired();
+                        },
                     },
                     data: {
                         title: 'Term of Service',
@@ -133,8 +100,10 @@ angular.module('leadwireApp')
                     url: '/applications/list',
                     templateUrl: 'application/list.html',
                     resolve: {
-                        permissions: loginRequired,
-                        deps: updateMenuItems('SETTINGS'),
+                        permissions: function (RouteGuard) {
+                            return RouteGuard.loginRequired();
+                        },
+                        deps: updateMenuItems(MenuEnum.SETTINGS),
                         beforeMount: [
                             '$rootScope',
                             'UserService',
@@ -154,8 +123,10 @@ angular.module('leadwireApp')
                     url: '/applications/{id}/detail',
                     templateUrl: 'application/detail.html',
                     resolve: {
-                        permissions: loginRequired,
-                        menu: updateMenuItems('SETTINGS'),
+                        permissions: function (RouteGuard) {
+                            return RouteGuard.loginRequired();
+                        },
+                        menu: updateMenuItems(MenuEnum.SETTINGS),
                     },
                     data: {
                         title: 'Application Detail',
@@ -167,8 +138,10 @@ angular.module('leadwireApp')
                     url: '/applications/{id}/edit',
                     templateUrl: 'application/edit.html',
                     resolve: {
-                        permissions: loginRequired,
-                        menu: updateMenuItems('SETTINGS'),
+                        permissions: function (RouteGuard) {
+                            return RouteGuard.loginRequired();
+                        },
+                        menu: updateMenuItems(MenuEnum.SETTINGS),
                     },
                     data: {
                         title: 'Edit Application',
@@ -182,8 +155,10 @@ angular.module('leadwireApp')
                     controller: 'billingListCtrl',
                     controllerAs: 'ctrl',
                     resolve: {
-                        permissions: loginRequired,
-                        menu: updateMenuItems('SETTINGS'),
+                        permissions: function (RouteGuard) {
+                            return RouteGuard.loginRequired();
+                        },
+                        menu: updateMenuItems(MenuEnum.SETTINGS),
                     },
                 })
                 .state('app.editPaymentMethod', {
@@ -192,8 +167,10 @@ angular.module('leadwireApp')
                     controller: 'editPaymentMethodCtrl',
                     controllerAs: 'ctrl',
                     resolve: {
-                        permissions: loginRequired,
-                        menu: updateMenuItems('SETTINGS'),
+                        permissions: function (RouteGuard) {
+                            return RouteGuard.loginRequired();
+                        },
+                        menu: updateMenuItems(MenuEnum.SETTINGS),
                     },
                 })
                 .state('app.updateSubscription', {
@@ -202,8 +179,10 @@ angular.module('leadwireApp')
                     controller: 'updateSubscriptionCtrl',
                     controllerAs: 'ctrl',
                     resolve: {
-                        permissions: loginRequired,
-                        menu: updateMenuItems('SETTINGS'),
+                        permissions: function (RouteGuard) {
+                            return RouteGuard.loginRequired();
+                        },
+                        menu: updateMenuItems(MenuEnum.SETTINGS),
                     },
                 })
                 .state('app.dashboard', {
@@ -213,8 +192,10 @@ angular.module('leadwireApp')
                     url: '/dashboard/:id/:tenant',
                     templateUrl: 'dashboard.html',
                     resolve: {
-                        permissions: loginRequired,
-                        menu: updateMenuItems('DASHBOARD'),
+                        permissions: function (RouteGuard) {
+                            return RouteGuard.loginRequired();
+                        },
+                        menu: updateMenuItems(MenuEnum.DASHBOARD),
                     },
                     controller: 'dashboardCtrl',
                     controllerAs: 'ctrl',
@@ -225,9 +206,11 @@ angular.module('leadwireApp')
                     controller: 'customDashboardsCtrl',
                     controllerAs: 'ctrl',
                     resolve: {
-                        permissions: loginRequired,
-                        menu: updateMenuItems('DASHBOARD'),
-                    }
+                        permissions: function (RouteGuard) {
+                            return RouteGuard.loginRequired();
+                        },
+                        menu: updateMenuItems(MenuEnum.DASHBOARD),
+                    },
                 })
                 .state('app.dashboard.manageDashboard', {
                     url: '/dashboard/manage/{tenant}',
@@ -235,7 +218,9 @@ angular.module('leadwireApp')
                     controller: 'manageDashboardsCtrl',
                     controllerAs: 'ctrl',
                     resolve: {
-                        permissions: loginRequired,
+                        permissions: function (RouteGuard) {
+                            return RouteGuard.loginRequired();
+                        },
                     },
                 })
                 .state('app.management', {
@@ -247,8 +232,10 @@ angular.module('leadwireApp')
                     url: '/users/list',
                     templateUrl: 'management/users/users.html',
                     resolve: {
-                        permissions: adminRequired,
-                        menu: updateMenuItems('MANAGEMENT'),
+                        permissions: function (RouteGuard) {
+                            return RouteGuard.adminRequired();
+                        },
+                        menu: updateMenuItems(MenuEnum.MANAGEMENT),
                         beforeMount: [
                             'MenuFactory',
                             '$rootScope',
@@ -258,7 +245,8 @@ angular.module('leadwireApp')
                                 MenuFactory, $rootScope, $localStorage,
                                 UserService) {
                                 // $rootScope.menus = $localStorage.currentMenu;
-                                $rootScope.menus = MenuFactory.get('MANAGEMENT');;
+                                $rootScope.menus = MenuFactory.get(
+                                    MenuEnum.MANAGEMENT);
                                 UserService.handleFirstLogin();
                             },
                         ],
@@ -273,8 +261,10 @@ angular.module('leadwireApp')
                     url: '/users/:id/detail',
                     templateUrl: 'management/users/userDetail.html',
                     resolve: {
-                        permissions: adminRequired,
-                        menu: updateMenuItems('MANAGEMENT'),
+                        permissions: function (RouteGuard) {
+                            return RouteGuard.adminRequired();
+                        },
+                        menu: updateMenuItems(MenuEnum.MANAGEMENT),
                     },
                     controller: 'DetailUserController',
                     controllerAs: 'ctrl',
@@ -283,8 +273,10 @@ angular.module('leadwireApp')
                     url: '/plans/list',
                     templateUrl: 'management/plans/list.html',
                     resolve: {
-                        permissions: adminRequired,
-                        menu: updateMenuItems('MANAGEMENT'),
+                        permissions: function (RouteGuard) {
+                            return RouteGuard.adminRequired();
+                        },
+                        menu: updateMenuItems(MenuEnum.MANAGEMENT),
                     },
                     controller: 'PlanListController',
                     controllerAs: 'ctrl',
@@ -293,8 +285,10 @@ angular.module('leadwireApp')
                     url: '/plans/new',
                     templateUrl: 'management/plans/add.html',
                     resolve: {
-                        permissions: adminRequired,
-                        menu: updateMenuItems('MANAGEMENT'),
+                        permissions: function (RouteGuard) {
+                            return RouteGuard.adminRequired();
+                        },
+                        menu: updateMenuItems(MenuEnum.MANAGEMENT),
                     },
                     controller: 'AddPlanController',
                     controllerAs: 'ctrl',
@@ -303,8 +297,10 @@ angular.module('leadwireApp')
                     url: '/plans/:id/edit',
                     templateUrl: 'management/plans/edit.html',
                     resolve: {
-                        permissions: adminRequired,
-                        menu: updateMenuItems('MANAGEMENT'),
+                        permissions: function (RouteGuard) {
+                            return RouteGuard.adminRequired();
+                        },
+                        menu: updateMenuItems(MenuEnum.MANAGEMENT),
                     },
                     controller: 'EditPlanController',
                     controllerAs: 'ctrl',
@@ -313,8 +309,10 @@ angular.module('leadwireApp')
                     url: '/applications/list',
                     templateUrl: 'management/applications/list.html',
                     resolve: {
-                        permissions: adminRequired,
-                        menu: updateMenuItems('MANAGEMENT'),
+                        permissions: function (RouteGuard) {
+                            return RouteGuard.adminRequired();
+                        },
+                        menu: updateMenuItems(MenuEnum.MANAGEMENT),
                     },
                     controller: 'ManageApplicationsController',
                     controllerAs: 'ctrl',
@@ -323,8 +321,10 @@ angular.module('leadwireApp')
                     url: '/applications/:id/detail',
                     templateUrl: 'management/applications/detail.html',
                     resolve: {
-                        permissions: adminRequired,
-                        menu: updateMenuItems('MANAGEMENT'),
+                        permissions: function (RouteGuard) {
+                            return RouteGuard.adminRequired();
+                        },
+                        menu: updateMenuItems(MenuEnum.MANAGEMENT),
                     },
                     controller: 'ManageApplicationsDetailController',
                     controllerAs: 'ctrl',
@@ -333,8 +333,10 @@ angular.module('leadwireApp')
                     url: '/applicationTypes/list',
                     templateUrl: 'management/applicationTypes/list.html',
                     resolve: {
-                        permissions: adminRequired,
-                        menu: updateMenuItems('MANAGEMENT'),
+                        permissions: function (RouteGuard) {
+                            return RouteGuard.adminRequired();
+                        },
+                        menu: updateMenuItems(MenuEnum.MANAGEMENT),
                     },
                     controller: 'ListApplicationTypesController',
                     controllerAs: 'ctrl',
@@ -343,8 +345,10 @@ angular.module('leadwireApp')
                     url: '/applicationTypes/new',
                     templateUrl: 'management/applicationTypes/add.html',
                     resolve: {
-                        permissions: adminRequired,
-                        menu: updateMenuItems('MANAGEMENT'),
+                        permissions: function (RouteGuard) {
+                            return RouteGuard.adminRequired();
+                        },
+                        menu: updateMenuItems(MenuEnum.MANAGEMENT),
                     },
                     controller: 'AddApplicationTypeController',
                     controllerAs: 'ctrl',
@@ -353,8 +357,10 @@ angular.module('leadwireApp')
                     url: '/applicationTypes/edit/:id',
                     templateUrl: 'management/applicationTypes/edit.html',
                     resolve: {
-                        permissions: adminRequired,
-                        menu: updateMenuItems('MANAGEMENT'),
+                        permissions: function (RouteGuard) {
+                            return RouteGuard.adminRequired();
+                        },
+                        menu: updateMenuItems(MenuEnum.MANAGEMENT),
                     },
                     controller: 'EditApplicationTypeController',
                     controllerAs: 'ctrl',
@@ -364,8 +370,10 @@ angular.module('leadwireApp')
                     url: '/templates/list',
                     templateUrl: 'management/templates/list.html',
                     resolve: {
-                        permissions: adminRequired,
-                        menu: updateMenuItems('MANAGEMENT'),
+                        permissions: function (RouteGuard) {
+                            return RouteGuard.adminRequired();
+                        },
+                        menu: updateMenuItems(MenuEnum.MANAGEMENT),
                     },
                     controller: 'ListTemplateController',
                     controllerAs: 'ctrl',
@@ -374,8 +382,10 @@ angular.module('leadwireApp')
                     url: '/templates/new',
                     templateUrl: 'management/templates/add.html',
                     resolve: {
-                        permissions: adminRequired,
-                        menu: updateMenuItems('MANAGEMENT'),
+                        permissions: function (RouteGuard) {
+                            return RouteGuard.adminRequired();
+                        },
+                        menu: updateMenuItems(MenuEnum.MANAGEMENT),
                     },
                     controller: 'AddTemplateController',
                     controllerAs: 'ctrl',
@@ -384,8 +394,10 @@ angular.module('leadwireApp')
                     url: '/templates/:id/edit',
                     templateUrl: 'management/templates/edit.html',
                     resolve: {
-                        permissions: adminRequired,
-                        menu: updateMenuItems('MANAGEMENT'),
+                        permissions: function (RouteGuard) {
+                            return RouteGuard.adminRequired();
+                        },
+                        menu: updateMenuItems(MenuEnum.MANAGEMENT),
                     },
                     controller: 'EditTemplateController',
                     controllerAs: 'ctrl',
@@ -394,8 +406,10 @@ angular.module('leadwireApp')
                     url: '/codes/list',
                     templateUrl: 'management/codes/list.html',
                     resolve: {
-                        permissions: adminRequired,
-                        menu: updateMenuItems('MANAGEMENT'),
+                        permissions: function (RouteGuard) {
+                            return RouteGuard.adminRequired();
+                        },
+                        menu: updateMenuItems(MenuEnum.MANAGEMENT),
                     },
                     controller: 'ListCodeController',
                     controllerAs: 'ctrl',
@@ -404,7 +418,9 @@ angular.module('leadwireApp')
                     url: '/infrastructureMonitoring',
                     templateUrl: 'infrastructureMonitoring.html',
                     resolve: {
-                        permissions: loginRequired,
+                        permissions: function (RouteGuard) {
+                            return RouteGuard.loginRequired();
+                        },
                     },
                     data: {
                         title: 'Infrastructure Monitoring',
@@ -416,7 +432,9 @@ angular.module('leadwireApp')
                     url: '/architectureDiscovery',
                     templateUrl: 'architectureDiscovery.html',
                     resolve: {
-                        permissions: loginRequired,
+                        permissions: function (RouteGuard) {
+                            return RouteGuard.loginRequired();
+                        },
                     },
                     data: {
                         title: 'Architecture Discovery',
@@ -430,7 +448,9 @@ angular.module('leadwireApp')
                     url: '/dataBrowser',
                     templateUrl: 'dataBrowser.html',
                     resolve: {
-                        permissions: loginRequired,
+                        permissions: function (RouteGuard) {
+                            return RouteGuard.loginRequired();
+                        },
                     },
                     data: {
                         title: 'Data Browser',
@@ -444,7 +464,9 @@ angular.module('leadwireApp')
                     url: '/customReports',
                     templateUrl: 'customReports.html',
                     resolve: {
-                        permissions: loginRequired,
+                        permissions: function (RouteGuard) {
+                            return RouteGuard.loginRequired();
+                        },
                     },
                     data: {
                         title: 'Custom Reports',
@@ -458,7 +480,9 @@ angular.module('leadwireApp')
                     url: '/syntheticMonitoring',
                     templateUrl: 'syntheticMonitoring.html',
                     resolve: {
-                        permissions: loginRequired,
+                        permissions: function (RouteGuard) {
+                            return RouteGuard.loginRequired();
+                        },
                     },
                     data: {
                         title: 'Synthetic Monitoring',
@@ -472,7 +496,9 @@ angular.module('leadwireApp')
                     url: '/alerts',
                     templateUrl: 'alerts.html',
                     resolve: {
-                        permissions: loginRequired,
+                        permissions: function (RouteGuard) {
+                            return RouteGuard.loginRequired();
+                        },
                     },
                     data: {
                         title: 'Alerts',
@@ -486,7 +512,9 @@ angular.module('leadwireApp')
                     url: '/businessTransactions',
                     templateUrl: 'businessTransactions.html',
                     resolve: {
-                        permissions: loginRequired,
+                        permissions: function (RouteGuard) {
+                            return RouteGuard.loginRequired();
+                        },
                     },
                     data: {
                         title: 'Business Transactions',
@@ -500,7 +528,9 @@ angular.module('leadwireApp')
                     url: '/realUserMonitoring',
                     templateUrl: 'realUserMonitoring.html',
                     resolve: {
-                        permissions: loginRequired,
+                        permissions: function (RouteGuard) {
+                            return RouteGuard.loginRequired();
+                        },
                     },
                     data: {
                         title: 'Real User Monitoring',
@@ -519,7 +549,9 @@ angular.module('leadwireApp')
                     url: '/visualisations',
                     templateUrl: 'administration/visualisations.html',
                     resolve: {
-                        permissions: loginRequired,
+                        permissions: function (RouteGuard) {
+                            return RouteGuard.loginRequired();
+                        },
                     },
                     data: {
                         title: 'Administration / Visualisations',
@@ -531,7 +563,9 @@ angular.module('leadwireApp')
                     url: '/reports',
                     templateUrl: 'administration/reports.html',
                     resolve: {
-                        permissions: loginRequired,
+                        permissions: function (RouteGuard) {
+                            return RouteGuard.loginRequired();
+                        },
                     },
                     data: {
                         title: 'Administration / Reports',

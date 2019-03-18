@@ -2,6 +2,7 @@
     angular.module('leadwireApp')
         .controller('EditTemplateController', [
             'TemplateService',
+            'ApplicationTypeFactory',
             'toastr',
             'CONFIG',
             'MESSAGES_CONSTANTS',
@@ -15,6 +16,7 @@
      */
     function EditTemplateCtrlFN (
         TemplateService,
+        ApplicationTypeFactory,
         toastr,
         CONSTANTS,
         MESSAGES_CONSTANTS,
@@ -74,8 +76,12 @@
                 },
                 templateId: templateId,
                 template: null,
+                applicationTypes: [],
             });
-
+            ApplicationTypeFactory.findAll()
+                .then(function (response) {
+                    vm.applicationTypes = response.data;
+                });
             vm.getTemplate(templateId);
         };
 

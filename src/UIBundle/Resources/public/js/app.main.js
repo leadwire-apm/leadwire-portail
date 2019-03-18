@@ -20,7 +20,7 @@
 // This is a naive example of how to silence the default error handler.
                 if (error.detail === 'UNAUTHORIZED') {
                     $rootScope.menus = MenuFactory.get('SETTINGS');
-                    $location.path('/login');
+                    $location.path('/applications/list');
                 }
             });
 
@@ -44,4 +44,5 @@
                 '',
             );
         });
+
 })(window.angular);

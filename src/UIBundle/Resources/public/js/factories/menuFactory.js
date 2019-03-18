@@ -7,14 +7,13 @@
             function (Menus, $state) {
                 return {
                     get: function (menuKey) {
+                        var menus = [];
                         if (menuKey in Menus) {
                             menus = Menus[menuKey].map(function (menu) {
                                 return angular.extend({}, menu, {
                                     route: $state.href(menu.route),
                                 });
                             });
-                        } else {
-                            menus = [];
                         }
                         return menus;
                     },
@@ -40,6 +39,11 @@
                 };
             },
         ])
+        .constant('MenuEnum', {
+            DASHBOARD: 'DASHBOARD',
+            SETTINGS: 'SETTINGS',
+            MANAGEMENT: 'MANAGEMENT',
+        })
         .constant('Menus', {
             DASHBOARD: [
                 // {

@@ -64,7 +64,7 @@ angular.module('leadwireApp', [
         DELETE_APP_SUCCESS: 'The app has been deleted.',
         REMOVE_APP_SUCCESS: 'The app has been removed.',
         DELETE_INVITATION_SUCCESS: 'The invitation has been deleted.',
-        CODE_COPIED:'The code was copied successfully',
+        CODE_COPIED: 'The code was copied successfully',
         ADD_APP_SUCCESS:
             'Your app has been added successfully. You need to activate your app',
         LOGIN_SUCCESS: function (provider) {
@@ -107,3 +107,4 @@ angular.module('leadwireApp', [
         },
 
     });
+
