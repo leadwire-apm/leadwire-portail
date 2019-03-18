@@ -205,7 +205,7 @@ class LdapService
                     $entry->setAttribute('member', array_merge($oldValue, ["cn=$userName,ou=People,dc=leadwire,dc=io"]));
                     $this->entryManager->update($entry);
                 } else {
-                    $this->logger->debug("Entry already up to date [cn=$userName,ou=People,dc=leadwire,dc=io] in [cn=app_{$application->getUuid()}]");
+                    $this->logger->notice("Entry already up to date [cn=$userName,ou=People,dc=leadwire,dc=io] in [cn=app_{$application->getUuid()}]");
                 }
             } else {
                 throw new \Exception("Unable to find LDAP records for demo applications app tenant");

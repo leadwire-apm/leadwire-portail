@@ -15,6 +15,7 @@
             'MESSAGES_CONSTANTS',
             'toastr',
             'Paginator',
+            'CONFIG',
             AppCtrlFN,
         ]);
 
@@ -32,6 +33,7 @@
         MESSAGES_CONSTANTS,
         toastr,
         Paginator,
+        CONFIG,
     ) {
         onLoad();
 
@@ -153,7 +155,7 @@
             $scope.app = {
                 name: 'leadwire',
                 author: 'Nyasha',
-                version: '1.0.0',
+                version: CONFIG.APP_VERSION,
                 year: new Date().getFullYear(),
                 layout: {
                     isSmallSidebar: false,

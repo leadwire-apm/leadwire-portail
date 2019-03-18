@@ -40,6 +40,7 @@ angular.module('leadwireApp', [
         textColor: '#6B6B6B',
     })
     .constant('CONFIG', {
+        APP_VERSION: APP_VERSION,
         BASE_URL: BASE_URL,
         ASSETS_BASE_URL: ASSETS_BASE_URL,
         UPLOAD_URL: UPLOAD_URL,
@@ -107,4 +108,3 @@ angular.module('leadwireApp', [
         },
 
     });
-

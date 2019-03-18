@@ -130,7 +130,8 @@ class KibanaService
                     'url' => $this->url . "api/kibana/dashboards/import?exclude=index-pattern&force=true",
                     'verb' => 'POST',
                     'headers' => $headers,
-                    'body' => $content,
+                    // 'body' => $content,
+                    'template' => $template->getName(),
                     'status_code' => $response->getStatusCode(),
                 ]
             );
@@ -198,6 +199,12 @@ class KibanaService
 
             return $response->getStatusCode() === Response::HTTP_OK;
         } else {
+            $this->logger->critical(
+                "leadwire.kibana.createApplicationDashboards",
+                [
+                    'error' => "Template ($template) not found",
+                ]
+            );
             throw new \Exception("Template ($template) not found");
         }
     }

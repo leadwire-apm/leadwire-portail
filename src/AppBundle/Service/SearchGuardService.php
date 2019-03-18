@@ -194,7 +194,7 @@ class SearchGuardService
             // ! Hard coded on purpose
             \shell_exec("sh /usr/share/elasticsearch/plugins/search-guard-6/tools/sgadmin.sh -cd /usr/share/elasticsearch/plugins/search-guard-6/sgconfig/ -icl -nhnv -cacert /certificates/root-ca.pem -cert /certificates/leadwire-apm.pem -key /certificates/leadwire-apm.key -keypass changeit &");
         } catch (IOException $e) {
-            $this->logger->critical($e->getMessage());
+            $this->logger->critical("leadwire.search_guard.updateSearchGuardConfig", ['error' => $e->getMessage()]);
         }
     }
 }
