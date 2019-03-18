@@ -5,6 +5,7 @@ namespace ATS\PaymentBundle\Service;
 use ATS\PaymentBundle\Document\Plan;
 use ATS\PaymentBundle\Document\PricingPlan;
 use ATS\PaymentBundle\Manager\PlanManager;
+use ATS\PaymentBundle\Service\CustomStripeGateway;
 use JMS\Serializer\SerializerInterface;
 use Psr\Log\LoggerInterface;
 
@@ -150,157 +151,154 @@ class PlanService
         $plan = $this->planManager->getOneBy(['id' => $id]);
 
         if ($plan instanceof Plan) {
-            $this->gateway->deletePlan(["id" => $plan->getName() . "-month"])->send();
-            $this->gateway->deletePlan(["id" => $plan->getName() . "-year"])->send();
+            /** @var PricingPlan $pricingPlan */
+            foreach ($plan->getPrices() as $pricingPlan) {
+                $response = $this->gateway->deletePlan(['id' => $pricingPlan->getToken()])->send()->getData();
+            }
+
+            $response = $this->gateway->deleteProduct(['id' => $plan->getStripeId()])->send()->getData();
             $this->planManager->deleteById($id);
         }
     }
 
     public function createDefaultPlans()
     {
+        $stripeProducts = $this->gateway->listProducts()->send()->getData()['data'];
 
-        $createdPlans = $this->gateway->listPlans()->send()->getData()['data'];
-
-        $first = $this->planManager->getOneBy(['name' => "BASIC"]);
-        if (!$first) {
-            $first = new Plan();
-            $first->setName("BASIC")
+        $basic = $this->planManager->getOneBy(['name' => "BASIC"]);
+        if ($basic === null) {
+            $basic = new Plan();
+            $basic->setName("BASIC")
                 ->setIsCreditCard(false)
                 ->setDiscount(0)
                 ->setPrice(0)
                 ->setMaxTransactionPerDay(10000)
                 ->setRetention(1);
-            $this->planManager->update($first);
+
+            $data = [
+                "name" => $basic->getName(),
+                "type" => 'service',
+            ];
+            $product = $this->gateway->createProduct($data)->send()->getData();
+            $basic->setStripeId($product['id']);
+            $this->planManager->update($basic);
         }
 
-        $second = $this->planManager->getOneBy(['name' => "STANDARD"]);
-        if (!$second) {
-            $second = new Plan();
-            $second->setName("STANDARD")
+        $standard = $this->planManager->getOneBy(['name' => "STANDARD"]);
+        if ($standard === null) {
+            $standard = new Plan();
+            $standard->setName("STANDARD")
                 ->setIsCreditCard(true)
                 ->setDiscount(15)
                 ->setPrice(71)
                 ->setMaxTransactionPerDay(100000)
                 ->setRetention(7);
 
-            /**
-             * Monthly Plan
-             */
+            $data = [
+                "name" => $standard->getName(),
+                "type" => 'service',
+            ];
 
-            $stripePlan = array_filter($createdPlans, function ($elem) use ($second) {
-                return $elem['id'] === $second->getName() . "-month";
-            });
-
-            if (empty($stripePlan) === true) {
-                $token = $this->gateway->createPlan([
-                    "interval" => 'month',
-                    "name" => $second->getName(),
-                    "currency" => Plan::CURRENCY_EURO,
-                    "amount" => $second->getPrice(),
-                    "id" => $second->getName() . "-month",
-                ])->send()->getData()['id'];
-
-            } else {
-                $token = reset($stripePlan)['id'];
-            }
-
-            $pricing = new PricingPlan();
-            $pricing->setName("monthly");
-            $pricing->setToken($token);
-            $second->addPrice($pricing);
+            $product = $this->gateway->createProduct($data)->send()->getData();
+            $standard->setStripeId($product['id']);
 
             /**
-             * Yearly Plan
+             * Monthly STANDARD Plan
              */
-            $stripePlan = array_filter($createdPlans, function ($elem) use ($second) {
-                return $elem['id'] === $second->getName() . "-year";
-            });
+            $data = [
+                "amount" => $standard->getPrice(),
+                "interval" => Plan::FREQUENCY_MONTHLY,
+                "name" => $standard->getName(),
+                "currency" => Plan::CURRENCY_EURO,
+                'product_id' => $product['id'],
+            ];
 
-            if (empty($stripePlan) === true) {
-                $token = $this->gateway->createPlan([
-                    "interval" => 'year',
-                    "name" => $second->getName(),
-                    "currency" => Plan::CURRENCY_EURO,
-                    "amount" => $second->getYearlyPrice(),
-                    "id" => $second->getName() . "-year",
-                ])->send()->getData()['id'];
-            } else {
-                $token = reset($stripePlan)['id'];
-            }
+            $plan = $this->gateway->createPlan($data)->send()->getData();
 
             $pricing = new PricingPlan();
-            $pricing->setName("yearly");
-            $pricing->setToken($token);
-            $second->addPrice($pricing);
+            $pricing->setName('monthly');
+            $pricing->setToken($plan['id']);
+            $standard->addPrice($pricing);
 
-            $this->planManager->update($second);
+            /**
+             * Yearly STANDARD Plan
+             */
+            $data = [
+                "amount" => $standard->getYearlyPrice(),
+                "interval" => Plan::FREQUENCY_YEARLY,
+                "name" => $standard->getName(),
+                "currency" => Plan::CURRENCY_EURO,
+                'product_id' => $product['id'],
+            ];
+
+            $plan = $this->gateway->createPlan($data)->send()->getData();
+
+            $pricing = new PricingPlan();
+            $pricing->setName('yearly');
+            $pricing->setToken($plan['id']);
+            $standard->addPrice($pricing);
+            $this->planManager->update($standard);
         }
 
-        $third = $this->planManager->getOneBy(['name' => "PREMIUM"]);
-        if (!$third) {
-            $third = new Plan();
-            $third->setName("PREMIUM")
+        $premium = $this->planManager->getOneBy(['name' => "PREMIUM"]);
+
+        if ($premium === null) {
+            $premium = new Plan();
+            $premium->setName("PREMIUM")
                 ->setIsCreditCard(true)
                 ->setDiscount(15)
                 ->setPrice(640)
                 ->setMaxTransactionPerDay(1000000)
                 ->setRetention(15);
 
+            $data = [
+                "name" => $premium->getName(),
+                "type" => 'service',
+            ];
+
+            $product = $this->gateway->createProduct($data)->send()->getData();
+            $premium->setStripeId($product['id']);
             /**
-             * monthly plan
+             * Monthly PREMIUM plan
              */
+            $data = [
+                "amount" => $premium->getPrice(),
+                "interval" => Plan::FREQUENCY_MONTHLY,
+                "name" => $premium->getName(),
+                "currency" => Plan::CURRENCY_EURO,
+                'product_id' => $product['id'],
+            ];
 
-            $stripePlan = array_filter($createdPlans, function ($elem) use ($third) {
-                return $elem['id'] === $third->getName() . "-month";
-            });
-
-            if (empty($stripePlan) === true) {
-                $token = $this->gateway->createPlan([
-                    "interval" => 'month',
-                    "name" => $third->getName(),
-                    "currency" => Plan::CURRENCY_EURO,
-                    "amount" => $third->getPrice(),
-                    "id" => $third->getName() . "-month",
-                ])->send()->getData()['id'];
-            } else {
-                $token = reset($stripePlan)['id'];
-            }
+            $plan = $this->gateway->createPlan($data)->send()->getData();
 
             $pricing = new PricingPlan();
-            $pricing->setName("monthly");
-            $pricing->setToken($token);
-            $third->addPrice($pricing);
+            $pricing->setName('monthly');
+            $pricing->setToken($plan['id']);
+            $premium->addPrice($pricing);
 
             /**
-             * Yearly plan
+             * Yearly PREMIUM Plan
              */
+            $data = [
+                "amount" => $premium->getYearlyPrice(),
+                "interval" => Plan::FREQUENCY_YEARLY,
+                "name" => $premium->getName(),
+                "currency" => Plan::CURRENCY_EURO,
+                'product_id' => $product['id'],
+            ];
 
-            $stripePlan = array_filter($createdPlans, function ($elem) use ($third) {
-                return $elem['id'] === $third->getName() . "-year";
-            });
-            if (empty($stripePlan) === true) {
-                $token = $this->gateway->createPlan([
-                    "interval" => 'year',
-                    "name" => $third->getName(),
-                    "currency" => Plan::CURRENCY_EURO,
-                    "amount" => $third->getYearlyPrice(),
-                    "id" => $third->getName() . "-year",
-                ])->send()->getData()['id'];
-            } else {
-                $token = reset($stripePlan)['id'];
-            }
+            $plan = $this->gateway->createPlan($data)->send()->getData();
 
             $pricing = new PricingPlan();
-            $pricing->setName("yearly");
-            $pricing->setToken($token);
-            $third->addPrice($pricing);
-
-            $this->planManager->update($third);
+            $pricing->setName('yearly');
+            $pricing->setToken($plan['id']);
+            $premium->addPrice($pricing);
+            $this->planManager->update($premium);
         }
     }
 
     /**
-     * @see https://stripe.com/docs/api/plans/update
+     * @link https://stripe.com/docs/api/plans/update
      * ! By design, you cannot change a plan’s ID, amount, currency, or billing cycle.
      *
      * @param string $json
@@ -312,56 +310,110 @@ class PlanService
         /** @var Plan $plan */
         $plan = $this->serializer->deserialize($json, Plan::class, 'json');
 
+        // Delete previous Plans
+        foreach ($plan->getPrices() as $pricingPlan) {
+            $data = $this->gateway->deletePlan(['id' => $pricingPlan->getToken()])->send()->getData();
+        }
+        $plan->setPrices([]);
+        // Monthly
         $data = [
-            "interval" => 'month',
-            "name" => $plan->getName(),
-            "currency" => Plan::CURRENCY_EURO,
             "amount" => $plan->getPrice(),
-            "id" => $plan->getName() . "-month",
-        ];
-        // Monthly plan
-        $this->gateway->deletePlan($data)->send();
-        $this->gateway->createPlan($data)->send();
-
-        $data = [
-            "interval" => 'year',
+            "interval" => Plan::FREQUENCY_MONTHLY,
             "name" => $plan->getName(),
             "currency" => Plan::CURRENCY_EURO,
-            "amount" => $plan->getYearlyPrice(),
-            "id" => $plan->getName() . "-year",
+            'product_id' => $plan->getStripeId(),
         ];
 
-        $this->gateway->deletePlan($data)->send();
-        $this->gateway->createPlan($data)->send();
+        $pricingPlan = $this->gateway->createPlan($data)->send()->getData();
+
+        $pricing = new PricingPlan();
+        $pricing->setName('monthly');
+        $pricing->setToken($pricingPlan['id']);
+        $plan->addPrice($pricing);
+
+        // Yearly
+        $data = [
+            "amount" => $plan->getYearlyPrice(),
+            "interval" => Plan::FREQUENCY_YEARLY,
+            "name" => $plan->getName(),
+            "currency" => Plan::CURRENCY_EURO,
+            'product_id' => $plan->getStripeId(),
+        ];
+
+        $pricingPlan = $this->gateway->createPlan($data)->send()->getData();
+
+        $pricing = new PricingPlan();
+        $pricing->setName('yearly');
+        $pricing->setToken($pricingPlan['id']);
+        $plan->addPrice($pricing);
 
         $this->planManager->update($plan);
     }
 
-    public function createNewPlan(string $json)
+    public function createPlan(string $json)
     {
+        $stripeProducts = $this->gateway->listProducts()->send()->getData();
         /** @var Plan $plan */
         $plan = $this->serializer->deserialize($json, Plan::class, 'json');
 
+        $product = array_filter($stripeProducts['data'], function ($element) use ($plan) {return $element['name'] === $plan->getName();});
+        $product = reset($product);
+
+        if (empty($product) === true) {
+            $data = [
+                "name" => $plan->getName(),
+                "type" => 'service',
+            ];
+
+            $product = $this->gateway->createProduct($data)->send()->getData();
+            $plan->setStripeId($data['id']);
+        }
+
         $data = [
-            "interval" => 'month',
-            "name" => $plan->getName(),
-            "currency" => Plan::CURRENCY_EURO,
             "amount" => $plan->getPrice(),
-            "id" => $plan->getName() . "-month",
-        ];
-
-        $this->gateway->createPlan($data)->send();
-
-        $data = [
-            "interval" => 'year',
+            "interval" => Plan::FREQUENCY_MONTHLY,
             "name" => $plan->getName(),
             "currency" => Plan::CURRENCY_EURO,
-            "amount" => $plan->getYearlyPrice(),
-            "id" => $plan->getName() . "-year",
+            'product_id' => $product['id'],
         ];
 
-        $this->gateway->createPlan($data)->send();
+        $data = $this->gateway->createPlan($data)->send()->getData();
+
+        $pricing = new PricingPlan();
+        $pricing->setName('monthly');
+        $pricing->setToken($data['id']);
+        $plan->addPrice($pricing);
+
+        $data = [
+            "amount" => $plan->getYearlyPrice(),
+            "interval" => Plan::FREQUENCY_YEARLY,
+            "name" => $plan->getName(),
+            "currency" => Plan::CURRENCY_EURO,
+            'product_id' => $product['id'],
+        ];
+
+        $data = $this->gateway->createPlan($data)->send()->getData();
+
+        $pricing = new PricingPlan();
+        $pricing->setName('yearly');
+        $pricing->setToken($data['id']);
+        $plan->addPrice($pricing);
 
         $this->planManager->update($plan);
+    }
+
+    public function deleteAllPlans()
+    {
+        $plans = $this->planManager->getAll();
+
+        foreach ($plans as $plan) {
+            foreach ($plan->getPrices() as $pricingPlan) {
+                $code = $this->gateway->deletePlan(['id' => $pricingPlan->getToken()])->send();
+            }
+
+            if ($plan->getStripeId() !== null) {
+                $code = $this->gateway->deleteProduct(['id' => $plan->getStripeId()])->send();
+            }
+        }
     }
 }

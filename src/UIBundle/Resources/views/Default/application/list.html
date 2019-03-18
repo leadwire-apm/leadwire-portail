@@ -53,10 +53,10 @@
                                 </a>
                             </td>
                             <td ng-if="!app.enabled && app.owner.id == user.id"
-                                data-title="Activate app"
-                                data-label="Activate app">
+                                data-title="Activate this application"
+                                data-label="Activate this application">
                                 <a class="btn btn-primary"
-                                   title="Activate app"
+                                   title="Activate this application"
                                    data-placement="left"
                                    data-toggle="tooltip"
                                    ng-click="ctrl.enableApp(app)"
@@ -86,7 +86,7 @@
                             </td>
                             <td ng-if="app.owner.id != user.id" data-title="Remove" data-label="Remove">
                                 <button class="btn btn-warning"
-                                        title="Remove application"
+                                        title="Remove this application"
                                         data-placement="left"
                                         data-toggle="tooltip"
 

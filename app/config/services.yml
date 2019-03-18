@@ -85,3 +85,5 @@ services:
     AppBundle\Service\SearchGuardService:
         arguments:
             $sgConfig: "%sg%"
+        tags:
+            - { name: monolog.logger, channel: search_guard }

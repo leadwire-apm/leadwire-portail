@@ -11,6 +11,8 @@ use AppBundle\Manager\UserManager;
 use AppBundle\SearchGuard\SgRoles;
 use AppBundle\SearchGuard\SgRolesMapping;
 use JMS\Serializer\SerializerInterface;
+use Psr\Log\LoggerInterface;
+use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Filesystem;
 
 class SearchGuardService
@@ -19,6 +21,11 @@ class SearchGuardService
      * @var SerializerInterface
      */
     private $serializer;
+
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
 
     /**
      * @var ApplicationManager
@@ -39,12 +46,14 @@ class SearchGuardService
 
     public function __construct(
         SerializerInterface $serializer,
+        LoggerInterface $logger,
         ApplicationManager $applicationManager,
         ApplicationPermissionManager $permissionManager,
         UserManager $userManager,
         array $sgConfig
     ) {
         $this->serializer = $serializer;
+        $this->logger = $logger;
         $this->applicationManager = $applicationManager;
         $this->permissionManager = $permissionManager;
         $this->userManager = $userManager;
@@ -75,6 +84,8 @@ class SearchGuardService
             $serialized .= $this->serializer->serialize([$applicationIndex => ['users' => $users]], 'yml');
             $serialized .= $this->serializer->serialize([$kibanaIndex => ['users' => $users]], 'yml');
         }
+
+        $allUsers = \array_unique($allUsers);
 
         foreach ($allUsers as $userIndex) {
             $serialized .= $this->serializer->serialize(["sg_$userIndex" => ['users' => [$userIndex]]], 'yml');
@@ -176,10 +187,15 @@ class SearchGuardService
             \unlink($configDir . 'sg_roles_mapping.yml');
         }
 
-        $fs->dumpFile($configDir . 'sg_roles.yml', $sgRolesData);
-        $fs->dumpFile($configDir . 'sg_roles_mapping.yml', $sgRolesMappingsData);
+        try {
+            $fs->dumpFile($configDir . 'sg_roles.yml', $sgRolesData);
+            $fs->dumpFile($configDir . 'sg_roles_mapping.yml', $sgRolesMappingsData);
 
-        // ! Hard coded on purpose
-        shell_exec("sh /usr/share/elasticsearch/plugins/search-guard-6/tools/sgadmin.sh -cd /usr/share/elasticsearch/plugins/search-guard-6/sgconfig/ -icl -nhnv -cacert /certificates/root-ca.pem -cert /certificates/leadwire-apm.pem -key /certificates/leadwire-apm.key -keypass changeit &");
+            // ! Hard coded on purpose
+            \shell_exec("sh /usr/share/elasticsearch/plugins/search-guard-6/tools/sgadmin.sh -cd /usr/share/elasticsearch/plugins/search-guard-6/sgconfig/ -icl -nhnv -cacert /certificates/root-ca.pem -cert /certificates/leadwire-apm.pem -key /certificates/leadwire-apm.key -keypass changeit &");
+        } catch (IOException $e) {
+            $this->logger->critical($e->getMessage());
+        }
+
     }
 }

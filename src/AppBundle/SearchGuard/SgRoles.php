@@ -67,6 +67,10 @@ class SgRoles
             '?kibana_all_${user_name}' => [
                 "*" => ['READ'],
             ],
+            '*' => [
+                "*" => ['INDICES_ALL'],
+            ],
+
         ];
 
         $this->sg_debug_index['cluster'] = ['CLUSTER_COMPOSITE_OPS', 'UNLIMITED'];

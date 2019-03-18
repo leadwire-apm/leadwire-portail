@@ -86,7 +86,7 @@ class PlanController extends Controller
     public function newPlan(Request $request, PlanService $planService)
     {
         $data = $request->getContent();
-        $planService->createNewPlan($data);
+        $planService->createPlan($data);
 
         return $this->renderResponse(null);
     }

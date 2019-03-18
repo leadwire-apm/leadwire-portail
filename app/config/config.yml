@@ -64,21 +64,11 @@ framework:
     router:
         resource:            '%kernel.root_dir%/config/routing.yml'
         strict_requirements: ~
-    form:
-        enabled:             true
-    csrf_protection:
-        enabled:             true
     validation:              { enable_annotations: true }
     templating:
         engines:             ['twig']
     default_locale:          '%locale%'
     trusted_hosts:           ~
-    session:
-        cookie_lifetime:     31536000
-        save_path:           '%kernel.project_dir%/var/sessions/app/%kernel.environment%'
-        cookie_domain:       '%app_domain%'
-        name:                'leadwire_%kernel.environment%'
-        use_cookies:         true
     fragments:    ~
     http_method_override:    true
 

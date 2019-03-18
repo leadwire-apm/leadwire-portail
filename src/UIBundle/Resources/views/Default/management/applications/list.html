@@ -5,6 +5,17 @@
     </div>
     <div class="panel-body">
         <div class="row no-margin">
+            <div class="row mb30">
+                <div class="col-sm-offset-10" style="display: flex">
+                    <label for="search">All Applications :</label>
+                    <label for="search" class="switch switch-sm ml10">
+                        <input id="search" type="checkbox"
+                                data-ng-model="ctrl.allApplications">
+                        <span><i class="handle"></i></span>
+                    </label>
+
+                </div>
+            </div>
             <div class="col-lg-12 ">
                 <table class="table table-striped mb0">
                     <thead>
@@ -24,7 +35,7 @@
                                      size="24"></spinner>
                         </td>
                     </tr>
-                    <tr ng-repeat="application in ctrl.applications"
+                    <tr ng-repeat="application in ctrl.applications | filter: (!ctrl.allApplications || '') && {removed: false}"
                         class="text-center"
                     >
                         <td data-title="Name" data-label="Name">

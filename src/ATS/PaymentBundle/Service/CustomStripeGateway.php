@@ -4,12 +4,14 @@
 namespace ATS\PaymentBundle\Service;
 
 use Omnipay\Stripe\Gateway;
-use ATS\PaymentBundle\Message\CreatePlanRequest;
-use ATS\PaymentBundle\Message\ListInvoicesRequest;
-use ATS\PaymentBundle\Message\UpdateSubscriptionRequest;
-use ATS\PaymentBundle\Message\UpdatePlanRequest;
 use Omnipay\Stripe\Message\DeletePlanRequest;
+use ATS\PaymentBundle\Message\CreatePlanRequest;
+use ATS\PaymentBundle\Message\UpdatePlanRequest;
+use ATS\PaymentBundle\Message\ListInvoicesRequest;
+use ATS\PaymentBundle\Message\ListProductsRequest;
 use ATS\PaymentBundle\Message\CreateProductRequest;
+use ATS\PaymentBundle\Message\DeleteProductRequest;
+use ATS\PaymentBundle\Message\UpdateSubscriptionRequest;
 
 
 
@@ -64,5 +66,15 @@ class CustomStripeGateway extends Gateway
     public function createProduct(array $parameters = [])
     {
         return $this->createRequest(CreateProductRequest::class, $parameters);
+    }
+
+    public function listProducts(array $parameters = [])
+    {
+        return $this->createRequest(ListProductsRequest::class, $parameters);
+    }
+
+    public function deleteProduct(array $parameters = [])
+    {
+        return $this->createRequest(DeleteProductRequest::class, $parameters);
     }
 }

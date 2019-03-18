@@ -190,6 +190,8 @@ class ApplicationController extends Controller
                     'shared_' . $application->getUuid()
                 );
 
+                $kibanaService->createApplicationDashboards($application, $this->getUser(), true);
+
                 $sgService->updateSearchGuardConfig();
                 $status = true;
             }

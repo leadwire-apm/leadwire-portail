@@ -99,6 +99,7 @@
                     isLoading: false,
                 },
                 applications: [],
+                allApplications: false,
             });
             vm.loadApplications();
         };

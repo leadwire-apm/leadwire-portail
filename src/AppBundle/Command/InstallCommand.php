@@ -32,6 +32,7 @@ Load default Application Type. Insert template for Kibana and more..'
         $ldap = $this->getContainer()->get(LdapService::class);
         /** @var PlanService $planService */
         $planService = $this->getContainer()->get(PlanService::class);
+        $planService->deleteAllPlans();
         $this->loadFixtures($output);
         $ldap->createDemoApplicationsEntries();
         $planService->createDefaultPlans();

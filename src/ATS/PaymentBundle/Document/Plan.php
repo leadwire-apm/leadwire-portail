@@ -18,6 +18,9 @@ class Plan
     const CURRENCY_EURO = "eur";
     const CURRENCY_USD = "usd";
 
+    const FREQUENCY_MONTHLY = "month";
+    const FREQUENCY_YEARLY = "year";
+
     /**
      * @var \MongoId
      *
@@ -89,11 +92,17 @@ class Plan
 
     /**
      * @var string
-     * @var string
      * @ODM\Field(type="string", name="token")
      */
     private $token;
 
+    /**
+     * @ODM\Field(type="string")
+     * @JMS\Expose
+     * @JMS\Type("string")
+     * @var string
+     */
+    private $stripeId;
     /**
      * @var \DateTime
      *
@@ -218,7 +227,7 @@ class Plan
 
     public function getYearlyPrice()
     {
-        return (($this->getPrice() * 12 * 85) / 100);
+        return (($this->getPrice() * 12 * (100 - $this->discount)) / 100);
     }
     /**
      * Set price
@@ -229,6 +238,7 @@ class Plan
     public function setPrice($price)
     {
         $this->price = $price;
+
         return $this;
     }
 
@@ -251,6 +261,7 @@ class Plan
     public function setDiscount($discount)
     {
         $this->discount = $discount;
+
         return $this;
     }
 
@@ -273,6 +284,7 @@ class Plan
     public function setIsCreditCard($isCreditCard)
     {
         $this->isCreditCard = $isCreditCard;
+
         return $this;
     }
 
@@ -293,6 +305,7 @@ class Plan
     public function setToken($token)
     {
         $this->token = $token;
+
         return $this;
     }
 
@@ -315,6 +328,7 @@ class Plan
     public function setCreatedAt($createdAt)
     {
         $this->createdAt = $createdAt;
+
         return $this;
     }
 
@@ -337,6 +351,7 @@ class Plan
     public function setUpdatedAt($updatedAt)
     {
         $this->updatedAt = $updatedAt;
+
         return $this;
     }
 
@@ -346,6 +361,11 @@ class Plan
     public function getPrices()
     {
         return $this->prices;
+    }
+
+    public function setPrices($prices)
+    {
+        $this->prices = $prices;
     }
 
     /**
@@ -377,5 +397,29 @@ class Plan
     public function __toString()
     {
         return (string) $this->id;
+    }
+
+    /**
+     * Get the value of stripeId
+     *
+     * @return  string
+     */
+    public function getStripeId()
+    {
+        return $this->stripeId;
+    }
+
+    /**
+     * Set the value of stripeId
+     *
+     * @param  string  $stripeId
+     *
+     * @return  self
+     */
+    public function setStripeId(string $stripeId)
+    {
+        $this->stripeId = $stripeId;
+
+        return $this;
     }
 }

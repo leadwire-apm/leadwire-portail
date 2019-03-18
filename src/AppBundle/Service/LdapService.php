@@ -167,7 +167,7 @@ class LdapService
                 "cn" => $userName,
                 "gidNumber" => "789",
                 "objectclass" => ['posixGroup', 'top'],
-                "description" => "username",
+                "description" => $user->getUsername(),
             ]
         );
 
@@ -183,7 +183,7 @@ class LdapService
                     "cn=leadwire-apm,ou=People,dc=leadwire,dc=io",
                     "cn=$userName,ou=People,dc=leadwire,dc=io",
                 ],
-                'description' => 'appname',
+                'description' => $user->getUsername(),
             ]
         );
 
@@ -254,7 +254,7 @@ class LdapService
                 "objectClass" => "groupofnames",
                 "cn" => "app_{$application->getUuid()}",
                 "member" => "cn=leadwire-apm,ou=People,dc=leadwire,dc=io",
-                "description" => "appname",
+                "description" => $application->getName(),
             ]
         );
 
@@ -267,7 +267,7 @@ class LdapService
                 "objectClass" => "groupofnames",
                 "cn" => "shared_{$application->getUuid()}",
                 "member" => "cn=leadwire-apm,ou=People,dc=leadwire,dc=io",
-                "description" => "appname",
+                "description" => $application->getName(),
             ]
         );
 

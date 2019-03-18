@@ -30,6 +30,7 @@
                 vm.flipActivityIndicator('isLoading');
                 vm.apps = vm.paginator.items = response.data;
                 $scope.$emit('set:apps', vm.apps);
+                $localStorage.applications = vm.apps;
             }).catch(function () {
                 vm.flipActivityIndicator('isLoading');
                 vm.apps = [];
@@ -109,6 +110,7 @@
                                         ? currentApp
                                         : updatedApp;
                                 });
+                                $localStorage.applications = vm.apps;
                                 $state.go('app.applicationDetail', {
                                     id: selectedApp.id,
                                 });

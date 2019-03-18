@@ -29,6 +29,13 @@ monolog:
             level: notice
             path:     '%kernel.logs_dir%/kibana.log'
             channels: [kibana]
+        sg:
+            type: rotating_file
+            action_level: notice
+            max_files: 10
+            level: notice
+            path:     '%kernel.logs_dir%/search_guard.log'
+            channels: [search_guard]
         es:
             type: rotating_file
             action_level: notice
