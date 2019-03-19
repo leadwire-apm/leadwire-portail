@@ -19,7 +19,7 @@
                             <th class="col-md-2">Type</th>
                             <th class="col-md-2">Email</th>
                             <th class="col-md-2">Status</th>
-                            <th colspan="3" style="text-align: center">Actions</th>
+                            <th colspan="4" style="text-align: center">Actions</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -43,7 +43,10 @@
                                 </span>
 
                             </td>
-                            <td data-title="Details" data-label="Details">
+
+                            <td
+                                data-title="Actions"
+                                data-label="Actions" class="actionsCell">
                                 <a class="btn btn-info"
                                    title="Details"
                                    data-placement="left"
@@ -51,11 +54,8 @@
                                    ng-disabled="!app.enabled" ui-sref="app.applicationDetail({id:app.id})">
                                     <i class="fa fa-info"></i>
                                 </a>
-                            </td>
-                            <td ng-if="!app.enabled && app.owner.id == user.id"
-                                data-title="Activate this application"
-                                data-label="Activate this application">
                                 <a class="btn btn-primary"
+                                   ng-if="!app.enabled && app.owner.id == user.id"
                                    title="Activate this application"
                                    data-placement="left"
                                    data-toggle="tooltip"
@@ -63,18 +63,15 @@
                                 >
                                     <i class="fa fa-key"></i>
                                 </a>
-                            </td>
-                            <td ng-if="app.enabled && app.owner.id == user.id"
-                                data-title="Edit App" data-label="Edit app">
                                 <a class="btn btn-warning"
+                                   ng-if="app.enabled && app.owner.id == user.id"
                                    title="Edit application"
                                    data-placement="left"
                                    data-toggle="tooltip"
 
                                    ui-sref="app.applicationEdit({id:app.id})"><i class="fa fa-pencil"></i></a>
-                            </td>
-                            <td ng-if="app.owner.id == user.id" data-title="Delete" data-label="Delete">
                                 <button class="btn btn-danger"
+                                        ng-if="app.owner.id == user.id"
                                         title="Delete application"
                                         data-placement="left"
                                         data-toggle="tooltip"
@@ -83,9 +80,8 @@
                                     <i ng-if="!ctrl.ui.isDeleting" class="fa fa-trash"></i>
                                     <spinner is-loading="ctrl.ui.isDeleting"></spinner>
                                 </button>
-                            </td>
-                            <td ng-if="app.owner.id != user.id" data-title="Remove" data-label="Remove">
                                 <button class="btn btn-warning"
+                                        ng-if="app.owner.id != user.id"
                                         title="Remove this application"
                                         data-placement="left"
                                         data-toggle="tooltip"
