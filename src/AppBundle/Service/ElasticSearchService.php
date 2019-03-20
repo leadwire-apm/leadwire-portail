@@ -364,14 +364,18 @@ class ElasticSearchService
      */
     protected function getRawDashboards(Application $app)
     {
-        $res = [];
+        $res = [
+            "Default" => [],
+            "Custom" => [],
+        ];
 
-        $tenants = ["all_user_{$app->getOwner()->getUuid()}", "app_{$app->getUuid()}"];
+        $tenants = [
+            "Default" => [/*"all_user_{$app->getOwner()->getUuid()}",*/ "app_{$app->getUuid()}"],
+            "Custom" => ["all_user_{$app->getOwner()->getUuid()}", "app_{$app->getUuid()}"],
+        ];
 
-        foreach ($tenants as $index => $tenant) {
-            try {
-                $key = $index === 0 ? "Default" : "Custom";
-                $res[$key] = isset($res[$key]) === true ? $res[$key] : [];
+        foreach ($tenants as $groupName => $tenantGroup) {
+            foreach ($tenantGroup as $tenant) {
                 $response = $this->httpClient->get(
                     $this->url . ".kibana_$tenant" . "/_search?pretty&from=0&size=10000",
                     [
@@ -388,22 +392,29 @@ class ElasticSearchService
                 if ($response->getStatusCode() === Response::HTTP_OK) {
                     $body = json_decode($response->getBody())->hits->hits;
                     foreach ($body as $element) {
-                        if (in_array($element->_source->type, array("dashboard" /*, "visualization"*/)) === true) {
+                        if ($element->_source->type === "dashboard") {
                             $title = $element->_source->{$element->_source->type}->title;
 
-                            $res[$key][] = [
+                            $res[$groupName][] = [
                                 "id" => $this->transformeId($element->_id),
                                 "name" => $title,
-                                "private" => ($index == 1),
+                                "private" => ($groupName === "Custom"),
                                 "tenant" => $tenant,
                             ];
                         }
                     }
+                } else {
+                    $this->logger->error(
+                        'leadwire.es.getRawDashboards',
+                        [
+                            'error' => $response->getReasonPhrase(),
+                            'status_code' => $response->getStatusCode(),
+                        ]
+                    );
                 }
-            } catch (\GuzzleHttp\Exception\ClientException $e) {
-                $this->logger->error('leadwire.es.getRawDashboards', ['error' => $e->getMessage()]);
             }
         }
+
         return $res;
     }
 
