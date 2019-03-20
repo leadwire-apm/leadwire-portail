@@ -54,8 +54,8 @@
                     return menu.icon || 'fa fa-dashboard';
                 },
             );
-            // $rootScope.menus = $localStorage.currentMenu;
-            $rootScope.menus = MenuFactory.get('DASHBOARD');
+            $rootScope.menus = $localStorage.currentMenu;
+            // $rootScope.menus = MenuFactory.get('DASHBOARD');
         };
 
         service.getDashboard = function(tenant, dashboardId) {

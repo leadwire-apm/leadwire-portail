@@ -98,7 +98,7 @@
             $scope.isChangingContext = true;
             DashboardService.fetchDashboardsByAppId(app.id)
                 .then(function (response) {
-                    $rootScope.menus = MenuFactory.get("DASHBOARD");
+                    // $rootScope.menus = MenuFactory.get("DASHBOARD");
                     $scope.isChangingContext = false;
                     $scope.selectedAppId = response.appId;
                     if (response.dashboards && response.dashboards.length) {

@@ -371,7 +371,7 @@ class ElasticSearchService
 
         $tenants = [
             "Default" => [/*"all_user_{$app->getOwner()->getUuid()}",*/ "app_{$app->getUuid()}"],
-            "Custom" => ["all_user_{$app->getOwner()->getUuid()}", "app_{$app->getUuid()}"],
+            "Custom" => ["user_{$app->getOwner()->getUuid()}", "shared_{$app->getUuid()}"],
         ];
 
         foreach ($tenants as $groupName => $tenantGroup) {

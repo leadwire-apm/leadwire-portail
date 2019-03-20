@@ -51,41 +51,41 @@
                 //     label: 'Dashboard',
                 //     route: 'app.dashboard.home',
                 // },
-                {
-                    icon: 'fa fa-eye',
-                    label: 'Real User Monitoring',
-                    route: 'app.realUserMonitoring',
-                },
-                {
-                    icon: 'fa fa-exchange',
-                    label: 'Synthetic Monitoring',
-                    route: 'app.syntheticMonitoring',
-                },
-                {
-                    icon: 'fa fa-search',
-                    label: 'Infrastructure Monitoring',
-                    route: 'app.infrastructureMonitoring',
-                },
-                {
-                    icon: 'fa fa-file-text',
-                    label: 'Custom Reports',
-                    route: 'app.customReports',
-                },
+                // {
+                //     icon: 'fa fa-eye',
+                //     label: 'Real User Monitoring',
+                //     route: 'app.realUserMonitoring',
+                // },
+                // {
+                //     icon: 'fa fa-exchange',
+                //     label: 'Synthetic Monitoring',
+                //     route: 'app.syntheticMonitoring',
+                // },
+                // {
+                //     icon: 'fa fa-search',
+                //     label: 'Infrastructure Monitoring',
+                //     route: 'app.infrastructureMonitoring',
+                // },
+                // {
+                //     icon: 'fa fa-file-text',
+                //     label: 'Custom Reports',
+                //     route: 'app.customReports',
+                // },
                 // {
                 //     icon: 'fa fa-table',
                 //     label: 'Data Browser',
                 //     route: 'app.dataBrowser',
                 // },
-                {
-                    icon: 'fa fa-briefcase',
-                    label: 'Business Transactions',
-                    route: 'app.businessTransactions',
-                },
-                {
-                    icon: 'fa fa-sitemap',
-                    label: 'Architecture Discovery',
-                    route: 'app.architectureDiscovery',
-                },
+                // {
+                //     icon: 'fa fa-briefcase',
+                //     label: 'Business Transactions',
+                //     route: 'app.businessTransactions',
+                // },
+                // {
+                //     icon: 'fa fa-sitemap',
+                //     label: 'Architecture Discovery',
+                //     route: 'app.architectureDiscovery',
+                // },
                 // {
                 //     icon: 'fa fa-exclamation-triangle',
                 //     label: 'Alerts',
