@@ -23,32 +23,28 @@ monolog:
             level: debug
             channels: ['!event', '!kibana', '!es', '!ldap']
         kibana:
-            type: rotating_file
+            type: stream
             action_level: notice
-            max_files: 10
             level: notice
-            path:     '%kernel.logs_dir%/kibana.log'
+            path:     '%kernel.logs_dir%/kibana_%kernel.environment%.log'
             channels: [kibana]
         sg:
-            type: rotating_file
+            type: stream
             action_level: notice
-            max_files: 10
             level: notice
-            path:     '%kernel.logs_dir%/search_guard.log'
+            path:     '%kernel.logs_dir%/search_guard_%kernel.environment%.log'
             channels: [search_guard]
         es:
-            type: rotating_file
+            type: stream
             action_level: notice
-            max_files: 10
             level: notice
-            path:     '%kernel.logs_dir%/es.log'
+            path:     '%kernel.logs_dir%/es_%kernel.environment%.log'
             channels: [es]
         ldap:
-            type: rotating_file
+            type: stream
             action_level: notice
-            max_files: 10
             level: notice
-            path:     '%kernel.logs_dir%/ldap.log'
+            path:     '%kernel.logs_dir%/ldap_%kernel.environment%.log'
             channels: [ldap]
         console:
             type: console

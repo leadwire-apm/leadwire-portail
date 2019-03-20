@@ -170,14 +170,14 @@ class User implements AdvancedUserInterface
     private $acceptNewsLetter;
 
     /**
-     * @ODM\ReferenceMany(targetDocument="Invitation", mappedBy="user")
+     * @ODM\ReferenceMany(targetDocument="Invitation", mappedBy="user", storeAs="dbRef")
      * @JMS\Type("array<AppBundle\Document\Invitation>")
      * @JMS\Expose
      */
     public $invitations;
 
     /**
-     * @ODM\ReferenceMany(targetDocument="Application", mappedBy="owner")
+     * @ODM\ReferenceMany(targetDocument="Application", mappedBy="owner", storeAs="dbRef")
      * @JMS\Type("array<AppBundle\Document\Application>")
      * @JMS\Expose
      */
@@ -186,7 +186,7 @@ class User implements AdvancedUserInterface
     /**
      * @var ?Application
      *
-     * @ODM\ReferenceOne(targetDocument="AppBundle\Document\Application", name="defaultApp", cascade={"persist"}, nullable=true)
+     * @ODM\ReferenceOne(targetDocument="AppBundle\Document\Application", name="defaultApp", cascade={"persist"}, nullable=true, storeAs="dbRef")
      * @JMS\Type("AppBundle\Document\Application")
      * @JMS\Expose
      */
@@ -195,7 +195,7 @@ class User implements AdvancedUserInterface
     /**
      * @var Plan|null
      *
-     * @ODM\ReferenceOne(targetDocument="ATS\PaymentBundle\Document\Plan", name="plan", cascade={"persist"})
+     * @ODM\ReferenceOne(targetDocument="ATS\PaymentBundle\Document\Plan", name="plan", cascade={"persist"}, storeAs="dbRef")
      * @JMS\Type("ATS\PaymentBundle\Document\Plan")
      * @JMS\Expose
      */
@@ -204,7 +204,7 @@ class User implements AdvancedUserInterface
     /**
      * @var Customer|null
      *
-     * @ODM\ReferenceOne(targetDocument="ATS\PaymentBundle\Document\Customer", name="customer", cascade={"persist"})
+     * @ODM\ReferenceOne(targetDocument="ATS\PaymentBundle\Document\Customer", name="customer", cascade={"persist"}, storeAs="dbRef")
      * @JMS\Type("ATS\PaymentBundle\Document\Customer")
      * @JMS\Expose
      */

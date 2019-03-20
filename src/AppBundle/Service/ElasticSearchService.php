@@ -62,7 +62,13 @@ class ElasticSearchService
         $this->settings = $settings;
         $this->templateManager = $templateManager;
         $this->logger = $logger;
-        $this->httpClient = new Client(['curl' => array(CURLOPT_SSL_VERIFYPEER => false), 'verify' => false]);
+        $this->httpClient = new Client(
+            [
+                'curl' => array(CURLOPT_SSL_VERIFYPEER => false),
+                'verify' => false,
+                'http_errors' => false,
+            ]
+        );
 
         $this->url = $settings['host'] . ":" . (string) $settings['port'] . "/";
     }
@@ -223,27 +229,56 @@ class ElasticSearchService
      */
     public function createAlias(string $applicationName): bool
     {
+        $now = (new \DateTime())->format('Y-m-d');
+
+        $response = $this->httpClient->delete($this->url . "enabled-$applicationName-$now");
+
+        $this->logger->notice(
+            "leadwire.es.createAlias",
+            [
+                'url' => $this->url . "enabled-{$applicationName}-{$now}",
+                'verb' => 'PUT',
+                'status_code' => $response->getStatusCode(),
+            ]
+        );
+        $response = $this->httpClient->put($this->url . "enabled-$applicationName-$now");
+
+        $this->logger->notice(
+            "leadwire.es.createAlias",
+            [
+                'url' => $this->url . "enabled-{$applicationName}-{$now}",
+                'verb' => 'PUT',
+                'status_code' => $response->getStatusCode(),
+            ]
+        );
+
         $bodyString = '{"actions":[{"add":{"index":"$index_pattern_name","alias":"$appname"}}]}';
         $body = json_decode($bodyString, false);
         $body->actions[0]->add->index = "*-$applicationName-*";
         $body->actions[0]->add->alias = $applicationName;
 
         $content = json_encode($body);
+
+        $headers = [
+            'Content-Type' => 'application/json',
+        ];
+
         $response = $this->httpClient->post(
             $this->url . "_aliases",
             [
-                'headers' => ['Content-Type' => 'application/json'],
+                'headers' => $headers,
                 'auth' => $this->getAuth(),
                 'body' => $content,
             ]
         );
 
         $this->logger->notice(
-            "leadwire.es.getAlias",
+            "leadwire.es.createAlias",
             [
                 'url' => $this->url . "_aliases",
-                'verb' => 'GET',
+                'verb' => 'POST',
                 'body' => $content,
+                'headers' => $headers,
                 'status_code' => $response->getStatusCode(),
             ]
         );
@@ -331,7 +366,7 @@ class ElasticSearchService
     {
         $res = [];
 
-        $tenants = $app->getIndexes();
+        $tenants = ["all_user_{$app->getOwner()->getUuid()}", "app_{$app->getUuid()}"];
 
         foreach ($tenants as $index => $tenant) {
             try {
@@ -350,17 +385,19 @@ class ElasticSearchService
                     ]
                 );
 
-                $body = json_decode($response->getBody())->hits->hits;
-                foreach ($body as $element) {
-                    if (in_array($element->_source->type, array("dashboard" /*, "visualization"*/)) === true) {
-                        $title = $element->_source->{$element->_source->type}->title;
+                if ($response->getStatusCode() === Response::HTTP_OK) {
+                    $body = json_decode($response->getBody())->hits->hits;
+                    foreach ($body as $element) {
+                        if (in_array($element->_source->type, array("dashboard" /*, "visualization"*/)) === true) {
+                            $title = $element->_source->{$element->_source->type}->title;
 
-                        $res[$key][] = [
-                            "id" => $this->transformeId($element->_id),
-                            "name" => $title,
-                            "private" => ($index == 1),
-                            "tenant" => $tenant,
-                        ];
+                            $res[$key][] = [
+                                "id" => $this->transformeId($element->_id),
+                                "name" => $title,
+                                "private" => ($index == 1),
+                                "tenant" => $tenant,
+                            ];
+                        }
                     }
                 }
             } catch (\GuzzleHttp\Exception\ClientException $e) {

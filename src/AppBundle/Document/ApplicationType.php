@@ -43,7 +43,7 @@ class ApplicationType
     private $installation;
 
     /**
-     * @ODM\ReferenceMany(targetDocument="AppBundle\Document\Template", mappedBy="applicationType")
+     * @ODM\ReferenceMany(targetDocument="AppBundle\Document\Template", mappedBy="applicationType", storeAs="dbRef")
      *
      * @var array
      */
@@ -60,7 +60,7 @@ class ApplicationType
     private $agent;
 
     /**
-     * @ODM\ReferenceMany(targetDocument="AppBundle\Document\Application", inversedBy="type")
+     * @ODM\ReferenceMany(targetDocument="AppBundle\Document\Application", inversedBy="type", storeAs="dbRef")
      * @JMS\Groups({"full"})
      */
     public $apps;

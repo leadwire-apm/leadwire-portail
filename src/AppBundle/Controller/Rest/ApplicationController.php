@@ -174,11 +174,15 @@ class ApplicationController extends Controller
                 $esService->deleteIndex("app_" . $application->getUuid());
                 $esService->createIndexTemplate($application, $applicationService->getActiveApplicationsNames());
 
+                $esService->createAlias($application->getName());
+
                 $kibanaService->loadIndexPatternForApplication(
                     $application,
                     $this->getUser(),
                     'app_' . $application->getUuid()
                 );
+
+                $kibanaService->makeDefaultIndex($application, $this->getUser());
 
                 $kibanaService->createApplicationDashboards($application, $this->getUser());
 
@@ -189,8 +193,6 @@ class ApplicationController extends Controller
                     $this->getUser(),
                     'shared_' . $application->getUuid()
                 );
-
-                $kibanaService->createApplicationDashboards($application, $this->getUser(), true);
 
                 $sgService->updateSearchGuardConfig();
                 $status = true;

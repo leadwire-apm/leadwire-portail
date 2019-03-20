@@ -4,11 +4,14 @@ namespace AppBundle\Service;
 
 use AppBundle\Document\Application;
 use AppBundle\Document\ApplicationPermission;
+use AppBundle\Document\DeleteTask;
+use AppBundle\Document\Task;
 use AppBundle\Document\User;
 use AppBundle\Exception\DuplicateApplicationNameException;
 use AppBundle\Manager\ActivationCodeManager;
 use AppBundle\Manager\ApplicationManager;
 use AppBundle\Manager\ApplicationPermissionManager;
+use AppBundle\Manager\DeleteTaskManager;
 use AppBundle\Manager\UserManager;
 use AppBundle\Service\ActivationCodeService;
 use JMS\Serializer\DeserializationContext;
@@ -65,6 +68,11 @@ class ApplicationService
     private $activationCodeService;
 
     /**
+     * @var DeleteTaskManager
+     */
+    private $taskManager;
+
+    /**
      * Constructor
      *
      * @param ApplicationManager $applicationManager
@@ -78,6 +86,7 @@ class ApplicationService
     public function __construct(
         ApplicationManager $applicationManager,
         ActivationCodeManager $activationCodeManager,
+        DeleteTaskManager $taskManager,
         ApplicationPermissionManager $apManager,
         UserManager $userManager,
         SerializerInterface $serializer,
@@ -87,6 +96,7 @@ class ApplicationService
     ) {
         $this->applicationManager = $applicationManager;
         $this->activationCodeManager = $activationCodeManager;
+        $this->taskManager = $taskManager;
         $this->apManager = $apManager;
         $this->userManager = $userManager;
         $this->serializer = $serializer;
@@ -317,6 +327,11 @@ class ApplicationService
             throw new HttpException(Response::HTTP_NOT_FOUND, "Application not Found");
         } else {
             $application->setRemoved(true);
+            $task = new DeleteTask();
+            $task
+                ->setApplication($application)
+                ->setStatus(Task::STATUS_SCHEDULED);
+            $this->taskManager->update($task);
 
             $this->applicationManager->update($application);
         }

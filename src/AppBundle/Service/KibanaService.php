@@ -86,7 +86,13 @@ class KibanaService
         $this->templateManager = $templateManager;
         $this->applicationManager = $applicationManager;
         $this->jwtHelper = $jwtHelper;
-        $this->httpClient = new Client(['curl' => array(CURLOPT_SSL_VERIFYPEER => false), 'verify' => false]);
+        $this->httpClient = new Client(
+            [
+                'curl' => array(CURLOPT_SSL_VERIFYPEER => false),
+                'verify' => false,
+                'http_errors' => false
+            ]
+        );
         $this->url = $settings['host'] . ":" . (string) $settings['port'] . "/";
     }
 
@@ -174,7 +180,7 @@ class KibanaService
             $headers = [
                 'kbn-xsrf' => true,
                 'Content-Type' => 'application/json',
-                'tenant' => "{$prefix}{$user->getUuid()}",
+                'tenant' => "{$prefix}{$application->getUuid()}",
                 'X-Proxy-User' => "user_{$user->getUuid()}",
                 'Authorization' => "Bearer $authorization",
             ];
@@ -315,7 +321,7 @@ class KibanaService
             $this->loadIndexPatternForApplication($demoApplication, $user, "user_{$user->getUuid()}", false);
         }
 
-        $this->makeDefaultIndex('jpetstore', $user);
+        // $this->makeDefaultIndex('jpetstore', $user);
     }
     /**
      * * curl --insecure  -H "Authorization: Bearer ${authorization}"  -XGET "https://kibana.leadwire.io/api/saved_objects/index-pattern/${appname}" -H 'kbn-xsrf: true' -H 'Content-Type: application/json'
@@ -357,22 +363,22 @@ class KibanaService
     /**
      * * curl --insecure -H "Authorization: Bearer ${authorization}" -X POST "$protocol://$host:$port/api/kibana/settings/defaultIndex"  -d"{\"value\":\"$appname\"}" -H 'kbn-xsrf: true' -H 'Content-Type: application/json'
      *
-     * @param string $applicationName
+     * @param Application $application
      * @param USer $user
      *
      * @return void
      */
-    public function makeDefaultIndex(string $applicationName, User $user)
+    public function makeDefaultIndex(Application $application, User $user)
     {
         $authorization = $this->jwtHelper->getAuthorizationHeader($user);
         $headers = [
             'kbn-xsrf' => true,
             'Content-Type' => 'application/json',
             'Authorization' => "Bearer $authorization",
-            'tenant' => "user_{$user->getUuid()}",
+            'tenant' => "app_{$application->getUuid()}",
             'X-Proxy-User' => "user_{$user->getUuid()}",
         ];
-        $content = json_encode(['value' => $applicationName]);
+        $content = json_encode(['value' => $application->getName()]);
 
         $response = $this->httpClient->post(
             $this->url . "api/kibana/settings/defaultIndex",

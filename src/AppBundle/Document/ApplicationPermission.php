@@ -29,14 +29,14 @@ class ApplicationPermission
     private $id;
 
     /**
-     * @ODM\ReferenceOne(targetDocument="AppBundle\Document\User")
+     * @ODM\ReferenceOne(targetDocument="AppBundle\Document\User", storeAs="dbRef")
      *
      * @var User
      */
     private $user;
 
     /**
-     * @ODM\ReferenceOne(targetDocument="AppBundle\Document\Application")
+     * @ODM\ReferenceOne(targetDocument="AppBundle\Document\Application", storeAs="dbRef")
      *
      * @var Application
      */

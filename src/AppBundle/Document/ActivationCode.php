@@ -50,7 +50,7 @@ class ActivationCode
     private $used;
 
     /**
-     * @ODM\ReferenceOne(targetDocument="AppBundle\Document\Application")
+     * @ODM\ReferenceOne(targetDocument="AppBundle\Document\Application", storeAs="dbRef")
      * @JMS\Expose
      * @var ?Application
      */
@@ -147,7 +147,7 @@ class ActivationCode
     /**
      * Get the value of application
      *
-     * @return  Application
+     * @return  ?Application
      */
     public function getApplication(): ?Application
     {

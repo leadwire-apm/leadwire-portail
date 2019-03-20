@@ -100,7 +100,7 @@ class Application
     /**
      * @var User
      *
-     * @ODM\ReferenceOne(targetDocument="AppBundle\Document\User", name="owner", cascade={"persist"}, inversedBy="applications")
+     * @ODM\ReferenceOne(targetDocument="AppBundle\Document\User", name="owner", cascade={"persist"}, inversedBy="applications", storeAs="dbRef")
      * @JMS\Type("AppBundle\Document\User")
      * @JMS\Expose
      * @JMS\Groups({"full", "Default"})
@@ -110,7 +110,7 @@ class Application
     /**
      * @var ApplicationType
      *
-     * @ODM\ReferenceOne(targetDocument="AppBundle\Document\ApplicationType", name="type", cascade={"persist"})
+     * @ODM\ReferenceOne(targetDocument="AppBundle\Document\ApplicationType", name="type", cascade={"persist"}, storeAs="dbRef")
      * @JMS\Type("AppBundle\Document\ApplicationType")
      * @JMS\Expose
      * @JMS\Groups({"full", "Default"})
@@ -118,7 +118,7 @@ class Application
     private $type;
 
     /**
-     * @ODM\ReferenceMany(targetDocument="AppBundle\Document\Invitation", mappedBy="app")
+     * @ODM\ReferenceMany(targetDocument="AppBundle\Document\Invitation", mappedBy="app", storeAs="dbRef")
      * @JMS\Type("array<AppBundle\Document\Invitation>")
      * @JMS\Expose
      */
@@ -383,6 +383,14 @@ class Application
         return [
             $this->getIndex(),
             'user_'. $this->owner->getUuid(),
+            'shared_' . $this->getUuid(),
+            'all_user_'.$this->owner->getUuid(),
+        ];
+    }
+
+    public function getSharedTenants()
+    {
+        return [
             'shared_' . $this->getUuid(),
             'all_user_'.$this->owner->getUuid(),
         ];

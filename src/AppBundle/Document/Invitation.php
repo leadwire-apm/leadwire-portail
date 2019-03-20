@@ -26,7 +26,7 @@ class Invitation
     /**
      * @var Application
      *
-     * @ODM\ReferenceOne(targetDocument="AppBundle\Document\Application", name="app", cascade={"persist"}, inversedBy="invitations")
+     * @ODM\ReferenceOne(targetDocument="AppBundle\Document\Application", name="app", cascade={"persist"}, inversedBy="invitations", storeAs="dbRef")
      * @JMS\Type("AppBundle\Document\Application")
      * @JMS\Expose
      */
@@ -44,7 +44,7 @@ class Invitation
     /**
      * @var User
      *
-     * @ODM\ReferenceOne(targetDocument="AppBundle\Document\User", name="user", cascade={"persist"}, inversedBy="otherApps")
+     * @ODM\ReferenceOne(targetDocument="AppBundle\Document\User", name="user", cascade={"persist"}, inversedBy="otherApps", storeAs="dbRef")
      * @JMS\Type("AppBundle\Document\User")
      * @JMS\Expose
      */

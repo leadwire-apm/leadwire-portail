@@ -46,7 +46,7 @@ class Stat
     /**
      * @var Application
      *
-     * @ODM\ReferenceOne(targetDocument="AppBundle\Document\Application", name="app", cascade={"persist"})
+     * @ODM\ReferenceOne(targetDocument="AppBundle\Document\Application", name="app", cascade={"persist"}, storeAs="dbRef")
      */
     private $application;
 

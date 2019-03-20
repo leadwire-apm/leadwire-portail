@@ -52,7 +52,7 @@ class Template
     private $version;
 
     /**
-     * @ODM\ReferenceOne(targetDocument="AppBundle\Document\ApplicationType",cascade={"persist"}, inversedBy="templates")
+     * @ODM\ReferenceOne(targetDocument="AppBundle\Document\ApplicationType",cascade={"persist"}, inversedBy="templates", storeAs="dbRef")
      * @JMS\Expose
      * @JMS\Type("AppBundle\Document\ApplicationType")
      * @var ApplicationType
