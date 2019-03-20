@@ -44,6 +44,5 @@ class GenerateTokenCommand extends ContainerAwareCommand
             $token = $jwt->encode($username, $index);
             $output->writeln($token);
         }
-
     }
 }
