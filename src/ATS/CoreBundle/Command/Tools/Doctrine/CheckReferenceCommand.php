@@ -304,12 +304,12 @@ class CheckReferenceCommand extends ContainerAwareCommand
             ->getRepository($classMeta->name)
             ->createQueryBuilder()
             ->hydrate(false)
-            ->field('id')->equals($dbRef['$id'])
+            ->field('id')->equals((string)$dbRef['$id'])
             ->select('id')
             ->getQuery()
             ->getSingleResult();
 
-        if ($found === false && $this->countOnly === false) {
+        if ($found === null && $this->countOnly === false) {
             $this->display(
                 sprintf(
                     "[%s] [%s] referenced by [%s] [%s] not found",
@@ -321,7 +321,7 @@ class CheckReferenceCommand extends ContainerAwareCommand
                 self::LEVEL_ERROR
             );
         }
-        if ($found === false && $this->autoRemove === true) {
+        if ($found === null && $this->autoRemove === true) {
             $fixerQb = $this->documentManager
                 ->getRepository($this->documentsMetadata[$collection]->name)
                 ->createQueryBuilder()
