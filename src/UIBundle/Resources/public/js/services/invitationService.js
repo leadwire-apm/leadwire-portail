@@ -7,17 +7,8 @@
                 return new Promise(function(resolve, reject) {
                     InvitationFactory.get(invitationId)
                         .then(function(response) {
-                            if (!response.data.user && response.data.app) {
-                                InvitationFactory.update(invitationId, {
-                                    id: invitationId,
-                                    isPending: false,
-                                    user: {
-                                        id: userId
-                                    },
-                                    application: {
-                                        id: response.data.app.id
-                                    }
-                                });
+                            if (response.data.pending == true) {
+                                InvitationFactory.accept(invitationId, {'userId': userId});
                             }
                             resolve(response.data.app);
                         })

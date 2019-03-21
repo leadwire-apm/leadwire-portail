@@ -30,7 +30,7 @@ function LoginControllerFN (
     $state,
 ) {
     var vm = this;
-    var invitationId =
+    vm.invitationId =
         $location.$$search && $location.$$search.invitation
             ? $location.$$search.invitation
             : undefined;
@@ -40,17 +40,14 @@ function LoginControllerFN (
     function authenticate (provider) {
         vm.isChecking = true;
         $auth.authenticate(provider)
-            .then(function () {
-                return invitationId;
-            })
             .then(getMe) // accept invitation and update Localstorage
             .then(handleAfterRedirect) // fetch application and dashboard
             .then(handleLoginSuccess(provider)) // redirect
             .catch(handleLoginFailure);
     }
 
-    function getMe (invitationId) {
-        return UserService.handleBeforeRedirect(invitationId);
+    function getMe () {
+        return UserService.handleBeforeRedirect(vm.invitationId);
     }
 
     function handleLoginSuccess (provider) {
@@ -133,9 +130,9 @@ function LoginControllerFN (
     function onLoad () {
         if ($auth.isAuthenticated()) {
             if ($localStorage.user) {
-                if (invitationId !== undefined) {
+                if (vm.invitationId !== undefined) {
                     InvitationService.acceptInvitation(
-                        invitationId,
+                        vm.invitationId,
                         $localStorage.user.id,
                     )
                         .then(function (app) {

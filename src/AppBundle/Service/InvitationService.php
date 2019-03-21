@@ -2,17 +2,21 @@
 
 namespace AppBundle\Service;
 
-use AppBundle\Document\Application;
-use AppBundle\Document\Invitation;
 use AppBundle\Document\User;
-use AppBundle\Manager\InvitationManager;
-use ATS\EmailBundle\Document\Email;
-use ATS\EmailBundle\Service\SimpleMailerService;
-use JMS\Serializer\SerializerInterface;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use AppBundle\Document\Invitation;
+use AppBundle\Manager\UserManager;
+use AppBundle\Document\Application;
+use ATS\EmailBundle\Document\Email;
 use Symfony\Component\Routing\Router;
+use JMS\Serializer\SerializerInterface;
+use AppBundle\Manager\InvitationManager;
+use AppBundle\Document\ApplicationPermission;
 use Symfony\Component\Routing\RouterInterface;
+use ATS\EmailBundle\Service\SimpleMailerService;
+use AppBundle\Manager\ApplicationPermissionManager;
+use AppBundle\Service\ApplicationPermissionService;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * Service class for Invitation entities
@@ -61,6 +65,16 @@ class InvitationService
     private $applicationService;
 
     /**
+     * @var ApplicationPermissionService
+     */
+    private $permissionService;
+
+    /**
+     * @var UserManager
+     */
+    private $userManager;
+
+    /**
      * Constructor
      *
      * @param InvitationManager $invitationManager
@@ -70,6 +84,8 @@ class InvitationService
      * @param Router $router
      * @param LdapService $ldap
      * @param ApplicationService $applicationService
+     * @param ApplicationPermissionService $permissionService
+     * @param UserManager $userManager
      */
     public function __construct(
         InvitationManager $invitationManager,
@@ -79,6 +95,8 @@ class InvitationService
         RouterInterface $router,
         LdapService $ldap,
         ApplicationService $applicationService,
+        ApplicationPermissionService $permissionService,
+        UserManager $userManager,
         string $sender
     ) {
         $this->invitationManager = $invitationManager;
@@ -90,6 +108,8 @@ class InvitationService
         $this->sender = $sender;
         $this->ldap = $ldap;
         $this->applicationService = $applicationService;
+        $this->permissionService = $permissionService;
+        $this->userManager = $userManager;
     }
 
     /**
@@ -221,6 +241,7 @@ class InvitationService
     public function sendInvitationMail(Invitation $invitation, User $user)
     {
         $mail = new Email();
+        $application = $this->applicationService->getApplication((string)$invitation->getApplication()->getId());
         $mail
             ->setSubject("LeadWire: Invitation to access to an application")
             ->setSenderName("LeadWire")
@@ -231,21 +252,33 @@ class InvitationService
             ->setMessageParameters(
                 [
                     'inviter' => $user->getName(),
-                    'application' => $invitation->getApplication()->getName(),
+                    'invitation_id' => $invitation->getId(),
+                    'application' => $application !== null ? $application->getName() : 'an application',
                     'email' => $invitation->getEmail(),
-                    'link' => $this->router->generate('accept_invitation', ['id' => $invitation->getId()], UrlGeneratorInterface::ABSOLUTE_URL)
+                    'link' => $this->router->generate('angular_endPoint', [], UrlGeneratorInterface::ABSOLUTE_URL)
                 ]
             );
 
         $this->mailer->send($mail, true);
     }
 
-    public function acceptInvitation($id)
+    /**
+     * @param string $id
+     * @param string $userId
+     *
+     * @return void
+     */
+    public function acceptInvitation($id, $userId)
     {
         $invitation = $this->invitationManager->getOneBy(['id' => $id, 'isPending' => true]);
+        $invitedUser = $this->userManager->getOneBy(['id' => $userId]);
 
-        if ($invitation instanceof Invitation) {
+        if ($invitation instanceof Invitation && $invitedUser instanceof User) {
             $invitation->setPending(false);
+            $invitation->setUser($invitedUser);
+            $application = $invitation->getApplication();
+            $this->permissionService->grantPermission($application, $invitedUser, ApplicationPermission::ACCESS_GUEST);
+            $this->ldap->registerApplication($invitedUser, $application);
             $this->invitationManager->update($invitation);
         }
     }

@@ -35,20 +35,4 @@ class DefaultController extends Controller
 
         return $this->redirect('/');
     }
-
-    /**
-     * @Route("/accept/{id}", methods="GET", name="accept_invitation")
-     *
-     * @param Request $request
-     * @param InvitationService $invitationService
-     * @param string  $id
-     *
-     * @return Response
-     */
-    public function acceptInvitationAction(Request $request, InvitationService $invitationService, string $id)
-    {
-        $invitationService->acceptInvitation($id);
-
-        return $this->redirect('/');
-    }
 }

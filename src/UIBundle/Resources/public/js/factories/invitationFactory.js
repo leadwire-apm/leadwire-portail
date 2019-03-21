@@ -25,6 +25,12 @@
                     return $http.delete(
                         CONFIG.BASE_URL + 'api/invitation/' + id + '/delete'
                     );
+                },
+                accept: function(id, body) {
+                    return $http.post(
+                        CONFIG.BASE_URL + 'api/invitation/' + id + '/accept',
+                        body
+                    )
                 }
             };
         }

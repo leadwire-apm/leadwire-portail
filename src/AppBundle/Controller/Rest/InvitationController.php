@@ -92,4 +92,20 @@ class InvitationController extends Controller
 
         return $this->renderResponse(null);
     }
+
+    /**
+     * @Route("/{id}/accept", methods="POST")
+     *
+     * @param Request $request
+     * @param InvitationService $invitationService
+     * @param string $id
+     *
+     * @return Response
+     */
+    public function acceptInvitationAction(Request $request, InvitationService $invitationService, $id)
+    {
+        $user = json_decode($request->getContent());
+        $invitationService->acceptInvitation($id, $user->userId);
+        return $this->renderResponse(null);
+    }
 }

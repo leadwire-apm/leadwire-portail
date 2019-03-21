@@ -108,7 +108,7 @@ class LdapService
 
         $sharedRecord = $this->ldap->query('ou=Group,dc=leadwire,dc=io', "(cn=shared_$appIndex)")->execute();
 
-        $entry = $appRecord[0];
+        $entry = $sharedRecord[0];
 
         if ($entry instanceof Entry) {
             $oldValue = $entry->getAttribute('member') !== null ? $entry->getAttribute('member') : [];
@@ -117,6 +117,8 @@ class LdapService
         } else {
             throw new \Exception("Unable to find LDAP records for applications shared tenant");
         }
+
+        return true;
     }
 
     /**
@@ -208,7 +210,8 @@ class LdapService
                     $this->logger->notice("Entry already up to date [cn=$userName,ou=People,dc=leadwire,dc=io] in [cn=app_{$application->getUuid()}]");
                 }
             } else {
-                throw new \Exception("Unable to find LDAP records for demo applications app tenant");
+                $this->logger->critical("Unable to find LDAP records for demo application {$application->getName()}");
+                throw new \Exception("Unable to find LDAP records for demo application {$application->getName()}");
             }
         }
 
