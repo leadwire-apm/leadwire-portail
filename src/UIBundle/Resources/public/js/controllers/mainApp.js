@@ -7,7 +7,6 @@
             '$rootScope',
             '$auth',
             '$location',
-            '$http',
             '$localStorage',
             'ApplicationFactory',
             'UserService',
@@ -25,7 +24,6 @@
         $rootScope,
         $auth,
         $location,
-        $http,
         $localStorage,
         ApplicationFactory,
         UserService,
@@ -131,14 +129,9 @@
 
         $scope.loadApplications = function() {
             ApplicationFactory.findMyApplications().then(function (response) {
-                // vm.flipActivityIndicator('isLoading');
-                // vm.apps = vm.paginator.items = response.data;
                 $localStorage.applications = response.data;
                 $scope.$emit('set:apps', response.data);
             }).catch(function () {
-                // vm.flipActivityIndicator('isLoading');
-                // vm.apps = [];
-                // vm.paginator.items = vm.apps;
             });
         };
 

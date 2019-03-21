@@ -5,11 +5,10 @@
             '$scope',
             'DashboardService',
             '$localStorage',
-            '$rootScope',
             controller
         ]);
 
-    function controller($scope, DashboardService, $localStorage, $rootScope) {
+    function controller($scope, DashboardService, $localStorage) {
         var vm = this;
 
         vm.onLoad = function() {

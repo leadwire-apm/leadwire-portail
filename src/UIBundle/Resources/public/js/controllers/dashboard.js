@@ -17,9 +17,6 @@
 
         vm.onLoad = function() {
             vm.isLoading = true;
-            // DashboardService.fetchDashboardsByAppId($localStorage.selectedAppId)
-            //     .then(function(data) {})
-            //     .catch(function() {vm.isLoading = false;});
             $rootScope.menus = $localStorage.currentApplicationMenus
         };
 

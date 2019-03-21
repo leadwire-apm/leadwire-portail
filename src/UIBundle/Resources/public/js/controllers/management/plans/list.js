@@ -5,7 +5,6 @@
             'PlanService',
             'toastr',
             'MESSAGES_CONSTANTS',
-            '$state',
             PlanListCtrlFN,
         ]);
 
@@ -17,7 +16,6 @@
         PlanService,
         toastr,
         MESSAGES_CONSTANTS,
-        $state,
     ) {
         var vm = this;
 

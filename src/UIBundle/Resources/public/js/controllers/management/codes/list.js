@@ -5,7 +5,6 @@
             'toastr',
             'CONFIG',
             'MESSAGES_CONSTANTS',
-            '$state',
             ListCodeCtrlFN,
         ]);
 
@@ -18,7 +17,6 @@
         toastr,
         CONSTANTS,
         MESSAGES_CONSTANTS,
-        $state,
     ) {
         var vm = this;
 
