@@ -2,10 +2,8 @@
     angular.module('leadwireApp')
         .controller('ManageApplicationsController', [
             'ApplicationService',
-            'CodeService',
             'toastr',
             'MESSAGES_CONSTANTS',
-            '$state',
             ManageApplicationsCtrlFN,
         ]);
 
@@ -15,10 +13,8 @@
      */
     function ManageApplicationsCtrlFN (
         ApplicationService,
-        CodeService,
         toastr,
         MESSAGES_CONSTANTS,
-        $state,
     ) {
         var vm = this;
 
