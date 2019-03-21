@@ -27,8 +27,6 @@ class GenerateSearchGuardFileCommand extends ContainerAwareCommand
         /** @var SearchGuardService $sg */
         $sg = $this->getContainer()->get(SearchGuardService::class);
 
-        $sg->updateSearchGuardConfig();
-        return 0;
         /** @var ?string $outputFile */
         $outputFile = $input->getOption('output');
         /** @var string $which */

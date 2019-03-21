@@ -61,7 +61,7 @@ class ApplicationController extends Controller
         if ($app === null) {
             throw new HttpException(Response::HTTP_NOT_FOUND, "App not Found");
         } else {
-            $dashboards = $esService->getDashboads($app);
+            $dashboards = $esService->getDashboads($app, $this->getUser());
             return $this->renderResponse($dashboards);
         }
     }
@@ -182,7 +182,7 @@ class ApplicationController extends Controller
                     'app_' . $application->getUuid()
                 );
 
-                $kibanaService->makeDefaultIndex($application, $this->getUser());
+                $kibanaService->makeDefaultIndex($application, $this->getUser(), 'app');
 
                 $kibanaService->createApplicationDashboards($application, $this->getUser());
 
@@ -193,6 +193,8 @@ class ApplicationController extends Controller
                     $this->getUser(),
                     'shared_' . $application->getUuid()
                 );
+
+                $kibanaService->makeDefaultIndex($application, $this->getUser(), 'shared');
 
                 $sgService->updateSearchGuardConfig();
                 $status = true;

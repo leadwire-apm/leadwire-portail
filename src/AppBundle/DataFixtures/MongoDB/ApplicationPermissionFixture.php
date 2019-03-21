@@ -17,21 +17,12 @@ class ApplicationPermissionFixture extends AbstractFixture implements OrderedFix
     {
         /** @var User $user */
         $user = $this->getReference(UserFixture::USER_ALI);
-        /** @var Application $squash */
-        $squash = $this->getReference(ApplicationFixture::SQUASH_APPLICATION);
         /** @var Application $jpetstore */
         $jpetstore = $this->getReference(ApplicationFixture::JPETSTORE_APPLICATION);
 
         $permission = new ApplicationPermission();
         $permission
             ->setApplication($jpetstore)
-            ->setUser($user)
-            ->setAccess(ApplicationPermission::ACCESS_DEMO);
-
-        $manager->persist($permission);
-        $permission = new ApplicationPermission();
-        $permission
-            ->setApplication($squash)
             ->setUser($user)
             ->setAccess(ApplicationPermission::ACCESS_DEMO);
 

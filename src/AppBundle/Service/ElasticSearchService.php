@@ -75,11 +75,12 @@ class ElasticSearchService
 
     /**
      * @param Application $app
+     * @param User $user
      */
-    public function getDashboads(Application $app)
+    public function getDashboads(Application $app, User $user)
     {
         try {
-            return $this->filter($this->getRawDashboards($app));
+            return $this->filter($this->getRawDashboards($app, $user));
         } catch (\Exception $e) {
             $this->logger->error($e->getMessage());
             throw new HttpException("An error has occurred while executing your request.", 500);
@@ -361,8 +362,9 @@ class ElasticSearchService
 
     /**
      * @param Application $app
+     * @param User $user
      */
-    protected function getRawDashboards(Application $app)
+    protected function getRawDashboards(Application $app, User $user)
     {
         $res = [
             "Default" => [],
@@ -370,8 +372,8 @@ class ElasticSearchService
         ];
 
         $tenants = [
-            "Default" => [/*"all_user_{$app->getOwner()->getUuid()}",*/ "app_{$app->getUuid()}"],
-            "Custom" => ["user_{$app->getOwner()->getUuid()}", "shared_{$app->getUuid()}"],
+            "Default" => ["all_user_{$user->getUuid()}", "app_{$app->getUuid()}"],
+            "Custom" => ["user_{$user->getUuid()}", "shared_{$app->getUuid()}"],
         ];
 
         foreach ($tenants as $groupName => $tenantGroup) {

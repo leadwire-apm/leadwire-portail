@@ -13,7 +13,6 @@ use AppBundle\DataFixtures\MongoDB\ApplicationTypeFixture;
 class ApplicationFixture extends AbstractFixture implements OrderedFixtureInterface
 {
     const JPETSTORE_APPLICATION = 'jpetstore';
-    const SQUASH_APPLICATION = 'squash';
 
     public function load(ObjectManager $manager)
     {
@@ -49,38 +48,9 @@ class ApplicationFixture extends AbstractFixture implements OrderedFixtureInterf
 
         $manager->persist($jpetstore);
 
-        $user = new User();
-        $user
-            ->setUsername("user_squash")
-            ->setActive(true)
-            ->setRoles([User::DEFAULT_ROLE])
-            ->setUuid("squash")
-            ->setAvatar('')
-            ->setName("user_squash")
-            ->setEmailValid(true)
-            ->setLocked(false)
-            ->setCompany("LeadWire")
-            ->setContact("")
-            ->setContactPreference("Email")
-            ->setEmail("user_squash@leadwire.io");
-        $manager->persist($user);
-        $squash = new Application();
-        $squash->setUuid("squash") // * UUID has to be hardcoded since it will be used on Kibana and stuff
-            ->setName("squash")
-            ->setDescription("Squash TM est un outil open source de gestion de référentiels de tests : gestion des exigences, cas de test, campagnes, etc. Squash est full web et nativement inter-projets.")
-            ->setEmail("wassim.dhib@leadwire.io")
-            ->setEnabled(true)
-            ->setDemo(true)
-            ->setRemoved(false)
-            ->setOwner($user)
-            ->setType($applicationType);
-
-        $manager->persist($squash);
-
         $manager->flush();
 
         $this->addReference(self::JPETSTORE_APPLICATION, $jpetstore);
-        $this->addReference(self::SQUASH_APPLICATION, $squash);
     }
 
     public function getOrder()

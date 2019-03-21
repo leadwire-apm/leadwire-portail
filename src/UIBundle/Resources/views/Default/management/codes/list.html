@@ -11,7 +11,7 @@
                         Generate code
                     </button>
                 </div>
-                <div class="no-more-tables">
+                <div ng-if="ctrl.codes.length" class="no-more-tables">
                     <table class="table table-striped mb0">
                         <thead>
                         <tr>
@@ -53,6 +53,11 @@
                         </tr>
                         </tbody>
                     </table>
+                </div>
+                <div ng-if="!ctrl.codes.length" class="alert alert-info text-center mt20">
+                    <h4>
+                        There are no activation codes yet
+                    </h4>
                 </div>
             </div>
         </div>

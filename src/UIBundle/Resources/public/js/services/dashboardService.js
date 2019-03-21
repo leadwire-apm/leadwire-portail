@@ -55,6 +55,7 @@
                 },
             );
             $rootScope.menus = $localStorage.currentMenu;
+            $localStorage.currentApplicationMenus = $localStorage.currentMenu;
             // $rootScope.menus = MenuFactory.get('DASHBOARD');
         };
 

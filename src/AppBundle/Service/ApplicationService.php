@@ -387,6 +387,17 @@ class ApplicationService
         $now = new \DateTime();
 
         foreach ($demoApplications as $demoApplication) {
+            $permission = $this->apManager->getOneBy(
+                [
+                    'application.id' => $demoApplication->getId(),
+                    'user.id' => $user->getId()
+                ]
+            );
+
+            if ($permission instanceof ApplicationPermission) {
+                continue;
+            }
+
             $permission = new ApplicationPermission();
             $permission->setApplication($demoApplication)
                 ->setUser($user)

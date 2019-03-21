@@ -2,19 +2,18 @@
 
 namespace AppBundle\Service;
 
-use Ramsey\Uuid\Uuid;
-use \Firebase\JWT\JWT;
-use GuzzleHttp\Client;
 use AppBundle\Document\User;
-use Psr\Log\LoggerInterface;
-use AppBundle\Service\JWTHelper;
 use AppBundle\Manager\UserManager;
+use AppBundle\Service\ElasticSearchService;
+use AppBundle\Service\JWTHelper;
+use AppBundle\Service\KibanaService;
 use AppBundle\Service\LdapService;
 use Firebase\JWT\ExpiredException;
-use AppBundle\Service\KibanaService;
-use AppBundle\Service\ElasticSearchService;
-use Symfony\Component\Config\Definition\Exception\Exception;
+use GuzzleHttp\Client;
+use Psr\Log\LoggerInterface;
+use Ramsey\Uuid\Uuid;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use \Firebase\JWT\JWT;
 
 class AuthService
 {
@@ -108,18 +107,10 @@ class AuthService
     public function githubProvider(array $params, string $githubAccessTokenUrl, string $githubUserAPI)
     {
         $client = new Client();
-        $responseGithub = $client->request(
-            'GET',
-            $githubAccessTokenUrl . '?' . http_build_query($params)
-        )->getBody();
+        $responseGithub = $client->get($githubAccessTokenUrl . '?' . http_build_query($params))->getBody();
 
         /* parse the response as array */
-        $res = $client->request(
-            'GET',
-            $githubUserAPI . '?' . $responseGithub,
-            [
-                'headers' => ['User-Agent' => 'leadwire']]
-        )->getBody();
+        $res = $client->get($githubUserAPI . '?' . $responseGithub, ['headers' => ['User-Agent' => 'leadwire']])->getBody();
 
         $data = json_decode($res, true);
 
@@ -128,6 +119,7 @@ class AuthService
         if ($user === null) {
             // We're dealing with a new user
             $user = $this->addUser($data);
+            $this->logger->notice("leadwire.auth.githubProvider", ["event" => "Created new user {$user->getUsername()}"]);
 
             if ($user !== null) {
                 // User creation in DB is successful
@@ -136,10 +128,10 @@ class AuthService
                 $this->ldapService->registerDemoApplications($user);
                 $this->applicationService->registerDemoApplications($user);
 
-                $this->esService->deleteIndex("user_".$user->getUuid());
+                $this->esService->deleteIndex("user_" . $user->getUuid());
                 $this->kibanaService->loadIndexPatternForDemoApplications($user);
 
-                $this->esService->deleteIndex("all_user_".$user->getUuid());
+                $this->esService->deleteIndex("all_user_" . $user->getUuid());
                 $this->kibanaService->loadIndexPatternForAllUser($user);
                 $this->kibanaService->createAllUserDashboard($user);
 
@@ -148,11 +140,13 @@ class AuthService
         } else {
             // Check if user has been deleted
             if ($user->isDeleted() === true) {
+                $this->logger->notice("leadwire.auth.githubProvider", ["event" => "Deleted user {$user->getUsername()} tried to login"]);
                 throw new AccessDeniedHttpException("User is deleted");
             }
 
             // Check if user is locked
             if ($user->isLocked() === true) {
+                $this->logger->notice("leadwire.auth.githubProvider", ["event" => "Locked user {$user->getUsername()} tried to login"]);
                 throw new AccessDeniedHttpException($user->getLockMessage());
             }
         }
@@ -203,27 +197,21 @@ class AuthService
      *
      * @param array $userData
      *
-     * @return User|null
+     * @return User
      */
-    protected function addUser(array $userData): ?User
+    protected function addUser(array $userData): User
     {
-        try {
-            $uuid1 = Uuid::uuid1();
-            $user = $this->userManager->create(
-                $userData['login'],
-                $uuid1->toString(),
-                $userData['avatar_url'],
-                $userData['name'],
-                [User::DEFAULT_ROLE],
-                true
-            );
+        $uuid1 = Uuid::uuid1();
+        $user = $this->userManager->create(
+            $userData['login'],
+            $uuid1->toString(),
+            $userData['avatar_url'],
+            $userData['name'],
+            [User::DEFAULT_ROLE],
+            true
+        );
 
-            return $user;
-        } catch (\Exception $e) {
-            $this->logger->critical($e->getMessage());
-
-            return null;
-        }
+        return $user;
     }
 
     /**

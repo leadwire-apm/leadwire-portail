@@ -174,8 +174,11 @@ class KibanaService
         );
 
         if ($template !== null) {
-            $content = str_replace("__replace_token__", $prefix . $application->getName(), $template->getContent());
-            $content = str_replace("__replace_service__", $prefix . $application->getName(), $content);
+            // Handle special case of Demo Applications
+            $id = $application->isDemo() === true ? $application->getName() : $prefix . $application->getName();
+
+            $content = str_replace("__replace_token__", $id, $template->getContent());
+            $content = str_replace("__replace_service__", $application->getName(), $content);
 
             $headers = [
                 'kbn-xsrf' => true,
@@ -215,10 +218,20 @@ class KibanaService
         }
     }
 
+    /**
+     * @param User $user
+     *
+     * @return void
+     */
     public function loadIndexPatternForAllUser(User $user)
     {
         // TODO CHANGE THIS HACK
         $application = $this->applicationManager->getDemoApplications()[0];
+
+        if ($application === null) {
+            $this->logger->critical("leadwire.kibana.loadIndexPatternForAllUser", ["error" => "Unable to load demo applications"]);
+            return;
+        }
 
         $template = $this->templateManager->getOneBy(
             [
@@ -320,8 +333,6 @@ class KibanaService
         foreach ($demoApplications as $demoApplication) {
             $this->loadIndexPatternForApplication($demoApplication, $user, "user_{$user->getUuid()}", false);
         }
-
-        // $this->makeDefaultIndex('jpetstore', $user);
     }
     /**
      * * curl --insecure  -H "Authorization: Bearer ${authorization}"  -XGET "https://kibana.leadwire.io/api/saved_objects/index-pattern/${appname}" -H 'kbn-xsrf: true' -H 'Content-Type: application/json'
@@ -364,18 +375,19 @@ class KibanaService
      * * curl --insecure -H "Authorization: Bearer ${authorization}" -X POST "$protocol://$host:$port/api/kibana/settings/defaultIndex"  -d"{\"value\":\"$appname\"}" -H 'kbn-xsrf: true' -H 'Content-Type: application/json'
      *
      * @param Application $application
-     * @param USer $user
+     * @param User $user
+     * @param string $tenant
      *
      * @return void
      */
-    public function makeDefaultIndex(Application $application, User $user)
+    public function makeDefaultIndex(Application $application, User $user, string $tenant = 'app')
     {
         $authorization = $this->jwtHelper->getAuthorizationHeader($user);
         $headers = [
             'kbn-xsrf' => true,
             'Content-Type' => 'application/json',
             'Authorization' => "Bearer $authorization",
-            'tenant' => "app_{$application->getUuid()}",
+            'tenant' => "{$tenant}_{$application->getUuid()}",
             'X-Proxy-User' => "user_{$user->getUuid()}",
         ];
         $content = json_encode(['value' => $application->getName()]);

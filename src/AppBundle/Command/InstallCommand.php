@@ -46,7 +46,7 @@ Load default Application Type. Insert template for Kibana and more..'
         $applicationService = $this->getContainer()->get(ApplicationService::class);
 
         /** @var bool $purge */
-        $purge = $input->getOption("purge") !== null ? false : true;
+        $purge = $input->getOption("purge") === true ?: false;
         $this->display($output, "Deleting Stripe plans");
         $planService->deleteAllPlans();
 
