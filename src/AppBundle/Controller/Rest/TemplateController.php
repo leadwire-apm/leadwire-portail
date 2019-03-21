@@ -55,7 +55,7 @@ class TemplateController extends Controller
     }
 
     /**
-     * @Route("/list")
+     * @Route("/list", methods="GET")
      *
      * @param Request $request
      * @param TemplateService $templateService

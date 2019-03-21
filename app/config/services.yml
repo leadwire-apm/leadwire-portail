@@ -71,10 +71,6 @@ services:
         tags:
             - { name: monolog.logger, channel: auth }
 
-    AppBundle\Service\ApplicationTypeService:
-        arguments:
-            $dataRootPath: "%kernel.project_dir%/app/Resources/templates"
-
     AppBundle\Service\ActivationCodeService:
         arguments:
             $rule: "%activation_code_regex%"

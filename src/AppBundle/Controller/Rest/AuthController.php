@@ -3,12 +3,12 @@
 namespace AppBundle\Controller\Rest;
 
 use AppBundle\Service\AuthService;
-use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
 
 class AuthController extends Controller
 {
@@ -32,15 +32,13 @@ class AuthController extends Controller
     {
         $data = json_decode($request->getContent(), true);
         $parameters = $this->getParameter("auth_providers")['github'];
-        $globalSettnigs = $this->getParameter('auth_providers')['settings'];
-        $params = [
-            'client_id' => $data['clientId'],
-            'redirect_uri' => $data['redirectUri'],
-            'client_secret' => $parameters["github_client_secret"],
-            'code' => $data['code'],
-        ];
         $userData = $authService->githubProvider(
-            $params,
+            [
+                'client_id' => $data['clientId'],
+                'redirect_uri' => $data['redirectUri'],
+                'client_secret' => $parameters["github_client_secret"],
+                'code' => $data['code'],
+            ],
             $parameters["github_access_token_url"],
             $parameters["github_users_api_url"]
         );

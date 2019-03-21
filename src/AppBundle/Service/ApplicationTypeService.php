@@ -30,28 +30,20 @@ class ApplicationTypeService
     private $logger;
 
     /**
-     * @var string
-     */
-    private $dataRootPath;
-
-    /**
      * Constructor
      *
      * @param ApplicationTypeManager $applicationTypeManager
      * @param SerializerInterface $serializer
      * @param LoggerInterface $logger
-     * @param string $dataRootPath
      */
     public function __construct(
         ApplicationTypeManager $applicationTypeManager,
         SerializerInterface $serializer,
-        LoggerInterface $logger,
-        string $dataRootPath
+        LoggerInterface $logger
     ) {
         $this->applicationTypeManager = $applicationTypeManager;
         $this->serializer = $serializer;
         $this->logger = $logger;
-        $this->dataRootPath = $dataRootPath;
     }
 
     /**

@@ -88,7 +88,7 @@ class Plan
      * @JMS\Expose
      * @JMS\Groups({})
      */
-    private $isCreditCard;
+    private $creditCardRequired;
 
     /**
      * @var string
@@ -266,24 +266,24 @@ class Plan
     }
 
     /**
-     * Get isCreditCard
+     * Get creditCardRequired
      *
      * @return bool
      */
-    public function getIsCreditCard()
+    public function creditCardRequired()
     {
-        return $this->isCreditCard;
+        return $this->creditCardRequired;
     }
 
     /**
-     * Set isCreditCard
+     * Set creditCardRequired
      * @param bool
      *
      * @return Plan
      */
-    public function setIsCreditCard($isCreditCard)
+    public function setCreditCardRequired($creditCardRequired)
     {
-        $this->isCreditCard = $isCreditCard;
+        $this->creditCardRequired = $creditCardRequired;
 
         return $this;
     }
@@ -380,7 +380,12 @@ class Plan
 
     public function getPricingPlan(string $name): ?array
     {
-        $filtered = array_filter($this->prices, function($pricingPlan) {$pricingPlan->getName() === $name;});
+        $filtered = array_filter(
+            $this->prices,
+            function (PricingPlan $pricingPlan) use ($name) {
+                $pricingPlan->getName() === $name;
+            }
+        );
 
         if (empty($filtered) === false) {
             return reset($filtered);

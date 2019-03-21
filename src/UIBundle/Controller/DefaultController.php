@@ -9,7 +9,7 @@ use Symfony\Component\HttpFoundation\Response;
 class DefaultController extends Controller
 {
     /**
-     * @Route("/", name="angular_endPoint")
+     * @Route("/", name="angular_endPoint", methods="GET")
      */
     public function indexAction()
     {

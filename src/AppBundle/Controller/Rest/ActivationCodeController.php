@@ -31,7 +31,7 @@ class ActivationCodeController extends Controller
     }
 
     /**
-     * @Route("/list")
+     * @Route("/list", methods="GET")
      *
      * @param Request $request
      * @param ActivationCodeService $acs

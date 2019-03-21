@@ -23,11 +23,6 @@ use Symfony\Component\HttpFoundation\Response;
 class KibanaService
 {
     /**
-     * @var array
-     */
-    private $settings;
-
-    /**
      * @var string
      */
     private $url;
@@ -36,11 +31,6 @@ class KibanaService
      * @var LoggerInterface
      */
     private $logger;
-
-    /**
-     * @var ElasticSearchService
-     */
-    private $elastic;
 
     /**
      * @var TemplateManager
@@ -66,7 +56,6 @@ class KibanaService
      * Undocumented function
      *
      * @param LoggerInterface $logger
-     * @param ElasticSearchService $elastic
      * @param TemplateManager $templateManager
      * @param ApplicationManager $applicationManager
      * @param JWTHelper $jwtHelper
@@ -74,15 +63,12 @@ class KibanaService
      */
     public function __construct(
         LoggerInterface $logger,
-        ElasticSearchService $elastic,
         TemplateManager $templateManager,
         ApplicationManager $applicationManager,
         JWTHelper $jwtHelper,
         array $settings = []
     ) {
-        $this->settings = $settings;
         $this->logger = $logger;
-        $this->elastic = $elastic;
         $this->templateManager = $templateManager;
         $this->applicationManager = $applicationManager;
         $this->jwtHelper = $jwtHelper;
@@ -90,7 +76,7 @@ class KibanaService
             [
                 'curl' => array(CURLOPT_SSL_VERIFYPEER => false),
                 'verify' => false,
-                'http_errors' => false
+                'http_errors' => false,
             ]
         );
         $this->url = $settings['host'] . ":" . (string) $settings['port'] . "/";

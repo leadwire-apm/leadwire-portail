@@ -7,6 +7,7 @@ use Symfony\Component\Finder\Finder;
 use AppBundle\Manager\TemplateManager;
 use AppBundle\Document\ApplicationType;
 use JMS\Serializer\SerializerInterface;
+use AppBundle\Manager\ApplicationTypeManager;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
@@ -22,12 +23,19 @@ class TemplateService
      */
     private $serializer;
 
+    /**
+     * @var ApplicationTypeManager
+     */
+    private $applicationTypeManager;
+
     public function __construct(
         TemplateManager $templateManager,
+        ApplicationTypeManager $applicationTypeManager,
         SerializerInterface $serializer
     ) {
         $this->templateManager = $templateManager;
         $this->serializer = $serializer;
+        $this->applicationTypeManager = $applicationTypeManager;
     }
 
     public function newTemplate($json)
@@ -36,6 +44,14 @@ class TemplateService
         $template = $this
             ->serializer
             ->deserialize($json, Template::class, 'json');
+
+        /**
+         * * Author's note :
+         * * For some reason, Doctrine complains about cascade operations when flushing the unit of work on PHP 7.1.x (works on 7.2+)
+         * * Workaround -> manually fetch the applicationType from the ID
+         */
+
+        $applicationType = $this->applicationTypeManager->getOneBy(['id' => $template->getApplicationType()->getId()]);
 
         $oldTemplate = $this->templateManager->getOneBy(['applicationType.id' => $template->getApplicationType()->getId(), 'name' => $template->getName()]);
 
@@ -46,6 +62,7 @@ class TemplateService
         }
 
         $template->setVersion($version);
+        $template->setApplicationType($applicationType);
 
         $id = $this->templateManager->update($template);
 

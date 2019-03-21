@@ -174,17 +174,17 @@ class CreatePlanRequest extends AbstractRequest
         );
 
         $intervalCount = $this->getIntervalCount();
-        if ($intervalCount != null) {
+        if ($intervalCount !== null) {
             $data['interval_count'] = $intervalCount;
         }
 
         $statementDescriptor = $this->getStatementDescriptor();
-        if ($statementDescriptor != null) {
+        if ($statementDescriptor !== null) {
             $data['statement_descriptor'] = $statementDescriptor;
         }
 
         $trialPeriodDays = $this->getTrialPeriodDays();
-        if ($trialPeriodDays != null) {
+        if ($trialPeriodDays !== null) {
             $data['trial_period_days'] = $trialPeriodDays;
         }
 

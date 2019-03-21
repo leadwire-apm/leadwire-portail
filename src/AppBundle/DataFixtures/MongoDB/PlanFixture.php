@@ -17,7 +17,7 @@ class PlanFixture extends AbstractFixture implements OrderedFixtureInterface
         return ;
         $first = new Plan();
         $first->setName("BASIC")
-            ->setIsCreditCard(false)
+            ->setCreditCardRequired(false)
             ->setDiscount(0)
             ->setPrice(0)
             ->setMaxTransactionPerDay(10000)
@@ -27,7 +27,7 @@ class PlanFixture extends AbstractFixture implements OrderedFixtureInterface
 
         $second = new Plan();
         $second->setName("STANDARD")
-            ->setIsCreditCard(true)
+            ->setCreditCardRequired(true)
             ->setDiscount(15)
             ->setPrice(71)
             ->setMaxTransactionPerDay(100000)
@@ -47,7 +47,7 @@ class PlanFixture extends AbstractFixture implements OrderedFixtureInterface
 
         $third = new Plan();
         $third->setName("PREMIUM")
-            ->setIsCreditCard(true)
+            ->setCreditCardRequired(true)
             ->setDiscount(15)
             ->setPrice(640)
             ->setMaxTransactionPerDay(1000000)

@@ -57,12 +57,6 @@ class CustomStripeGateway extends Gateway
         return $this->createRequest(UpdateSubscriptionRequest::class, $parameters);
     }
 
-    public function updatePlan(array $parameters = [])
-    {
-        $this->createRequest(DeletePlanRequest::class, $parameters);
-        // return $this->createRequest(UpdatePlanRequest::class, $parameters);
-    }
-
     public function createProduct(array $parameters = [])
     {
         return $this->createRequest(CreateProductRequest::class, $parameters);

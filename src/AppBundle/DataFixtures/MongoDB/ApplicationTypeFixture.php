@@ -18,7 +18,7 @@ class ApplicationTypeFixture extends AbstractFixture implements OrderedFixtureIn
         $url = "https://github.com/leadwire-apm/leadwire-javaagent";
         $response = $client->get($url . "/raw/stable/README.md", ['stream' => true]);
         $defaultType = new ApplicationType();
-        $defaultType->setName("Java");
+        $defaultType->setName(ApplicationType::DEFAULT_TYPE);
         $defaultType->setInstallation($response->getBody()->read(10000));
         $defaultType->setAgent($url);
 

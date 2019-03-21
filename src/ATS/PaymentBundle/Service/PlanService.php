@@ -156,20 +156,18 @@ class PlanService
                 $response = $this->gateway->deletePlan(['id' => $pricingPlan->getToken()])->send()->getData();
             }
 
-            $response = $this->gateway->deleteProduct(['id' => $plan->getStripeId()])->send()->getData();
+            $this->gateway->deleteProduct(['id' => $plan->getStripeId()])->send()->getData();
             $this->planManager->deleteById($id);
         }
     }
 
     public function createDefaultPlans()
     {
-        $stripeProducts = $this->gateway->listProducts()->send()->getData()['data'];
-
         $basic = $this->planManager->getOneBy(['name' => "BASIC"]);
         if ($basic === null) {
             $basic = new Plan();
             $basic->setName("BASIC")
-                ->setIsCreditCard(false)
+                ->setCreditCardRequired(false)
                 ->setDiscount(0)
                 ->setPrice(0)
                 ->setMaxTransactionPerDay(10000)
@@ -188,7 +186,7 @@ class PlanService
         if ($standard === null) {
             $standard = new Plan();
             $standard->setName("STANDARD")
-                ->setIsCreditCard(true)
+                ->setCreditCardRequired(true)
                 ->setDiscount(15)
                 ->setPrice(71)
                 ->setMaxTransactionPerDay(100000)
@@ -245,7 +243,7 @@ class PlanService
         if ($premium === null) {
             $premium = new Plan();
             $premium->setName("PREMIUM")
-                ->setIsCreditCard(true)
+                ->setCreditCardRequired(true)
                 ->setDiscount(15)
                 ->setPrice(640)
                 ->setMaxTransactionPerDay(1000000)
@@ -258,6 +256,7 @@ class PlanService
 
             $product = $this->gateway->createProduct($data)->send()->getData();
             $premium->setStripeId($product['id']);
+
             /**
              * Monthly PREMIUM plan
              */
@@ -408,11 +407,11 @@ class PlanService
 
         foreach ($plans as $plan) {
             foreach ($plan->getPrices() as $pricingPlan) {
-                $code = $this->gateway->deletePlan(['id' => $pricingPlan->getToken()])->send();
+                $this->gateway->deletePlan(['id' => $pricingPlan->getToken()])->send();
             }
 
             if ($plan->getStripeId() !== null) {
-                $code = $this->gateway->deleteProduct(['id' => $plan->getStripeId()])->send();
+                $this->gateway->deleteProduct(['id' => $plan->getStripeId()])->send();
             }
         }
     }

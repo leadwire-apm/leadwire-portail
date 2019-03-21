@@ -14,6 +14,8 @@ use JMS\Serializer\Annotation as JMS;
  */
 class ApplicationType
 {
+    const DEFAULT_TYPE = 'Java';
+
     /**
      * @var \MongoId
      *

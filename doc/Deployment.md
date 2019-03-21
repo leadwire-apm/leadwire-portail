@@ -30,7 +30,7 @@ One important Symfony requirement is that the `var` directory must be writable b
 # Seeding Data
 Leadwire portal application needs some date to be setup in the database to operate properly. This can be achieved via a spacific command
 ```sh
-$ bin/console leadwire:install
+$ bin/console leadwire:install --env=prod # add --purge flag to clear the entire database before creating new data
 ```
 
 ***Note***: The previous command will:

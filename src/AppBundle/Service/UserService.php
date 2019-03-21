@@ -282,7 +282,6 @@ class UserService
         } else {
             /** @var string $json */
             $json = json_encode(["name" => $user->getName(), "email" => $user->getEmail()]);
-            // $data = json_decode($data, true);
 
             $customer = $this->customerService->newCustomer($json, $data);
             $user->setCustomer($customer);
@@ -343,6 +342,7 @@ class UserService
      * Updates a specific user from JSON data
      *
      * @param string $json
+     * @param string $id
      *
      * @return bool
      */

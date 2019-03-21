@@ -13,9 +13,9 @@ parameters:
     internal_api_prefix: api
     secret_key: ''
     providerName: Stripe
-    super_admin_username: '%super_admin_username%'
+    super_admin_username: toto
     mailer_transport: 'gmail'
-    mailer_user: '%mailer_user%'
+    mailer_user: 'test@test.com'
     mailer_password: 'password'
     sender: "%mailer_user%"
     github_client_id: 'aa236b3900fb084b3ccf'

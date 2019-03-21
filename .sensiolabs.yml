@@ -18,3 +18,11 @@ rules:
         enabled: true
         max_count: 20
         threshold: 5
+    symfony.controller.missing_redirect_after_post:
+        enabled: false
+    symfony.verbose_logging_in_production:
+        enabled: false
+    twig.template_too_long:
+        enabled: false
+    symfony.configuration.error_pages_should_be_customised:
+    enabled: false

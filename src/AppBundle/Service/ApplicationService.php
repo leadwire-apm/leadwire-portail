@@ -38,11 +38,6 @@ class ApplicationService
     private $activationCodeManager;
 
     /**
-     * @var UserManager
-     */
-    private $userManager;
-
-    /**
      * @var ApplicationPermissionManager
      */
     private $apManager;
@@ -77,6 +72,7 @@ class ApplicationService
      *
      * @param ApplicationManager $applicationManager
      * @param ActivationCodeManager $activationCodeManager
+     * @param DeleteTaskManager $taskManager
      * @param ApplicationPermissionManager $apManager
      * @param SerializerInterface $serializer
      * @param LoggerInterface $logger
@@ -88,7 +84,6 @@ class ApplicationService
         ActivationCodeManager $activationCodeManager,
         DeleteTaskManager $taskManager,
         ApplicationPermissionManager $apManager,
-        UserManager $userManager,
         SerializerInterface $serializer,
         LoggerInterface $logger,
         ApplicationTypeService $appTypeService,
@@ -98,7 +93,6 @@ class ApplicationService
         $this->activationCodeManager = $activationCodeManager;
         $this->taskManager = $taskManager;
         $this->apManager = $apManager;
-        $this->userManager = $userManager;
         $this->serializer = $serializer;
         $this->logger = $logger;
         $this->appTypeService = $appTypeService;

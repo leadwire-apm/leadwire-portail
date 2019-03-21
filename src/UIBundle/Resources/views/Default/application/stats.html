@@ -3,15 +3,17 @@
         <table class="table mb0">
             <thead>
             <tr>
-                <th class="text-center">
-                    Date
-                </th>
+                <th class="text-center">Date</th>
                 <th class="text-center ">Transactions</th>
             </tr>
             </thead>
+            <div ng-if="ctrl.application.demo" class="alert alert-info text-center">
+                <h4>
+                    Sample Data
+                </h4>
+            </div>
             <tbody>
-            <tr ng-repeat="stat in ctrl.applicationStats"
-                ng-class="{'bg-blue':$index < ctrl.retention,'bg-grey-f':$index >= ctrl.retention}">
+            <tr ng-repeat="stat in ctrl.applicationStats" ng-class="ctrl.application.demo ? {'bg-blue':true} : {'bg-blue':$index < ctrl.retention,'bg-grey-f':$index >= ctrl.retention}">
                 <td class="text-center">
                     [[ctrl.moment(stat.day,ctrl.CONSTANTS.DEFAULT_DATE_FORMAT).format(ctrl.CONSTANTS.EN_DATE_FORMAT)]]
                 </td>
@@ -20,12 +22,12 @@
             </tbody>
         </table>
     </div>
-    <p class="alert alert-warning text-center " ng-if="user.plan.retention !==15">
+    <p class="alert alert-warning text-center " ng-if="!ctrl.application.demo && user.plan.retention !==15">
         <span class="text-danger">Only data with blue background are available on dashboard, to see more available data</span>
-        <br><a
-            ui-sref="app.updateSubscription({action:'upgrade'})" class="btn btn-primary">
-        Upgrade your plan
-    </a>
+        <br>
+        <a ui-sref="app.updateSubscription({action:'upgrade'})" class="btn btn-primary">
+            Upgrade your plan
+        </a>
     </p>
 
 </div>

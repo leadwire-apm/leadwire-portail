@@ -164,15 +164,6 @@ class AuthService
      */
     public function generateToken(User $user)
     {
-        $token = [
-            'host' => $this->appDomain,
-            'user' => $user->getIndex(),
-            'name' => $user->getUsername(),
-            'iat' => time(),
-            'exp' => time() + 1800 + 1800 * 2,
-            'nbf' => time(),
-        ];
-
         return $this->jwtHelper->encode($user->getUsername(), $user->getIndex());
     }
 
