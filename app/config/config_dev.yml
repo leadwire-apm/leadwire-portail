@@ -46,6 +46,12 @@ monolog:
             level: notice
             path:     '%kernel.logs_dir%/ldap_%kernel.environment%.log'
             channels: [ldap]
+        auth:
+            type: stream
+            action_level: notice
+            level: notice
+            path:     '%kernel.logs_dir%/auth_%kernel.environment%.log'
+            channels: [auth]
         console:
             type: console
             process_psr_3_messages: false

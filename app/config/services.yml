@@ -68,6 +68,8 @@ services:
             $appDomain: "%app_domain%"
             $authProviderSettings: "%auth_providers%"
             $superAdminUsername: "%super_admin_username%"
+        tags:
+            - { name: monolog.logger, channel: auth }
 
     AppBundle\Service\ApplicationTypeService:
         arguments:

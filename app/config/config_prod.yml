@@ -37,6 +37,13 @@ monolog:
             level: notice
             path:     '%kernel.logs_dir%/ldap.log'
             channels: [ldap]
+        auth:
+            type: rotating_file
+            action_level: notice
+            max_files: 10
+            level: notice
+            path:     '%kernel.logs_dir%/auth.log'
+            channels: [auth]
         nested:
             type: stream
             path: '%kernel.logs_dir%/%kernel.environment%.log'
