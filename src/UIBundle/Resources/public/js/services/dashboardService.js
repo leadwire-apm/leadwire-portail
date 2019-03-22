@@ -47,7 +47,7 @@
                 function (menu) {
                     return $state.href('app.dashboard.home', {
                         id: menu.id,
-                        tenant: null,
+                        tenant: menu.tenant,
                     });
                 },
                 function (menu) {
@@ -56,7 +56,6 @@
             );
             $rootScope.menus = $localStorage.currentMenu;
             $localStorage.currentApplicationMenus = $localStorage.currentMenu;
-            // $rootScope.menus = MenuFactory.get('DASHBOARD');
         };
 
         service.getDashboard = function(tenant, dashboardId) {
