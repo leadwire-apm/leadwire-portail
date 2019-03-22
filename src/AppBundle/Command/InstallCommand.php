@@ -9,7 +9,6 @@ use AppBundle\Service\ApplicationService;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use ATS\PaymentBundle\Service\PlanService;
 use AppBundle\Service\ElasticSearchService;
-use Symfony\Component\Console\Command\Command;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;

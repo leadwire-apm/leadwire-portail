@@ -2,8 +2,11 @@
 namespace AppBundle\Service;
 
 use AppBundle\Document\Application;
+use AppBundle\Document\ApplicationType;
 use AppBundle\Document\User;
 use AppBundle\Manager\ApplicationManager;
+use AppBundle\Manager\ApplicationPermissionManager;
+use AppBundle\Manager\ApplicationTypeManager;
 use AppBundle\Manager\TemplateManager;
 use AppBundle\Service\JWTHelper;
 use GuzzleHttp\Client;
@@ -43,6 +46,16 @@ class KibanaService
     private $applicationManager;
 
     /**
+     * @var ApplicationPermissionManager
+     */
+    private $permissionManager;
+
+    /**
+     * @var ApplicationTypeManager $applicationTypeManager
+     */
+    private $applicationTypeManager;
+
+    /**
      * @var Client
      */
     private $httpClient;
@@ -58,6 +71,8 @@ class KibanaService
      * @param LoggerInterface $logger
      * @param TemplateManager $templateManager
      * @param ApplicationManager $applicationManager
+     * @param ApplicationPermissionManager $permissionManager,
+     * @param ApplicationTypeManager $applicationTypeManager,
      * @param JWTHelper $jwtHelper
      * @param array $settings
      */
@@ -65,12 +80,16 @@ class KibanaService
         LoggerInterface $logger,
         TemplateManager $templateManager,
         ApplicationManager $applicationManager,
+        ApplicationPermissionManager $permissionManager,
+        ApplicationTypeManager $applicationTypeManager,
         JWTHelper $jwtHelper,
         array $settings = []
     ) {
         $this->logger = $logger;
         $this->templateManager = $templateManager;
         $this->applicationManager = $applicationManager;
+        $this->permissionManager = $permissionManager;
+        $this->applicationTypeManager = $applicationTypeManager;
         $this->jwtHelper = $jwtHelper;
         $this->httpClient = new Client(
             [
@@ -82,14 +101,29 @@ class KibanaService
         $this->url = $settings['host'] . ":" . (string) $settings['port'] . "/";
     }
 
+    /**
+     * @param User $user
+     *
+     * @return bool
+     */
     public function createAllUserDashboard(User $user)
     {
-        // TODO CHANGE THIS HACK
-        $application = $this->applicationManager->getDemoApplications()[0];
+        $defaultType = $this->applicationTypeManager->getOneBy(['name' => ApplicationType::DEFAULT_TYPE]);
+
+        if ($defaultType === null) {
+            $this->logger->alert(
+                "leadwire.kibana.createAllUserDashboard",
+                [
+                    "error" => "Java Application Type not found.\nDid you forget to launch bin/console leadwire:install ?",
+                ]
+            );
+
+            throw new \Exception("Java Application Type not found.");
+        }
 
         $template = $this->templateManager->getOneBy(
             [
-                'applicationType.id' => $application->getType()->getId(),
+                'applicationType.id' => $defaultType->getId(),
                 'name' => 'apm-dashboards-all',
             ]
         );
@@ -122,7 +156,6 @@ class KibanaService
                     'url' => $this->url . "api/kibana/dashboards/import?exclude=index-pattern&force=true",
                     'verb' => 'POST',
                     'headers' => $headers,
-                    // 'body' => $content,
                     'template' => $template->getName(),
                     'status_code' => $response->getStatusCode(),
                 ]
@@ -130,7 +163,8 @@ class KibanaService
 
             return $response->getStatusCode() === Response::HTTP_OK;
         } else {
-            throw new \Exception("Template ($template) not found");
+            $this->logger->alert("leadwire.kibana.createAllUserDashboard", ["error" => "Template [apm-dashboards-all] for Java type not found"]);
+            throw new \Exception("Template apm-dashboards-all for Java Application Type not found.");
         }
     }
 
@@ -160,10 +194,7 @@ class KibanaService
         );
 
         if ($template !== null) {
-            // Handle special case of Demo Applications
-            $id = $application->isDemo() === true ? $application->getName() : $prefix . $application->getName();
-
-            $content = str_replace("__replace_token__", $id, $template->getContent());
+            $content = str_replace("__replace_token__", $application->getName(), $template->getContent());
             $content = str_replace("__replace_service__", $application->getName(), $content);
 
             $headers = [
@@ -194,13 +225,13 @@ class KibanaService
 
             return $response->getStatusCode() === Response::HTTP_OK;
         } else {
-            $this->logger->critical(
+            $this->logger->alert(
                 "leadwire.kibana.createApplicationDashboards",
                 [
-                    'error' => "Template ($template) not found",
+                    'error' => "Template [apm-dashboards] for {$application->getType()->getName()} type not found",
                 ]
             );
-            throw new \Exception("Template ($template) not found");
+            throw new \Exception("Template apm-dashboards for {$application->getType()->getName()} Application Type not found.");
         }
     }
 
@@ -216,7 +247,7 @@ class KibanaService
 
         if ($application === null) {
             $this->logger->critical("leadwire.kibana.loadIndexPatternForAllUser", ["error" => "Unable to load demo applications"]);
-            return;
+            throw new \Exception("Unable to load demo applications");
         }
 
         $template = $this->templateManager->getOneBy(
@@ -309,15 +340,21 @@ class KibanaService
 
             return true;
         } else {
-            throw new \Exception("Template (apmserver) not found");
+            $this->logger->alert(
+                "leadwire.kibana.loadIndexPatternForApplication",
+                [
+                    'error' => "Template [apmserver] not found for type {$application->getType()->getName()}",
+                ]
+            );
+            throw new \Exception("Template apmserver not found for type {$application->getType()->getName()}");
         }
     }
 
-    public function loadIndexPatternForDemoApplications(User $user)
+    public function loadIndexPatternForUserTenant(User $user)
     {
-        $demoApplications = $this->applicationManager->getDemoApplications();
-        foreach ($demoApplications as $demoApplication) {
-            $this->loadIndexPatternForApplication($demoApplication, $user, "user_{$user->getUuid()}", false);
+        $userAccessibleApplications = $this->permissionManager->getAccessibleApplications($user);
+        foreach ($userAccessibleApplications as $application) {
+            $this->loadIndexPatternForApplication($application, $user, "user_{$user->getUuid()}", false);
         }
     }
     /**

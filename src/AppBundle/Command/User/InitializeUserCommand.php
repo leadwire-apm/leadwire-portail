@@ -64,7 +64,7 @@ class InitializeUserCommand extends ContainerAwareCommand
             $output->write("<info>Loading Kibana Index Patterns </info>");
             $es->deleteIndex("user_" . $user->getUuid());
             $output->write(".");
-            $kibana->loadIndexPatternForDemoApplications($user);
+            $kibana->loadIndexPatternForUserTenant($user);
             $output->write(".");
 
             $es->deleteIndex("all_user_" . $user->getUuid());

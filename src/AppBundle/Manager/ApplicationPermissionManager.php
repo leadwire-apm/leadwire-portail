@@ -35,4 +35,16 @@ class ApplicationPermissionManager extends AbstractManager
     {
         return $this->getDocumentRepository()->findGrantedAccessForApplication($application);
     }
+
+    public function getAccessibleApplications(User $user)
+    {
+        $applications = [];
+        $grantedPermission = $this->getDocumentRepository()->findUserAccessible($user);
+
+        foreach ($grantedPermission as $permission) {
+            $applications[] = $permission->getApplication();
+        }
+
+        return $applications;
+    }
 }

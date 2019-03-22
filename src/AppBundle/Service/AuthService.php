@@ -129,7 +129,7 @@ class AuthService
                 $this->applicationService->registerDemoApplications($user);
 
                 $this->esService->deleteIndex("user_" . $user->getUuid());
-                $this->kibanaService->loadIndexPatternForDemoApplications($user);
+                $this->kibanaService->loadIndexPatternForUserTenant($user);
 
                 $this->esService->deleteIndex("all_user_" . $user->getUuid());
                 $this->kibanaService->loadIndexPatternForAllUser($user);

@@ -4,7 +4,6 @@ namespace ATS\PaymentBundle\Document;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 use JMS\Serializer\Annotation as JMS;
 
-
 /**
  * @ODM\EmbeddedDocument
  */
