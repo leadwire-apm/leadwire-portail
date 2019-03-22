@@ -182,7 +182,7 @@ class ApplicationController extends Controller
                     'app_' . $application->getUuid()
                 );
 
-                $kibanaService->makeDefaultIndex($application, $this->getUser(), 'app');
+                $kibanaService->makeDefaultIndex("app_{$application->getUuid()}", $this->getUser(), $application->getName());
 
                 $kibanaService->createApplicationDashboards($application, $this->getUser());
 
@@ -194,7 +194,7 @@ class ApplicationController extends Controller
                     'shared_' . $application->getUuid()
                 );
 
-                $kibanaService->makeDefaultIndex($application, $this->getUser(), 'shared');
+                $kibanaService->makeDefaultIndex("shared_{$application->getUuid()}", $this->getUser(), $application->getName());
 
                 $sgService->updateSearchGuardConfig();
                 $status = true;

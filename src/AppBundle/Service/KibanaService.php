@@ -12,6 +12,7 @@ use AppBundle\Service\JWTHelper;
 use GuzzleHttp\Client;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
+use ATS\CoreBundle\Service\Util\AString;
 
 /**
  * Class Kibana Service. Manage connexions with Kibana Rest API.
@@ -242,7 +243,6 @@ class KibanaService
      */
     public function loadIndexPatternForAllUser(User $user)
     {
-        // TODO CHANGE THIS HACK
         $application = $this->applicationManager->getDemoApplications()[0];
 
         if ($application === null) {
@@ -285,6 +285,8 @@ class KibanaService
                     'status_code' => $response->getStatusCode(),
                 ]
             );
+
+            $this->makeDefaultIndex("all_user_{$user->getUuid()}", $user, "all_user_{$user->getUuid()}");
         }
     }
 
@@ -397,23 +399,32 @@ class KibanaService
     /**
      * * curl --insecure -H "Authorization: Bearer ${authorization}" -X POST "$protocol://$host:$port/api/kibana/settings/defaultIndex"  -d"{\"value\":\"$appname\"}" -H 'kbn-xsrf: true' -H 'Content-Type: application/json'
      *
-     * @param Application $application
-     * @param User $user
      * @param string $tenant
+     * @param User $user
+     * @param string $value
      *
      * @return void
      */
-    public function makeDefaultIndex(Application $application, User $user, string $tenant = 'app')
+    public function makeDefaultIndex(string $tenant, User $user, string $value)
     {
-        $authorization = $this->jwtHelper->getAuthorizationHeader($user);
+        $str = new AString($tenant);
+        $shared = ($str->startsWith("shared_") ===true) || ($str->startsWith("all_user_") === true);
+
+        if ($shared === true) {
+            $authorization = $this->jwtHelper->getAuthorizationHeader();
+        } else {
+            $authorization = $this->jwtHelper->getAuthorizationHeader($user);
+        }
+
         $headers = [
             'kbn-xsrf' => true,
             'Content-Type' => 'application/json',
             'Authorization' => "Bearer $authorization",
-            'tenant' => "{$tenant}_{$application->getUuid()}",
+            'tenant' => "$tenant",
             'X-Proxy-User' => "user_{$user->getUuid()}",
         ];
-        $content = json_encode(['value' => $application->getName()]);
+
+        $content = json_encode(['value' => $value]);
 
         $response = $this->httpClient->post(
             $this->url . "api/kibana/settings/defaultIndex",
