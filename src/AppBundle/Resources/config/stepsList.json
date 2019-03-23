@@ -1,52 +1,52 @@
 [
     {
         "label": "Cadrage",
-        "order": 0,
+        "order": 1,
         "current": true
     },
     {
         "label": "Devis",
-        "order": 1,
-        "current": false
-    },
-    {
-        "label": "CDC",
         "order": 2,
         "current": false
     },
     {
-        "label": "R7J",
+        "label": "CDC",
         "order": 3,
         "current": false
     },
     {
-        "label": "Scipts Jdd",
+        "label": "R7J",
         "order": 4,
         "current": false
     },
     {
-        "label": "PP",
+        "label": "Scipts Jdd",
         "order": 5,
         "current": false
     },
     {
-        "label": "Outils Tperf",
+        "label": "PP",
         "order": 6,
         "current": false
     },
     {
-        "label": "Tuning",
+        "label": "Outils Tperf",
         "order": 7,
         "current": false
     },
     {
-        "label": "Ref",
+        "label": "Tuning",
         "order": 8,
         "current": false
     },
     {
-        "label": "Rapport",
+        "label": "Ref",
         "order": 9,
+        "current": false
+    },
+    {
+        "label": "Rapport",
+        "order": 10,
         "current": false
     }
 ]

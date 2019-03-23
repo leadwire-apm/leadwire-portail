@@ -37,6 +37,11 @@ class StepService
     {
         $stepsList = file_get_contents('../Ressources/config/stepsList.json');
 
+        foreach($stepsList as $step)
+        {
+            $this->stepManager->create($tmec, $step["label"], $step["order"], $step["current"]);
+        }
+
         $this->stepManager->create($tmec, "Cadrage", 1, true);
         $this->stepManager->create($tmec, "Devis", 2, false);
         $this->stepManager->create($tmec, "CDC", 3, false);
