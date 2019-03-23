@@ -41,8 +41,7 @@ class StepService
         {
             $this->stepManager->create($tmec, $step["label"], $step["order"], $step["current"]);
         }
-
-        $this->stepManager->create($tmec, "Cadrage", 1, true);
+       /* $this->stepManager->create($tmec, "Cadrage", 1, true);
         $this->stepManager->create($tmec, "Devis", 2, false);
         $this->stepManager->create($tmec, "CDC", 3, false);
         $this->stepManager->create($tmec, "R7J", 4, false);
@@ -51,7 +50,7 @@ class StepService
         $this->stepManager->create($tmec, "Outils Tperf", 7, false);
         $this->stepManager->create($tmec, "Tuning", 8, false);
         $this->stepManager->create($tmec, "Ref", 9, false);
-        $this->stepManager->create($tmec, "Rapport", 10, false);
+        $this->stepManager->create($tmec, "Rapport", 10, false);*/
         return null;
     }
 
