@@ -1,0 +1,52 @@
+[
+    {
+        "label": "Cadrage",
+        "order": 0,
+        "current": true
+    },
+    {
+        "label": "Devis",
+        "order": 1,
+        "current": false
+    },
+    {
+        "label": "CDC",
+        "order": 2,
+        "current": false
+    },
+    {
+        "label": "R7J",
+        "order": 3,
+        "current": false
+    },
+    {
+        "label": "Scipts Jdd",
+        "order": 4,
+        "current": false
+    },
+    {
+        "label": "PP",
+        "order": 5,
+        "current": false
+    },
+    {
+        "label": "Outils Tperf",
+        "order": 6,
+        "current": false
+    },
+    {
+        "label": "Tuning",
+        "order": 7,
+        "current": false
+    },
+    {
+        "label": "Ref",
+        "order": 8,
+        "current": false
+    },
+    {
+        "label": "Rapport",
+        "order": 9,
+        "current": false
+    }
+]

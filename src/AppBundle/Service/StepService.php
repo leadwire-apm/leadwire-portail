@@ -35,6 +35,7 @@ class StepService
      */
     public function initSteps(Tmec $tmec)
     {
+        $stepsList = file_get_contents('../Ressources/config/stepsList.json');
 
         $this->stepManager->create($tmec, "Cadrage", 1, true);
         $this->stepManager->create($tmec, "Devis", 2, false);
