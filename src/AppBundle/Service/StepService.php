@@ -10,59 +10,6 @@ use JMS\Serializer\SerializerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
-$stepsList = array(
-    array(
-        "label"=> "Cadrage",
-        "order"=> 1,
-        "current"=> true
-    ),
-    array(
-        "label"=> "Devis",
-        "order"=> 2,
-        "current"=> false
-    ),
-    array(
-        "label"=> "CDC",
-        "order"=> 3,
-        "current"=> false
-    ),
-    array(
-        "label"=> "R7J",
-        "order"=> 4,
-        "current"=> false
-    ),
-    array(
-        "label"=> "Scipts Jdd",
-        "order"=> 5,
-        "current"=> false
-    ),
-    array(
-        "label"=> "PP",
-        "order"=> 6,
-        "current"=> false
-    ),
-    array(
-        "label"=> "Outils Tperf",
-        "order"=> 7,
-        "current"=> false
-    ),
-    array(
-        "label"=> "Tuning",
-        "order"=> 8,
-        "current"=> false
-    ),
-    array(
-        "label"=> "Ref",
-        "order"=> 9,
-        "current"=> false
-    ),
-    array(
-        "label"=> "Rapport",
-        "order"=> 10,
-        "current"=> false
-    )
-);
-
 class StepService
 {
     /**
@@ -88,21 +35,64 @@ class StepService
      */
     public function initSteps(Tmec $tmec)
     {
+        $stepsList = array(
+            array(
+                "label"=> "Cadrage",
+                "order"=> 1,
+                "current"=> true
+            ),
+            array(
+                "label"=> "Devis",
+                "order"=> 2,
+                "current"=> false
+            ),
+            array(
+                "label"=> "CDC",
+                "order"=> 3,
+                "current"=> false
+            ),
+            array(
+                "label"=> "R7J",
+                "order"=> 4,
+                "current"=> false
+            ),
+            array(
+                "label"=> "Scipts Jdd",
+                "order"=> 5,
+                "current"=> false
+            ),
+            array(
+                "label"=> "PP",
+                "order"=> 6,
+                "current"=> false
+            ),
+            array(
+                "label"=> "Outils Tperf",
+                "order"=> 7,
+                "current"=> false
+            ),
+            array(
+                "label"=> "Tuning",
+                "order"=> 8,
+                "current"=> false
+            ),
+            array(
+                "label"=> "Ref",
+                "order"=> 9,
+                "current"=> false
+            ),
+            array(
+                "label"=> "Rapport",
+                "order"=> 10,
+                "current"=> false
+            )
+        );
 
         foreach($stepsList as $step)
         {
             $this->stepManager->create($tmec, $step["label"], $step["order"], $step["current"]);
         }
-       /* $this->stepManager->create($tmec, "Cadrage", 1, true);
-        $this->stepManager->create($tmec, "Devis", 2, false);
-        $this->stepManager->create($tmec, "CDC", 3, false);
-        $this->stepManager->create($tmec, "R7J", 4, false);
-        $this->stepManager->create($tmec, "Scipts Jdd", 5, false);
-        $this->stepManager->create($tmec, "PP", 6, false);
-        $this->stepManager->create($tmec, "Outils Tperf", 7, false);
-        $this->stepManager->create($tmec, "Tuning", 8, false);
-        $this->stepManager->create($tmec, "Ref", 9, false);
-        $this->stepManager->create($tmec, "Rapport", 10, false);*/
+       
         return null;
     }
 
