@@ -35,7 +35,7 @@ class StepService
      */
     public function initSteps(Tmec $tmec)
     {
-        $stepsList = file_get_contents('../Ressources/config/stepsList.json');
+        $stepsList = file_get_contents(__DIR__.'/../src/AppBundle/Ressources/config/stepsList.json');
 
         foreach($stepsList as $step)
         {
