@@ -38,6 +38,7 @@
         onLoad();
 
         $scope.JENKINS_URL = CONFIG.JENKINS_URL;
+        $scope.COMPAGNE_ENABLED = config.COMPAGNE_ENABLED;
         
         $scope.$on('user:updated', function (event, data) {
             $rootScope.user = data;
