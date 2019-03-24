@@ -59,9 +59,6 @@ function LoginControllerFN (
     function providerAuthenticate (provider) {
         vm.isChecking = true;
         $auth.authenticate(provider)
-            .then(function () {
-                return invitationId;
-            })
             .then(getMe) // accept invitation and update Localstorage
             .then(handleAfterRedirect) // fetch application and dashboard
             .then(handleLoginSuccess(provider)) // redirect
