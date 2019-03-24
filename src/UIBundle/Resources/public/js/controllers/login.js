@@ -38,7 +38,7 @@ function LoginControllerFN (
             : undefined;
     onLoad();
     
-    vm.loginAuthenticate = loginAuthenticate;
+    vm.authenticate = authenticate;
 
     vm.loginMethod = CONFIG.LOGIN_METHOD;
 
