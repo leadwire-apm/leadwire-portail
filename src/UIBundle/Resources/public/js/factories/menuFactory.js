@@ -22,7 +22,7 @@
                     });
                 }
 
-                if(CONFIG.COMPAGNE_ENABLED){
+                if(CONFIG.COMPAGNE_ENABLED === "true"){
                     Menus.MANAGEMENT.push( 
                         {
                             route: 'app.management.tmecs',
