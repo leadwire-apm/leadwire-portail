@@ -609,13 +609,16 @@ angular.module('leadwireApp')
                     url: '/page/about-us',
                     templateUrl: 'static/aboutUs.html',
                 })
+
                 //TMEC
                 .state('app.tmecs', {
                     url: '/compagnes/list',
                     templateUrl: 'application/tmecsList.html',
                     resolve: {
-                        permissions: loginRequired,
-                        menu: updateMenuItems('SETTINGS')
+                        permissions: function (RouteGuard) {
+                            return RouteGuard.loginRequired();
+                        },
+                        menu: updateMenuItems(MenuEnum.SETTINGS)
                     },
                     controller: 'ListCompagnesController',
                     controllerAs: 'ctrl',
@@ -625,8 +628,10 @@ angular.module('leadwireApp')
                     url: '/tmec/list',
                     templateUrl: 'tmec/list.html',
                     resolve: {
-                        permissions: adminRequired,
-                        menu: updateMenuItems('MANAGEMENT'),
+                        permissions: function (RouteGuard) {
+                            return RouteGuard.adminRequired();
+                        },
+                        menu: updateMenuItems(menuenum.MANAGEMENT),
                     },
                     controller: 'ListCompagnesController',
                     controllerAs: 'ctrl',
@@ -636,8 +641,10 @@ angular.module('leadwireApp')
                     url: '/tmec/add',
                     templateUrl: 'tmec/add.html',
                     resolve: {
-                        permissions: adminRequired,
-                        menu: updateMenuItems('MANAGEMENT'),
+                        permissions: function (RouteGuard) {
+                            return RouteGuard.adminRequired();
+                        },
+                        menu: updateMenuItems(menuenum.MANAGEMENT),
                     },
                     controller: 'AddCompagnesController',
                     controllerAs: 'ctrl',
@@ -647,8 +654,10 @@ angular.module('leadwireApp')
                     url: '/tmec/edit/:id',
                     templateUrl: 'tmec/edit.html',
                     resolve: {
-                        permissions: adminRequired,
-                        menu: updateMenuItems('MANAGEMENT'),
+                        permissions: function (RouteGuard) {
+                            return RouteGuard.adminRequired();
+                        },
+                        menu: updateMenuItems(menuenum.MANAGEMENT),
                     },
                     controller: 'EditCompagnesController',
                     controllerAs: 'ctrl',
@@ -658,8 +667,10 @@ angular.module('leadwireApp')
                     url: '/tmec/overview',
                     templateUrl: 'tmec/overview.html',
                     resolve: {
-                        permissions: loginRequired,
-                        menu: updateMenuItems('SETTINGS'),
+                        permissions: function (RouteGuard) {
+                            return RouteGuard.loginRequired();
+                        },
+                        menu: updateMenuItems(MenuEnum.SETTINGS),
                     },
                     controller: 'TmecOverviewController',
                     controllerAs: 'ctrl',
