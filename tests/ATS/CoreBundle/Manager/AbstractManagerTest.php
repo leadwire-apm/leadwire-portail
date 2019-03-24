@@ -2,111 +2,219 @@
 
 namespace Tests\ATS\CoreBundle\Manager;
 
-use ATS\CoreBundle\Manager\AbstractManager;
+use AppBundle\Document\User;
+use AppBundle\Manager\UserManager;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 class AbstractManagerTest extends KernelTestCase
 {
-    protected $object;
+    private $documentManager;
 
-    protected $documentManager;
-    protected $documentRegistry;
-    protected $appCache;
+    private $managerRegistry;
 
     /**
-     * {@inheritDoc}
+     * @var UserManager
      */
+    private $userManager;
+
     protected function setUp()
     {
         $kernel = self::bootKernel();
-
-        $this->documentRegistry = $kernel->getContainer()->get('doctrine_mongodb');
-        $this->appCache = $kernel->getContainer()->get('cache.app');
+        $this->managerRegistry = $kernel->getContainer()->get('doctrine_mongodb');
         $this->documentManager = $kernel->getContainer()
             ->get('doctrine_mongodb')
             ->getManager();
+
+        $this->userManager = new UserManager($this->managerRegistry);
     }
 
+    /**
+     * @uses ATS\CoreBundle\Repository\BaseDocumentRepository::deleteAll
+     *
+     * @return void
+     */
     public function testPaginate()
     {
-        $manager = $this->createMock(AbstractManager::class);
-        $manager->expects($this->any())
-            ->method('paginate')
-            ->willReturn($this->object);
+        $this->userManager->deleteAll();
+        for ($i = 0; $i < 50; $i++) {
+            $user = new User("user$i", "user$i@test.com");
+            if ($i < 10) {
+                $user->setActive(true);
+            }
+            $this->documentManager->persist($user);
+        }
+        $this->documentManager->flush();
 
-        $this->assertEquals($this->object, $manager->paginate());
+        $pageItems = $this->userManager->paginate(['active' => true]);
+        $this->assertCount(10, $pageItems);
+        $pageItems = $this->userManager->paginate();
+        $this->assertCount(20, $pageItems);
+        $pageItems = $this->userManager->paginate([], 1);
+        $this->assertCount(20, $pageItems);
     }
 
+    /**
+     * @uses ATS\CoreBundle\Repository\BaseDocumentRepository::deleteAll
+     * @uses ATS\CoreBundle\Repository\BaseDocumentRepository::save
+     * @return void
+     */
     public function testUpdate()
     {
-        $manager = $this->createMock(AbstractManager::class);
-        $manager->expects($this->any())
-            ->method('update')
-            ->willReturn(null);
+        $this->userManager->deleteAll();
 
-        $this->assertEquals(null, $manager->update($this->object));
+        $user = new User();
+        $user->setUsername('toto');
+        $this->userManager->update($user);
+        $fetched = $this->documentManager->getRepository(User::class)->findBy([]);
+        $this->assertCount(1, $fetched);
+        $this->assertEquals('toto', $fetched[0]->getUsername());
     }
 
+    /**
+     * @uses ATS\CoreBundle\Repository\BaseDocumentRepository::delete
+     * @uses ATS\CoreBundle\Repository\BaseDocumentRepository::save
+     * @uses ATS\CoreBundle\Repository\BaseDocumentRepository::deleteAll
+     *
+     * @return void
+     */
     public function testDelete()
     {
-        $manager = $this->createMock(AbstractManager::class);
-        $manager->expects($this->any())
-            ->method('delete')
-            ->willReturn(null);
+        $this->userManager->deleteAll();
+        $this->assertCount(0, $this->documentManager->getRepository(User::class)->findBy([]));
 
-        $this->assertEquals(null, $manager->delete($this->object));
+        $user = new User();
+        $user->setUsername('testDelete');
+        $this->userManager->update($user);
+        $userId = $user->getId();
+        $this->assertCount(1, $this->documentManager->getRepository(User::class)->findBy([]));
+
+        $id = $this->userManager->delete($user);
+
+        $this->assertCount(0, $this->documentManager->getRepository(User::class)->findBy([]));
+        $this->assertEquals($id, $userId);
     }
 
+    /**
+     * @uses ATS\CoreBundle\Repository\BaseDocumentRepository::save
+     * @uses ATS\CoreBundle\Repository\BaseDocumentRepository::deleteAll
+     * @uses ATS\CoreBundle\Repository\BaseDocumentRepository::delete
+     *
+     * @return void
+     */
     public function testDeleteById()
     {
-        $manager = $this->createMock(AbstractManager::class);
-        $manager->expects($this->any())
-            ->method('deleteById')
-            ->willReturn(null);
-
-        $this->assertEquals(null, $manager->deleteById(1));
+        $this->userManager->deleteAll();
+        $user = new User();
+        $user->setUsername('deleteById');
+        $this->userManager->update($user);
+        $this->assertCount(1, $this->documentManager->getRepository(User::class)->findBy([]));
+        $this->userManager->deleteById($user->getId());
+        $this->assertCount(0, $this->documentManager->getRepository(User::class)->findBy([]));
     }
 
+    /**
+     * @uses ATS\CoreBundle\Repository\BaseDocumentRepository::save
+     * @uses ATS\CoreBundle\Repository\BaseDocumentRepository::deleteAll
+     *
+     * @return void
+     */
     public function testDeleteAll()
     {
-        $manager = $this->createMock(AbstractManager::class);
-        $manager->expects($this->any())
-            ->method('deleteAll')
-            ->willReturn(null);
-
-        $this->assertEquals(null, $manager->deleteAll());
+        $this->userManager->deleteAll();
+        $this->assertCount(0, $this->documentManager->getRepository(User::class)->findBy([]));
+        $user = new User('deleteAll', 'deleteAll@deleteAll.com');
+        $this->userManager->update($user);
+        $user = new User('deleteAll2', 'deleteAll2@deleteAll.com');
+        $this->userManager->update($user);
+        $this->assertCount(2, $this->documentManager->getRepository(User::class)->findBy([]));
+        $this->userManager->deleteAll();
+        $this->assertCount(0, $this->documentManager->getRepository(User::class)->findBy([]));
     }
 
+    /**
+     * @uses ATS\CoreBundle\Repository\BaseDocumentRepository::save
+     * @uses ATS\CoreBundle\Repository\BaseDocumentRepository::deleteAll
+     *
+     * @return void
+     */
     public function testGetAll()
     {
-        $manager = $this->createMock(AbstractManager::class);
-        $manager->expects($this->any())
-            ->method('getAll')
-            ->willReturn($this->object);
-
-        $this->assertEquals($this->object, $manager->getAll());
+        $this->userManager->deleteAll();
+        $user = new User('getAll', 'getAll@test.com');
+        $user->setUsername('getAll');
+        $this->userManager->update($user);
+        $this->assertCount(1, $this->userManager->getAll());
+        $user = new User('getAll2', 'getAll2@test.com');
+        $user->setUsername('getAll2');
+        $this->userManager->update($user);
+        $this->assertCount(2, $this->userManager->getAll());
+        $this->assertEquals("getAll", $this->userManager->getAll()[0]->getUsername());
+        $this->assertEquals("getAll2", $this->userManager->getAll()[1]->getUsername());
     }
 
+    /**
+     * @uses ATS\CoreBundle\Repository\BaseDocumentRepository::save
+     * @uses ATS\CoreBundle\Repository\BaseDocumentRepository::deleteAll
+     *
+     * @return void
+     */
     public function testGetBy()
     {
-        $manager = $this->createMock(AbstractManager::class);
-        $manager->expects($this->any())
-            ->method('getBy')
-            ->willReturn($this->object);
-
-        $this->assertEquals($this->object, $manager->getBy(['firstAttr' => 1]));
+        $this->userManager->deleteAll();
+        $user = new User();
+        $user->setUsername('getBy');
+        $this->userManager->update($user);
+        $users = $this->userManager->getBy(['username' => "getBy"]);
+        $this->assertCount(1, $users);
     }
 
+    /**
+     * @uses ATS\CoreBundle\Repository\BaseDocumentRepository::save
+     * @uses ATS\CoreBundle\Repository\BaseDocumentRepository::deleteAll
+     *
+     * @return void
+     */
     public function testGetOneBy()
     {
-        $manager = $this->createMock(AbstractManager::class);
-        $manager->expects($this->any())
-            ->method('getOneBy')
-            ->willReturn($this->object);
-
-        $this->assertEquals($this->object, $manager->getOneBy(['id' => 1]));
+        $this->userManager->deleteAll();
+        $user = new User('user1', 'user1');
+        $user->setActive(true);
+        $this->userManager->update($user);
+        $user = new User('user2', 'user2');
+        $user->setActive(true);
+        $this->userManager->update($user);
+        $user = new User('user3', 'user3');
+        $user->setUsername('user3');
+        $user->setActive(false);
+        $this->userManager->update($user);
+        $users = $this->userManager->getBy(['active' => true]);
+        $this->assertCount(2, $users);
+        $users = $this->userManager->getBy(['active' => false]);
+        $this->assertCount(1, $users);
+        $this->assertEquals('user3', $users[0]->getUsername());
     }
 
+
+    /**
+     * @uses ATS\CoreBundle\Repository\BaseDocumentRepository::deleteAll
+     *
+     * @return void
+     */
+    public function testBatchUpdate()
+    {
+        $this->userManager->deleteAll();
+        $users = [];
+        for ($i = 0; $i < 50; $i++) {
+            $users[] = new User("user$i", "user$i@test.com");
+        }
+
+        $this->assertCount(50, $users);
+        $this->userManager->batchUpdate($users);
+
+        $fetched = $this->userManager->getAll();
+        $this->assertCount(50, $fetched);
+
+    }
     /**
      * {@inheritDoc}
      */
@@ -115,6 +223,6 @@ class AbstractManagerTest extends KernelTestCase
         parent::tearDown();
 
         $this->documentManager->close();
-        $this->documentManager = null; // avoid memory leaks
+        $this->documentManager = null;
     }
 }

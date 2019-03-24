@@ -56,7 +56,7 @@ class ExtractTranslationKeysCommand extends BaseCommand
 
             $translationEntries = $this->manager->getAll();
             $availableKeys = array_map(
-                function ($entry) {
+                function (TranslationEntry $entry) {
                     return $entry->getKey();
                 },
                 $translationEntries
@@ -64,7 +64,7 @@ class ExtractTranslationKeysCommand extends BaseCommand
 
             $newEntries = [];
             foreach ($translationKeys as $newKey) {
-                if (!in_array($newKey, $availableKeys)) {
+                if (in_array($newKey, $availableKeys) === false) {
                     $this->output->writeln($newKey);
                     $newEntries[] = new TranslationEntry($newKey);
                 }

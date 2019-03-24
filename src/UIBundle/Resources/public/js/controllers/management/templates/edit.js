@@ -1,0 +1,89 @@
+(function (angular) {
+    angular.module('leadwireApp')
+        .controller('EditTemplateController', [
+            'TemplateService',
+            'ApplicationTypeFactory',
+            'toastr',
+            'CONFIG',
+            'MESSAGES_CONSTANTS',
+            '$state',
+            EditTemplateCtrlFN,
+        ]);
+
+    /**
+     * Handle add new template logic
+     *
+     */
+    function EditTemplateCtrlFN (
+        TemplateService,
+        ApplicationTypeFactory,
+        toastr,
+        CONSTANTS,
+        MESSAGES_CONSTANTS,
+        $state,
+    ) {
+        var vm = this;
+
+        /**
+         *
+         * @param {"isLoading","isSaving"} key
+         */
+        vm.flipActivityIndicator = function (key) {
+            vm.ui[key] = !vm.ui[key];
+        };
+
+        vm.getTemplate = function (id) {
+            vm.flipActivityIndicator('isLoading');
+            TemplateService.find(id)
+                .then(function (template) {
+                    if (template === null) {
+                        throw new Error();
+                    }
+                    vm.flipActivityIndicator('isLoading');
+                    vm.template = template;
+                })
+                .catch(function () {
+                    vm.flipActivityIndicator('isLoading');
+                    $state.go('app.management.templates');
+                });
+        };
+
+        vm.handleOnSubmit = function () {
+            vm.flipActivityIndicator('isSaving');
+            TemplateService.update(vm.template)
+                .then(function () {
+                    vm.flipActivityIndicator('isSaving');
+                    toastr.success(MESSAGES_CONSTANTS.SUCCESS);
+                    $state.go('app.management.templates');
+                })
+                .catch(function (error) {
+                    vm.flipActivityIndicator('isSaving');
+                    toastr.error(error.message || MESSAGES_CONSTANTS.ERROR);
+                });
+        };
+
+        vm.init = function () {
+            var templateId = $state.params.id;
+            vm = angular.extend(vm, {
+                ui: {
+                    isLoading: false,
+                    isSaving: false,
+                    editor: {
+                        options: {
+                            mode: 'code',
+                        },
+                    },
+                },
+                templateId: templateId,
+                template: null,
+                applicationTypes: [],
+            });
+            ApplicationTypeFactory.findAll()
+                .then(function (response) {
+                    vm.applicationTypes = response.data;
+                });
+            vm.getTemplate(templateId);
+        };
+
+    }
+})(window.angular);

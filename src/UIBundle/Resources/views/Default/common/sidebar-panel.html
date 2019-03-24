@@ -1,0 +1,43 @@
+<div class="brand">
+
+    <!-- logo -->
+    <a class="brand-logo" data-ng-click="brandRedirectTo()">
+        <img data-ng-src="images/logo.png" height="30" alt="">
+    </a>
+    <!-- /logo -->
+
+    <!-- toggle small sidebar menu -->
+    <a href="javascript:;" class="toggle-sidebar hidden-xs hamburger-icon v3"
+       data-ng-click="app.layout.isSmallSidebar = !app.layout.isSmallSidebar">
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+    </a>
+    <!-- /toggle small sidebar menu -->
+
+</div>
+<!-- main navigation -->
+<nav role="navigation" side-navigation>
+    <ul class="nav">
+        <li class="text-center" ng-if="isChangingContext">
+            <spinner is-loading="true" size="32" color="'antiquewhite'"></spinner>
+        </li>
+        <li ng-repeat="menu in menus track by $index"
+            ng-if="!isChangingContext"
+            ui-sref-active="active">
+            <a ng-href="[[menu.route]]">
+                <i class="[[menu.icon]]"></i>
+                <span>[[menu.label]]</span>
+            </a>
+        </li>
+        <li ng-if="!isChangingContext && state.includes('app.dashboard')">
+            <a ui-sref="app.dashboard.customDashboard">
+                <i class="fa fa-file-text"></i>
+                <span>Custom</span>
+            </a>
+        </li>
+    </ul>
+</nav>
+<!-- main navigation -->
+<!-- /main navigation -->

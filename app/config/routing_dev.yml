@@ -12,15 +12,3 @@ _errors:
 
 _main:
     resource: routing.yml
-
-#    /%internal_api_prefix%/doc/{area}
-app.swagger_ui:
-    path: /doc/{area}
-    methods: GET
-    defaults: { _controller: nelmio_api_doc.controller.swagger_ui, area: default }
-
-client_bootstrapper:
-    resource: "@ClientBootstrapperBundle/Resources/config/routing.yml"
-    prefix:   "/"
-    host:     "%app_domain%"
-    schemes:  "%app_schemes%"

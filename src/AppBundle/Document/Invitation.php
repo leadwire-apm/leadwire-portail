@@ -1,18 +1,16 @@
-<?php declare(strict_types=1);
+<?php declare (strict_types = 1);
 
 namespace AppBundle\Document;
 
+use AppBundle\Document\Application;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 use JMS\Serializer\Annotation as JMS;
-use ATS\CoreBundle\Annotation as ATS;
-use AppBundle\Document\App;
 
 /**
  * @ODM\Document(repositoryClass="AppBundle\Repository\InvitationRepository")
  * @ODM\HasLifecycleCallbacks
  * @ODM\ChangeTrackingPolicy("DEFERRED_EXPLICIT")
  * @JMS\ExclusionPolicy("all")
- * @ATS\ApplicationView
  */
 class Invitation
 {
@@ -26,14 +24,13 @@ class Invitation
     private $id;
 
     /**
-     * @var App
+     * @var Application
      *
-     * @ODM\ReferenceOne(targetDocument="AppBundle\Document\App", name="app", cascade={"persist"}, inversedBy="invitations")
-     * @JMS\Type("AppBundle\Document\App")
+     * @ODM\ReferenceOne(targetDocument="AppBundle\Document\Application", name="app", cascade={"persist"}, inversedBy="invitations", storeAs="dbRef")
+     * @JMS\Type("AppBundle\Document\Application")
      * @JMS\Expose
-     * @JMS\Groups({"Default", "full"})
      */
-    private $app;
+    private $application;
 
     /**
      * @var string
@@ -41,18 +38,15 @@ class Invitation
      * @ODM\Field(type="string", name="email")
      * @JMS\Type("string")
      * @JMS\Expose
-     * @JMS\Groups({"Default"})
      */
     private $email;
-
 
     /**
      * @var User
      *
-     * @ODM\ReferenceOne(targetDocument="AppBundle\Document\User", name="user", cascade={"persist"}, inversedBy="otherApps")
+     * @ODM\ReferenceOne(targetDocument="AppBundle\Document\User", name="user", cascade={"persist"}, inversedBy="otherApps", storeAs="dbRef")
      * @JMS\Type("AppBundle\Document\User")
      * @JMS\Expose
-     * @JMS\Groups({"full"})
      */
     private $user = null;
 
@@ -62,10 +56,8 @@ class Invitation
      * @ODM\Field(type="boolean", name="isPending")
      * @JMS\Type("boolean")
      * @JMS\Expose
-     * @JMS\Groups({"Default"})
      */
-    private $isPending = true;
-
+    private $pending = true;
 
     /**
      * Constructor
@@ -88,22 +80,23 @@ class Invitation
     /**
      * Get app
      *
-     * @return App
+     * @return Application
      */
-    public function getApp()
+    public function getApplication()
     {
-        return $this->app;
+        return $this->application;
     }
 
     /**
      * Set app
-     * @param App
+     * @param Application $application
      *
      * @return Invitation
      */
-    public function setApp(App $app)
+    public function setApplication(Application $application)
     {
-        $this->app = $app;
+        $this->application = $application;
+
         return $this;
     }
 
@@ -119,7 +112,7 @@ class Invitation
 
     /**
      * Set email
-     * @param string
+     * @param string $email
      *
      * @return Invitation
      */
@@ -130,24 +123,25 @@ class Invitation
     }
 
     /**
-     * Get isPending
+     * Get pending
      *
      * @return bool
      */
-    public function getIsPending()
+    public function isPending()
     {
-        return $this->isPending;
+        return $this->pending;
     }
 
     /**
-     * Set isPending
-     * @param bool
+     * Set pending
+     * @param bool $pending
      *
      * @return Invitation
      */
-    public function setIsPending($isPending)
+    public function setPending($pending)
     {
-        $this->isPending = $isPending;
+        $this->pending = $pending;
+
         return $this;
     }
 
@@ -163,7 +157,7 @@ class Invitation
 
     /**
      * Set user
-     * @param User
+     * @param User $user
      *
      * @return Invitation
      */

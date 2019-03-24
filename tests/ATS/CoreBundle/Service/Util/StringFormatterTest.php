@@ -9,10 +9,10 @@ class StringFormatterTest extends TestCase
 {
     public function testHumanizeDuration()
     {
-        $this->assertEquals("0:0:1", StringFormatter::humanizeDuration(1000));
-        $this->assertEquals("0:0:10", StringFormatter::humanizeDuration(10000));
-        $this->assertEquals("0:1:0", StringFormatter::humanizeDuration(60000));
-        $this->assertEquals("1:0:0", StringFormatter::humanizeDuration(3600000));
+        $this->assertEquals("00:00:01", StringFormatter::humanizeDuration(1000));
+        $this->assertEquals("00:00:10", StringFormatter::humanizeDuration(10000));
+        $this->assertEquals("00:01:00", StringFormatter::humanizeDuration(60000));
+        $this->assertEquals("01:00:00", StringFormatter::humanizeDuration(3600000));
     }
 
     public function testHumanizeMemorySize()

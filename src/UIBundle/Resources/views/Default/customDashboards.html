@@ -1,0 +1,35 @@
+<div class="">
+    <a ui-sref="app.dashboard.manageDashboard({tenant:'user_' + ctrl.currentUserUuid})"
+       class="btn btn-primary pull-right ml10 ">
+        Add private dashboard </a>
+    <a ui-sref="app.dashboard.manageDashboard({tenant:'shared_' + ctrl.selectedAppUuid})"
+       class="btn btn-primary pull-right ml10 ">
+        Add shared dashboard</a>
+    <h4>Custom Dashboard</h4>
+    <hr>
+</div>
+
+<div class="col-sm-12 col-md-12 col-xs-12">
+    <div ng-if="ctrl.isLoading" class="text-center m-b--15">
+        <spinner is-loading="ctrl.isLoading" size="32"></spinner>
+    </div>
+
+    <div ng-if="!ctrl.themeList.length && !ctrl.isLoading" class="alert alert-info text-center">
+        <h4>
+            No Dashboard yet.
+        </h4>
+    </div>
+    <div ng-repeat="theme in ctrl.themeList" class="col-md-6 col-sm-6 col-xs-12">
+        <h3>[[theme.name]]</h3>
+        <ul class="list-group">
+            <a class="list-group-item" ng-repeat="dashboard in theme.dashboards"
+               ui-sref="app.dashboard.home({id:dashboard.id,tenant:dashboard.tenant})">
+                <i class="pull-right"
+                   style="font-size: medium;padding: .2em 10px .3em"
+                   ng-class="{'fa fa-lock label label-danger':dashboard.private,'fa fa-unlock label label-info':!dashboard.private}">
+                </i>
+                <span class="btn btn-link ">[[dashboard.name]]</span>
+            </a>
+        </ul>
+    </div>
+</div>

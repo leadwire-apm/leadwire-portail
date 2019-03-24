@@ -2,12 +2,28 @@
 
 namespace Tests\ATS\TranslationBundle\Repository;
 
-use ATS\TranslationBundle\Document\TranslationEntry;
-use ATS\TranslationBundle\Manager\TranslationEntryManager;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use ATS\TranslationBundle\Document\TranslationEntry;
+use Doctrine\ODM\MongoDB\DocumentManager;
+use Doctrine\Bundle\MongoDBBundle\ManagerRegistry;
 
+/**
+ * TranslationEntryManagerTest
+ *
+ * @author Mohamed BEN ABDA <mbenabda@ats-digital.com>
+ */
 class TranslationEntryRepositoryTest extends KernelTestCase
 {
+    /**
+     * @var DocumentManager
+     */
+    private $documentManager;
+
+    /**
+     * @var ManagerRegistry
+     */
+    private $documentRegistry;
+
     /**
      * {@inheritDoc}
      */
@@ -16,36 +32,38 @@ class TranslationEntryRepositoryTest extends KernelTestCase
         $kernel = self::bootKernel();
 
         $this->documentRegistry = $kernel->getContainer()->get('doctrine_mongodb');
-        $this->appCache = $kernel->getContainer()->get('cache.app');
         $this->documentManager = $kernel->getContainer()
             ->get('doctrine_mongodb')
             ->getManager();
 
-        $this->object = new TranslationEntry('someKey', ['fr' => 'Une Valeur', 'en' => 'A Value']);
-        $this->documentManager->persist($this->object);
-        $this->documentManager->flush();
-
-        $this->tem = new TranslationEntryManager($this->documentRegistry, $this->appCache);
+        $this->documentManager->getSchemaManager()->dropDatabases();
     }
 
+    /**
+     * Test Get All Keys
+     *
+     * @uses ATS\TranslationBundle\Document\TranslationEntry::__construct
+     */
     public function testGetAllKeys()
     {
-        $this->tem->deleteAll();
+        $firstTranslation = new TranslationEntry('firstKey', ['fr' => 'Premier', 'en' => 'First']);
+        $this->documentManager->persist($firstTranslation);
 
-        $translationEntry = new TranslationEntry();
-        $translationEntry->setKey('someKey')
-            ->setValues([
-                'fr' => 'Une Valeur',
-                'en' => 'A Value',
-            ]);
+        $secondTranslation = new TranslationEntry('secondKey', ['fr' => 'Deuxième', 'en' => 'Second']);
+        $this->documentManager->persist($secondTranslation);
 
-        $this->tem->update($translationEntry);
+        $this->documentManager->flush();
 
-        $keys = $this->documentManager->getRepository(TranslationEntry::class)->getAllKeys();
-        $this->assertCount(1, $keys);
-        $this->assertCount(2, $keys[0]);
-        $this->assertEquals('someKey', $keys[0]['key']);
+        $translationEntries = $this->documentManager
+            ->getRepository(TranslationEntry::class)
+            ->getAllKeys()
+        ;
+
+        $this->assertCount(2, $translationEntries);
+
+        $this->documentManager->getSchemaManager()->dropDatabases();
     }
+
     /**
      * {@inheritDoc}
      */

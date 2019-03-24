@@ -1,0 +1,77 @@
+<div class="form-group">
+    <label class="col-sm-2 control-label" for="name">Name *</label>
+    <div class="col-sm-10">
+
+        <input id="name" name="name" placeholder="Plan name" type="text"
+               class="form-control"
+               data-ng-model="ctrl.plan.name"
+               required>
+        <span class="text-red"
+              ng-show="planForm.name.$error.required && !planForm.name.$pristine">
+            This field is required</span>
+    </div>
+</div>
+
+
+<div class="form-group">
+    <label class="col-sm-2 control-label" for="retention">Retention *</label>
+    <div class="col-sm-10">
+
+        <input id="retention" name="retention" placeholder="Plan retention"
+               type="number"
+               class="form-control"
+               data-ng-model="ctrl.plan.retention"
+               required>
+        <span class="text-red"
+              ng-show="planForm.retention.$error.required && !planForm.retention.$pristine">
+            This field is required</span>
+    </div>
+</div>
+
+
+<div class="form-group">
+    <label class="col-sm-2 control-label" for="maxTransactionPerDay">Max transaction per
+        day *</label>
+    <div class="col-sm-10">
+
+        <input id="maxTransactionPerDay" name="maxTransactionPerDay"
+               placeholder="Max transaction per day"
+               type="number"
+               class="form-control"
+               data-ng-model="ctrl.plan.maxTransactionPerDay"
+               required>
+        <span class="text-red"
+              ng-show="planForm.maxTransactionPerDay.$error.required && !planForm.maxTransactionPerDay.$pristine">
+            This field is required</span>
+    </div>
+</div>
+
+
+<div class="form-group">
+    <label class="col-sm-2 control-label" for="price">Price *</label>
+    <div class="col-sm-10">
+
+        <input id="price" name="price" placeholder="Plan price"
+               type="number"
+               class="form-control"
+               data-ng-model="ctrl.plan.price"
+               required>
+        <span class="text-red"
+              ng-show="planForm.price.$error.required && !planForm.price.$pristine">
+            This field is required</span>
+    </div>
+</div>
+
+<div class="form-group">
+    <label class="col-sm-2 control-label" for="discount">Discount *</label>
+    <div class="col-sm-10">
+
+        <input id="discount" name="discount" placeholder="Plan discount"
+               type="number"
+               class="form-control"
+               data-ng-model="ctrl.plan.discount">
+        <span class="text-red"
+              ng-show="planForm.discount.$error.required && !planForm.discount.$pristine">
+            This field is required</span>
+    </div>
+</div>

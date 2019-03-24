@@ -1,9 +1,7 @@
 translation_rest:
     resource: "@TranslationBundle/Controller/Rest/TranslationEntryController.php"
-    type: "rest"
+    type: "annotation"
     prefix: "/core/%internal_api_prefix%/translation"
-    options:
-        expose: true
 
 translation:
     resource: "@TranslationBundle/Controller/DefaultController.php"

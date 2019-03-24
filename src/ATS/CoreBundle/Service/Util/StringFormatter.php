@@ -6,7 +6,7 @@ class StringFormatter
 {
 
     /**
-     * @param int $millis
+     * @param int|float $millis
      *
      * @return string
      */
@@ -15,6 +15,10 @@ class StringFormatter
         $hours = floor($millis / 1000 / 60 / 60);
         $minutes = floor(($millis / 1000 / 60) - ($hours * 60));
         $seconds = floor(($millis / 1000) - $minutes * 60 - $hours * 60 * 60);
+
+        $hours = $hours < 10 ? "0".$hours : $hours;
+        $minutes = $minutes < 10 ? "0".$minutes : $minutes;
+        $seconds = $seconds < 10 ? "0".$seconds : $seconds;
 
         return "{$hours}:{$minutes}:{$seconds}";
     }

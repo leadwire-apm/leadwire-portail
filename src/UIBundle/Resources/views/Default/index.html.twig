@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html class="no-js" data-ng-app="leadwireApp">
+<head>
+    <meta charset="utf-8">
+    <title>Lead Wire APM</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="yes"/>
+
+    <link rel="apple-touch-icon" sizes="57x57" ng-href="images/favicon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" ng-href="images/favicon/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" ng-href="images/favicon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" ng-href="images/favicon/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" ng-href="images/favicon/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" ng-href="images/favicon/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" ng-href="images/favicon/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" ng-href="images/favicon/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" ng-href="images/favicon/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192" ng-href="images/favicon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" ng-href="images/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" ng-href="images/favicon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" ng-href="images/favicon/favicon-16x16.png">
+    <link rel="manifest" ng-href="images/favicon/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="theme-color" content="#ffffff">
+    <meta name="msapplication-TileImage" ng-content="images/favicon/android-icon-144x144.png">
+    <meta id="load_styles_before">
+
+
+    {% stylesheets 'bundles/ui/css/*' %}
+        <link rel="stylesheet" href="{{ asset_url }}"/>
+    {% endstylesheets %}
+    <link rel="stylesheet" href="bundles/ui/css/custom.css"/>
+
+</head>
+<body data-ng-controller="AppCtrl" class="[[ app.layout.sidebarTheme ]] [[ app.layout.headerTheme ]]">
+
+<script type="text/ng-template" id="directives/toggle-offscreen.html">
+    {% include 'directives/toggle-offscreen.html' %}
+</script>
+<script type="text/ng-template" id="architectureDiscovery.html">
+    {% include 'architectureDiscovery.html' %}
+</script>
+<script type="text/ng-template" id="profile.html">
+    {% include 'profile.html' %}
+</script>
+<script type="text/ng-template" id="billingEngagementChoices.html">
+    {% include 'billingEngagementChoices.html' %}
+</script>
+<script type="text/ng-template" id="extras-signin.html">
+    {% include 'extras-signin.html' %}
+</script>
+<script type="text/ng-template" id="toc.html">
+    {% include 'toc.html' %}
+</script>
+<script type="text/ng-template" id="billingList.html">
+    {% include 'billingList.html' %}
+</script>
+<script type="text/ng-template" id="customReports.html">
+    {% include 'customReports.html' %}
+</script>
+<script type="text/ng-template" id="pricing.html">
+    {% include 'pricing.html' %}
+</script>
+<script type="text/ng-template" id="profileForm.html">
+    {% include 'profileForm.html' %}
+</script>
+<script type="text/ng-template" id="billing.html">
+    {% include 'billing.html' %}
+</script>
+<script type="text/ng-template" id="advices.html">
+    {% include 'advices.html' %}
+</script>
+<script type="text/ng-template" id="realUserMonitoring.html">
+    {% include 'realUserMonitoring.html' %}
+</script>
+<script type="text/ng-template" id="syntheticMonitoring.html">
+    {% include 'syntheticMonitoring.html' %}
+</script>
+<script type="text/ng-template" id="billingForm.html">
+    {% include 'billingForm.html' %}
+</script>
+<script type="text/ng-template" id="dashboard.html">
+    {% include 'dashboard.html' %}
+</script>
+<script type="text/ng-template" id="updateSubscription.html">
+    {% include 'updateSubscription.html' %}
+</script>
+<script type="text/ng-template" id="customDashboards.html">
+    {% include 'customDashboards.html' %}
+</script>
+<script type="text/ng-template" id="common/layout.html">
+    {% include 'common/layout.html' %}
+</script>
+<script type="text/ng-template" id="common/quick-launch-panel.html">
+    {% include 'common/quick-launch-panel.html' %}
+</script>
+<script type="text/ng-template" id="common/chat-panel.html">
+    {% include 'common/chat-panel.html' %}
+</script>
+<script type="text/ng-template" id="common/options.html">
+    {% include 'common/options.html' %}
+</script>
+<script type="text/ng-template" id="common/footer.html">
+    {% include 'common/footer.html' %}
+</script>
+<script type="text/ng-template" id="common/application-sidebar.html">
+    {% include 'common/application-sidebar.html' %}
+</script>
+<script type="text/ng-template" id="common/session.html">
+    {% include 'common/session.html' %}
+</script>
+<script type="text/ng-template" id="common/header.html">
+    {% include 'common/header.html' %}
+</script>
+<script type="text/ng-template" id="common/sidebar-panel.html">
+    {% include 'common/sidebar-panel.html' %}
+</script>
+<script type="text/ng-template" id="pricingTable.html">
+    {% include 'pricingTable.html' %}
+</script>
+<script type="text/ng-template" id="tos.html">
+    {% include 'tos.html' %}
+</script>
+<script type="text/ng-template" id="wizard.html">
+    {% include 'wizard.html' %}
+</script>
+<script type="text/ng-template" id="dataBrowser.html">
+    {% include 'dataBrowser.html' %}
+</script>
+<script type="text/ng-template" id="billingTotals.html">
+    {% include 'billingTotals.html' %}
+</script>
+<script type="text/ng-template" id="static/aboutUs.html">
+    {% include 'static/aboutUs.html' %}
+</script>
+<script type="text/ng-template" id="static/help.html">
+    {% include 'static/help.html' %}
+</script>
+<script type="text/ng-template" id="static/layout.html">
+    {% include 'static/layout.html' %}
+</script>
+<script type="text/ng-template" id="static/privacyPolicy.html">
+    {% include 'static/privacyPolicy.html' %}
+</script>
+<script type="text/ng-template" id="static/termsOfService.html">
+    {% include 'static/termsOfService.html' %}
+</script>
+<script type="text/ng-template" id="static/termsOfContract.html">
+    {% include 'static/termsOfContract.html' %}
+</script>
+<script type="text/ng-template" id="businessTransactions.html">
+    {% include 'businessTransactions.html' %}
+</script>
+<script type="text/ng-template" id="editPaymentMethod.html">
+    {% include 'editPaymentMethod.html' %}
+</script>
+<script type="text/ng-template" id="billingTips.html">
+    {% include 'billingTips.html' %}
+</script>
+<script type="text/ng-template" id="administration/visualisations.html">
+    {% include 'administration/visualisations.html' %}
+</script>
+<script type="text/ng-template" id="administration/reports.html">
+    {% include 'administration/reports.html' %}
+</script>
+<script type="text/ng-template" id="application/listInvitations.html">
+    {% include 'application/listInvitations.html' %}
+</script>
+<script type="text/ng-template" id="application/form.html">
+    {% include 'application/form.html' %}
+</script>
+<script type="text/ng-template" id="application/stats.html">
+    {% include 'application/stats.html' %}
+</script>
+<script type="text/ng-template" id="application/list.html">
+    {% include 'application/list.html' %}
+</script>
+<script type="text/ng-template" id="application/add.html">
+    {% include 'application/add.html' %}
+</script>
+<script type="text/ng-template" id="application/applicationInfo.html">
+    {% include 'application/applicationInfo.html' %}
+</script>
+<script type="text/ng-template" id="application/edit.html">
+    {% include 'application/edit.html' %}
+</script>
+<script type="text/ng-template" id="application/detail.html">
+    {% include 'application/detail.html' %}
+</script>
+<script type="text/ng-template" id="application/installation.html">
+    {% include 'application/installation.html' %}
+</script>
+<script type="text/ng-template" id="application/enable.html">
+    {% include 'application/enable.html' %}
+</script>
+<script type="text/ng-template" id="manageDashboards.html">
+    {% include 'manageDashboards.html' %}
+</script>
+<script type="text/ng-template" id="management/users/users.html">
+    {% include 'management/users/users.html' %}
+</script>
+<script type="text/ng-template" id="management/users/userDetail.html">
+    {% include 'management/users/userDetail.html' %}
+</script>
+<script type="text/ng-template" id="management/users/userPlans.html">
+    {% include 'management/users/userPlans.html' %}
+</script>
+<script type="text/ng-template" id="management/users/userApplications.html">
+    {% include 'management/users/userApplications.html' %}
+</script>
+
+
+<script type="text/ng-template" id="management/plans/list.html">
+    {% include 'management/plans/list.html' %}
+</script>
+<script type="text/ng-template" id="management/plans/form.html">
+    {% include 'management/plans/form.html' %}
+</script>
+<script type="text/ng-template" id="management/plans/add.html">
+    {% include 'management/plans/add.html' %}
+</script>
+<script type="text/ng-template" id="management/plans/edit.html">
+    {% include 'management/plans/edit.html' %}
+</script>
+
+<script type="text/ng-template" id="management/applications/list.html">
+    {% include 'management/applications/list.html' %}
+</script>
+<script type="text/ng-template" id="management/applications/detail.html">
+    {% include 'management/applications/detail.html' %}
+</script>
+<script type="text/ng-template" id="management/applications/stats.html">
+    {% include 'management/applications/stats.html' %}
+</script>
+
+{#Application types#}
+
+<script type="text/ng-template" id="management/applicationTypes/list.html">
+    {% include 'management/applicationTypes/list.html' %}
+</script>
+
+<script type="text/ng-template" id="management/applicationTypes/add.html">
+    {% include 'management/applicationTypes/add.html' %}
+</script>
+
+<script type="text/ng-template" id="management/applicationTypes/edit.html">
+    {% include 'management/applicationTypes/edit.html' %}
+</script>
+
+<script type="text/ng-template" id="management/applicationTypes/form.html">
+    {% include 'management/applicationTypes/form.html' %}
+</script>
+
+<script type="text/ng-template" id="management/templates/list.html">
+    {% include 'management/templates/list.html' %}
+</script>
+<script type="text/ng-template" id="management/templates/add.html">
+    {% include 'management/templates/add.html' %}
+</script>
+<script type="text/ng-template" id="management/templates/edit.html">
+    {% include 'management/templates/edit.html' %}
+</script>
+
+<script type="text/ng-template" id="management/templates/form.html">
+    {% include 'management/templates/form.html' %}
+</script>
+
+<script type="text/ng-template" id="management/codes/list.html">
+    {% include 'management/codes/list.html' %}
+</script>
+
+
+
+
+<script type="text/ng-template" id="infrastructureMonitoring.html">
+    {% include 'infrastructureMonitoring.html' %}
+</script>
+<script type="text/ng-template" id="alerts.html">
+    {% include 'alerts.html' %}
+</script>
+
+<!-- quick launch panel -->
+<div class="quick-launch-panel" ng-include="'common/quick-launch-panel.html'"></div>
+<!-- /quick launch panel -->
+
+<div class="app [[$state.current.data.appClasses]]"
+     data-ng-class="{'layout-small-menu': app.layout.isSmallSidebar,
+            'layout-chat-open': app.layout.isChatOpen,
+            'layout-fixed-header': app.layout.isFixedHeader,
+            'layout-boxed': app.layout.isBoxed,
+            'layout-static-sidebar': app.layout.isStaticSidebar,
+            'layout-right-sidebar': app.layout.isRightSidebar,
+            'layout-fixed-footer': app.layout.isFixedFooter,
+            'message-open': app.isMessageOpen,
+            'login-page':isLogin}"
+     data-ui-view>
+</div>
+{% block javascripts %}
+    <script type="text/javascript">
+        APP_VERSION = '{{ APP_VERSION }}';
+        BASE_URL = '{{ BASE_URL }}';
+        ASSETS_BASE_URL = '{{ ASSETS_BASE_URL }}';
+        UPLOAD_URL = '{{ UPLOAD_URL }}';
+        DOWNLOAD_URL = '{{ DOWNLOAD_URL }}';
+        GITHUB_CLIENT_ID = '{{ GITHUB_CLIENT_ID }}';
+        KIBANA_BASE_URL = '{{ KIBANA_BASE_URL }}';
+        DATE_DEFAULT_FORMAT = '{{ DATE_DEFAULT_FORMAT }}';
+        EN_DATE_FORMAT = '{{ EN_DATE_FORMAT }}';
+        FR_DATE_FORMAT = '{{ FR_DATE_FORMAT }}';
+        TAX = '{{ TAX }}';
+    </script>
+
+    {% javascripts
+        'bundles/ui/js/extensions/polyfills.js'
+        'bundles/ui/js/extensions/modernizr.js'
+        'bundles/ui/js/lib/jquery.min.js'
+        'bundles/ui/js/lib/angular.min.js'
+        'bundles/ui/js/lib/bootstrap.min.js'
+        'bundles/ui/js/lib/angular-animate.min.js'
+        'bundles/ui/js/lib/angular-touch.min.js'
+        'bundles/ui/js/lib/ngStorage.min.js'
+        'bundles/ui/js/lib/satellizer.min.js'
+        'bundles/ui/js/lib/ui-bootstrap-tpls.min.js'
+
+        'bundles/ui/js/lib/ui-utils.min.js'
+        'bundles/ui/js/lib/angular-cookies.min.js'
+        'bundles/ui/js/lib/angular-sanitize.min.js'
+        'bundles/ui/js/lib/angular-ui-router.min.js'
+        'bundles/ui/js/lib/ocLazyLoad.min.js'
+        'bundles/ui/js/lib/toastr.min.js'
+        'bundles/ui/js/lib/angular-toastr.tpls.min.js'
+        'bundles/ui/js/lib/simplemde-angular.js'
+        'bundles/ui/js/lib/jsoneditor.min.js'
+        'bundles/ui/js/lib/jsoneditor-angular.js'
+
+        'bundles/ui/js/lib/ui-utils-ieshiv.min.js'
+        'bundles/ui/js/lib/perfect-scrollbar.jquery.js'
+        'bundles/ui/js/lib/chosen.jquery.min.js'
+        'bundles/ui/js/lib/jquery.noty.packaged.min.js'
+        'bundles/ui/js/lib/jquery.card.js'
+        'bundles/ui/js/lib/jquery.validate.min.js'
+        'bundles/ui/js/lib/jquery.bootstrap.wizard.min.js'
+        'bundles/ui/js/lib/simplemde.min.js'
+        'bundles/ui/js/lib/fastclick.js'
+        'bundles/ui/js/extensions/angular-toastr.js'
+        'bundles/ui/js/extensions/showdown.js'
+        'bundles/ui/js/extensions/lib.js'
+        'bundles/ui/js/extensions/noty-defaults.js'
+        'bundles/ui/js/extensions/sweetalert.js'
+        'bundles/ui/js/extensions/moment.min.js'
+        'bundles/ui/js/app.js'
+        'bundles/ui/js/app.main.js'
+
+        'bundles/ui/js/factories/userFactory.js'
+        'bundles/ui/js/factories/httpInterceptorFactory.js'
+        'bundles/ui/js/factories/planFactory.js'
+        'bundles/ui/js/factories/applicationFactory.js'
+        'bundles/ui/js/factories/applicationTypeFactory.js'
+        'bundles/ui/js/factories/countryApi.js'
+        'bundles/ui/js/factories/invitationFactory.js'
+        'bundles/ui/js/factories/menuFactory.js'
+        'bundles/ui/js/factories/codeFactory.js'
+        'bundles/ui/js/factories/templateFactory.js'
+
+        'bundles/ui/js/services/routeGuard.js'
+        'bundles/ui/js/services/applicationService.js'
+        'bundles/ui/js/services/config.js'
+        'bundles/ui/js/services/dashboardService.js'
+        'bundles/ui/js/services/invitationService.js'
+        'bundles/ui/js/services/messages.js'
+        'bundles/ui/js/services/fileService.js'
+        'bundles/ui/js/services/paginator.js'
+        'bundles/ui/js/services/userService.js'
+        'bundles/ui/js/services/planService.js'
+        'bundles/ui/js/services/applicationTypeService.js'
+        'bundles/ui/js/services/codeService.js'
+        'bundles/ui/js/services/templateService.js'
+
+        'bundles/ui/js/directives/anchor-scroll.js'
+        'bundles/ui/js/directives/blacklist.js'
+        'bundles/ui/js/directives/c3.js'
+        'bundles/ui/js/directives/chosen.js'
+        'bundles/ui/js/directives/fileModel.js'
+        'bundles/ui/js/directives/httpsrc.js'
+        'bundles/ui/js/directives/iframe.js'
+        'bundles/ui/js/directives/input.js'
+        'bundles/ui/js/directives/lowercaseOnly.js'
+        'bundles/ui/js/directives/markdown.js'
+        'bundles/ui/js/directives/navigation.js'
+        'bundles/ui/js/directives/offscreen.js'
+        'bundles/ui/js/directives/panel-control-collapse.js'
+        'bundles/ui/js/directives/panel-control-refresh.js'
+        'bundles/ui/js/directives/panel-control-remove.js'
+        'bundles/ui/js/directives/preloader.js'
+        'bundles/ui/js/directives/preventDefault.js'
+        'bundles/ui/js/directives/quick-launch.js'
+        'bundles/ui/js/directives/rickshaw.js'
+        'bundles/ui/js/directives/scrollup.js'
+        'bundles/ui/js/directives/spinner.js'
+        'bundles/ui/js/directives/vector.js'
+
+        'bundles/ui/js/filters/inArray.js'
+
+        'bundles/ui/js/controllers/addApplication.js'
+        'bundles/ui/js/controllers/alerts.js'
+        'bundles/ui/js/controllers/businessTransactions.js'
+        'bundles/ui/js/controllers/dataBrowser.js'
+        'bundles/ui/js/controllers/infrastructureMonitoring.js'
+        'bundles/ui/js/controllers/profile.js'
+        'bundles/ui/js/controllers/updateSubscription.js'
+        'bundles/ui/js/controllers/administration.reports.js'
+        'bundles/ui/js/controllers/application.js'
+        'bundles/ui/js/controllers/customDashboards.js'
+        'bundles/ui/js/controllers/detailApplication.js'
+        'bundles/ui/js/controllers/login.js'
+        'bundles/ui/js/controllers/profileModal.js'
+        'bundles/ui/js/controllers/administration.visualisations.js'
+        'bundles/ui/js/controllers/architectureDiscovery.js'
+        'bundles/ui/js/controllers/customReports.js'
+        'bundles/ui/js/controllers/editApplication.js'
+        'bundles/ui/js/controllers/mainApp.js'
+
+        'bundles/ui/js/controllers/management/users/manageUsers.js'
+        'bundles/ui/js/controllers/management/users/userDetail.js'
+        'bundles/ui/js/controllers/management/applications/manageApplications.js'
+        'bundles/ui/js/controllers/management/applications/detail.js'
+        'bundles/ui/js/controllers/management/plans/list.js'
+        'bundles/ui/js/controllers/management/plans/add.js'
+        'bundles/ui/js/controllers/management/plans/edit.js'
+        'bundles/ui/js/controllers/management/applicationTypes/list.js'
+        'bundles/ui/js/controllers/management/applicationTypes/add.js'
+        'bundles/ui/js/controllers/management/applicationTypes/edit.js'
+        'bundles/ui/js/controllers/management/templates/list.js'
+        'bundles/ui/js/controllers/management/templates/add.js'
+        'bundles/ui/js/controllers/management/templates/edit.js'
+        'bundles/ui/js/controllers/management/codes/list.js'
+
+
+        'bundles/ui/js/controllers/realUserMonitoring.js'
+        'bundles/ui/js/controllers/advices.js'
+        'bundles/ui/js/controllers/billingList.js'
+        'bundles/ui/js/controllers/dashboard.js'
+        'bundles/ui/js/controllers/editPaymentMethod.js'
+        'bundles/ui/js/controllers/manageDashboards.js'
+        'bundles/ui/js/controllers/syntheticMonitoring.js'
+        'bundles/ui/js/config.router.js'
+        'bundles/ui/js/lib/custom.js' %}
+
+    <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+
+
+{% endblock %}
+</body>
+</html>

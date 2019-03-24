@@ -1,20 +1,20 @@
-<?php declare(strict_types=1);
+<?php declare (strict_types = 1);
 
 namespace AppBundle\Controller\Rest;
 
-use AppBundle\Service\AuthService;
+use AppBundle\Document\User;
 use AppBundle\Service\UserService;
-use ATS\CoreBundle\Controller\Rest\BaseRestController;
-use ATS\PaymentBundle\Exception\OmnipayException;
-use FOS\RestBundle\Controller\Annotations\Route;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Response;
+use ATS\CoreBundle\Controller\Rest\RestControllerTrait;
+use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
-class UserController extends BaseRestController
+class UserController extends Controller
 {
+    use RestControllerTrait;
 
     /**
      * @Route("/me", methods="GET")
@@ -24,21 +24,48 @@ class UserController extends BaseRestController
     public function getMeAction()
     {
         $user = $this->getUser();
-        if (!$user) {
+
+        if ($user === null) {
             return $this->exception("Non Authorized", 401);
         }
 
-        return $this->prepareJsonResponse($user, 200, "Default");
+        return $this->renderResponse($user, 200, []);
     }
 
+    /**
+     * @Route("/list/{role}", methods="GET", defaults={"role"="all"}, requirements={"role"="all|admin"})
+     *
+     * @return Response
+     */
+    public function listUsersAction(Request $request, UserService $userService, $role)
+    {
+        $users = $userService->listUsersByRole($role);
+
+        return $this->renderResponse($users, Response::HTTP_OK, []);
+    }
+
+    /**
+     * @Route("/{id}/get", methods="GET")
+     *
+     * @param Request $request
+     * @param UserService $userService
+     * @param string $id
+     *
+     * @return Response
+     */
+    public function getUserAction(Request $request, UserService $userService, $id)
+    {
+        $user = $userService->getUser($id);
+
+        return $this->renderResponse($user);
+    }
 
     /**
      * @Route("/{id}/update", methods="PUT")
      *
      * @param Request $request
      * @param UserService $userService
-     *
-     * @param $id
+     * @param string $id
      * @return Response
      */
     public function updateUserAction(Request $request, UserService $userService, $id)
@@ -46,7 +73,7 @@ class UserController extends BaseRestController
         $data = $request->getContent();
         $successful = $userService->updateUser($data, $id);
 
-        return $this->prepareJsonResponse($successful);
+        return $this->renderResponse($successful);
     }
 
     /**
@@ -54,8 +81,8 @@ class UserController extends BaseRestController
      *
      * @param Request $request
      * @param UserService $userService
+     * @param string $id
      *
-     * @param $id
      * @return Response
      */
     public function subscribeAction(Request $request, UserService $userService, $id)
@@ -64,7 +91,7 @@ class UserController extends BaseRestController
             $data = $request->getContent();
             $successful = $userService->subscribe($data, $this->getUser());
 
-            return $this->prepareJsonResponse($successful);
+            return $this->renderResponse($successful);
         } catch (\Exception $e) {
             return $this->exception($e->getMessage(), 400);
         }
@@ -74,6 +101,7 @@ class UserController extends BaseRestController
      * @Route("/{id}/invoices", methods="GET")
      *
      * @param UserService $userService
+     *
      * @return Response
      */
     public function getInvoicesAction(UserService $userService)
@@ -81,7 +109,7 @@ class UserController extends BaseRestController
         try {
             $data = $userService->getInvoices($this->getUser());
 
-            return $this->prepareJsonResponse($data);
+            return $this->renderResponse($data);
         } catch (\Exception $e) {
             return $this->exception($e->getMessage(), 400);
         }
@@ -91,13 +119,15 @@ class UserController extends BaseRestController
      * @Route("/{id}/subscription", methods="GET")
      *
      * @param UserService $userService
+     *
      * @return Response
      */
     public function getSubscriptionAction(UserService $userService)
     {
         try {
             $data = $userService->getSubscription($this->getUser());
-            return $this->json($data, 200);
+
+            return $this->renderResponse($data);
         } catch (\Exception $e) {
             return $this->exception($e->getMessage(), 400);
         }
@@ -108,7 +138,9 @@ class UserController extends BaseRestController
      *
      * @param Request $request
      * @param UserService $userService
+     *
      * @return Response
+     *
      * @throws BadRequestHttpException
      */
     public function updateSubscriptionAction(Request $request, UserService $userService)
@@ -118,7 +150,8 @@ class UserController extends BaseRestController
                 $this->getUser(),
                 json_decode($request->getContent(), true)
             );
-            return $this->json($data);
+
+            return $this->renderResponse($data);
         } catch (\Exception $e) {
             return $this->exception($e->getMessage(), 400);
         }
@@ -129,7 +162,9 @@ class UserController extends BaseRestController
      *
      * @param Request $request
      * @param UserService $userService
+     *
      * @return Response
+     *
      * @throws BadRequestHttpException
      */
     public function updateCreditCardAction(Request $request, UserService $userService)
@@ -139,7 +174,8 @@ class UserController extends BaseRestController
                 $this->getUser(),
                 json_decode($request->getContent(), true)
             );
-            return $this->json($data);
+
+            return $this->renderResponse($data);
         } catch (\Exception $e) {
             return $this->exception($e->getMessage(), 400);
         }
@@ -147,6 +183,47 @@ class UserController extends BaseRestController
 
     private function exception($message, $status = 400)
     {
-        return new JsonResponse(array('message' => $message), $status);
+        return $this->renderResponse(array('message' => $message), $status);
+    }
+
+    /**
+     * @Route("/{id}/delete", methods="DELETE")
+     *
+     * @param Request $request
+     * @param UserService $userService
+     * @param string $id
+     *
+     * @return Response
+     */
+    public function deleteUserAction(Request $request, UserService $userService, $id)
+    {
+        $this->denyAccessUnlessGranted([User::ROLE_ADMIN, User::ROLE_SUPER_ADMIN]);
+        $successful = $userService->softDeleteUser($id);
+
+        return $this->renderResponse($successful);
+    }
+
+    /**
+     * @Route("/{id}/lock-toggle", methods="PUT")
+     *
+     * @param Request $request
+     * @param UserService $userService
+     * @param string $id
+     *
+     * @return Response
+     */
+    public function lockToggleUserAction(Request $request, UserService $userService, $id)
+    {
+        $this->denyAccessUnlessGranted([User::ROLE_ADMIN, User::ROLE_SUPER_ADMIN]);
+
+        $lockMessage = $request->get("message");
+
+        if ($lockMessage === null) {
+            $lockMessage = $this->getParameter('default_lock_message');
+        }
+
+        $successful = $userService->lockToggle($id, $lockMessage);
+
+        return $this->renderResponse($successful);
     }
 }

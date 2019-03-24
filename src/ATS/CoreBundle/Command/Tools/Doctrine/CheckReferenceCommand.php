@@ -2,31 +2,17 @@
 
 namespace ATS\CoreBundle\Command\Tools\Doctrine;
 
-use ATS\CoreBundle\Command\Base\BaseCommand;
+use Doctrine\Bundle\MongoDBBundle\ManagerRegistry;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Doctrine\ODM\MongoDB\Mapping\ClassMetadata;
+use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\OutputInterface;
 
-class CheckReferenceCommand extends BaseCommand
+class CheckReferenceCommand extends ContainerAwareCommand
 {
     const CMD_NAME = 'ats:core:tools:doctrine:check-reference';
-
-    /**
-     * @var mixed
-     */
-    private $documentsMetadata;
-    /**
-     * @var mixed
-     */
-    private $countOnly;
-    /**
-     * @var mixed
-     */
-    private $force;
-    /**
-     * @var mixed
-     */
-    private $autoFix;
 
     const THRESHOLD = 10000;
     const PAGE_COUNT = 50000;
@@ -38,12 +24,51 @@ class CheckReferenceCommand extends BaseCommand
     /**
      * @var array
      */
+    private $documentsMetadata;
+
+    /**
+     * @var boolean
+     */
+    private $countOnly;
+
+    /**
+     * @var boolean
+     */
+    private $force;
+
+    /**
+     * @var boolean
+     */
+    private $autoRemove;
+
+    /**
+     * @var OutputInterface
+     */
+    private $output;
+
+    /**
+     * @var DocumentManager
+     */
+    private $documentManager;
+
+    /**
+     * @var array
+     */
     private static $levelToTag = [
         self::LEVEL_INFO => 'info',
         self::LEVEL_WARNING => 'comment',
         self::LEVEL_ERROR => 'error',
     ];
 
+    public function __construct(ManagerRegistry $managerRegistry)
+    {
+        $this->documentManager = $managerRegistry->getManager();
+        parent::__construct();
+    }
+
+    /**
+     * @return void
+     */
     protected function configure()
     {
         $this
@@ -51,20 +76,23 @@ class CheckReferenceCommand extends BaseCommand
             ->addOption('collection', 'col', InputOption::VALUE_REQUIRED, 'Specifiy a collection')
             ->addOption('count', 'c', InputOption::VALUE_NONE, 'Display bad refs count only')
             ->addOption('force', 'f', InputOption::VALUE_NONE, 'Ignore threshold (10000)')
-            ->addOption('auto-fix', 'a', InputOption::VALUE_NONE, 'Automatically removes bad references');
+            ->addOption('auto-remove', 'a', InputOption::VALUE_NONE, 'Automatically removes broken references')
+            ->setDescription("Finds all broken DBRefs in the MongoDB database and optionnaly removes them");
     }
 
-    protected function doExecute()
+    /**
+     * @return void
+     */
+    protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $selectedCollection = $this->input->getOption('collection');
-        $this->countOnly = $this->input->getOption('count');
-        $this->force = $this->input->getOption('force');
-        $this->autoFix = $this->input->getOption('auto-fix');
+        $this->output = $output;
 
-        /** @var DocumentManager $documentManager */
-        $documentManager = $this->getContainer()->get('doctrine_mongodb')->getManager();
+        $selectedCollection = $input->getOption('collection');
+        $this->countOnly = (bool) $input->getOption('count');
+        $this->force = (bool) $input->getOption('force');
+        $this->autoRemove = (bool) $input->getOption('auto-remove');
 
-        $metas = $documentManager->getMetadataFactory()->getAllMetadata();
+        $metas = $this->documentManager->getMetadataFactory()->getAllMetadata();
 
         $this->documentsMetadata = [];
 
@@ -73,11 +101,11 @@ class CheckReferenceCommand extends BaseCommand
             $this->documentsMetadata[$metaIdentifier] = $meta;
         }
 
-        if ($selectedCollection != null) {
+        if ($selectedCollection !== null) {
             $scope =
                 array_filter(
                     $this->documentsMetadata,
-                    function ($meta) use ($selectedCollection) {
+                    function (ClassMetadata $meta) use ($selectedCollection) {
                         return (new \ReflectionClass($meta->getName()))->getShortName() == $selectedCollection;
                     }
                 );
@@ -87,8 +115,8 @@ class CheckReferenceCommand extends BaseCommand
 
         foreach ($scope as $className => $classMetadata) {
             $referenceFields = [];
-            if ($this->hasReferences($classMetadata, $referenceFields)) {
-                $this->checkReferences($documentManager, $classMetadata, $referenceFields);
+            if ($this->hasReferences($classMetadata, $referenceFields) === true) {
+                $this->checkReferences($classMetadata, $referenceFields);
             } else {
                 $this->display(
                     sprintf("Collection %s has no attached references, skipping ..", $className),
@@ -100,7 +128,8 @@ class CheckReferenceCommand extends BaseCommand
 
     /**
      * @param ClassMetadata $classMetadata
-     * @param $referenceFields
+     * @param array $referenceFields
+     *
      * @return mixed
      */
     private function hasReferences(ClassMetadata $classMetadata, &$referenceFields)
@@ -108,9 +137,9 @@ class CheckReferenceCommand extends BaseCommand
         $hasReferences = false;
 
         foreach ($classMetadata->getFieldNames() as $fieldName) {
-            if ($classMetadata->hasReference($fieldName)) {
-                if (array_key_exists('mappedBy', $classMetadata->fieldMappings[$fieldName])) {
-                    if ($classMetadata->fieldMappings[$fieldName]['mappedBy'] == null) {
+            if ($classMetadata->hasReference($fieldName) === true) {
+                if (array_key_exists('mappedBy', $classMetadata->fieldMappings[$fieldName]) === true) {
+                    if ($classMetadata->fieldMappings[$fieldName]['mappedBy'] === null) {
                         $hasReferences = true;
                         $referenceFields[] = $fieldName;
                     }
@@ -122,14 +151,14 @@ class CheckReferenceCommand extends BaseCommand
     }
 
     /**
-     * @param $documentManager
-     * @param $classMetadata
-     * @param $referenceFields
-     * @return null
+     * @param ClassMetadata $classMetadata
+     * @param array $referenceFields
+     *
+     * @return void
      */
-    private function checkReferences($documentManager, $classMetadata, $referenceFields)
+    private function checkReferences(ClassMetadata $classMetadata, array $referenceFields)
     {
-        $qb = $documentManager
+        $qb = $this->documentManager
             ->getRepository($classMetadata->name)
             ->createQueryBuilder()
             ->hydrate(false);
@@ -138,7 +167,7 @@ class CheckReferenceCommand extends BaseCommand
 
         $documentsCount = $qbCount->count()->getQuery()->execute();
 
-        if (!$this->force && $documentsCount > self::THRESHOLD) {
+        if ($this->force === false && $documentsCount > self::THRESHOLD) {
             $this->display(
                 sprintf(
                     "[%s] => Ignored! Contains %d documents",
@@ -147,6 +176,7 @@ class CheckReferenceCommand extends BaseCommand
                 ),
                 self::LEVEL_WARNING
             );
+
             return;
         }
 
@@ -166,26 +196,25 @@ class CheckReferenceCommand extends BaseCommand
 
             foreach ($documents as $document) {
                 foreach ($document as $attr => $dbRef) {
-                    if ($attr == '_id') {
+                    if ($attr === '_id') {
                         continue;
                     }
 
                     // if DBRef is null --> No reference for this document
-                    if ($dbRef == null) {
+                    if ($dbRef === null) {
                         continue;
                     }
 
-                    if (array_key_exists('$ref', $dbRef)) {
+                    if (array_key_exists('$ref', $dbRef) === true) {
                         // ReferenceOne
                         $found = $this
                             ->assertValidReference(
-                                $documentManager,
                                 $dbRef,
                                 $classMetadata->collection,
                                 $document['_id'],
                                 $attr
                             );
-                        if (!$found) {
+                        if ($found === false) {
                             $count++;
                         }
                     } else {
@@ -194,13 +223,12 @@ class CheckReferenceCommand extends BaseCommand
                         foreach ($dbRef as $ref) {
                             $found = $this
                                 ->assertValidReference(
-                                    $documentManager,
                                     $ref,
                                     $classMetadata->collection,
                                     $document['_id'],
                                     $attr . '.' . $cnt
                                 );
-                            if (!$found) {
+                            if ($found === false) {
                                 $count++;
                             }
                             $cnt++;
@@ -211,7 +239,7 @@ class CheckReferenceCommand extends BaseCommand
             $current += self::PAGE_COUNT;
         }
 
-        if ($count) {
+        if ($count > 0) {
             $this->display(
                 sprintf(
                     "[%s] has [%d] bad REFs",
@@ -226,17 +254,21 @@ class CheckReferenceCommand extends BaseCommand
     }
 
     /**
-     * @param $documentManager
-     * @param $dbRef
-     * @param $collection
-     * @param $documentId
-     * @param $fieldName
+     * @param array $dbRef
+     * @param string $collection
+     * @param string $documentId
+     * @param string $fieldName
+     *
      * @return mixed
      */
-    private function assertValidReference($documentManager, $dbRef, $collection, $documentId, $fieldName)
-    {
-        if (!array_key_exists('$ref', $dbRef)
-            || !array_key_exists('$id', $dbRef)
+    private function assertValidReference(
+        array $dbRef,
+        $collection,
+        $documentId,
+        $fieldName
+    ) {
+        if (array_key_exists('$ref', $dbRef) === false
+            || array_key_exists('$id', $dbRef) === false
         ) {
             $this->display(
                 sprintf(
@@ -251,7 +283,7 @@ class CheckReferenceCommand extends BaseCommand
             return null;
         }
 
-        if (!array_key_exists($dbRef['$ref'], $this->documentsMetadata)) {
+        if (array_key_exists($dbRef['$ref'], $this->documentsMetadata) === false) {
             $this->display(
                 sprintf(
                     'Ill-formed DBRef in document [%s] [%s]. [%s] does not reference any known Entity in [%s]',
@@ -268,16 +300,16 @@ class CheckReferenceCommand extends BaseCommand
 
         $referenceClass = $dbRef['$ref'];
         $classMeta = $this->documentsMetadata[$referenceClass];
-        $found = $documentManager
+        $found = $this->documentManager
             ->getRepository($classMeta->name)
             ->createQueryBuilder()
             ->hydrate(false)
-            ->field('id')->equals($dbRef['$id'])
+            ->field('id')->equals((string)$dbRef['$id'])
             ->select('id')
             ->getQuery()
             ->getSingleResult();
 
-        if (!$found && !$this->countOnly) {
+        if ($found === null && $this->countOnly === false) {
             $this->display(
                 sprintf(
                     "[%s] [%s] referenced by [%s] [%s] not found",
@@ -289,12 +321,13 @@ class CheckReferenceCommand extends BaseCommand
                 self::LEVEL_ERROR
             );
         }
-        if (!$found && $this->autoFix) {
-            $fixerQb = $documentManager
+        if ($found === null && $this->autoRemove === true) {
+            $fixerQb = $this->documentManager
                 ->getRepository($this->documentsMetadata[$collection]->name)
                 ->createQueryBuilder()
                 ->findAndUpdate()
-                ->field('id')->equals($documentId);
+                ->field('id')
+                ->equals($documentId);
 
             if (strpos($fieldName, '.') !== false) {
                 $realFieldName = explode('.', $fieldName)[0];
@@ -324,8 +357,10 @@ class CheckReferenceCommand extends BaseCommand
     }
 
     /**
-     * @param $message
-     * @param $level
+     * @param string $message
+     * @param int    $level
+     *
+     * @return void
      */
     private function display($message, $level = self::LEVEL_INFO)
     {

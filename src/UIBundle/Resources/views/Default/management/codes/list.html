@@ -1,0 +1,65 @@
+<div class="panel mb25" ng-init="ctrl.init()">
+    <div class="panel-heading border">
+        <h4>Activation codes</h4>
+    </div>
+    <div class="panel-body">
+        <div class="row no-margin">
+            <div class="col-lg-12">
+                <div class="row">
+                    <button class="btn  btn-default pull-right"
+                            ng-click="ctrl.generateCode()"><i class="fa fa-lock"></i>
+                        Generate code
+                    </button>
+                </div>
+                <div ng-if="ctrl.codes.length" class="no-more-tables">
+                    <table class="table table-striped mb0">
+                        <thead>
+                        <tr>
+                            <th class="text-center">
+                                Code
+                            </th>
+                            <th class="text-center"><span>State</span></th>
+                            <th class="text-center"><span>Application</span></th>
+                            <th colspan="3" class="text-center"><span>Actions</span></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-if="ctrl.ui.isLoading" class="text-center">
+                            <td colspan="6">
+                                <spinner is-loading="ctrl.ui.isLoading"
+                                         size="24"></spinner>
+                            </td>
+                        </tr>
+                        <tr ng-repeat="code in ctrl.codes" class="text-center">
+                            <td data-title="Code" data-label="Code">
+                                [[code.code]]
+                            </td>
+                            <td data-title="State" data-label="State">
+                                <span class="label"
+                                      data-ng-class="code.used ? 'label-danger' : 'label-success'">
+                                    [[code.used ? 'Used' : 'Not Used']]
+                                </span>
+                            </td>
+                            <td data-title="Application" data-label="Application">
+                                [[code.used ? code.application.name : '-']]
+                            </td>
+                            <td data-title="Status" data-label="Status">
+                                <button class="btn btn-toolbar"
+                                        data-ng-disabled="code.used"
+                                        ng-click="ctrl.copyCode(code)">
+                                    <i class="fa fa-copy"></i> Copy
+                                </button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div ng-if="!ctrl.codes.length" class="alert alert-info text-center mt20">
+                    <h4>
+                        There are no activation codes yet
+                    </h4>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

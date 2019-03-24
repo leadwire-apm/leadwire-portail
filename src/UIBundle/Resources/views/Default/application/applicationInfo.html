@@ -1,0 +1,10 @@
+<div class="col-lg-12">
+    <h5><span class="bold text-bluegrey">Name : </span> [[ctrl.application.name]]</h5>
+    <h5><span class="bold text-bluegrey">Type : </span> [[ctrl.application.type.name]]</h5>
+    <h5><span class="bold text-bluegrey">App Email : </span> [[ctrl.application.email]]</h5>
+    <h5><span class="bold text-bluegrey">Owner Email : </span> [[ctrl.application.owner.email]]</h5>
+    <h5><span class="bold text-bluegrey">Owner Github : </span> [[ctrl.application.owner.username]]</h5>
+    <h5><span class="bold text-bluegrey">Status : </span>
+        <span ng-class="ctrl.application.enabled ? 'label label-success' : 'label label-default'">[[ctrl.application.enabled ? 'Enabled' :'Disabled']]</span>
+    </h5>
+</div>

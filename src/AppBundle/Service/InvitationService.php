@@ -1,17 +1,22 @@
-<?php declare(strict_types=1);
+<?php declare (strict_types = 1);
 
 namespace AppBundle\Service;
 
 use AppBundle\Document\User;
-use ATS\EmailBundle\Document\Email;
-use ATS\EmailBundle\Service\SimpleMailerService;
 use Psr\Log\LoggerInterface;
+use AppBundle\Document\Invitation;
+use AppBundle\Manager\UserManager;
+use AppBundle\Document\Application;
+use ATS\EmailBundle\Document\Email;
+use Symfony\Component\Routing\Router;
 use JMS\Serializer\SerializerInterface;
 use AppBundle\Manager\InvitationManager;
-use AppBundle\Document\Invitation;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use AppBundle\Document\ApplicationPermission;
+use Symfony\Component\Routing\RouterInterface;
+use ATS\EmailBundle\Service\SimpleMailerService;
+use AppBundle\Manager\ApplicationPermissionManager;
+use AppBundle\Service\ApplicationPermissionService;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Routing\Router;
 
 /**
  * Service class for Invitation entities
@@ -40,7 +45,7 @@ class InvitationService
     private $mailer;
 
     /**
-     * @var Router
+     * @var RouterInterface
      */
     private $router;
 
@@ -55,9 +60,19 @@ class InvitationService
     private $ldap;
 
     /**
-     * @var AppService
+     * @var ApplicationService
      */
-    private $appService;
+    private $applicationService;
+
+    /**
+     * @var ApplicationPermissionService
+     */
+    private $permissionService;
+
+    /**
+     * @var UserManager
+     */
+    private $userManager;
 
     /**
      * Constructor
@@ -67,25 +82,40 @@ class InvitationService
      * @param LoggerInterface $logger
      * @param SimpleMailerService $mailer
      * @param Router $router
-     * @param ContainerInterface $container
      * @param LdapService $ldap
-     * @param AppService $appService
+     * @param ApplicationService $applicationService
+     * @param ApplicationPermissionService $permissionService
+     * @param UserManager $userManager
      */
-    public function __construct(InvitationManager $invitationManager, SerializerInterface $serializer, LoggerInterface $logger, SimpleMailerService $mailer, Router $router, ContainerInterface $container, LdapService $ldap, AppService $appService)
-    {
+    public function __construct(
+        InvitationManager $invitationManager,
+        SerializerInterface $serializer,
+        LoggerInterface $logger,
+        SimpleMailerService $mailer,
+        RouterInterface $router,
+        LdapService $ldap,
+        ApplicationService $applicationService,
+        ApplicationPermissionService $permissionService,
+        UserManager $userManager,
+        string $sender
+    ) {
         $this->invitationManager = $invitationManager;
         $this->serializer = $serializer;
         $this->logger = $logger;
         $this->mailer =
         $this->mailer = $mailer;
         $this->router = $router;
-        $this->sender = $container->getParameter('sender');
+        $this->sender = $sender;
         $this->ldap = $ldap;
-        $this->appService = $appService;
+        $this->applicationService = $applicationService;
+        $this->permissionService = $permissionService;
+        $this->userManager = $userManager;
     }
 
     /**
      * List all invitations
+     *
+     * @codeCoverageIgnore
      *
      * @return array
      */
@@ -97,6 +127,7 @@ class InvitationService
     /**
      * Paginates through Invitations
      *
+     * @codeCoverageIgnore
      * @param int $pageNumber
      * @param int $itemsPerPage
      * @param array $criteria
@@ -111,6 +142,7 @@ class InvitationService
     /**
      * Get a specific invitation
      *
+     * @codeCoverageIgnore
      * @param string $id
      *
      * @return Invitation
@@ -123,7 +155,8 @@ class InvitationService
     /**
      * Get specific invitations
      *
-     * @param string $criteria
+     * @codeCoverageIgnore
+     * @param array $criteria
      *
      * @return array
      */
@@ -135,6 +168,8 @@ class InvitationService
     /**
      * Creates a new invitation from JSON data
      *
+     * @codeCoverageIgnore
+     *
      * @param string $json
      *
      * @param User $user
@@ -145,8 +180,10 @@ class InvitationService
         $invitation = $this
             ->serializer
             ->deserialize($json, Invitation::class, 'json');
+
         $id = $this->invitationManager->update($invitation);
-        $this->sendInvitationMail($this->getInvitation($id), $user);
+        $this->sendInvitationMail($this->getInvitation((string)$id), $user);
+
         return $id;
     }
 
@@ -162,9 +199,19 @@ class InvitationService
         $isSuccessful = false;
 
         try {
+            /** @var Invitation $invitation */
             $invitation = $this->serializer->deserialize($json, Invitation::class, 'json');
-            $invitation->setApp($this->appService->getApp($invitation->getApp()->getId()));
-            if ($invitation->getApp()->getOwner()->getId() != $invitation->getUser()->getId()) {
+
+            /** @var Application|null $application */
+            $application = $this->applicationService->getApplication((string) $invitation->getApplication()->getId());
+
+            if ($application !== null) {
+                $invitation->setApplication($application);
+            } else {
+                throw new \Exception(sprintf("Unknown application %s", $invitation->getApplication()->getId()));
+            }
+
+            if ($invitation->getApplication()->getOwner()->getId() !== $invitation->getUser()->getId()) {
                 $this->invitationManager->update($invitation);
                 $this->ldap->createInvitationEntry($invitation);
                 $isSuccessful = true;
@@ -180,6 +227,8 @@ class InvitationService
     /**
      * Deletes a specific invitation from JSON data
      *
+     * @codeCoverageIgnore
+     *
      * @param string $id
      *
      * @return void
@@ -189,47 +238,48 @@ class InvitationService
         $this->invitationManager->deleteById($id);
     }
 
-    /**
-     * Performs a full text search on  Invitation
-     *
-     * @param string $term
-     * @param string $lang
-     *
-     * @return array
-     */
-    public function textSearch($term, $lang)
-    {
-        return $this->invitationManager->textSearch($term, $lang);
-    }
-
-    /**
-     * Performs multi-field grouped query on Invitation
-     * @param array $searchCriteria
-     * @param string $groupField
-     * @param \Closure $groupValueProcessor
-     * @return array
-     */
-    public function getAndGroupBy(array $searchCriteria, $groupFields = [], $valueProcessors = [])
-    {
-        return $this->invitationManager->getAndGroupBy($searchCriteria, $groupFields, $valueProcessors);
-    }
-
     public function sendInvitationMail(Invitation $invitation, User $user)
     {
         $mail = new Email();
+        $application = $this->applicationService->getApplication((string)$invitation->getApplication()->getId());
         $mail
             ->setSubject("LeadWire: Invitation to access to an application")
             ->setSenderName("LeadWire")
             ->setSenderAddress($this->sender)
             ->setTemplate('AppBundle:Mail:AppInvitation.html.twig')
             ->setRecipientAddress($invitation->getEmail())
-            ->setMessageParameters([
-                'user' => $user,
-                'email' => $invitation->getEmail(),
-                'invitation' => $invitation->getId(),
-                'link' => $this->router->generate('angular_endPoint', [], UrlGeneratorInterface::ABSOLUTE_URL)
-            ]);
+            ->setSentAt(new \DateTime())
+            ->setMessageParameters(
+                [
+                    'inviter' => $user->getName(),
+                    'invitation_id' => $invitation->getId(),
+                    'application' => $application !== null ? $application->getName() : 'an application',
+                    'email' => $invitation->getEmail(),
+                    'link' => $this->router->generate('angular_endPoint', [], UrlGeneratorInterface::ABSOLUTE_URL)
+                ]
+            );
 
-        $this->mailer->send($mail, false);
+        $this->mailer->send($mail, true);
+    }
+
+    /**
+     * @param string $id
+     * @param string $userId
+     *
+     * @return void
+     */
+    public function acceptInvitation($id, $userId)
+    {
+        $invitation = $this->invitationManager->getOneBy(['id' => $id, 'isPending' => true]);
+        $invitedUser = $this->userManager->getOneBy(['id' => $userId]);
+
+        if ($invitation instanceof Invitation && $invitedUser instanceof User) {
+            $invitation->setPending(false);
+            $invitation->setUser($invitedUser);
+            $application = $invitation->getApplication();
+            $this->permissionService->grantPermission($application, $invitedUser, ApplicationPermission::ACCESS_GUEST);
+            $this->ldap->registerApplication($invitedUser, $application);
+            $this->invitationManager->update($invitation);
+        }
     }
 }

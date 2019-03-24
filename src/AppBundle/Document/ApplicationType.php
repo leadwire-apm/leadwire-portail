@@ -1,20 +1,21 @@
-<?php declare(strict_types=1);
+<?php declare (strict_types = 1);
 
 namespace AppBundle\Document;
 
+use AppBundle\Document\App;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 use JMS\Serializer\Annotation as JMS;
-use ATS\CoreBundle\Annotation as ATS;
-use AppBundle\Document\App;
 
 /**
  * @ODM\Document(repositoryClass="AppBundle\Repository\ApplicationTypeRepository")
  * @ODM\HasLifecycleCallbacks
  * @JMS\ExclusionPolicy("all")
- * @ATS\ApplicationView
+ *
  */
 class ApplicationType
 {
+    const DEFAULT_TYPE = 'Java';
+
     /**
      * @var \MongoId
      *
@@ -30,7 +31,6 @@ class ApplicationType
      * @ODM\Field(type="string", name="name")
      * @JMS\Type("string")
      * @JMS\Expose
-     * @JMS\Groups({"Default"})
      */
     private $name;
 
@@ -45,9 +45,11 @@ class ApplicationType
     private $installation;
 
     /**
-     * @ODM\Field(type="raw", name="template")
+     * @ODM\ReferenceMany(targetDocument="AppBundle\Document\Template", mappedBy="applicationType", storeAs="dbRef")
+     *
+     * @var array
      */
-    private $template;
+    private $templates;
 
     /**
      * @var string
@@ -60,11 +62,10 @@ class ApplicationType
     private $agent;
 
     /**
-     * @ODM\ReferenceMany(targetDocument="App", inversedBy="type")
+     * @ODM\ReferenceMany(targetDocument="AppBundle\Document\Application", inversedBy="type", storeAs="dbRef")
      * @JMS\Groups({"full"})
      */
     public $apps;
-
 
     /**
      * Constructor
@@ -96,7 +97,7 @@ class ApplicationType
 
     /**
      * Set name
-     * @param string
+     * @param string $name
      *
      * @return ApplicationType
      */
@@ -118,7 +119,7 @@ class ApplicationType
 
     /**
      * Set installation
-     * @param string
+     * @param string $installation
      *
      * @return ApplicationType
      */
@@ -132,19 +133,21 @@ class ApplicationType
      * Get template
      *
      */
-    public function getTemplate()
+    public function getTemplates()
     {
-        return $this->template;
+        return $this->templates;
     }
 
     /**
      * Set template
+     * @param array $templates
      *
      * @return ApplicationType
      */
-    public function setTemplate($template)
+    public function setTemplates($templates)
     {
-        $this->template = $template;
+        $this->templates = $templates;
+
         return $this;
     }
 
@@ -160,7 +163,7 @@ class ApplicationType
 
     /**
      * Set agent
-     * @param string
+     * @param string $agent
      *
      * @return ApplicationType
      */

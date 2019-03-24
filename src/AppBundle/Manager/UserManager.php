@@ -1,10 +1,10 @@
-<?php declare(strict_types=1);
+<?php declare (strict_types = 1);
 
 namespace AppBundle\Manager;
 
+use AppBundle\Document\User;
 use ATS\CoreBundle\Manager\AbstractManager;
 use Doctrine\Bundle\MongoDBBundle\ManagerRegistry;
-use AppBundle\Document\User;
 
 /**
  * Manager class for User entities
@@ -27,23 +27,50 @@ class UserManager extends AbstractManager
      */
     public function getUserByUsername($username)
     {
-        return $this->getDocumentRepository()->getByUsername($username);
+        /** @var User $user */
+        $user = $this->getDocumentRepository()->findOneBy(['username' => $username]);
+
+        return $user;
     }
 
-    public function create($username, $uuid, $avatar, $name, $roles = [], $active = true)
+    /**
+     *
+     * @param string $username
+     * @param string $uuid
+     * @param string $avatar
+     * @param string $name
+     * @param array $roles
+     * @param boolean $active
+     *
+     * @return User
+     */
+    public function create($username, $uuid, $avatar, $name, $roles = [], $active = true): User
     {
-        $user = (new User)
-            ->setActive($active)
+        $user = new User();
+        $user
+            ->setAvatar($avatar)
+            ->setUuid($uuid)
+            ->setName($name)
+            ->setEmailValid(false)
             ->setUsername($username)
             ->setRoles($roles)
-            ->setPassword("")
-            ->setUuid($uuid)
-            ->setAvatar($avatar)
-            ->setName($name)
-            ->setIsEmailValid(false)
-        ;
-
+            ->setActive($active)
+            ->setPassword("");
 
         $this->update($user);
+
+        return $user;
+    }
+
+    public function getActiveUsers()
+    {
+        return $this
+            ->qb()
+            ->find()
+            ->field('deleted')->equals(false)
+            ->field('locked')->equals(false)
+            ->getQuery()
+            ->execute()
+            ->toArray(false);
     }
 }

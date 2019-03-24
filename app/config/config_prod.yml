@@ -7,6 +7,43 @@ monolog:
             type: rotating_file
             action_level: error
             max_files: 10
+            level: error
+            channels: ['!kibana', '!es', '!ldap']
+        kibana:
+            type: rotating_file
+            action_level: notice
+            max_files: 10
+            level: notice
+            path:     '%kernel.logs_dir%/kibana.log'
+            channels: [kibana]
+        sg:
+            type: rotating_file
+            action_level: notice
+            max_files: 10
+            level: notice
+            path:     '%kernel.logs_dir%/search_guard.log'
+            channels: [search_guard]
+        es:
+            type: rotating_file
+            action_level: notice
+            max_files: 10
+            level: notice
+            path:     '%kernel.logs_dir%/es.log'
+            channels: [es]
+        ldap:
+            type: rotating_file
+            action_level: notice
+            max_files: 10
+            level: notice
+            path:     '%kernel.logs_dir%/ldap.log'
+            channels: [ldap]
+        auth:
+            type: rotating_file
+            action_level: notice
+            max_files: 10
+            level: notice
+            path:     '%kernel.logs_dir%/auth.log'
+            channels: [auth]
         nested:
             type: stream
             path: '%kernel.logs_dir%/%kernel.environment%.log'
@@ -14,3 +51,6 @@ monolog:
         console:
             type: console
             process_psr_3_messages: false
+
+sentry:
+    dsn: "https://918b5864b38348e0948bcb7099ad6824:c59d5742338342198b7de15cde31843c@sentry.test.ats-digital.com/4"

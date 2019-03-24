@@ -3,6 +3,7 @@ namespace ATS\PaymentBundle\Service;
 
 use ATS\PaymentBundle\Document\Customer;
 use ATS\PaymentBundle\Exception\OmnipayException;
+use ATS\PaymentBundle\Service\CustomStripeGateway;
 use Psr\Log\LoggerInterface;
 
 class Subscription
@@ -13,7 +14,7 @@ class Subscription
     private $customerService;
 
     /**
-     * @var GateWay
+     * @var CustomStripeGateway
      */
     private $gateway;
 
@@ -26,12 +27,12 @@ class Subscription
      * PaymentService constructor.
      * @param \ATS\PaymentBundle\Service\CustomerService $customerService
      * @param LoggerInterface $logger
-     * @param GateWay $gateWay
+     * @param CustomStripeGateway $gateWay
      */
     public function __construct(
         CustomerService $customerService,
         LoggerInterface $logger,
-        GateWay $gateWay
+        CustomStripeGateway $gateWay
     ) {
         $this->customerService = $customerService;
         $this->logger = $logger;
@@ -66,7 +67,7 @@ class Subscription
     {
         return $this->request(
             'fetchSubscription',
-            ['subscriptionReference' => $sub, 'customerReference' =>  $customer->getGatewayToken()]
+            ['subscriptionReference' => $sub, 'customerReference' => $customer->getGatewayToken()]
         );
     }
 
@@ -84,12 +85,15 @@ class Subscription
         string $planReference,
         $anchor
     ) {
-        return $this->request('updateSubscription', [
-            'customerReference' => $customerReference,
-            'subscriptionReference' => $subscriptionReference,
-            'plan' => $planReference,
-            "anchor" => $anchor,
-        ]);
+        return $this->request(
+            'updateSubscription',
+            [
+                'customerReference' => $customerReference,
+                'subscriptionReference' => $subscriptionReference,
+                'plan' => $planReference,
+                "anchor" => $anchor,
+            ]
+        );
     }
 
     /**
@@ -101,11 +105,14 @@ class Subscription
      */
     public function delete(string $subscriptionReference, string $customerReference, bool $atPeriodEnd = true)
     {
-        return $this->request('cancelSubscription', [
-            'subscriptionReference' => $subscriptionReference,
-            '//atPeriodEnd' => $atPeriodEnd,
-            'customerReference' => $customerReference
-        ]);
+        return $this->request(
+            'cancelSubscription',
+            [
+                'subscriptionReference' => $subscriptionReference,
+                '//atPeriodEnd' => $atPeriodEnd,
+                'customerReference' => $customerReference,
+            ]
+        );
     }
 
     /**
@@ -118,7 +125,7 @@ class Subscription
     {
         $response = $this->gateway->{$functionName}($parameters)->send();
 
-        if ($response->isSuccessful()) {
+        if ($response->isSuccessful() === true) {
             return $response->getData();
         } else {
             $this->logger->error($response->getMessage());

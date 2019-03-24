@@ -1,0 +1,23 @@
+<div class="col-sm-12">
+    <div class="no-more-tables">
+        <table class="table mb0">
+            <thead>
+            <tr>
+                <th class="text-center">
+                    Date
+                </th>
+                <th class="text-center ">Transactions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="stat in ctrl.applicationStats"
+                ng-class="{'bg-blue':$index < ctrl.retention,'bg-grey-f':$index >= ctrl.application.owner.plan.retention}">
+                <td class="text-center">
+                    [[ctrl.moment(stat.day,ctrl.CONSTANTS.DEFAULT_DATE_FORMAT).format(ctrl.CONSTANTS.EN_DATE_FORMAT)]]
+                </td>
+                <td class="text-center">[[stat.nbr]]</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

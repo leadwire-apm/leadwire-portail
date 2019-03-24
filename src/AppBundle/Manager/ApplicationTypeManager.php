@@ -13,6 +13,12 @@ use AppBundle\Document\ApplicationType;
  */
 class ApplicationTypeManager extends AbstractManager
 {
+    /**
+     * @codeCoverageIgnore
+     *
+     * @param ManagerRegistry $managerRegistry
+     * @param ?string $managerName
+     */
     public function __construct(ManagerRegistry $managerRegistry, $managerName = null)
     {
         parent::__construct($managerRegistry, ApplicationType::class, $managerName);

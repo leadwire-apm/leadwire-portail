@@ -1,0 +1,19 @@
+includes:
+    - vendor/phpstan/phpstan-symfony/extension.neon
+    - vendor/phpstan/phpstan-deprecation-rules/rules.neon
+parameters:
+    reportUnmatchedIgnoredErrors: false
+    level: max
+    paths:
+        - %rootDir%/../../../src/AppBundle
+    checkFunctionNameCase: true
+    checkMaybeUndefinedVariables: true
+    symfony:
+        container_xml_path: %rootDir%/../../../var/cache/app/dev/appDevDebugProjectContainer.xml
+    ignoreErrors:
+        - '#Call to an undefined method Doctrine\\Common\\Persistence\\ObjectRepository::createQueryBuilder().#'
+        - '#Call to an undefined method ATS\\CoreBundle\\Repository\\BaseDocumentRepository::findUserAccessible().#'
+        - '#Call to an undefined method ATS\\CoreBundle\\Repository\\BaseDocumentRepository::findGrantedAccessForApplication().#'
+        - '#does not accept Doctrine\\Common\\Persistence\\ObjectManager.#'
+        - '#should return [a-zA-Z0-9\\_]+ but returns Doctrine\\Common\\Persistence\\ObjectRepository.#'
+        - '#expects Doctrine\\ODM\\MongoDB\\Mapping\\ClassMetadata, Doctrine\\Common\\Persistence\\Mapping\\ClassMetadata given.#'

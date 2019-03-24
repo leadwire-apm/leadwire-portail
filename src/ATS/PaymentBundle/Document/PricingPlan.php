@@ -3,11 +3,9 @@ namespace ATS\PaymentBundle\Document;
 
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 use JMS\Serializer\Annotation as JMS;
-use ATS\CoreBundle\Annotation as ATS;
 
 /**
  * @ODM\EmbeddedDocument
- * @ATS\ApplicationView
  */
 class PricingPlan
 {
@@ -17,7 +15,6 @@ class PricingPlan
      * @ODM\Field(type="string", name="name")
      * @JMS\Type("string")
      * @JMS\Expose
-     * @JMS\Groups({})
      */
     private $name;
 
@@ -27,7 +24,6 @@ class PricingPlan
      * @ODM\Field(type="string", name="token")
      * @JMS\Type("string")
      * @JMS\Expose
-     * @JMS\Groups({})
      */
     private $token;
 

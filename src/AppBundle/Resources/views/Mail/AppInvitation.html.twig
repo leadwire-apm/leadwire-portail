@@ -2,7 +2,8 @@
 <p>
     Hello {{ email }}, <br/>
     <br/>
-   <p> You just receved an invitation to Leadwire from {{ user.username }}. Please click in this <a href="{{ link }}#/login?invitation={{ invitation }}">link</a> to accept the invitation. <p>
+   <p> {{ inviter }} invited you to collaborate on <b>{{ application }}</b> on LeadWire APM. </p>
+   <p> To accept the invitation, please <a href="{{ link }}#/login?invitation={{ invitation_id }}">Confirm</a>.</p>
 
     <p>best regards,<br/>
     LeadWire</p>

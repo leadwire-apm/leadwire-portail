@@ -1,0 +1,61 @@
+<div class="panel" ng-init="ctrl.init()">
+    <div class="panel-heading">
+        <h4>Manage Plans</h4>
+        <hr>
+    </div>
+    <div class="panel-body">
+        <div class="row no-margin">
+            <div class="row mb30">
+                <a ui-sref="app.management.addPlan"
+                   class="btn btn-success pull-right">
+                    <i class="fa fa-plus"></i> Add new Plan</a>
+            </div>
+
+            <div class="col-lg-12 ">
+                <div class="no-more-tables">
+                    <table class="table table-striped mb0">
+                        <thead>
+                        <tr>
+                            <th class="text-center">
+                                Name
+                            </th>
+                            <th class="text-center"><span>Price</span></th>
+                            <th class="text-center"><span>Discount</span></th>
+                            <th colspan="3" class="text-center"><span>Actions</span></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-if="ctrl.ui.isLoading" class="text-center">
+                            <td colspan="6">
+                                <spinner is-loading="ctrl.ui.isLoading" size="24"></spinner>
+                            </td>
+                        </tr>
+                        <tr ng-repeat="plan in ctrl.plans" class="text-center"
+
+                        >
+                            <td data-title="Name" data-label="Name">
+                                [[plan.name]]
+                            </td>
+                            <td data-title="Price" data-label="Price">
+                                [[plan.price]]
+                            </td>
+                            <td data-title="Discount" data-label="Discount">
+                                [[plan.discount]]
+
+                            </td>
+                            <td data-title="Actions" data-label="Actions">
+                                <a class="btn btn-warning" ui-sref="app.management.editPlan(plan)">
+                                    Edit
+                                </a>
+                                <button class="btn btn-danger" ng-click="ctrl.deletePlan(plan.id)">
+                                    Delete
+                                </button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

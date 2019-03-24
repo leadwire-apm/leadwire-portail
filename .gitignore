@@ -1,5 +1,3 @@
-/.web-server-pid
-/.vscode/
 /uploads/
 /app/config/parameters.yml
 /app/config/vendor/application.yml
@@ -26,10 +24,8 @@
 /web/bundles/
 /web/css/
 /web/js/
-.idea/
 *.log
 /src/UIBundle/Resources/public/app
-/src/UIBundle/Resources/views/Default/index.html.twig
 /src/UIBundle/Resources/public/dev/dist
 /src/UIBundle/Resources/public/dev/node_modules
 /src/UIBundle/Resources/public/dev/bower_components
@@ -40,4 +36,3 @@
 /uploads/*
 !/uploads/.gitkeep
 .tmp
-

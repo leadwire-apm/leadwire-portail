@@ -2,6 +2,9 @@ imports:
     - { resource: config.yml }
     - { resource: services_dev.yml }
 
+parameters:
+    dev_delivery_address: aturki@ats-digital.com
+
 framework:
     router:
         resource: '%kernel.root_dir%/config/routing_dev.yml'
@@ -18,7 +21,37 @@ monolog:
             type: stream
             path: '%kernel.logs_dir%/%kernel.environment%.log'
             level: debug
-            channels: ['!event']
+            channels: ['!event', '!kibana', '!es', '!ldap']
+        kibana:
+            type: stream
+            action_level: notice
+            level: notice
+            path:     '%kernel.logs_dir%/kibana_%kernel.environment%.log'
+            channels: [kibana]
+        sg:
+            type: stream
+            action_level: notice
+            level: notice
+            path:     '%kernel.logs_dir%/search_guard_%kernel.environment%.log'
+            channels: [search_guard]
+        es:
+            type: stream
+            action_level: notice
+            level: notice
+            path:     '%kernel.logs_dir%/es_%kernel.environment%.log'
+            channels: [es]
+        ldap:
+            type: stream
+            action_level: notice
+            level: notice
+            path:     '%kernel.logs_dir%/ldap_%kernel.environment%.log'
+            channels: [ldap]
+        auth:
+            type: stream
+            action_level: notice
+            level: notice
+            path:     '%kernel.logs_dir%/auth_%kernel.environment%.log'
+            channels: [auth]
         console:
             type: console
             process_psr_3_messages: false
@@ -43,30 +76,6 @@ swiftmailer:
         - "%dev_delivery_address%"
     logging: true
 
-nelmio_api_doc:
-    documentation:
-        host: "%app_domain%"
-        schemes: ["%app_schemes%"]
-        info:
-            title: "%app_title%"
-            description: "%app_description%"
-            version: "%app_version%"
-        securityDefinitions:
-            Bearer:
-                type: apiKey
-                description: 'Value: Bearer {jwt}'
-                name: Authorization
-                in: header
-        security:
-            - Bearer: []
-    areas:
-        default: ~
-        core:
-            path_patterns:
-                - ^/%internal_api_prefix%(?!/doc$)
-        translation:
-            path_patterns:
-                - ^/translation/%internal_api_prefix%
 nelmio_cors:
     paths:
         '^/login':

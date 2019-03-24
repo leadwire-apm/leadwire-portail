@@ -2,6 +2,55 @@ imports:
     - { resource: config.yml }
     - { resource: services_dev.yml }
 
+parameters:
+    locale: en
+    app_version: 1.0.0
+    app_domain: 'leadwire.local'
+    app_schemes: 'http'
+    activation_code_regex: '[A-Z0-9]B[A-Z0-9]{2}7[A-Z0-9]'
+    default_lock_message: 'Your account has been locked'
+    secret: secretChangeMe
+    internal_api_prefix: api
+    secret_key: ''
+    providerName: Stripe
+    super_admin_username: toto
+    mailer_transport: 'gmail'
+    mailer_user: 'test@test.com'
+    mailer_password: 'password'
+    sender: "%mailer_user%"
+    github_client_id: 'aa236b3900fb084b3ccf'
+    auth_providers.settings.token_secret: '52e431f6ed5a80ed700c04986b6ddf'
+    kibana.host: 'https://localhost'
+    kibana.iframe_host: 'https://localhost'
+    kibana.port: 5604
+    kibana.iframe_port: 5605
+    auth_providers:
+        github:
+            github_access_token_url: 'https://github.com/login/oauth/access_token'
+            github_users_api_url: 'https://api.github.com/user'
+            github_client_secret: '74af1ceda97c9e2b0ee65e8df2dd9b35d129544c'
+        settings:
+            token_secret: '52e431f6ed5a80ed700c04986b6ddf'
+    ldap:
+        host: '145.239.158.168'
+        port: 389
+        dn_user: 'cn=ldapadm,dc=leadwire,dc=io'
+        mdp: 'ldppassword123'
+    kibana:
+        host: 'https://localhost'
+        port: 5604
+        iframe_host: 'https://localhost'
+        iframe_port: 5405
+        template_folder: '%kernel.project_dir%/app/Resources/Kibana'
+    elastic:
+        username: ''
+        password: ''
+        host: 'http://localhost'
+        port: 9200
+    sg:
+        executable_path: '/usr/share/elasticsearch/plugins/search-guard-6/tools/sgadmin.sh'
+        config_dirpath: '/usr/share/elasticsearch/plugins/search-guard-6/sgconfig/'
+
 framework:
     router:
         resource: '%kernel.root_dir%/config/routing_dev.yml'
@@ -33,44 +82,31 @@ doctrine_mongodb:
         default:
             server: 'mongodb://mongo:27017'
             options:
-                username: '%database_user%'
-                password: '%database_pass%'
+                username: ~
+                password: ~
                 connect: true
-                db: 'ATSBoilerPlateTestDB'
+                db: 'leadwire_test_db'
     document_managers:
         default:
             connection: default
-            database: 'ATSBoilerPlateTestDB'
+            database: 'leadwire_test_db'
             auto_mapping: true
             logging: false
 
-# Making services public as per https://github.com/symfony/symfony/issues/24543
-services:
-    test_alias.Symfony\Component\Security\Core\Encoder\EncoderFactory:
-        alias: "Symfony\\Component\\Security\\Core\\Encoder\\EncoderFactoryInterface"
-        public: true
-    test_alias.Doctrine\Common\Annotations\CachedReader:
-        alias: "Doctrine\\Common\\Annotations\\Reader"
-        public: true
-    test_alias.FOS\OAuthServerBundle\Model\ClientManagerInterface:
-        alias: fos_oauth_server.client_manager.default
-        public: true
-    test_alias.FOS\OAuthServerBundle\Model\AccessTokenManagerInterface:
-        alias: fos_oauth_server.access_token_manager.default
-        public: true
-
-    test_alias.annotation.reader:
-        alias: "annotations.reader"
-        public: true
-
-    Doctrine\Bundle\MongoDBBundle\Command\GenerateRepositoriesDoctrineODMCommand:
-        tags:
-            - { name: 'console.command', command: 'doctrine:mongodb:generate:repositories' }
-
-    Symfony\Bundle\AsseticBundle\Command\DumpCommand:
-        tags:
-            - { name: 'console.command', command: 'assetic:dump' }
-
-    Symfony\Bundle\AsseticBundle\Command\WatchCommand:
-        tags:
-            - { name: 'console.command', command: 'assetic:watch' }
+monolog:
+    handlers:
+        main:
+            type: stream
+            path: '%kernel.logs_dir%/%kernel.environment%.log'
+            level: debug
+            channels: ['!event']
+        console:
+            type: console
+            process_psr_3_messages: false
+            channels: ['!event', '!doctrine', '!console']
+        # To follow logs in real time, execute the following command:
+        # `bin/console server:log -vv`
+        server_log:
+            type: server_log
+            process_psr_3_messages: false
+            host: 127.0.0.1:9911

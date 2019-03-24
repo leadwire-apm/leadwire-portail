@@ -1,37 +1,38 @@
-<?php declare(strict_types=1);
+<?php declare (strict_types = 1);
 
 namespace AppBundle\Controller;
 
 use AppBundle\Manager\UserManager;
-use Doctrine\Bundle\MongoDBBundle\Logger\LoggerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use AppBundle\Service\InvitationService;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class DefaultController extends Controller
 {
     /**
-     * @Route("/logedin", methods="GET")
-     */
-    public function indexAction()
-    {
-        return $this->render('AppBundle:Default:index.html.twig');
-    }
-
-    /**
      * @Route("/verify/{email}", methods="GET", name="verify_email")
+     *
      * @param  UserManager $um
-     * @param $email
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @param string $email
+     *
+     * @return RedirectResponse
      */
-    public function verifAction(UserManager $um, $email)
+    public function verifyEmailAction(UserManager $um, $email)
     {
         $user = $um->getOneBy(['email' => $email]);
-        if ($user->getIsEmailValid()) {
+
+        if ($user->isEmailValid() === true) {
             return $this->redirect('/');
         }
+
         $user->setActive(true);
-        $user->setIsEmailValid(true);
+        $user->setEmailValid(true);
         $um->update($user);
+
         return $this->redirect('/');
     }
 }

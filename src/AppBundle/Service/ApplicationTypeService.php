@@ -1,12 +1,12 @@
-<?php declare(strict_types=1);
+<?php declare (strict_types = 1);
 
 namespace AppBundle\Service;
 
-use ATS\CoreBundle\Service\Http\GuzzleClient;
-use Psr\Log\LoggerInterface;
-use JMS\Serializer\SerializerInterface;
-use AppBundle\Manager\ApplicationTypeManager;
 use AppBundle\Document\ApplicationType;
+use AppBundle\Manager\ApplicationTypeManager;
+use GuzzleHttp\Client;
+use JMS\Serializer\SerializerInterface;
+use Psr\Log\LoggerInterface;
 
 /**
  * Service class for ApplicationType entities
@@ -36,8 +36,11 @@ class ApplicationTypeService
      * @param SerializerInterface $serializer
      * @param LoggerInterface $logger
      */
-    public function __construct(ApplicationTypeManager $applicationTypeManager, SerializerInterface $serializer, LoggerInterface $logger)
-    {
+    public function __construct(
+        ApplicationTypeManager $applicationTypeManager,
+        SerializerInterface $serializer,
+        LoggerInterface $logger
+    ) {
         $this->applicationTypeManager = $applicationTypeManager;
         $this->serializer = $serializer;
         $this->logger = $logger;
@@ -45,6 +48,7 @@ class ApplicationTypeService
 
     /**
      * List all applicationTypes
+     * @codeCoverageIgnore
      *
      * @return array
      */
@@ -55,6 +59,8 @@ class ApplicationTypeService
 
     /**
      * Paginates through ApplicationTypes
+     *
+     * @codeCoverageIgnore
      *
      * @param int $pageNumber
      * @param int $itemsPerPage
@@ -70,6 +76,7 @@ class ApplicationTypeService
     /**
      * Get a specific applicationType
      *
+     * @codeCoverageIgnore
      * @param string $id
      *
      * @return ApplicationType
@@ -82,7 +89,8 @@ class ApplicationTypeService
     /**
      * Get specific applicationTypes
      *
-     * @param string $criteria
+     * @codeCoverageIgnore
+     * @param array $criteria
      *
      * @return array
      */
@@ -94,21 +102,20 @@ class ApplicationTypeService
     /**
      * Creates a new applicationType from JSON data
      *
+     * @codeCoverageIgnore
      * @param string $json
      *
      * @return bool
      */
     public function newApplicationType($json)
     {
-        $applicationType = $this
-            ->serializer
-            ->deserialize($json, ApplicationType::class, 'json');
-
         return $this->updateApplicationType($json);
     }
 
     /**
      * Updates a specific applicationType from JSON data
+     *
+     * @codeCoverageIgnore
      *
      * @param string $json
      *
@@ -124,7 +131,6 @@ class ApplicationTypeService
             $isSuccessful = true;
         } catch (\Exception $e) {
             $this->logger->error($e->getMessage());
-            $isSuccessful = false;
         }
 
         return $isSuccessful;
@@ -133,6 +139,8 @@ class ApplicationTypeService
     /**
      * Deletes a specific applicationType from JSON data
      *
+     * @codeCoverageIgnore
+     *
      * @param string $id
      *
      * @return void
@@ -140,53 +148,5 @@ class ApplicationTypeService
     public function deleteApplicationType($id)
     {
         $this->applicationTypeManager->deleteById($id);
-    }
-
-    /**
-     * Performs a full text search on  ApplicationType
-     *
-     * @param string $term
-     * @param string $lang
-     *
-     * @return array
-     */
-    public function textSearch($term, $lang)
-    {
-        return $this->applicationTypeManager->textSearch($term, $lang);
-    }
-
-    /**
-     * Performs multi-field grouped query on ApplicationType
-     * @param array $searchCriteria
-     * @param string $groupField
-     * @param \Closure $groupValueProcessor
-     * @return array
-     */
-    public function getAndGroupBy(array $searchCriteria, $groupFields = [], $valueProcessors = [])
-    {
-        return $this->applicationTypeManager->getAndGroupBy($searchCriteria, $groupFields, $valueProcessors);
-    }
-
-    /**
-     * @return ApplicationType
-     */
-    public function createDefaultType()
-    {
-        $defaultType = $this->applicationTypeManager->getOneBy(['name' => "Java"]);
-        if (!$defaultType) {
-            $client = new GuzzleClient();
-            $url = "https://github.com/leadwire-apm/leadwire-javaagent";
-            $response = $client->get($url . "/raw/stable/README.md", ['stream' => true]);
-            $defaultType = new ApplicationType();
-            $defaultType->setName("Java");
-            $defaultType->setInstallation($response->getBody()->read(10000));
-            $defaultType->setTemplate(json_decode(file_get_contents(
-                __DIR__ . "/../../../app/Resources/Kibana/apm-dashboards.json"
-            )));
-            $defaultType->setAgent($url);
-            $this->applicationTypeManager->update($defaultType);
-        }
-
-        return $defaultType;
     }
 }

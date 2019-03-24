@@ -1,17 +1,18 @@
-<?php declare(strict_types=1);
+<?php declare (strict_types = 1);
 
 namespace ATS\PaymentBundle\Controller\Rest;
 
-use ATS\CoreBundle\Controller\Rest\BaseRestController;
+use ATS\CoreBundle\Controller\Rest\RestControllerTrait;
 use ATS\PaymentBundle\Document\Plan;
-use FOS\RestBundle\Controller\Annotations\Route;
+use ATS\PaymentBundle\Service\PlanService;
+use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use ATS\CoreBundle\Service\Voter\AclVoter;
-use ATS\PaymentBundle\Service\PlanService;
 
-class PlanController extends BaseRestController
+class PlanController extends Controller
 {
+    use RestControllerTrait;
     /**
      * @Route("/{id}/get", methods="GET")
      *
@@ -24,9 +25,8 @@ class PlanController extends BaseRestController
     public function getPlanAction(Request $request, PlanService $planService, $id)
     {
         $data = $planService->getPlan($id);
-        $this->denyAccessUnlessGranted(AclVoter::VIEW, $data);
 
-        return $this->prepareJsonResponse($data);
+        return $this->renderResponse($data);
     }
 
     /**
@@ -39,10 +39,56 @@ class PlanController extends BaseRestController
      */
     public function listPlansAction(Request $request, PlanService $planService)
     {
-        $this->denyAccessUnlessGranted(AclVoter::VIEW_ALL, Plan::class);
         $data = $planService->listPlans();
 
-        return $this->prepareJsonResponse($data);
+        return $this->renderResponse($data);
+    }
+
+    /**
+     * @Route("/{id}/update", methods="PUT")
+     *
+     * @param Request $request
+     * @param PlanService $planService
+     *
+     * @return Response
+     */
+    public function updatePlan(Request $request, PlanService $planService, $id)
+    {
+        $data = $request->getContent();
+        $planService->modifyPlan($data);
+
+        return $this->renderResponse(null);
+    }
+
+    /**
+     * @Route("/{id}/delete", methods="DELETE")
+     *
+     * @param Request $request
+     * @param PlanService $planService
+     *
+     * @return Response
+     */
+    public function deletePlan(Request $request, PlanService $planService, $id)
+    {
+        $planService->deletePlan($id);
+
+        return $this->renderResponse(null);
+    }
+
+    /**
+     * @Route("/new", methods="POST")
+     *
+     * @param Request $request
+     * @param PlanService $planService
+     *
+     * @return Response
+     */
+    public function newPlan(Request $request, PlanService $planService)
+    {
+        $data = $request->getContent();
+        $planService->createPlan($data);
+
+        return $this->renderResponse(null);
     }
 
     /**
@@ -65,9 +111,8 @@ class PlanController extends BaseRestController
         $pageNumber,
         $itemsPerPage
     ) {
-        $this->denyAccessUnlessGranted(AclVoter::VIEW_ALL, Plan::class);
         $pageResult = $planService->paginate($pageNumber, $itemsPerPage);
 
-        return $this->prepareJsonResponse($pageResult);
+        return $this->renderResponse($pageResult);
     }
 }

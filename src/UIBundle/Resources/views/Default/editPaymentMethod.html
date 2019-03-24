@@ -1,0 +1,22 @@
+<div class="panel panel-primary" ng-init="ctrl.onLoad()">
+    <div class="panel-heading">
+        <h4>Edit payment method</h4>
+    </div>
+    <div class="panel-body">
+        <form class="form-horizontal bordered-group" name="ctrl.billingForm"
+              ng-submit="ctrl.validateBilling()"
+              role="form"
+        >
+            <div class="row" >
+                <div data-ng-include="'billingForm.html'"></div>
+            </div>
+            <div class="row mt25">
+                <button type="button" class="btn btn-primary pull-right ml15"
+                        ng-disabled="ctrl.billingForm.$invalid || ctrl.ui.isSaving"
+                        data-ng-click="ctrl.validateBilling()">
+                    <spinner is-loading="ctrl.ui.isSaving"></spinner> <span>Validate</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

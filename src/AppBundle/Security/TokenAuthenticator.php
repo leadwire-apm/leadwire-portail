@@ -3,14 +3,14 @@
 namespace AppBundle\Security;
 
 use AppBundle\Service\AuthService;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Security\Guard\AbstractGuardAuthenticator;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
+use Symfony\Component\Security\Guard\AbstractGuardAuthenticator;
 
 class TokenAuthenticator extends AbstractGuardAuthenticator
 {
@@ -52,7 +52,7 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
     {
         $apiKey = $credentials['token'];
         if (null === $apiKey) {
-            return;
+            return null;
         }
 
         return $this->authService->getUserFromToken($apiKey);
@@ -72,7 +72,7 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception)
     {
         $data = array(
-            'message' => strtr($exception->getMessageKey(), $exception->getMessageData())
+            'message' => strtr($exception->getMessageKey(), $exception->getMessageData()),
         );
 
         return new JsonResponse($data, Response::HTTP_FORBIDDEN);
@@ -84,7 +84,7 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
     public function start(Request $request, AuthenticationException $authException = null)
     {
         $data = array(
-            'message' => 'Authentication Required'
+            'message' => 'Authentication Required',
         );
 
         return new JsonResponse($data, Response::HTTP_UNAUTHORIZED);

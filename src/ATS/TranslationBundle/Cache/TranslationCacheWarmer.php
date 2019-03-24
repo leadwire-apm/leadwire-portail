@@ -20,7 +20,7 @@ class TranslationCacheWarmer implements CacheWarmerInterface
 
     public function isOptional()
     {
-        return false;
+        return true;
     }
 
     public function warmUp($cacheDir)

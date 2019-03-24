@@ -2,8 +2,9 @@
 
 namespace ATS\CoreBundle\Manager;
 
-use ATS\CoreBundle\Repository\BaseDocumentRepository;
+use Doctrine\ODM\MongoDB\Query\Builder;
 use Doctrine\Bundle\MongoDBBundle\ManagerRegistry;
+use ATS\CoreBundle\Repository\BaseDocumentRepository;
 
 /**
  * AbstractManager
@@ -24,15 +25,20 @@ abstract class AbstractManager
     private $documentClass;
 
     /**
-     * @var string
+     * @var string|null
      */
     private $managerName;
+
+    /**
+     * @var DocumentManager
+     */
+    protected $documentManager;
 
     /**
      *
      * @param ManagerRegistry $managerRegistry
      * @param string $documentClass
-     * @param string $managerName
+     * @param string|null $managerName
      *
      */
     public function __construct(ManagerRegistry $managerRegistry, $documentClass = '', $managerName = null)
@@ -40,6 +46,7 @@ abstract class AbstractManager
         $this->managerRegistry = $managerRegistry;
         $this->documentClass = $documentClass;
         $this->managerName = $managerName;
+        $this->documentManager = $managerRegistry->getManager($managerName);
     }
 
     /**
@@ -51,7 +58,6 @@ abstract class AbstractManager
      * @param string $sortOrder
      * @param string $sortableField
      *
-     *
      * @return array
      */
     public function paginate(
@@ -61,26 +67,15 @@ abstract class AbstractManager
         $sortOrder = 'DESC',
         $sortableField = 'id'
     ) {
-        $qb = $this->getDocumentRepository()
-            ->createQueryBuilder();
-
-        if (count($criteria) > 0) {
-            foreach ($criteria as $field => $value) {
-                $qb = $qb->field($field)->equals($value);
-            }
-        }
-
-        return $qb
-            ->sort($sortableField, $sortOrder)
-            ->skip(($pageNumber - 1) * $itemsPerPage)
-            ->limit($itemsPerPage)
-            ->getQuery()
-            ->execute()
-            ->toArray(false);
+        return $this
+            ->getDocumentRepository()
+            ->findBy($criteria, [$sortableField => $sortOrder], $itemsPerPage, ($pageNumber - 1) * $itemsPerPage);
     }
 
     /**
      * @param mixed $document
+     *
+     * @return \MongoId
      */
     public function update($document)
     {
@@ -97,15 +92,18 @@ abstract class AbstractManager
      */
     public function batchUpdate(array $documents)
     {
+        $documentManager = $this->managerRegistry->getManager($this->managerName);
         foreach ($documents as $document) {
-            $this->managerRegistry->getManager($this->managerName)->persist($document);
+            $documentManager->persist($document);
         }
 
-        $this->managerRegistry->getManager($this->managerName)->flush();
+        $documentManager->flush();
     }
 
     /**
      * @param mixed $document
+     *
+     * @return \MongoId
      */
     public function delete($document)
     {
@@ -115,14 +113,15 @@ abstract class AbstractManager
     }
 
     /**
+     * @param string $id
+     *
      * @return void
      */
-
     public function deleteById($id)
     {
         $document = $this->getOneBy(['id' => $id]);
 
-        if ($document) {
+        if ($document !== null) {
             $this->delete($document);
         }
     }
@@ -130,7 +129,6 @@ abstract class AbstractManager
     /**
      * @return void
      */
-
     public function deleteAll()
     {
         $this->getDocumentRepository()->deleteAll();
@@ -146,15 +144,17 @@ abstract class AbstractManager
 
     /**
      * @param array      $criteria
-     * @param array|null $orderBy
+     * @param array      $orderBy
      * @param integer    $limit
      * @param integer    $offset
      *
      * @return array
      */
-    public function getBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+    public function getBy(array $criteria, array $orderBy = null, $limit = 0, $offset = 0)
     {
-        return $this->getDocumentRepository()->findBy($criteria, $orderBy, $limit, $offset);
+        return $this
+            ->getDocumentRepository()
+            ->findBy($criteria, $orderBy, $limit, $offset);
     }
 
     /**
@@ -165,76 +165,20 @@ abstract class AbstractManager
      *
      * @return mixed
      */
-    public function textSearch($text, $language = 'en')
+    public function textSearch($text, $language = 'english')
     {
-        return $this->getDocumentRepository()->like($text, $language);
+        return $this->getDocumentRepository()->textSearch($text, $language);
     }
 
     /**
      * @param array $criteria
      *
-     * @return array
+     * @return mixed
      */
     public function getOneBy(array $criteria)
     {
-        $result = $this->getBy($criteria, null, 1);
-        return array_pop($result);
-    }
-
-    /**
-     * @param array $records
-     * @param array $groupFields
-     * @param array $valueProcessors
-     * @return mixed
-     */
-    public function groupBy(array $records, array $groupFields = [], array $valueProcessors = [])
-    {
-        $result = [];
-        $getters = [];
-
-        foreach ($groupFields as $groupField) {
-            $getters[] = new \ReflectionMethod($this->documentClass, 'get' . ucfirst($groupField));
-        }
-
-        foreach ($records as $record) {
-            $current = &$result;
-
-            foreach ($getters as $index => $getter) {
-                $value = $getter->invoke($record, $getter);
-
-                if (array_key_exists($index, $valueProcessors) && is_callable($valueProcessors[$index])) {
-                    $value = $valueProcessors[$index]($value);
-                }
-
-                if (!is_int($value) && !is_string($value)) {
-                    throw new \Exception(
-                        "Unprocessed or improperly processed group value %s",
-                        serialize($value)
-                    );
-                }
-
-                if (!isset($current[$value])) {
-                    $current[$value] = null;
-                }
-                $current = &$current[$value];
-            }
-
-            $current[] = $record;
-        }
-
-        return $result;
-    }
-
-    /**
-     * @param array $criteria
-     * @param string $groupField
-     * @param array $valueProcessors
-     * @return array
-     */
-    public function getAndGroupBy(array $criteria, $groupFields = [], array $valueProcessors = [])
-    {
-        $records = $this->getBy($criteria);
-        return $this->groupBy($records, $groupFields, $valueProcessors);
+        $results = $this->getBy($criteria);
+        return count($results) === 0 ? null : reset($results);
     }
 
     /**
@@ -245,5 +189,17 @@ abstract class AbstractManager
         return $this->managerRegistry
             ->getManager($this->managerName)
             ->getRepository($this->documentClass);
+    }
+
+    /**
+     *
+     * @return Builder
+     */
+    protected function qb()
+    {
+        return $this->managerRegistry
+            ->getManager($this->managerName)
+            ->getRepository($this->documentClass)
+            ->createQueryBuilder();
     }
 }

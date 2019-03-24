@@ -1,0 +1,28 @@
+pre_composer_script: |
+    #!/bin/bash
+    yes '' | pecl install mongodb
+
+php_ini: |
+    extension=mongodb.so
+
+exclude_patterns:
+    - app/check.php
+    - app/SymfonyRequirements.php
+    - web/config.php
+    - web/app*.php
+    - src/UIBundle/Resources/public/js/**/*.js
+    - .gitlab-ci.yml
+
+rules:
+    symfony.controller.too_many_actions_per_controller:
+        enabled: true
+        max_count: 20
+        threshold: 5
+    symfony.controller.missing_redirect_after_post:
+        enabled: false
+    symfony.verbose_logging_in_production:
+        enabled: false
+    twig.template_too_long:
+        enabled: false
+    symfony.configuration.error_pages_should_be_customised:
+    enabled: false

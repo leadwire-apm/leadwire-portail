@@ -1,58 +1,191 @@
 variables:
+    CONTAINER_IMAGE: registry.gitlab.ats-digital.com/ats/docker:php7.2
     DOCKER_DRIVER: overlay2
 
 services:
     - mongo:3.4
 
 stages:
-    - build
+    - lint
     - test
+    - sensio
     - deploy
 
 cache:
     key: ${CI_COMMIT_REF_SLUG}
     paths:
         - vendor/
-phpcs:
+
+phpunit:
+    image: $CONTAINER_IMAGE
+    stage: test
     before_script:
-        - curl -sS https://getcomposer.org/installer | php
-        - curl -OL https://squizlabs.github.io/PHP_CodeSniffer/phpcs.phar
-        - php composer.phar require phpstan/phpstan
-        - 'sed "s/database_host: .*/database_host: mongo/" -i app/config/parameters.yml'
-    image: aturki/php7.1
-    stage: build
+        - touch .env
+        - echo "DATABASE_NAME=leadwire" >> .env
+        - echo "DATABASE_HOST=mongo" >> .env
+        - echo "DATABASE_PORT=27017" >> .env
+        - echo "STRIPE_SECRET_KEY=sk_test_BXblT1kn2Qgv9R2aTvltloU7" >> .env
+        - echo "APP_DOMAIN=leadwire.local" >> .env
+        - echo "APP_SCHEME=http" >> .env
+        - echo "SUPER_USER_ADMIN_NAME=aturki" >> .env
+        - echo "MAILER_TRANSPORT=gmail" >> .env
+        - echo "MAILER_USER=contact@ats-digital.com" >> .env
+        - echo "MAILER_PASSWORD='ats-digital&1'" >> .env
+        - echo "GITHUB_CLIENT_ID=aa236b3900fb084b3ccf" >> .env
+        - echo "GITHUB_CLIENT_SECRET=74af1ceda97c9e2b0ee65e8df2dd9b35d129544c" >> .env
+        - echo "JWT_TOKEN_SECRET=52e431f6ed5a80ed700c04986b6ddf" >> .env
+        - echo "LDAP_HOST=145.239.158.168" >> .env
+        - echo "LDAP_PORT=389" >> .env
+        - echo "LDAP_DN_USER=cn=ldapadm,dc=leadwire,dc=io" >> .env
+        - echo "LDAP_PASSWORD=ldppassword123" >> .env
+        - echo "KIBANA_HOST=https://kibana.leadwire.io" >> .env
+        - echo "ES_USERNAME=adm-portail" >> .env
+        - echo "ES_PASSWORD=portail-adm" >> .env
+        - echo "ES_HOST=https://es.leadwire.io/" >> .env
+        - composer install
     tags:
-        - phpcs
+        - phpunit
     script:
-        - php phpcs.phar --error-severity=1 --warning-severity=8 --extensions=php --standard=PSR2 --encoding=utf-8 ./src
-        - ./vendor/bin/phpstan analyze -l1 src/ATS/AdminBundle src/ATS/AnalyticsBundle src/ATS/CoreBundle src/ATS/EmailBundle src/ATS/GeneratorBundle src/ATS/TranslationBundle src/ATS/UserBundle
+        - ./vendor/bin/simple-phpunit --coverage-text --colors=never --strict-coverage --disallow-test-output -c phpunit.xml.dist
 
-#phpunit:
-#    before_script:
-#        - curl -sS https://getcomposer.org/installer | php
-#        - curl -OL https://phar.phpunit.de/phpunit.phar
-#        - php composer.phar install
-#        - 'sed "s/database_host: .*/database_host: mongo/" -i app/config/parameters.yml'
-#    image: aturki/php7.1
-#    stage: test
-#    tags:
-#        - phpunit
-#    script:
-#        - php phpunit.phar --coverage-text --colors=never --strict-coverage --disallow-test-output -c phpunit.xml.dist tests/ATS/
+phpcs:
+    image: $CONTAINER_IMAGE
+    stage: lint
+    before_script:
+        - touch .env
+        - echo "DATABASE_NAME=leadwire" >> .env
+        - echo "DATABASE_HOST=mongo" >> .env
+        - echo "DATABASE_PORT=27017" >> .env
+        - echo "APP_DOMAIN=leadwire.local" >> .env
+        - echo "APP_SCHEME=http" >> .env
+        - echo "STRIPE_SECRET_KEY=$TEST_STRIPE_SECRET_KEY" >> .env
+        - echo "SUPER_USER_ADMIN_NAME=$TEST_SUPER_USER_ADMIN_NAME" >> .env
+        - echo "MAILER_TRANSPORT=$TEST_MAILER_TRANSPORT" >> .env
+        - echo "MAILER_USER=$TEST_MAILER_USER" >> .env
+        - echo "MAILER_PASSWORD=$TEST_MAILER_PASSWORD" >> .env
+        - echo "GITHUB_CLIENT_ID=$TEST_GITHUB_CLIENT_ID" >> .env
+        - echo "GITHUB_CLIENT_SECRET=$TEST_GITHUB_CLIENT_SECRET" >> .env
+        - echo "JWT_TOKEN_SECRET=$TEST_JWT_TOKEN_SECRET" >> .env
+        - echo "LDAP_HOST=$TEST_LDAP_HOST" >> .env
+        - echo "LDAP_PORT=$TEST_LDAP_PORT" >> .env
+        - echo "LDAP_DN_USER=$TEST_LDAP_DN_USER" >> .env
+        - echo "LDAP_PASSWORD=$TEST_LDAP_PASSWORD" >> .env
+        - echo "KIBANA_HOST=$TEST_KIBANA_HOST" >> .env
+        - echo "KIBANA_IFRAME_HOST=$TEST_KIBANA_HOST" >> .env
+        - echo "KIBANA_PORT=$TEST_KIBANA_PORT" >> .env
+        - echo "KIBANA_IFRAME_PORT=$TEST_KIBANA_PORT" >> .env
+        - echo "ES_USERNAME=$TEST_ES_USERNAME" >> .env
+        - echo "ES_PASSWORD=$TEST_ES_PASSWORD" >> .env
+        - echo "ES_HOST=$TEST_ES_HOST" >> .env
+        - echo "ES_PORT=$TEST_ES_PORT" >> .env
+        - composer install
+    tags:
+        - phpunit
+    script:
+        - ./vendor/bin/phpcs --error-severity=1 --warning-severity=8 --extensions=php --standard=ats_ruleset.xml.dist --encoding=utf-8 ./src/AppBundle
 
-codequality:
-    image: docker:stable
-    variables:
-        DOCKER_DRIVER: overlay2
+phpstan:
+    image: $CONTAINER_IMAGE
+    stage: lint
+    before_script:
+        - touch .env
+        - echo "DATABASE_NAME=leadwire" >> .env
+        - echo "DATABASE_HOST=mongo" >> .env
+        - echo "DATABASE_PORT=27017" >> .env
+        - echo "APP_DOMAIN=leadwire.local" >> .env
+        - echo "APP_SCHEME=http" >> .env
+        - echo "STRIPE_SECRET_KEY=$TEST_STRIPE_SECRET_KEY" >> .env
+        - echo "SUPER_USER_ADMIN_NAME=$TEST_SUPER_USER_ADMIN_NAME" >> .env
+        - echo "MAILER_TRANSPORT=$TEST_MAILER_TRANSPORT" >> .env
+        - echo "MAILER_USER=$TEST_MAILER_USER" >> .env
+        - echo "MAILER_PASSWORD=$TEST_MAILER_PASSWORD" >> .env
+        - echo "GITHUB_CLIENT_ID=$TEST_GITHUB_CLIENT_ID" >> .env
+        - echo "GITHUB_CLIENT_SECRET=$TEST_GITHUB_CLIENT_SECRET" >> .env
+        - echo "JWT_TOKEN_SECRET=$TEST_JWT_TOKEN_SECRET" >> .env
+        - echo "LDAP_HOST=$TEST_LDAP_HOST" >> .env
+        - echo "LDAP_PORT=$TEST_LDAP_PORT" >> .env
+        - echo "LDAP_DN_USER=$TEST_LDAP_DN_USER" >> .env
+        - echo "LDAP_PASSWORD=$TEST_LDAP_PASSWORD" >> .env
+        - echo "KIBANA_HOST=$TEST_KIBANA_HOST" >> .env
+        - echo "KIBANA_IFRAME_HOST=$TEST_KIBANA_HOST" >> .env
+        - echo "KIBANA_PORT=$TEST_KIBANA_PORT" >> .env
+        - echo "KIBANA_IFRAME_PORT=$TEST_KIBANA_PORT" >> .env
+        - echo "ES_USERNAME=$TEST_ES_USERNAME" >> .env
+        - echo "ES_PASSWORD=$TEST_ES_PASSWORD" >> .env
+        - echo "ES_HOST=$TEST_ES_HOST" >> .env
+        - echo "ES_PORT=$TEST_ES_PORT" >> .env
+        - composer install
+    tags:
+        - phpunit
+    script:
+        - ./bin/console cache:clear --env dev
+        - ./vendor/bin/phpstan analyse
+
+sensio-insight:
+    image: $CONTAINER_IMAGE
+    stage: sensio
+    tags:
+        - php-qa
+    script:
+        - curl -o insight.phar -s https://get.insight.symfony.com/insight.phar
+        - php insight.phar analyze --no-interaction --no-ansi 2d9d7311-a698-4ed2-b484-6c19f0211940 --reference $CI_COMMIT_SHA --user-uuid 2acbe908-0593-4401-a1ae-315ec03e025f --api-token b9b8faac9a8ade3d12b75b7a84e42d9dfc3ec4c3d19f680564dbfc98850d69fc --fail-condition "analysis.grade in ['none']"
+    except:
+        refs:
+            - /^v[0-9]{1,}.*$/
     allow_failure: true
-    services:
-        - docker:stable-dind
+
+deploy:test:
+    image: $CONTAINER_IMAGE
+    stage: deploy
+    tags:
+        - min-runner
+    environment:
+        name: test
+        url: http://leadwire.test.ats-digital.com
+    only:
+        - develop
+    before_script:
+        - touch .env
+        - echo "DATABASE_NAME=leadwire" >> .env
+        - echo "DATABASE_HOST=mongo" >> .env
+        - echo "DATABASE_PORT=27017" >> .env
+        - echo "APP_DOMAIN=leadwire.local" >> .env
+        - echo "APP_SCHEME=http" >> .env
+        - echo "STRIPE_SECRET_KEY=$TEST_STRIPE_SECRET_KEY" >> .env
+        - echo "SUPER_USER_ADMIN_NAME=$TEST_SUPER_USER_ADMIN_NAME" >> .env
+        - echo "MAILER_TRANSPORT=$TEST_MAILER_TRANSPORT" >> .env
+        - echo "MAILER_USER=$TEST_MAILER_USER" >> .env
+        - echo "MAILER_PASSWORD=$TEST_MAILER_PASSWORD" >> .env
+        - echo "GITHUB_CLIENT_ID=$TEST_GITHUB_CLIENT_ID" >> .env
+        - echo "GITHUB_CLIENT_SECRET=$TEST_GITHUB_CLIENT_SECRET" >> .env
+        - echo "JWT_TOKEN_SECRET=$TEST_JWT_TOKEN_SECRET" >> .env
+        - echo "LDAP_HOST=$TEST_LDAP_HOST" >> .env
+        - echo "LDAP_PORT=$TEST_LDAP_PORT" >> .env
+        - echo "LDAP_DN_USER=$TEST_LDAP_DN_USER" >> .env
+        - echo "LDAP_PASSWORD=$TEST_LDAP_PASSWORD" >> .env
+        - echo "KIBANA_HOST=$TEST_KIBANA_HOST" >> .env
+        - echo "KIBANA_IFRAME_HOST=$TEST_KIBANA_HOST" >> .env
+        - echo "KIBANA_PORT=$TEST_KIBANA_PORT" >> .env
+        - echo "KIBANA_IFRAME_PORT=$TEST_KIBANA_PORT" >> .env
+        - echo "ES_USERNAME=$TEST_ES_USERNAME" >> .env
+        - echo "ES_PASSWORD=$TEST_ES_PASSWORD" >> .env
+        - echo "ES_HOST=$TEST_ES_HOST" >> .env
+        - echo "ES_PORT=$TEST_ES_PORT" >> .env
     script:
-        - export SP_VERSION=$(echo "$CI_SERVER_VERSION" | sed 's/^\([0-9]*\)\.\([0-9]*\).*/\1-\2-stable/')
-        - docker run
-            --env SOURCE_CODE="$PWD"
-            --volume "$PWD":/code
-            --volume /var/run/docker.sock:/var/run/docker.sock
-            "registry.gitlab.com/gitlab-org/security-products/codequality:$SP_VERSION" /code
-    artifacts:
-        paths: [codeclimate.json]
+        - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
+        - eval $(ssh-agent -s)
+        - ssh-add <(echo "$ATS_TEST_SSH_KEY")
+        - mkdir -p ~/.ssh
+        - 'echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+        - scp .env ats@test.ats-digital.com:/apps/leadwire_lot2/.env
+        - ssh -t ats@test.ats-digital.com 'cd /apps/leadwire_lot2 &&
+            pwd &&
+            rm -fr /apps/leadwire_lot2/var/cache/app/prod &&
+            eval $(ssh-agent -s) &&
+            git pull origin develop &&
+            ssh-add ~/.ssh/deploy_rsa &&
+            composer install --no-dev --no-scripts --optimize-autoloader &&
+            app/console assets:install --env prod &&
+            app/console assetic:dump --env prod &&
+            app/console cache:clear --env prod
+          '

@@ -19,10 +19,6 @@ services:
         # but if a service is unused, it's removed anyway
         exclude: '../../src/AppBundle/{Document,Repository}'
 
-    ATS\AdminBundle\:
-        resource: '../../src/ATS/AdminBundle/*'
-        exclude: '../../src/ATS/AdminBundle/{Document,Repository}'
-
     ATS\CoreBundle\:
         resource: '../../src/ATS/CoreBundle/*'
         exclude: '../../src/ATS/CoreBundle/{Document,Repository}'
@@ -31,25 +27,9 @@ services:
         resource: '../../src/ATS/EmailBundle/*'
         exclude: '../../src/ATS/EmailBundle/{Document,Repository}'
 
-    ATS\AnalyticsBundle\:
-        resource: '../../src/ATS/AnalyticsBundle/*'
-        exclude: '../../src/ATS/AnalyticsBundle/{Document,Repository}'
-
-    ATS\UserBundle\:
-        resource: '../../src/ATS/UserBundle/*'
-        exclude: '../../src/ATS/UserBundle/{Document,Repository}'
-
     ATS\TranslationBundle\:
         resource: '../../src/ATS/TranslationBundle/*'
         exclude: '../../src/ATS/TranslationBundle/{Document,Repository}'
-
-    ATS\ScheduledTaskBundle\:
-        resource: '../../src/ATS/ScheduledTaskBundle/*'
-        exclude: '../../src/ATS/ScheduledTaskBundle/{Document,Repository}'
-
-    ATS\ClientBootstrapperBundle\:
-        resource: '../../src/ATS/ClientBootstrapperBundle/*'
-        exclude: '../../src/ATS/ClientBootstrapperBundle/{Document,Repository}'
 
     # controllers are imported separately to make sure they're public
     # and have a tag that allows actions to type-hint services
@@ -57,10 +37,51 @@ services:
         resource: '../../src/AppBundle/Controller'
         tags: ['controller.service_arguments']
 
-    ATS\UserBundle\Controller\:
-        resource: '../../src/ATS/UserBundle/Controller'
-        tags: ['controller.service_arguments']
+    AppBundle\Service\LdapService:
+        arguments:
+            $settings: '%ldap%'
+        tags:
+            - { name: monolog.logger, channel: ldap }
 
-    ATS\ClientBootstrapperBundle\Controller\:
-        resource: '../../src/ATS/ClientBootstrapperBundle/Controller'
-        tags: ['controller.service_arguments']
+    AppBundle\Service\ElasticSearchService:
+        arguments:
+            $settings: "%elastic%"
+        tags:
+            - { name: monolog.logger, channel: es }
+
+    AppBundle\Service\KibanaService:
+        arguments:
+            $settings: "%kibana%"
+        tags:
+            - { name: monolog.logger, channel: kibana }
+
+    AppBundle\Service\InvitationService:
+        arguments:
+            $sender: "%sender%"
+
+    AppBundle\Service\UserService:
+        arguments:
+            $sender: "%sender%"
+
+    AppBundle\Service\AuthService:
+        arguments:
+            $appDomain: "%app_domain%"
+            $authProviderSettings: "%auth_providers%"
+            $superAdminUsername: "%super_admin_username%"
+        tags:
+            - { name: monolog.logger, channel: auth }
+
+    AppBundle\Service\ActivationCodeService:
+        arguments:
+            $rule: "%activation_code_regex%"
+
+    AppBundle\Service\JWTHelper:
+        arguments:
+            $domain: "%app_domain%"
+            $secret: "%auth_providers.settings.token_secret%"
+
+    AppBundle\Service\SearchGuardService:
+        arguments:
+            $sgConfig: "%sg%"
+        tags:
+            - { name: monolog.logger, channel: search_guard }

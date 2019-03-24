@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+echo "Running Code Sniffer..."
+./vendor/bin/phpcs --error-severity=1 --warning-severity=8 --extensions=php --standard=ats_ruleset.xml.dist --encoding=utf-8 ./src/AppBundle
+echo "Running PHPStan..."
+./vendor/bin/phpstan analyse
+echo "Clearing Cache..."
+./bin/console cache:clear

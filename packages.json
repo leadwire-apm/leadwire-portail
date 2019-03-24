@@ -1,7 +1,0 @@
-{
-    "packages": {
-        "ats-digital/symfony-boilerplate": {
-            "dev-master": { @composer.json }
-        }
-    }
-}

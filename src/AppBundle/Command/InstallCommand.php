@@ -2,105 +2,134 @@
 
 namespace AppBundle\Command;
 
-use AppBundle\Service\ApplicationTypeService;
-use ATS\PaymentBundle\Service\PlanService;
+use AppBundle\Service\LdapService;
+use AppBundle\Document\Application;
+use AppBundle\Service\KibanaService;
+use AppBundle\Service\ApplicationService;
 use Doctrine\ODM\MongoDB\DocumentManager;
-use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputArgument;
+use ATS\PaymentBundle\Service\PlanService;
+use AppBundle\Service\ElasticSearchService;
+use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Input\ArrayInput;
+use Doctrine\Common\DataFixtures\Purger\MongoDBPurger;
+use Doctrine\Common\DataFixtures\Executor\MongoDBExecutor;
+use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Input\InputOption;
 
-class InstallCommand extends Command
+class InstallCommand extends ContainerAwareCommand
 {
-    private $applicationTypeService;
-    private $planService;
-    private $dm;
-
-    public function __construct(
-        ApplicationTypeService $applicationTypeService,
-        PlanService $planService,
-        DocumentManager $doctrine
-    ) {
-        $this->applicationTypeService = $applicationTypeService;
-        $this->planService = $planService;
-        $this->dm = $doctrine;
-        parent::__construct();
-    }
-
-
     protected function configure()
     {
         $this
             ->setName('leadwire:install')
-            ->setDescription('Creates files and data required by the app.')
-            ->addArgument('dev', InputArgument::OPTIONAL, "If set, ignore grunt build step")
-            ->setHelp('Creates files and data required by the app.
-Load default Application Type. Insert template for Kibana and more..')
-        ;
+            ->setDescription('Creates files and data required by the app')
+            ->addOption("purge", "p", InputOption::VALUE_NONE, "Purge the database")
+            ->setHelp(
+                'Creates files and data required by the app.
+Load default Application Type. Insert template for Kibana and more..'
+            );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $isDev = $input->getArgument('dev');
+        /** @var LdapService $ldap */
+        $ldap = $this->getContainer()->get(LdapService::class);
+        /** @var ElasticSearchService $es */
+        $es = $this->getContainer()->get(ElasticSearchService::class);
+        /** @var KibanaService $kibana */
+        $kibana = $this->getContainer()->get(KibanaService::class);
+        /** @var PlanService $planService */
+        $planService = $this->getContainer()->get(PlanService::class);
+        /** @var ApplicationService $applicationService */
+        $applicationService = $this->getContainer()->get(ApplicationService::class);
 
-        if (!$isDev) {
-            /**
-             * Create Build of assets first.
-             */
-            $output->writeln("<fg=yellow>Dev mode off, executing grunt build...</>");
+        /** @var bool $purge */
+        $purge = $input->getOption("purge") === true ?: false;
+        $this->display($output, "Deleting Stripe plans");
+        $planService->deleteAllPlans();
 
-            $outputGrunt = shell_exec("cd src/UIBundle/Resources/public/dev && grunt build");
-            $output->writeln($outputGrunt);
-            shell_exec(" cd ../../../../../");
-        } else {
-            $output->writeln("<fg=yellow>Dev mode on going to grunt build...</>");
+        $this->loadFixtures($output, $purge);
+        $this->display($output, "Creating LDAP entries for demo applications");
+        $ldap->createDemoApplicationsEntries();
+        $demoApplications = $applicationService->listDemoApplications();
+
+        $this->display($output, "Initializing ES & Kibana");
+        /** @var Application $application */
+        foreach ($demoApplications as $application) {
+            $es->deleteIndex("app_" . $application->getUuid());
+            $es->createIndexTemplate($application, $applicationService->getActiveApplicationsNames());
+            $es->createAlias($application->getName());
+
+            $kibana->loadIndexPatternForApplication(
+                $application,
+                $application->getOwner(),
+                'app_' . $application->getUuid()
+            );
+
+            $kibana->createApplicationDashboards($application, $application->getOwner());
+
+            $es->deleteIndex("shared_" . $application->getUuid());
+
+            $kibana->loadIndexPatternForApplication(
+                $application,
+                $application->getOwner(),
+                'shared_' . $application->getUuid()
+            );
         }
 
-        /**
-         * Assets install and dump.
-         */
-        $commands = [
-            "Install Assets" => [
-                'command' => "assets:install",
-                '--symlink' => true,
-            ] ,
-            "Assetic Dump" => [
-                'command' => "assetic:dump",
-            ]
-        ];
+        $this->display($output, "Creating Stripe Plans with new Data");
+        $planService->createDefaultPlans();
 
-        foreach ($commands as $step => $arguments) {
-            $output->writeln($step);
-            $command = $this->getApplication()->find($arguments['command']);
-            $greetInput = new ArrayInput($arguments);
-            $command->run($greetInput, $output);
-        }
+        return 0;
+    }
 
-        $output->writeln("Create Application Type if not set yet");
-
-        try {
-            $defaultType = $this->applicationTypeService->createDefaultType();
-        } catch (\Exception $e) {
-            $output->writeln("<fg=red>" . $e->getMessage() . "</>");
+    private function loadFixtures($output, $purge)
+    {
+        if ($purge === false) {
             return;
         }
-        $output->writeln("<fg=green>Application Type: " . $defaultType->getName() . "</>");
 
-        $output->writeln("Create Plans if not set");
-
-        try {
-            $this->planService->createDefaulPlans();
-            $output->writeln("<fg=green> 3 Plans  are created !</>");
-        } catch (\Exception $e) {
-            $output->writeln("<fg=red>" . $e->getMessage() . "</>");
-            return;
+        /** @var DocumentManager $dm */
+        $dm = $this->getContainer()->get('doctrine_mongodb')->getManager();
+        /** @var KernelInterface $kernel */
+        $kernel = $this->getContainer()->get('kernel');
+        $paths = $this->getContainer()->getParameter('doctrine_mongodb.odm.fixtures_dirs');
+        $paths = is_array($paths) === true ? $paths : [$paths];
+        $paths[] = $kernel->getRootDir() . '/DataFixtures/MongoDB';
+        foreach ($kernel->getBundles() as $bundle) {
+            $paths[] = $bundle->getPath() . '/DataFixtures/MongoDB';
         }
 
-        $output->writeln("Creating Indexes");
-        $this->dm->getSchemaManager()->ensureIndexes();
+        $loaderClass = $this->getContainer()->getParameter('doctrine_mongodb.odm.fixture_loader');
+        $loader = new $loaderClass($this->getContainer());
+        foreach ($paths as $path) {
+            if (is_dir($path) === true) {
+                $loader->loadFromDirectory($path);
+            } else if (is_file($path) === true) {
+                $loader->loadFromFile($path);
+            }
+        }
 
-        $output->writeln("<fg=green>It's done!</>");
+        $fixtures = $loader->getFixtures();
+        if ($fixtures === null) {
+            throw new \InvalidArgumentException(
+                sprintf('Could not find any fixtures to load in: %s', "\n\n- " . implode("\n- ", $paths))
+            );
+        }
+
+        $purger = new MongoDBPurger($dm);
+        $executor = new MongoDBExecutor($dm, $purger);
+        $executor->setLogger(
+            function ($message) use ($output) {
+                $output->writeln(sprintf('  <comment>></comment> <info>%s</info>', $message));
+            }
+        );
+        $executor->execute($fixtures, false);
+    }
+
+    private function display($output, $message)
+    {
+        $output->writeln(sprintf('  <comment>></comment> <info>%s</info>', $message));
     }
 }

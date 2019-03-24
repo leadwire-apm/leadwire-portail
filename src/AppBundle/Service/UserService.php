@@ -1,20 +1,20 @@
-<?php declare(strict_types=1);
+<?php declare (strict_types = 1);
 
 namespace AppBundle\Service;
 
+use AppBundle\Document\User;
+use AppBundle\Manager\UserManager;
 use ATS\EmailBundle\Document\Email;
 use ATS\EmailBundle\Service\SimpleMailerService;
 use ATS\PaymentBundle\Service\CustomerService;
-use ATS\PaymentBundle\Service\Subscription;
 use ATS\PaymentBundle\Service\PlanService;
+use ATS\PaymentBundle\Service\Subscription;
 use JMS\Serializer\DeserializationContext;
-use Psr\Log\LoggerInterface;
 use JMS\Serializer\SerializerInterface;
-use AppBundle\Manager\UserManager;
-use AppBundle\Document\User;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\Router;
+use Symfony\Component\Routing\RouterInterface;
 
 /**
  * Service class for User entities
@@ -43,7 +43,7 @@ class UserService
     private $mailer;
 
     /**
-     * @var Router
+     * @var RouterInterface
      */
     private $router;
 
@@ -74,8 +74,7 @@ class UserService
      * @param SerializerInterface $serializer
      * @param LoggerInterface $logger
      * @param SimpleMailerService $mailer
-     * @param Router $router
-     * @param ContainerInterface $container
+     * @param RouterInterface $router
      * @param CustomerService $customerService
      * @param Subscription $subscriptionService
      * @param PlanService $planService
@@ -85,86 +84,93 @@ class UserService
         SerializerInterface $serializer,
         LoggerInterface $logger,
         SimpleMailerService $mailer,
-        Router $router,
-        ContainerInterface $container,
+        RouterInterface $router,
         CustomerService $customerService,
         Subscription $subscriptionService,
-        PlanService $planService
+        PlanService $planService,
+        string $sender
     ) {
         $this->userManager = $userManager;
         $this->serializer = $serializer;
         $this->logger = $logger;
         $this->mailer = $mailer;
         $this->router = $router;
-        $this->sender = $container->getParameter('sender');
+        $this->sender = $sender;
         $this->customerService = $customerService;
         $this->subscriptionService = $subscriptionService;
         $this->planService = $planService;
     }
 
     /**
-     * List all users
+     * List users by role
+     *
+     * @param string $role
      *
      * @return array
      */
-    public function listUsers()
+    public function listUsersByRole($role)
     {
-        return $this->userManager->getAll();
-    }
+        $users = [];
+        switch ($role) {
+            case 'admin':
+                $users = $this->userManager->getBy(
+                    [
+                        'roles' => [
+                            '$all' => [User::ROLE_ADMIN],
+                        ],
+                    ]
+                );
+                break;
 
-    /**
-     * Paginates through Users
-     *
-     * @param int $pageNumber
-     * @param int $itemsPerPage
-     * @param array $criteria
-     *
-     * @return array
-     */
-    public function paginate($pageNumber = 1, $itemsPerPage = 20, array $criteria = [])
-    {
-        return $this->userManager->paginate($criteria, $pageNumber, $itemsPerPage);
+            default:
+                $users = $this->userManager->getAll();
+                break;
+        }
+
+        return $users;
     }
 
     public function subscribe($data, User $user)
     {
+        /** @var string $json */
         $json = json_encode(["name" => $user->getName(), "email" => $user->getEmail()]);
         $data = json_decode($data, true);
         $plan = $this->planService->getPlan($data['plan']);
         $token = null;
-        if ($plan) {
-            if ($plan->getPrice() == 0) {
-                if ($user->getSubscriptionId()) {
+
+        if ($plan !== null) {
+            if ($plan->getPrice() === 0.0) {
+                if ($user->getSubscriptionId() !== null) {
                     $this->subscriptionService->delete(
                         $user->getSubscriptionId(),
-                        $user->getCustomer()->getGatewayToken()
+                        $user->getCustomer() !== null ? $user->getCustomer()->getGatewayToken() : ''
                     );
                 }
                 $user->setPlan($plan);
                 $this->userManager->update($user);
+
                 return true;
             } else {
                 foreach ($plan->getPrices() as $pricingPlan) {
-                    if ($pricingPlan->getName() == $data['billingType']) {
+                    if ($pricingPlan->getName() === $data['billingType']) {
                         $token = $pricingPlan->getToken();
                     }
                 }
 
-                if (!$user->getCustomer()) {
+                if ($user->getCustomer() === null) {
                     $customer = $this->customerService->newCustomer($json, $data['card']);
                     $user->setCustomer($customer);
                 } else {
                     $customer = $user->getCustomer();
                 }
 
-                if ($subscriptionId = $this->subscriptionService->create(
-                    $token,
-                    $customer
-                )
-                ) {
+                $subscriptionId = $this->subscriptionService->create($token, $customer);
+
+                if ($subscriptionId !== null) {
                     $user->setSubscriptionId($subscriptionId);
                     $user->setPlan($plan);
                     $this->userManager->update($user);
+
                     return true;
                 } else {
                     return false;
@@ -177,7 +183,7 @@ class UserService
 
     public function getSubscription(User $user)
     {
-        if ($user->getSubscriptionId() && $user->getCustomer()) {
+        if ($user->getSubscriptionId() !== null && $user->getCustomer() !== null) {
             return $this->subscriptionService->get($user->getSubscriptionId(), $user->getCustomer());
         } else {
             return [];
@@ -186,44 +192,64 @@ class UserService
 
     public function getInvoices(User $user)
     {
-        if ($user->getCustomer()) {
+        if ($user->getCustomer() !== null) {
             return $this->customerService->getInvoices($user->getCustomer()->getGatewayToken());
         } else {
             return [];
         }
     }
 
+    /**
+     *
+     * @param User $user
+     * @param array $data
+     *
+     * @return mixed
+     */
     public function updateSubscription(User $user, $data)
     {
+        // TODO MAJOR REWORK NEEDED
+
+        if ($user->getCustomer() === null) {
+            throw new \Exception(sprintf("Customer for user %s is null", $user->getId()));
+        }
+
         $plan = $this->planService->getPlan($data['plan']);
         $subscription = $this->subscriptionService->get($user->getSubscriptionId(), $user->getCustomer());
         $token = false;
-        if ($plan) {
+
+        if ($plan !== null) {
             $anchorCycle = 'unchanged';
-            //$user->getPlan()->getPrice() < $plan->getPrice() ? 'unchanged' : $data['periodEnd'];
-            if ($plan->getPrice() == 0) {
+            if ($plan->getPrice() === 0.0) {
                 $this->subscriptionService->delete(
                     $user->getSubscriptionId(),
                     $user->getCustomer()->getGatewayToken()
                 );
                 $user->setPlan($plan);
                 $this->userManager->update($user);
+
                 return true;
             } else {
                 foreach ($plan->getPrices() as $billingType) {
-                    if ($billingType->getName() == $data['billingType']) {
+                    if ($billingType->getName() === $data['billingType']) {
                         $token = $billingType->getToken();
                     }
                 }
 
-                if (is_string($token)) {
-                    if ($user->getPlan()->getPrice() < $plan->getPrice() &&
-                        $subscription["plan"]["interval"] . 'ly' != $data['billingType']
+                if (is_string($token) === true) {
+                    $userPlan = $user->getPlan();
+
+                    if ($userPlan === null) {
+                        throw new \Exception("User plan not found {$user->getId()}");
+                    }
+
+                    if ($userPlan->getPrice() < $plan->getPrice() &&
+                        $subscription["plan"]["interval"] . 'ly' !== $data['billingType']
                     ) {
                         $anchorCycle = 'now';
                     }
 
-                    if ($user->getPlan()->getPrice() == 0) {
+                    if ($userPlan->getPrice() === 0.0) {
                         $data = $this->subscriptionService->create(
                             $token,
                             $user->getCustomer()
@@ -235,10 +261,10 @@ class UserService
                             $token,
                             $anchorCycle
                         );
-
                     }
                     $user->setPlan($plan);
                     $this->userManager->update($user);
+
                     return $data;
                 } else {
                     throw new \Exception("Plan was not found");
@@ -251,11 +277,11 @@ class UserService
 
     public function updateCreditCard(User $user, $data)
     {
-        if ($user->getCustomer()) {
+        if ($user->getCustomer() !== null) {
             $customer = $user->getCustomer();
         } else {
+            /** @var string $json */
             $json = json_encode(["name" => $user->getName(), "email" => $user->getEmail()]);
-            $data = json_decode($data, true);
 
             $customer = $this->customerService->newCustomer($json, $data);
             $user->setCustomer($customer);
@@ -279,7 +305,7 @@ class UserService
     /**
      * Get specific users
      *
-     * @param string $criteria
+     * @param array $criteria
      *
      * @return array
      */
@@ -297,17 +323,26 @@ class UserService
      */
     public function newUser($json)
     {
+        $context = new DeserializationContext();
+        $context->setSerializeNull(true);
+
+        /** @var User $user */
         $user = $this
             ->serializer
-            ->deserialize($json, User::class, 'json');
+            ->deserialize($json, User::class, 'json', $context);
 
-        return $this->updateUser($json);
+        $this->userManager->update($user);
+
+        $this->sendVerificationEmail($user);
+
+        return true;
     }
 
     /**
      * Updates a specific user from JSON data
      *
      * @param string $json
+     * @param string $id
      *
      * @return bool
      */
@@ -324,9 +359,7 @@ class UserService
                 ->deserialize($json, User::class, 'json', $context);
 
             $this->userManager->update($user);
-            if (!$user->getIsEmailValid()) {
-                $this->sendVerifEmail($user);
-            }
+
             $isSuccessful = true;
         } catch (\Exception $e) {
             $this->logger->error($e->getMessage());
@@ -349,34 +382,9 @@ class UserService
     }
 
     /**
-     * Performs a full text search on  User
-     *
-     * @param string $term
-     * @param string $lang
-     *
-     * @return array
-     */
-    public function textSearch($term, $lang)
-    {
-        return $this->userManager->textSearch($term, $lang);
-    }
-
-    /**
-     * Performs multi-field grouped query on User
-     * @param array $searchCriteria
-     * @param string $groupField
-     * @param \Closure $groupValueProcessor
-     * @return array
-     */
-    public function getAndGroupBy(array $searchCriteria, $groupFields = [], $valueProcessors = [])
-    {
-        return $this->userManager->getAndGroupBy($searchCriteria, $groupFields, $valueProcessors);
-    }
-
-    /**
      * @param User $user
      */
-    public function sendVerifEmail(User $user)
+    public function sendVerificationEmail(User $user)
     {
         $mail = new Email();
         $mail
@@ -385,11 +393,64 @@ class UserService
             ->setSenderAddress($this->sender)
             ->setTemplate('AppBundle:Mail:verif.html.twig')
             ->setRecipientAddress($user->getEmail())
-            ->setMessageParameters([
-                'username' => $user->getUsername(),
-                'email' => $user->getEmail(),
-                'link' => $this->router->generate('verify_email', ['email' => $user->getEmail()], UrlGeneratorInterface::ABSOLUTE_URL)
-            ]);
-        $this->mailer->send($mail, false);
+            ->setSentAt(new \DateTime())
+            ->setMessageParameters(
+                [
+                    'username' => $user->getUsername(),
+                    'email' => $user->getEmail(),
+                    'link' => $this->router->generate('verify_email', ['email' => $user->getEmail()], UrlGeneratorInterface::ABSOLUTE_URL),
+                ]
+            );
+        $this->mailer->send($mail, true);
+    }
+
+    /**
+     *
+     * @param string $id
+     *
+     * @return boolean
+     */
+    public function softDeleteUser(string $id): bool
+    {
+        $isSuccessful = false;
+        /** @var User $user */
+        $user = $this->userManager->getOneBy(['id' => $id]);
+
+        if ($user instanceof User) {
+            $user->setDeleted(true);
+            $this->userManager->update($user);
+
+            $isSuccessful = true;
+        }
+
+        return $isSuccessful;
+    }
+
+    /**
+     * Toggles Lock staus for a given user
+     *
+     * @param string $id
+     * @param string $lockMessage
+     *
+     * @return boolean
+     */
+    public function lockToggle(string $id, string $lockMessage): bool
+    {
+        $isSuccessful = false;
+
+        $user = $this->userManager->getOneBy(['id' => $id]);
+
+        if ($user instanceof User) {
+            $user->toggleLock();
+            if ($user->isLocked() === true) {
+                // It's a lock operation --> Update the lock message if any
+                $user->setLockMessage($lockMessage);
+            }
+
+            $this->userManager->update($user);
+            $isSuccessful = true;
+        }
+
+        return $isSuccessful;
     }
 }

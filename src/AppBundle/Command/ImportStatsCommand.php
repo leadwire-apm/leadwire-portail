@@ -1,41 +1,34 @@
 <?php
 namespace AppBundle\Command;
 
+use DateTime;
 use AppBundle\Document\Stat;
-use AppBundle\Manager\AppManager;
-use AppBundle\Service\StatService;
+use AppBundle\Manager\ApplicationManager;
 use Symfony\Component\Console\Command\Command;
+use Doctrine\Bundle\MongoDBBundle\ManagerRegistry;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Doctrine\Bundle\MongoDBBundle\ManagerRegistry;
 
 class ImportStatsCommand extends Command
 {
     /**
-     * @var StatService
+     * @var ApplicationManager
      */
-    private $statService;
-
-    /**
-     * @var AppManager
-     */
-    private $appManager;
+    private $applicationManager;
 
     /**
      * @var ManagerRegistry
      */
     private $managerRegistry;
 
-    public function __construct(StatService $statService, AppManager $appManager, ManagerRegistry $managerRegistry)
+    public function __construct(ApplicationManager $applicationManager, ManagerRegistry $managerRegistry)
     {
-        $this->statService = $statService;
-        $this->appManager = $appManager;
+        $this->applicationManager = $applicationManager;
         $this->managerRegistry = $managerRegistry;
 
         parent::__construct();
     }
-
 
     protected function configure()
     {
@@ -43,27 +36,33 @@ class ImportStatsCommand extends Command
             ->setName('leadwire:import:stats')
             ->setDescription('Import CSV file to Database')
             ->addArgument('file', InputArgument::REQUIRED, "CSV file to import")
-            ->setHelp('Import CSV file to Database.
+            ->setHelp(
+                'Import CSV file to Database.
 CSV file must have a header in first line. It should loik like:
-app_uuid;jour;nb_tx');
+app_uuid;jour;nb_tx'
+            );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        /** @var string $file */
         $file = $input->getArgument('file');
-        if (is_file($file)) {
+
+        if (is_file($file) === true) {
             $stats = [];
             $apps = [];
             $row = 0;
 
-            if (($handle = fopen($file, "r")) !== false) {
+            $handle = fopen($file, "r");
+
+            if ($handle !== false) {
                 while (($data = fgetcsv($handle, 0, ";")) !== false) {
-                    $num = count($data);
+                    $num = is_array($data) === true ? count($data) : 0;
                     $row++;
                     for ($c = 1; $c < $num; $c++) {
-                        if (!isset($apps[$data[0]])) {
-                            $apps[$data[0]] = $this->appManager->getOneBy(['uuid' => $data[0]]);
-                            if (!$apps[$data[0]]) {
+                        if (false === isset($apps[$data[0]])) {
+                            $apps[$data[0]] = $this->applicationManager->getOneBy(['uuid' => $data[0]]);
+                            if ($apps[$data[0]] === null) {
                                 $output->writeln(
                                     "<fg=red> App with uuid = '"
                                     . $data[0]
@@ -72,12 +71,16 @@ app_uuid;jour;nb_tx');
                                 continue;
                             }
                         }
-                        $timezone = new \DateTimeZone('Europe/London');
-                        $date = \DateTime::createFromFormat('Ymd', $data[1], $timezone);
                         $stats[$row] = new Stat();
-                        $stats[$row]->setDay($date)
-                            ->setNbr($data[2])
-                            ->setApp($apps[$data[0]]);
+                        $timezone = new \DateTimeZone('Europe/London');
+                        $date = DateTime::createFromFormat('Ymd', $data[1], $timezone);
+                        if ($date instanceof DateTime) {
+                            $stats[$row]->setDay($date);
+                        } else {
+                            throw new \Exception(sprintf("Bad value for DateTime object [%s]", $data[1]));
+                        }
+                        $stats[$row]->setNbr($data[2])
+                            ->setApplication($apps[$data[0]]);
 
                         $this->managerRegistry->getManager()->persist($stats[$row]);
                     }

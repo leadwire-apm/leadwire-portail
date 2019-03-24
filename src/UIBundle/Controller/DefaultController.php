@@ -3,16 +3,16 @@
 namespace UIBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Response;
 
 class DefaultController extends Controller
 {
     /**
-     * @Route("/", name="angular_endPoint")
+     * @Route("/", name="angular_endPoint", methods="GET")
      */
     public function indexAction()
     {
-        return $this->render('UIBundle:Default:index.html.twig', []);
+        return $this->render('@UI/Default/index.html.twig');
     }
 }

@@ -1,18 +1,61 @@
 imports:
-    - { resource: parameters.yml }
     - { resource: security.yml }
     - { resource: services.yml }
     - { resource: vendor/config.yml}
     - { resource: "@AppBundle/Resources/config/config.yml" }
-    - { resource: "@AnalyticsBundle/Resources/config/config.yml" }
     - { resource: "@CoreBundle/Resources/config/config.yml" }
-    - { resource: "@ClientBootstrapperBundle/Resources/config/services.yml" }
     - { resource: "@UIBundle/Resources/config/services.yml" }
     - { resource: "@PaymentBundle/Resources/config/services.yml" }
 
 # Parameters Configuration
 parameters:
-    locale: '%app_locale%'
+    locale: en
+    app_version: 'v1.0.0'
+    app_domain: '%env(APP_DOMAIN)%'
+    app_schemes: '%env(APP_SCHEME)%'
+    activation_code_regex: '[A-Z0-9]B[A-Z0-9]{2}7[A-Z0-9]'
+    default_lock_message: 'Your account has been locked'
+    secret: 06abd8f87b9d3b88feb152891421cb20017e56dd
+    internal_api_prefix: api
+    secret_key: '%env(STRIPE_SECRET_KEY)%'
+    providerName: Stripe
+    super_admin_username: '%env(SUPER_USER_ADMIN_NAME)%'
+    mailer_transport: '%env(MAILER_TRANSPORT)%'
+    mailer_user: '%env(MAILER_USER)%'
+    mailer_password: '%env(MAILER_PASSWORD)%'
+    sender: "%mailer_user%"
+    github_client_id: '%env(GITHUB_CLIENT_ID)%'
+    auth_providers.settings.token_secret: '%env(JWT_TOKEN_SECRET)%'
+    kibana.host: '%env(KIBANA_HOST)%'
+    kibana.iframe_host: '%env(KIBANA_IFRAME_HOST)%'
+    kibana.port: '%env(KIBANA_PORT)%'
+    kibana.iframe_port: '%env(KIBANA_IFRAME_PORT)%'
+    auth_providers:
+        github:
+            github_access_token_url: 'https://github.com/login/oauth/access_token'
+            github_users_api_url: 'https://api.github.com/user'
+            github_client_secret: '%env(GITHUB_CLIENT_SECRET)%'
+        settings:
+            token_secret: '%env(JWT_TOKEN_SECRET)%'
+    ldap:
+        host: '%env(LDAP_HOST)%'
+        port: '%env(LDAP_PORT)%'
+        dn_user: '%env(LDAP_DN_USER)%'
+        mdp: '%env(LDAP_PASSWORD)%'
+    kibana:
+        host: '%env(KIBANA_HOST)%'
+        port: '%env(KIBANA_PORT)%'
+        iframe_host: '%env(KIBANA_IFRAME_HOST)%'
+        iframe_port: '%env(KIBANA_IFRAME_PORT)%'
+        template_folder: '%kernel.project_dir%/app/Resources/Kibana'
+    elastic:
+        username: '%env(ES_USERNAME)%'
+        password: '%env(ES_PASSWORD)%'
+        host: '%env(ES_HOST)%'
+        port: '%env(ES_PORT)%'
+    sg:
+        executable_path: '/usr/share/elasticsearch/plugins/search-guard-6/tools/sgadmin.sh'
+        config_dirpath: '/usr/share/elasticsearch/plugins/search-guard-6/sgconfig/'
 
 # Framework Configuration
 framework:
@@ -21,23 +64,11 @@ framework:
     router:
         resource:            '%kernel.root_dir%/config/routing.yml'
         strict_requirements: ~
-        http_port:           3000
-        https_port:          8443
-    form:
-        enabled:             true
-    csrf_protection:
-        enabled:             true
     validation:              { enable_annotations: true }
     templating:
         engines:             ['twig']
     default_locale:          '%locale%'
     trusted_hosts:           ~
-    session:
-        cookie_lifetime:     31536000
-        save_path:           '%kernel.project_dir%/var/sessions/app/%kernel.environment%'
-        cookie_domain:       '%app_domain%'
-        name:                '%app_id%_%kernel.environment%'
-        use_cookies:         true
     fragments:    ~
     http_method_override:    true
 
@@ -46,49 +77,46 @@ twig:
     debug:            '%kernel.debug%'
     strict_variables: '%kernel.debug%'
     globals:
-        app_version:  '%app_version%'
+        APP_VERSION:  '%app_version%'
+        BASE_URL: '%app_schemes%://%app_domain%/'
+        ASSETS_BASE_URL: '/'
+        UPLOAD_URL: '%app_schemes%://%app_domain%/uploads/'
+        DOWNLOAD_URL: '%app_schemes%://%app_domain%/core/api/resource/'
+        GITHUB_CLIENT_ID: '%github_client_id%'
+        KIBANA_BASE_URL: '%kibana.iframe_host%:%kibana.iframe_port%/'
+        DATE_DEFAULT_FORMAT: 'YYYY-MM-DD[T]HH:mm:ssZZ'
+        EN_DATE_FORMAT: 'YYYY-DD-MM'
+        FR_DATE_FORMAT: 'DD-MM-YYYY'
+        TAX: 20
+    paths:
+        '%kernel.project_dir%/src/UIBundle/Resources/views/Default': ~
 
 # Assetic Configuration
 assetic:
     debug:          '%kernel.debug%'
     use_controller: false
     bundles:
-        - CoreBundle
-        - AppBundle
-        - UserBundle
-        - AdminBundle
-        - TranslationBundle
+        - UIBundle
+
     filters:
         cssrewrite: ~
 
 doctrine_mongodb:
     auto_generate_hydrator_classes: true
-    default_database: '%database_name%'
+    default_database: '%env(DATABASE_NAME)%'
     default_connection: default
     default_document_manager: default
     connections:
         default:
-            server: 'mongodb://%database_host%:%database_port%'
+            server: 'mongodb://%env(DATABASE_HOST)%:%env(DATABASE_PORT)%'
             options:
-                username: '%database_user%'
-                password: '%database_pass%'
+                username: ~
+                password: ~
                 connect: true
-                db: '%database_name%'
+                db: '%env(DATABASE_NAME)%'
     document_managers:
         default:
             connection: default
-            database: '%database_name%'
+            database: '%env(DATABASE_NAME)%'
             auto_mapping: true
             logging: false
-
-fos_oauth_server:
-    db_driver: mongodb
-    client_class:        ATS\UserBundle\Document\Client
-    access_token_class:  ATS\UserBundle\Document\AccessToken
-    refresh_token_class: ATS\UserBundle\Document\RefreshToken
-    auth_code_class:     ATS\UserBundle\Document\AuthCode
-    service:
-        user_provider: ATS\UserBundle\Provider\SimpleUserProvider
-        options:
-            supported_scopes: user
-            access_token_lifetime: 3600 # 1 hour in seconds

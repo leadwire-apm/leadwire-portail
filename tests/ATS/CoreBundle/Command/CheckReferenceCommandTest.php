@@ -2,20 +2,21 @@
 
 namespace Tests\ATS\CoreBundle\Command;
 
-use ATS\CoreBundle\Command\Tools\Doctrine\CheckReferenceCommand;
-use Symfony\Bundle\FrameworkBundle\Console\Application;
-use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Console\Tester\CommandTester;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Bundle\FrameworkBundle\Console\Application;
+use ATS\CoreBundle\Command\Tools\Doctrine\CheckReferenceCommand;
 
-class CheckReferenceCommandTest extends KernelTestCase
+class CheckReferenceCommandTest extends WebTestCase
 {
 
     public function testExecute()
     {
         $kernel = self::bootKernel();
         $application = new Application($kernel);
-
-        $application->add(new CheckReferenceCommand());
+        $logger = $kernel->getContainer()->get('logger');
+        $managerRegistry = $kernel->getContainer()->get('doctrine_mongodb');
+        $application->add((new CheckReferenceCommand($managerRegistry)));
 
         $command = $application->find('ats:core:tools:doctrine:check-reference');
         $commandTester = new CommandTester($command);
