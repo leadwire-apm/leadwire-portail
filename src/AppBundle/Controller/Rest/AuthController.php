@@ -49,4 +49,40 @@ class AuthController extends Controller
             ]
         );
     }
+
+    public function loginAction(Request $request, AuthService $authService)
+    {
+        $data = json_decode($request->getContent(), true);
+        $globalSettnigs = $this->getParameter('auth_providers')['settings'];
+        $params = [
+            'username' => $data['username']
+        ];
+        
+        $userData = $authService->loginProvider($params);
+
+        return new JsonResponse(
+            [
+                "token" => $authService->generateToken($userData, $globalSettnigs['token_secret']),
+            ]
+        );
+    }
+
+    public function proxyAction(Request $request, AuthService $authService)
+    {
+        $data = json_decode($request->getContent(), true);
+        $globalSettnigs = $this->getParameter('auth_providers')['settings'];
+        $params = [
+            'username' => $data['username'],
+            'email' => $data['email'],
+            'group' => $data['group']
+        ];
+        
+        $userData = $authService->proxyLoginProvider($params);
+
+        return new JsonResponse(
+            [
+                "token" => $authService->generateToken($userData, $globalSettnigs['token_secret']),
+            ]
+        );
+    }
 }

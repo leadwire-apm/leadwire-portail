@@ -1,0 +1,73 @@
+<div class="modal-body">
+    <div class="main">
+
+        <div class="container">
+
+            <form  id="signup-form" class="signup-form">
+
+                <div role="application" class="wizard clearfix vertical" id="steps-uid-0">
+                    <div class="steps clearfix">
+
+                        <ul role="tablist">
+
+                            <li role="tab"
+                                ng-class="{'first': ($index == 0), 'last': ($index == ctrl.stepData.length - 1), 'current': (step.current), 'completed': ( step.completed), 'inProgress': ( ctrl.max === $index)}"
+                                ng-repeat="step in ctrl.stepData">
+                                <a ng-click="ctrl.goToStep(step.order)">
+                                    <div class="title">
+                                        <span class="step-number">[[step.order]]</span>
+                                        <span class="step-text">[[step.label]]</span>
+                                    </div>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="content clearfix">
+                        <h3 id="steps-uid-0-h-0" tabindex="-1" class="title">Info</h3>
+                        <fieldset id="steps-uid-0-p-0" role="tabpanel" aria-labelledby="steps-uid-0-h-0" class="body">
+                            <div class="fieldset-content">
+                                <div class="form-row">
+                                    <div class="form-flex">
+                                        <div class="form-group all">
+                                            <label class="form-label">Comments : </label>
+                                            <textarea class="form-control" ng-model="ctrl.current.comment" rows="6" disabled="true"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="form-flex">
+                                        <div class="form-group">
+                                            <label class="form-label">waiting for informations : </label>
+                                            <input class="stepCheckbox" type="checkbox" ng-model="ctrl.current.waiting" disabled="true">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+                        <div class="actions">
+                            <ul role="menu" aria-label="Pagination">
+
+                                <li ng-show="ctrl.stepProgress > 0">
+                                    <a role="menuitem" ng-click="ctrl.previous()">Previous</a>
+                                </li>
+
+                                <li ng-show="ctrl.stepProgress < ctrl.max">
+                                    <a role="menuitem"  ng-click="ctrl.next()">Next</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                </div>
+
+            </form>
+        </div>
+
+    </div>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-primary" ng-click="ctrl.ok()">OK</button>
+    <button class="btn btn-warning" ng-click="ctrl.cancel()">Cancel</button>
+</div>

@@ -1,0 +1,57 @@
+<div id="panel" class="panel" ng-init="ctrl.init()">
+        <div class="panel-heading">
+            <h4>Campaigns Overview</h4>
+            <hr>
+        </div>
+        <div class="panel-body">
+            <div class="row no-margin">
+                <div class="col-lg-12 ">
+                    <div class="row mb30" ng-if="false">
+                        <div class="col-sm-4"></div>
+                        <div class="col-sm-4"></div>
+                        <div class="col-sm-4">
+                            <a ng-click="ctrl.generatePdf()" class="btn btn-success pull-right">
+                                <i class="fa fa-plus"></i>
+                                Download PDF
+                            </a>
+                        </div>
+                    </div>
+                    <div class="no-more-tables">
+                        <table class="table table-striped mb0">
+                            <thead>
+                            <tr>
+                                <th class="text-center">Application Name</th>
+                                <th class="text-center">Version</th>
+                                <th class="text-center">Status</th>
+                            </tr>
+                            </thead>
+                            <tbody >
+                            <tr ng-if="ctrl.ui.isLoading" class="text-center">
+                                <td colspan="6">
+                                    <spinner is-loading="ctrl.ui.isLoading" size="24"></spinner>
+                                </td>
+                            </tr>
+                            <tr ng-repeat="compagne in ctrl.compagnes" class="text-center">
+                                
+                                <td data-title="Name" data-label="Name">
+                                    [[compagne.applicationName]]
+                                </td>
+
+                                <td data-title="version" data-label="version">
+                                    [[compagne.version]]
+                                </td>
+
+                                <td data-title="version" data-label="version">
+                                    <div>
+                                        <span ng-repeat="step in compagne.steps" class="stepsSpan" ng-class="ctrl.getClass(step)">[[step.label]]</span>
+                                    </div>
+                                </td>
+
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>

@@ -25,6 +25,9 @@ angular.module('leadwireApp')
                 url: CONFIG.BASE_URL + 'login/github',
             });
 
+            $authProvider.baseUrl = CONFIG.BASE_URL;
+            $authProvider.loginUrl = 'login/' + CONFIG.LOGIN_METHOD;
+
             // Application routes
             $stateProvider.state('app', {
                 abstract: true,
@@ -605,7 +608,63 @@ angular.module('leadwireApp')
                 .state('static.aboutUs', {
                     url: '/page/about-us',
                     templateUrl: 'static/aboutUs.html',
-                });
+                })
+                //TMEC
+                .state('app.tmecs', {
+                    url: '/compagnes/list',
+                    templateUrl: 'application/tmecsList.html',
+                    resolve: {
+                        permissions: loginRequired,
+                        menu: updateMenuItems('SETTINGS')
+                    },
+                    controller: 'ListCompagnesController',
+                    controllerAs: 'ctrl',
+                })
+
+                .state('app.management.tmecs', {
+                    url: '/tmec/list',
+                    templateUrl: 'tmec/list.html',
+                    resolve: {
+                        permissions: adminRequired,
+                        menu: updateMenuItems('MANAGEMENT'),
+                    },
+                    controller: 'ListCompagnesController',
+                    controllerAs: 'ctrl',
+                })
+
+                .state('app.management.addTmecs', {
+                    url: '/tmec/add',
+                    templateUrl: 'tmec/add.html',
+                    resolve: {
+                        permissions: adminRequired,
+                        menu: updateMenuItems('MANAGEMENT'),
+                    },
+                    controller: 'AddCompagnesController',
+                    controllerAs: 'ctrl',
+                })
+
+                .state('app.management.editTmecs', {
+                    url: '/tmec/edit/:id',
+                    templateUrl: 'tmec/edit.html',
+                    resolve: {
+                        permissions: adminRequired,
+                        menu: updateMenuItems('MANAGEMENT'),
+                    },
+                    controller: 'EditCompagnesController',
+                    controllerAs: 'ctrl',
+                })
+
+                .state('app.overview', {
+                    url: '/tmec/overview',
+                    templateUrl: 'tmec/overview.html',
+                    resolve: {
+                        permissions: loginRequired,
+                        menu: updateMenuItems('SETTINGS'),
+                    },
+                    controller: 'TmecOverviewController',
+                    controllerAs: 'ctrl',
+                })
+                //END TMEC
 
             function updateMenuItems (key) {
                 return function (MenuFactory, $rootScope) {
