@@ -13,6 +13,7 @@
  * @param ApplicationFactory
  * @param $rootScope
  * @param $state
+ * @param CONFIG
  * @constructor
  */
 function LoginControllerFN (
@@ -28,6 +29,7 @@ function LoginControllerFN (
     ApplicationFactory,
     $rootScope,
     $state,
+    CONFIG,
 ) {
     var vm = this;
     vm.invitationId =
@@ -35,17 +37,83 @@ function LoginControllerFN (
             ? $location.$$search.invitation
             : undefined;
     onLoad();
-    vm.authenticate = authenticate;
+    
+    vm.loginAuthenticate = loginAuthenticate;
 
-    function authenticate (provider) {
+    vm.loginMethod = CONFIG.LOGIN_METHOD;
+
+    if(vm.loginMethod === 'proxy'){
+        proxyAuthenticate(vm.loginMethod);
+    }
+
+    function authenticate () {
+        if(vm.loginMethod === 'github'){
+            providerAuthenticate(vm.loginMethod);
+        }else if(vm.loginMethod === 'login'){
+            loginAuthenticate(vm.loginMethod);
+        }else if(vm.loginMethod === 'proxy'){
+            proxyAuthenticate(vm.loginMethod);
+        }
+    }
+
+    function providerAuthenticate (provider) {
         vm.isChecking = true;
         $auth.authenticate(provider)
+            .then(function () {
+                return invitationId;
+            })
             .then(getMe) // accept invitation and update Localstorage
             .then(handleAfterRedirect) // fetch application and dashboard
             .then(handleLoginSuccess(provider)) // redirect
             .catch(handleLoginFailure);
     }
 
+    function loginAuthenticate (provider) {
+
+        if(!vm.login || !vm.password){
+            toastr.error(MESSAGES_CONSTANTS.LOGIN_REQUIRED);
+            return;
+        }
+
+        vm.isChecking = true;
+
+        $auth.login({'username': vm.login})
+            .then(function () {
+                return invitationId;
+            })
+            .then(getMe) // accept invitation and update Localstorage
+            .then(handleAfterRedirect) // fetch application and dashboard
+            .then(handleLoginSuccess(provider)) // redirect
+            .catch(handleLoginFailure);
+    }
+
+    function proxyAuthenticate (provider) {
+        var userInfos = {};
+
+        UserService.getProxyHeaders(function(headers){
+
+        if(angular.isUndefined(headers.username) || angular.isUndefined(headers.group) || angular.isUndefined(headers.email)
+         || !headers.username || !headers.group || !headers.email){
+            toastr.error(MESSAGES_CONSTANTS.PROXY_HEADER_REQUIRED);
+            return;
+        }
+
+        vm.isChecking = true;
+
+        userInfos.group = headers.group;
+        userInfos.username = headers.username;
+        userInfos.email = headers.email;
+
+        $auth.login(userInfos)
+            .then(function () {
+                return invitationId;
+            })
+            .then(getMe) // accept invitation and update Localstorage
+            .then(handleAfterRedirect) // fetch application and dashboard
+            .then(handleLoginSuccess(provider)) // redirect
+            .catch(handleLoginFailure);
+        });
+    }
     function getMe () {
         return UserService.handleBeforeRedirect(vm.invitationId);
     }
@@ -176,6 +244,7 @@ function LoginControllerFN (
             'ApplicationFactory',
             '$rootScope',
             '$state',
+            'CONFIG',
             LoginControllerFN,
         ]);
 })(window.angular);

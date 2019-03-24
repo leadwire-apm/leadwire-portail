@@ -4,7 +4,41 @@
         .factory('MenuFactory', [
             'Menus',
             '$state',
-            function (Menus, $state) {
+            'CONFIG',
+            function (Menus, $state, CONFIG) {
+
+                if(CONFIG.STRIPE_ENABLED === "true"){
+                    Menus.SETTINGS.push({
+                        route: 'app.billingList',
+                        icon: 'fa fa-money',
+                        label: 'Billing',
+                    });
+
+                    Menus.MANAGEMENT.push({
+                        route: 'app.management.plans',
+                        abstractRoute: 'app.management',
+                        icon: 'fa fa-money',
+                        label: 'Manage plans',
+                    });
+                }
+
+                if(CONFIG.COMPAGNE_ENABLED){
+                    Menus.MANAGEMENT.push( 
+                        {
+                            route: 'app.management.tmecs',
+                            abstractRoute: 'app.management',
+                            icon: 'fa fa-table',
+                            label: 'Manage Campaigns',
+                        },
+                    );
+
+                    Menus.SETTINGS.push({
+                        route: 'app.tmecs',
+                        icon: 'fa fa-table',
+                        label: 'Campaigns',
+                    });
+                }
+                
                 return {
                     get: function (menuKey) {
                         var menus = [];
@@ -127,12 +161,6 @@
                     icon: 'fa fa-desktop',
                     label: 'Applications',
                 },
-                {
-                    route: 'app.billingList',
-                    icon: 'fa fa-money',
-                    label: 'Billing',
-                },
-
             ],
             MANAGEMENT: [
                 {
@@ -140,12 +168,6 @@
                     abstractRoute: 'app.management',
                     icon: 'fa fa-user',
                     label: 'Manage Users',
-                },
-                {
-                    route: 'app.management.plans',
-                    abstractRoute: 'app.management',
-                    icon: 'fa fa-money',
-                    label: 'Manage plans',
                 },
                 {
                     route: 'app.management.applications',
