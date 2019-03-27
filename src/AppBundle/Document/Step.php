@@ -82,7 +82,7 @@ class Step
     /**
      * @var Tmec
      *
-     * @ODM\ReferenceOne(targetDocument="AppBundle\Document\Tmec", name="compagne", cascade={"persist"}, storeAs="dbRef")
+     * @ODM\ReferenceOne(targetDocument="AppBundle\Document\Tmec", name="compagne", cascade={"persist"}, inversedBy="compagnes", storeAs="dbRef")
      * @JMS\Type("AppBundle\Document\Tmec")
      * @JMS\Expose
      * @JMS\Groups({"full", "Default"})
