@@ -81,7 +81,7 @@
             ApplicationFactory.findMyApplications()
                 .then(function (applications) {
                     var appIds = [];
-                    applications.forEach(application => {
+                    applications.data.forEach(application => {
                         appIds.push(application.id)
                     });
                     cb(appIds)
