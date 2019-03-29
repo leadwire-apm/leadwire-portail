@@ -30,7 +30,7 @@ class StepService
      */
     public function initSteps(Tmec $tmec)
     {
-        $folderPath = "./app/Resources/templates";
+        $folderPath = "./app/Resources/steps";
         $finder = new Finder();
         $finder->files()->in($folderPath);
         /** @var \SplFileInfo $file */
