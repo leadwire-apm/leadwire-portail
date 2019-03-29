@@ -7,6 +7,8 @@ use AppBundle\Manager\StepManager;
 use JMS\Serializer\SerializerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\Finder\Finder;
+
 class StepService
 {
     /**
@@ -29,6 +31,21 @@ class StepService
      */
     public function initSteps(Tmec $tmec)
     {
+        $folderPath = "./app/Resources/templates";
+        $finder = new Finder();
+        $finder->files()->in($folderPath);
+        /** @var \SplFileInfo $file */
+        foreach ($finder as $file) {
+            if ($file->getRealPath() === false) {
+                throw new \Exception("Error fetching file");
+            }
+            $steps = ((array) file_get_contents($file->getRealPath()));
+            foreach ($steps as $step) {
+                $this->stepManager->create($tmec, $step->label, $step->order, $step->completed);
+            }
+        }
+
+       /* 
         $this->stepManager->create($tmec, "Cadrage", 1, true);
         $this->stepManager->create($tmec, "Devis", 2, false);
         $this->stepManager->create($tmec, "CDC", 3, false);
@@ -38,7 +55,7 @@ class StepService
         $this->stepManager->create($tmec, "Outils Tperf", 7, false);
         $this->stepManager->create($tmec, "Tuning", 8, false);
         $this->stepManager->create($tmec, "Ref", 9, false);
-        $this->stepManager->create($tmec, "Rapport", 10, false);
+        $this->stepManager->create($tmec, "Rapport", 10, false);*/
         return null;
     }
     public function updateStep($json)
