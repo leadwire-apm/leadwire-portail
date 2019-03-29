@@ -30,11 +30,11 @@ class StepService
      */
     public function initSteps(Tmec $tmec)
     {
-        $folderPath = "./app/Resources/steps";
+        /*$folderPath = "./app/Resources/steps";
         $finder = new Finder();
-        $finder->files()->in($folderPath);
+        $finder->files()->in($folderPath);*/
         /** @var \SplFileInfo $file */
-        foreach ($finder as $file) {
+        /*foreach ($finder as $file) {
             if ($file->getRealPath() === false) {
                 throw new \Exception("Error fetching file");
             }
@@ -42,9 +42,9 @@ class StepService
             foreach ($steps as $step) {
                 $this->stepManager->create($tmec, $step->label, $step->order, $step->completed);
             }
-        }
+        }*/
 
-       /* 
+       
         $this->stepManager->create($tmec, "Cadrage", 1, true);
         $this->stepManager->create($tmec, "Devis", 2, false);
         $this->stepManager->create($tmec, "CDC", 3, false);
@@ -54,7 +54,7 @@ class StepService
         $this->stepManager->create($tmec, "Outils Tperf", 7, false);
         $this->stepManager->create($tmec, "Tuning", 8, false);
         $this->stepManager->create($tmec, "Ref", 9, false);
-        $this->stepManager->create($tmec, "Rapport", 10, false);*/
+        $this->stepManager->create($tmec, "Rapport", 10, false);
         return null;
     }
     public function updateStep($json)
