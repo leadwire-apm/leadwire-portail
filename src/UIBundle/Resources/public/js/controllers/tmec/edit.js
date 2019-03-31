@@ -6,6 +6,7 @@
             'MESSAGES_CONSTANTS',
             '$state',
             'toastr',
+            'ApplicationFactory',
             EditCompagnesCtrlFN,
         ]);
 
@@ -19,6 +20,7 @@
         MESSAGES_CONSTANTS,
         $state,
         toastr,
+        ApplicationFactory,
     ) {
         var vm = this;
 
@@ -60,9 +62,9 @@
         };
 
         function loadApplications(){
-            TmecService.all()
+            ApplicationFactory.findMyApplications()
             .then(function (applications) {
-                vm.applications = applications;
+                vm.applications = applications.data;
             })
             .catch(function (error) {
             });

@@ -75,9 +75,6 @@ function LoginControllerFN (
         vm.isChecking = true;
 
         $auth.login({'username': vm.login})
-            .then(function () {
-                return invitationId;
-            })
             .then(getMe) // accept invitation and update Localstorage
             .then(handleAfterRedirect) // fetch application and dashboard
             .then(handleLoginSuccess(provider)) // redirect
@@ -102,9 +99,6 @@ function LoginControllerFN (
         userInfos.email = headers.email;
 
         $auth.login(userInfos)
-            .then(function () {
-                return invitationId;
-            })
             .then(getMe) // accept invitation and update Localstorage
             .then(handleAfterRedirect) // fetch application and dashboard
             .then(handleLoginSuccess(provider)) // redirect

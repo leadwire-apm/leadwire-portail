@@ -6,6 +6,7 @@
             'MESSAGES_CONSTANTS',
             '$stateParams',
             '$modal',
+            'ApplicationFactory',
             ListCompagnesCtrlFN,
         ]);
 
@@ -19,6 +20,7 @@
         MESSAGES_CONSTANTS,
         $stateParams,
         $modal,
+        ApplicationFactory,
     ) {
         var vm = this;
 
@@ -76,10 +78,10 @@
         };
 
         getAllApplications = function (cb) {
-            TmecService.all()
+            ApplicationFactory.findMyApplications()
                 .then(function (applications) {
                     var appIds = [];
-                    applications.forEach(application => {
+                    applications.data.forEach(application => {
                         appIds.push(application.id)
                     });
                     cb(appIds)
