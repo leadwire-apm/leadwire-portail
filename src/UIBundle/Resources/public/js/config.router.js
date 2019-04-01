@@ -242,12 +242,8 @@ angular.module('leadwireApp')
                             '$localStorage',
                             'UserService',
                             function (
-                                MenuFactory, $rootScope, $localStorage,
-                                UserService) {
-                                // $rootScope.menus = $localStorage.currentMenu;
-                                $rootScope.menus = MenuFactory.get(
-                                    MenuEnum.MANAGEMENT);
-                                UserService.handleFirstLogin();
+                                MenuFactory, $rootScope, $localStorage, UserService) {
+                                $rootScope.menus = MenuFactory.get(MenuEnum.MANAGEMENT);
                             },
                         ],
                     },
@@ -313,6 +309,16 @@ angular.module('leadwireApp')
                             return RouteGuard.adminRequired();
                         },
                         menu: updateMenuItems(MenuEnum.MANAGEMENT),
+                        beforeMount: [
+                            'MenuFactory',
+                            '$rootScope',
+                            'UserService',
+                            function (
+                                MenuFactory, $rootScope, UserService) {
+                                $rootScope.menus = MenuFactory.get(MenuEnum.MANAGEMENT);
+                                UserService.handleFirstLogin();
+                            },
+                        ],
                     },
                     controller: 'ManageApplicationsController',
                     controllerAs: 'ctrl',

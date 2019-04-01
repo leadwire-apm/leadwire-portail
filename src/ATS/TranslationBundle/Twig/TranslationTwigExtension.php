@@ -2,13 +2,14 @@
 
 namespace ATS\TranslationBundle\Twig;
 
-use ATS\TranslationBundle\Manager\TranslationEntryManager;
+use Twig\Extension\AbstractExtension;
 use Symfony\Component\Translation\Translator;
+use ATS\TranslationBundle\Manager\TranslationEntryManager;
 
 /**
  * @deprecated
  */
-class TranslationTwigExtension extends \Twig_Extension
+class TranslationTwigExtension extends AbstractExtension
 {
     /**
      * translationEntryManager

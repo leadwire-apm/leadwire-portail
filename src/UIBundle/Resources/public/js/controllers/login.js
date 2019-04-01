@@ -97,11 +97,9 @@ function LoginControllerFN (
         const isAdmin = UserService.isAdmin(user);
         const isSuperAdmin = user.roles.indexOf(
             UserService.getRoles().SUPER_ADMIN) !== -1;
-        if (isAdmin) {
+        if (isAdmin || isSuperAdmin) {
             $localStorage.currentMenu = MenuFactory.get('MANAGEMENT');
-            return { path: 'app.management.users' };
-        } else if (isSuperAdmin) {
-            // TODO
+            return { path: 'app.management.applications' };
         } else {
             // Simple user
             return ApplicationFactory.findMyApplications()
@@ -122,9 +120,7 @@ function LoginControllerFN (
                         return { path: 'app.applicationsList' };
                     }
                 });
-
         }
-
     }
 
     function onLoad () {

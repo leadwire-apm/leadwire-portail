@@ -149,7 +149,7 @@ class User implements AdvancedUserInterface
      * @JMS\Type("boolean")
      * @JMS\Expose
      */
-    private $emailValid = false;
+    private $emailValid;
 
     /**
      * @var string
