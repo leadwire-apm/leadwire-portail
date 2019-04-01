@@ -6,16 +6,17 @@ use AppBundle\Service\LdapService;
 use AppBundle\Document\Application;
 use AppBundle\Service\KibanaService;
 use AppBundle\Service\ApplicationService;
+use AppBundle\Service\SearchGuardService;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use ATS\PaymentBundle\Service\PlanService;
 use AppBundle\Service\ElasticSearchService;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Doctrine\Common\DataFixtures\Purger\MongoDBPurger;
 use Doctrine\Common\DataFixtures\Executor\MongoDBExecutor;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
-use Symfony\Component\Console\Input\InputOption;
 
 class InstallCommand extends ContainerAwareCommand
 {
@@ -43,6 +44,8 @@ Load default Application Type. Insert template for Kibana and more..'
         $planService = $this->getContainer()->get(PlanService::class);
         /** @var ApplicationService $applicationService */
         $applicationService = $this->getContainer()->get(ApplicationService::class);
+        /** @var SearchGuardService $sgService */
+        $sgService = $this->getContainer()->get(SearchGuardService::class);
 
         /** @var bool $purge */
         $purge = $input->getOption("purge") === true ?: false;
@@ -50,9 +53,13 @@ Load default Application Type. Insert template for Kibana and more..'
         $planService->deleteAllPlans();
 
         $this->loadFixtures($output, $purge);
+
         $this->display($output, "Creating LDAP entries for demo applications");
         $ldap->createDemoApplicationsEntries();
         $demoApplications = $applicationService->listDemoApplications();
+
+        $this->display($output, "Initializing SearchGuard configuration");
+        $sgService->updateSearchGuardConfig();
 
         $this->display($output, "Initializing ES & Kibana");
         /** @var Application $application */

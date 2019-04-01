@@ -269,7 +269,7 @@ class KibanaService
             ];
 
             $response = $this->httpClient->post(
-                $this->url . "api/saved_objects/index-pattern/{$application->getName()}",
+                $this->url . "api/saved_objects/index-pattern/all_user_{$user->getUuid()}",
                 [
                     'headers' => $headers,
                     'body' => $content,
@@ -279,7 +279,7 @@ class KibanaService
             $this->logger->notice(
                 "leadwire.kibana.loadIndexPatternForAllUser",
                 [
-                    'url' => $this->url . "api/saved_objects/index-pattern/{$application->getName()}",
+                    'url' => $this->url . "api/saved_objects/index-pattern/all_user_{$user->getUuid()}",
                     'verb' => 'POST',
                     'headers' => $headers,
                     'status_code' => $response->getStatusCode(),

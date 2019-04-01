@@ -48,11 +48,6 @@ class LdapService
     private $entryManager;
 
     /**
-     * @var bool
-     */
-    private $initialized;
-
-    /**
      * LdapService constructor.
      *
      * @param LoggerInterface $logger
@@ -76,10 +71,8 @@ class LdapService
             $this->ldap->bind($this->settings['dn_user'], $this->settings['mdp']);
 
             $this->entryManager = $this->ldap->getEntryManager();
-            $this->initialized = true;
         } catch (\Exception $e) {
             $this->logger->emergency('leadwire.ldap.__construct', ['error' => $e->getMessage()]);
-            $this->initialized = false;
         }
     }
 
