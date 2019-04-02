@@ -8,6 +8,7 @@
             '$ocLazyLoad',
             '$modal',
             'FileService',
+            'CONFIG',
             UserServiceFN,
         ]);
 
@@ -19,6 +20,7 @@
         $ocLazyLoad,
         $modal,
         FileService,
+        CONFIG,
     ) {
         var service = this;
         var sep = '###';
@@ -217,16 +219,18 @@
             if (connectedUser.id &&
                 (!connectedUser.email || !connectedUser.plan)) {
                 // show modal
-                $modal.open({
-                    ariaLabelledBy: 'User-form',
-                    size: 'lg',
-                    keyboard: false,
-                    backdrop: 'static',
-                    ariaDescribedBy: 'User-form',
-                    templateUrl: 'wizard.html',
-                    controller: 'profileModalCtrl',
-                    controllerAs: 'ctrl',
-                });
+                if(CONFIG.STRIPE_ENABLED === "true"){
+                    $modal.open({
+                        ariaLabelledBy: 'User-form',
+                        size: 'lg',
+                        keyboard: false,
+                        backdrop: 'static',
+                        ariaDescribedBy: 'User-form',
+                        templateUrl: 'wizard.html',
+                        controller: 'profileModalCtrl',
+                        controllerAs: 'ctrl',
+                    });
+                }
             }
         };
 
@@ -329,6 +333,16 @@
                 return user.roles.includes(role);
             });
         };
+
+        service.getProxyHeaders = function(cb){
+            UserFactory.getProxyHeaders()
+           .success(function(data, status, headers, config) {
+                cb(headers());
+             })
+             .error(function(err) {
+               throw new Error(err);
+             });
+       }
 
         service.ADMINS = ADMINS;
     }

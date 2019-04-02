@@ -157,6 +157,111 @@ class AuthService
     }
 
     /**
+     * @param array $params
+     */
+    public function loginProvider(array $params)
+    {
+        $user = $this->userManager->getOneBy($params);
+
+        if ($user === null) {
+            throw new AccessDeniedHttpException("User is undefined");
+        } else {
+            // Check if user has been deleted
+            if ($user->isDeleted() === true) {
+                throw new AccessDeniedHttpException("User is deleted");
+            }
+
+            // Check if user is locked
+            if ($user->isLocked() === true) {
+                throw new AccessDeniedHttpException($user->getLockMessage());
+            }
+
+            $this->checkSuperAdminRoles($user);
+        }
+        return $user;
+    }
+
+    public function proxyLoginProvider(array $params)
+    {
+        $user = $this->userManager->getOneBy(['email' => $params['email']]);
+
+        if ($user === null) {
+            // We're dealing with a new user
+            $user = $this->addUserWithEmail($params);
+
+            if ($user !== null) {
+                // User creation in DB is successful
+                // Should create LDAP & ElasticSearch entries
+                $this->ldapService->createNewUserEntries($user);
+                $this->ldapService->registerDemoApplications($user);
+                $this->applicationService->registerDemoApplications($user);
+
+                $this->esService->deleteIndex("user_" . $user->getUuid());
+                $this->kibanaService->loadIndexPatternForUserTenant($user);
+
+                $this->esService->deleteIndex("all_user_" . $user->getUuid());
+                $this->kibanaService->loadIndexPatternForAllUser($user);
+                $this->kibanaService->createAllUserDashboard($user);
+
+                $this->sgService->updateSearchGuardConfig();
+            }
+        } else {
+            // Check if user has been deleted
+            if ($user->isDeleted() === true) {
+                $this->logger->notice("leadwire.auth.githubProvider", ["event" => "Deleted user {$user->getUsername()} tried to login"]);
+                throw new AccessDeniedHttpException("User is deleted");
+            }
+
+            // Check if user is locked
+            if ($user->isLocked() === true) {
+                $this->logger->notice("leadwire.auth.githubProvider", ["event" => "Locked user {$user->getUsername()} tried to login"]);
+                throw new AccessDeniedHttpException($user->getLockMessage());
+            }
+        }
+
+        $this->checkSuperAdminRoles($user);
+
+        return $user;
+    }
+
+    /**
+     *
+     * @param array $userData
+     *
+     * @return User|null
+     */
+    protected function addUserWithEmail(array $userData): ?User
+    {
+        try {
+            $uuid1 = Uuid::uuid1();
+
+            if ($userData['group'] === 'utilisateur') {
+                $role = [User::DEFAULT_ROLE];
+            } else if ($userData['group'] === 'administrateur') {
+                $role = [User::ROLE_SUPER_ADMIN];
+            } else {
+                $role = []; // Should never happen
+            }
+
+            $user = $this->userManager->createWithEmail(
+                $userData['username'],
+                $uuid1->toString(),
+                'https://img.icons8.com/metro/26/000000/administrator-male.png',
+                $userData['username'], //name
+                $role,
+                true,
+                $userData['email']
+            );
+
+            return $user;
+        } catch (\Exception $e) {
+            $this->logger->critical($e->getMessage());
+
+            return null;
+        }
+    }
+
+    /**
      *
      * @param User $user
      *

@@ -73,4 +73,37 @@ class UserManager extends AbstractManager
             ->execute()
             ->toArray(false);
     }
+
+     /**
+     *
+     * @param string $username
+     * @param string $uuid
+     * @param string $avatar
+     * @param string $name
+     * @param array $roles
+     * @param boolean $active
+     * @param string $email
+     *
+     * @return User
+     */
+    public function createWithEmail($username, $uuid, $avatar, $name, $roles, $active, $email): User
+    {
+        $user = new User();
+        $user
+            ->setAvatar($avatar)
+            ->setUuid($uuid)
+            ->setName($name)
+            ->setEmailValid(true)
+            ->setEmail($email)
+            ->setUsername($username)
+            ->setRoles($roles)
+            ->setActive($active)
+            ->setContactPreference('Email')
+            ->setPassword("")
+            ->setAcceptNewsLetter(true);
+
+        $this->update($user);
+
+        return $user;
+    }
 }

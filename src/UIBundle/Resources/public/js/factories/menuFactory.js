@@ -4,7 +4,41 @@
         .factory('MenuFactory', [
             'Menus',
             '$state',
-            function (Menus, $state) {
+            'CONFIG',
+            function (Menus, $state, CONFIG) {
+
+                if(CONFIG.STRIPE_ENABLED === true){
+                    Menus.SETTINGS.push({
+                        route: 'app.billingList',
+                        icon: 'fa fa-money-bill-alt',
+                        label: 'Billing',
+                    });
+
+                    Menus.MANAGEMENT.push({
+                        route: 'app.management.plans',
+                        abstractRoute: 'app.management',
+                        icon: 'fa fa-money-bill-alt',
+                        label: 'Manage plans',
+                    });
+                }
+
+                if(CONFIG.COMPAGNE_ENABLED === true){
+                    Menus.MANAGEMENT.push(
+                        {
+                            route: 'app.management.tmecs',
+                            abstractRoute: 'app.management',
+                            icon: 'fa fa-table',
+                            label: 'Manage Campaigns',
+                        },
+                    );
+
+                    Menus.SETTINGS.push({
+                        route: 'app.tmecs',
+                        icon: 'fa fa-table',
+                        label: 'Campaigns',
+                    });
+                }
+
                 return {
                     get: function (menuKey) {
                         var menus = [];
@@ -45,77 +79,7 @@
             MANAGEMENT: 'MANAGEMENT',
         })
         .constant('Menus', {
-            DASHBOARD: [
-                // {
-                //     icon: 'fas fa-tachometer-alt',
-                //     label: 'Dashboard',
-                //     route: 'app.dashboard.home',
-                // },
-                // {
-                //     icon: 'fa fa-eye',
-                //     label: 'Real User Monitoring',
-                //     route: 'app.realUserMonitoring',
-                // },
-                // {
-                //     icon: 'fa fa-exchange',
-                //     label: 'Synthetic Monitoring',
-                //     route: 'app.syntheticMonitoring',
-                // },
-                // {
-                //     icon: 'fa fa-search',
-                //     label: 'Infrastructure Monitoring',
-                //     route: 'app.infrastructureMonitoring',
-                // },
-                // {
-                //     icon: 'fa fa-file-text',
-                //     label: 'Custom Reports',
-                //     route: 'app.customReports',
-                // },
-                // {
-                //     icon: 'fa fa-table',
-                //     label: 'Data Browser',
-                //     route: 'app.dataBrowser',
-                // },
-                // {
-                //     icon: 'fa fa-briefcase',
-                //     label: 'Business Transactions',
-                //     route: 'app.businessTransactions',
-                // },
-                // {
-                //     icon: 'fa fa-sitemap',
-                //     label: 'Architecture Discovery',
-                //     route: 'app.architectureDiscovery',
-                // },
-                // {
-                //     icon: 'fa fa-exclamation-triangle',
-                //     label: 'Alerts',
-                //     route: 'app.alerts',
-                // },
-                // {
-                //     icon: 'fa fa-book',
-                //     label: 'Documentation',
-                //     route: 'app.realUserMonitoring',
-                // },
-                // {
-                //     icon: 'fa fa-support',
-                //     label: 'Support',
-                //     route: 'app.realUserMonitoring',
-                // },
-                // {
-                //     icon: 'fa fa-gears',
-                //     label: 'Administration',
-                //     children: [
-                //         {
-                //             route: 'app.administration.visualisations',
-                //             label: 'Visualisations',
-                //         },
-                //         {
-                //             route: 'app.administration.reports',
-                //             label: 'Reports',
-                //         },
-                //     ],
-                // },
-            ],
+            DASHBOARD: [],
             SETTINGS: [
                 {
                     route: 'app.user',
@@ -127,12 +91,6 @@
                     icon: 'fa fa-desktop',
                     label: 'Applications',
                 },
-                {
-                    route: 'app.billingList',
-                    icon: 'fa fa-money-bill-alt',
-                    label: 'Billing',
-                },
-
             ],
             MANAGEMENT: [
                 {
@@ -140,12 +98,6 @@
                     abstractRoute: 'app.management',
                     icon: 'fa fa-user',
                     label: 'Manage Users',
-                },
-                {
-                    route: 'app.management.plans',
-                    abstractRoute: 'app.management',
-                    icon: 'fa fa-money-bill-alt',
-                    label: 'Manage plans',
                 },
                 {
                     route: 'app.management.applications',

@@ -51,6 +51,10 @@ angular.module('leadwireApp', [
         EN_DATE_FORMAT: EN_DATE_FORMAT,
         FR_DATE_FORMAT: FR_DATE_FORMAT,
         TAX: TAX,
+        LOGIN_METHOD: LOGIN_METHOD,
+        COMPAGNE_ENABLED: COMPAGNE_ENABLED,
+        JENKINS_URL: JENKINS_URL,
+        STRIPE_ENABLED: STRIPE_ENABLED,
     })
     .constant('MESSAGES_CONSTANTS', {
         ERROR: 'Something went wrong,please try again.',
@@ -71,6 +75,8 @@ angular.module('leadwireApp', [
         LOGIN_SUCCESS: function (provider) {
             return 'You have successfully signed in with ' + provider;
         },
+        GO_NEXT_STEP: 'The state must not be waiting, please uncheck the box before continuing',
+        COMPAGNE_VALIDATE: 'If you validate the companion will be archived',
         LOGOUT_SUCCESS: 'You have been logged out.',
         SWEET_ALERT_DELETE_MODE: {
             title: 'Are you sure?',

@@ -487,6 +487,7 @@ blockquote p {
 }
 .quick-launch-panel .container {
   position: relative;
+  background-color: #343c4b;
 }
 .quick-launch-panel .quick-launcher-inner {
   display: block;
