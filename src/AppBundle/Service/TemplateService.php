@@ -53,15 +53,6 @@ class TemplateService
 
         $applicationType = $this->applicationTypeManager->getOneBy(['id' => $template->getApplicationType()->getId()]);
 
-        $oldTemplate = $this->templateManager->getOneBy(['applicationType.id' => $template->getApplicationType()->getId(), 'name' => $template->getName()]);
-
-        if ($oldTemplate instanceof Template) {
-            $version = $oldTemplate->getVersion() + 1;
-        } else {
-            $version = 1;
-        }
-
-        $template->setVersion($version);
         $template->setApplicationType($applicationType);
 
         $id = $this->templateManager->update($template);

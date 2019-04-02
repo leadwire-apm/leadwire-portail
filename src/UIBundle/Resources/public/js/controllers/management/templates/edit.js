@@ -3,6 +3,7 @@
         .controller('EditTemplateController', [
             'TemplateService',
             'ApplicationTypeFactory',
+            'MonitoringSetFactory',
             'toastr',
             'CONFIG',
             'MESSAGES_CONSTANTS',
@@ -17,6 +18,7 @@
     function EditTemplateCtrlFN (
         TemplateService,
         ApplicationTypeFactory,
+        MonitoringSetFactory,
         toastr,
         CONSTANTS,
         MESSAGES_CONSTANTS,
@@ -77,11 +79,15 @@
                 templateId: templateId,
                 template: null,
                 applicationTypes: [],
+                monitoringSets: []
             });
             ApplicationTypeFactory.findAll()
                 .then(function (response) {
                     vm.applicationTypes = response.data;
                 });
+            MonitoringSetFactory.findAll().then(function (response) {
+                vm.monitoringSets = response.data;
+            });
             vm.getTemplate(templateId);
         };
 

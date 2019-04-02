@@ -51,7 +51,7 @@
                     });
                 },
                 function (menu) {
-                    return menu.icon || 'fa fa-dashboard';
+                    return menu.icon || 'fas fa-tachometer-alt';
                 },
             );
             $rootScope.menus = $localStorage.currentMenu;

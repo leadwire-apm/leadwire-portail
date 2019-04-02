@@ -28,7 +28,7 @@ class TemplateFixture extends AbstractFixture implements OrderedFixtureInterface
             $template->setName(str_replace(".json", "", $file->getFilename()));
             $template->setContent((string) file_get_contents($file->getRealPath()));
             $template->setApplicationType($applicationType);
-            $template->setVersion(1);
+            $template->setVersion("6.5.1");
             $manager->persist($template);
         }
         $manager->flush();

@@ -2,12 +2,13 @@
 
 namespace AppBundle\Controller\Rest;
 
+use AppBundle\Exception\DuplicateApplicationTypeException;
 use AppBundle\Service\ApplicationTypeService;
 use ATS\CoreBundle\Controller\Rest\RestControllerTrait;
-use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
 
 class ApplicationTypeController extends Controller
 {
@@ -53,10 +54,14 @@ class ApplicationTypeController extends Controller
      */
     public function newApplicationTypeAction(Request $request, ApplicationTypeService $applicationtypeService)
     {
-        $data = $request->getContent();
-        $successful = $applicationtypeService->newApplicationType($data);
+        try {
+            $data = $request->getContent();
+            $successful = $applicationtypeService->newApplicationType($data);
 
-        return $this->renderResponse($successful);
+            return $this->renderResponse($successful);
+        } catch (DuplicateApplicationTypeException $e) {
+            return $this->renderResponse(['message' => $e->getMessage()], Response::HTTP_NOT_ACCEPTABLE);
+        }
     }
 
     /**

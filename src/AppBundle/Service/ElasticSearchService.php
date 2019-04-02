@@ -323,19 +323,8 @@ class ElasticSearchService
             ];
         }
 
-        $response = $this->httpClient->delete($this->url . "_template/apm-6.5.1", ['auth' => $this->getAuth()]);
-
-        $this->logger->notice(
-            "leadwire.es.createIndexTemplate",
-            [
-                'url' => $this->url . "_template/apm-6.5.1",
-                'verb' => 'DELETE',
-                'status_code' => $response->getStatusCode(),
-            ]
-        );
-
         $response = $this->httpClient->put(
-            $this->url . "_template/apm-6.5.1",
+            $this->url . "_template/{$template->getVersion()}",
             [
                 'auth' => $this->getAuth(),
                 'headers' => [
@@ -348,7 +337,7 @@ class ElasticSearchService
         $this->logger->notice(
             "leadwire.es.createIndexTemplate",
             [
-                'url' => $this->url . "_template/apm-6.5.1",
+                'url' => $this->url . "_template/{$template->getVersion()}",
                 'verb' => 'PUT',
                 'body' => json_encode($content),
                 'status_code' => $response->getStatusCode(),

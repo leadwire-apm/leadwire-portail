@@ -37,3 +37,8 @@ app_rest_template:
     resource: "@AppBundle/Controller/Rest/TemplateController.php"
     type: "annotation"
     prefix: "/%internal_api_prefix%/template"
+
+app_rest_monitoringset:
+    resource: "@AppBundle/Controller/Rest/MonitoringSetController.php"
+    type: "annotation"
+    prefix: "/%internal_api_prefix%/monitoringSet"

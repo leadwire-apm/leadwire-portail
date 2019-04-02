@@ -65,6 +65,9 @@
                 vm.applicationTypes = response.data;
             });
 
+            MonitoringSetFactory.findAll().then(function (response) {
+                vm.monitoringSets = response.data;
+            });
         };
 
     }

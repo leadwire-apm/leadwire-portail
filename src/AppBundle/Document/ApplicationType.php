@@ -45,7 +45,7 @@ class ApplicationType
     private $installation;
 
     /**
-     * @ODM\ReferenceMany(targetDocument="AppBundle\Document\Template", mappedBy="applicationType", storeAs="dbRef")
+     * @ODM\ReferenceMany(targetDocument="AppBundle\Document\Template", mappedBy="applicationType", storeAs="dbRef", cascade={"remove"})
      *
      * @var array
      */

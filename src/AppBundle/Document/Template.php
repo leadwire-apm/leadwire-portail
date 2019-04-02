@@ -2,6 +2,7 @@
 
 namespace AppBundle\Document;
 
+use AppBundle\Document\MonitoringSet;
 use JMS\Serializer\Annotation as JMS;
 use AppBundle\Document\ApplicationType;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
@@ -43,11 +44,11 @@ class Template
     private $content;
 
     /**
-     * @ODM\Field(type="int")
+     * @ODM\Field(type="string")
      * @JMS\Expose
-     * @JMS\Type("int")
+     * @JMS\Type("string")
      *
-     * @var int
+     * @var string
      */
     private $version;
 
@@ -58,6 +59,14 @@ class Template
      * @var ApplicationType
      */
     private $applicationType;
+
+    /**
+     * @ODM\ReferenceOne(targetDocument="AppBundle\Document\MonitoringSet",cascade={"persist"}, inversedBy="templates", storeAs="dbRef")
+     * @JMS\Expose
+     * @JMS\Type("AppBundle\Document\ApplicationType")
+     * @var MonitoringSet
+     */
+    private $monitoringSet;
 
     /**
      * Get the value of id
@@ -125,9 +134,9 @@ class Template
     /**
      * Get the value of version
      *
-     * @return  int
+     * @return  string
      */
-    public function getVersion(): int
+    public function getVersion(): string
     {
         return $this->version;
     }
@@ -135,11 +144,11 @@ class Template
     /**
      * Set the value of version
      *
-     * @param  int  $version
+     * @param  string  $version
      *
      * @return  self
      */
-    public function setVersion(int $version): self
+    public function setVersion(string $version): self
     {
         $this->version = $version;
 

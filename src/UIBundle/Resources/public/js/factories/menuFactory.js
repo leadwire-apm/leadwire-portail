@@ -47,7 +47,7 @@
         .constant('Menus', {
             DASHBOARD: [
                 // {
-                //     icon: 'fa fa-dashboard',
+                //     icon: 'fas fa-tachometer-alt',
                 //     label: 'Dashboard',
                 //     route: 'app.dashboard.home',
                 // },
@@ -129,7 +129,7 @@
                 },
                 {
                     route: 'app.billingList',
-                    icon: 'fa fa-money',
+                    icon: 'fa fa-money-bill-alt',
                     label: 'Billing',
                 },
 
@@ -144,7 +144,7 @@
                 {
                     route: 'app.management.plans',
                     abstractRoute: 'app.management',
-                    icon: 'fa fa-money',
+                    icon: 'fa fa-money-bill-alt',
                     label: 'Manage plans',
                 },
                 {
@@ -160,9 +160,15 @@
                     label: 'Manage application types',
                 },
                 {
+                    route: 'app.management.monitoringSets',
+                    abstractRoute: 'app.management',
+                    icon: 'fa fa-desktop',
+                    label: 'Manage monitoring sets',
+                },
+                {
                     route: 'app.management.templates',
                     abstractRoute: 'app.management',
-                    icon: 'fa fa-file-text',
+                    icon: 'fa fa-file-alt',
                     label: 'Manage templates',
                 },
                 {
