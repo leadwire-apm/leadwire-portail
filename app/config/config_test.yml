@@ -41,7 +41,6 @@ parameters:
         port: 5604
         iframe_host: 'https://localhost'
         iframe_port: 5405
-        template_folder: '%kernel.project_dir%/app/Resources/Kibana'
     elastic:
         username: ''
         password: ''

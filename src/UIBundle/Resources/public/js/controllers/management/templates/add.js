@@ -28,6 +28,10 @@
             vm.ui[key] = !vm.ui[key];
         };
 
+        vm.getTemplateTypes = function() {
+            TemplateService.getTypes().then(function(types){vm.types = types;});
+        };
+
         vm.handleOnSubmit = function () {
             vm.flipActivityIndicator('isSaving');
             TemplateService.create(vm.template)
@@ -55,12 +59,17 @@
                 template: {
                     name: null,
                     content: null,
+                    version: null,
+                    type: null,
+                    monitoringSet: {
+                        id: null
+                    },
                     applicationType: {
                         id: null
                     }
                 },
             });
-
+            vm.getTemplateTypes();
             ApplicationTypeFactory.findAll().then(function (response) {
                 vm.applicationTypes = response.data;
             });

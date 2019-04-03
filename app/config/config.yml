@@ -34,6 +34,7 @@ parameters:
     compagne_enabled: '%env(COMPAGNE_ENABLED)%'
     jenkins_url: '%env(JENKINS_URL)%'
     stripe_enabled: '%env(STRIPE_ENABLED)%'
+    kibana_admin_username: '%env(KIBANA_ADMIN_USERNAME)%'
     auth_providers:
         github:
             github_access_token_url: 'https://github.com/login/oauth/access_token'
@@ -51,7 +52,8 @@ parameters:
         port: '%env(KIBANA_PORT)%'
         iframe_host: '%env(KIBANA_IFRAME_HOST)%'
         iframe_port: '%env(KIBANA_IFRAME_PORT)%'
-        template_folder: '%kernel.project_dir%/app/Resources/Kibana'
+        kibana_admin_username: '%env(KIBANA_ADMIN_USERNAME)%'
+        kibana_admin_uuid: '%env(KIBANA_ADMIN_UUID)%'
     elastic:
         username: '%env(ES_USERNAME)%'
         password: '%env(ES_PASSWORD)%'

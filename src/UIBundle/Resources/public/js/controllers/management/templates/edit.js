@@ -34,6 +34,10 @@
             vm.ui[key] = !vm.ui[key];
         };
 
+        vm.getTemplateTypes = function() {
+            TemplateService.getTypes().then(function(types){vm.types = types;});
+        };
+
         vm.getTemplate = function (id) {
             vm.flipActivityIndicator('isLoading');
             TemplateService.find(id)
@@ -79,8 +83,10 @@
                 templateId: templateId,
                 template: null,
                 applicationTypes: [],
-                monitoringSets: []
+                monitoringSets: [],
+                types: [],
             });
+            vm.getTemplateTypes();
             ApplicationTypeFactory.findAll()
                 .then(function (response) {
                     vm.applicationTypes = response.data;

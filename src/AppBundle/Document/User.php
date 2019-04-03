@@ -9,6 +9,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 use Doctrine\Bundle\MongoDBBundle\Validator\Constraints\Unique;
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
+use Ramsey\Uuid\Uuid;
 
 /**
  * @ODM\Document(repositoryClass="AppBundle\Repository\UserRepository")
@@ -750,9 +751,32 @@ class User implements AdvancedUserInterface
         return $this;
     }
 
+    /**
+     * @deprecated 1.1
+     *
+     * @return string
+     */
     public function getIndex()
     {
         return "user_" . $this->uuid;
+    }
+
+    public function getUserIndex()
+    {
+        if (Uuid::isValid($this->uuid) === true) {
+            return "user_" . $this->uuid;
+        } else {
+            return $this->username;
+        }
+    }
+
+    public function getAllUserIndex()
+    {
+        if (Uuid::isValid($this->uuid) === true) {
+            return "all_user_" . $this->uuid;
+        } else {
+            return $this->username;
+        }
     }
 
     /**

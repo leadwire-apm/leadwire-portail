@@ -2,16 +2,17 @@
 
 namespace AppBundle\Command\User;
 
+use AppBundle\Document\User;
 use AppBundle\Manager\UserManager;
-use AppBundle\Service\ApplicationService;
-use AppBundle\Service\ElasticSearchService;
-use AppBundle\Service\KibanaService;
 use AppBundle\Service\LdapService;
+use AppBundle\Service\KibanaService;
+use AppBundle\Service\ApplicationService;
 use AppBundle\Service\SearchGuardService;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
-use Symfony\Component\Console\Input\InputInterface;
+use AppBundle\Service\ElasticSearchService;
 use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 
 class InitializeUserCommand extends ContainerAwareCommand
 {
@@ -45,6 +46,7 @@ class InitializeUserCommand extends ContainerAwareCommand
         /** @var string $username */
         $username = $input->getOption("username");
 
+        /** @var ?User $user */
         $user = $userManager->getOneBy(['username' => $username]);
         if ($user === null) {
             throw new \Exception("User with username $username not found");
@@ -62,12 +64,12 @@ class InitializeUserCommand extends ContainerAwareCommand
         $applicationService->registerDemoApplications($user);
         if ($withKibana === true) {
             $output->write("<info>Loading Kibana Index Patterns </info>");
-            $es->deleteIndex("user_" . $user->getUuid());
+            $es->deleteIndex($user->getUserIndex());
             $output->write(".");
             $kibana->loadIndexPatternForUserTenant($user);
             $output->write(".");
 
-            $es->deleteIndex("all_user_" . $user->getUuid());
+            $es->deleteIndex($user->getAllUserIndex());
             $output->write(".");
             $kibana->loadIndexPatternForAllUser($user);
             $output->write(".");

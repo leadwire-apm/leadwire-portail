@@ -3,3 +3,9 @@ services:
         autowire: true
         autoconfigure: true
         public: true
+
+    # AppBundle\Listener\CustomHeadersListener:
+    #     arguments:
+    #         $loginMethod: "%login_method%"
+    #     tags:
+    #         - { name: kernel.event_listener, event: kernel.request }

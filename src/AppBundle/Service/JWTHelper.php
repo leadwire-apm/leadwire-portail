@@ -51,7 +51,7 @@ class JWTHelper
     }
 
     /**
-     *
+     * @deprecated 1.1
      * @param User $user
      *
      * @return string

@@ -64,24 +64,22 @@ Load default Application Type. Insert template for Kibana and more..'
         $this->display($output, "Initializing ES & Kibana");
         /** @var Application $application */
         foreach ($demoApplications as $application) {
-            $es->deleteIndex("app_" . $application->getUuid());
+            $es->deleteIndex($application->getApplicationIndex());
             $es->createIndexTemplate($application, $applicationService->getActiveApplicationsNames());
             $es->createAlias($application->getName());
 
             $kibana->loadIndexPatternForApplication(
                 $application,
-                $application->getOwner(),
-                'app_' . $application->getUuid()
+                $application->getApplicationIndex()
             );
 
             $kibana->createApplicationDashboards($application, $application->getOwner());
 
-            $es->deleteIndex("shared_" . $application->getUuid());
+            $es->deleteIndex($application->getSharedIndex());
 
             $kibana->loadIndexPatternForApplication(
                 $application,
-                $application->getOwner(),
-                'shared_' . $application->getUuid()
+                $application->getSharedIndex()
             );
         }
 

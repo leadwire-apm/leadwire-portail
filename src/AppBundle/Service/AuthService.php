@@ -13,7 +13,6 @@ use GuzzleHttp\Client;
 use Psr\Log\LoggerInterface;
 use Ramsey\Uuid\Uuid;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
-use \Firebase\JWT\JWT;
 
 class AuthService
 {
@@ -128,10 +127,10 @@ class AuthService
                 $this->ldapService->registerDemoApplications($user);
                 $this->applicationService->registerDemoApplications($user);
 
-                $this->esService->deleteIndex("user_" . $user->getUuid());
+                $this->esService->deleteIndex($user->getUserIndex());
                 $this->kibanaService->loadIndexPatternForUserTenant($user);
 
-                $this->esService->deleteIndex("all_user_" . $user->getUuid());
+                $this->esService->deleteIndex($user->getAllUserIndex());
                 $this->kibanaService->loadIndexPatternForAllUser($user);
                 $this->kibanaService->createAllUserDashboard($user);
 
@@ -196,10 +195,10 @@ class AuthService
                 $this->ldapService->registerDemoApplications($user);
                 $this->applicationService->registerDemoApplications($user);
 
-                $this->esService->deleteIndex("user_" . $user->getUuid());
+                $this->esService->deleteIndex($user->getUserIndex());
                 $this->kibanaService->loadIndexPatternForUserTenant($user);
 
-                $this->esService->deleteIndex("all_user_" . $user->getUuid());
+                $this->esService->deleteIndex($user->getAllUserIndex());
                 $this->kibanaService->loadIndexPatternForAllUser($user);
                 $this->kibanaService->createAllUserDashboard($user);
 
@@ -233,8 +232,6 @@ class AuthService
     protected function addUserWithEmail(array $userData): ?User
     {
         try {
-            $uuid1 = Uuid::uuid1();
-
             if ($userData['group'] === 'utilisateur') {
                 $role = [User::DEFAULT_ROLE];
             } else if ($userData['group'] === 'administrateur') {
@@ -245,7 +242,7 @@ class AuthService
 
             $user = $this->userManager->createWithEmail(
                 $userData['username'],
-                $uuid1->toString(),
+                $userData['username'],
                 'https://img.icons8.com/metro/26/000000/administrator-male.png',
                 $userData['username'], //name
                 $role,
@@ -269,7 +266,7 @@ class AuthService
      */
     public function generateToken(User $user)
     {
-        return $this->jwtHelper->encode($user->getUsername(), $user->getIndex());
+        return $this->jwtHelper->encode($user->getUsername(), $user->getUserIndex());
     }
 
     /**

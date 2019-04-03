@@ -77,8 +77,8 @@ class SearchGuardService
 
             /** @var ApplicationPermission $permission */
             foreach ($permissions as $permission) {
-                $users[] = $permission->getUser()->getIndex();
-                $allUsers[] = $permission->getUser()->getIndex();
+                $users[] = $permission->getUser()->getUserIndex();
+                $allUsers[] = $permission->getUser()->getUserIndex();
             }
 
             $serialized .= $this->serializer->serialize([$applicationIndex => ['users' => $users]], 'yml');
@@ -122,7 +122,7 @@ class SearchGuardService
                     "sg_{$application->getName()}_kibana_index" => [
                         'cluster' => ['CLUSTER_COMPOSITE_OPS'],
                         'indices' => [
-                            "?kibana_app_{$application->getUuid()}" => [
+                            "?kibana_{$application->getApplicationIndex()}" => [
                                 "*" => [
                                     "READ",
                                     "indices:data/write/index",
@@ -130,7 +130,7 @@ class SearchGuardService
                                     "indices:data/write/bulk[s]",
                                 ],
                             ],
-                            "?kibana_shared_{$application->getUuid()}" => ["*" => ["INDICES_ALL"]],
+                            "?kibana_{$application->getSharedIndex()}" => ["*" => ["INDICES_ALL"]],
                         ],
                     ],
                 ],

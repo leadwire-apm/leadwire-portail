@@ -171,30 +171,28 @@ class ApplicationController extends Controller
                 $ldapService->createApplicationEntry($application);
                 $ldapService->registerApplication($this->getUser(), $application);
 
-                $esService->deleteIndex("app_" . $application->getUuid());
+                $esService->deleteIndex($application->getApplicationIndex());
                 $esService->createIndexTemplate($application, $applicationService->getActiveApplicationsNames());
 
                 $esService->createAlias($application->getName());
 
                 $kibanaService->loadIndexPatternForApplication(
                     $application,
-                    $this->getUser(),
-                    'app_' . $application->getUuid()
+                    $application->getApplicationIndex()
                 );
 
-                $kibanaService->makeDefaultIndex("app_{$application->getUuid()}", $this->getUser(), $application->getName());
+                $kibanaService->makeDefaultIndex($application->getApplicationIndex(), $this->getUser(), $application->getName());
 
                 $kibanaService->createApplicationDashboards($application, $this->getUser());
 
-                $esService->deleteIndex("shared_" . $application->getUuid());
+                $esService->deleteIndex($application->getSharedIndex());
 
                 $kibanaService->loadIndexPatternForApplication(
                     $application,
-                    $this->getUser(),
-                    'shared_' . $application->getUuid()
+                    $application->getSharedIndex()
                 );
 
-                $kibanaService->makeDefaultIndex("shared_{$application->getUuid()}", $this->getUser(), $application->getName());
+                $kibanaService->makeDefaultIndex($application->getSharedIndex(), $this->getUser(), $application->getName());
 
                 $sgService->updateSearchGuardConfig();
                 $status = true;

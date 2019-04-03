@@ -2,14 +2,16 @@
 
 namespace AppBundle\Service;
 
-use AppBundle\Document\Application;
-use AppBundle\Document\User;
-use AppBundle\Manager\TemplateManager;
 use GuzzleHttp\Client;
-use GuzzleHttp\Exception\ClientException;
+use AppBundle\Document\User;
 use Psr\Log\LoggerInterface;
-use SensioLabs\Security\Exception\HttpException;
+use AppBundle\Document\Template;
+use AppBundle\Document\Application;
+use AppBundle\Manager\TemplateManager;
+use GuzzleHttp\Exception\ClientException;
+use AppBundle\Manager\MonitoringSetManager;
 use Symfony\Component\HttpFoundation\Response;
+use SensioLabs\Security\Exception\HttpException;
 
 /**
  * Class ElasticSearchService Service. Manage connexions with Kibana Rest API.
@@ -49,18 +51,26 @@ class ElasticSearchService
     private $templateManager;
 
     /**
+     * @var MonitoringSetManager
+     */
+    private $msManager;
+
+    /**
      * ElasticSearchService constructor.
      * @param LoggerInterface $logger
      * @param TemplateManager $templateManager
+     * @param MonitoringSetManager $msManager
      * @param array $settings
      */
     public function __construct(
         LoggerInterface $logger,
         TemplateManager $templateManager,
+        MonitoringSetManager $msManager,
         array $settings = []
     ) {
         $this->settings = $settings;
         $this->templateManager = $templateManager;
+        $this->msManager = $msManager;
         $this->logger = $logger;
         $this->httpClient = new Client(
             [
@@ -287,6 +297,13 @@ class ElasticSearchService
         return $response->getStatusCode() === Response::HTTP_OK;
     }
 
+    /**
+     * @deprecated 1.1
+     *
+     * @param Application $application
+     *
+     * @return void
+     */
     public function deleteApplicationIndexes(Application $application)
     {
         $this->deleteIndex("app_{$application->getUuid()}");
@@ -302,47 +319,70 @@ class ElasticSearchService
      */
     public function createIndexTemplate(Application $application, array $activeApplications)
     {
-        $template = $this->templateManager->getOneBy(
-            [
-                'applicationType.id' => $application->getType()->getId(),
-                'name' => 'index-template',
-            ]
-        );
+        $templates = $this->templateManager->getBy(['applicationType.id' => $application->getType()->getId()]);
 
-        if ($template === null) {
-            throw new \Exception("Template (index-template) not found");
+        foreach ($this->msManager->getAll() as $monitoringSet) {
+            $filtered = array_filter(
+                $templates,
+                function (Template $element) use ($monitoringSet) {
+                    return $element->getMonitoringSet() == $monitoringSet && $element->getType() === Template::INDEX_TEMPLATE;
+                }
+            );
+
+            /** @var Template|bool $template */
+            $template = reset($filtered);
+
+            if (($template instanceof Template) === false) {
+                throw new \Exception(
+                    sprintf(
+                        "Template (%s) of Monitoring Set (%s) not found",
+                        Template::INDEX_TEMPLATE,
+                        $monitoringSet->getName()
+                    )
+                );
+            }
+
+            $content = $template->getContentObject();
+
+            foreach ($activeApplications as $app) {
+                // VERY HACKISH !!!
+                if ($monitoringSet->getName() === "Infrastructure") {
+                    $content->{"metricbeat-6.5.1"}->aliases->{$app->getName()} = [
+                        "filter" => [
+                            "term" => ["context.service.name" => $app->getName()],
+                        ],
+                    ];
+                } else {
+                    $content->aliases->{$app->getName()} = [
+                        "filter" => [
+                            "term" => ["context.service.name" => $app->getName()],
+                        ],
+                    ];
+                }
+            }
+
+            $response = $this->httpClient->put(
+                $this->url . "_template/{$template->getVersion()}",
+                [
+                    'auth' => $this->getAuth(),
+                    'headers' => [
+                        "Content-Type" => "application/json",
+                    ],
+                    'body' => json_encode($content),
+                ]
+            );
+
+            $this->logger->notice(
+                "leadwire.es.createIndexTemplate",
+                [
+                    'url' => $this->url . "_template/{$template->getVersion()}",
+                    'verb' => 'PUT',
+                    'body' => json_encode($content),
+                    'status_code' => $response->getStatusCode(),
+                    'monitoring_set' => $monitoringSet->getName(),
+                ]
+            );
         }
-
-        $content = $template->getContentObject();
-
-        foreach ($activeApplications as $app) {
-            $content->aliases->{$app->getName()} = [
-                "filter" => [
-                    "term" => ["context.service.name" => $app->getName()],
-                ],
-            ];
-        }
-
-        $response = $this->httpClient->put(
-            $this->url . "_template/{$template->getVersion()}",
-            [
-                'auth' => $this->getAuth(),
-                'headers' => [
-                    "Content-Type" => "application/json",
-                ],
-                'body' => json_encode($content),
-            ]
-        );
-
-        $this->logger->notice(
-            "leadwire.es.createIndexTemplate",
-            [
-                'url' => $this->url . "_template/{$template->getVersion()}",
-                'verb' => 'PUT',
-                'body' => json_encode($content),
-                'status_code' => $response->getStatusCode(),
-            ]
-        );
     }
 
     /*********************************************
@@ -361,8 +401,8 @@ class ElasticSearchService
         ];
 
         $tenants = [
-            "Default" => ["all_user_{$user->getUuid()}", "app_{$app->getUuid()}"],
-            "Custom" => ["user_{$user->getUuid()}", "shared_{$app->getUuid()}"],
+            "Default" => [$user->getAllUserIndex(), $app->getApplicationIndex()],
+            "Custom" => [$user->getUserIndex(), $app->getSharedIndex()],
         ];
 
         foreach ($tenants as $groupName => $tenantGroup) {

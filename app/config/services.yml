@@ -40,6 +40,7 @@ services:
     AppBundle\Service\LdapService:
         arguments:
             $settings: '%ldap%'
+            $kibanaAdminUsername: '%kibana_admin_username%'
         tags:
             - { name: monolog.logger, channel: ldap }
 

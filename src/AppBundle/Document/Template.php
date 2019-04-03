@@ -9,12 +9,16 @@ use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 
 /**
  * @ODM\Document(repositoryClass="AppBundle\Repository\TemplateRepository")
- * @ODM\UniqueIndex(keys={"name"="asc", "version"="desc"})
+ * @ODM\UniqueIndex(keys={"name"="asc", "version"="desc", "monitoringSet"="asc"})
  * @ODM\ChangeTrackingPolicy("DEFERRED_EXPLICIT")
  * @JMS\ExclusionPolicy("all")
  */
 class Template
 {
+    const DASHBOARDS = "Dashboards";
+    const DASHBAORDS_ALL = "Dashboards-All";
+    const INDEX_TEMPLATE = "Index-Template";
+    const INDEX_PATTERN = "Index-Pattern";
 
     /**
      * @ODM\Id(strategy="auto")
@@ -53,9 +57,19 @@ class Template
     private $version;
 
     /**
+     * @ODM\Field(type="string")
+     * @JMS\Expose
+     * @JMS\Type("string")
+     *
+     * @var string
+     */
+    private $type;
+
+    /**
      * @ODM\ReferenceOne(targetDocument="AppBundle\Document\ApplicationType",cascade={"persist"}, inversedBy="templates", storeAs="dbRef")
      * @JMS\Expose
      * @JMS\Type("AppBundle\Document\ApplicationType")
+     *
      * @var ApplicationType
      */
     private $applicationType;
@@ -64,6 +78,7 @@ class Template
      * @ODM\ReferenceOne(targetDocument="AppBundle\Document\MonitoringSet",cascade={"persist"}, inversedBy="templates", storeAs="dbRef")
      * @JMS\Expose
      * @JMS\Type("AppBundle\Document\ApplicationType")
+     *
      * @var MonitoringSet
      */
     private $monitoringSet;
@@ -177,5 +192,63 @@ class Template
         $this->applicationType = $applicationType;
 
         return $this;
+    }
+
+    /**
+     * Get the value of monitoringSet
+     *
+     * @return  MonitoringSet
+     */
+    public function getMonitoringSet()
+    {
+        return $this->monitoringSet;
+    }
+
+    /**
+     * Set the value of monitoringSet
+     *
+     * @param  MonitoringSet  $monitoringSet
+     *
+     * @return  self
+     */
+    public function setMonitoringSet(MonitoringSet $monitoringSet)
+    {
+        $this->monitoringSet = $monitoringSet;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of type
+     *
+     * @return  string
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    /**
+     * Set the value of type
+     *
+     * @param  string  $type
+     *
+     * @return  self
+     */
+    public function setType(string $type)
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+
+    public static function getTypes()
+    {
+        return [
+            self::DASHBOARDS,
+            self::DASHBAORDS_ALL,
+            self::INDEX_TEMPLATE,
+            self::INDEX_PATTERN,
+        ];
     }
 }
