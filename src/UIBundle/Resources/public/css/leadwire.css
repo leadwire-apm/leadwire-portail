@@ -562,10 +562,10 @@ blockquote p {
   overflow-x: hidden;
   overflow-y: auto;
 }
-.sidebar-panel > nav ul {
+/* .sidebar-panel > nav ul {
   padding: 0;
   list-style: none;
-}
+} */
 .sidebar-panel > nav ul > li > a {
   display: block;
   text-align: left;
@@ -665,9 +665,9 @@ blockquote p {
   overflow: hidden;
   display: block;
 }
-.sidebar-panel > nav > ul > li > .sub-menu .sub-menu {
+/* .sidebar-panel > nav > ul > li > .sub-menu .sub-menu {
   padding-left: 20px;
-}
+} */
 .sidebar-panel > nav .open > ul {
   max-height: 500px;
 }
@@ -729,28 +729,28 @@ blockquote p {
     padding: 0;
     width: 100%;
   }
-  .layout-small-menu .sidebar-panel > nav > ul > li:hover > .sub-menu {
+  /* .layout-small-menu .sidebar-panel > nav > ul > li:hover > .sub-menu {
     max-height: 500px;
-  }
-  .layout-small-menu .sidebar-panel > nav > ul > li > .sub-menu {
+  } */
+  /* .layout-small-menu .sidebar-panel > nav > ul > li > .sub-menu {
     position: absolute;
     top: 0;
     left: 100%;
     max-height: 0;
-  }
-  .layout-small-menu .sidebar-panel > nav > ul > li > .sub-menu a {
+  } */
+  /* .layout-small-menu .sidebar-panel > nav > ul > li > .sub-menu a {
     padding-left: 15px;
     white-space: nowrap;
-  }
-  .layout-small-menu .sidebar-panel > nav > ul > li > .sub-menu > li > a + .sub-menu > li > a {
+  } */
+  /* .layout-small-menu .sidebar-panel > nav > ul > li > .sub-menu > li > a + .sub-menu > li > a {
     padding-left: 35px;
-  }
-  .layout-small-menu .sidebar-panel > nav > ul > li > .sub-menu > li > a + .sub-menu > li > a + .sub-menu > li > a {
+  } */
+  /* .layout-small-menu .sidebar-panel > nav > ul > li > .sub-menu > li > a + .sub-menu > li > a + .sub-menu > li > a {
     padding-left: 45px;
-  }
-  .layout-small-menu .sidebar-panel > nav > ul > li > .sub-menu > li > a + .sub-menu > li > a + .sub-menu > li > a + .sub-menu > li > a {
+  } */
+  /* .layout-small-menu .sidebar-panel > nav > ul > li > .sub-menu > li > a + .sub-menu > li > a + .sub-menu > li > a + .sub-menu > li > a {
     padding-left: 55px;
-  }
+  } */
   .layout-small-menu .sidebar-panel > nav .multi-level {
     min-width: 180px;
   }
@@ -760,14 +760,14 @@ blockquote p {
   .layout-small-menu .sidebar-panel > nav .multi-level.menu-accordion > a::before {
     content: '';
   }
-  .layout-small-menu .sidebar-panel > nav .multi-level .sub-menu {
+  /* .layout-small-menu .sidebar-panel > nav .multi-level .sub-menu {
     position: relative;
     left: auto;
-  }
-  .layout-small-menu .sidebar-panel > nav .multi-level .sub-menu > li > a {
+  } */
+  /* .layout-small-menu .sidebar-panel > nav .multi-level .sub-menu > li > a {
     padding-left: 40px;
-  }
-  .layout-small-menu .sidebar-panel > nav .multi-level .sub-menu > li > a + .sub-menu > li > a {
+  } */
+  /* .layout-small-menu .sidebar-panel > nav .multi-level .sub-menu > li > a + .sub-menu > li > a {
     padding-left: 45px;
   }
   .layout-small-menu .sidebar-panel > nav .multi-level .sub-menu > li > a + .sub-menu > li > a + .sub-menu > li > a {
@@ -775,7 +775,7 @@ blockquote p {
   }
   .layout-small-menu .sidebar-panel > nav .multi-level .sub-menu > li > a + .sub-menu > li > a + .sub-menu > li > a + .sub-menu > li > a {
     padding-left: 55px;
-  }
+  } */
   .layout-small-menu .main-panel {
     margin-left: 70px;
   }
@@ -830,6 +830,13 @@ blockquote p {
 .sidebar-panel > nav a {
   color: #B2B6BE;
 }
+
+.sidebar-panel > nav ul > ul > li {
+  color: #B2B6BE;
+  padding-left: 20px;
+  list-style-type: none;
+}
+
 .sidebar-panel > nav a:active,
 .sidebar-panel > nav a:focus,
 .sidebar-panel > nav a:hover {
@@ -852,9 +859,9 @@ blockquote p {
   .small-menu .sidebar-panel > nav li.open {
     background-color: #454f63;
   }
-  .small-menu .sidebar-panel nav > ul > li > .sub-menu {
+  /* .small-menu .sidebar-panel nav > ul > li > .sub-menu {
     background-color: #454f63;
-  }
+  } */
 }
 .sidebar-panel .ps-container > .ps-scrollbar-y-rail > .ps-scrollbar-y {
   background-color: rgba(255, 255, 255, 0.5);
@@ -2159,10 +2166,10 @@ footer.content-footer li a:active {
     margin-left: 0;
     margin-right: 250px;
   }
-  .layout-right-sidebar.layout-small-menu .sidebar-panel nav > ul > li > .sub-menu {
+  /* .layout-right-sidebar.layout-small-menu .sidebar-panel nav > ul > li > .sub-menu {
     right: 100%!important;
     left: auto!important;
-  }
+  } */
   .layout-right-sidebar.layout-small-menu .main-panel {
     margin-left: 0;
     margin-right: 70px;

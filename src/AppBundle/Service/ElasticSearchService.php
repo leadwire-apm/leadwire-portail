@@ -467,7 +467,7 @@ class ElasticSearchService
         foreach ($dashboards['Default'] as $item) {
             preg_match_all('/\[([^]]+)\]/', $item['name'], $out);
             $theme = isset($out[1][0]) === true ? $out[1][0] : 'Misc';
-            $default[] = [
+            $default[$theme][] = [
                 "private" => $item['private'],
                 "id" => $item['id'],
                 "tenant" => $item['tenant'],

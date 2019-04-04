@@ -58,15 +58,31 @@
                         iconCallback,
                     ) {
                         try {
-                            return menus.map(function (menu) {
+                            newMenus = ['APM', 'Metricbeat System'];
+
+                            apm = menus['APM'].map(function (menu) {
                                 return {
                                     label: labelCallback(menu),
                                     route: routeCallback(menu),
                                     icon: iconCallback(menu),
                                 };
                             });
+
+                            infra = menus['Metricbeat System'].map(function (menu) {
+                                return {
+                                    label: labelCallback(menu),
+                                    route: routeCallback(menu),
+                                    icon: iconCallback(menu),
+                                };
+                            });
+
+                            newMenus['APM'] = apm;
+                            newMenus['Metricbeat System'] = infra;
+
+                            return newMenus;
                         }
                         catch (e) {
+                            console.log(e);
                             return [];
                         }
                     },

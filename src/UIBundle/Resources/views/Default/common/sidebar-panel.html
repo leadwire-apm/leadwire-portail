@@ -24,13 +24,26 @@
             <spinner is-loading="true" size="32" color="'antiquewhite'"></spinner>
         </li>
         <li ng-repeat="menu in menus track by $index"
-            ng-if="!isChangingContext"
+            ng-if="!isChangingContext && state.includes('app.dashboard') == false"
             ui-sref-active="active">
             <a ng-href="[[menu.route]]">
                 <i class="[[menu.icon]]"></i>
                 <span>[[menu.label]]</span>
             </a>
         </li>
+        <div ng-repeat="menu in menus track by $index" ng-if="!isChangingContext && state.includes('app.dashboard')">
+            <li data-toggle="collapse" data-target="#[[menu.split(' ').join('')]]" ng-class="collapsed" ui-sref-active="active" style="padding: 13px 21px;">
+                <a href="#"><i ng-class="menu == 'APM' ? 'fa fa-eye' : 'fa fa-exchange-alt'"></i> [[menu]] <span class="arrow"></span></a>
+            </li>
+            <ul class="sub-menu collapse" id="[[menu.split(' ').join('')]]">
+                <li ng-repeat="submenu in menus[menu]" style="list-style-type: none;">
+                    <a ng-href="[[submenu.route]]" style="padding: 13px 21px;">
+                            <i class="[[submenu.icon]]"></i>
+                            <span>[[submenu.label]]</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
         <li ng-if="!isChangingContext && state.includes('app.dashboard')">
             <a ui-sref="app.dashboard.customDashboard">
                 <i class="fa fa-file-alt"></i>
@@ -41,3 +54,4 @@
 </nav>
 <!-- main navigation -->
 <!-- /main navigation -->
+<!--  -->
