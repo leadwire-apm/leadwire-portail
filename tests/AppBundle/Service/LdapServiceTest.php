@@ -34,8 +34,8 @@ class LdapServiceTest extends BaseFunctionalTest
         $ldap->bind($ldapSettings['dn_user'], $ldapSettings['mdp']);
         $entryManager = $ldap->getEntryManager();
 
-        $allUserTenant = LdapService::ALL_USER_TENANT_PREFIX . $uuid;
-        $userName = LdapService::USER_NAME_PREFIX . $uuid;
+        $allUserTenant = $user->getAllUserIndex();
+        $userName = $user->getUserIndex();
 
         $result = $ldap->query('ou=Group,dc=leadwire,dc=io', "(cn=$allUserTenant)")->execute();
         $entryUserAll = $result[0];
