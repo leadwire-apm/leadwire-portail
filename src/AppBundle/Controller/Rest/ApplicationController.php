@@ -181,9 +181,9 @@ class ApplicationController extends Controller
                     $application->getApplicationIndex()
                 );
 
-                $kibanaService->makeDefaultIndex($application->getApplicationIndex(), $this->getUser(), $application->getName());
+                $kibanaService->makeDefaultIndex($application->getApplicationIndex(), $application->getName());
 
-                $kibanaService->createApplicationDashboards($application, $this->getUser());
+                $kibanaService->createApplicationDashboards($application);
 
                 $esService->deleteIndex($application->getSharedIndex());
 
@@ -192,7 +192,7 @@ class ApplicationController extends Controller
                     $application->getSharedIndex()
                 );
 
-                $kibanaService->makeDefaultIndex($application->getSharedIndex(), $this->getUser(), $application->getName());
+                $kibanaService->makeDefaultIndex($application->getSharedIndex(), $application->getName());
 
                 $sgService->updateSearchGuardConfig();
                 $status = true;

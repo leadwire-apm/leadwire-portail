@@ -53,11 +53,6 @@ class KibanaService
     private $templateManager;
 
     /**
-     * @var ApplicationManager $applicationManager
-     */
-    private $applicationManager;
-
-    /**
      * @var ApplicationPermissionManager
      */
     private $permissionManager;
@@ -83,16 +78,10 @@ class KibanaService
     private $jwtHelper;
 
     /**
-     * @var array
-     */
-    private $monitoringSets;
-
-    /**
      * Undocumented function
      *
      * @param LoggerInterface $logger
      * @param TemplateManager $templateManager
-     * @param ApplicationManager $applicationManager
      * @param ApplicationPermissionManager $permissionManager,
      * @param ApplicationTypeManager $applicationTypeManager,
      * @param JWTHelper $jwtHelper
@@ -101,7 +90,6 @@ class KibanaService
     public function __construct(
         LoggerInterface $logger,
         TemplateManager $templateManager,
-        ApplicationManager $applicationManager,
         ApplicationPermissionManager $permissionManager,
         ApplicationTypeManager $applicationTypeManager,
         MonitoringSetManager $msManager,
@@ -110,7 +98,6 @@ class KibanaService
     ) {
         $this->logger = $logger;
         $this->templateManager = $templateManager;
-        $this->applicationManager = $applicationManager;
         $this->permissionManager = $permissionManager;
         $this->applicationTypeManager = $applicationTypeManager;
         $this->msManager = $msManager;
@@ -210,12 +197,11 @@ class KibanaService
     /**
      *
      * @param Application $application
-     * @param User $user
      * @param boolean $shared
      *
      * @return boolean
      */
-    public function createApplicationDashboards(Application $application, User $user, $shared = false): bool
+    public function createApplicationDashboards(Application $application, bool $shared = false): bool
     {
         $templates = $this->templateManager->getBy(['applicationType.id' => $application->getType()->getId()]);
 
@@ -354,7 +340,7 @@ class KibanaService
                 ]
             );
 
-            $this->makeDefaultIndex($user->getAllUserIndex(), $user, $user->getAllUserIndex());
+            $this->makeDefaultIndex($user->getAllUserIndex(), $user->getAllUserIndex());
         }
     }
 
@@ -479,12 +465,11 @@ class KibanaService
      * * curl --insecure -H "Authorization: Bearer ${authorization}" -X POST "$protocol://$host:$port/api/kibana/settings/defaultIndex"  -d"{\"value\":\"$appname\"}" -H 'kbn-xsrf: true' -H 'Content-Type: application/json'
      *
      * @param string $tenant
-     * @param User $user
      * @param string $value
      *
      * @return void
      */
-    public function makeDefaultIndex(string $tenant, User $user, string $value)
+    public function makeDefaultIndex(string $tenant, string $value)
     {
         $authorization = $this->jwtHelper->encode($this->kibanaAdminUsername, $this->kibanaAdminUuid);
 

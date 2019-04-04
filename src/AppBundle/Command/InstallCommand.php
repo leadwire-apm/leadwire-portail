@@ -73,7 +73,7 @@ Load default Application Type. Insert template for Kibana and more..'
                 $application->getApplicationIndex()
             );
 
-            $kibana->createApplicationDashboards($application, $application->getOwner());
+            $kibana->createApplicationDashboards($application);
 
             $es->deleteIndex($application->getSharedIndex());
 
