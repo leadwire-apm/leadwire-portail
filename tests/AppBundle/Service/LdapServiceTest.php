@@ -41,7 +41,7 @@ class LdapServiceTest extends BaseFunctionalTest
         $entryUserAll = $result[0];
         $this->assertInstanceOf(Entry::class, $entryUserAll);
         $this->assertEquals($entryUserAll->getAttribute('cn')[0], $allUserTenant);
-        $this->assertEquals($entryUserAll->getAttribute('member')[0], "cn=leadwire-apm,ou=People,dc=leadwire,dc=io");
+        $this->assertEquals($entryUserAll->getAttribute('member')[0], "cn=adm-portail,ou=People,dc=leadwire,dc=io");
         $this->assertEquals($entryUserAll->getAttribute('member')[1], "cn=$userName,ou=People,dc=leadwire,dc=io");
 
         $result = $ldap->query('ou=People,dc=leadwire,dc=io', "(cn=$userName)")->execute();
