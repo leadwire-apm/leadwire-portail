@@ -194,6 +194,12 @@ deploy:test:
         - echo "ES_PASSWORD=$TEST_ES_PASSWORD" >> .env
         - echo "ES_HOST=$TEST_ES_HOST" >> .env
         - echo "ES_PORT=$TEST_ES_PORT" >> .env
+        - echo "LOGIN_METHOD=$LOGIN_METHOD" >> .env
+        - echo "COMPAGNE_ENABLED=$COMPAGNE_ENABLED" >> .env
+        - echo "JENKINS_URL=$JENKINS_URL" >> .env
+        - echo "STRIPE_ENABLED=$STRIPE_ENABLED" >> .env
+        - echo "KIBANA_ADMIN_USERNAME=$KIBANA_ADMIN_USERNAME" >> .env
+        - echo "KIBANA_ADMIN_UUID=$KIBANA_ADMIN_UUID" >> .env
     script:
         - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
         - eval $(ssh-agent -s)
