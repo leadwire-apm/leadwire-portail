@@ -47,10 +47,16 @@ Load default Application Type. Insert template for Kibana and more..'
         /** @var SearchGuardService $sgService */
         $sgService = $this->getContainer()->get(SearchGuardService::class);
 
+        /** @var bool $stripeEnabled */
+        $stripeEnabled = $this->getContainer()->getParameter('stripe_enabled');
+
         /** @var bool $purge */
         $purge = $input->getOption("purge") === true ?: false;
-        $this->display($output, "Deleting Stripe plans");
-        $planService->deleteAllPlans();
+
+        if ($stripeEnabled === true) {
+            $this->display($output, "Deleting Stripe plans");
+            $planService->deleteAllPlans();
+        }
 
         $this->loadFixtures($output, $purge);
 
@@ -83,8 +89,10 @@ Load default Application Type. Insert template for Kibana and more..'
             );
         }
 
-        $this->display($output, "Creating Stripe Plans with new Data");
-        $planService->createDefaultPlans();
+        if ($stripeEnabled === true) {
+            $this->display($output, "Creating Stripe Plans with new Data");
+            $planService->createDefaultPlans();
+        }
 
         return 0;
     }
