@@ -50,23 +50,31 @@ class LdapService
     private $kibanaAdminUsername;
 
     /**
+     * @var bool
+     */
+    private $hasAllUserTenant;
+
+    /**
      * LdapService constructor.
      *
      * @param LoggerInterface $logger
      * @param ApplicationManager $applicationManager
      * @param array $settings
      * @param string $kibanaAdminUsername,
+     * @param bool $hasAllUserTenant,
      */
     public function __construct(
         LoggerInterface $logger,
         ApplicationManager $applicationManager,
         array $settings,
-        string $kibanaAdminUsername
+        string $kibanaAdminUsername,
+        bool $hasAllUserTenant
     ) {
         $this->settings = $settings;
         $this->applicationManager = $applicationManager;
         $this->logger = $logger;
         $this->kibanaAdminUsername = $kibanaAdminUsername;
+        $this->hasAllUserTenant = $hasAllUserTenant;
 
         try {
             $this->ldap = Ldap::create(
@@ -174,21 +182,23 @@ class LdapService
 
         $status = $this->saveEntry($entry);
 
-        // ALL_USER entry
-        $entry = new Entry(
-            "cn={$user->getAllUserIndex()},ou=Group,dc=leadwire,dc=io",
-            [
-                'cn' => "{$user->getAllUserIndex()}",
-                'objectClass' => ['groupofnames'],
-                'member' => [
-                    "cn={$this->kibanaAdminUsername},ou=People,dc=leadwire,dc=io",
-                    "cn={$user->getUserIndex()},ou=People,dc=leadwire,dc=io",
-                ],
-                'description' => $user->getUsername(),
-            ]
-        );
+        if ($this->hasAllUserTenant === true) {
+            // ALL_USER entry
+            $entry = new Entry(
+                "cn={$user->getAllUserIndex()},ou=Group,dc=leadwire,dc=io",
+                [
+                    'cn' => "{$user->getAllUserIndex()}",
+                    'objectClass' => ['groupofnames'],
+                    'member' => [
+                        "cn={$this->kibanaAdminUsername},ou=People,dc=leadwire,dc=io",
+                        "cn={$user->getUserIndex()},ou=People,dc=leadwire,dc=io",
+                    ],
+                    'description' => $user->getUsername(),
+                ]
+            );
 
-        $status = $status && $this->saveEntry($entry);
+            $status = $status && $this->saveEntry($entry);
+        }
 
         return $status;
     }

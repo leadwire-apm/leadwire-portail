@@ -175,6 +175,7 @@ class SearchGuardService
     {
         $fs = new Filesystem();
         $configDir = $this->sgConfig['config_dirpath'];
+        $scriptPath = $this->sgConfig['script_path'];
 
         $sgRolesData = $this->prepareConfig();
         $sgRolesMappingsData = $this->prepareMappingsConfig();
@@ -192,7 +193,7 @@ class SearchGuardService
             $fs->dumpFile($configDir . 'sg_roles_mapping.yml', $sgRolesMappingsData);
 
             // ! Hard coded on purpose
-            $output = \shell_exec("sh /usr/share/elasticsearch/plugins/search-guard-6/tools/sgadmin.sh -cd /usr/share/elasticsearch/plugins/search-guard-6/sgconfig/ -icl -nhnv -cacert /certificates/root-ca.pem -cert /certificates/leadwire-apm.pem -key /certificates/leadwire-apm.key -keypass changeit &");
+            $output = \shell_exec("sh $scriptPath -cd $configDir -icl -nhnv -cacert /certificates/root-ca.pem -cert /certificates/leadwire-apm.pem -key /certificates/leadwire-apm.key -keypass changeit &");
             $this->logger->notice(
                 "leadwire.search_guard.updateSearchGuardConfig",
                 [

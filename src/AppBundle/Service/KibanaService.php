@@ -5,7 +5,6 @@ use AppBundle\Document\Application;
 use AppBundle\Document\ApplicationType;
 use AppBundle\Document\Template;
 use AppBundle\Document\User;
-use AppBundle\Manager\ApplicationManager;
 use AppBundle\Manager\ApplicationPermissionManager;
 use AppBundle\Manager\ApplicationTypeManager;
 use AppBundle\Manager\MonitoringSetManager;
@@ -78,6 +77,11 @@ class KibanaService
     private $jwtHelper;
 
     /**
+     * @var bool
+     */
+    private $hasAllUserTenant;
+
+    /**
      * Undocumented function
      *
      * @param LoggerInterface $logger
@@ -85,6 +89,7 @@ class KibanaService
      * @param ApplicationPermissionManager $permissionManager,
      * @param ApplicationTypeManager $applicationTypeManager,
      * @param JWTHelper $jwtHelper
+     * @param bool $hasAllUserTenant
      * @param array $settings
      */
     public function __construct(
@@ -94,6 +99,7 @@ class KibanaService
         ApplicationTypeManager $applicationTypeManager,
         MonitoringSetManager $msManager,
         JWTHelper $jwtHelper,
+        bool $hasAllUserTenant,
         array $settings = []
     ) {
         $this->logger = $logger;
@@ -102,6 +108,7 @@ class KibanaService
         $this->applicationTypeManager = $applicationTypeManager;
         $this->msManager = $msManager;
         $this->jwtHelper = $jwtHelper;
+        $this->hasAllUserTenant = $hasAllUserTenant;
         $this->httpClient = new Client(
             [
                 'curl' => array(CURLOPT_SSL_VERIFYPEER => false),
@@ -121,6 +128,10 @@ class KibanaService
      */
     public function createAllUserDashboard(User $user)
     {
+        if ($this->hasAllUserTenant === false) {
+            return false;
+        }
+
         $defaultType = $this->applicationTypeManager->getOneBy(['name' => ApplicationType::DEFAULT_TYPE]);
 
         if ($defaultType === null) {
@@ -206,6 +217,7 @@ class KibanaService
         $templates = $this->templateManager->getBy(['applicationType.id' => $application->getType()->getId()]);
 
         foreach ($this->msManager->getAll() as $monitoringSet) {
+            $replaceService = strtolower($monitoringSet->getQualifier()) . "-" . $application->getName();
             $filtered = array_filter(
                 $templates,
                 function (Template $element) use ($monitoringSet) {
@@ -234,8 +246,8 @@ class KibanaService
 
             $authorization = $this->jwtHelper->encode($this->kibanaAdminUsername, $this->kibanaAdminUuid);
 
-            $content = str_replace("__replace_token__", $application->getName(), $template->getContent());
-            $content = str_replace("__replace_service__", $application->getName(), $content);
+            $content = str_replace("__replace_token__", $replaceService, $template->getContent());
+            $content = str_replace("__replace_service__", $replaceService, $content);
 
             $headers = [
                 'kbn-xsrf' => true,
@@ -275,6 +287,10 @@ class KibanaService
      */
     public function loadIndexPatternForAllUser(User $user)
     {
+        if ($this->hasAllUserTenant === false) {
+            return;
+        }
+
         $defaultType = $this->applicationTypeManager->getOneBy(['name' => ApplicationType::DEFAULT_TYPE]);
 
         if ($defaultType === null) {
@@ -377,7 +393,9 @@ class KibanaService
                 throw new \Exception(sprintf("Template (%s) not found for type (%s)", Template::INDEX_PATTERN, $application->getType()->getName()));
             }
 
-            $content = str_replace("__replace_token__", $application->getName(), $template->getContent());
+            $indexPattern = strtolower($monitoringSet->getQualifier()) . "-" . $application->getName();
+
+            $content = str_replace("__replace_token__", $indexPattern, $template->getContent());
 
             $headers = [
                 'kbn-xsrf' => true,
@@ -391,7 +409,7 @@ class KibanaService
             $headers['Authorization'] = "Bearer $authorization";
 
             $response = $this->httpClient->post(
-                $this->url . "api/saved_objects/index-pattern/{$application->getName()}",
+                $this->url . "api/saved_objects/index-pattern/$indexPattern",
                 [
                     'headers' => $headers,
                     'body' => $content,
@@ -401,7 +419,7 @@ class KibanaService
             $this->logger->notice(
                 "leadwire.kibana.loadIndexPatternForApplication",
                 [
-                    'url' => $this->url . "api/saved_objects/index-pattern/{$application->getName()}",
+                    'url' => $this->url . "api/saved_objects/index-pattern/$indexPattern",
                     'verb' => 'POST',
                     'headers' => $headers,
                     'status_code' => $response->getStatusCode(),
@@ -477,7 +495,7 @@ class KibanaService
             'kbn-xsrf' => true,
             'Content-Type' => 'application/json',
             'Authorization' => "Bearer $authorization",
-            'tenant' => "$tenant",
+            'tenant' => $tenant,
             'X-Proxy-User' => $this->kibanaAdminUsername,
         ];
 

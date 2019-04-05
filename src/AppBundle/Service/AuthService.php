@@ -71,6 +71,12 @@ class AuthService
      */
     private $sgService;
 
+    /**
+     *
+     * @var bool
+     */
+    private $hasAllUserTenant;
+
     public function __construct(
         UserManager $userManage,
         ApplicationService $applicationService,
@@ -82,7 +88,8 @@ class AuthService
         SearchGuardService $sgService,
         string $appDomain,
         array $authProviderSettings,
-        string $superAdminUsername
+        string $superAdminUsername,
+        bool $hasAllUserTenant
     ) {
         $this->userManager = $userManage;
         $this->applicationService = $applicationService;
@@ -95,6 +102,7 @@ class AuthService
         $this->authProviderSettings = $authProviderSettings;
         $this->superAdminUsername = $superAdminUsername;
         $this->sgService = $sgService;
+        $this->hasAllUserTenant = $hasAllUserTenant;
     }
 
     /**
@@ -116,38 +124,9 @@ class AuthService
         $user = $this->userManager->getOneBy(['username' => $data['login']]);
 
         if ($user === null) {
-            // We're dealing with a new user
-            $user = $this->addUser($data);
-            $this->logger->notice("leadwire.auth.githubProvider", ["event" => "Created new user {$user->getUsername()}"]);
-
-            if ($user !== null) {
-                // User creation in DB is successful
-                // Should create LDAP & ElasticSearch entries
-                $this->ldapService->createNewUserEntries($user);
-                $this->ldapService->registerDemoApplications($user);
-                $this->applicationService->registerDemoApplications($user);
-
-                $this->esService->deleteIndex($user->getUserIndex());
-                $this->kibanaService->loadIndexPatternForUserTenant($user);
-
-                $this->esService->deleteIndex($user->getAllUserIndex());
-                $this->kibanaService->loadIndexPatternForAllUser($user);
-                $this->kibanaService->createAllUserDashboard($user);
-
-                $this->sgService->updateSearchGuardConfig();
-            }
+            $user = $this->handleNewUser($data);
         } else {
-            // Check if user has been deleted
-            if ($user->isDeleted() === true) {
-                $this->logger->notice("leadwire.auth.githubProvider", ["event" => "Deleted user {$user->getUsername()} tried to login"]);
-                throw new AccessDeniedHttpException("User is deleted");
-            }
-
-            // Check if user is locked
-            if ($user->isLocked() === true) {
-                $this->logger->notice("leadwire.auth.githubProvider", ["event" => "Locked user {$user->getUsername()} tried to login"]);
-                throw new AccessDeniedHttpException($user->getLockMessage());
-            }
+            $this->validateActiveStatus($user);
         }
 
         $this->checkSuperAdminRoles($user);
@@ -165,15 +144,7 @@ class AuthService
         if ($user === null) {
             throw new AccessDeniedHttpException("User is undefined");
         } else {
-            // Check if user has been deleted
-            if ($user->isDeleted() === true) {
-                throw new AccessDeniedHttpException("User is deleted");
-            }
-
-            // Check if user is locked
-            if ($user->isLocked() === true) {
-                throw new AccessDeniedHttpException($user->getLockMessage());
-            }
+            $this->validateActiveStatus($user);
 
             $this->checkSuperAdminRoles($user);
         }
@@ -185,42 +156,54 @@ class AuthService
         $user = $this->userManager->getOneBy(['email' => $params['email']]);
 
         if ($user === null) {
-            // We're dealing with a new user
-            $user = $this->addUserWithEmail($params);
-
-            if ($user !== null) {
-                // User creation in DB is successful
-                // Should create LDAP & ElasticSearch entries
-                $this->ldapService->createNewUserEntries($user);
-                $this->ldapService->registerDemoApplications($user);
-                $this->applicationService->registerDemoApplications($user);
-
-                $this->esService->deleteIndex($user->getUserIndex());
-                $this->kibanaService->loadIndexPatternForUserTenant($user);
-
-                $this->esService->deleteIndex($user->getAllUserIndex());
-                $this->kibanaService->loadIndexPatternForAllUser($user);
-                $this->kibanaService->createAllUserDashboard($user);
-
-                $this->sgService->updateSearchGuardConfig();
-            }
+            $user = $this->handleNewUser($params);
         } else {
-            // Check if user has been deleted
-            if ($user->isDeleted() === true) {
-                $this->logger->notice("leadwire.auth.githubProvider", ["event" => "Deleted user {$user->getUsername()} tried to login"]);
-                throw new AccessDeniedHttpException("User is deleted");
-            }
-
-            // Check if user is locked
-            if ($user->isLocked() === true) {
-                $this->logger->notice("leadwire.auth.githubProvider", ["event" => "Locked user {$user->getUsername()} tried to login"]);
-                throw new AccessDeniedHttpException($user->getLockMessage());
-            }
+            $this->validateActiveStatus($user);
         }
 
         $this->checkSuperAdminRoles($user);
 
         return $user;
+    }
+
+    /**
+     *
+     * @param User $user
+     *
+     * @return string
+     */
+    public function generateToken(User $user)
+    {
+        return $this->jwtHelper->encode($user->getUsername(), $user->getUserIndex());
+    }
+
+    /**
+     *
+     * @param string $token
+     *
+     * @return mixed
+     */
+    public function decodeToken($token)
+    {
+        $decoded = $this->jwtHelper->decode($token, $this->authProviderSettings['settings']['token_secret']);
+
+        if (isset($decoded->host) === false || $decoded->host !== $this->appDomain) {
+            throw new ExpiredException('Invalide token');
+        }
+
+        return $decoded;
+    }
+
+    /**
+     * @param string $authorization
+     * @return User|null
+     */
+    public function getUserFromToken($authorization)
+    {
+        $jwt = explode(' ', $authorization);
+        $token = $this->decodeToken($jwt[1]);
+
+        return $this->userManager->getOneBy(['uuid' => str_replace("user_", "", $token->user)]);
     }
 
     /**
@@ -260,34 +243,6 @@ class AuthService
 
     /**
      *
-     * @param User $user
-     *
-     * @return string
-     */
-    public function generateToken(User $user)
-    {
-        return $this->jwtHelper->encode($user->getUsername(), $user->getUserIndex());
-    }
-
-    /**
-     *
-     * @param string $token
-     *
-     * @return mixed
-     */
-    public function decodeToken($token)
-    {
-        $decoded = $this->jwtHelper->decode($token, $this->authProviderSettings['settings']['token_secret']);
-
-        if (isset($decoded->host) === false || $decoded->host !== $this->appDomain) {
-            throw new ExpiredException('Invalide token');
-        }
-
-        return $decoded;
-    }
-
-    /**
-     *
      * @param array $userData
      *
      * @return User
@@ -308,18 +263,6 @@ class AuthService
     }
 
     /**
-     * @param string $authorization
-     * @return User|null
-     */
-    public function getUserFromToken($authorization)
-    {
-        $jwt = explode(' ', $authorization);
-        $token = $this->decodeToken($jwt[1]);
-
-        return $this->userManager->getOneBy(['uuid' => str_replace("user_", "", $token->user)]);
-    }
-
-    /**
      * Makes sure that the user with the configured super admin username has the right access role
      *
      * @param User $user
@@ -333,6 +276,54 @@ class AuthService
         ) {
             $user->promote(User::ROLE_SUPER_ADMIN);
             $this->userManager->update($user);
+        }
+    }
+
+    private function handleNewUser(array $parameters): ?User
+    {
+        // We're dealing with a new user
+        $user = null;
+
+        if (array_key_exists('group', $parameters) === true) {
+            $user = $this->addUserWithEmail($parameters);
+        } else {
+            $user = $this->addUser($parameters);
+        }
+
+        if ($user !== null) {
+            // User creation in DB is successful
+            // Should create LDAP & ElasticSearch entries
+            $this->ldapService->createNewUserEntries($user);
+            $this->ldapService->registerDemoApplications($user);
+            $this->applicationService->registerDemoApplications($user);
+
+            $this->esService->deleteIndex($user->getUserIndex());
+            $this->kibanaService->loadIndexPatternForUserTenant($user);
+
+            if ($this->hasAllUserTenant === true) {
+                $this->esService->deleteIndex($user->getAllUserIndex());
+                $this->kibanaService->loadIndexPatternForAllUser($user);
+                $this->kibanaService->createAllUserDashboard($user);
+            }
+
+            $this->sgService->updateSearchGuardConfig();
+        }
+
+        return $user;
+    }
+
+    private function validateActiveStatus(User $user)
+    {
+        // Check if user has been deleted
+        if ($user->isDeleted() === true) {
+            $this->logger->notice("leadwire.auth.githubProvider", ["event" => "Deleted user {$user->getUsername()} tried to login"]);
+            throw new AccessDeniedHttpException("User is deleted");
+        }
+
+        // Check if user is locked
+        if ($user->isLocked() === true) {
+            $this->logger->notice("leadwire.auth.githubProvider", ["event" => "Locked user {$user->getUsername()} tried to login"]);
+            throw new AccessDeniedHttpException($user->getLockMessage());
         }
     }
 }

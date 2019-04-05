@@ -19,7 +19,7 @@ class MonitoringSetFixture extends AbstractFixture implements OrderedFixtureInte
         $manager->persist($ms);
         $this->addReference(self::APM_MONITORING_SET, $ms);
         $ms = new MonitoringSet();
-        $ms->setName("Infrastructure")->setQualifier("INFRASTRUCTURE");
+        $ms->setName("Metricbeat")->setQualifier("METRICBEAT");
         $manager->persist($ms);
         $this->addReference(self::INFRASTRUCTURE_MONITORING_SET, $ms);
 
