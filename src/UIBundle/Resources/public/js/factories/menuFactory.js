@@ -32,11 +32,12 @@
                         },
                     );
 
-                    Menus.SETTINGS.push({
-                        route: 'app.tmecs',
-                        icon: 'fa fa-table',
-                        label: 'Campaigns',
-                    });
+                   Menus.CAMPAGNE.push(                {
+                        url: CONFIG.JENKINS_URL,
+                        icon: 'fa fa-play-circle',
+                        label: 'Launch',
+                        external:true
+                    })
                 }
 
                 return {
