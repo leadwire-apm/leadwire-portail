@@ -23,6 +23,12 @@ parameters:
     kibana.iframe_host: 'https://localhost'
     kibana.port: 5604
     kibana.iframe_port: 5605
+    login_method: 'github'
+    compagne_enabled: true
+    jenkins_url: 'http://localhost'
+    stripe_enabled: true
+    kibana_admin_username: ''
+    has_all_user_tenant: false
     auth_providers:
         github:
             github_access_token_url: 'https://github.com/login/oauth/access_token'
@@ -40,6 +46,8 @@ parameters:
         port: 5604
         iframe_host: 'https://localhost'
         iframe_port: 5405
+        kibana_admin_username: ''
+        kibana_admin_uuid: ''
     elastic:
         username: ''
         password: ''
