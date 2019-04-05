@@ -282,9 +282,10 @@ class ElasticSearchService
 
         foreach ($application->getType()->getMonitoringSets() as $ms) {
             $body = json_decode($bodyString, false);
-            $aliasName = strtolower($ms->getQualifier()) . "-$applicationName-*";
-            $createdAliases[] = strtolower($ms->getQualifier()) . "-$applicationName";
-            $body->actions[0]->add->index = strtolower($ms->getQualifier()) . "-$applicationName";
+            $aliasName = strtolower($ms->getQualifier()) . "-$applicationName";
+            $indexName = strtolower($ms->getQualifier())."-*-$applicationName-*";
+            $createdAliases[] = $aliasName;
+            $body->actions[0]->add->index = $indexName;
             $body->actions[0]->add->alias = $aliasName;
             $content = json_encode($body);
             $response = $this->httpClient->post(
@@ -382,7 +383,6 @@ class ElasticSearchService
                     'headers' => [
                         "Content-Type" => "application/json",
                     ],
-                    'body' => json_encode($content),
                 ]
             );
 
@@ -391,7 +391,6 @@ class ElasticSearchService
                 [
                     'url' => $this->url . "_template/{$template->getVersion()}",
                     'verb' => 'PUT',
-                    'body' => json_encode($content),
                     'status_code' => $response->getStatusCode(),
                     'monitoring_set' => $monitoringSet->getName(),
                 ]
