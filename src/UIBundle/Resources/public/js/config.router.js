@@ -500,7 +500,7 @@ angular.module('leadwireApp')
                         permissions: function (RouteGuard) {
                             return RouteGuard.loginRequired();
                         },
-                        menu: updateMenuItems(MenuEnum.SETTINGS)
+                        menu: updateMenuItems(MenuEnum.CAMPAGNE)
                     },
                     controller: 'ListCompagnesController',
                     controllerAs: 'ctrl',
@@ -552,7 +552,7 @@ angular.module('leadwireApp')
                         permissions: function (RouteGuard) {
                             return RouteGuard.loginRequired();
                         },
-                        menu: updateMenuItems(MenuEnum.SETTINGS),
+                        menu: updateMenuItems(MenuEnum.CAMPAGNE),
                     },
                     controller: 'TmecOverviewController',
                     controllerAs: 'ctrl',
