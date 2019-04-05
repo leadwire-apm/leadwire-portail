@@ -3,6 +3,7 @@
 namespace AppBundle\Controller\Rest;
 
 use AppBundle\Document\User;
+use AppBundle\Document\Template;
 use AppBundle\Service\TemplateService;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -103,5 +104,17 @@ class TemplateController extends Controller
         $data = $templateService->getTemplate($id);
 
         return $this->renderResponse($data, Response::HTTP_OK, ["Default"]);
+    }
+
+    /**
+     * @Route("/get-types", methods="GET")
+     *
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function getTypesAction(Request $request)
+    {
+        return $this->renderResponse(Template::getTypes());
     }
 }

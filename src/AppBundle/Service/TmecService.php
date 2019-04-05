@@ -3,14 +3,14 @@
 namespace AppBundle\Service;
 
 use AppBundle\Document\Tmec;
-use Symfony\Component\Finder\Finder;
 use AppBundle\Manager\TmecManager;
 use AppBundle\Service\StepService;
+use AppBundle\Document\Application;
 use JMS\Serializer\SerializerInterface;
+use AppBundle\Manager\ApplicationManager;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
-use AppBundle\Manager\ApplicationManager;
-use AppBundle\Document\Application;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 class TmecService
 {
@@ -51,6 +51,7 @@ class TmecService
      */
     public function newTmec(array $params)
     {
+        /** @var ?Tmec $tmec */
         $tmec = $this->tmecManager->getTmecByVersion($params['version'], $params['applicationId']);
 
         if ($tmec === null) {
@@ -60,15 +61,16 @@ class TmecService
                 $params['startDate'],
                 $params['endDate'],
                 $params['application'],
-                $params['applicationName']);
+                $params['applicationName']
+            );
 
             $this->stepService->initSteps($tmec);
         } else {
-            throw new AccessDeniedHttpException("Version is already exist");
+            throw new AccessDeniedHttpException("Version already exists");
         }
+
         return $tmec;
     }
-
 
     public function update($json)
     {
@@ -81,8 +83,9 @@ class TmecService
      * @param array $params
      */
     public function listTmec(array $params)
-    {   
+    {
         $tmecList = $this->tmecManager->getTmecByApplication($params['completed'], $params['ids']);
+
         return $tmecList;
     }
 
@@ -119,7 +122,8 @@ class TmecService
      */
     public function getApplications()
     {
-        $applications =  $this->applicationManager->getBy([]);
+        $applications = $this->applicationManager->getBy([]);
+
         return $applications;
     }
 }

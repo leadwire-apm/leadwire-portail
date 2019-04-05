@@ -10,7 +10,7 @@ imports:
 # Parameters Configuration
 parameters:
     locale: en
-    app_version: 'v1.0.0'
+    app_version: 'v1.1.1'
     app_domain: '%env(APP_DOMAIN)%'
     app_schemes: '%env(APP_SCHEME)%'
     activation_code_regex: '[A-Z0-9]B[A-Z0-9]{2}7[A-Z0-9]'
@@ -34,6 +34,8 @@ parameters:
     compagne_enabled: '%env(COMPAGNE_ENABLED)%'
     jenkins_url: '%env(JENKINS_URL)%'
     stripe_enabled: '%env(STRIPE_ENABLED)%'
+    kibana_admin_username: '%env(KIBANA_ADMIN_USERNAME)%'
+    has_all_user_tenant: false
     auth_providers:
         github:
             github_access_token_url: 'https://github.com/login/oauth/access_token'
@@ -51,15 +53,16 @@ parameters:
         port: '%env(KIBANA_PORT)%'
         iframe_host: '%env(KIBANA_IFRAME_HOST)%'
         iframe_port: '%env(KIBANA_IFRAME_PORT)%'
-        template_folder: '%kernel.project_dir%/app/Resources/Kibana'
+        kibana_admin_username: '%env(KIBANA_ADMIN_USERNAME)%'
+        kibana_admin_uuid: '%env(KIBANA_ADMIN_UUID)%'
     elastic:
         username: '%env(ES_USERNAME)%'
         password: '%env(ES_PASSWORD)%'
         host: '%env(ES_HOST)%'
         port: '%env(ES_PORT)%'
     sg:
-        executable_path: '/usr/share/elasticsearch/plugins/search-guard-6/tools/sgadmin.sh'
-        config_dirpath: '/usr/share/elasticsearch/plugins/search-guard-6/sgconfig/'
+        script_path: '%env(SG_ADMIN_SCRIPT_PATH)%'
+        config_dirpath: '%env(SG_ADMIN_CONF_DIR_PATH)%'
 
 # Framework Configuration
 framework:

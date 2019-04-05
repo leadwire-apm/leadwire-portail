@@ -29,6 +29,52 @@
 </div>
 
 <div class="form-group">
+    <label class="col-sm-2 control-label">Monitoring Set *</label>
+    <div class="col-sm-10">
+
+        <select name="monitoringSet" placeholder="Monitoring set" class="form-control"
+        data-ng-model="ctrl.template.monitoringSet.id"
+        autocomplete="false"
+        required>
+            <option ng-repeat="ms in ctrl.monitoringSets" value="[[ms.id]]">[[ms.name]]</option>
+          </select>
+        <span class="text-red"
+              ng-show="templateForm.monitoringSet.$error.required && !templateForm.monitoringSet.$pristine">
+            This field is required</span>
+    </div>
+</div>
+
+<div class="form-group">
+    <label class="col-sm-2 control-label">Type *</label>
+    <div class="col-sm-10">
+
+        <select name="type" placeholder="Template Type" class="form-control"
+        data-ng-model="ctrl.template.type"
+        autocomplete="false"
+        required>
+            <option ng-repeat="type in ctrl.types" value="[[type]]">[[type]]</option>
+          </select>
+        <span class="text-red"
+              ng-show="templateForm.type.$error.required && !templateForm.type.$pristine">
+            This field is required</span>
+    </div>
+</div>
+
+<div class="form-group">
+    <label class="col-sm-2 control-label">Version *</label>
+    <div class="col-sm-10">
+
+        <input name="version" placeholder="Template version" type="text" class="form-control"
+               data-ng-model="ctrl.template.version"
+               autocomplete="false"
+               required>
+        <span class="text-red"
+              ng-show="templateForm.version.$error.required && !templateForm.version.$pristine">
+            This field is required</span>
+    </div>
+</div>
+
+<div class="form-group">
     <label class="col-sm-2 control-label" for="content">Content *</label>
     <div class="col-sm-10">
         <div ng-jsoneditor

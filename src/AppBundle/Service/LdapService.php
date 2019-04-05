@@ -19,9 +19,6 @@ use Symfony\Component\Ldap\Ldap;
  */
 class LdapService
 {
-    const ALL_USER_TENANT_PREFIX = 'all_user_';
-    const USER_NAME_PREFIX = 'user_';
-
     /**
      * @var array
      */
@@ -48,9 +45,14 @@ class LdapService
     private $entryManager;
 
     /**
+     * @var string
+     */
+    private $kibanaAdminUsername;
+
+    /**
      * @var bool
      */
-    private $initialized;
+    private $hasAllUserTenant;
 
     /**
      * LdapService constructor.
@@ -58,12 +60,21 @@ class LdapService
      * @param LoggerInterface $logger
      * @param ApplicationManager $applicationManager
      * @param array $settings
+     * @param string $kibanaAdminUsername,
+     * @param bool $hasAllUserTenant,
      */
-    public function __construct(LoggerInterface $logger, ApplicationManager $applicationManager, array $settings)
-    {
+    public function __construct(
+        LoggerInterface $logger,
+        ApplicationManager $applicationManager,
+        array $settings,
+        string $kibanaAdminUsername,
+        bool $hasAllUserTenant
+    ) {
         $this->settings = $settings;
         $this->applicationManager = $applicationManager;
         $this->logger = $logger;
+        $this->kibanaAdminUsername = $kibanaAdminUsername;
+        $this->hasAllUserTenant = $hasAllUserTenant;
 
         try {
             $this->ldap = Ldap::create(
@@ -76,10 +87,8 @@ class LdapService
             $this->ldap->bind($this->settings['dn_user'], $this->settings['mdp']);
 
             $this->entryManager = $this->ldap->getEntryManager();
-            $this->initialized = true;
         } catch (\Exception $e) {
             $this->logger->emergency('leadwire.ldap.__construct', ['error' => $e->getMessage()]);
-            $this->initialized = false;
         }
     }
 
@@ -92,27 +101,27 @@ class LdapService
      */
     public function createInvitationEntry(Invitation $invitation): bool
     {
-        $appIndex = $invitation->getApplication()->getUuid();
-        $userName = self::USER_NAME_PREFIX . $invitation->getUser()->getUuid();
+        $application = $invitation->getApplication();
+        $user = $invitation->getUser();
 
-        $appRecord = $this->ldap->query('ou=Group,dc=leadwire,dc=io', "(cn=app_$appIndex)")->execute();
+        $appRecord = $this->ldap->query('ou=Group,dc=leadwire,dc=io', "(cn={$application->getApplicationIndex()})")->execute();
         $entry = $appRecord[0];
 
         if ($entry instanceof Entry) {
             $oldValue = $entry->getAttribute('member') !== null ? $entry->getAttribute('member') : [];
-            $entry->setAttribute('member', array_merge($oldValue, ["cn=$userName,ou=People,dc=leadwire,dc=io"]));
+            $entry->setAttribute('member', array_merge($oldValue, ["cn={$user->getUserIndex()},ou=People,dc=leadwire,dc=io"]));
             $this->entryManager->update($entry);
         } else {
             throw new \Exception("Unable to find LDAP records for applications app tenant");
         }
 
-        $sharedRecord = $this->ldap->query('ou=Group,dc=leadwire,dc=io', "(cn=shared_$appIndex)")->execute();
+        $sharedRecord = $this->ldap->query('ou=Group,dc=leadwire,dc=io', "(cn={$application->getSharedIndex()})")->execute();
 
         $entry = $sharedRecord[0];
 
         if ($entry instanceof Entry) {
             $oldValue = $entry->getAttribute('member') !== null ? $entry->getAttribute('member') : [];
-            $entry->setAttribute('member', array_merge($oldValue, ["cn=$userName,ou=People,dc=leadwire,dc=io"]));
+            $entry->setAttribute('member', array_merge($oldValue, ["cn={$user->getUserIndex()},ou=People,dc=leadwire,dc=io"]));
             $this->entryManager->update($entry);
         } else {
             throw new \Exception("Unable to find LDAP records for applications shared tenant");
@@ -158,15 +167,13 @@ class LdapService
      */
     public function createNewUserEntries(User $user): bool
     {
-        $allUserTenant = self::ALL_USER_TENANT_PREFIX . $user->getUuid();
-        $userName = self::USER_NAME_PREFIX . $user->getUuid();
         $status = true;
 
         // People entry
         $entry = new Entry(
-            "cn=$userName,ou=People,dc=leadwire,dc=io",
+            "cn={$user->getUserIndex()},ou=People,dc=leadwire,dc=io",
             [
-                "cn" => $userName,
+                "cn" => $user->getUserIndex(),
                 "gidNumber" => "789",
                 "objectclass" => ['posixGroup', 'top'],
                 "description" => $user->getUsername(),
@@ -175,39 +182,39 @@ class LdapService
 
         $status = $this->saveEntry($entry);
 
-        // ALL_USER entry
-        $entry = new Entry(
-            "cn=$allUserTenant,ou=Group,dc=leadwire,dc=io",
-            [
-                'cn' => "$allUserTenant",
-                'objectClass' => ['groupofnames'],
-                'member' => [
-                    "cn=leadwire-apm,ou=People,dc=leadwire,dc=io",
-                    "cn=$userName,ou=People,dc=leadwire,dc=io",
-                ],
-                'description' => $user->getUsername(),
-            ]
-        );
+        if ($this->hasAllUserTenant === true) {
+            // ALL_USER entry
+            $entry = new Entry(
+                "cn={$user->getAllUserIndex()},ou=Group,dc=leadwire,dc=io",
+                [
+                    'cn' => "{$user->getAllUserIndex()}",
+                    'objectClass' => ['groupofnames'],
+                    'member' => [
+                        "cn={$this->kibanaAdminUsername},ou=People,dc=leadwire,dc=io",
+                        "cn={$user->getUserIndex()},ou=People,dc=leadwire,dc=io",
+                    ],
+                    'description' => $user->getUsername(),
+                ]
+            );
 
-        $status = $status && $this->saveEntry($entry);
+            $status = $status && $this->saveEntry($entry);
+        }
 
         return $status;
     }
 
     public function registerApplication(User $user, Application $application): bool
     {
-        $userName = self::USER_NAME_PREFIX . $user->getUuid();
-
         foreach (['app_', 'shared_'] as $tenantPrefix) {
             $result = $this->ldap->query('ou=Group,dc=leadwire,dc=io', "(cn={$tenantPrefix}{$application->getUuid()})")->execute();
             $entry = $result[0];
             if ($entry instanceof Entry) {
                 $oldValue = $entry->getAttribute('member') !== null ? $entry->getAttribute('member') : [];
-                if (in_array("cn=$userName,ou=People,dc=leadwire,dc=io", $oldValue) === false) {
-                    $entry->setAttribute('member', array_merge($oldValue, ["cn=$userName,ou=People,dc=leadwire,dc=io"]));
+                if (in_array("cn={$user->getUserIndex()},ou=People,dc=leadwire,dc=io", $oldValue) === false) {
+                    $entry->setAttribute('member', array_merge($oldValue, ["cn={$user->getUserIndex()},ou=People,dc=leadwire,dc=io"]));
                     $this->entryManager->update($entry);
                 } else {
-                    $this->logger->notice("Entry already up to date [cn=$userName,ou=People,dc=leadwire,dc=io] in [cn=app_{$application->getUuid()}]");
+                    $this->logger->notice("Entry already up to date [cn={$user->getUserIndex()},ou=People,dc=leadwire,dc=io] in [cn={$application->getApplicationIndex()}]");
                 }
             } else {
                 $this->logger->critical("Unable to find LDAP records for demo application {$application->getName()}");
@@ -252,11 +259,11 @@ class LdapService
     {
         // app_ tenant
         $entry = new Entry(
-            "cn=app_{$application->getUuid()},ou=Group,dc=leadwire,dc=io",
+            "cn={$application->getApplicationIndex()},ou=Group,dc=leadwire,dc=io",
             [
                 "objectClass" => "groupofnames",
-                "cn" => "app_{$application->getUuid()}",
-                "member" => "cn=leadwire-apm,ou=People,dc=leadwire,dc=io",
+                "cn" => $application->getApplicationIndex(),
+                "member" => "cn={$this->kibanaAdminUsername},ou=People,dc=leadwire,dc=io",
                 "description" => $application->getName(),
             ]
         );
@@ -265,11 +272,11 @@ class LdapService
 
         // shared_ tenant
         $entry = new Entry(
-            "cn=shared_{$application->getUuid()},ou=Group,dc=leadwire,dc=io",
+            "cn={$application->getSharedIndex()},ou=Group,dc=leadwire,dc=io",
             [
                 "objectClass" => "groupofnames",
-                "cn" => "shared_{$application->getUuid()}",
-                "member" => "cn=leadwire-apm,ou=People,dc=leadwire,dc=io",
+                "cn" => $application->getSharedIndex(),
+                "member" => "cn={$this->kibanaAdminUsername},ou=People,dc=leadwire,dc=io",
                 "description" => $application->getName(),
             ]
         );

@@ -308,6 +308,18 @@ class ApplicationService
     }
 
     /**
+     * @param Application $application
+     *
+     * @return void
+     */
+    public function obliterateApplication(Application $application)
+    {
+        $this->apManager->removeApplicationPermissions($application);
+
+        $this->applicationManager->deleteById((string) $application->getId());
+    }
+
+    /**
      * Deletes a specific app from JSON data
      *
      * @param string $id

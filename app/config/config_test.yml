@@ -4,7 +4,6 @@ imports:
 
 parameters:
     locale: en
-    app_version: 1.0.0
     app_domain: 'leadwire.local'
     app_schemes: 'http'
     activation_code_regex: '[A-Z0-9]B[A-Z0-9]{2}7[A-Z0-9]'
@@ -41,7 +40,6 @@ parameters:
         port: 5604
         iframe_host: 'https://localhost'
         iframe_port: 5405
-        template_folder: '%kernel.project_dir%/app/Resources/Kibana'
     elastic:
         username: ''
         password: ''

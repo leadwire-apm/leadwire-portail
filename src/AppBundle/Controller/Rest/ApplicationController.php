@@ -3,23 +3,24 @@
 namespace AppBundle\Controller\Rest;
 
 use AppBundle\Document\User;
-use AppBundle\Exception\DuplicateApplicationNameException;
-use AppBundle\Service\ApplicationService;
-use AppBundle\Service\ElasticSearchService;
-use AppBundle\Service\KibanaService;
+use MongoDuplicateKeyException;
 use AppBundle\Service\LdapService;
 use AppBundle\Service\StatService;
-use ATS\CoreBundle\Controller\Rest\RestControllerTrait;
-use MongoDuplicateKeyException;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\JsonResponse;
+use AppBundle\Document\Application;
+use AppBundle\Service\KibanaService;
+use AppBundle\Service\ApplicationService;
+use AppBundle\Service\SearchGuardService;
+use AppBundle\Service\ElasticSearchService;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use ATS\CoreBundle\Controller\Rest\RestControllerTrait;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use AppBundle\Exception\DuplicateApplicationNameException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
-use Symfony\Component\Routing\Annotation\Route;
-use AppBundle\Service\SearchGuardService;
 
 class ApplicationController extends Controller
 {
@@ -162,6 +163,7 @@ class ApplicationController extends Controller
         SearchGuardService $sgService
     ) {
         $status = false;
+        $application = null;
         try {
             $data = $request->getContent();
             $application = $applicationService->newApplication($data, $this->getUser());
@@ -171,36 +173,40 @@ class ApplicationController extends Controller
                 $ldapService->createApplicationEntry($application);
                 $ldapService->registerApplication($this->getUser(), $application);
 
-                $esService->deleteIndex("app_" . $application->getUuid());
+                $esService->deleteIndex($application->getApplicationIndex());
                 $esService->createIndexTemplate($application, $applicationService->getActiveApplicationsNames());
 
-                $esService->createAlias($application->getName());
+                $aliases = $esService->createAlias($application);
 
                 $kibanaService->loadIndexPatternForApplication(
                     $application,
-                    $this->getUser(),
-                    'app_' . $application->getUuid()
+                    $application->getApplicationIndex()
                 );
 
-                $kibanaService->makeDefaultIndex("app_{$application->getUuid()}", $this->getUser(), $application->getName());
+                $kibanaService->makeDefaultIndex($application->getApplicationIndex(), $aliases[0]);
 
-                $kibanaService->createApplicationDashboards($application, $this->getUser());
+                $kibanaService->createApplicationDashboards($application);
 
-                $esService->deleteIndex("shared_" . $application->getUuid());
+                $esService->deleteIndex($application->getSharedIndex());
 
                 $kibanaService->loadIndexPatternForApplication(
                     $application,
-                    $this->getUser(),
-                    'shared_' . $application->getUuid()
+                    $application->getSharedIndex()
                 );
 
-                $kibanaService->makeDefaultIndex("shared_{$application->getUuid()}", $this->getUser(), $application->getName());
+                $kibanaService->makeDefaultIndex($application->getSharedIndex(), $aliases[0]);
 
                 $sgService->updateSearchGuardConfig();
                 $status = true;
             }
         } catch (DuplicateApplicationNameException $e) {
             return $this->renderResponse(['message' => $e->getMessage()], Response::HTTP_NOT_ACCEPTABLE);
+        } catch (\Exception $e) {
+            if ($application instanceof Application) {
+                $applicationService->obliterateApplication($application);
+
+                return $this->renderResponse(['message' => $e->getMessage()], Response::HTTP_NOT_ACCEPTABLE);
+            }
         }
 
         if ($status === true) {

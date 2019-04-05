@@ -2,6 +2,7 @@
 
 namespace AppBundle\Manager;
 
+use AppBundle\Document\Application;
 use AppBundle\Document\Tmec;
 use ATS\CoreBundle\Manager\AbstractManager;
 use Doctrine\Bundle\MongoDBBundle\ManagerRegistry;
@@ -24,12 +25,12 @@ class TmecManager extends AbstractManager
      * @param string $version
      * @param string $application
      *
-     * @return User
+     * @return Tmec|null
      */
     public function getTmecByVersion($version, $application)
     {
-        /** @var Tmec $tmec */
-        $tmec = $this->getDocumentRepository()->findOneBy(['version' => $version, 'application'=>$application]);
+        /** @var ?Tmec $tmec */
+        $tmec = $this->getDocumentRepository()->findOneBy(['version' => $version, 'application' => $application]);
 
         return $tmec;
     }
@@ -39,11 +40,11 @@ class TmecManager extends AbstractManager
      *
      * @param string $id
      *
-     * @return User
+     * @return Tmec|null
      */
     public function getTmecById($id)
     {
-        /** @var Tmec $tmec */
+        /** @var ?Tmec $tmec */
         $tmec = $this->getDocumentRepository()->findOneBy(['_id' => $id]);
 
         return $tmec;
@@ -55,14 +56,13 @@ class TmecManager extends AbstractManager
      * @param boolean $completed
      * @param array $ids
      *
-     * @return Tmec
+     * @return array
      */
     public function getTmecByApplication($completed, $ids)
     {
-        /** @var Tmec $tmec */
-        if($completed === true){
+        if ($completed === true) {
             $tmecList = $this->getDocumentRepository()->createQueryBuilder()->find()->field('completed')->field('application')->in($ids)->getQuery()->execute()->toArray(false);
-        }else {
+        } else {
             $tmecList = $this->getDocumentRepository()->createQueryBuilder()->find()->field('completed')->equals(false)->field('application')->in($ids)->getQuery()->execute()->toArray(false);
         }
         return $tmecList;
@@ -71,10 +71,10 @@ class TmecManager extends AbstractManager
     /**
      *
      * @param string $version
-     * @param \DateTime $description
-     * @param \DteTime $startDate
+     * @param string $description
+     * @param string $startDate
      * @param string $endDate
-     * @param stirng $application
+     * @param string $application
      * @param string $applicationName
      *
      * @return Tmec

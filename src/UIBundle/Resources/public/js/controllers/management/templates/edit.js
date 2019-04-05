@@ -3,6 +3,7 @@
         .controller('EditTemplateController', [
             'TemplateService',
             'ApplicationTypeFactory',
+            'MonitoringSetFactory',
             'toastr',
             'CONFIG',
             'MESSAGES_CONSTANTS',
@@ -17,6 +18,7 @@
     function EditTemplateCtrlFN (
         TemplateService,
         ApplicationTypeFactory,
+        MonitoringSetFactory,
         toastr,
         CONSTANTS,
         MESSAGES_CONSTANTS,
@@ -30,6 +32,10 @@
          */
         vm.flipActivityIndicator = function (key) {
             vm.ui[key] = !vm.ui[key];
+        };
+
+        vm.getTemplateTypes = function() {
+            TemplateService.getTypes().then(function(types){vm.types = types;});
         };
 
         vm.getTemplate = function (id) {
@@ -77,11 +83,17 @@
                 templateId: templateId,
                 template: null,
                 applicationTypes: [],
+                monitoringSets: [],
+                types: [],
             });
+            vm.getTemplateTypes();
             ApplicationTypeFactory.findAll()
                 .then(function (response) {
                     vm.applicationTypes = response.data;
                 });
+            MonitoringSetFactory.findAll().then(function (response) {
+                vm.monitoringSets = response.data;
+            });
             vm.getTemplate(templateId);
         };
 

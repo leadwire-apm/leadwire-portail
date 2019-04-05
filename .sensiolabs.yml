@@ -25,4 +25,4 @@ rules:
     twig.template_too_long:
         enabled: false
     symfony.configuration.error_pages_should_be_customised:
-    enabled: false
+        enabled: false

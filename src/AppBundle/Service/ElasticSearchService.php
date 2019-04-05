@@ -3,7 +3,9 @@
 namespace AppBundle\Service;
 
 use AppBundle\Document\Application;
+use AppBundle\Document\Template;
 use AppBundle\Document\User;
+use AppBundle\Manager\MonitoringSetManager;
 use AppBundle\Manager\TemplateManager;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
@@ -49,18 +51,34 @@ class ElasticSearchService
     private $templateManager;
 
     /**
+     * @var MonitoringSetManager
+     */
+    private $msManager;
+
+    /**
+     * @var bool
+     */
+    private $hasAllUserTenant;
+
+    /**
      * ElasticSearchService constructor.
      * @param LoggerInterface $logger
      * @param TemplateManager $templateManager
+     * @param MonitoringSetManager $msManager
+     * @param bool $hasAllUserTenant
      * @param array $settings
      */
     public function __construct(
         LoggerInterface $logger,
         TemplateManager $templateManager,
+        MonitoringSetManager $msManager,
+        bool $hasAllUserTenant,
         array $settings = []
     ) {
         $this->settings = $settings;
         $this->templateManager = $templateManager;
+        $this->msManager = $msManager;
+        $this->hasAllUserTenant = $hasAllUserTenant;
         $this->logger = $logger;
         $this->httpClient = new Client(
             [
@@ -224,20 +242,24 @@ class ElasticSearchService
     /**
      * * curl --insecure -u $es_admin_user:$es_admin_password -H 'Content-Type: application/json' -XPOST https://es.leadwire.io/_aliases -d"{\"actions\":[{\"add\":{\"index\":\"$index_pattern_name\",\"alias\":\"$appname\"}}]}"
      *
-     * @param string $applicationName
+     * @param Application $application
      *
-     * @return bool
+     * @return array
      */
-    public function createAlias(string $applicationName): bool
+    public function createAlias(Application $application): array
     {
         $now = (new \DateTime())->format('Y-m-d');
+        $createdAliases = [];
 
-        $response = $this->httpClient->delete($this->url . "enabled-$applicationName-$now");
+        $applicationName = $application->getName();
+        $indexName = "enabled-$applicationName-$now";
+
+        $response = $this->httpClient->delete($this->url . $indexName);
 
         $this->logger->notice(
             "leadwire.es.createAlias",
             [
-                'url' => $this->url . "enabled-{$applicationName}-{$now}",
+                'url' => $this->url . $indexName,
                 'verb' => 'PUT',
                 'status_code' => $response->getStatusCode(),
             ]
@@ -247,46 +269,56 @@ class ElasticSearchService
         $this->logger->notice(
             "leadwire.es.createAlias",
             [
-                'url' => $this->url . "enabled-{$applicationName}-{$now}",
+                'url' => $this->url . $indexName,
                 'verb' => 'PUT',
                 'status_code' => $response->getStatusCode(),
             ]
         );
 
         $bodyString = '{"actions":[{"add":{"index":"$index_pattern_name","alias":"$appname"}}]}';
-        $body = json_decode($bodyString, false);
-        $body->actions[0]->add->index = "*-$applicationName-*";
-        $body->actions[0]->add->alias = $applicationName;
-
-        $content = json_encode($body);
-
         $headers = [
             'Content-Type' => 'application/json',
         ];
 
-        $response = $this->httpClient->post(
-            $this->url . "_aliases",
-            [
-                'headers' => $headers,
-                'auth' => $this->getAuth(),
-                'body' => $content,
-            ]
-        );
+        foreach ($application->getType()->getMonitoringSets() as $ms) {
+            $body = json_decode($bodyString, false);
+            $aliasName = strtolower($ms->getQualifier()) . "-$applicationName";
+            $indexName = strtolower($ms->getQualifier())."-*-$applicationName-*";
+            $createdAliases[] = $aliasName;
+            $body->actions[0]->add->index = $indexName;
+            $body->actions[0]->add->alias = $aliasName;
+            $content = json_encode($body);
+            $response = $this->httpClient->post(
+                $this->url . "_aliases",
+                [
+                    'headers' => $headers,
+                    'auth' => $this->getAuth(),
+                    'body' => $content,
+                ]
+            );
 
-        $this->logger->notice(
-            "leadwire.es.createAlias",
-            [
-                'url' => $this->url . "_aliases",
-                'verb' => 'POST',
-                'body' => $content,
-                'headers' => $headers,
-                'status_code' => $response->getStatusCode(),
-            ]
-        );
+            $this->logger->notice(
+                "leadwire.es.createAlias",
+                [
+                    'url' => $this->url . "_aliases",
+                    'verb' => 'POST',
+                    'body' => $content,
+                    'headers' => $headers,
+                    'status_code' => $response->getStatusCode(),
+                ]
+            );
+        }
 
-        return $response->getStatusCode() === Response::HTTP_OK;
+        return $createdAliases;
     }
 
+    /**
+     * @deprecated 1.1
+     *
+     * @param Application $application
+     *
+     * @return void
+     */
     public function deleteApplicationIndexes(Application $application)
     {
         $this->deleteIndex("app_{$application->getUuid()}");
@@ -302,58 +334,68 @@ class ElasticSearchService
      */
     public function createIndexTemplate(Application $application, array $activeApplications)
     {
-        $template = $this->templateManager->getOneBy(
-            [
-                'applicationType.id' => $application->getType()->getId(),
-                'name' => 'index-template',
-            ]
-        );
+        $templates = $this->templateManager->getBy(['applicationType.id' => $application->getType()->getId()]);
 
-        if ($template === null) {
-            throw new \Exception("Template (index-template) not found");
+        foreach ($this->msManager->getAll() as $monitoringSet) {
+            $filtered = array_filter(
+                $templates,
+                function (Template $element) use ($monitoringSet) {
+                    return $element->getMonitoringSet() == $monitoringSet && $element->getType() === Template::INDEX_TEMPLATE;
+                }
+            );
+
+            /** @var Template|bool $template */
+            $template = reset($filtered);
+
+            if (($template instanceof Template) === false) {
+                throw new \Exception(
+                    sprintf(
+                        "Template (%s) of Monitoring Set (%s) not found",
+                        Template::INDEX_TEMPLATE,
+                        $monitoringSet->getName()
+                    )
+                );
+            }
+
+            $content = $template->getContentObject();
+
+            foreach ($activeApplications as $app) {
+                // VERY HACKISH !!!
+                if ($monitoringSet->getQualifier() === "METRICBEAT") {
+                    $content->{"metricbeat-6.5.1"}->aliases->{$app->getName()} = [
+                        "filter" => [
+                            "term" => ["context.service.name" => $app->getName()],
+                        ],
+                    ];
+                } else {
+                    $content->aliases->{$app->getName()} = [
+                        "filter" => [
+                            "term" => ["context.service.name" => $app->getName()],
+                        ],
+                    ];
+                }
+            }
+
+            $response = $this->httpClient->put(
+                $this->url . "_template/{$template->getVersion()}",
+                [
+                    'auth' => $this->getAuth(),
+                    'headers' => [
+                        "Content-Type" => "application/json",
+                    ],
+                ]
+            );
+
+            $this->logger->notice(
+                "leadwire.es.createIndexTemplate",
+                [
+                    'url' => $this->url . "_template/{$template->getVersion()}",
+                    'verb' => 'PUT',
+                    'status_code' => $response->getStatusCode(),
+                    'monitoring_set' => $monitoringSet->getName(),
+                ]
+            );
         }
-
-        $content = $template->getContentObject();
-
-        foreach ($activeApplications as $app) {
-            $content->aliases->{$app->getName()} = [
-                "filter" => [
-                    "term" => ["context.service.name" => $app->getName()],
-                ],
-            ];
-        }
-
-        $response = $this->httpClient->delete($this->url . "_template/apm-6.5.1", ['auth' => $this->getAuth()]);
-
-        $this->logger->notice(
-            "leadwire.es.createIndexTemplate",
-            [
-                'url' => $this->url . "_template/apm-6.5.1",
-                'verb' => 'DELETE',
-                'status_code' => $response->getStatusCode(),
-            ]
-        );
-
-        $response = $this->httpClient->put(
-            $this->url . "_template/apm-6.5.1",
-            [
-                'auth' => $this->getAuth(),
-                'headers' => [
-                    "Content-Type" => "application/json",
-                ],
-                'body' => json_encode($content),
-            ]
-        );
-
-        $this->logger->notice(
-            "leadwire.es.createIndexTemplate",
-            [
-                'url' => $this->url . "_template/apm-6.5.1",
-                'verb' => 'PUT',
-                'body' => json_encode($content),
-                'status_code' => $response->getStatusCode(),
-            ]
-        );
     }
 
     /*********************************************
@@ -372,8 +414,8 @@ class ElasticSearchService
         ];
 
         $tenants = [
-            "Default" => ["all_user_{$user->getUuid()}", "app_{$app->getUuid()}"],
-            "Custom" => ["user_{$user->getUuid()}", "shared_{$app->getUuid()}"],
+            "Default" => $this->hasAllUserTenant === true ? [$user->getAllUserIndex(), $app->getApplicationIndex()]: [$app->getApplicationIndex()],
+            "Custom" => [$user->getUserIndex(), $app->getSharedIndex()],
         ];
 
         foreach ($tenants as $groupName => $tenantGroup) {
@@ -438,7 +480,7 @@ class ElasticSearchService
         foreach ($dashboards['Default'] as $item) {
             preg_match_all('/\[([^]]+)\]/', $item['name'], $out);
             $theme = isset($out[1][0]) === true ? $out[1][0] : 'Misc';
-            $default[] = [
+            $default[$theme][] = [
                 "private" => $item['private'],
                 "id" => $item['id'],
                 "tenant" => $item['tenant'],

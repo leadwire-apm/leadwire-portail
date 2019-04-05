@@ -2,8 +2,8 @@
 
 namespace AppBundle\Document;
 
-use JMS\Serializer\Annotation as JMS;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
+use JMS\Serializer\Annotation as JMS;
 
 /**
  * @ODM\Document(repositoryClass="AppBundle\Repository\TemplateRepository")
@@ -63,17 +63,16 @@ class Tmec
      * @ODM\Field(type="string")
      * @JMS\Expose
      * @JMS\Type("string")
-     * 
+     *
      * @var string
      */
     private $application;
-
 
     /**
      * @ODM\Field(type="string")
      * @JMS\Expose
      * @JMS\Type("string")
-     * 
+     *
      * @var string
      */
     private $applicationName;
@@ -105,20 +104,6 @@ class Tmec
     }
 
     /**
-     * Set the value of id
-     *
-     * @param  string  $id
-     *
-     * @return  self
-     */
-    public function setId(string $id)
-    {
-        $this->id = $id;
-
-        return $this;
-    }
-
-    /**
      * Get the value of version
      *
      * @return  string
@@ -141,7 +126,7 @@ class Tmec
 
         return $this;
     }
-	
+
     /**
      * Get the value of description
      *
@@ -157,7 +142,7 @@ class Tmec
      *
      * @param  string  $description
      *
-     * @return string
+     * @return self
      */
     public function setDescription(string $description)
     {
@@ -171,7 +156,7 @@ class Tmec
      *
      * @param string $startDate
      *
-     * @return Tmec
+     * @return self
      */
     public function setStartDate(string $startDate)
     {
@@ -189,8 +174,8 @@ class Tmec
     {
         return $this->startDate;
     }
-	
-	/**
+
+    /**
      * Set endDate
      *
      * @param string $endDate
@@ -213,7 +198,6 @@ class Tmec
     {
         return $this->endDate;
     }
-
 
     /**
      * Get the value of application
@@ -239,7 +223,7 @@ class Tmec
         return $this;
     }
 
-     /**
+    /**
      * Set completed
      *
      * @param bool $completed

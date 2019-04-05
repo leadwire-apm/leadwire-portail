@@ -153,7 +153,7 @@ class PlanService
         if ($plan instanceof Plan) {
             /** @var PricingPlan $pricingPlan */
             foreach ($plan->getPrices() as $pricingPlan) {
-                $response = $this->gateway->deletePlan(['id' => $pricingPlan->getToken()])->send()->getData();
+                $this->gateway->deletePlan(['id' => $pricingPlan->getToken()])->send()->getData();
             }
 
             $this->gateway->deleteProduct(['id' => $plan->getStripeId()])->send()->getData();

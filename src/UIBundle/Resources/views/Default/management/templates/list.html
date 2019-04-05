@@ -15,24 +15,35 @@
                         <thead>
                         <tr>
                             <th class="text-center">Application Type</th>
+                            <th class="text-center">Monitoring Set</th>
                             <th class="text-center">Name</th>
+                            <th class="text-center">Type</th>
+                            <th class="text-center">Version</th>
                             <th colspan="3" class="text-center"><span>Actions</span></th>
                         </tr>
                         </thead>
                         <tbody>
                         <tr ng-if="ctrl.ui.isLoading" class="text-center">
                             <td colspan="6">
-                                <spinner is-loading="ctrl.ui.isLoading"
-                                         size="24"></spinner>
+                                <spinner is-loading="ctrl.ui.isLoading" size="24"></spinner>
                             </td>
                         </tr>
                         <tr ng-repeat="template in ctrl.templates" class="text-center">
                             <td data-title="ApplicationType" data-label="ApplicationType">
                                 [[template.applicationType.name]]
                             </td>
+                            <td data-title="MonitoringSet" data-label="MonitoringSet">
+                                [[template.monitoringSet.name || '-']]
+                            </td>
                             <td data-title="Name" data-label="Name">
-                                    [[template.name]]
-                                </td>
+                                [[template.name]]
+                            </td>
+                            <td data-title="Name" data-label="Name">
+                                [[template.type || '-']]
+                            </td>
+                            <td data-title="Version" data-label="Version">
+                                [[ template.version || '-' ]]
+                            </td>
                             <td data-title="Actions" data-label="Actions">
                                 <a class="btn btn-warning"
                                    ui-sref="app.management.editTemplate(template)">

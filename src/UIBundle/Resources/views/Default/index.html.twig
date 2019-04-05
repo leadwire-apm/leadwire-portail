@@ -40,9 +40,6 @@
 <script type="text/ng-template" id="directives/toggle-offscreen.html">
     {% include 'directives/toggle-offscreen.html' %}
 </script>
-<script type="text/ng-template" id="architectureDiscovery.html">
-    {% include 'architectureDiscovery.html' %}
-</script>
 <script type="text/ng-template" id="profile.html">
     {% include 'profile.html' %}
 </script>
@@ -58,9 +55,6 @@
 <script type="text/ng-template" id="billingList.html">
     {% include 'billingList.html' %}
 </script>
-<script type="text/ng-template" id="customReports.html">
-    {% include 'customReports.html' %}
-</script>
 <script type="text/ng-template" id="pricing.html">
     {% include 'pricing.html' %}
 </script>
@@ -69,15 +63,6 @@
 </script>
 <script type="text/ng-template" id="billing.html">
     {% include 'billing.html' %}
-</script>
-<script type="text/ng-template" id="advices.html">
-    {% include 'advices.html' %}
-</script>
-<script type="text/ng-template" id="realUserMonitoring.html">
-    {% include 'realUserMonitoring.html' %}
-</script>
-<script type="text/ng-template" id="syntheticMonitoring.html">
-    {% include 'syntheticMonitoring.html' %}
 </script>
 <script type="text/ng-template" id="billingForm.html">
     {% include 'billingForm.html' %}
@@ -127,9 +112,6 @@
 <script type="text/ng-template" id="wizard.html">
     {% include 'wizard.html' %}
 </script>
-<script type="text/ng-template" id="dataBrowser.html">
-    {% include 'dataBrowser.html' %}
-</script>
 <script type="text/ng-template" id="billingTotals.html">
     {% include 'billingTotals.html' %}
 </script>
@@ -151,20 +133,11 @@
 <script type="text/ng-template" id="static/termsOfContract.html">
     {% include 'static/termsOfContract.html' %}
 </script>
-<script type="text/ng-template" id="businessTransactions.html">
-    {% include 'businessTransactions.html' %}
-</script>
 <script type="text/ng-template" id="editPaymentMethod.html">
     {% include 'editPaymentMethod.html' %}
 </script>
 <script type="text/ng-template" id="billingTips.html">
     {% include 'billingTips.html' %}
-</script>
-<script type="text/ng-template" id="administration/visualisations.html">
-    {% include 'administration/visualisations.html' %}
-</script>
-<script type="text/ng-template" id="administration/reports.html">
-    {% include 'administration/reports.html' %}
 </script>
 <script type="text/ng-template" id="application/listInvitations.html">
     {% include 'application/listInvitations.html' %}
@@ -212,7 +185,6 @@
     {% include 'management/users/userApplications.html' %}
 </script>
 
-
 <script type="text/ng-template" id="management/plans/list.html">
     {% include 'management/plans/list.html' %}
 </script>
@@ -254,6 +226,25 @@
     {% include 'management/applicationTypes/form.html' %}
 </script>
 
+{#Monitoring Sets#}
+
+<script type="text/ng-template" id="management/monitoringSets/list.html">
+    {% include 'management/monitoringSets/list.html' %}
+</script>
+
+<script type="text/ng-template" id="management/monitoringSets/add.html">
+    {% include 'management/monitoringSets/add.html' %}
+</script>
+
+<script type="text/ng-template" id="management/monitoringSets/edit.html">
+    {% include 'management/monitoringSets/edit.html' %}
+</script>
+
+<script type="text/ng-template" id="management/monitoringSets/form.html">
+    {% include 'management/monitoringSets/form.html' %}
+</script>
+
+
 <script type="text/ng-template" id="management/templates/list.html">
     {% include 'management/templates/list.html' %}
 </script>
@@ -270,16 +261,6 @@
 
 <script type="text/ng-template" id="management/codes/list.html">
     {% include 'management/codes/list.html' %}
-</script>
-
-
-
-
-<script type="text/ng-template" id="infrastructureMonitoring.html">
-    {% include 'infrastructureMonitoring.html' %}
-</script>
-<script type="text/ng-template" id="alerts.html">
-    {% include 'alerts.html' %}
 </script>
 
 <!-- quick launch panel -->
@@ -337,11 +318,11 @@
         DATE_DEFAULT_FORMAT = '{{ DATE_DEFAULT_FORMAT }}';
         EN_DATE_FORMAT = '{{ EN_DATE_FORMAT }}';
         FR_DATE_FORMAT = '{{ FR_DATE_FORMAT }}';
-        TAX = '{{ TAX }}';
+        TAX = {{ TAX }};
         LOGIN_METHOD = '{{ LOGIN_METHOD }}';
-        COMPAGNE_ENABLED = '{{ COMPAGNE_ENABLED }}';
+        COMPAGNE_ENABLED = {{ COMPAGNE_ENABLED }};
         JENKINS_URL = '{{ JENKINS_URL }}';
-        STRIPE_ENABLED = '{{ STRIPE_ENABLED }}';
+        STRIPE_ENABLED = {{ STRIPE_ENABLED }};
     </script>
 
     {% javascripts
@@ -390,6 +371,7 @@
         'bundles/ui/js/factories/planFactory.js'
         'bundles/ui/js/factories/applicationFactory.js'
         'bundles/ui/js/factories/applicationTypeFactory.js'
+        'bundles/ui/js/factories/monitoringSetFactory.js'
         'bundles/ui/js/factories/countryApi.js'
         'bundles/ui/js/factories/invitationFactory.js'
         'bundles/ui/js/factories/menuFactory.js'
@@ -408,6 +390,7 @@
         'bundles/ui/js/services/userService.js'
         'bundles/ui/js/services/planService.js'
         'bundles/ui/js/services/applicationTypeService.js'
+        'bundles/ui/js/services/monitoringSetService.js'
         'bundles/ui/js/services/codeService.js'
         'bundles/ui/js/services/templateService.js'
         'bundles/ui/js/services/tmec.js'
@@ -438,21 +421,13 @@
         'bundles/ui/js/filters/inArray.js'
 
         'bundles/ui/js/controllers/addApplication.js'
-        'bundles/ui/js/controllers/alerts.js'
-        'bundles/ui/js/controllers/businessTransactions.js'
-        'bundles/ui/js/controllers/dataBrowser.js'
-        'bundles/ui/js/controllers/infrastructureMonitoring.js'
         'bundles/ui/js/controllers/profile.js'
         'bundles/ui/js/controllers/updateSubscription.js'
-        'bundles/ui/js/controllers/administration.reports.js'
         'bundles/ui/js/controllers/application.js'
         'bundles/ui/js/controllers/customDashboards.js'
         'bundles/ui/js/controllers/detailApplication.js'
         'bundles/ui/js/controllers/login.js'
         'bundles/ui/js/controllers/profileModal.js'
-        'bundles/ui/js/controllers/administration.visualisations.js'
-        'bundles/ui/js/controllers/architectureDiscovery.js'
-        'bundles/ui/js/controllers/customReports.js'
         'bundles/ui/js/controllers/editApplication.js'
         'bundles/ui/js/controllers/mainApp.js'
 
@@ -466,6 +441,9 @@
         'bundles/ui/js/controllers/management/applicationTypes/list.js'
         'bundles/ui/js/controllers/management/applicationTypes/add.js'
         'bundles/ui/js/controllers/management/applicationTypes/edit.js'
+        'bundles/ui/js/controllers/management/monitoringSets/list.js'
+        'bundles/ui/js/controllers/management/monitoringSets/add.js'
+        'bundles/ui/js/controllers/management/monitoringSets/edit.js'
         'bundles/ui/js/controllers/management/templates/list.js'
         'bundles/ui/js/controllers/management/templates/add.js'
         'bundles/ui/js/controllers/management/templates/edit.js'
@@ -479,13 +457,10 @@
         'bundles/ui/js/controllers/tmec/overview.js'
 
 
-        'bundles/ui/js/controllers/realUserMonitoring.js'
-        'bundles/ui/js/controllers/advices.js'
         'bundles/ui/js/controllers/billingList.js'
         'bundles/ui/js/controllers/dashboard.js'
         'bundles/ui/js/controllers/editPaymentMethod.js'
         'bundles/ui/js/controllers/manageDashboards.js'
-        'bundles/ui/js/controllers/syntheticMonitoring.js'
         'bundles/ui/js/config.router.js'
         'bundles/ui/js/lib/custom.js'
         'bundles/ui/js/lib/jspdf.min.js'%}

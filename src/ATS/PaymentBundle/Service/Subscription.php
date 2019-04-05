@@ -9,11 +9,6 @@ use Psr\Log\LoggerInterface;
 class Subscription
 {
     /**
-     * @var CustomerService
-     */
-    private $customerService;
-
-    /**
      * @var CustomStripeGateway
      */
     private $gateway;
@@ -25,16 +20,13 @@ class Subscription
 
     /**
      * PaymentService constructor.
-     * @param \ATS\PaymentBundle\Service\CustomerService $customerService
      * @param LoggerInterface $logger
      * @param CustomStripeGateway $gateWay
      */
     public function __construct(
-        CustomerService $customerService,
         LoggerInterface $logger,
         CustomStripeGateway $gateWay
     ) {
-        $this->customerService = $customerService;
         $this->logger = $logger;
         $this->gateway = $gateWay;
     }

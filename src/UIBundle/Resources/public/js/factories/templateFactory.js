@@ -43,6 +43,9 @@
                     return $http.delete(
                         CONFIG.BASE_URL + 'api/template/' + id + '/delete');
                 },
+                getTypes: function () {
+                    return $http.get(CONFIG.BASE_URL + 'api/template/get-types');
+                }
             };
         });
 })(window.angular);

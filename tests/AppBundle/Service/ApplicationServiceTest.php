@@ -99,7 +99,7 @@ class ApplicationServiceTest extends BaseFunctionalTest
 
         $this->assertFalse($app->isEnabled());
 
-        $success = $this->applicationService->toggleActivation($app->getId());
+        $success = $this->applicationService->toggleActivation((string)$app->getId());
 
         $this->assertTrue($success);
         $dbApp = $this->applicationService->getApplication($app->getId());

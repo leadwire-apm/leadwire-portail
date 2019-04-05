@@ -56,6 +56,16 @@
                     });
             };
 
+            service.getTypes = function () {
+                return TemplateFactory.getTypes()
+                    .then(function (response) {
+                        return response.data;
+                    })
+                    .catch(function (error) {
+                        throw new Error(error);
+                    });
+            };
+
             return service;
         });
 })(window.angular);

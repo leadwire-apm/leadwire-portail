@@ -7,23 +7,23 @@
             'CONFIG',
             function (Menus, $state, CONFIG) {
 
-                if(CONFIG.STRIPE_ENABLED === "true"){
+                if(CONFIG.STRIPE_ENABLED === true){
                     Menus.SETTINGS.push({
                         route: 'app.billingList',
-                        icon: 'fa fa-money',
+                        icon: 'fa fa-money-bill-alt',
                         label: 'Billing',
                     });
 
                     Menus.MANAGEMENT.push({
                         route: 'app.management.plans',
                         abstractRoute: 'app.management',
-                        icon: 'fa fa-money',
+                        icon: 'fa fa-money-bill-alt',
                         label: 'Manage plans',
                     });
                 }
 
-                if(CONFIG.COMPAGNE_ENABLED === "true"){
-                    Menus.MANAGEMENT.push( 
+                if(CONFIG.COMPAGNE_ENABLED === true){
+                    Menus.MANAGEMENT.push(
                         {
                             route: 'app.management.tmecs',
                             abstractRoute: 'app.management',
@@ -38,7 +38,7 @@
                         label: 'Campaigns',
                     });
                 }
-                
+
                 return {
                     get: function (menuKey) {
                         var menus = [];
@@ -58,15 +58,31 @@
                         iconCallback,
                     ) {
                         try {
-                            return menus.map(function (menu) {
+                            newMenus = ['APM', 'Metricbeat System'];
+
+                            apm = menus['APM'].map(function (menu) {
                                 return {
                                     label: labelCallback(menu),
                                     route: routeCallback(menu),
                                     icon: iconCallback(menu),
                                 };
                             });
+
+                            infra = menus['Metricbeat System'].map(function (menu) {
+                                return {
+                                    label: labelCallback(menu),
+                                    route: routeCallback(menu),
+                                    icon: iconCallback(menu),
+                                };
+                            });
+
+                            newMenus['APM'] = apm;
+                            newMenus['Metricbeat System'] = infra;
+
+                            return newMenus;
                         }
                         catch (e) {
+                            console.log(e);
                             return [];
                         }
                     },
@@ -79,77 +95,7 @@
             MANAGEMENT: 'MANAGEMENT',
         })
         .constant('Menus', {
-            DASHBOARD: [
-                // {
-                //     icon: 'fa fa-dashboard',
-                //     label: 'Dashboard',
-                //     route: 'app.dashboard.home',
-                // },
-                // {
-                //     icon: 'fa fa-eye',
-                //     label: 'Real User Monitoring',
-                //     route: 'app.realUserMonitoring',
-                // },
-                // {
-                //     icon: 'fa fa-exchange',
-                //     label: 'Synthetic Monitoring',
-                //     route: 'app.syntheticMonitoring',
-                // },
-                // {
-                //     icon: 'fa fa-search',
-                //     label: 'Infrastructure Monitoring',
-                //     route: 'app.infrastructureMonitoring',
-                // },
-                // {
-                //     icon: 'fa fa-file-text',
-                //     label: 'Custom Reports',
-                //     route: 'app.customReports',
-                // },
-                // {
-                //     icon: 'fa fa-table',
-                //     label: 'Data Browser',
-                //     route: 'app.dataBrowser',
-                // },
-                // {
-                //     icon: 'fa fa-briefcase',
-                //     label: 'Business Transactions',
-                //     route: 'app.businessTransactions',
-                // },
-                // {
-                //     icon: 'fa fa-sitemap',
-                //     label: 'Architecture Discovery',
-                //     route: 'app.architectureDiscovery',
-                // },
-                // {
-                //     icon: 'fa fa-exclamation-triangle',
-                //     label: 'Alerts',
-                //     route: 'app.alerts',
-                // },
-                // {
-                //     icon: 'fa fa-book',
-                //     label: 'Documentation',
-                //     route: 'app.realUserMonitoring',
-                // },
-                // {
-                //     icon: 'fa fa-support',
-                //     label: 'Support',
-                //     route: 'app.realUserMonitoring',
-                // },
-                // {
-                //     icon: 'fa fa-gears',
-                //     label: 'Administration',
-                //     children: [
-                //         {
-                //             route: 'app.administration.visualisations',
-                //             label: 'Visualisations',
-                //         },
-                //         {
-                //             route: 'app.administration.reports',
-                //             label: 'Reports',
-                //         },
-                //     ],
-                // },
-            ],
+            DASHBOARD: [],
             SETTINGS: [
                 {
                     route: 'app.user',
@@ -182,9 +128,15 @@
                     label: 'Manage application types',
                 },
                 {
+                    route: 'app.management.monitoringSets',
+                    abstractRoute: 'app.management',
+                    icon: 'fa fa-desktop',
+                    label: 'Manage monitoring sets',
+                },
+                {
                     route: 'app.management.templates',
                     abstractRoute: 'app.management',
-                    icon: 'fa fa-file-text',
+                    icon: 'fa fa-file-alt',
                     label: 'Manage templates',
                 },
                 {

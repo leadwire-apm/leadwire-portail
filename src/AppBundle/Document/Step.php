@@ -2,9 +2,9 @@
 
 namespace AppBundle\Document;
 
-use JMS\Serializer\Annotation as JMS;
-use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 use AppBundle\Document\Tmec;
+use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
+use JMS\Serializer\Annotation as JMS;
 
 /**
  * @ODM\Document(repositoryClass="AppBundle\Repository\TemplateRepository")
@@ -60,7 +60,6 @@ class Step
      */
     private $waiting;
 
-
     /**
      * @var bool
      *
@@ -89,7 +88,6 @@ class Step
      */
     private $tmec;
 
-
     /**
      * Get tmec
      *
@@ -104,7 +102,7 @@ class Step
      * Set tmec
      * @param Tmec $tmec
      *
-     * @return Tmec
+     * @return self
      */
     public function setTmec(Tmec $tmec)
     {
@@ -112,7 +110,6 @@ class Step
 
         return $this;
     }
-
 
     /**
      * Get the value of id
@@ -122,20 +119,6 @@ class Step
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Set the value of id
-     *
-     * @param  string  $id
-     *
-     * @return  self
-     */
-    public function setId(string $id)
-    {
-        $this->id = $id;
-
-        return $this;
     }
 
     /**
@@ -151,7 +134,7 @@ class Step
 
         return $this;
     }
-	
+
     /**
      * Get the value of label
      *
@@ -167,7 +150,7 @@ class Step
      *
      * @param  string  $comment
      *
-     * @return string
+     * @return self
      */
     public function setComment(string $comment)
     {
@@ -234,7 +217,7 @@ class Step
         return $this->current;
     }
 
-     /**
+    /**
      * Get the value of order
      *
      * @return  int

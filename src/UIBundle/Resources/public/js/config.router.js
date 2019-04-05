@@ -245,12 +245,8 @@ angular.module('leadwireApp')
                             '$localStorage',
                             'UserService',
                             function (
-                                MenuFactory, $rootScope, $localStorage,
-                                UserService) {
-                                // $rootScope.menus = $localStorage.currentMenu;
-                                $rootScope.menus = MenuFactory.get(
-                                    MenuEnum.MANAGEMENT);
-                                UserService.handleFirstLogin();
+                                MenuFactory, $rootScope, $localStorage, UserService) {
+                                $rootScope.menus = MenuFactory.get(MenuEnum.MANAGEMENT);
                             },
                         ],
                     },
@@ -316,6 +312,16 @@ angular.module('leadwireApp')
                             return RouteGuard.adminRequired();
                         },
                         menu: updateMenuItems(MenuEnum.MANAGEMENT),
+                        beforeMount: [
+                            'MenuFactory',
+                            '$rootScope',
+                            'UserService',
+                            function (
+                                MenuFactory, $rootScope, UserService) {
+                                $rootScope.menus = MenuFactory.get(MenuEnum.MANAGEMENT);
+                                UserService.handleFirstLogin();
+                            },
+                        ],
                     },
                     controller: 'ManageApplicationsController',
                     controllerAs: 'ctrl',
@@ -368,7 +374,42 @@ angular.module('leadwireApp')
                     controller: 'EditApplicationTypeController',
                     controllerAs: 'ctrl',
                 })
-
+                .state('app.management.monitoringSets', {
+                    url: '/monitoringSets/list',
+                    templateUrl: 'management/monitoringSets/list.html',
+                    resolve: {
+                        permissions: function (RouteGuard) {
+                            return RouteGuard.adminRequired();
+                        },
+                        menu: updateMenuItems(MenuEnum.MANAGEMENT),
+                    },
+                    controller: 'ListMonitoringSetController',
+                    controllerAs: 'ctrl',
+                })
+                .state('app.management.addMonitoringSet', {
+                    url: '/monitoringSets/new',
+                    templateUrl: 'management/monitoringSets/add.html',
+                    resolve: {
+                        permissions: function (RouteGuard) {
+                            return RouteGuard.adminRequired();
+                        },
+                        menu: updateMenuItems(MenuEnum.MANAGEMENT),
+                    },
+                    controller: 'AddMonitoringSetController',
+                    controllerAs: 'ctrl',
+                })
+                .state('app.management.editMonitoringSets', {
+                    url: '/monitoringSets/edit/:id',
+                    templateUrl: 'management/monitoringSets/edit.html',
+                    resolve: {
+                        permissions: function (RouteGuard) {
+                            return RouteGuard.adminRequired();
+                        },
+                        menu: updateMenuItems(MenuEnum.MANAGEMENT),
+                    },
+                    controller: 'EditMonitoringSetController',
+                    controllerAs: 'ctrl',
+                })
                 .state('app.management.templates', {
                     url: '/templates/list',
                     templateUrl: 'management/templates/list.html',
@@ -415,165 +456,6 @@ angular.module('leadwireApp')
                         menu: updateMenuItems(MenuEnum.MANAGEMENT),
                     },
                     controller: 'ListCodeController',
-                    controllerAs: 'ctrl',
-                })
-                .state('app.infrastructureMonitoring', {
-                    url: '/infrastructureMonitoring',
-                    templateUrl: 'infrastructureMonitoring.html',
-                    resolve: {
-                        permissions: function (RouteGuard) {
-                            return RouteGuard.loginRequired();
-                        },
-                    },
-                    data: {
-                        title: 'Infrastructure Monitoring',
-                    },
-                    controller: 'infrastructureMonitoringController',
-                    controllerAs: 'ctrl',
-                })
-                .state('app.architectureDiscovery', {
-                    url: '/architectureDiscovery',
-                    templateUrl: 'architectureDiscovery.html',
-                    resolve: {
-                        permissions: function (RouteGuard) {
-                            return RouteGuard.loginRequired();
-                        },
-                    },
-                    data: {
-                        title: 'Architecture Discovery',
-                    },
-                    controller: 'architectureDiscoveryController',
-                    controllerAs: 'ctrl',
-                })
-
-                // Data Browser
-                .state('app.dataBrowser', {
-                    url: '/dataBrowser',
-                    templateUrl: 'dataBrowser.html',
-                    resolve: {
-                        permissions: function (RouteGuard) {
-                            return RouteGuard.loginRequired();
-                        },
-                    },
-                    data: {
-                        title: 'Data Browser',
-                    },
-                    controller: 'dataBrowserController',
-                    controllerAs: 'ctrl',
-                })
-
-                // custom Reports
-                .state('app.customReports', {
-                    url: '/customReports',
-                    templateUrl: 'customReports.html',
-                    resolve: {
-                        permissions: function (RouteGuard) {
-                            return RouteGuard.loginRequired();
-                        },
-                    },
-                    data: {
-                        title: 'Custom Reports',
-                    },
-                    controller: 'customReportsController',
-                    controllerAs: 'ctrl',
-                })
-
-                // Synthetic Monitoring
-                .state('app.syntheticMonitoring', {
-                    url: '/syntheticMonitoring',
-                    templateUrl: 'syntheticMonitoring.html',
-                    resolve: {
-                        permissions: function (RouteGuard) {
-                            return RouteGuard.loginRequired();
-                        },
-                    },
-                    data: {
-                        title: 'Synthetic Monitoring',
-                    },
-                    controller: 'syntheticMonitoringController',
-                    controllerAs: 'ctrl',
-                })
-
-                // Alerts
-                .state('app.alerts', {
-                    url: '/alerts',
-                    templateUrl: 'alerts.html',
-                    resolve: {
-                        permissions: function (RouteGuard) {
-                            return RouteGuard.loginRequired();
-                        },
-                    },
-                    data: {
-                        title: 'Alerts',
-                    },
-                    controller: 'alertsController',
-                    controllerAs: 'ctrl',
-                })
-
-                // Business Transactions
-                .state('app.businessTransactions', {
-                    url: '/businessTransactions',
-                    templateUrl: 'businessTransactions.html',
-                    resolve: {
-                        permissions: function (RouteGuard) {
-                            return RouteGuard.loginRequired();
-                        },
-                    },
-                    data: {
-                        title: 'Business Transactions',
-                    },
-                    controller: 'businessTransactionsController',
-                    controllerAs: 'ctrl',
-                })
-
-                // real User Monitoring
-                .state('app.realUserMonitoring', {
-                    url: '/realUserMonitoring',
-                    templateUrl: 'realUserMonitoring.html',
-                    resolve: {
-                        permissions: function (RouteGuard) {
-                            return RouteGuard.loginRequired();
-                        },
-                    },
-                    data: {
-                        title: 'Real User Monitoring',
-                    },
-                    controller: 'realUserMonitoringController',
-                    controllerAs: 'ctrl',
-                })
-
-                // Administration
-                .state('app.administration', {
-                    template: '<div ui-view></div>',
-                    abstract: true,
-                    url: '/administration',
-                })
-                .state('app.administration.visualisations', {
-                    url: '/visualisations',
-                    templateUrl: 'administration/visualisations.html',
-                    resolve: {
-                        permissions: function (RouteGuard) {
-                            return RouteGuard.loginRequired();
-                        },
-                    },
-                    data: {
-                        title: 'Administration / Visualisations',
-                    },
-                    controller: 'administrationVisualisationsController',
-                    controllerAs: 'ctrl',
-                })
-                .state('app.administration.reports', {
-                    url: '/reports',
-                    templateUrl: 'administration/reports.html',
-                    resolve: {
-                        permissions: function (RouteGuard) {
-                            return RouteGuard.loginRequired();
-                        },
-                    },
-                    data: {
-                        title: 'Administration / Reports',
-                    },
-                    controller: 'administrationReportsController',
                     controllerAs: 'ctrl',
                 })
                 .state('logout', {

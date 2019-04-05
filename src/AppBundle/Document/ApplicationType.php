@@ -3,8 +3,9 @@
 namespace AppBundle\Document;
 
 use AppBundle\Document\App;
-use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 use JMS\Serializer\Annotation as JMS;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 
 /**
  * @ODM\Document(repositoryClass="AppBundle\Repository\ApplicationTypeRepository")
@@ -45,9 +46,9 @@ class ApplicationType
     private $installation;
 
     /**
-     * @ODM\ReferenceMany(targetDocument="AppBundle\Document\Template", mappedBy="applicationType", storeAs="dbRef")
+     * @ODM\ReferenceMany(targetDocument="AppBundle\Document\Template", mappedBy="applicationType", storeAs="dbRef", cascade={"remove"})
      *
-     * @var array
+     * @var ArrayCollection
      */
     private $templates;
 
@@ -73,6 +74,7 @@ class ApplicationType
     public function __construct()
     {
         // auto-generated stub
+        $this->templates = new ArrayCollection();
     }
 
     /**
@@ -139,19 +141,6 @@ class ApplicationType
     }
 
     /**
-     * Set template
-     * @param array $templates
-     *
-     * @return ApplicationType
-     */
-    public function setTemplates($templates)
-    {
-        $this->templates = $templates;
-
-        return $this;
-    }
-
-    /**
      * Get agent
      *
      * @return string
@@ -181,5 +170,18 @@ class ApplicationType
     public function __toString()
     {
         return (string) $this->id;
+    }
+
+    public function getMonitoringSets()
+    {
+        // dump(get_class($this->templates->toArray()[0]));exit;
+        return array_unique(
+            array_map(
+                function (Template $template) {
+                    return $template->getMonitoringSet();
+                },
+                $this->templates->toArray()
+            )
+        );
     }
 }

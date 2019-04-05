@@ -370,7 +370,7 @@ class Application
 
     /**
      * Get elastic index
-     *
+     * @deprecated 1.1
      * @return string
      */
     public function getIndex()
@@ -378,22 +378,14 @@ class Application
         return 'app_' . $this->getUuid();
     }
 
-    public function getIndexes()
+    public function getApplicationIndex()
     {
-        return [
-            $this->getIndex(),
-            'user_'. $this->owner->getUuid(),
-            'shared_' . $this->getUuid(),
-            'all_user_'.$this->owner->getUuid(),
-        ];
+        return "app_". $this->uuid;
     }
 
-    public function getSharedTenants()
+    public function getSharedIndex()
     {
-        return [
-            'shared_' . $this->getUuid(),
-            'all_user_'.$this->owner->getUuid(),
-        ];
+        return "shared_" . $this->uuid;
     }
 
     /**

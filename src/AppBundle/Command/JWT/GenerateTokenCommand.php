@@ -35,7 +35,7 @@ class GenerateTokenCommand extends ContainerAwareCommand
             $user = $this->getContainer()->get(UserManager::class)->getOneBy(['username' => $username]);
 
             if ($user instanceof User) {
-                $token = $jwt->encode($user->getUsername(), $user->getIndex());
+                $token = $jwt->encode($user->getUsername(), $user->getUserIndex());
                 $output->writeln($token);
             } else {
                 throw new \Exception("User $username not found");

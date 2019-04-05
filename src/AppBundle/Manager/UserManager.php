@@ -51,7 +51,7 @@ class UserManager extends AbstractManager
             ->setAvatar($avatar)
             ->setUuid($uuid)
             ->setName($name)
-            ->setEmailValid(false)
+            ->setEmailValid(true)
             ->setUsername($username)
             ->setRoles($roles)
             ->setActive($active)
@@ -86,7 +86,7 @@ class UserManager extends AbstractManager
      *
      * @return User
      */
-    public function createWithEmail($username, $uuid, $avatar, $name, $roles = [], $active = true, $email): User
+    public function createWithEmail($username, $uuid, $avatar, $name, $roles, $active, $email): User
     {
         $user = new User();
         $user

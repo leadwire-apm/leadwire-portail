@@ -4,12 +4,11 @@ namespace AppBundle\Controller\Rest;
 
 use AppBundle\Document\User;
 use AppBundle\Service\TmecService;
+use ATS\CoreBundle\Controller\Rest\RestControllerTrait;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use ATS\CoreBundle\Controller\Rest\RestControllerTrait;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 class TmecController extends Controller
 {
@@ -26,7 +25,7 @@ class TmecController extends Controller
      */
     public function newTmecAction(Request $request, TmecService $tmecService)
     {
-        // Only super Admin can do this 
+        // Only super Admin can do this
         $this->denyAccessUnlessGranted([User::ROLE_ADMIN, User::ROLE_SUPER_ADMIN]);
         $data = json_decode($request->getContent(), true);
         $tmec = $tmecService->newTmec($data);
@@ -55,7 +54,7 @@ class TmecController extends Controller
      *
      * @param Request $request
      * @param TmecService $tmecService
-     * 
+     *
      * @return Response
      */
     public function listTmecAction(Request $request, TmecService $tmecService)
@@ -71,7 +70,7 @@ class TmecController extends Controller
      * @param Request $request
      * @param TmecService $tmecService
      * @param string $id
-     * 
+     *
      * @return Response
      */
     public function getTmecAction(Request $request, TmecService $tmecService, $id)
@@ -113,5 +112,4 @@ class TmecController extends Controller
 
         return $this->renderResponse($applications, Response::HTTP_OK, ["Default"]);
     }
-
 }

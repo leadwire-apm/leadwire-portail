@@ -4,9 +4,9 @@ namespace AppBundle\Service;
 
 use AppBundle\Document\ApplicationType;
 use AppBundle\Manager\ApplicationTypeManager;
-use GuzzleHttp\Client;
 use JMS\Serializer\SerializerInterface;
 use Psr\Log\LoggerInterface;
+use AppBundle\Exception\DuplicateApplicationTypeException;
 
 /**
  * Service class for ApplicationType entities
@@ -109,7 +109,20 @@ class ApplicationTypeService
      */
     public function newApplicationType($json)
     {
-        return $this->updateApplicationType($json);
+        /** @var ApplicationType $applicationType */
+        $applicationType = $this->serializer->deserialize($json, ApplicationType::class, 'json');
+        $dbApplicationType = $this->applicationTypeManager->getOneBy(
+            [
+                'name' => $applicationType->getName(),
+            ]
+        );
+
+        if ($dbApplicationType instanceof ApplicationType) {
+            throw new DuplicateApplicationTypeException("An application type with the same name already exists");
+        } else {
+            $this->applicationTypeManager->update($applicationType);
+            return true;
+        }
     }
 
     /**
