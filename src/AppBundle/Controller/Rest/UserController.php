@@ -65,13 +65,12 @@ class UserController extends Controller
      *
      * @param Request $request
      * @param UserService $userService
-     * @param string $id
      * @return Response
      */
-    public function updateUserAction(Request $request, UserService $userService, $id)
+    public function updateUserAction(Request $request, UserService $userService)
     {
         $data = $request->getContent();
-        $successful = $userService->updateUser($data, $id);
+        $successful = $userService->updateUser($data);
 
         return $this->renderResponse($successful);
     }
