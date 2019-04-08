@@ -87,7 +87,7 @@ class Tmec
     private $completed;
 
     /**
-     * @ODM\ReferenceMany(targetDocument="Step", mappedBy="compagne", storeAs="dbRef")
+     * @ODM\ReferenceMany(targetDocument="Step", mappedBy="compagne", storeAs="dbRef", cascade="{persist}")
      * @JMS\Type("array<AppBundle\Document\Step>")
      * @JMS\Expose
      */

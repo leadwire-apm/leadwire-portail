@@ -8,7 +8,6 @@ use JMS\Serializer\Annotation as JMS;
 
 /**
  * @ODM\Document(repositoryClass="AppBundle\Repository\TemplateRepository")
- * @ODM\UniqueIndex(keys={"version"="desc"})
  * @ODM\ChangeTrackingPolicy("DEFERRED_EXPLICIT")
  * @JMS\ExclusionPolicy("all")
  */
