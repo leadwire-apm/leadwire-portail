@@ -26,7 +26,11 @@
         <li ng-repeat="menu in menus track by $index"
             ng-if="!isChangingContext && state.includes('app.dashboard') == false"
             ui-sref-active="active">
-            <a ng-href="[[menu.route]]">
+             <a ng-if="menu.route" ng-href="[[menu.route]]">
+                <i class="[[menu.icon]]"></i>
+                <span>[[menu.label]]</span>
+            </a>
+            <a ng-if="menu.url" ng-href="[[menu.url]]" target="_blank">
                 <i class="[[menu.icon]]"></i>
                 <span>[[menu.label]]</span>
             </a>

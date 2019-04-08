@@ -35,7 +35,6 @@
     ) {
         onLoad();
 
-        $scope.JENKINS_URL = CONFIG.JENKINS_URL;
         $scope.COMPAGNE_ENABLED = CONFIG.COMPAGNE_ENABLED;
 
         $scope.$on('user:updated', function (event, data) {

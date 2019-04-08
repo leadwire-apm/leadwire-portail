@@ -32,11 +32,12 @@
                         },
                     );
 
-                    Menus.SETTINGS.push({
-                        route: 'app.tmecs',
-                        icon: 'fa fa-table',
-                        label: 'Campaigns',
-                    });
+                   Menus.CAMPAGNE.push(                {
+                        url: CONFIG.JENKINS_URL,
+                        icon: 'fa fa-play-circle',
+                        label: 'Launch',
+                        external:true
+                    })
                 }
 
                 return {
@@ -93,8 +94,21 @@
             DASHBOARD: 'DASHBOARD',
             SETTINGS: 'SETTINGS',
             MANAGEMENT: 'MANAGEMENT',
+            CAMPAGNE: 'CAMPAGNE',
         })
         .constant('Menus', {
+               CAMPAGNE:  [
+                {
+                    route: 'app.overview',
+                    icon: 'fa fa-paper-plane',
+                    label: 'Overview',
+                },
+                {
+                    route: 'app.tmecs',
+                    icon: 'fa fa-table',
+                    label: 'Campaigns',
+                }
+            ],
             DASHBOARD: [],
             SETTINGS: [
                 {
