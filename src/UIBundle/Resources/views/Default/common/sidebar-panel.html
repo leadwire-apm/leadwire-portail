@@ -37,7 +37,7 @@
         </li>
         <div ng-repeat="menu in menus track by $index" ng-if="!isChangingContext && state.includes('app.dashboard')">
             <li data-toggle="collapse" data-target="#[[menu.split(' ').join('')]]" ng-class="collapsed" ui-sref-active="active" style="padding: 13px 21px;">
-                <a href="#"><i ng-class="menu == 'APM' ? 'fa fa-eye' : 'fa fa-exchange-alt'"></i> [[menu]] <span class="arrow"></span></a>
+                <a href="#"><i ng-class="menu == 'APM' ? 'fa fa-eye' : 'fa fa-exchange-alt'"></i><span>[[menu]]</span></a>
             </li>
             <ul class="sub-menu collapse" id="[[menu.split(' ').join('')]]">
                 <li ng-repeat="submenu in menus[menu]" style="list-style-type: none;">

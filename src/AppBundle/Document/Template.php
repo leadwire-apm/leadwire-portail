@@ -2,10 +2,10 @@
 
 namespace AppBundle\Document;
 
-use AppBundle\Document\MonitoringSet;
-use JMS\Serializer\Annotation as JMS;
 use AppBundle\Document\ApplicationType;
+use AppBundle\Document\MonitoringSet;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
+use JMS\Serializer\Annotation as JMS;
 
 /**
  * @ODM\Document(repositoryClass="AppBundle\Repository\TemplateRepository")
@@ -250,5 +250,10 @@ class Template
             self::INDEX_TEMPLATE,
             self::INDEX_PATTERN,
         ];
+    }
+
+    public function getFormattedVersion()
+    {
+        return strtolower($this->monitoringSet->getQualifier()) . "-" . $this->version;
     }
 }

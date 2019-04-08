@@ -729,6 +729,20 @@ blockquote p {
     padding: 0;
     width: 100%;
   }
+
+  .layout-small-menu .sidebar-panel > nav > ul> div > li > a > .fa {
+    display: block;
+    padding: 0;
+    width: 100%;
+  }
+
+  .layout-small-menu .sidebar-panel > nav > ul > div > li > a > span {
+    display: none;
+  }
+
+  /* .layout-small-menu .sidebar-panel > nav > ul > div > ul.sub-menu >li > a > span {
+    display: none;
+  } */
   /* .layout-small-menu .sidebar-panel > nav > ul > li:hover > .sub-menu {
     max-height: 500px;
   } */

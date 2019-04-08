@@ -72,8 +72,7 @@ Load default Application Type. Insert template for Kibana and more..'
         foreach ($demoApplications as $application) {
             $es->deleteIndex($application->getApplicationIndex());
             $es->createIndexTemplate($application, $applicationService->getActiveApplicationsNames());
-            $es->createAlias($application);
-
+            $aliases = $es->createAlias($application);
             $kibana->loadIndexPatternForApplication(
                 $application,
                 $application->getApplicationIndex()
@@ -87,6 +86,8 @@ Load default Application Type. Insert template for Kibana and more..'
                 $application,
                 $application->getSharedIndex()
             );
+
+            $kibana->makeDefaultIndex($application->getApplicationIndex(), $aliases[0]);
         }
 
         if ($stripeEnabled === true) {

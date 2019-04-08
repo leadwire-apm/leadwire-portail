@@ -1,6 +1,4 @@
 {
-   "metricbeat-6.5.1":{
-      "order":1,
       "index_patterns":[
          "metricbeat-6.5.1-*"
       ],
@@ -10385,5 +10383,4 @@
       "aliases":{
 
       }
-   }
 }

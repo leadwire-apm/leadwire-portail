@@ -174,7 +174,6 @@ class ApplicationType
 
     public function getMonitoringSets()
     {
-        // dump(get_class($this->templates->toArray()[0]));exit;
         return array_unique(
             array_map(
                 function (Template $template) {

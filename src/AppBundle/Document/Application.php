@@ -378,12 +378,22 @@ class Application
         return 'app_' . $this->getUuid();
     }
 
-    public function getApplicationIndex()
+    /**
+     * @JMS\VirtualProperty
+     *
+     * @return string
+     */
+    public function getApplicationIndex(): string
     {
         return "app_". $this->uuid;
     }
 
-    public function getSharedIndex()
+    /**
+     * @JMS\VirtualProperty
+     *
+     * @return string
+     */
+    public function getSharedIndex(): string
     {
         return "shared_" . $this->uuid;
     }

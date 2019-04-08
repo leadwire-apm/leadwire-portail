@@ -35,7 +35,7 @@ class TemplateFixture extends AbstractFixture implements OrderedFixtureInterface
             $template->setContent((string) file_get_contents($file->getRealPath()));
             $template->setApplicationType($applicationType);
             $template->setMonitoringSet($apmMonitoringSet);
-            $template->setVersion("apm-6.5.1");
+            $template->setVersion("6.5.1");
             $manager->persist($template);
         }
 
@@ -54,7 +54,7 @@ class TemplateFixture extends AbstractFixture implements OrderedFixtureInterface
             $template->setContent((string) file_get_contents($file->getRealPath()));
             $template->setApplicationType($applicationType);
             $template->setMonitoringSet($infrastructureMonitoringSet);
-            $template->setVersion("apm-6.5.1");
+            $template->setVersion("6.5.1");
             $manager->persist($template);
         }
         $manager->flush();
