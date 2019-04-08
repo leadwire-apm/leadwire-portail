@@ -68,12 +68,16 @@ class AuthController extends Controller
 
     public function proxyAction(Request $request, AuthService $authService)
     {
+        if(!isset( $request->headers->get('username')) || !isset($request->headers->get('email')) || !isset($request->headers->get('group'))){
+            return new JsonResponse("Provider not found", 404);
+        }
+
         $params = [
             'username' => $request->headers->get('username'),
             'email' => $request->headers->get('email'),
             'group' => $request->headers->get('group'),
         ];
-        
+
         $userData = $authService->proxyLoginProvider($params);
 
         return new JsonResponse(
