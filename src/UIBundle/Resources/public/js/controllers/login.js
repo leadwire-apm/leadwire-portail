@@ -83,29 +83,13 @@ function LoginControllerFN(
   }
 
   function proxyAuthenticate(provider) {
-    var userInfos = {};
 
     UserService.getProxyHeaders(function(headers) {
-      if (
-        angular.isUndefined(headers.username) ||
-        angular.isUndefined(headers.group) ||
-        angular.isUndefined(headers.email) ||
-        !headers.username ||
-        !headers.group ||
-        !headers.email
-      ) {
-        toastr.error(MESSAGES_CONSTANTS.PROXY_HEADER_REQUIRED);
-        return;
-      }
 
       vm.isChecking = true;
 
-      userInfos.group = headers.group;
-      userInfos.username = headers.username;
-      userInfos.email = headers.email;
-
       $auth
-        .login(userInfos)
+        .login()
         .then(getMe) // accept invitation and update Localstorage
         .then(handleAfterRedirect) // fetch application and dashboard
         .then(handleLoginSuccess(provider)) // redirect
