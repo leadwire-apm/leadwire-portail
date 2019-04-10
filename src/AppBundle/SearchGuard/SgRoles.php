@@ -59,7 +59,7 @@ class SgRoles
         $this->sg_manage_snapshots['cluster'] = ['MANAGE_SNAPSHOTS'];
         $this->sg_manage_snapshots['indices'] = ['*' => ["*" => ['indices:data/write/index', 'indices:admin/create']]];
 
-        $this->sg_own_index['cluster'] = ['CLUSTER_COMPOSITE_OPS'];
+        $this->sg_own_index['cluster'] = ['CLUSTER_COMPOSITE_OPS', 'cluster:monitor/state', 'cluster:monitor/health', 'indices:admin/template/get'];
         $this->sg_own_index['indices'] = [
             '?kibana_${user_name}' => [
                 "*" => ['INDICES_ALL'],
@@ -68,7 +68,7 @@ class SgRoles
                 "*" => ['READ'],
             ],
             '*' => [
-                "*" => ['INDICES_ALL'],
+                "*" => ['indices:admin/aliases/get', 'indices:monitor/stats', 'indices:admin/template/get', 'indices:admin/mappings/get', 'indices:admin/get'],
             ],
 
         ];
