@@ -195,6 +195,7 @@ class ApplicationController extends Controller
                     $application->getSharedIndex()
                 );
 
+                $kibanaService->loadDefaultIndex($application->getSharedIndex(), 'default');
                 $kibanaService->makeDefaultIndex($application->getSharedIndex(), 'default');
 
                 $sgService->updateSearchGuardConfig();
