@@ -474,7 +474,6 @@ class KibanaService
                     'status_code' => $response->getStatusCode(),
                 ]
             );
-        }
 
         return true;
     }
