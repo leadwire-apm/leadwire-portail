@@ -431,6 +431,54 @@ class KibanaService
         return true;
     }
 
+    
+     /**
+     * * curl --insecure -H "Authorization: Bearer ${authorization}" -X POST "$protocol://$host:$port/api/saved_objects/index-pattern/default" -H 'kbn-xsrf: true' -H 'Content-Type: application/json' -d '{ "attributes": { "title": "*" }}'
+     *
+     * @param Application $application
+     * @param string $tenant
+     *
+     * @return bool
+     */
+    public function loadDefaultIndex(string $tenant, string $value): bool
+    {
+            $indexPattern = $value;
+
+            $content = '{ "attributes": { "title": "*" }}';
+
+            $headers = [
+                'kbn-xsrf' => true,
+                'Content-Type' => 'application/json',
+                'tenant' => $tenant,
+                'X-Proxy-User' => $this->kibanaAdminUsername,
+            ];
+
+            $authorization = $this->jwtHelper->encode($this->kibanaAdminUsername, $this->kibanaAdminUuid);
+
+            $headers['Authorization'] = "Bearer $authorization";
+
+            $response = $this->httpClient->post(
+                $this->url . "api/saved_objects/index-pattern/$indexPattern",
+                [
+                    'headers' => $headers,
+                    'body' => $content,
+                ]
+            );
+
+            $this->logger->notice(
+                "leadwire.kibana.loadDefaultIndex",
+                [
+                    'url' => $this->url . "api/saved_objects/index-pattern/$indexPattern",
+                    'verb' => 'POST',
+                    'headers' => $headers,
+                    'status_code' => $response->getStatusCode(),
+                ]
+            );
+
+        return true;
+    }
+
+    
     /**
      * @param User $user
      *

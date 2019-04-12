@@ -126,9 +126,8 @@ class SearchGuardService
                             "?kibana_{$application->getApplicationIndex()}" => [
                                 "*" => [
                                     "READ",
-                                    "indices:data/write/index",
-                                    "indices:data/write/update",
-                                    "indices:data/write/bulk[s]",
+                                    "indices:data/read/get",
+                                    "indices:data/read/search",
                                 ],
                             ],
                             "?kibana_{$application->getSharedIndex()}" => ["*" => ["INDICES_ALL"]],
