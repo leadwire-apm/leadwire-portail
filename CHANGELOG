@@ -1,0 +1,18 @@
+# Changelog
+All notable changes to this project will be documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+
+## [1.2.0] - 2019-04-12
+### Added
+- Update application type for created applications: https://gitlab.ats-digital.com/leadwire/leadwire/issues/103
+- Initialize application type with default templates
+
+### Changed
+- Enabled Index creation: https://gitlab.ats-digital.com/leadwire/leadwire/issues/116
+
+### Fixed
+- sg_roles.yml mapping fine generation: https://gitlab.ats-digital.com/leadwire/leadwire/issues/114
+- Application defail page when Stripe is disabled https://gitlab.ats-digital.com/leadwire/leadwire/issues/115

@@ -102,6 +102,7 @@ class SearchGuardService
 
         $applications = $this->applicationManager->getBy(['removed' => false]);
 
+        /** @var Application $application */
         foreach ($applications as $application) {
             $serialized .= $this->serializer->serialize(
                 [

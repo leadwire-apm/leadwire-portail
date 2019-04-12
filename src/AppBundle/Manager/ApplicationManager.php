@@ -28,7 +28,6 @@ class ApplicationManager extends AbstractManager
     {
         return $this
             ->qb()
-            ->select('name')
             ->field('removed')->equals(false)
             ->getQuery()
             ->execute()
