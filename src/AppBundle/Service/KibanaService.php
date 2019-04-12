@@ -431,12 +431,12 @@ class KibanaService
         return true;
     }
 
-    
+
      /**
      * * curl --insecure -H "Authorization: Bearer ${authorization}" -X POST "$protocol://$host:$port/api/saved_objects/index-pattern/default" -H 'kbn-xsrf: true' -H 'Content-Type: application/json' -d '{ "attributes": { "title": "*" }}'
      *
-     * @param Application $application
      * @param string $tenant
+     * @param string $value
      *
      * @return bool
      */
@@ -478,7 +478,7 @@ class KibanaService
         return true;
     }
 
-    
+
     /**
      * @param User $user
      *

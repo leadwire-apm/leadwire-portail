@@ -131,10 +131,10 @@ class ElasticSearchService
             $this->logger->notice(
                 "leadwire.es.getIndex",
                 [
-                    'url' => $this->url . ".kibana_$tenantName",
-                    'verb' => 'GET',
                     'status_code' => $response->getStatusCode(),
                     'phrase' => $response->getReasonPhrase(),
+                    'url' => $this->url . ".kibana_$tenantName",
+                    'verb' => 'GET',
                 ]
             );
         } catch (ClientException $e) {
@@ -143,9 +143,9 @@ class ElasticSearchService
                 $this->logger->warning(
                     "leadwire.es.getIndex",
                     [
-                        'url' => $this->url . ".kibana_$tenantName",
                         'status_code' => $response->getStatusCode(),
                         'phrase' => $response->getReasonPhrase(),
+                        'url' => $this->url . ".kibana_$tenantName",
                     ]
                 );
 
@@ -192,10 +192,10 @@ class ElasticSearchService
             $this->logger->notice(
                 "leadwire.es.deleteIndex",
                 [
-                    'url' => $this->url . ".kibana_$tenantName",
-                    'verb' => 'DELETE',
                     'status_code' => $response->getStatusCode(),
                     'phrase' => $response->getReasonPhrase(),
+                    'url' => $this->url . ".kibana_$tenantName",
+                    'verb' => 'DELETE',
                 ]
             );
         } catch (ClientException $e) {
@@ -231,10 +231,10 @@ class ElasticSearchService
         $this->logger->notice(
             "leadwire.es.getAlias",
             [
-                'url' => $this->url . "_alias/$applicationName",
-                'verb' => 'GET',
                 'status_code' => $response->getStatusCode(),
                 'phrase' => $response->getReasonPhrase(),
+                'url' => $this->url . "_alias/$applicationName",
+                'verb' => 'GET',
             ]
         );
 
@@ -274,18 +274,20 @@ class ElasticSearchService
             $this->logger->notice(
                 "leadwire.es.createAlias",
                 [
+                    'status_code' => $response->getStatusCode(),
+                    'phrase' => $response->getReasonPhrase(),
                     'url' => $this->url . $indexName,
                     'verb' => 'DELETE',
-                    'status_code' => $response->getStatusCode(),
+                    'headers' => null,
                     'monitoring_set' => $ms->getQualifier(),
-                    'phrase' => $response->getReasonPhrase(),
                 ]
             );
 
             $response = $this->httpClient->put(
-                $this->url . $indexName,
+                $this->url . $indexName . "/_doc/1",
                 [
                     'auth' => $this->getAuth(),
+                    'headers' => $headers,
                     'body' => \json_encode(["@timestamp" => (new \DateTime)->format("Y-m-d\TH:i:s")]),
                 ]
             );
@@ -293,11 +295,12 @@ class ElasticSearchService
             $this->logger->notice(
                 "leadwire.es.createAlias",
                 [
-                    'url' => $this->url . $indexName,
-                    'verb' => 'PUT',
                     'status_code' => $response->getStatusCode(),
-                    'monitoring_set' => $ms->getQualifier(),
                     'phrase' => $response->getReasonPhrase(),
+                    'url' => $this->url . $indexName . "/_doc/1",
+                    'verb' => 'PUT',
+                    'headers' => $headers,
+                    'monitoring_set' => $ms->getQualifier(),
                 ]
             );
 
@@ -320,11 +323,11 @@ class ElasticSearchService
             $this->logger->notice(
                 "leadwire.es.createAlias",
                 [
+                    'status_code' => $response->getStatusCode(),
+                    'phrase' => $response->getReasonPhrase(),
                     'url' => $this->url . "_aliases",
                     'verb' => 'POST',
                     'headers' => $headers,
-                    'status_code' => $response->getStatusCode(),
-                    'phrase' => $response->getReasonPhrase(),
                 ]
             );
         }
@@ -404,10 +407,10 @@ class ElasticSearchService
             $this->logger->notice(
                 "leadwire.es.createIndexTemplate",
                 [
-                    'url' => $this->url . "_template/{$template->getFormattedVersion()}",
-                    'verb' => 'PUT',
                     'status_code' => $response->getStatusCode(),
                     'phrase' => $response->getReasonPhrase(),
+                    'url' => $this->url . "_template/{$template->getFormattedVersion()}",
+                    'verb' => 'PUT',
                     'monitoring_set' => $monitoringSet->getName(),
                 ]
             );
