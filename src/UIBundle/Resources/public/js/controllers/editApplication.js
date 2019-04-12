@@ -3,6 +3,7 @@
         .module('leadwireApp')
         .controller('applicationEditCtrl', [
             'ApplicationFactory',
+            'ApplicationTypeFactory',
             '$stateParams',
             '$state',
             '$rootScope',
@@ -13,6 +14,7 @@
 
     function applicationEditCtrlFN(
         ApplicationFactory,
+        ApplicationTypeFactory,
         $stateParams,
         $state,
         $rootScope,
@@ -21,21 +23,23 @@
     ) {
         var vm = this;
         $rootScope.currentNav = 'settings';
-        vm.ui = {
-            isSaving: false,
-            isEditing: true
-        };
+
 
         ApplicationFactory.get($stateParams.id).then(function(res) {
             vm.application = res.data;
         });
 
+        vm.loadApplicationTypes = function () {
+            ApplicationTypeFactory.findAll()
+                .then(function (response) {
+                    vm.applicationTypes = response.data;
+                });
+        };
         vm.editApp = function() {
             vm.flipActivityIndicator();
             const updatedApp = angular.extend({},vm.application);
             delete updatedApp.invitations;
             delete updatedApp.owner;
-            delete updatedApp.type;
             ApplicationFactory.update(vm.application.id, updatedApp)
                 .then(function() {
                     vm.flipActivityIndicator();
@@ -54,6 +58,16 @@
 
         vm.flipActivityIndicator = function() {
             vm.ui.isSaving = !vm.ui.isSaving;
+        };
+
+        vm.onLoad = function () {
+            vm = angular.extend(vm, {
+                ui : {
+                    isSaving: false,
+                    isEditing: true
+                },
+            });
+            vm.loadApplicationTypes();
         };
     }
 })(window.angular);

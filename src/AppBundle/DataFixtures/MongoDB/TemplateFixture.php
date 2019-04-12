@@ -20,7 +20,7 @@ class TemplateFixture extends AbstractFixture implements OrderedFixtureInterface
         /** @var MonitoringSet $apmMonitoringSet */
         $apmMonitoringSet = $this->getReference(MonitoringSetFixture::APM_MONITORING_SET);
         /** @var MonitoringSet $infrastructureMonitoringSet */
-        $infrastructureMonitoringSet = $this->getReference(MonitoringSetFixture::INFRASTRUCTURE_MONITORING_SET);
+        $infrastructureMonitoringSet = $this->getReference(MonitoringSetFixture::METRICBEAT_MONITORING_SET);
         $apmFolderPath = "./app/Resources/templates/apm";
         $finder = new Finder();
         $finder->files()->in($apmFolderPath);
@@ -40,7 +40,7 @@ class TemplateFixture extends AbstractFixture implements OrderedFixtureInterface
         }
 
         $manager->flush();
-        $infrastructureFolderPath = "./app/Resources/templates/infrastructure";
+        $infrastructureFolderPath = "./app/Resources/templates/metricbeat";
         $finder = new Finder();
         $finder->files()->in($infrastructureFolderPath);
         /** @var \SplFileInfo $file */

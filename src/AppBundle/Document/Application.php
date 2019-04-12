@@ -110,7 +110,7 @@ class Application
     /**
      * @var ApplicationType
      *
-     * @ODM\ReferenceOne(targetDocument="AppBundle\Document\ApplicationType", name="type", cascade={"persist"}, storeAs="dbRef")
+     * @ODM\ReferenceOne(targetDocument="AppBundle\Document\ApplicationType", name="type", storeAs="dbRef")
      * @JMS\Type("AppBundle\Document\ApplicationType")
      * @JMS\Expose
      * @JMS\Groups({"full", "Default"})
@@ -133,6 +133,16 @@ class Application
      * @var bool
      */
     private $demo;
+
+    /**
+     * @ODM\Field(type="date")
+     * @JMS\Type("DateTime")
+     * @JMS\Expose
+     * @JMS\Groups({"full"})
+     *
+     * @var \DateTime
+     */
+    private $createdAt;
     /**
      * Constructor
      */
@@ -438,5 +448,29 @@ class Application
     public function getInvitations()
     {
         return $this->invitations;
+    }
+
+    /**
+     * Get the value of createdAt
+     *
+     * @return  \DateTime
+     */
+    public function getCreatedAt()
+    {
+        return $this->createdAt;
+    }
+
+    /**
+     * Set the value of createdAt
+     *
+     * @param \DateTime  $createdAt
+     *
+     * @return  self
+     */
+    public function setCreatedAt(\DateTime $createdAt)
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
     }
 }

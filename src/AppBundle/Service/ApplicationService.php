@@ -12,7 +12,6 @@ use AppBundle\Manager\ActivationCodeManager;
 use AppBundle\Manager\ApplicationManager;
 use AppBundle\Manager\ApplicationPermissionManager;
 use AppBundle\Manager\DeleteTaskManager;
-use AppBundle\Manager\UserManager;
 use AppBundle\Service\ActivationCodeService;
 use JMS\Serializer\DeserializationContext;
 use JMS\Serializer\SerializerInterface;
@@ -256,6 +255,7 @@ class ApplicationService
 
         $uuid1 = Uuid::uuid1();
         $application
+            ->setCreatedAt(new \DateTime())
             ->setOwner($user)
             ->setEnabled(false)
             ->setUuid($uuid1->toString())
@@ -283,28 +283,44 @@ class ApplicationService
      *
      * @param string $json
      *
-     * @return bool
+     * @return array
      */
-    public function updateApp($json, $id)
+    public function updateApplication($json, $id): array
     {
-        $isSuccessful = false;
+        $state = [
+            'successful' => false,
+            'esUpdateRequired' => false,
+            'application' => null,
+        ];
 
         try {
             $realApp = $this->applicationManager->getOneBy(['id' => $id]);
+
             if ($realApp === null) {
                 throw new \Exception(sprintf("Unknow application %s", $id));
             }
+
             $context = new DeserializationContext();
             $context->setGroups(['Default']);
+            /** @var Application $application */
             $application = $this->serializer->deserialize($json, Application::class, 'json', $context);
+
+            $newType = $this->appTypeService->getApplicationType((string) $application->getType()->getId());
+            $application->setType($newType);
+
             $this->applicationManager->update($application);
-            $isSuccessful = true;
+
+            $state['successful'] = true;
+            $state['esUpdateRequired'] = $realApp->getType()->getId() !== $application->getType()->getId();
+            $state['application'] = $application;
         } catch (\Exception $e) {
             $this->logger->error($e->getMessage());
-            $isSuccessful = false;
+            $state['successful'] = false;
+            $state['esUpdateRequired'] = false;
+            $state['application'] = null;
         }
 
-        return $isSuccessful;
+        return $state;
     }
 
     /**
@@ -396,7 +412,7 @@ class ApplicationService
             $permission = $this->apManager->getOneBy(
                 [
                     'application.id' => $demoApplication->getId(),
-                    'user.id' => $user->getId()
+                    'user.id' => $user->getId(),
                 ]
             );
 

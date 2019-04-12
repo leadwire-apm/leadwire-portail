@@ -258,8 +258,7 @@ class ElasticSearchService
      */
     public function createAlias(Application $application): array
     {
-
-        $now = (new \DateTime())->format('Y-m-d');
+        $now = $application->getCreatedAt()->format('Y-m-d');
         $createdAliases = [];
         $applicationName = $application->getName();
 
@@ -269,7 +268,7 @@ class ElasticSearchService
         ];
 
         foreach ($application->getType()->getMonitoringSets() as $ms) {
-            $qualifier = strtolower($ms->getQualifier());
+            $qualifier = \strtolower($ms->getQualifier());
             $indexName = "{$qualifier}-enabled-$applicationName-$now";
             $response = $this->httpClient->delete($this->url . $indexName, ['auth' => $this->getAuth()]);
             $this->logger->notice(
@@ -283,7 +282,13 @@ class ElasticSearchService
                 ]
             );
 
-            $response = $this->httpClient->put($this->url . $indexName, ['auth' => $this->getAuth()]);
+            $response = $this->httpClient->put(
+                $this->url . $indexName,
+                [
+                    'auth' => $this->getAuth(),
+                    'body' => \json_encode(["@timestamp" => (new \DateTime)->format("Y-m-d\TH:i:s")]),
+                ]
+            );
 
             $this->logger->notice(
                 "leadwire.es.createAlias",
@@ -296,13 +301,13 @@ class ElasticSearchService
                 ]
             );
 
-            $body = json_decode($bodyString, false);
-            $aliasName = strtolower($ms->getQualifier()) . "-$applicationName";
-            $indexName = strtolower($ms->getQualifier()) . "-*-$applicationName-*";
+            $body = \json_decode($bodyString, false);
+            $aliasName = \strtolower($ms->getQualifier()) . "-$applicationName";
+            $indexName = \strtolower($ms->getQualifier()) . "-*-$applicationName-*";
             $createdAliases[] = $aliasName;
             $body->actions[0]->add->index = $indexName;
             $body->actions[0]->add->alias = $aliasName;
-            $content = json_encode($body);
+            $content = \json_encode($body);
             $response = $this->httpClient->post(
                 $this->url . "_aliases",
                 [
@@ -352,7 +357,7 @@ class ElasticSearchService
         $templates = $this->templateManager->getBy(['applicationType.id' => $application->getType()->getId()]);
 
         foreach ($this->msManager->getAll() as $monitoringSet) {
-            $filtered = array_filter(
+            $filtered = \array_filter(
                 $templates,
                 function (Template $element) use ($monitoringSet) {
                     return $element->getMonitoringSet() == $monitoringSet && $element->getType() === Template::INDEX_TEMPLATE;
@@ -364,7 +369,7 @@ class ElasticSearchService
 
             if (($template instanceof Template) === false) {
                 throw new \Exception(
-                    sprintf(
+                    \sprintf(
                         "Template (%s) of Monitoring Set (%s) not found",
                         Template::INDEX_TEMPLATE,
                         $monitoringSet->getName()
@@ -392,7 +397,7 @@ class ElasticSearchService
                     'headers' => [
                         "Content-Type" => "application/json",
                     ],
-                    'body' => json_encode($content),
+                    'body' => \json_encode($content),
                 ]
             );
 
@@ -445,7 +450,7 @@ class ElasticSearchService
                 );
 
                 if ($response->getStatusCode() === Response::HTTP_OK) {
-                    $body = json_decode($response->getBody())->hits->hits;
+                    $body = \json_decode($response->getBody())->hits->hits;
                     foreach ($body as $element) {
                         if ($element->_source->type === "dashboard") {
                             $title = $element->_source->{$element->_source->type}->title;
@@ -478,24 +483,24 @@ class ElasticSearchService
         $custom = [];
         $default = [];
         foreach ($dashboards['Custom'] as $item) {
-            preg_match_all('/\[([^]]+)\]/', $item['name'], $out);
+            \preg_match_all('/\[([^]]+)\]/', $item['name'], $out);
             $theme = isset($out[1][0]) === true ? $out[1][0] : 'Misc';
             $custom[$theme][] = [
                 "private" => $item['private'],
                 "id" => $item['id'],
                 "tenant" => $item['tenant'],
-                "name" => str_replace("[$theme] ", "", $item['name']),
+                "name" => \str_replace("[$theme] ", "", $item['name']),
             ];
         }
 
         foreach ($dashboards['Default'] as $item) {
-            preg_match_all('/\[([^]]+)\]/', $item['name'], $out);
+            \preg_match_all('/\[([^]]+)\]/', $item['name'], $out);
             $theme = isset($out[1][0]) === true ? $out[1][0] : 'Misc';
             $default[$theme][] = [
                 "private" => $item['private'],
                 "id" => $item['id'],
                 "tenant" => $item['tenant'],
-                "name" => str_replace("[$theme] ", "", $item['name']),
+                "name" => \str_replace("[$theme] ", "", $item['name']),
             ];
         }
 
@@ -507,8 +512,8 @@ class ElasticSearchService
 
     protected function transformeId($id)
     {
-        $id = str_replace('dashboard:', "", $id);
-        $id = str_replace('visualization:', "", $id);
+        $id = \str_replace('dashboard:', "", $id);
+        $id = \str_replace('visualization:', "", $id);
 
         return $id;
     }

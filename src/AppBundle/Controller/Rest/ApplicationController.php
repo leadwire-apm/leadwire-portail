@@ -2,25 +2,25 @@
 
 namespace AppBundle\Controller\Rest;
 
-use AppBundle\Document\User;
-use MongoDuplicateKeyException;
-use AppBundle\Service\LdapService;
-use AppBundle\Service\StatService;
 use AppBundle\Document\Application;
-use AppBundle\Service\KibanaService;
+use AppBundle\Document\User;
+use AppBundle\Exception\DuplicateApplicationNameException;
 use AppBundle\Service\ApplicationService;
-use AppBundle\Service\SearchGuardService;
 use AppBundle\Service\ElasticSearchService;
+use AppBundle\Service\KibanaService;
+use AppBundle\Service\LdapService;
+use AppBundle\Service\SearchGuardService;
+use AppBundle\Service\StatService;
+use ATS\CoreBundle\Controller\Rest\RestControllerTrait;
+use MongoDuplicateKeyException;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use ATS\CoreBundle\Controller\Rest\RestControllerTrait;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpKernel\Exception\HttpException;
-use AppBundle\Exception\DuplicateApplicationNameException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
+use Symfony\Component\Routing\Annotation\Route;
 
 class ApplicationController extends Controller
 {
@@ -225,13 +225,43 @@ class ApplicationController extends Controller
      * @param string $id
      * @return Response
      */
-    public function updateApplicationAction(Request $request, ApplicationService $applicationService, string $id)
-    {
+    public function updateApplicationAction(
+        Request $request,
+        ApplicationService $applicationService,
+        ElasticSearchService $esService,
+        KibanaService $kibanaService,
+        string $id
+    ) {
         try {
             $data = $request->getContent();
-            $successful = $applicationService->updateApp($data, $id);
+            $state = $applicationService->updateApplication($data, $id);
+            if ($state['esUpdateRequired'] === true) {
+                $application = $state['application'];
+                $esService->deleteIndex($application->getApplicationIndex());
+                $esService->createIndexTemplate($application, $applicationService->getActiveApplicationsNames());
 
-            return $this->renderResponse($successful);
+                $aliases = $esService->createAlias($application);
+
+                $kibanaService->loadIndexPatternForApplication(
+                    $application,
+                    $application->getApplicationIndex()
+                );
+
+                $kibanaService->makeDefaultIndex($application->getApplicationIndex(), $aliases[0]);
+
+                $kibanaService->createApplicationDashboards($application);
+
+                $esService->deleteIndex($application->getSharedIndex());
+
+                $kibanaService->loadIndexPatternForApplication(
+                    $application,
+                    $application->getSharedIndex()
+                );
+
+                $kibanaService->makeDefaultIndex($application->getSharedIndex(), $aliases[0]);
+            }
+
+            return $this->renderResponse($state['successful']);
         } catch (MongoDuplicateKeyException $e) {
             return $this->renderResponse(['message' => "Application's name must be unique"], Response::HTTP_UNAUTHORIZED);
         }

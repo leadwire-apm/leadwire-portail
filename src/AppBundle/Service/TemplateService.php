@@ -10,6 +10,7 @@ use JMS\Serializer\SerializerInterface;
 use AppBundle\Manager\ApplicationTypeManager;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use AppBundle\Manager\MonitoringSetManager;
 
 class TemplateService
 {
@@ -28,14 +29,28 @@ class TemplateService
      */
     private $applicationTypeManager;
 
+    /**
+     * @var MonitoringSetManager
+     */
+    private $msManager;
+
+    /**
+     * @var string
+     */
+    private $defaultTemplatesPath;
+
     public function __construct(
         TemplateManager $templateManager,
         ApplicationTypeManager $applicationTypeManager,
-        SerializerInterface $serializer
+        MonitoringSetManager $msManager,
+        SerializerInterface $serializer,
+        string $defaultTemplatesPath
     ) {
         $this->templateManager = $templateManager;
         $this->serializer = $serializer;
         $this->applicationTypeManager = $applicationTypeManager;
+        $this->msManager = $msManager;
+        $this->defaultTemplatesPath = $defaultTemplatesPath;
     }
 
     public function newTemplate($json)
@@ -99,5 +114,33 @@ class TemplateService
     public function getTemplate(string $id)
     {
         return $this->templateManager->getOneBy(['id' => $id]);
+    }
+
+    /**
+     * @param string $id
+     */
+    public function initializeDefaultForApplicationType(string $id)
+    {
+        $applicationType = $this->applicationTypeManager->getOneBy(['id' => $id]);
+        $now = (new \DateTime())->format("Y-m-d\TH:i:s");
+
+        foreach ($this->msManager->getAll() as $ms) {
+            $finder = new Finder();
+            $finder->files()->in($this->defaultTemplatesPath.\strtolower($ms->getQualifier()));
+            foreach ($finder as $file) {
+                if ($file->getRealPath() === false) {
+                    throw new \Exception("Error fetching file");
+                }
+                $template = new Template();
+                $template->setName(\strtolower($ms->getName() . "-" . \str_replace(".json", "", $file->getFilename())));
+                $template->setType(\str_replace(".json", "", $file->getFilename()));
+                $template->setContent((string) file_get_contents($file->getRealPath()));
+                $template->setApplicationType($applicationType);
+                $template->setMonitoringSet($ms);
+                $template->setVersion($now);
+
+                $this->templateManager->update($template);
+            }
+        }
     }
 }

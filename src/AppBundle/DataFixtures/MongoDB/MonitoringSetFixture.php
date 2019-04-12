@@ -9,7 +9,7 @@ use Doctrine\Common\Persistence\ObjectManager;
 
 class MonitoringSetFixture extends AbstractFixture implements OrderedFixtureInterface
 {
-    const INFRASTRUCTURE_MONITORING_SET = "INFRASTRUCTURE";
+    const METRICBEAT_MONITORING_SET = "METRICBEAT";
     const APM_MONITORING_SET = "APM";
 
     public function load(ObjectManager $manager)
@@ -21,7 +21,7 @@ class MonitoringSetFixture extends AbstractFixture implements OrderedFixtureInte
         $ms = new MonitoringSet();
         $ms->setName("Metricbeat")->setQualifier("METRICBEAT");
         $manager->persist($ms);
-        $this->addReference(self::INFRASTRUCTURE_MONITORING_SET, $ms);
+        $this->addReference(self::METRICBEAT_MONITORING_SET, $ms);
 
         $manager->flush();
     }

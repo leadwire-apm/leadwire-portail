@@ -16,6 +16,7 @@ use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 class ApplicationType
 {
     const DEFAULT_TYPE = 'Java';
+    const TEMPLATES_COUNT = 8; // Number of monitoring sets x number of templates per monitoring set
 
     /**
      * @var \MongoId
@@ -182,5 +183,15 @@ class ApplicationType
                 $this->templates->toArray()
             )
         );
+    }
+
+    /**
+     * @JMS\VirtualProperty()
+     *
+     * @return boolean
+     */
+    public function isWellDefined()
+    {
+        return count($this->templates) === self::TEMPLATES_COUNT;
     }
 }

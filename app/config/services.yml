@@ -80,6 +80,10 @@ services:
         arguments:
             $rule: "%activation_code_regex%"
 
+    AppBundle\Service\TemplateService:
+        arguments:
+            $defaultTemplatesPath: "%kernel.root_dir%/Resources/templates/"
+
     AppBundle\Service\JWTHelper:
         arguments:
             $domain: "%app_domain%"
