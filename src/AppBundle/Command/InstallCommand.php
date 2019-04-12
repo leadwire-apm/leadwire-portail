@@ -87,7 +87,11 @@ Load default Application Type. Insert template for Kibana and more..'
                 $application->getSharedIndex()
             );
 
-            $kibana->makeDefaultIndex($application->getApplicationIndex(), $aliases[0]);
+            $kibana->loadDefaultIndex($application->getApplicationIndex(), 'default');
+            $kibana->makeDefaultIndex($application->getApplicationIndex(), 'default');
+            
+            $kibana->loadDefaultIndex($application->getSharedIndex(), 'default');
+            $kibana->makeDefaultIndex($application->getSharedIndex(), 'default');
         }
 
         if ($stripeEnabled === true) {
