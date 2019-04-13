@@ -49,7 +49,7 @@
             </ul>
         </div>
         <li ng-if="!isChangingContext && state.includes('app.dashboard')">
-            <a ui-sref="app.dashboard.customDashboard">
+            <a ui-sref="app.dashboard.customDashboard({appId:$localStorage.selectedAppId})">
                 <i class="fa fa-file-alt"></i>
                 <span>Custom</span>
             </a>
