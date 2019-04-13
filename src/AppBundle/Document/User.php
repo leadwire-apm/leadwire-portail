@@ -171,14 +171,14 @@ class User implements AdvancedUserInterface
     private $acceptNewsLetter;
 
     /**
-     * @ODM\ReferenceMany(targetDocument="Invitation", mappedBy="user", storeAs="dbRef")
+     * @ODM\ReferenceMany(targetDocument="AppBundle\Document\Invitation", mappedBy="user", storeAs="dbRef")
      * @JMS\Type("array<AppBundle\Document\Invitation>")
      * @JMS\Expose
      */
     public $invitations;
 
     /**
-     * @ODM\ReferenceMany(targetDocument="Application", mappedBy="owner", storeAs="dbRef")
+     * @ODM\ReferenceMany(targetDocument="AppBundle\Document\Application", mappedBy="owner", storeAs="dbRef")
      * @JMS\Type("array<AppBundle\Document\Application>")
      * @JMS\Expose
      */

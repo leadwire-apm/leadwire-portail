@@ -2,16 +2,17 @@
 
 namespace AppBundle\Service;
 
-use AppBundle\Document\Application;
-use AppBundle\Document\Template;
-use AppBundle\Document\User;
-use AppBundle\Manager\MonitoringSetManager;
-use AppBundle\Manager\TemplateManager;
 use GuzzleHttp\Client;
-use GuzzleHttp\Exception\ClientException;
+use AppBundle\Document\User;
 use Psr\Log\LoggerInterface;
-use SensioLabs\Security\Exception\HttpException;
+use AppBundle\Document\Template;
+use AppBundle\Document\Application;
+use AppBundle\Manager\TemplateManager;
+use ATS\CoreBundle\Service\Util\AString;
+use GuzzleHttp\Exception\ClientException;
+use AppBundle\Manager\MonitoringSetManager;
 use Symfony\Component\HttpFoundation\Response;
+use SensioLabs\Security\Exception\HttpException;
 
 /**
  * Class ElasticSearchService Service. Manage connexions with Kibana Rest API.
@@ -461,7 +462,7 @@ class ElasticSearchService
                             $res[$groupName][] = [
                                 "id" => $this->transformeId($element->_id),
                                 "name" => $title,
-                                "private" => ($groupName === "Custom"),
+                                "private" => $groupName === "Custom" && (new AString($tenant))->startsWith("shared_") === false,
                                 "tenant" => $tenant,
                             ];
                         }

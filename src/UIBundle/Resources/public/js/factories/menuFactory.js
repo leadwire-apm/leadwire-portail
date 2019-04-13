@@ -83,7 +83,6 @@
                             return newMenus;
                         }
                         catch (e) {
-                            console.log(e);
                             return [];
                         }
                     },

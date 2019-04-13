@@ -19,6 +19,8 @@ class ApplicationFixture extends AbstractFixture implements OrderedFixtureInterf
         /** @var ApplicationType $applicationType */
         $applicationType = $this->getReference(ApplicationTypeFixture::DEFAULT_TYPE_REFERENCE);
 
+        $now = new \DateTime();
+
         $user = new User();
         $user
             ->setUsername("user_jpetstore")
@@ -41,6 +43,7 @@ class ApplicationFixture extends AbstractFixture implements OrderedFixtureInterf
             ->setDescription("A web application built on top of MyBatis 3, Spring 3 and Stripes")
             ->setEmail("wassim.dhib@leadwire.io")
             ->setEnabled(true)
+            ->setCreatedAt($now)
             ->setDemo(true)
             ->setRemoved(false)
             ->setOwner($user)
