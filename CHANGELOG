@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Application Fixture initialization https://gitlab.ats-digital.com/leadwire/leadwire/issues/118
 - SG Roles when user accepts invitation https://gitlab.ats-digital.com/leadwire/leadwire/issues/119
+- Custom Menu reload https://gitlab.ats-digital.com/leadwire/leadwire/issues/120
 - Visual hint for private tenants https://gitlab.ats-digital.com/leadwire/leadwire/issues/121
 
 ## [1.2.0] - 2019-04-12
