@@ -79,7 +79,7 @@ class Template
      * @JMS\Expose
      * @JMS\Type("AppBundle\Document\ApplicationType")
      *
-     * @var MonitoringSet
+     * @var ?MonitoringSet
      */
     private $monitoringSet;
 
@@ -197,9 +197,9 @@ class Template
     /**
      * Get the value of monitoringSet
      *
-     * @return  MonitoringSet
+     * @return  MonitoringSet|null
      */
-    public function getMonitoringSet()
+    public function getMonitoringSet(): ?MonitoringSet
     {
         return $this->monitoringSet;
     }
@@ -207,11 +207,11 @@ class Template
     /**
      * Set the value of monitoringSet
      *
-     * @param  MonitoringSet  $monitoringSet
+     * @param  ?MonitoringSet  $monitoringSet
      *
      * @return  self
      */
-    public function setMonitoringSet(MonitoringSet $monitoringSet)
+    public function setMonitoringSet(?MonitoringSet $monitoringSet): self
     {
         $this->monitoringSet = $monitoringSet;
 
@@ -254,6 +254,10 @@ class Template
 
     public function getFormattedVersion()
     {
-        return strtolower($this->monitoringSet->getQualifier()) . "-" . $this->version;
+        if ($this->monitoringSet !== null) {
+            return strtolower($this->monitoringSet->getQualifier()) . "-" . $this->version;
+        }
+
+        return '-';
     }
 }

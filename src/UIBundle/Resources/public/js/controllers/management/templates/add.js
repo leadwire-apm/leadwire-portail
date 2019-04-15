@@ -3,6 +3,7 @@
         .controller('AddTemplateController', [
             'TemplateService',
             'ApplicationTypeFactory',
+            'MonitoringSetFactory',
             'toastr',
             'CONFIG',
             'MESSAGES_CONSTANTS',
@@ -17,6 +18,7 @@
     function AddTemplateCtrlFN (
         TemplateService,
         ApplicationTypeFactory,
+        MonitoringSetFactory,
         toastr,
         CONSTANTS,
         MESSAGES_CONSTANTS,

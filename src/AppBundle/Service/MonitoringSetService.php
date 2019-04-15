@@ -2,10 +2,12 @@
 
 namespace AppBundle\Service;
 
-use AppBundle\Document\MonitoringSet;
-use AppBundle\Manager\MonitoringSetManager;
-use JMS\Serializer\SerializerInterface;
 use Psr\Log\LoggerInterface;
+use AppBundle\Document\Template;
+use AppBundle\Document\MonitoringSet;
+use AppBundle\Manager\TemplateManager;
+use JMS\Serializer\SerializerInterface;
+use AppBundle\Manager\MonitoringSetManager;
 
 /**
  * Service class for MonitoringSet entities
@@ -17,6 +19,11 @@ class MonitoringSetService
      * @var MonitoringSetManager
      */
     private $monitoringSetManager;
+
+    /**
+     * @var TemplateManager
+     */
+    private $templateManager;
 
     /**
      * @var SerializerInterface
@@ -32,15 +39,18 @@ class MonitoringSetService
      * Constructor
      *
      * @param MonitoringSetManager $monitoringSetManager
+     * @param TemplateManager $templateManager
      * @param SerializerInterface $serializer
      * @param LoggerInterface $logger
      */
     public function __construct(
         MonitoringSetManager $monitoringSetManager,
+        TemplateManager $templateManager,
         SerializerInterface $serializer,
         LoggerInterface $logger
     ) {
         $this->monitoringSetManager = $monitoringSetManager;
+        $this->templateManager = $templateManager;
         $this->serializer = $serializer;
         $this->logger = $logger;
     }
@@ -149,6 +159,16 @@ class MonitoringSetService
      */
     public function deleteMonitoringSet($id)
     {
-        $this->monitoringSetManager->deleteById($id);
+        $ms = $this->monitoringSetManager->getOneBy(['id' => $id]);
+
+        if ($ms instanceof MonitoringSet) {
+            /** @var Template $template */
+            foreach ($ms->getTemplates() as $template) {
+                $template->setMonitoringSet(null);
+                $this->templateManager->update($template);
+            }
+
+            $this->monitoringSetManager->deleteById($id);
+        }
     }
 }

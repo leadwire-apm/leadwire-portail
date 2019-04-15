@@ -151,7 +151,7 @@ class KibanaService
             $filtered = array_filter(
                 $templates,
                 function (Template $element) use ($monitoringSet) {
-                    return $element->getMonitoringSet()->getId() === $monitoringSet->getId() && $element->getType() === Template::DASHBAORDS_ALL;
+                    return $element->getMonitoringSet() !== null && $element->getMonitoringSet()->getId() === $monitoringSet->getId() && $element->getType() === Template::DASHBAORDS_ALL;
                 }
             );
 
@@ -221,7 +221,7 @@ class KibanaService
             $filtered = array_filter(
                 $templates,
                 function (Template $element) use ($monitoringSet) {
-                    return $element->getMonitoringSet()->getId() === $monitoringSet->getId() && $element->getType() === Template::DASHBOARDS;
+                    return $element->getMonitoringSet() !== null && $element->getMonitoringSet()->getId() === $monitoringSet->getId() && $element->getType() === Template::DASHBOARDS;
                 }
             );
 
@@ -310,7 +310,7 @@ class KibanaService
             $filtered = array_filter(
                 $templates,
                 function (Template $element) use ($monitoringSet) {
-                    return $element->getMonitoringSet()->getId() === $monitoringSet->getId() && $element->getType() === Template::INDEX_PATTERN;
+                    return $element->getMonitoringSet() !== null && $element->getMonitoringSet()->getId() === $monitoringSet->getId() && $element->getType() === Template::INDEX_PATTERN;
                 }
             );
 
@@ -376,7 +376,7 @@ class KibanaService
             $filtered = array_filter(
                 $templates,
                 function (Template $element) use ($monitoringSet) {
-                    return $element->getMonitoringSet()->getId() === $monitoringSet->getId() && $element->getType() === Template::INDEX_PATTERN;
+                    return $element->getMonitoringSet() !== null && $element->getMonitoringSet()->getId() === $monitoringSet->getId() && $element->getType() === Template::INDEX_PATTERN;
                 }
             );
 
