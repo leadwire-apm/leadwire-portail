@@ -2,17 +2,17 @@
 
 namespace AppBundle\Service;
 
-use GuzzleHttp\Client;
-use AppBundle\Document\User;
-use Psr\Log\LoggerInterface;
-use AppBundle\Document\Template;
 use AppBundle\Document\Application;
+use AppBundle\Document\Template;
+use AppBundle\Document\User;
+use AppBundle\Manager\MonitoringSetManager;
 use AppBundle\Manager\TemplateManager;
 use ATS\CoreBundle\Service\Util\AString;
+use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
-use AppBundle\Manager\MonitoringSetManager;
-use Symfony\Component\HttpFoundation\Response;
+use Psr\Log\LoggerInterface;
 use SensioLabs\Security\Exception\HttpException;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Class ElasticSearchService Service. Manage connexions with Kibana Rest API.
@@ -473,6 +473,7 @@ class ElasticSearchService
                         [
                             'error' => $response->getReasonPhrase(),
                             'status_code' => $response->getStatusCode(),
+                            'url' => $this->url . ".kibana_$tenant" . "/_search?pretty&from=0&size=10000",
                         ]
                     );
                 }

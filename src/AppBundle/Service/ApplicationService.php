@@ -304,15 +304,18 @@ class ApplicationService
             $context->setGroups(['Default']);
             /** @var Application $application */
             $application = $this->serializer->deserialize($json, Application::class, 'json', $context);
+            $state['esUpdateRequired'] = $realApp->getType()->getId() !== $application->getType()->getId();
 
             $newType = $this->appTypeService->getApplicationType((string) $application->getType()->getId());
-            $application->setType($newType);
+            $realApp->setType($newType);
+            $realApp->setName($application->getName());
+            $realApp->setDescription($application->getDescription());
 
-            $this->applicationManager->update($application);
+            $this->applicationManager->update($realApp);
 
             $state['successful'] = true;
-            $state['esUpdateRequired'] = $realApp->getType()->getId() !== $application->getType()->getId();
-            $state['application'] = $application;
+
+            $state['application'] = $realApp;
         } catch (\Exception $e) {
             $this->logger->error($e->getMessage());
             $state['successful'] = false;
