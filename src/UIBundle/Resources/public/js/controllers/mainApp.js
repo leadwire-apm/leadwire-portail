@@ -164,6 +164,7 @@
                 author: 'Nyasha',
                 version: CONFIG.APP_VERSION,
                 year: new Date().getFullYear(),
+                COMPAGNE_ENABLED: CONFIG.COMPAGNE_ENABLED,
                 layout: {
                     isSmallSidebar: false,
                     isChatOpen: false,

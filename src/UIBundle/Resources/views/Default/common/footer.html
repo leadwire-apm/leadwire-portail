@@ -16,16 +16,16 @@
     <li>
       <a href="javascript:;">Copyright <i class="far fa-copyright"></i> <span>leadwire</span> [[app.year]]. All rights reserved ([[app.version]])</a>
     </li>
-    <li>
+    <li ng-if="COMPAGNE_ENABLED === false">
       <a ui-sref="static.aboutUs" target="_blank" class="btn btn-link btn-sm">About</a>
     </li>
-    <li>
+    <li ng-if="COMPAGNE_ENABLED === false">
       <a ui-sref="static.help" target="_blank" class="btn btn-link btn-sm">Help</a>
     </li>
-    <li>
+    <li ng-if="COMPAGNE_ENABLED === false">
       <a ui-sref="static.termsOfService" target="_blank" class="btn btn-link btn-sm">Terms of service</a>
     </li>
-    <li>
+    <li ng-if="COMPAGNE_ENABLED === false">
       <a ui-sref="static.privacyPolicy" target="_blank" class="btn btn-link btn-sm">Privacy Policy</a>
     </li>
   </ul>
