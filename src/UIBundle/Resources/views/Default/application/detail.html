@@ -14,7 +14,7 @@
             <section ng-include="'application/installation.html'">
             </section>
         </tab>
-        <tab heading="Stats" ng-if="STRIPE_ENABLED && (user.id == ctrl.application.owner.id || ctrl.application.demo)">
+        <tab heading="Stats" ng-if="STRIPE_ENABLED && (user.id == ctrl.application.owner.id || ctrl.application.demo) && ctrl.loginMethod === 'github'">
             <section ng-include="'application/stats.html'">
             </section>
         </tab>

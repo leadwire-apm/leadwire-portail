@@ -24,6 +24,12 @@
     ) {
         var vm = this;
 
+        vm.loginMethod = CONFIG.LOGIN_METHOD;
+        vm.ownerTitle = "Owner Github :"
+        if(vm.loginMethod === 'proxy' || vm.loginMethod === 'login'){
+            vm.ownerTitle = "Owner Login Id :"
+        }
+
         vm.getApp = function () {
             ApplicationFactory.get($stateParams.id)
                 .then(function (res) {
