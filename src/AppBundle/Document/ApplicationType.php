@@ -190,8 +190,18 @@ class ApplicationType
      *
      * @return boolean
      */
-    public function isWellDefined()
+    public function isWellDefined(): bool
     {
         return count($this->templates) === self::TEMPLATES_COUNT;
+    }
+
+    /**
+     * @JMS\VirtualProperty()
+     *
+     * @return boolean
+     */
+    public function canInit(): bool
+    {
+        return count($this->templates) === 0;
     }
 }
