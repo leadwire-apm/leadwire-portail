@@ -10,11 +10,11 @@
                      ng-include="'application/listInvitations.html'">
             </section>
         </tab>
-        <tab heading="Installation" ng-if="user.id == ctrl.application.owner.id">
+        <tab heading="Installation" ng-if="user.id == ctrl.application.owner.id  && ctrl.COMPAGNE_ENABLED === false">
             <section ng-include="'application/installation.html'">
             </section>
         </tab>
-        <tab heading="Stats" ng-if="STRIPE_ENABLED && (user.id == ctrl.application.owner.id || ctrl.application.demo) && ctrl.COMPAGNE_ENABLED === false">
+        <tab heading="Stats" ng-if="STRIPE_ENABLED && (user.id == ctrl.application.owner.id || ctrl.application.demo)">
             <section ng-include="'application/stats.html'">
             </section>
         </tab>
