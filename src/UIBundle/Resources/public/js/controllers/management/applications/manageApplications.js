@@ -4,6 +4,7 @@
             'ApplicationService',
             'toastr',
             'MESSAGES_CONSTANTS',
+            'CONFIG',
             ManageApplicationsCtrlFN,
         ]);
 
@@ -15,8 +16,16 @@
         ApplicationService,
         toastr,
         MESSAGES_CONSTANTS,
+        CONFIG,
     ) {
         var vm = this;
+
+        vm.loginMethod = CONFIG.LOGIN_METHOD;
+        vm.ownerTitle = "Owner Github :"
+
+        if(vm.loginMethod === 'proxy' || vm.loginMethod === 'login'){
+            vm.ownerTitle = "Owner Login Id :"
+        }
 
         vm.flipActivityIndicator = function (key) {
             vm.ui[key] = !vm.ui[key];
