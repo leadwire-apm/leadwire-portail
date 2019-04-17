@@ -9,7 +9,7 @@
             '$modal',
             'FileService',
             'CONFIG',
-            "MenuFactory",
+            'MenuFactory',
             UserServiceFN,
         ]);
 
