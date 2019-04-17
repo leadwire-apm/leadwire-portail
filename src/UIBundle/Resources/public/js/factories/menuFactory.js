@@ -43,7 +43,6 @@
                                     menus.push(
                                         {
                                             route:  '#/tmec/list',
-                                            abstractRoute: 'app.campagne',
                                             icon: 'fa fa-table',
                                             label: 'Manage Campaigns',
                                         },
