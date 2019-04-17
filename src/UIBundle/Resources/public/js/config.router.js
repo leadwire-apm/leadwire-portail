@@ -506,7 +506,7 @@ angular.module('leadwireApp')
                     controllerAs: 'ctrl',
                 })
 
-                .state('app.campagne.tmecs', {
+                .state('app.management.tmecs', {
                     url: '/tmec/list',
                     templateUrl: 'tmec/list.html',
                     resolve: {
@@ -519,7 +519,7 @@ angular.module('leadwireApp')
                     controllerAs: 'ctrl',
                 })
 
-                .state('app.campagne.addTmecs', {
+                .state('app.management.addTmecs', {
                     url: '/tmec/add',
                     templateUrl: 'tmec/add.html',
                     resolve: {
@@ -532,7 +532,7 @@ angular.module('leadwireApp')
                     controllerAs: 'ctrl',
                 })
 
-                .state('app.campagne.editTmecs', {
+                .state('app.management.editTmecs', {
                     url: '/tmec/edit/:id',
                     templateUrl: 'tmec/edit.html',
                     resolve: {
