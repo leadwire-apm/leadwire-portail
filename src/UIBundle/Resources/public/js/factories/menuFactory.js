@@ -42,7 +42,7 @@
                                 if (UserService.isAdmin($localStorage.user)) {
                                     menus.push(
                                         {
-                                            route:  $state.href('app.campagne.tmecs'),
+                                            route:  '#/tmec/list',
                                             abstractRoute: 'app.campagne',
                                             icon: 'fa fa-table',
                                             label: 'Manage Campaigns',
