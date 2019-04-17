@@ -16,7 +16,7 @@
         </div>
     </div>
     <div class="login-footer">
-        <div class="container" style="display: flex;justify-content: space-around" ng-if="ctrl.COMPAGNE_ENABLED === false">
+        <div class="container" style="display: flex;justify-content: space-around" ng-if="ctrl.loginMethod === 'github'">
             <a ui-sref="static.aboutUs" target="_blank" class="btn btn-link btn-sm">About</a>
             <a ui-sref="static.help" target="_blank" class="btn btn-link btn-sm">Help</a>
             <a ui-sref="static.termsOfService" target="_blank" class="btn btn-link btn-sm">Terms of service</a>

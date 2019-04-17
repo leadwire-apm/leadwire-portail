@@ -124,13 +124,13 @@
         <span class="pull-left">[[user.fname]] </span>
       </a>
       <ul class="dropdown-menu">
-        <li ng-if="COMPAGNE_ENABLED === false">
+        <li ng-if="LOGIN_METHOD === 'github'">
           <a ui-sref="app.user">Settings</a>
         </li>
-        <li ng-if="COMPAGNE_ENABLED === false"> 
+        <li ng-if="LOGIN_METHOD === 'github'"> 
           <a ui-sref="app.updateSubscription({action:'upgrade'})">Upgrade</a>
         </li>
-        <li ng-if="COMPAGNE_ENABLED === false">
+        <li ng-if="LOGIN_METHOD === 'github'">
           <a href="javascript:;">Help</a>
         </li>
         <li>

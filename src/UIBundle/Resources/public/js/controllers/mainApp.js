@@ -34,8 +34,8 @@
         CONFIG,
     ) {
         onLoad();
-
         $scope.COMPAGNE_ENABLED = CONFIG.COMPAGNE_ENABLED;
+        $scope.LOGIN_METHOD     = CONFIG.LOGIN_METHOD;
 
         $scope.$on('user:updated', function (event, data) {
             $rootScope.user = data;
@@ -164,7 +164,7 @@
                 author: 'Nyasha',
                 version: CONFIG.APP_VERSION,
                 year: new Date().getFullYear(),
-                COMPAGNE_ENABLED: CONFIG.COMPAGNE_ENABLED,
+                LOGIN_METHOD: CONFIG.LOGIN_METHOD,
                 layout: {
                     isSmallSidebar: false,
                     isChatOpen: false,
