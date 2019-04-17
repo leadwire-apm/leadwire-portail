@@ -23,35 +23,35 @@
                         label: 'Manage plans',
                     });
                 }
-
-                if(CONFIG.COMPAGNE_ENABLED === true){
-                    if (UserService.isAdmin($localStorage.user)) {
-                        Menus.CAMPAGNE.push(
-                            {
-                                route: 'app.management.tmecs',
-                                abstractRoute: 'app.management',
-                                icon: 'fa fa-table',
-                                label: 'Manage Campaigns',
-                            },
-                        );
-                    } else {
-                        Menus.CAMPAGNE.push(
-                            {
-                                route: 'app.tmecs',
-                                icon: 'fa fa-table',
-                                label: 'Campaigns',
-                            }
-                        )
-                    }
-                   Menus.CAMPAGNE.push({
-                        url: CONFIG.JENKINS_URL,
-                        icon: 'fa fa-play-circle',
-                        label: 'Launch',
-                        external:true
-                    })
-                }
-
                 return {
+                    update : function(){
+                        if(CONFIG.COMPAGNE_ENABLED === true){
+                            if (UserService.isAdmin($localStorage.user)) {
+                                Menus.CAMPAGNE.push(
+                                    {
+                                        route: 'app.management.tmecs',
+                                        abstractRoute: 'app.management',
+                                        icon: 'fa fa-table',
+                                        label: 'Manage Campaigns',
+                                    },
+                                );
+                            } else {
+                                Menus.CAMPAGNE.push(
+                                    {
+                                        route: 'app.tmecs',
+                                        icon: 'fa fa-table',
+                                        label: 'Campaigns',
+                                    }
+                                )
+                            }
+                           Menus.CAMPAGNE.push({
+                                url: CONFIG.JENKINS_URL,
+                                icon: 'fa fa-play-circle',
+                                label: 'Launch',
+                                external:true
+                            })
+                        }
+                    },
                     get: function (menuKey) {
                         var menus = [];
                         if (menuKey in Menus) {
