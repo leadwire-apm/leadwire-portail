@@ -29,7 +29,8 @@ function LoginControllerFN(
   ApplicationFactory,
   $rootScope,
   $state,
-  CONFIG
+  CONFIG,
+  MenuFactory,
 ) {
   var vm = this;
   vm.invitationId =
@@ -165,6 +166,9 @@ function LoginControllerFN(
   function onLoad() {
     if ($auth.isAuthenticated()) {
       if ($localStorage.user) {
+
+        MenuFactory.update();
+        
         if (vm.invitationId !== undefined) {
           InvitationService.acceptInvitation(
             vm.invitationId,
@@ -208,6 +212,7 @@ function LoginControllerFN(
       "$rootScope",
       "$state",
       "CONFIG",
+      "MenuFactory",
       LoginControllerFN
     ]);
 })(window.angular);
