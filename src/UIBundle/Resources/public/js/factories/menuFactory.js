@@ -23,6 +23,18 @@
                         label: 'Manage plans',
                     });
                 }
+
+                if(CONFIG.LOGIN_METHOD === 'github'){
+                    Menus.MANAGEMENT.push(
+                        {
+                            route: 'app.management.codes',
+                            abstractRoute: 'app.management',
+                            icon: 'fa fa-qrcode',
+                            label: 'Activation codes',
+                        }
+                    )
+                }
+
                 return {
                     update : function(){
 
@@ -161,12 +173,6 @@
                     abstractRoute: 'app.management',
                     icon: 'fa fa-file-alt',
                     label: 'Manage templates',
-                },
-                {
-                    route: 'app.management.codes',
-                    abstractRoute: 'app.management',
-                    icon: 'fa fa-qrcode',
-                    label: 'Activation codes',
                 },
             ],
         });

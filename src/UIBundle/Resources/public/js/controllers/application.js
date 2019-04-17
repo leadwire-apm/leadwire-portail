@@ -8,6 +8,7 @@
         '$localStorage',
         'Paginator',
         '$modal',
+        'CONFIG',
         applicationListCtrlFN,
     ]);
 
@@ -20,8 +21,11 @@
         $localStorage,
         Paginator,
         $modal,
+        CONFIG,
     ) {
         var vm = this;
+
+        vm.LOGIN_METHOD      = CONFIG.LOGIN_METHOD;
 
         function getApps () {
             // get all
