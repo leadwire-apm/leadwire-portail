@@ -9,6 +9,7 @@
             '$modal',
             'FileService',
             'CONFIG',
+            "MenuFactory",
             UserServiceFN,
         ]);
 
@@ -21,6 +22,7 @@
         $modal,
         FileService,
         CONFIG,
+        MenuFactory,
     ) {
         var service = this;
         var sep = '###';
@@ -62,6 +64,7 @@
 
                             userInfo.avatar = response.data.avatar;
                             $localStorage.user = userInfo;
+                            MenuFactory.update();
                             $rootScope.$broadcast('user:updated', userInfo);
                             resolve($localStorage.user);
                         })
