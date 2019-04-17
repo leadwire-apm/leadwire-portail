@@ -5,7 +5,9 @@
             'Menus',
             '$state',
             'CONFIG',
-            function (Menus, $state, CONFIG) {
+            'UserService',
+            '$localStorage',
+            function (Menus, $state, CONFIG, UserService, $localStorage) {
 
                 if(CONFIG.STRIPE_ENABLED === true){
                     Menus.SETTINGS.push({
@@ -23,16 +25,25 @@
                 }
 
                 if(CONFIG.COMPAGNE_ENABLED === true){
-                    Menus.MANAGEMENT.push(
-                        {
-                            route: 'app.management.tmecs',
-                            abstractRoute: 'app.management',
-                            icon: 'fa fa-table',
-                            label: 'Manage Campaigns',
-                        },
-                    );
-
-                   Menus.CAMPAGNE.push(                {
+                    if (UserService.isAdmin($localStorage.user)) {
+                        Menus.CAMPAGNE.push(
+                            {
+                                route: 'app.management.tmecs',
+                                abstractRoute: 'app.management',
+                                icon: 'fa fa-table',
+                                label: 'Manage Campaigns',
+                            },
+                        );
+                    } else {
+                        Menus.CAMPAGNE.push(
+                            {
+                                route: 'app.tmecs',
+                                icon: 'fa fa-table',
+                                label: 'Campaigns',
+                            }
+                        )
+                    }
+                   Menus.CAMPAGNE.push({
                         url: CONFIG.JENKINS_URL,
                         icon: 'fa fa-play-circle',
                         label: 'Launch',
@@ -101,11 +112,6 @@
                     route: 'app.overview',
                     icon: 'fa fa-paper-plane',
                     label: 'Overview',
-                },
-                {
-                    route: 'app.tmecs',
-                    icon: 'fa fa-table',
-                    label: 'Campaigns',
                 }
             ],
             DASHBOARD: [],

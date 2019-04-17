@@ -513,7 +513,7 @@ angular.module('leadwireApp')
                         permissions: function (RouteGuard) {
                             return RouteGuard.adminRequired();
                         },
-                        menu: updateMenuItems(MenuEnum.MANAGEMENT),
+                        menu: updateMenuItems(MenuEnum.CAMPAGNE),
                     },
                     controller: 'ListCompagnesController',
                     controllerAs: 'ctrl',
@@ -526,7 +526,7 @@ angular.module('leadwireApp')
                         permissions: function (RouteGuard) {
                             return RouteGuard.adminRequired();
                         },
-                        menu: updateMenuItems(MenuEnum.MANAGEMENT),
+                        menu: updateMenuItems(MenuEnum.CAMPAGNE),
                     },
                     controller: 'AddCompagnesController',
                     controllerAs: 'ctrl',
@@ -539,7 +539,7 @@ angular.module('leadwireApp')
                         permissions: function (RouteGuard) {
                             return RouteGuard.adminRequired();
                         },
-                        menu: updateMenuItems(MenuEnum.MANAGEMENT),
+                        menu: updateMenuItems(MenuEnum.CAMPAGNE),
                     },
                     controller: 'EditCompagnesController',
                     controllerAs: 'ctrl',
