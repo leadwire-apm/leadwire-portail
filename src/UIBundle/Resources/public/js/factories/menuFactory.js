@@ -37,13 +37,13 @@
                             });
                         }
                         if(menuKey === "CAMPAGNE"){
-                            
+
                             if(CONFIG.COMPAGNE_ENABLED === true){
                                 if (UserService.isAdmin($localStorage.user)) {
                                     menus.push(
                                         {
-                                            route: 'app.management.tmecs',
-                                            abstractRoute: 'app.management',
+                                            route:  $state.href('app.campagne.tmecs'),
+                                            abstractRoute: 'app.campagne',
                                             icon: 'fa fa-table',
                                             label: 'Manage Campaigns',
                                         },
@@ -51,7 +51,7 @@
                                 } else {
                                     menus.push(
                                         {
-                                            route: 'app.tmecs',
+                                            route:  $state.href('app.tmecs'),
                                             icon: 'fa fa-table',
                                             label: 'Campaigns',
                                         }
