@@ -44,7 +44,6 @@
             if (vm.stepProgress < vm.compagne.steps.length) {
                 vm.stepProgress++;
                 vm.current = vm.compagne.steps[vm.stepProgress];
-                }
             }
         }
 
