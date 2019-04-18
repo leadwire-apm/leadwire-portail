@@ -41,10 +41,10 @@
                                     [[compagne.version]]
                                 </td>
 
-                                <td data-title="version" data-label="version">
+                                <td data-title="version" class="flex" data-label="version">
                                     <div class="tooltips" ng-repeat="step in compagne.steps">
                                         <span class="stepsSpan" ng-class="ctrl.getClass(step)">[[step.label]]</span>
-                                        <div class="tooltipstext">[[step.comment]]</div>
+                                        <div class="tooltipstext" ng-if="step.comment.length > 1">[[step.comment]]</div>
                                     </div>
                                 </td>
 
