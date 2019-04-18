@@ -11,7 +11,7 @@
                             <ul role="tablist">
     
                                 <li role="tab"
-                                    ng-class="{'first': ($index == 0), 'last': ($index == ctrl.compagne.steps.length - 1), 'completed': (step.completed), 'current': (step.current)}"
+                                    ng-class="{'first': ($index == 0), 'last': ($index == ctrl.compagne.steps.length - 1), 'completed': (step.completed), 'current': (step.current), 'inProgress': ( ctrl.current.order === $index)}"
                                     ng-repeat="step in ctrl.compagne.steps">
                                     <a ng-click="ctrl.goToStep(step.order)">
                                         <div class="title">
@@ -38,9 +38,22 @@
     
                                     <div class="form-row">
                                         <div class="form-flex">
-                                            <div class="form-group">
-                                                <label class="form-label">waiting for informations : </label>
-                                                <input class="stepCheckbox" type="checkbox" ng-model="ctrl.current.waiting">
+                                            <div class="form-group">                                                
+                                                <div class="btn-group" data-toggle="buttons" id="modelselect">
+
+                                                    <label class="btn btn-primary rad">
+                                                        <input type="radio" name="options" id="option1" value="waiting"  ng-model="ctrl.current.waiting" /> Option 1
+                                                    </label>
+
+                                                    <label class="btn btn-primary rad">
+                                                        <input type="radio" name="options" id="option2" value="Current"  ng-model="ctrl.current.current" /> Option 2
+                                                    </label>
+
+                                                    <label class="btn btn-primary rad">
+                                                        <input type="radio" name="options" id="option2" value="Completed"  ng-model="ctrl.current.completed"/> Option 3
+                                                    </label>
+                                                </div>
+
                                             </div>
                                         </div>
                                     </div>

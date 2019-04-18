@@ -41,33 +41,17 @@
         }
 
         vm.next = function () {
-
-            /*if( vm.current.waiting === true){
-                toastr.error(MESSAGES_CONSTANTS.GO_NEXT_STEP);
-                return;
-            }*/
-
             if (vm.stepProgress < vm.compagne.steps.length) {
-                vm.compagne.steps[vm.stepProgress].completed = true;
-                vm.compagne.steps[vm.stepProgress].current = false;
                 vm.stepProgress++;
                 vm.current = vm.compagne.steps[vm.stepProgress];
-
-                if(vm.stepProgress + 1 <= 10){
-                    vm.compagne.steps[vm.stepProgress].current = true;
                 }
             }
         }
 
         vm.previous = function () {
             if (vm.stepProgress > 0) {
-                vm.compagne.steps[vm.stepProgress].completed = false;
                 vm.stepProgress--;
-                vm.compagne.steps[vm.stepProgress].current = true;
                 vm.current = vm.compagne.steps[vm.stepProgress];
-
-                if(vm.stepProgress + 1 < 10)
-                vm.compagne.steps[vm.stepProgress+1].current = false;
             }
         }
 
