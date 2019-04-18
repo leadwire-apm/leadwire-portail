@@ -70,6 +70,16 @@
             }
         }
 
+        vm.getCssStyle = function(){
+            if(vm.current.completed){
+                return 'completed';
+            } else if(vm.current.waiting){
+                return 'waiting'
+            } else if (vm.current.current){
+                return 'current';
+            }
+        }
+
         vm.finished = function () {
             if(vm.completed === true){
                 swal(MESSAGES_CONSTANTS.COMPAGNE_VALIDATE)
