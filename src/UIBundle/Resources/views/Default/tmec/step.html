@@ -41,17 +41,21 @@
                                             <div class="form-group">                                                
                                                 <div class="btn-group" data-toggle="buttons" id="modelselect">
 
-                                                    <label class="btn btn-primary rad">
-                                                        <input type="radio" name="waiting" id="option1" ng-model="ctrl.current.waiting" /> waiting
-                                                    </label>
+                                                    <div class="form-group">
+                                                        <label class="form-label">Waiting for informations : </label>
+                                                        <input class="stepCheckbox" type="checkbox" ng-model="ctrl.current.waiting" ng-click="ctrl.updateSelection('waiting')">
+                                                    </div>
 
-                                                    <label class="btn btn-primary rad">
-                                                        <input type="radio" name="Current" id="option2" ng-model="ctrl.current.current" /> Current
-                                                    </label>
+                                                    <div class="form-group">
+                                                        <label class="form-label">Completed : </label>
+                                                        <input class="stepCheckbox" type="checkbox" ng-model="ctrl.current.completed" ng-click="ctrl.updateSelection('completed')>
+                                                    </div>
 
-                                                    <label class="btn btn-primary rad">
-                                                        <input type="radio" name="Completed" id="option2" ng-model="ctrl.current.completed"/> Completed
-                                                    </label>
+                                                    <div class="form-group">
+                                                        <label class="form-label">Current : </label>
+                                                        <input class="stepCheckbox" type="checkbox" ng-model="ctrl.current.current" ng-click="ctrl.updateSelection('current')>
+                                                    </div>
+
                                                 </div>
 
                                             </div>

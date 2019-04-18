@@ -54,6 +54,22 @@
             }
         }
 
+        vm.updateSelection = function (type) {
+            if(type === "waiting"){
+                vm.current.waiting = true;
+                vm.current.completed = false;
+                vm.current.current = false;
+            } else if(type === "completed"){
+                vm.current.waiting = false;
+                vm.current.completed = true;
+                vm.current.current = false;
+            }else if( type === "current"){
+                vm.current.waiting = false;
+                vm.current.completed = false;
+                vm.current.current = true;
+            }
+        }
+
         vm.finished = function () {
             if(vm.completed === true){
                 swal(MESSAGES_CONSTANTS.COMPAGNE_VALIDATE)
