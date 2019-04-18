@@ -11,7 +11,7 @@
                             <ul role="tablist">
     
                                 <li role="tab"
-                                    ng-class="{'first': ($index == 0), 'last': ($index == ctrl.compagne.steps.length - 1), 'completed': (step.completed), 'waiting': (step.waiting), 'selected': ( ctrl.current.order-1 === $index)}"
+                                    ng-class="{'first': ($index == 0), 'last': ($index == ctrl.compagne.steps.length - 1), 'completed': (step.completed), 'current': (step.current), 'waiting': (step.waiting), 'selected': ( ctrl.current.order-1 === $index)}"
                                     ng-repeat="step in ctrl.compagne.steps">
                                     <a ng-click="ctrl.goToStep(step.order)">
                                         <div class="title">
