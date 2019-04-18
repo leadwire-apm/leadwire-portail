@@ -1,8 +1,8 @@
-.tooltip {
+.tooltips {
   position: relative;
 }
 
-.tooltip .tooltiptext {
+.tooltips .tooltipstext {
   visibility: hidden;
   width: 200px;
   background-color: black;
@@ -19,7 +19,7 @@
   margin-left: -60px;
 }
 
-.tooltip:hover .tooltiptext {
+.tooltips:hover .tooltipstext {
   visibility: visible;
 }
 
