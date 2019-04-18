@@ -31,7 +31,7 @@
 <div class="form-group">
     <label class="col-sm-2 control-label">Start Date *</label>
     <div class="col-sm-10">
-        <input type="date" name="startDate" class="form-control" data-ng-model="ctrl.compagne.startDate" my-date-picker required>
+        <input type="text" name="startDate" class="form-control" data-ng-model="ctrl.compagne.startDate" my-date-picker required>
         <span class="text-red" ng-show="compagneForm.startDate.$error.required && !compagneForm.startDate.$pristine">
             This field is required</span>
 
@@ -41,11 +41,9 @@
 <div class="form-group">
     <label class="col-sm-2 control-label">End Date *</label>
     <div class="col-sm-10">
-        <input type="date" name="endDate" class="form-control" data-ng-model="ctrl.compagne.endDate" my-date-pickerrequired>
+        <input type="text" name="endDate" class="form-control" data-ng-model="ctrl.compagne.endDate" my-date-picker required>
         <span class="text-red" ng-show="compagneForm.endDate.$error.required && !compagneForm.endDate.$pristine">
             This field is required</span>
 
     </div>
 </div>
-
-<input type="text" class="form-control" ng-model="date" my-date-picker />
