@@ -240,7 +240,7 @@ display-flex, .form-flex, .form-date-group, .steps ul, .title, .title .step-numb
   }
 
   .current .title .step-number {
-  background: #4966b1;
+  background: #4966b1 !important;
   color: #fff;
   }
   .current .title .step-text {
