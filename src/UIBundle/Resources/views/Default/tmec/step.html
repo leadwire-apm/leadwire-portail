@@ -11,7 +11,7 @@
                             <ul role="tablist">
     
                                 <li role="tab"
-                                    ng-class="{'first': ($index == 0), 'last': ($index == ctrl.compagne.steps.length - 1), 'completed': (step.completed), 'current': (step.current), 'inProgress': ( ctrl.current.order === $index)}"
+                                    ng-class="{'first': ($index == 0), 'last': ($index == ctrl.compagne.steps.length - 1), 'completed': (step.completed), 'current': (step.current), 'inProgress': ( ctrl.current.order-1 === $index)}"
                                     ng-repeat="step in ctrl.compagne.steps">
                                     <a ng-click="ctrl.goToStep(step.order)">
                                         <div class="title">
@@ -42,15 +42,15 @@
                                                 <div class="btn-group" data-toggle="buttons" id="modelselect">
 
                                                     <label class="btn btn-primary rad">
-                                                        <input type="radio" name="options" id="option1" value="waiting"  ng-model="ctrl.current.waiting" /> Option 1
+                                                        <input type="radio" name="waiting" id="option1" ng-model="ctrl.current.waiting" /> waiting
                                                     </label>
 
                                                     <label class="btn btn-primary rad">
-                                                        <input type="radio" name="options" id="option2" value="Current"  ng-model="ctrl.current.current" /> Option 2
+                                                        <input type="radio" name="Current" id="option2" ng-model="ctrl.current.current" /> Current
                                                     </label>
 
                                                     <label class="btn btn-primary rad">
-                                                        <input type="radio" name="options" id="option2" value="Completed"  ng-model="ctrl.current.completed"/> Option 3
+                                                        <input type="radio" name="Completed" id="option2" ng-model="ctrl.current.completed"/> Completed
                                                     </label>
                                                 </div>
 
