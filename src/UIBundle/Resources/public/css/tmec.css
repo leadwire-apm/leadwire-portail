@@ -256,11 +256,11 @@ display-flex, .form-flex, .form-date-group, .steps ul, .title, .title .step-numb
   }
 
   .selected .title .step-number {
-    background: #9999 !important;
+    background: #9999;
     color: #fff;
   }
   .selected .title .step-text {
-    color: #9999 !important;
+    color: #9999;
   }
 
   .content h3 {
