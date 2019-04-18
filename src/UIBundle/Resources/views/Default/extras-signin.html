@@ -5,13 +5,21 @@
             <div class="brand-logo text-center" style="margin-top: 20px">
                 <img data-ng-src="/images/logo01 ft.png" height="60" alt="">
             </div>
+
             <div class="panel-body text-center mt20">
                 <button id="github-button" style="font-size: larger" class="btn btn-block btn-social btn-github"
-                        ng-click="ctrl.authenticate('github')">
+                  ng-click="ctrl.authenticate()">
                     <spinner is-loading="ctrl.isChecking"></spinner>
-                    <i ng-if="!ctrl.isChecking" class="fab fa-github"></i> <span>Sign in with GitHub</span>
+                   
+                    <i ng-if="!ctrl.isChecking && ctrl.loginMethod === 'github'" class="fa fa-github"></i>
+                     <span ng-if="ctrl.loginMethod === 'github">Sign in with GitHub</span>
+                   
+                     <i ng-if="!ctrl.isChecking  && ctrl.loginMethod === 'login'" class="fa fa-user-circle"></i> 
+                    <span ng-if="ctrl.loginMethod === 'login'">Sign in</span>
+                    
+                    <i ng-if="!ctrl.isChecking && ctrl.loginMethod === 'proxy'" class="fa fa-server"></i>
+                    <span ng-if="ctrl.loginMethod === 'proxy'">Sign in with Proxy</span>
                 </button>
-
             </div>
         </div>
     </div>
