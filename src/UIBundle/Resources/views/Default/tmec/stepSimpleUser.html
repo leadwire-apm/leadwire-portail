@@ -11,7 +11,7 @@
                         <ul role="tablist">
 
                             <li role="tab"
-                                ng-class="{'first': ($index == 0), 'last': ($index == ctrl.stepData.length - 1), 'current': (step.current), 'completed': ( step.completed), 'inProgress': ( ctrl.max === $index)}"
+                            ng-class="{'first': ($index == 0), 'last': ($index == ctrl.compagne.steps.length - 1), 'completed': (step.completed), 'current': (step.current), 'waiting': (step.waiting), 'selected': ( ctrl.current.order-1 === $index)}"
                                 ng-repeat="step in ctrl.stepData">
                                 <a ng-click="ctrl.goToStep(step.order)">
                                     <div class="title">
@@ -41,6 +41,16 @@
                                         <div class="form-group">
                                             <label class="form-label">waiting for informations : </label>
                                             <input class="stepCheckbox" type="checkbox" ng-model="ctrl.current.waiting" disabled="true">
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="form-label">Completed : </label>
+                                            <input class="stepCheckbox" type="checkbox" ng-model="ctrl.current.completed" disabled="true" >
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="form-label">Current : </label>
+                                            <input class="stepCheckbox" type="checkbox" ng-model="ctrl.current.current" disabled="true">
                                         </div>
                                     </div>
                                 </div>
