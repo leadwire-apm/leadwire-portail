@@ -1,3 +1,28 @@
+.tooltip {
+  position: relative;
+}
+
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 200px;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0;
+  
+  /* Position the tooltip */
+  position: absolute;
+  z-index: 1;
+  bottom: 100%;
+  left: 50%;
+  margin-left: -60px;
+}
+
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+}
+
 /* @extend display-flex; */
 display-flex, .form-flex, .form-date-group, .steps ul, .title, .title .step-number, .actions ul li a, .form-radio-flex, .form-find {
     display: flex;
@@ -290,3 +315,5 @@ display-flex, .form-flex, .form-date-group, .steps ul, .title, .title .step-numb
         width: 24px;
         height: 24px;
       }
+
+
