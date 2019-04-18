@@ -230,12 +230,12 @@ display-flex, .form-flex, .form-date-group, .steps ul, .title, .title .step-numb
     font-weight: bold;
     color: #999;
     }
-    .inProgress .title .step-number {
+    .waiting .title .step-number {
         background: #DAA520;
         color: #fff;
     }
 
-    .inProgress .title .step-text {
+    .waiting .title .step-text {
         color: #DAA520;
     }
 
@@ -253,6 +253,14 @@ display-flex, .form-flex, .form-date-group, .steps ul, .title, .title .step-numb
     }
     .completed .title .step-text {
     color: #1AF13E;
+    }
+
+    .selected .title .step-number {
+      background: #1AF13E;
+      color: #fff;
+    }
+    .selected .title .step-text {
+      color: #1AF13E;
     }
 
     .content h3 {
