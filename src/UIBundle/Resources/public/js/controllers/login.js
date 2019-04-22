@@ -29,7 +29,7 @@ function LoginControllerFN(
   ApplicationFactory,
   $rootScope,
   $state,
-  CONFIG
+  CONFIG,
 ) {
   var vm = this;
   vm.invitationId =
@@ -40,8 +40,9 @@ function LoginControllerFN(
 
   vm.authenticate = authenticate;
 
-  vm.loginMethod = CONFIG.LOGIN_METHOD;
-
+  vm.loginMethod      = CONFIG.LOGIN_METHOD;
+  vm.COMPAGNE_ENABLED = CONFIG.COMPAGNE_ENABLED;
+  
   if (vm.loginMethod === "proxy") {
     proxyAuthenticate(vm.loginMethod);
   }
@@ -164,6 +165,7 @@ function LoginControllerFN(
   function onLoad() {
     if ($auth.isAuthenticated()) {
       if ($localStorage.user) {
+
         if (vm.invitationId !== undefined) {
           InvitationService.acceptInvitation(
             vm.invitationId,

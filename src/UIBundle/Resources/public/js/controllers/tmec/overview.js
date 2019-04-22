@@ -50,8 +50,12 @@
 
             var label = "label label-danger";
 
-            if (step.current  || step.completed) {
+            if (step.completed) {
                 label = "label label-success";
+            }
+
+            if (step.current) {
+                label = "label label-primary";
             }
 
             if (step.waiting) {

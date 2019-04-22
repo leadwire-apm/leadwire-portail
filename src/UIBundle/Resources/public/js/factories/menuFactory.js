@@ -5,7 +5,9 @@
             'Menus',
             '$state',
             'CONFIG',
-            function (Menus, $state, CONFIG) {
+            'UserService',
+            '$localStorage',
+            function (Menus, $state, CONFIG, UserService, $localStorage) {
 
                 if(CONFIG.STRIPE_ENABLED === true){
                     Menus.SETTINGS.push({
@@ -22,25 +24,21 @@
                     });
                 }
 
-                if(CONFIG.COMPAGNE_ENABLED === true){
+                if(CONFIG.LOGIN_METHOD === 'github'){
                     Menus.MANAGEMENT.push(
                         {
-                            route: 'app.management.tmecs',
+                            route: 'app.management.codes',
                             abstractRoute: 'app.management',
-                            icon: 'fa fa-table',
-                            label: 'Manage Campaigns',
-                        },
-                    );
-
-                   Menus.CAMPAGNE.push(                {
-                        url: CONFIG.JENKINS_URL,
-                        icon: 'fa fa-play-circle',
-                        label: 'Launch',
-                        external:true
-                    })
+                            icon: 'fa fa-qrcode',
+                            label: 'Activation codes',
+                        }
+                    )
                 }
 
                 return {
+                    update : function(){
+
+                    },
                     get: function (menuKey) {
                         var menus = [];
                         if (menuKey in Menus) {
@@ -49,6 +47,35 @@
                                     route: $state.href(menu.route),
                                 });
                             });
+                        }
+                        if(menuKey === "CAMPAGNE"){
+
+                            if(CONFIG.COMPAGNE_ENABLED === true){
+                                if (UserService.isAdmin($localStorage.user)) {
+                                    menus.push(
+                                        {
+                                            route:  $state.href('app.management.tmecs'),
+                                            abstractRoute: 'app.management',
+                                            icon: 'fa fa-table',
+                                            label: 'Manage Campaigns',
+                                        },
+                                    );
+                                } else {
+                                    menus.push(
+                                        {
+                                            route:  $state.href('app.tmecs'),
+                                            icon: 'fa fa-table',
+                                            label: 'Campaigns',
+                                        }
+                                    )
+                                }
+                                menus.push({
+                                    url: CONFIG.JENKINS_URL,
+                                    icon: 'fa fa-play-circle',
+                                    label: 'Launch',
+                                    external:true
+                                })
+                            }
                         }
                         return menus;
                     },
@@ -106,11 +133,6 @@
                     route: 'app.overview',
                     icon: 'fa fa-paper-plane',
                     label: 'Overview',
-                },
-                {
-                    route: 'app.tmecs',
-                    icon: 'fa fa-table',
-                    label: 'Campaigns',
                 }
             ],
             DASHBOARD: [],
@@ -156,12 +178,6 @@
                     abstractRoute: 'app.management',
                     icon: 'fa fa-file-alt',
                     label: 'Manage templates',
-                },
-                {
-                    route: 'app.management.codes',
-                    abstractRoute: 'app.management',
-                    icon: 'fa fa-qrcode',
-                    label: 'Activation codes',
                 },
             ],
         });

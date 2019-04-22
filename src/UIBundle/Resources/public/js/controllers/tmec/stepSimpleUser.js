@@ -41,28 +41,16 @@
 
         vm.next = function () {
 
-            if( vm.current.waiting === true){
-                toastr.error(MESSAGES_CONSTANTS.GO_NEXT_STEP);
-                return;
-            }
-
-            if (vm.stepProgress < vm.stepData.length) {
-                vm.stepData[vm.stepProgress].current = false;
+            if (vm.stepProgress < vm.max) {
                 vm.stepProgress++;
                 vm.current = vm.stepData[vm.stepProgress];
-                if(vm.stepProgress + 1 <= 10)
-                vm.stepData[vm.stepProgress].current = true;
             }
         }
 
         vm.previous = function () {
             if (vm.stepProgress > 0) {
                 vm.stepProgress--;
-                vm.stepData[vm.stepProgress].current = true;
                 vm.current = vm.stepData[vm.stepProgress];
-
-                if(vm.stepProgress + 1 < 10)
-                vm.stepData[vm.stepProgress+1].current = false;
             }
         }
 
