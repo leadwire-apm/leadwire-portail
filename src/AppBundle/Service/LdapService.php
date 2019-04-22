@@ -139,8 +139,6 @@ class LdapService
      */
     protected function saveEntry(Entry $entry)
     {
-        // TODO Change this to query then add instead of catching exception
-
         try {
             $this->entryManager->add($entry);
 

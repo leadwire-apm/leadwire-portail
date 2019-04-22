@@ -59,31 +59,35 @@
                         iconCallback,
                     ) {
                         try {
-                            newMenus = ['APM', 'Metricbeat System'];
+                            newMenus = Object.keys(menus);
 
-                            apm = menus['APM'].map(function (menu) {
-                                return {
-                                    label: labelCallback(menu),
-                                    route: routeCallback(menu),
-                                    icon: iconCallback(menu),
-                                };
-                            });
+                            newMenus.forEach(function(theme) {
+                                sub = menus[theme].map(function (menu) {
+                                    return {
+                                        label: labelCallback(menu),
+                                        route: routeCallback(menu),
+                                        icon: iconCallback(menu),
+                                    };
+                                });
 
-                            infra = menus['Metricbeat System'].map(function (menu) {
-                                return {
-                                    label: labelCallback(menu),
-                                    route: routeCallback(menu),
-                                    icon: iconCallback(menu),
-                                };
-                            });
+                                newMenus[theme] = sub;
+                            })
 
-                            newMenus['APM'] = apm;
-                            newMenus['Metricbeat System'] = infra;
+
+                            // infra = menus['Metricbeat System'].map(function (menu) {
+                            //     return {
+                            //         label: labelCallback(menu),
+                            //         route: routeCallback(menu),
+                            //         icon: iconCallback(menu),
+                            //     };
+                            // });
+
+
+                            // newMenus['Metricbeat System'] = infra;
 
                             return newMenus;
                         }
                         catch (e) {
-                            console.log(e);
                             return [];
                         }
                     },

@@ -61,14 +61,14 @@
                                    data-toggle="tooltip"
                                    ng-click="ctrl.enableApp(app)"
                                 >
-                                    <i class="fa fa-key"></i>
+                                    <i class="fas fa-key"></i>
                                 </a>
                                 <a class="btn btn-warning"
                                    ng-if="app.enabled && app.owner.id == user.id"
                                    title="Edit application"
                                    data-placement="left"
                                    data-toggle="tooltip"
-                                   ui-sref="app.applicationEdit({id:app.id})"><i class="fa fa-pencil-alt"></i></a>
+                                   ui-sref="app.applicationEdit({id:app.id})"><i class="fas fa-pencil-alt"></i></a>
                                 <button class="btn btn-danger"
                                         ng-if="app.owner.id == user.id"
                                         title="Delete application"

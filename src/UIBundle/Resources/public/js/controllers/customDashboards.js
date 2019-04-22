@@ -26,8 +26,8 @@
 
         vm.loadThemeList = function(dashboards) {
             var customDashboards = dashboards || $localStorage.customMenus.list;
-            vm.selectedAppUuid = $localStorage.selectedApp.uuid;
-            vm.currentUserUuid = $localStorage.user.uuid;
+            vm.selectedApp = $localStorage.selectedApp;
+            vm.currentUser = $localStorage.user;
             $scope.$apply(function() {
                 vm.isLoading = false;
                 vm.themeList = Object.keys(customDashboards).reduce(function(

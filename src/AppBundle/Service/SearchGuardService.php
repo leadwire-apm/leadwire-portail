@@ -102,6 +102,7 @@ class SearchGuardService
 
         $applications = $this->applicationManager->getBy(['removed' => false]);
 
+        /** @var Application $application */
         foreach ($applications as $application) {
             $serialized .= $this->serializer->serialize(
                 [
@@ -125,9 +126,8 @@ class SearchGuardService
                             "?kibana_{$application->getApplicationIndex()}" => [
                                 "*" => [
                                     "READ",
-                                    "indices:data/write/index",
-                                    "indices:data/write/update",
-                                    "indices:data/write/bulk[s]",
+                                    "indices:data/read/get",
+                                    "indices:data/read/search",
                                 ],
                             ],
                             "?kibana_{$application->getSharedIndex()}" => ["*" => ["INDICES_ALL"]],

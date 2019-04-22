@@ -12,7 +12,7 @@
   <!-- /logo -->
 
   <ul class="nav navbar-nav navbar-right pull-right">
-        <li class="dropdown pull-left" ng-if="COMPAGNE_ENABLED === 'true'">
+        <li class="dropdown pull-left" ng-if="COMPAGNE_ENABLED === true">
             <a  href="" ui-sref="app.overview"  title="Campagnes">
         <i class="fa fa-paper-plane"></i>
       </a>
@@ -27,7 +27,7 @@
         data-toggle="tooltip"
         quick-launch
       >
-        <i class="far fa-circle"></i>
+        <img src="images/elasticsearch.png" width="15px"></img>
       </a>
     </li>
     <li class="pull-left hidden-xs" ng-if="isAdmin()">

@@ -4,11 +4,12 @@ namespace AppBundle\Controller\Rest;
 
 use AppBundle\Document\Invitation;
 use AppBundle\Service\InvitationService;
+use AppBundle\Service\SearchGuardService;
 use ATS\CoreBundle\Controller\Rest\RestControllerTrait;
-use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
 
 class InvitationController extends Controller
 {
@@ -98,14 +99,21 @@ class InvitationController extends Controller
      *
      * @param Request $request
      * @param InvitationService $invitationService
+     * @param SearchGuardService $sgService
      * @param string $id
      *
      * @return Response
      */
-    public function acceptInvitationAction(Request $request, InvitationService $invitationService, $id)
-    {
+    public function acceptInvitationAction(
+        Request $request,
+        InvitationService $invitationService,
+        SearchGuardService $sgService,
+        $id
+    ) {
         $user = json_decode($request->getContent());
         $invitationService->acceptInvitation($id, $user->userId);
+        $sgService->updateSearchGuardConfig();
+
         return $this->renderResponse(null);
     }
 }

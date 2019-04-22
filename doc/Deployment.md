@@ -33,10 +33,14 @@ Leadwire portal application needs some date to be setup in the database to opera
 $ bin/console leadwire:install --env=prod # add --purge flag to clear the entire database before creating new data
 ```
 
-***Note***: The previous command will:
-    - Delete any Stripe plan (in Stripe Platform)
-    - ***Commpletely delete*** any previous data in the data base
-    - Create Demo Applications entries in MongoDB
-    - Create Demo Applications entries in LDAP
-    - Create Pricing plans in MongoDB
-    - Create Pricing plans in Stripe
+***Note***: The previous command will:\
+    - Delete any Stripe plan (in Stripe Platform)\
+    - ***Commpletely delete*** any previous data in the data base\
+    - Create Demo Applications entries in MongoDB\
+    - Create Demo Applications entries in LDAP\
+    - Create Pricing plans in MongoDB\
+    - Create Pricing plans in Stripe\
+
+
+# Docker images
+For more convenience, 2 [Docker images](https://github.com/leadwire-apm/leadwire-devops) are provided for development environment. those images provide the necessary components for LDAP, ElasticSearch, Kibana and SearchGuard (only on the ***secure*** image)

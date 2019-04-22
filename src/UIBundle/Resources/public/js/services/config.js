@@ -13,18 +13,21 @@
         var service = {};
 
         service.baseUrl = CONFIG.KIBANA_BASE_URL;
-        // service.baseUrl = 'https://kibana.leadwire.io/';
 
         service.getUrl = function(tenantPrefix, dashboardId, hasParameters) {
             var tenant = '';
             switch (tenantPrefix) {
                 case 'app_':
+                    tenant = $localStorage.selectedApp.sharedIndex;
+                    break;
                 case 'shared_':
-                    tenant = tenantPrefix + $localStorage.selectedApp.uuid;
+                    tenant = $localStorage.selectedApp.sharedIndex;
                     break;
                 case 'user_':
+                    tenant = $localStorage.user.userIndex;
+                    break;
                 case 'all_user_':
-                    tenant = tenantPrefix + $localStorage.user.uuid;
+                    tenant = $localStorage.user.allUserIndex;
                     break;
                 default:
                     tenant = tenantPrefix;

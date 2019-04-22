@@ -106,7 +106,7 @@
                             tenant: response.dashboards[0].tenant
                         });
                     } else {
-                        $location.path('/dashboard/custom');
+                        $location.path('/dashboard/custom/' + response.appId);
                     }
                     $scope.$apply();
                 })

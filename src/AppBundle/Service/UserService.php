@@ -208,7 +208,7 @@ class UserService
      */
     public function updateSubscription(User $user, $data)
     {
-        // TODO MAJOR REWORK NEEDED
+        // ! MAJOR REWORK NEEDED
 
         if ($user->getCustomer() === null) {
             throw new \Exception(sprintf("Customer for user %s is null", $user->getId()));
@@ -342,11 +342,10 @@ class UserService
      * Updates a specific user from JSON data
      *
      * @param string $json
-     * @param string $id
      *
      * @return bool
      */
-    public function updateUser($json, $id)
+    public function updateUser($json)
     {
         $isSuccessful = false;
 

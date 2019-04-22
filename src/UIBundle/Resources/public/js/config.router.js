@@ -204,7 +204,7 @@ angular.module('leadwireApp')
                     controllerAs: 'ctrl',
                 })
                 .state('app.dashboard.customDashboard', {
-                    url: '/dashboard/custom',
+                    url: '/dashboard/custom/:id',
                     templateUrl: 'customDashboards.html',
                     controller: 'customDashboardsCtrl',
                     controllerAs: 'ctrl',

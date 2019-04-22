@@ -171,14 +171,14 @@ class User implements AdvancedUserInterface
     private $acceptNewsLetter;
 
     /**
-     * @ODM\ReferenceMany(targetDocument="Invitation", mappedBy="user", storeAs="dbRef")
+     * @ODM\ReferenceMany(targetDocument="AppBundle\Document\Invitation", mappedBy="user", storeAs="dbRef")
      * @JMS\Type("array<AppBundle\Document\Invitation>")
      * @JMS\Expose
      */
     public $invitations;
 
     /**
-     * @ODM\ReferenceMany(targetDocument="Application", mappedBy="owner", storeAs="dbRef")
+     * @ODM\ReferenceMany(targetDocument="AppBundle\Document\Application", mappedBy="owner", storeAs="dbRef")
      * @JMS\Type("array<AppBundle\Document\Application>")
      * @JMS\Expose
      */
@@ -761,7 +761,12 @@ class User implements AdvancedUserInterface
         return "user_" . $this->uuid;
     }
 
-    public function getUserIndex()
+    /**
+     * @JMS\VirtualProperty()
+     *
+     * @return string
+     */
+    public function getUserIndex(): string
     {
         if (Uuid::isValid($this->uuid) === true) {
             return "user_" . $this->uuid;
@@ -770,7 +775,12 @@ class User implements AdvancedUserInterface
         }
     }
 
-    public function getAllUserIndex()
+    /**
+     * @JMS\VirtualProperty()
+     *
+     * @return string
+     */
+    public function getAllUserIndex(): string
     {
         if (Uuid::isValid($this->uuid) === true) {
             return "all_user_" . $this->uuid;

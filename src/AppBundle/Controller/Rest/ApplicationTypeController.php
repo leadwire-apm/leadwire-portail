@@ -9,6 +9,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use AppBundle\Service\TemplateService;
 
 class ApplicationTypeController extends Controller
 {
@@ -94,5 +95,21 @@ class ApplicationTypeController extends Controller
         $applicationtypeService->deleteApplicationType($id);
 
         return $this->renderResponse(null);
+    }
+
+    /**
+     * @Route("/{id}/initWithDefaultTemplates", methods="POST")
+     *
+     * @param Request $request
+     * @param TemplateService $templateService
+     * @param string $id
+     *
+     * @return Response
+     */
+    public function initWithDefaultTemplatesAction(Request $request, TemplateService $templateService, $id)
+    {
+        $templateService->initializeDefaultForApplicationType($id);
+
+        return $this->renderResponse(true);
     }
 }

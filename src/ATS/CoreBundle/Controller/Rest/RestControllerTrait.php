@@ -29,13 +29,16 @@ trait RestControllerTrait
     protected function renderResponse($data, $responseCode = Response::HTTP_OK, $contextGroups = [])
     {
         $response = null;
+        $defaultGroup = ['Default'];
 
         $serializer = $this->container->get('jms_serializer');
 
         $context = SerializationContext::create()->enableMaxDepthChecks();
 
         if (count($contextGroups) > 0) {
-            $context->setGroups($contextGroups);
+            $context->setGroups(array_merge($defaultGroup, $contextGroups));
+        } else {
+            $context->setGroups($defaultGroup);
         }
 
         try {

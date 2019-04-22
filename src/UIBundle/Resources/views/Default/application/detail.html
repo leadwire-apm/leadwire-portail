@@ -1,7 +1,7 @@
 <div class="col-md-12 col-sm-12" ng-init="ctrl.onLoad()">
 
     <tabset justified="true" class="box-tab justified ">
-        <tab heading="Detail Application">
+        <tab heading="Application Detail">
             <section  ng-include="'application/applicationInfo.html'">
             </section>
         </tab>
@@ -14,7 +14,7 @@
             <section ng-include="'application/installation.html'">
             </section>
         </tab>
-        <tab heading="Stats" ng-if="user.id == ctrl.application.owner.id || ctrl.application.demo">
+        <tab heading="Stats" ng-if="STRIPE_ENABLED && (user.id == ctrl.application.owner.id || ctrl.application.demo)">
             <section ng-include="'application/stats.html'">
             </section>
         </tab>

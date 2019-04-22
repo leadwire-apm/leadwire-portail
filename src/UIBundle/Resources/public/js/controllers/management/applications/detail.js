@@ -29,7 +29,6 @@
         };
 
         vm.getApplication = function (id) {
-            console.log(id);
             ApplicationService.find(id)
                 .then(function (app) {
                     if (app === null) {

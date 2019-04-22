@@ -1,8 +1,8 @@
 <div class="">
-    <a ui-sref="app.dashboard.manageDashboard({tenant:'user_' + ctrl.currentUserUuid})"
+    <a ui-sref="app.dashboard.manageDashboard({tenant:ctrl.currentUser.userIndex})"
        class="btn btn-primary pull-right ml10 ">
         Add private dashboard </a>
-    <a ui-sref="app.dashboard.manageDashboard({tenant:'shared_' + ctrl.selectedAppUuid})"
+    <a ui-sref="app.dashboard.manageDashboard({tenant:ctrl.selectedApp.sharedIndex})"
        class="btn btn-primary pull-right ml10 ">
         Add shared dashboard</a>
     <h4>Custom Dashboard</h4>

@@ -151,7 +151,7 @@ class KibanaService
             $filtered = array_filter(
                 $templates,
                 function (Template $element) use ($monitoringSet) {
-                    return $element->getMonitoringSet()->getId() === $monitoringSet->getId() && $element->getType() === Template::DASHBAORDS_ALL;
+                    return $element->getMonitoringSet() !== null && $element->getMonitoringSet()->getId() === $monitoringSet->getId() && $element->getType() === Template::DASHBAORDS_ALL;
                 }
             );
 
@@ -221,7 +221,7 @@ class KibanaService
             $filtered = array_filter(
                 $templates,
                 function (Template $element) use ($monitoringSet) {
-                    return $element->getMonitoringSet()->getId() === $monitoringSet->getId() && $element->getType() === Template::DASHBOARDS;
+                    return $element->getMonitoringSet() !== null && $element->getMonitoringSet()->getId() === $monitoringSet->getId() && $element->getType() === Template::DASHBOARDS;
                 }
             );
 
@@ -310,7 +310,7 @@ class KibanaService
             $filtered = array_filter(
                 $templates,
                 function (Template $element) use ($monitoringSet) {
-                    return $element->getMonitoringSet()->getId() === $monitoringSet->getId() && $element->getType() === Template::INDEX_PATTERN;
+                    return $element->getMonitoringSet() !== null && $element->getMonitoringSet()->getId() === $monitoringSet->getId() && $element->getType() === Template::INDEX_PATTERN;
                 }
             );
 
@@ -376,7 +376,7 @@ class KibanaService
             $filtered = array_filter(
                 $templates,
                 function (Template $element) use ($monitoringSet) {
-                    return $element->getMonitoringSet()->getId() === $monitoringSet->getId() && $element->getType() === Template::INDEX_PATTERN;
+                    return $element->getMonitoringSet() !== null && $element->getMonitoringSet()->getId() === $monitoringSet->getId() && $element->getType() === Template::INDEX_PATTERN;
                 }
             );
 
@@ -430,6 +430,54 @@ class KibanaService
 
         return true;
     }
+
+
+     /**
+     * * curl --insecure -H "Authorization: Bearer ${authorization}" -X POST "$protocol://$host:$port/api/saved_objects/index-pattern/default" -H 'kbn-xsrf: true' -H 'Content-Type: application/json' -d '{ "attributes": { "title": "*" }}'
+     *
+     * @param string $tenant
+     * @param string $value
+     *
+     * @return bool
+     */
+    public function loadDefaultIndex(string $tenant, string $value): bool
+    {
+            $indexPattern = $value;
+
+            $content = '{ "attributes": { "title": "*" }}';
+
+            $headers = [
+                'kbn-xsrf' => true,
+                'Content-Type' => 'application/json',
+                'tenant' => $tenant,
+                'X-Proxy-User' => $this->kibanaAdminUsername,
+            ];
+
+            $authorization = $this->jwtHelper->encode($this->kibanaAdminUsername, $this->kibanaAdminUuid);
+
+            $headers['Authorization'] = "Bearer $authorization";
+
+            $response = $this->httpClient->post(
+                $this->url . "api/saved_objects/index-pattern/$indexPattern",
+                [
+                    'headers' => $headers,
+                    'body' => $content,
+                ]
+            );
+
+            $this->logger->notice(
+                "leadwire.kibana.loadDefaultIndex",
+                [
+                    'url' => $this->url . "api/saved_objects/index-pattern/$indexPattern",
+                    'verb' => 'POST',
+                    'headers' => $headers,
+                    'status_code' => $response->getStatusCode(),
+                ]
+            );
+
+        return true;
+    }
+
 
     /**
      * @param User $user

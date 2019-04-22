@@ -17,6 +17,7 @@
         InvitationFactory,
         $stateParams,
         $rootScope,
+        CONFIG,
         CONSTANTS,
         toastr,
         MESSAGES_CONSTANTS,
@@ -126,7 +127,7 @@
                 },
                 CONSTANTS: CONSTANTS,
                 moment: moment,
-                retention: $rootScope.user.plan.retention,
+                retention: CONFIG.STRIPE_ENABLED == true ? $rootScope.user.plan.retention : null,
                 DOWNLOAD_URL: CONSTANTS.DOWNLOAD_URL,
             });
             vm.getApp();

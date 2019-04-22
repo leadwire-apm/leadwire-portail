@@ -24,7 +24,6 @@
     ) {
 
         var vm = this;
-
         var margins = {
             top: 70,
             bottom: 40,
@@ -53,11 +52,11 @@
 
             if (step.current  || step.completed) {
                 label = "label label-success";
-            } 
-            
+            }
+
             if (step.waiting) {
                 label = "label label-warning";
-            } 
+            }
 
             return label;
         }
@@ -102,8 +101,9 @@
                     isLoading: false
                 },
                 compagnes: [],
+                all: false
             });
             vm.loadApplications();
         }
-    } 
+    }
 })(window.angular);

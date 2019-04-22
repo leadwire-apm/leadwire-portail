@@ -13,7 +13,6 @@
         var vm = this;
         vm.applications = $localStorage.applications;
         vm.dashboardLink = DashboardService.getDashboard($state.params.tenant, $state.params.id);
-        console.log(vm.dashboardLink);
 
         vm.onLoad = function() {
             vm.isLoading = true;

@@ -52,7 +52,7 @@ class TmecService
     public function newTmec(array $params)
     {
         /** @var ?Tmec $tmec */
-        $tmec = $this->tmecManager->getTmecByVersion($params['version'], $params['applicationId']);
+        $tmec = $this->tmecManager->getTmecByVersion($params['version'], $params['application']);
 
         if ($tmec === null) {
             $tmec = $this->tmecManager->create(

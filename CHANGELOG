@@ -1,0 +1,40 @@
+# Changelog
+All notable changes to this project will be documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [1.2.3] - 2019-04-16
+### Fixed
+- Initializing templates versions https://gitlab.ats-digital.com/leadwire/leadwire/issues/125
+- Faulty application type meny https://gitlab.ats-digital.com/leadwire/leadwire/issues/126
+- Link to Cusotm Dashboards creation  https://gitlab.ats-digital.com/leadwire/leadwire/issues/128
+- Dynamic dashboards for monitoring sets  https://gitlab.ats-digital.com/leadwire/leadwire/issues/127
+
+## [1.2.2] - 2019-04-15
+### Fixed
+- List of monitoring sets in add new template page is empty https://gitlab.ats-digital.com/leadwire/leadwire/issues/122
+- Delete Monitoring Set breaks MongoDB references https://gitlab.ats-digital.com/leadwire/leadwire/issues/123
+- Custom menu not working https://gitlab.ats-digital.com/leadwire/leadwire/issues/120
+
+### Changed
+- Logo for Applications header  https://github.com/leadwire-apm/leadwire-portail/issues/15
+
+## [1.2.1] - 2019-04-13
+### Fixed
+- Application Fixture initialization https://gitlab.ats-digital.com/leadwire/leadwire/issues/118
+- SG Roles when user accepts invitation https://gitlab.ats-digital.com/leadwire/leadwire/issues/119
+- Custom Menu reload https://gitlab.ats-digital.com/leadwire/leadwire/issues/120
+- Visual hint for private tenants https://gitlab.ats-digital.com/leadwire/leadwire/issues/121
+
+## [1.2.0] - 2019-04-12
+### Added
+- Update application type for created applications: https://gitlab.ats-digital.com/leadwire/leadwire/issues/103
+- Initialize application type with default templates
+
+### Changed
+- Enabled Index creation: https://gitlab.ats-digital.com/leadwire/leadwire/issues/116
+
+### Fixed
+- sg_roles.yml mapping fine generation: https://gitlab.ats-digital.com/leadwire/leadwire/issues/114
+- Application defail page when Stripe is disabled https://gitlab.ats-digital.com/leadwire/leadwire/issues/115

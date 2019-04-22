@@ -53,6 +53,11 @@
                     '/delete',
                 );
             },
+            initWithDefaultTemplates(appTypeId) {
+                return $http.post(
+                    CONFIG.BASE_URL + 'api/applicationType/' + appTypeId + '/initWithDefaultTemplates'
+                )
+            }
         };
     }
 })(window.angular);

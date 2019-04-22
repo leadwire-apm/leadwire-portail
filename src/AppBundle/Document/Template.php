@@ -2,10 +2,10 @@
 
 namespace AppBundle\Document;
 
-use AppBundle\Document\MonitoringSet;
-use JMS\Serializer\Annotation as JMS;
 use AppBundle\Document\ApplicationType;
+use AppBundle\Document\MonitoringSet;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
+use JMS\Serializer\Annotation as JMS;
 
 /**
  * @ODM\Document(repositoryClass="AppBundle\Repository\TemplateRepository")
@@ -15,6 +15,7 @@ use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
  */
 class Template
 {
+    const DEFAULT_VERSION = "6.5.1";
     const DASHBOARDS = "Dashboards";
     const DASHBAORDS_ALL = "Dashboards-All";
     const INDEX_TEMPLATE = "Index-Template";
@@ -66,7 +67,7 @@ class Template
     private $type;
 
     /**
-     * @ODM\ReferenceOne(targetDocument="AppBundle\Document\ApplicationType",cascade={"persist"}, inversedBy="templates", storeAs="dbRef")
+     * @ODM\ReferenceOne(targetDocument="AppBundle\Document\ApplicationType", inversedBy="templates", storeAs="dbRef")
      * @JMS\Expose
      * @JMS\Type("AppBundle\Document\ApplicationType")
      *
@@ -75,11 +76,11 @@ class Template
     private $applicationType;
 
     /**
-     * @ODM\ReferenceOne(targetDocument="AppBundle\Document\MonitoringSet",cascade={"persist"}, inversedBy="templates", storeAs="dbRef")
+     * @ODM\ReferenceOne(targetDocument="AppBundle\Document\MonitoringSet", inversedBy="templates", storeAs="dbRef")
      * @JMS\Expose
-     * @JMS\Type("AppBundle\Document\ApplicationType")
+     * @JMS\Type("AppBundle\Document\MonitoringSet")
      *
-     * @var MonitoringSet
+     * @var ?MonitoringSet
      */
     private $monitoringSet;
 
@@ -197,9 +198,9 @@ class Template
     /**
      * Get the value of monitoringSet
      *
-     * @return  MonitoringSet
+     * @return  MonitoringSet|null
      */
-    public function getMonitoringSet()
+    public function getMonitoringSet(): ?MonitoringSet
     {
         return $this->monitoringSet;
     }
@@ -207,11 +208,11 @@ class Template
     /**
      * Set the value of monitoringSet
      *
-     * @param  MonitoringSet  $monitoringSet
+     * @param  ?MonitoringSet  $monitoringSet
      *
      * @return  self
      */
-    public function setMonitoringSet(MonitoringSet $monitoringSet)
+    public function setMonitoringSet(?MonitoringSet $monitoringSet): self
     {
         $this->monitoringSet = $monitoringSet;
 
@@ -250,5 +251,14 @@ class Template
             self::INDEX_TEMPLATE,
             self::INDEX_PATTERN,
         ];
+    }
+
+    public function getFormattedVersion()
+    {
+        if ($this->monitoringSet !== null) {
+            return strtolower($this->monitoringSet->getQualifier()) . "-" . $this->version;
+        }
+
+        return '-';
     }
 }
