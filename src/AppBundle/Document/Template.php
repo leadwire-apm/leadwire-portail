@@ -15,6 +15,7 @@ use JMS\Serializer\Annotation as JMS;
  */
 class Template
 {
+    const DEFAULT_VERSION = "6.5.1";
     const DASHBOARDS = "Dashboards";
     const DASHBAORDS_ALL = "Dashboards-All";
     const INDEX_TEMPLATE = "Index-Template";
@@ -66,7 +67,7 @@ class Template
     private $type;
 
     /**
-     * @ODM\ReferenceOne(targetDocument="AppBundle\Document\ApplicationType",cascade={"persist"}, inversedBy="templates", storeAs="dbRef")
+     * @ODM\ReferenceOne(targetDocument="AppBundle\Document\ApplicationType", inversedBy="templates", storeAs="dbRef")
      * @JMS\Expose
      * @JMS\Type("AppBundle\Document\ApplicationType")
      *
@@ -75,9 +76,9 @@ class Template
     private $applicationType;
 
     /**
-     * @ODM\ReferenceOne(targetDocument="AppBundle\Document\MonitoringSet",cascade={"persist"}, inversedBy="templates", storeAs="dbRef")
+     * @ODM\ReferenceOne(targetDocument="AppBundle\Document\MonitoringSet", inversedBy="templates", storeAs="dbRef")
      * @JMS\Expose
-     * @JMS\Type("AppBundle\Document\ApplicationType")
+     * @JMS\Type("AppBundle\Document\MonitoringSet")
      *
      * @var ?MonitoringSet
      */

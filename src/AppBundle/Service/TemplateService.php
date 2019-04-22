@@ -4,13 +4,14 @@ namespace AppBundle\Service;
 
 use AppBundle\Document\Template;
 use Symfony\Component\Finder\Finder;
+use AppBundle\Document\MonitoringSet;
 use AppBundle\Manager\TemplateManager;
 use AppBundle\Document\ApplicationType;
 use JMS\Serializer\SerializerInterface;
+use AppBundle\Manager\MonitoringSetManager;
 use AppBundle\Manager\ApplicationTypeManager;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
-use AppBundle\Manager\MonitoringSetManager;
 
 class TemplateService
 {
@@ -66,9 +67,13 @@ class TemplateService
          * * Workaround -> manually fetch the applicationType from the ID
          */
 
+         /** @var MonitoringSet $deserializedMs */
+        $deserializedMs = $template->getMonitoringSet();
         $applicationType = $this->applicationTypeManager->getOneBy(['id' => $template->getApplicationType()->getId()]);
+        $ms = $this->msManager->getOneBy(['id' => $deserializedMs->getId()]);
 
         $template->setApplicationType($applicationType);
+        $template->setMonitoringSet($ms);
 
         $id = $this->templateManager->update($template);
 
@@ -122,7 +127,6 @@ class TemplateService
     public function initializeDefaultForApplicationType(string $id)
     {
         $applicationType = $this->applicationTypeManager->getOneBy(['id' => $id]);
-        $now = (new \DateTime())->format("Y-m-d\TH:i:s");
 
         foreach ($this->msManager->getAll() as $ms) {
             $finder = new Finder();
@@ -137,7 +141,7 @@ class TemplateService
                 $template->setContent((string) file_get_contents($file->getRealPath()));
                 $template->setApplicationType($applicationType);
                 $template->setMonitoringSet($ms);
-                $template->setVersion($now);
+                $template->setVersion(Template::DEFAULT_VERSION);
 
                 $this->templateManager->update($template);
             }

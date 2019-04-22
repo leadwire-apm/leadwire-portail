@@ -43,7 +43,7 @@ class MonitoringSet
     private $qualifier;
 
     /**
-     * @ODM\ReferenceMany(targetDocument="AppBundle\Document\Template", storeAs="dbRef", mappedBy="monitoringSet", cascade="{delete}")
+     * @ODM\ReferenceMany(targetDocument="AppBundle\Document\Template", storeAs="dbRef", mappedBy="monitoringSet")
      *
      * @var array
      */

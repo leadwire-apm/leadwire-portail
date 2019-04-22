@@ -58,7 +58,7 @@
                                 </button>
                                 <button
                                     class="btn btn-primary"
-                                    ng-if="appType.isWellDefined == false"
+                                    ng-if="appType.canInit == true"
                                     ng-click="ctrl.initWithDefaultTemplates(appType.id)">
                                     Init with default templates
                                 </button>
