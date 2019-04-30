@@ -28,6 +28,13 @@
              *
              * @returns {Promise}
              */
+            findAllValid: function () {
+                return $http.get(CONFIG.BASE_URL + 'api/monitoringSet/list/true');
+            },
+            /**
+             *
+             * @returns {Promise}
+             */
             get: function (id) {
                 return $http.get(
                     CONFIG.BASE_URL + 'api/monitoringSet/' + id + '/get');

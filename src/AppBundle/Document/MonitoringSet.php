@@ -47,7 +47,8 @@ class MonitoringSet
 
     /**
      * @ODM\ReferenceMany(targetDocument="AppBundle\Document\Template", storeAs="dbRef")
-     *
+     * @JMS\Expose
+     * @JMS\Type("ArrayCollection<AppBundle\Document\Template>")
      * @var Collection
      */
     private $templates;
@@ -198,9 +199,9 @@ class MonitoringSet
      *
      * @return boolean
      */
-    public function isWellDefined(): bool
+    public function isValid(): bool
     {
-        return count($this->templates) === self::TEMPLATES_COUNT;
+        return $this->templates->count() === self::TEMPLATES_COUNT;
     }
 
     public function getFormattedVersion()

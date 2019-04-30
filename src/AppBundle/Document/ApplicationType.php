@@ -3,10 +3,10 @@
 namespace AppBundle\Document;
 
 use AppBundle\Document\App;
-use JMS\Serializer\Annotation as JMS;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
+use JMS\Serializer\Annotation as JMS;
 
 /**
  * @ODM\Document(repositoryClass="AppBundle\Repository\ApplicationTypeRepository")
@@ -325,5 +325,20 @@ class ApplicationType
     public function resetMonitoringSets()
     {
         $this->monitoringSets->clear();
+    }
+
+    /**
+     * @JMS\VirtualProperty
+     *
+     * @return boolean
+     */
+    public function isValid(): bool
+    {
+        $isValid = true;
+        foreach ($this->monitoringSets as $monitoringSets) {
+            $isValid = $isValid && $monitoringSets->isValid();
+        }
+
+        return $isValid;
     }
 }

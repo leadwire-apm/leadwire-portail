@@ -18,4 +18,14 @@ class MonitoringSetManager extends AbstractManager
     {
         parent::__construct($managerRegistry, MonitoringSet::class, $managerName);
     }
+
+    public function getValid()
+    {
+        return $this
+            ->qb()
+            ->field('templates')->size(MonitoringSet::TEMPLATES_COUNT)
+            ->getQuery()
+            ->execute()
+            ->toArray(false);
+    }
 }

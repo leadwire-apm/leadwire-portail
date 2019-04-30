@@ -66,6 +66,11 @@ class MonitoringSetService
         return $this->monitoringSetManager->getAll();
     }
 
+    public function listValidMonitoringSets()
+    {
+        return $this->monitoringSetManager->getValid();
+    }
+
     /**
      * Paginates through MonitoringSets
      *

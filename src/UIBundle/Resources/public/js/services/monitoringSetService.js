@@ -15,6 +15,16 @@
                     });
             };
 
+            service.listValid = function () {
+                return MonitoringSetFactory.findAllValid()
+                    .then(function (response) {
+                        return response.data;
+                    })
+                    .catch(function (error) {
+                        throw new Error(error);
+                    });
+            };
+
             service.find = function (id) {
                 return MonitoringSetFactory.get(id)
                     .then(function (response) {

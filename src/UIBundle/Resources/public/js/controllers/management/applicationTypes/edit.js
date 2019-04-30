@@ -43,7 +43,7 @@
         };
 
         vm.loadMonitoringSets = function() {
-            MonitoringSetService.list()
+            MonitoringSetService.listValid()
             .then(function(monitoringSets) {
                 vm.availableMonitoringSets = monitoringSets;
                 $('.selectpicker').selectpicker('refresh');
