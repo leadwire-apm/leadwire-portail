@@ -4,6 +4,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.0] - 2019-04-25
+### Changed
+- Application types, monitoring sets and templates relationships https://gitlab.ats-digital.com/leadwire/leadwire/issues/133
+
+### Added
+- Curator configuration management https://gitlab.ats-digital.com/leadwire/leadwire/issues/132
+
+### Security
+- CVE-2019-10909
+- CVE-2019-10910
+- CVE-2019-10911
+- CVE-2019-10912
+- CVE-2019-10913
+
 ## [1.2.3] - 2019-04-16
 ### Fixed
 - Initializing templates versions https://gitlab.ats-digital.com/leadwire/leadwire/issues/125

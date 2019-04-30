@@ -15,8 +15,6 @@ class TemplateFixture extends AbstractFixture implements OrderedFixtureInterface
 {
     public function load(ObjectManager $manager)
     {
-        /** @var ApplicationType $applicationType */
-        $applicationType = $this->getReference(ApplicationTypeFixture::DEFAULT_TYPE_REFERENCE);
         /** @var MonitoringSet $apmMonitoringSet */
         $apmMonitoringSet = $this->getReference(MonitoringSetFixture::APM_MONITORING_SET);
         /** @var MonitoringSet $infrastructureMonitoringSet */
@@ -33,10 +31,9 @@ class TemplateFixture extends AbstractFixture implements OrderedFixtureInterface
             $template->setName(strtolower($apmMonitoringSet->getName() . "-" . str_replace(".json", "", $file->getFilename())));
             $template->setType(str_replace(".json", "", $file->getFilename()));
             $template->setContent((string) file_get_contents($file->getRealPath()));
-            $template->setApplicationType($applicationType);
             $template->setMonitoringSet($apmMonitoringSet);
-            $template->setVersion("6.5.1");
             $manager->persist($template);
+            $manager->persist($apmMonitoringSet);
         }
 
         $manager->flush();
@@ -52,10 +49,9 @@ class TemplateFixture extends AbstractFixture implements OrderedFixtureInterface
             $template->setName(strtolower($infrastructureMonitoringSet->getName() . "-" . str_replace(".json", "", $file->getFilename())));
             $template->setType(str_replace(".json", "", $file->getFilename()));
             $template->setContent((string) file_get_contents($file->getRealPath()));
-            $template->setApplicationType($applicationType);
             $template->setMonitoringSet($infrastructureMonitoringSet);
-            $template->setVersion("6.5.1");
             $manager->persist($template);
+            $manager->persist($infrastructureMonitoringSet);
         }
         $manager->flush();
     }

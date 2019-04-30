@@ -159,16 +159,18 @@ class MonitoringSetService
      */
     public function deleteMonitoringSet($id)
     {
-        $ms = $this->monitoringSetManager->getOneBy(['id' => $id]);
+        // TODO: review this !!
+        return;
+        // $ms = $this->monitoringSetManager->getOneBy(['id' => $id]);
 
-        if ($ms instanceof MonitoringSet) {
-            /** @var Template $template */
-            foreach ($ms->getTemplates() as $template) {
-                $template->setMonitoringSet(null);
-                $this->templateManager->update($template);
-            }
+        // if ($ms instanceof MonitoringSet) {
+        //     /** @var Template $template */
+        //     foreach ($ms->getTemplates() as $template) {
+        //         $template->setMonitoringSet(null);
+        //         $this->templateManager->update($template);
+        //     }
 
-            $this->monitoringSetManager->deleteById($id);
-        }
+        //     $this->monitoringSetManager->deleteById($id);
+        // }
     }
 }

@@ -9,7 +9,7 @@ use JMS\Serializer\Annotation as JMS;
 
 /**
  * @ODM\Document(repositoryClass="AppBundle\Repository\TemplateRepository")
- * @ODM\UniqueIndex(keys={"name"="asc", "version"="desc", "monitoringSet"="asc"})
+ * @ODM\UniqueIndex(keys={"name"="asc", "monitoringSet"="asc"})
  * @ODM\ChangeTrackingPolicy("DEFERRED_EXPLICIT")
  * @JMS\ExclusionPolicy("all")
  */
@@ -55,34 +55,7 @@ class Template
      *
      * @var string
      */
-    private $version;
-
-    /**
-     * @ODM\Field(type="string")
-     * @JMS\Expose
-     * @JMS\Type("string")
-     *
-     * @var string
-     */
     private $type;
-
-    /**
-     * @ODM\ReferenceOne(targetDocument="AppBundle\Document\ApplicationType", inversedBy="templates", storeAs="dbRef")
-     * @JMS\Expose
-     * @JMS\Type("AppBundle\Document\ApplicationType")
-     *
-     * @var ApplicationType
-     */
-    private $applicationType;
-
-    /**
-     * @ODM\ReferenceOne(targetDocument="AppBundle\Document\MonitoringSet", inversedBy="templates", storeAs="dbRef")
-     * @JMS\Expose
-     * @JMS\Type("AppBundle\Document\MonitoringSet")
-     *
-     * @var ?MonitoringSet
-     */
-    private $monitoringSet;
 
     /**
      * Get the value of id
@@ -146,75 +119,16 @@ class Template
 
         return $this;
     }
-
-    /**
-     * Get the value of version
-     *
-     * @return  string
-     */
-    public function getVersion(): string
-    {
-        return $this->version;
-    }
-
-    /**
-     * Set the value of version
-     *
-     * @param  string  $version
-     *
-     * @return  self
-     */
-    public function setVersion(string $version): self
-    {
-        $this->version = $version;
-
-        return $this;
-    }
-
-    /**
-     * Get the value of applicationType
-     *
-     * @return  ApplicationType
-     */
-    public function getApplicationType(): ApplicationType
-    {
-        return $this->applicationType;
-    }
-
-    /**
-     * Set the value of applicationType
-     *
-     * @param  ApplicationType  $applicationType
-     *
-     * @return  self
-     */
-    public function setApplicationType(ApplicationType $applicationType): self
-    {
-        $this->applicationType = $applicationType;
-
-        return $this;
-    }
-
-    /**
-     * Get the value of monitoringSet
-     *
-     * @return  MonitoringSet|null
-     */
-    public function getMonitoringSet(): ?MonitoringSet
-    {
-        return $this->monitoringSet;
-    }
-
     /**
      * Set the value of monitoringSet
      *
-     * @param  ?MonitoringSet  $monitoringSet
+     * @param  MonitoringSet  $monitoringSet
      *
      * @return  self
      */
-    public function setMonitoringSet(?MonitoringSet $monitoringSet): self
+    public function setMonitoringSet(MonitoringSet &$monitoringSet): self
     {
-        $this->monitoringSet = $monitoringSet;
+        $monitoringSet->addTemplate($this);
 
         return $this;
     }
@@ -247,18 +161,8 @@ class Template
     {
         return [
             self::DASHBOARDS,
-            self::DASHBAORDS_ALL,
             self::INDEX_TEMPLATE,
             self::INDEX_PATTERN,
         ];
-    }
-
-    public function getFormattedVersion()
-    {
-        if ($this->monitoringSet !== null) {
-            return strtolower($this->monitoringSet->getQualifier()) . "-" . $this->version;
-        }
-
-        return '-';
     }
 }

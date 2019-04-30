@@ -360,16 +360,11 @@ class ElasticSearchService
     {
         $templates = $this->templateManager->getBy(['applicationType.id' => $application->getType()->getId()]);
 
-        foreach ($this->msManager->getAll() as $monitoringSet) {
-            $filtered = \array_filter(
-                $templates,
-                function (Template $element) use ($monitoringSet) {
-                    return $element->getMonitoringSet() == $monitoringSet && $element->getType() === Template::INDEX_TEMPLATE;
-                }
-            );
+        $monitoringSets = $application->getType()->getMonitoringSets();
 
+        foreach ($monitoringSets as $monitoringSet) {
             /** @var Template|bool $template */
-            $template = reset($filtered);
+            $template = $monitoringSet->getTemplateByType(Template::INDEX_TEMPLATE);
 
             if (($template instanceof Template) === false) {
                 throw new \Exception(
@@ -395,7 +390,7 @@ class ElasticSearchService
             }
 
             $response = $this->httpClient->put(
-                $this->url . "_template/{$template->getFormattedVersion()}",
+                $this->url . "_template/{$monitoringSet->getFormattedVersion()}",
                 [
                     'auth' => $this->getAuth(),
                     'headers' => [
@@ -410,7 +405,7 @@ class ElasticSearchService
                 [
                     'status_code' => $response->getStatusCode(),
                     'phrase' => $response->getReasonPhrase(),
-                    'url' => $this->url . "_template/{$template->getFormattedVersion()}",
+                    'url' => $this->url . "_template/{$monitoringSet->getFormattedVersion()}",
                     'verb' => 'PUT',
                     'monitoring_set' => $monitoringSet->getName(),
                 ]

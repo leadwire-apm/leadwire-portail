@@ -13,6 +13,7 @@ use AppBundle\Service\JWTHelper;
 use GuzzleHttp\Client;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Intl\Exception\NotImplementedException;
 
 /**
  * Class Kibana Service. Manage connexions with Kibana Rest API.
@@ -132,77 +133,7 @@ class KibanaService
             return false;
         }
 
-        $defaultType = $this->applicationTypeManager->getOneBy(['name' => ApplicationType::DEFAULT_TYPE]);
-
-        if ($defaultType === null) {
-            $this->logger->alert(
-                "leadwire.kibana.createAllUserDashboard",
-                [
-                    "error" => "Java Application Type not found.\nDid you forget to launch bin/console leadwire:install ?",
-                ]
-            );
-
-            throw new \Exception("Java Application Type not found.");
-        }
-
-        $templates = $this->templateManager->getBy(['applicationType.id' => $defaultType->getId()]);
-
-        foreach ($this->msManager->getAll() as $monitoringSet) {
-            $filtered = array_filter(
-                $templates,
-                function (Template $element) use ($monitoringSet) {
-                    return $element->getMonitoringSet() !== null && $element->getMonitoringSet()->getId() === $monitoringSet->getId() && $element->getType() === Template::DASHBAORDS_ALL;
-                }
-            );
-
-            /** @var Template|bool $template */
-            $template = reset($filtered);
-
-            if (($template instanceof Template) === false) {
-                $this->logger->alert(
-                    "leadwire.kibana.createAllUserDashboard",
-                    [
-                        'error' => sprintf("Template (%s) for type (%s) not found", Template::DASHBAORDS_ALL, $defaultType->getName()),
-                    ]
-                );
-                throw new \Exception(sprintf("Template (%s) for type (%s) not found", Template::DASHBAORDS_ALL, $defaultType->getName()));
-            }
-
-            $content = str_replace("__replace_token__", $user->getAllUserIndex(), $template->getContent());
-            $content = str_replace("__replace_service__", $user->getAllUserIndex(), $content);
-
-            $authorization = $this->jwtHelper->encode($this->kibanaAdminUsername, $this->kibanaAdminUuid);
-
-            $headers = [
-                'kbn-xsrf' => true,
-                'Content-Type' => 'application/json',
-                'tenant' => $user->getAllUserIndex(),
-                'X-Proxy-User' => $this->kibanaAdminUsername,
-                'Authorization' => "Bearer $authorization",
-            ];
-
-            $response = $this->httpClient->post(
-                $this->url . "api/kibana/dashboards/import?exclude=index-pattern&force=true",
-                [
-                    'headers' => $headers,
-                    'body' => $content,
-                ]
-            );
-
-            $this->logger->notice(
-                "leadwire.kibana.createAllUserDashboard",
-                [
-                    'url' => $this->url . "api/kibana/dashboards/import?exclude=index-pattern&force=true",
-                    'verb' => 'POST',
-                    'headers' => $headers,
-                    'template' => $template->getName(),
-                    'status_code' => $response->getStatusCode(),
-                    'monitoring_set' => $monitoringSet->getName(),
-                ]
-            );
-        }
-
-        return true;
+        throw new NotImplementedException("This feature is not implemented");
     }
 
     /**
@@ -214,19 +145,11 @@ class KibanaService
      */
     public function createApplicationDashboards(Application $application, bool $shared = false): bool
     {
-        $templates = $this->templateManager->getBy(['applicationType.id' => $application->getType()->getId()]);
-
-        foreach ($this->msManager->getAll() as $monitoringSet) {
+        foreach ($application->getType()->getMonitoringSets() as $monitoringSet) {
             $replaceService = strtolower($monitoringSet->getQualifier()) . "-" . $application->getName();
-            $filtered = array_filter(
-                $templates,
-                function (Template $element) use ($monitoringSet) {
-                    return $element->getMonitoringSet() !== null && $element->getMonitoringSet()->getId() === $monitoringSet->getId() && $element->getType() === Template::DASHBOARDS;
-                }
-            );
 
             /** @var Template|bool $template */
-            $template = reset($filtered);
+            $template = $monitoringSet->getTemplateByType(Template::DASHBOARDS);
 
             if (($template instanceof Template) === false) {
                 $this->logger->alert(
@@ -291,73 +214,7 @@ class KibanaService
             return;
         }
 
-        $defaultType = $this->applicationTypeManager->getOneBy(['name' => ApplicationType::DEFAULT_TYPE]);
-
-        if ($defaultType === null) {
-            $this->logger->alert(
-                "leadwire.kibana.loadIndexPatternForAllUser",
-                [
-                    "error" => "Java Application Type not found.\nDid you forget to launch bin/console leadwire:install ?",
-                ]
-            );
-
-            throw new \Exception("Java Application Type not found.");
-        }
-
-        $templates = $this->templateManager->getBy(['applicationType.id' => $defaultType->getId()]);
-
-        foreach ($this->msManager->getAll() as $monitoringSet) {
-            $filtered = array_filter(
-                $templates,
-                function (Template $element) use ($monitoringSet) {
-                    return $element->getMonitoringSet() !== null && $element->getMonitoringSet()->getId() === $monitoringSet->getId() && $element->getType() === Template::INDEX_PATTERN;
-                }
-            );
-
-            /** @var Template|bool $template */
-            $template = reset($filtered);
-
-            if (($template instanceof Template) === false) {
-                $this->logger->alert(
-                    "leadwire.kibana.loadIndexPatternForAllUser",
-                    [
-                        'error' => sprintf("Template (%s) for type (%s) not found", Template::INDEX_PATTERN, $defaultType->getName()),
-                    ]
-                );
-                throw new \Exception(sprintf("Template (%s) for type (%s) not found", Template::INDEX_PATTERN, $defaultType->getName()));
-            }
-
-            $content = str_replace("__replace_token__", $user->getAllUserIndex(), $template->getContent());
-            $authorization = $this->jwtHelper->encode($this->kibanaAdminUsername, $this->kibanaAdminUuid);
-            $headers = [
-                'kbn-xsrf' => true,
-                'Content-Type' => 'application/json',
-                'tenant' => $user->getAllUserIndex(),
-                'X-Proxy-User' => $this->kibanaAdminUsername,
-                'Authorization' => "Bearer $authorization",
-            ];
-
-            $response = $this->httpClient->post(
-                $this->url . "api/saved_objects/index-pattern/{$user->getAllUserIndex()}",
-                [
-                    'headers' => $headers,
-                    'body' => $content,
-                ]
-            );
-
-            $this->logger->notice(
-                "leadwire.kibana.loadIndexPatternForAllUser",
-                [
-                    'url' => $this->url . "api/saved_objects/index-pattern/{$user->getAllUserIndex()}",
-                    'verb' => 'POST',
-                    'headers' => $headers,
-                    'status_code' => $response->getStatusCode(),
-                    'monitoring_set' => $monitoringSet->getName(),
-                ]
-            );
-
-            $this->makeDefaultIndex($user->getAllUserIndex(), $user->getAllUserIndex());
-        }
+        throw new NotImplementedException("This feature is not implemented");
     }
 
     /**
@@ -372,16 +229,9 @@ class KibanaService
     {
         $templates = $this->templateManager->getBy(['applicationType.id' => $application->getType()->getId()]);
 
-        foreach ($this->msManager->getAll() as $monitoringSet) {
-            $filtered = array_filter(
-                $templates,
-                function (Template $element) use ($monitoringSet) {
-                    return $element->getMonitoringSet() !== null && $element->getMonitoringSet()->getId() === $monitoringSet->getId() && $element->getType() === Template::INDEX_PATTERN;
-                }
-            );
-
+        foreach ($application->getType()->getMonitoringSets() as $monitoringSet) {
             /** @var Template|bool $template */
-            $template = reset($filtered);
+            $template = $monitoringSet->getTemplateByType(Template::INDEX_PATTERN);
 
             if (($template instanceof Template) === false) {
                 $this->logger->alert(
@@ -431,8 +281,7 @@ class KibanaService
         return true;
     }
 
-
-     /**
+    /**
      * * curl --insecure -H "Authorization: Bearer ${authorization}" -X POST "$protocol://$host:$port/api/saved_objects/index-pattern/default" -H 'kbn-xsrf: true' -H 'Content-Type: application/json' -d '{ "attributes": { "title": "*" }}'
      *
      * @param string $tenant
@@ -442,42 +291,41 @@ class KibanaService
      */
     public function loadDefaultIndex(string $tenant, string $value): bool
     {
-            $indexPattern = $value;
+        $indexPattern = $value;
 
-            $content = '{ "attributes": { "title": "*" }}';
+        $content = '{ "attributes": { "title": "*" }}';
 
-            $headers = [
-                'kbn-xsrf' => true,
-                'Content-Type' => 'application/json',
-                'tenant' => $tenant,
-                'X-Proxy-User' => $this->kibanaAdminUsername,
-            ];
+        $headers = [
+            'kbn-xsrf' => true,
+            'Content-Type' => 'application/json',
+            'tenant' => $tenant,
+            'X-Proxy-User' => $this->kibanaAdminUsername,
+        ];
 
-            $authorization = $this->jwtHelper->encode($this->kibanaAdminUsername, $this->kibanaAdminUuid);
+        $authorization = $this->jwtHelper->encode($this->kibanaAdminUsername, $this->kibanaAdminUuid);
 
-            $headers['Authorization'] = "Bearer $authorization";
+        $headers['Authorization'] = "Bearer $authorization";
 
-            $response = $this->httpClient->post(
-                $this->url . "api/saved_objects/index-pattern/$indexPattern",
-                [
-                    'headers' => $headers,
-                    'body' => $content,
-                ]
-            );
+        $response = $this->httpClient->post(
+            $this->url . "api/saved_objects/index-pattern/$indexPattern",
+            [
+                'headers' => $headers,
+                'body' => $content,
+            ]
+        );
 
-            $this->logger->notice(
-                "leadwire.kibana.loadDefaultIndex",
-                [
-                    'url' => $this->url . "api/saved_objects/index-pattern/$indexPattern",
-                    'verb' => 'POST',
-                    'headers' => $headers,
-                    'status_code' => $response->getStatusCode(),
-                ]
-            );
+        $this->logger->notice(
+            "leadwire.kibana.loadDefaultIndex",
+            [
+                'url' => $this->url . "api/saved_objects/index-pattern/$indexPattern",
+                'verb' => 'POST',
+                'headers' => $headers,
+                'status_code' => $response->getStatusCode(),
+            ]
+        );
 
         return true;
     }
-
 
     /**
      * @param User $user

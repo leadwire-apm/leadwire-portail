@@ -14,7 +14,6 @@
                     <table class="table table-striped mb0">
                         <thead>
                         <tr>
-                            <th class="text-center">Application Type</th>
                             <th class="text-center">Monitoring Set</th>
                             <th class="text-center">Name</th>
                             <th class="text-center">Type</th>
@@ -29,9 +28,6 @@
                             </td>
                         </tr>
                         <tr ng-repeat="template in ctrl.templates" class="text-center">
-                            <td data-title="ApplicationType" data-label="ApplicationType">
-                                [[template.applicationType.name]]
-                            </td>
                             <td data-title="MonitoringSet" data-label="MonitoringSet">
                                 [[template.monitoringSet.name || '-']]
                             </td>

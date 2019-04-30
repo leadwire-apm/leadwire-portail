@@ -2,10 +2,11 @@
 
 namespace AppBundle\Service;
 
-use AppBundle\Document\ApplicationType;
-use AppBundle\Manager\ApplicationTypeManager;
-use JMS\Serializer\SerializerInterface;
 use Psr\Log\LoggerInterface;
+use AppBundle\Document\ApplicationType;
+use JMS\Serializer\SerializerInterface;
+use AppBundle\Manager\MonitoringSetManager;
+use AppBundle\Manager\ApplicationTypeManager;
 use AppBundle\Exception\DuplicateApplicationTypeException;
 
 /**
@@ -18,6 +19,11 @@ class ApplicationTypeService
      * @var ApplicationTypeManager
      */
     private $applicationTypeManager;
+
+    /**
+     * @var MonitoringSetManager
+     */
+    private $msManager;
 
     /**
      * @var SerializerInterface
@@ -33,15 +39,18 @@ class ApplicationTypeService
      * Constructor
      *
      * @param ApplicationTypeManager $applicationTypeManager
+     * @param MonitoringSetManager $msManager
      * @param SerializerInterface $serializer
      * @param LoggerInterface $logger
      */
     public function __construct(
         ApplicationTypeManager $applicationTypeManager,
+        MonitoringSetManager $msManager,
         SerializerInterface $serializer,
         LoggerInterface $logger
     ) {
         $this->applicationTypeManager = $applicationTypeManager;
+        $this->msManager = $msManager;
         $this->serializer = $serializer;
         $this->logger = $logger;
     }
@@ -109,6 +118,8 @@ class ApplicationTypeService
      */
     public function newApplicationType($json)
     {
+        $dm = $this->msManager->getDocumentManager();
+
         /** @var ApplicationType $applicationType */
         $applicationType = $this->serializer->deserialize($json, ApplicationType::class, 'json');
         $dbApplicationType = $this->applicationTypeManager->getOneBy(
@@ -120,7 +131,15 @@ class ApplicationTypeService
         if ($dbApplicationType instanceof ApplicationType) {
             throw new DuplicateApplicationTypeException("An application type with the same name already exists");
         } else {
-            $this->applicationTypeManager->update($applicationType);
+            $applicationType->setVersion(1);
+            $monitoringSets = $applicationType->getMonitoringSets();
+            $applicationType->resetMonitoringSets();
+            foreach ($monitoringSets as $ms) {
+                $loaded = $this->msManager->getOneBy(['id' => $ms->getId()]);
+                $applicationType->addMonitoringSet($loaded);
+            }
+            $dm->persist($applicationType);
+            $dm->flush();
             return true;
         }
     }
@@ -137,10 +156,21 @@ class ApplicationTypeService
     public function updateApplicationType($json)
     {
         $isSuccessful = false;
+        $dm = $this->msManager->getDocumentManager();
 
         try {
+            /** @var ApplicationType $applicationType */
             $applicationType = $this->serializer->deserialize($json, ApplicationType::class, 'json');
-            $this->applicationTypeManager->update($applicationType);
+
+            $applicationType->incrementVersion();
+            $monitoringSets = $applicationType->getMonitoringSets();
+            $applicationType->resetMonitoringSets();
+            foreach ($monitoringSets as $ms) {
+                $loaded = $this->msManager->getOneBy(['id' => $ms->getId()]);
+                $applicationType->addMonitoringSet($loaded);
+            }
+            $dm->persist($applicationType);
+            $dm->flush();
             $isSuccessful = true;
         } catch (\Exception $e) {
             $this->logger->error($e->getMessage());

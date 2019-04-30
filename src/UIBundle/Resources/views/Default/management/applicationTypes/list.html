@@ -16,7 +16,7 @@
                         <thead>
                         <tr>
                             <th class="text-center">Name</th>
-                            <th class="text-center">agent</th>
+                            <th class="text-center">Description</th>
                             <th class="text-center" colspan="3"
                                 style="text-align: center">Actions
                             </th>
@@ -33,17 +33,12 @@
                             class="text-center"
                         >
                             <td data-title="Name" data-label="Name">
-                                <span
-                                title="[[appType.isWellDefined ? '' : 'There are missing templates for this type']]"
-                                data-placement="top"
-                                data-toggle="tooltip"
-                                ng-class="appType.isWellDefined ? '' : 'fas fa-times-circle'"></span>
                                 <span>
                                     [[appType.name]]
                                 </span>
                             </td>
-                            <td data-title="Agent" data-label="Agent">
-                                [[appType.agent]]
+                            <td data-title="Description" data-label="Description">
+                                [[appType.description]]
                             </td>
                             <td data-title="Actions" data-label="Actions"
                                 class="text-center">
@@ -55,12 +50,6 @@
                                         ng-click="ctrl.handleOnDelete(appType.id)">
                                     Delete
                                     <spinner is-loading="ctrl.ui['isDeleting'+appType.id]"></spinner>
-                                </button>
-                                <button
-                                    class="btn btn-primary"
-                                    ng-if="appType.canInit == true"
-                                    ng-click="ctrl.initWithDefaultTemplates(appType.id)">
-                                    Init with default templates
                                 </button>
                             </td>
                         </tr>
