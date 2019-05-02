@@ -2,16 +2,13 @@
 
 namespace AppBundle\Service;
 
-use AppBundle\Document\Template;
-use Symfony\Component\Finder\Finder;
 use AppBundle\Document\MonitoringSet;
-use AppBundle\Manager\TemplateManager;
-use AppBundle\Document\ApplicationType;
-use JMS\Serializer\SerializerInterface;
+use AppBundle\Document\Template;
 use AppBundle\Manager\MonitoringSetManager;
-use AppBundle\Manager\ApplicationTypeManager;
-use Symfony\Component\HttpFoundation\Response;
+use AppBundle\Manager\TemplateManager;
 use Doctrine\Common\Collections\ArrayCollection;
+use JMS\Serializer\SerializerInterface;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class TemplateService
@@ -27,32 +24,18 @@ class TemplateService
     private $serializer;
 
     /**
-     * @var ApplicationTypeManager
-     */
-    private $applicationTypeManager;
-
-    /**
      * @var MonitoringSetManager
      */
     private $msManager;
 
-    /**
-     * @var string
-     */
-    private $defaultTemplatesPath;
-
     public function __construct(
         TemplateManager $templateManager,
-        ApplicationTypeManager $applicationTypeManager,
         MonitoringSetManager $msManager,
-        SerializerInterface $serializer,
-        string $defaultTemplatesPath
+        SerializerInterface $serializer
     ) {
         $this->templateManager = $templateManager;
         $this->serializer = $serializer;
-        $this->applicationTypeManager = $applicationTypeManager;
         $this->msManager = $msManager;
-        $this->defaultTemplatesPath = $defaultTemplatesPath;
     }
 
     public function newTemplate($json)
