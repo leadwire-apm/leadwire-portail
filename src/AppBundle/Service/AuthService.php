@@ -71,12 +71,6 @@ class AuthService
      */
     private $sgService;
 
-    /**
-     *
-     * @var bool
-     */
-    private $hasAllUserTenant;
-
     public function __construct(
         UserManager $userManage,
         ApplicationService $applicationService,
@@ -88,8 +82,7 @@ class AuthService
         SearchGuardService $sgService,
         string $appDomain,
         array $authProviderSettings,
-        string $superAdminUsername,
-        bool $hasAllUserTenant
+        string $superAdminUsername
     ) {
         $this->userManager = $userManage;
         $this->applicationService = $applicationService;
@@ -102,7 +95,6 @@ class AuthService
         $this->authProviderSettings = $authProviderSettings;
         $this->superAdminUsername = $superAdminUsername;
         $this->sgService = $sgService;
-        $this->hasAllUserTenant = $hasAllUserTenant;
     }
 
     /**

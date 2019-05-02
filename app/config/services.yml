@@ -72,7 +72,6 @@ services:
             $appDomain: "%app_domain%"
             $authProviderSettings: "%auth_providers%"
             $superAdminUsername: "%super_admin_username%"
-            $hasAllUserTenant: '%has_all_user_tenant%'
         tags:
             - { name: monolog.logger, channel: auth }
 

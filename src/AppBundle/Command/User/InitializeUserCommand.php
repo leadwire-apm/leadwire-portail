@@ -46,9 +46,6 @@ class InitializeUserCommand extends ContainerAwareCommand
         /** @var string $username */
         $username = $input->getOption("username");
 
-        /** @var bool $hasAllUserTenant */
-        $hasAllUserTenant = $this->getContainer()->getParameter("has_all_user_tenant");
-
         /** @var ?User $user */
         $user = $userManager->getOneBy(['username' => $username]);
         if ($user === null) {
