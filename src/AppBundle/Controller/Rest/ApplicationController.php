@@ -176,7 +176,7 @@ class ApplicationController extends Controller
                 $esService->deleteIndex($application->getApplicationIndex());
                 $esService->createIndexTemplate($application, $applicationService->getActiveApplicationsNames());
 
-                $aliases = $esService->createAlias($application);
+                $esService->createAlias($application);
 
                 $kibanaService->loadIndexPatternForApplication(
                     $application,

@@ -52,11 +52,6 @@
                     CONFIG.BASE_URL + 'api/applicationType/' + appTypeId +
                     '/delete',
                 );
-            },
-            initWithDefaultTemplates(appTypeId) {
-                return $http.post(
-                    CONFIG.BASE_URL + 'api/applicationType/' + appTypeId + '/initWithDefaultTemplates'
-                )
             }
         };
     }

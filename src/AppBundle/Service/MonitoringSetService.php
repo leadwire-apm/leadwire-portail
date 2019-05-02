@@ -2,12 +2,11 @@
 
 namespace AppBundle\Service;
 
-use Psr\Log\LoggerInterface;
-use AppBundle\Document\Template;
 use AppBundle\Document\MonitoringSet;
-use AppBundle\Manager\TemplateManager;
-use JMS\Serializer\SerializerInterface;
+use AppBundle\Manager\ApplicationTypeManager;
 use AppBundle\Manager\MonitoringSetManager;
+use JMS\Serializer\SerializerInterface;
+use Psr\Log\LoggerInterface;
 
 /**
  * Service class for MonitoringSet entities
@@ -21,9 +20,9 @@ class MonitoringSetService
     private $monitoringSetManager;
 
     /**
-     * @var TemplateManager
+     * @var ApplicationTypeManager
      */
-    private $templateManager;
+    private $applicationTypeManager;
 
     /**
      * @var SerializerInterface
@@ -39,18 +38,17 @@ class MonitoringSetService
      * Constructor
      *
      * @param MonitoringSetManager $monitoringSetManager
-     * @param TemplateManager $templateManager
      * @param SerializerInterface $serializer
      * @param LoggerInterface $logger
      */
     public function __construct(
         MonitoringSetManager $monitoringSetManager,
-        TemplateManager $templateManager,
+        ApplicationTypeManager $applicationTypeManager,
         SerializerInterface $serializer,
         LoggerInterface $logger
     ) {
         $this->monitoringSetManager = $monitoringSetManager;
-        $this->templateManager = $templateManager;
+        $this->applicationTypeManager = $applicationTypeManager;
         $this->serializer = $serializer;
         $this->logger = $logger;
     }
@@ -164,18 +162,16 @@ class MonitoringSetService
      */
     public function deleteMonitoringSet($id)
     {
-        // TODO: review this !!
-        return;
-        // $ms = $this->monitoringSetManager->getOneBy(['id' => $id]);
+        $ms = $this->monitoringSetManager->getOneBy(['id' => $id]);
 
-        // if ($ms instanceof MonitoringSet) {
-        //     /** @var Template $template */
-        //     foreach ($ms->getTemplates() as $template) {
-        //         $template->setMonitoringSet(null);
-        //         $this->templateManager->update($template);
-        //     }
+        $linkedTypes = $this->applicationTypeManager->getLinkedTypes($ms);
 
-        //     $this->monitoringSetManager->deleteById($id);
-        // }
+        if (count($linkedTypes) > 0) {
+            throw new \Exception("Cannot delete a monitoring set that is used in an application type");
+        }
+
+        if ($ms instanceof MonitoringSet) {
+            $this->monitoringSetManager->deleteById($id);
+        }
     }
 }

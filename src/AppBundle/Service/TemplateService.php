@@ -113,29 +113,4 @@ class TemplateService
     {
         return $this->templateManager->getOneBy(['id' => $id]);
     }
-
-    /**
-     * @param string $id
-     */
-    public function initializeDefaultForApplicationType(string $id)
-    {
-        // TODO review this !!
-
-        foreach ($this->msManager->getAll() as $ms) {
-            $finder = new Finder();
-            $finder->files()->in($this->defaultTemplatesPath . \strtolower($ms->getQualifier()));
-            foreach ($finder as $file) {
-                if ($file->getRealPath() === false) {
-                    throw new \Exception("Error fetching file");
-                }
-                $template = new Template();
-                $template->setName(\strtolower($ms->getName() . "-" . \str_replace(".json", "", $file->getFilename())));
-                $template->setType(\str_replace(".json", "", $file->getFilename()));
-                $template->setContent((string) file_get_contents($file->getRealPath()));
-                $template->setMonitoringSet($ms);
-
-                $this->templateManager->update($template);
-            }
-        }
-    }
 }

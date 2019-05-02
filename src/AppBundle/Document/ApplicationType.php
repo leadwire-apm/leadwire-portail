@@ -184,28 +184,6 @@ class ApplicationType
     }
 
     /**
-     * @JMS\VirtualProperty()
-     *
-     * @return boolean
-     */
-    public function isWellDefined(): bool
-    {
-        // TODO impement this
-        return false;
-    }
-
-    /**
-     * @JMS\VirtualProperty()
-     *
-     * @return boolean
-     */
-    public function canInit(): bool
-    {
-        // TODO implement this
-        return true;
-    }
-
-    /**
      * Get the value of monitoringSets
      */
     public function getMonitoringSets()

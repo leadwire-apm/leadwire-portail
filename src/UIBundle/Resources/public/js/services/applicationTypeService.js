@@ -55,16 +55,6 @@
                     });
             };
 
-            service.initWithDefaultTemplates = function(applicationTypeId) {
-                return ApplicationTypeFactory.initWithDefaultTemplates(applicationTypeId)
-                .then(function (response) {
-                    return response.data;
-                })
-                .catch(function (err) {
-                    throw new Error(err);
-                });
-            }
-
             return service;
         });
 })(window.angular);

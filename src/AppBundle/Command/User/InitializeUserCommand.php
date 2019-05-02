@@ -72,15 +72,6 @@ class InitializeUserCommand extends ContainerAwareCommand
             $kibana->loadIndexPatternForUserTenant($user);
             $output->write(".");
 
-            if ($hasAllUserTenant === true) {
-                $es->deleteIndex($user->getAllUserIndex());
-                $output->write(".");
-                $kibana->loadIndexPatternForAllUser($user);
-                $output->write(".");
-                $kibana->createAllUserDashboard($user);
-                $output->write(".");
-            }
-
             $output->writeln("Done");
         }
 

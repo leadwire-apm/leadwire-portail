@@ -299,15 +299,9 @@ class AuthService
 
             $this->esService->deleteIndex($user->getUserIndex());
             $this->kibanaService->loadIndexPatternForUserTenant($user);
-           
+
             $this->kibanaService->loadDefaultIndex($user->getUserIndex(), 'default');
             $this->kibanaService->makeDefaultIndex($user->getUserIndex(), 'default');
-
-            if ($this->hasAllUserTenant === true) {
-                $this->esService->deleteIndex($user->getAllUserIndex());
-                $this->kibanaService->loadIndexPatternForAllUser($user);
-                $this->kibanaService->createAllUserDashboard($user);
-            }
 
             $this->sgService->updateSearchGuardConfig();
         }

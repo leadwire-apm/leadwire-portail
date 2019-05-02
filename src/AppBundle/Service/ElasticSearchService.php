@@ -5,8 +5,6 @@ namespace AppBundle\Service;
 use AppBundle\Document\Application;
 use AppBundle\Document\Template;
 use AppBundle\Document\User;
-use AppBundle\Manager\MonitoringSetManager;
-use AppBundle\Manager\TemplateManager;
 use ATS\CoreBundle\Service\Util\AString;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
@@ -47,16 +45,6 @@ class ElasticSearchService
     private $httpClient;
 
     /**
-     * @var TemplateManager
-     */
-    private $templateManager;
-
-    /**
-     * @var MonitoringSetManager
-     */
-    private $msManager;
-
-    /**
      * @var bool
      */
     private $hasAllUserTenant;
@@ -64,21 +52,15 @@ class ElasticSearchService
     /**
      * ElasticSearchService constructor.
      * @param LoggerInterface $logger
-     * @param TemplateManager $templateManager
-     * @param MonitoringSetManager $msManager
      * @param bool $hasAllUserTenant
      * @param array $settings
      */
     public function __construct(
         LoggerInterface $logger,
-        TemplateManager $templateManager,
-        MonitoringSetManager $msManager,
         bool $hasAllUserTenant,
         array $settings = []
     ) {
         $this->settings = $settings;
-        $this->templateManager = $templateManager;
-        $this->msManager = $msManager;
         $this->hasAllUserTenant = $hasAllUserTenant;
         $this->logger = $logger;
         $this->httpClient = new Client(
@@ -358,8 +340,6 @@ class ElasticSearchService
      */
     public function createIndexTemplate(Application $application, array $activeApplications)
     {
-        $templates = $this->templateManager->getBy(['applicationType.id' => $application->getType()->getId()]);
-
         $monitoringSets = $application->getType()->getMonitoringSets();
 
         foreach ($monitoringSets as $monitoringSet) {

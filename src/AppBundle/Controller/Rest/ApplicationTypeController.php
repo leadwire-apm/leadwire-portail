@@ -96,20 +96,4 @@ class ApplicationTypeController extends Controller
 
         return $this->renderResponse(null);
     }
-
-    /**
-     * @Route("/{id}/initWithDefaultTemplates", methods="POST")
-     *
-     * @param Request $request
-     * @param TemplateService $templateService
-     * @param string $id
-     *
-     * @return Response
-     */
-    public function initWithDefaultTemplatesAction(Request $request, TemplateService $templateService, $id)
-    {
-        $templateService->initializeDefaultForApplicationType($id);
-
-        return $this->renderResponse(true);
-    }
 }

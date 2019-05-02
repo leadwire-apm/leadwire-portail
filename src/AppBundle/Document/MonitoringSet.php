@@ -152,7 +152,7 @@ class MonitoringSet
     public function getTemplateByType(string $type): ?Template
     {
         $template = $this->templates->filter(
-            function ($template) use ($type) {
+            function (Template $template) use ($type) {
                 return $template->getType() === $type;
             }
         )->first();

@@ -1,19 +1,15 @@
 <?php
 namespace AppBundle\Service;
 
-use GuzzleHttp\Client;
-use AppBundle\Document\User;
-use Psr\Log\LoggerInterface;
-use AppBundle\Document\Template;
-use AppBundle\Service\JWTHelper;
 use AppBundle\Document\Application;
 use AppBundle\Document\MonitoringSet;
-use AppBundle\Manager\TemplateManager;
-use AppBundle\Document\ApplicationType;
-use AppBundle\Manager\MonitoringSetManager;
-use AppBundle\Manager\ApplicationTypeManager;
-use Symfony\Component\HttpFoundation\Response;
+use AppBundle\Document\Template;
+use AppBundle\Document\User;
 use AppBundle\Manager\ApplicationPermissionManager;
+use AppBundle\Service\JWTHelper;
+use GuzzleHttp\Client;
+use Psr\Log\LoggerInterface;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Intl\Exception\NotImplementedException;
 
 /**
@@ -49,24 +45,9 @@ class KibanaService
     private $logger;
 
     /**
-     * @var TemplateManager
-     */
-    private $templateManager;
-
-    /**
      * @var ApplicationPermissionManager
      */
     private $permissionManager;
-
-    /**
-     * @var ApplicationTypeManager
-     */
-    private $applicationTypeManager;
-
-    /**
-     * @var MonitoringSetManager
-     */
-    private $msManager;
 
     /**
      * @var Client
@@ -87,28 +68,20 @@ class KibanaService
      * Undocumented function
      *
      * @param LoggerInterface $logger
-     * @param TemplateManager $templateManager
      * @param ApplicationPermissionManager $permissionManager,
-     * @param ApplicationTypeManager $applicationTypeManager,
      * @param JWTHelper $jwtHelper
      * @param bool $hasAllUserTenant
      * @param array $settings
      */
     public function __construct(
         LoggerInterface $logger,
-        TemplateManager $templateManager,
         ApplicationPermissionManager $permissionManager,
-        ApplicationTypeManager $applicationTypeManager,
-        MonitoringSetManager $msManager,
         JWTHelper $jwtHelper,
         bool $hasAllUserTenant,
         array $settings = []
     ) {
         $this->logger = $logger;
-        $this->templateManager = $templateManager;
         $this->permissionManager = $permissionManager;
-        $this->applicationTypeManager = $applicationTypeManager;
-        $this->msManager = $msManager;
         $this->jwtHelper = $jwtHelper;
         $this->hasAllUserTenant = $hasAllUserTenant;
         $this->httpClient = new Client(
@@ -124,6 +97,7 @@ class KibanaService
     }
 
     /**
+     * @deprecated 1.3.0
      * @param User $user
      *
      * @return bool
@@ -216,6 +190,7 @@ class KibanaService
     }
 
     /**
+     * @deprecated 1.3.0
      * @param User $user
      *
      * @return void
@@ -239,8 +214,6 @@ class KibanaService
      */
     public function loadIndexPatternForApplication(Application $application, string $tenant): bool
     {
-        $templates = $this->templateManager->getBy(['applicationType.id' => $application->getType()->getId()]);
-
         foreach ($application->getType()->getMonitoringSets() as $monitoringSet) {
             if ($monitoringSet->isValid() === false) {
                 $this->logger->warning(
