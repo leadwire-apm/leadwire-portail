@@ -34,6 +34,30 @@
 
         };
 
+        vm.applyChanges = function(applicationId) {
+            swal(MESSAGES_CONSTANTS.SWEET_ALERT_VALIDATION('This will update ElasticSearch indexes and Kibana dashboard for the current application.'))
+                .then(function (willUpdate) {
+                    if (willUpdate) {
+                        vm.doApplyChanges(applicationId);
+                    } else {
+                        swal.close();
+                    }
+                });
+        }
+
+        vm.doApplyChanges = function(applicationId) {
+            vm.flipActivityIndicator('isApplyingChanges' + applicationId);
+            ApplicationService.applyChanges(applicationId)
+            .then(function () {
+                vm.flipActivityIndicator('isApplyingChanges' + applicationId);
+                toastr.success(MESSAGES_CONSTANTS.SUCCESS);
+            })
+            .then(vm.loadApplications)
+            .catch(function(err) {
+                vm.flipActivityIndicator('isApplyingChanges' + applicationId);
+                toastr.error(MESSAGES_CONSTANTS.ERROR);
+            });
+        }
         vm.handleOnToggleStatus = function (application) {
             swal(MESSAGES_CONSTANTS.SWEET_ALERT_VALIDATION())
                 .then(function (willToggle) {

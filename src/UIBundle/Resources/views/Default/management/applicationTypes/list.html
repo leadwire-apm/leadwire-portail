@@ -17,6 +17,7 @@
                         <tr>
                             <th class="text-center">Name</th>
                             <th class="text-center">Description</th>
+                            <th class="text-center">Monitoring Sets</th>
                             <th class="text-center" colspan="3"
                                 style="text-align: center">Actions
                             </th>
@@ -40,16 +41,28 @@
                             <td data-title="Description" data-label="Description">
                                 [[appType.description]]
                             </td>
-                            <td data-title="Actions" data-label="Actions"
-                                class="text-center">
-                                <a class="btn btn-warning"
-                                   ui-sref="app.management.editApplicationTypes({id:appType.id})">
-                                    Edit
+                            <td data-title="MonitoringSets" data-label="MonitoringSets">
+                                <ul>
+                                    <li ng-repeat="ms in appType.monitoringSets" style="list-style: none;">[[ms.name]]</li>
+                                </ul>
+                            </td>
+                            <td data-title="Actions" data-label="Actions" class="text-left">
+                                <a
+                                    class="btn btn-warning"
+                                    title="Edit"
+                                    data-placement="top"
+                                    data-toggle="tooltip"
+                                    ui-sref="app.management.editApplicationTypes({id:appType.id})">
+                                    <i class="fas fa-pencil-alt"></i>
                                 </a>
-                                <button class="btn btn-danger"
-                                        ng-click="ctrl.handleOnDelete(appType.id)">
-                                    Delete
+                                <button
+                                    title="Delete"
+                                    data-placement="top"
+                                    data-toggle="tooltip"
+                                    class="btn bg-red"
+                                    ng-click="ctrl.handleOnDelete(appType.id)">
                                     <spinner is-loading="ctrl.ui['isDeleting'+appType.id]"></spinner>
+                                    <i class="fa fa-trash"></i>
                                 </button>
                             </td>
                         </tr>

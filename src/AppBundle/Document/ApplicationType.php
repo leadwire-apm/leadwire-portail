@@ -60,9 +60,6 @@ class ApplicationType
      * @var string
      * @deprecated 1.3
      * @ODM\Field(type="string", name="agent")
-     * @JMS\Type("string")
-     * @JMS\Expose
-     * @JMS\Groups({"Default", "full"})
      */
     private $agent;
 
@@ -76,9 +73,10 @@ class ApplicationType
     /**
      * @var Collection
      *
-     * @ODM\ReferenceMany(targetDocument="AppBundle\Document\MonitoringSet", storeAs="dbRef")
+     * @ODM\ReferenceMany(targetDocument="AppBundle\Document\MonitoringSet", storeAs="dbRef", strategy="set")
      * @JMS\Expose
-     * @JMS\Type("ArrayCollection   <AppBundle\Document\MonitoringSet>")
+     * @JMS\Groups({"full", "Default"})
+     * @JMS\Type("ArrayCollection<AppBundle\Document\MonitoringSet>")
      */
     private $monitoringSets;
 
@@ -282,16 +280,18 @@ class ApplicationType
     /**
      * @return self
      */
-    public function incrementVersion()
+    public function incrementVersion(): self
     {
         $this->version += 1;
 
         return $this;
     }
 
-    public function resetMonitoringSets()
+    public function resetMonitoringSets(): self
     {
         $this->monitoringSets->clear();
+
+        return $this;
     }
 
     /**

@@ -46,8 +46,9 @@ class MonitoringSet
     private $qualifier;
 
     /**
-     * @ODM\ReferenceMany(targetDocument="AppBundle\Document\Template", storeAs="dbRef")
+     * @ODM\ReferenceMany(targetDocument="AppBundle\Document\Template", storeAs="dbRef", strategy="setArray")
      * @JMS\Expose
+     * @JMS\Groups({"full", "Default"})
      * @JMS\Type("ArrayCollection<AppBundle\Document\Template>")
      * @var Collection
      */
@@ -142,13 +143,24 @@ class MonitoringSet
         return $this;
     }
 
-    public function getTemplateByType(string $type): Template
+    /**
+     *
+     * @param string $type
+     *
+     * @return Template|null
+     */
+    public function getTemplateByType(string $type): ?Template
     {
-        return $this->templates->filter(
+        $template = $this->templates->filter(
             function ($template) use ($type) {
                 return $template->getType() === $type;
             }
         )->first();
+
+        if ($template === false) {
+            return null;
+        }
+        return $template;
     }
 
     public function __toString()

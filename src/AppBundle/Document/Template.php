@@ -2,10 +2,11 @@
 
 namespace AppBundle\Document;
 
-use AppBundle\Document\ApplicationType;
 use AppBundle\Document\MonitoringSet;
-use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 use JMS\Serializer\Annotation as JMS;
+use AppBundle\Document\ApplicationType;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 
 /**
  * @ODM\Document(repositoryClass="AppBundle\Repository\TemplateRepository")
@@ -17,7 +18,6 @@ class Template
 {
     const DEFAULT_VERSION = "6.5.1";
     const DASHBOARDS = "Dashboards";
-    const DASHBAORDS_ALL = "Dashboards-All";
     const INDEX_TEMPLATE = "Index-Template";
     const INDEX_PATTERN = "Index-Pattern";
 
@@ -34,6 +34,7 @@ class Template
      * @ODM\Field(type="string")
      * @JMS\Expose
      * @JMS\Type("string")
+     * @JMS\Groups({"Default", "template-list"})
      *
      * @var string
      */
@@ -42,6 +43,7 @@ class Template
     /**
      * @ODM\Field(type="string")
      * @JMS\Expose
+     * @JMS\Groups({"full"})
      * @JMS\Type("string")
      *
      * @var string
@@ -52,10 +54,18 @@ class Template
      * @ODM\Field(type="string")
      * @JMS\Expose
      * @JMS\Type("string")
+     * @JMS\Groups({"Default", "template-list"})
      *
      * @var string
      */
     private $type;
+
+    /**
+     * @var ArrayCollection
+     * @JMS\Expose
+     * @JMS\Groups({"Default", "template-list"})
+     */
+    private $attachedMonitoringSets;
 
     /**
      * Get the value of id
@@ -164,5 +174,29 @@ class Template
             self::INDEX_TEMPLATE,
             self::INDEX_PATTERN,
         ];
+    }
+
+    /**
+     * Get the value of attachedMonitoringSets
+     *
+     * @return  ArrayCollection
+     */
+    public function getAttachedMonitoringSets()
+    {
+        return $this->attachedMonitoringSets;
+    }
+
+    /**
+     * Set the value of attachedMonitoringSets
+     *
+     * @param  ArrayCollection  $attachedMonitoringSets
+     *
+     * @return  self
+     */
+    public function setAttachedMonitoringSets(ArrayCollection $attachedMonitoringSets)
+    {
+        $this->attachedMonitoringSets = $attachedMonitoringSets;
+
+        return $this;
     }
 }

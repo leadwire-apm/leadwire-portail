@@ -28,7 +28,7 @@ class ApplicationController extends Controller
     use RestControllerTrait;
 
     /**
-     * @Route("/{id}/get", methods="GET")
+     * @Route("/{id}/get/{group}", methods="GET", defaults={"group"="Default"})
      *
      * @param Request $request
      * @param ApplicationService $applicationService
@@ -36,11 +36,11 @@ class ApplicationController extends Controller
      *
      * @return Response
      */
-    public function getApplicationAction(Request $request, ApplicationService $applicationService, $id)
+    public function getApplicationAction(Request $request, ApplicationService $applicationService, $id, $group)
     {
         $data = $applicationService->getApplication($id);
 
-        return $this->renderResponse($data, Response::HTTP_OK);
+        return $this->renderResponse($data, Response::HTTP_OK, [$group]);
     }
 
     /**
@@ -346,5 +346,53 @@ class ApplicationController extends Controller
         $successful = $applicationService->toggleActivation($id);
 
         return $this->renderResponse($successful, Response::HTTP_OK);
+    }
+
+    /**
+     * @Route("/{id}/apply-change", methods="PUT")
+     *
+     * @param Request $request
+     * @param ApplicationService $applicationService
+     * @param ElasticSearchService $esService
+     * @param KibanaService $kibanaService
+     * @param string $id
+     *
+     * @return Response
+     */
+    public function applyTypeChangeAction(
+        Request $request,
+        ApplicationService $applicationService,
+        ElasticSearchService $esService,
+        KibanaService $kibanaService,
+        string $id
+    ) {
+        $application = $applicationService->getApplication($id);
+
+        if ($application instanceof Application) {
+            $esService->deleteIndex($application->getApplicationIndex());
+            $esService->createIndexTemplate($application, $applicationService->getActiveApplicationsNames());
+            $aliases = $esService->createAlias($application);
+            $kibanaService->loadIndexPatternForApplication(
+                $application,
+                $application->getApplicationIndex()
+            );
+
+            $kibanaService->makeDefaultIndex($application->getApplicationIndex(), $aliases[0]);
+
+            $kibanaService->createApplicationDashboards($application);
+
+            $esService->deleteIndex($application->getSharedIndex());
+
+            $kibanaService->loadIndexPatternForApplication(
+                $application,
+                $application->getSharedIndex()
+            );
+
+            $kibanaService->makeDefaultIndex($application->getSharedIndex(), $aliases[0]);
+        } else {
+            throw new NotFoundHttpException("Application with ID {$id} not found.");
+        }
+
+        return $this->renderResponse(true);
     }
 }

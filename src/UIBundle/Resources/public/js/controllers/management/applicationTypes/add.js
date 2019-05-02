@@ -36,7 +36,7 @@
 
         vm.saveAppType = function () {
             vm.flipActivityIndicator('isSaving');
-            vm.applicationType.monitoringSets = vm.applicationType.monitoringSets.map(function (msId) {return {'id': msId};});
+            vm.applicationType.monitoringSets = vm.applicationType.monitoringSets.map(function (ms) {return {'id': ms};});
             ApplicationTypeService.create(vm.applicationType)
                 .then(function () {
                     vm.flipActivityIndicator('isSaving');

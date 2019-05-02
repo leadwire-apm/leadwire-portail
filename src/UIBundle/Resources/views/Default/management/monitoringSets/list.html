@@ -17,6 +17,7 @@
                         <tr>
                             <th class="text-center">Name</th>
                             <th class="text-center">Qualifier</th>
+                            <th class="text-center">Templates</th>
                             <th class="text-center" colspan="3" style="text-align: center">Actions</th>
                         </tr>
                         </thead>
@@ -33,13 +34,30 @@
                             <td data-title="Qualifier" data-label="Qualifier">
                                 [[monitoringSet.qualifier]]
                             </td>
+                            <td data-title="Qualifier" data-label="Qualifier" class="text-left">
+                                <ul>
+                                    <li style="list-style: none;"><i style="padding-right:5px;" ng-class="ctrl.templateStatus(monitoringSet, 'Dashboards') ? 'fas fa-check-circle' : 'fas fa-times-circle'"></i>Dashboards</li>
+                                    <li style="list-style: none;"><i style="padding-right:5px;" ng-class="ctrl.templateStatus(monitoringSet, 'Index-Pattern') ? 'fas fa-check-circle' : 'fas fa-times-circle'"></i>Index-Pattern</li>
+                                    <li style="list-style: none;"><i style="padding-right:5px;" ng-class="ctrl.templateStatus(monitoringSet, 'Index-Template') ? 'fas fa-check-circle' : 'fas fa-times-circle'"></i>Index-Template</li>
+                                </ul>
+                            </td>
                             <td data-title="Actions" data-label="Actions"
-                                class="text-center">
-                                <a class="btn btn-warning" ui-sref="app.management.editMonitoringSets({id:monitoringSet.id})">
-                                    Edit
+                                class="text-left">
+                                <a
+                                    class="btn btn-warning"
+                                    title="Edit"
+                                    data-placement="top"
+                                    data-toggle="tooltip"
+                                    ui-sref="app.management.editMonitoringSets({id:monitoringSet.id})">
+                                    <i class="fas fa-pencil-alt"></i>
                                 </a>
-                                <button class="btn btn-danger" ng-click="ctrl.handleOnDelete(monitoringSet.id)">
-                                    Delete
+                                <button
+                                    class="btn bg-red"
+                                    title="Delete"
+                                    data-placement="top"
+                                    data-toggle="tooltip"
+                                    ng-click="ctrl.handleOnDelete(monitoringSet.id)">
+                                    <i class="fa fa-trash"></i>
                                     <spinner is-loading="ctrl.ui['isDeleting'+monitoringSet.id]"></spinner>
                                 </button>
                             </td>

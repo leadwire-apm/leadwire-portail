@@ -16,6 +16,7 @@
                         <tr>
                             <th class="text-center">Name</th>
                             <th class="text-center">Type</th>
+                            <th class="text-center">Linked to</th>
                             <th colspan="3" class="text-center"><span>Actions</span></th>
                         </tr>
                         </thead>
@@ -32,14 +33,22 @@
                             <td data-title="Name" data-label="Name">
                                 [[template.type || '-']]
                             </td>
-                            <td data-title="Actions" data-label="Actions">
+                            <td data-title="MonitoringSets" data-label="MonitoringSets" class="text-left">
+                                <ul>
+                                    <li ng-repeat="ms in template.attachedMonitoringSets" style="list-style: none;">
+                                        <a ui-sref="app.management.editMonitoringSets({id:ms.id})">[[ ms.name + '-' + ms.version ]]</a>
+                                    </li>
+                                </ul>
+                            </td>
+                            <td data-title="Actions" data-label="Actions" class="text-center">
                                 <a class="btn btn-warning"
                                    ui-sref="app.management.editTemplate(template)">
-                                    Edit
+                                   <i class="fas fa-pencil-alt"></i>
                                 </a>
-                                <button class="btn btn-danger"
+                                <button class="btn bg-red"
+                                        ng-disabled="template.attachedMonitoringSets.length > 0"
                                         ng-click="ctrl.handleOnDelete(template.id)">
-                                    Delete
+                                    <i class="fa fa-trash"></i>
                                 </button>
                             </td>
                         </tr>

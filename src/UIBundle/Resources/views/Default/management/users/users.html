@@ -38,7 +38,7 @@
                             <tr ng-repeat="user in ctrl.users | inArray:ctrl.onlyAdmins:'roles':ctrl.ADMINS"
                                 class="text-center">
                                 <td data-title="Name" data-label="Name" class="text-left">
-                                    <span ng-if="ctrl.isAdmin(user)" class="fa fa-unlock" data-toggle="tooltip" data-placement="top" title="This user has administrative privileges"></span>
+                                    <span ng-if="ctrl.isAdmin(user)" class="fas fa-user-cog" data-toggle="tooltip" data-placement="top" title="This user has administrative privileges"></span>
                                     <span>
                                         [[user.name]]
                                     </span>
@@ -54,32 +54,33 @@
                                 </td>
                                 <td data-title="Actions" data-label="Actions" class="text-center">
                                     <button class="btn btn-default"
+                                            title="[[ctrl.isAdmin(user) ? 'Revoke Admin role from this user' : 'Promote this user to Admin']]"
+                                            data-placement="top"
+                                            data-toggle="tooltip"
                                             data-ng-class="ctrl.isAdmin(user) ? 'text-red' : 'text-green'"
                                             data-ng-disabled="ctrl.ui.isProcessing"
                                             ng-click="ctrl.handleChangePermission(user)">
-                                        <i class="fa fa-cogs"></i> [[ctrl.isAdmin(user) ?
-                                        'Revoke ' : 'Promote']]
+                                        <i ng-class="ctrl.isAdmin(user) ? 'fa fa-angle-double-down' : 'fa fa-angle-double-up'"></i>
                                     </button>
                                     <button data-ng-class="user.locked ? 'btn btn-success' : 'btn btn-danger'"
+                                            title="[[user.locked ? 'Activate' : 'Block']]"
+                                            data-placement="top"
+                                            data-toggle="tooltip"
                                             ng-click="ctrl.handleOnToggleLock(user)"
-                                            data-ng-disabled="ctrl.ui.isProcessing"
-                                    >
-                                        <i class="fa fa-lock"></i> [[user.locked ?
-                                        'Activate'
-                                        : 'Block']]
+                                            data-ng-disabled="ctrl.ui.isProcessing">
+                                        <i ng-class="user.locked ? 'fa fa-unlock' : 'fa fa-lock'"></i>
                                     </button>
 
                                     <button class="btn btn-info"
                                             ng-click="ctrl.goDetail(user.id)"
                                             data-ng-disabled="ctrl.ui.isProcessing"
                                     >
-                                        <i class="fa fa-info-circle"></i> Detail
+                                        <i class="fa fa-info-circle"></i>
                                     </button>
                                     <button class="btn btn-danger bg-red"
                                             ng-click="ctrl.handleDeleteUser(user.id)"
-                                            data-ng-disabled="user.deleted || ctrl.ui.isProcessing"
-                                    >
-                                        <i class="fa fa-trash"></i> Delete
+                                            data-ng-disabled="user.deleted || ctrl.ui.isProcessing">
+                                        <i class="fa fa-trash"></i>
                                     </button>
 
                                 </td>

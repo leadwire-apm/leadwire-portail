@@ -2,15 +2,16 @@
 
 namespace AppBundle\Service;
 
-use AppBundle\Document\ApplicationType;
-use AppBundle\Document\MonitoringSet;
 use AppBundle\Document\Template;
-use AppBundle\Manager\ApplicationTypeManager;
-use AppBundle\Manager\MonitoringSetManager;
-use AppBundle\Manager\TemplateManager;
-use JMS\Serializer\SerializerInterface;
 use Symfony\Component\Finder\Finder;
+use AppBundle\Document\MonitoringSet;
+use AppBundle\Manager\TemplateManager;
+use AppBundle\Document\ApplicationType;
+use JMS\Serializer\SerializerInterface;
+use AppBundle\Manager\MonitoringSetManager;
+use AppBundle\Manager\ApplicationTypeManager;
 use Symfony\Component\HttpFoundation\Response;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class TemplateService
@@ -79,7 +80,13 @@ class TemplateService
      */
     public function listTemplates(): array
     {
-        return $this->templateManager->getAll();
+        $templates = $this->templateManager->getAll();
+
+        /** @var Template $template */
+        foreach ($templates as &$template) {
+            $template->setAttachedMonitoringSets(new ArrayCollection($this->msManager->getAssosiated($template)));
+        }
+        return $templates;
     }
 
     /**

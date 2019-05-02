@@ -1,18 +1,19 @@
 <?php
 namespace AppBundle\Service;
 
-use AppBundle\Document\Application;
-use AppBundle\Document\ApplicationType;
-use AppBundle\Document\Template;
-use AppBundle\Document\User;
-use AppBundle\Manager\ApplicationPermissionManager;
-use AppBundle\Manager\ApplicationTypeManager;
-use AppBundle\Manager\MonitoringSetManager;
-use AppBundle\Manager\TemplateManager;
-use AppBundle\Service\JWTHelper;
 use GuzzleHttp\Client;
+use AppBundle\Document\User;
 use Psr\Log\LoggerInterface;
+use AppBundle\Document\Template;
+use AppBundle\Service\JWTHelper;
+use AppBundle\Document\Application;
+use AppBundle\Document\MonitoringSet;
+use AppBundle\Manager\TemplateManager;
+use AppBundle\Document\ApplicationType;
+use AppBundle\Manager\MonitoringSetManager;
+use AppBundle\Manager\ApplicationTypeManager;
 use Symfony\Component\HttpFoundation\Response;
+use AppBundle\Manager\ApplicationPermissionManager;
 use Symfony\Component\Intl\Exception\NotImplementedException;
 
 /**
@@ -145,10 +146,21 @@ class KibanaService
      */
     public function createApplicationDashboards(Application $application, bool $shared = false): bool
     {
+        /** @var MonitoringSet $monitoringSet */
         foreach ($application->getType()->getMonitoringSets() as $monitoringSet) {
+            if ($monitoringSet->isValid() === false) {
+                $this->logger->warning(
+                    "leadwire.kibana.createApplicationDashboards",
+                    [
+                        'event' => 'Ignoring invalid MonitoringSet',
+                        'monitoring_set' => $monitoringSet->getName(),
+                    ]
+                );
+                continue;
+            }
             $replaceService = strtolower($monitoringSet->getQualifier()) . "-" . $application->getName();
 
-            /** @var Template|bool $template */
+            /** @var ?Template $template */
             $template = $monitoringSet->getTemplateByType(Template::DASHBOARDS);
 
             if (($template instanceof Template) === false) {
@@ -230,7 +242,17 @@ class KibanaService
         $templates = $this->templateManager->getBy(['applicationType.id' => $application->getType()->getId()]);
 
         foreach ($application->getType()->getMonitoringSets() as $monitoringSet) {
-            /** @var Template|bool $template */
+            if ($monitoringSet->isValid() === false) {
+                $this->logger->warning(
+                    "leadwire.kibana.createApplicationDashboards",
+                    [
+                        'event' => 'Ignoring invalid MonitoringSet',
+                        'monitoring_set' => $monitoringSet->getName(),
+                    ]
+                );
+                continue;
+            }
+            /** @var ?Template $template */
             $template = $monitoringSet->getTemplateByType(Template::INDEX_PATTERN);
 
             if (($template instanceof Template) === false) {

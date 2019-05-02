@@ -19,6 +19,7 @@ use Psr\Log\LoggerInterface;
 use Ramsey\Uuid\Uuid;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use AppBundle\Manager\ApplicationTypeManager;
 
 /**
  * Service class for App entities
@@ -30,6 +31,11 @@ class ApplicationService
      * @var ApplicationManager
      */
     private $applicationManager;
+
+    /**
+     * @var ApplicationTypeManager
+     */
+    private $applicationTypeManager;
 
     /**
      * @var ActivationCodeManager
@@ -70,6 +76,7 @@ class ApplicationService
      * Constructor
      *
      * @param ApplicationManager $applicationManager
+     * @param ApplicationTypeManager $applicationTypeManager
      * @param ActivationCodeManager $activationCodeManager
      * @param DeleteTaskManager $taskManager
      * @param ApplicationPermissionManager $apManager
@@ -80,6 +87,7 @@ class ApplicationService
      */
     public function __construct(
         ApplicationManager $applicationManager,
+        ApplicationTypeManager $applicationTypeManager,
         ActivationCodeManager $activationCodeManager,
         DeleteTaskManager $taskManager,
         ApplicationPermissionManager $apManager,
@@ -89,6 +97,7 @@ class ApplicationService
         ActivationCodeService $activationCodeService
     ) {
         $this->applicationManager = $applicationManager;
+        $this->applicationTypeManager = $applicationTypeManager;
         $this->activationCodeManager = $activationCodeManager;
         $this->taskManager = $taskManager;
         $this->apManager = $apManager;
@@ -246,7 +255,9 @@ class ApplicationService
         $application = $this
             ->serializer
             ->deserialize($json, Application::class, 'json', $context);
-        $application->setDeployedTypeVersion($application->getType()->getVersion());
+
+        $applicationType = $this->applicationTypeManager->getOneBy(['id' => $application->getType()->getId()]);
+        $application->setDeployedTypeVersion($applicationType->getVersion());
         $application->setName(\str_replace(' ', '_', $application->getName())); // Make sure thare are no spaces
         $dbApplication = $this->applicationManager->getOneBy(['name' => $application->getName()]);
 
@@ -306,8 +317,8 @@ class ApplicationService
             /** @var Application $application */
             $application = $this->serializer->deserialize($json, Application::class, 'json', $context);
             $state['esUpdateRequired'] = $realApp->getType()->getId() !== $application->getType()->getId();
-
             $newType = $this->appTypeService->getApplicationType((string) $application->getType()->getId());
+            $realApp->setDeployedTypeVersion($newType->getVersion());
             $realApp->setType($newType);
             $realApp->setName($application->getName());
             $realApp->setDescription($application->getDescription());

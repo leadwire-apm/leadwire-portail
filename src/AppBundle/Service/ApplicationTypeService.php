@@ -3,6 +3,7 @@
 namespace AppBundle\Service;
 
 use Psr\Log\LoggerInterface;
+use AppBundle\Document\MonitoringSet;
 use AppBundle\Document\ApplicationType;
 use JMS\Serializer\SerializerInterface;
 use AppBundle\Manager\MonitoringSetManager;
@@ -161,15 +162,19 @@ class ApplicationTypeService
         try {
             /** @var ApplicationType $applicationType */
             $applicationType = $this->serializer->deserialize($json, ApplicationType::class, 'json');
+            $dbApplicationType = $this->applicationTypeManager->getOneBy(['id' => $applicationType->getId()]);
+            $dbApplicationType->incrementVersion();
+            $dbApplicationType->resetMonitoringSets();
 
-            $applicationType->incrementVersion();
-            $monitoringSets = $applicationType->getMonitoringSets();
-            $applicationType->resetMonitoringSets();
-            foreach ($monitoringSets as $ms) {
+            foreach ($applicationType->getMonitoringSets() as $ms) {
                 $loaded = $this->msManager->getOneBy(['id' => $ms->getId()]);
-                $applicationType->addMonitoringSet($loaded);
+                if (($loaded instanceof MonitoringSet) === false) {
+                    continue;
+                }
+                $dbApplicationType->addMonitoringSet($loaded);
             }
-            $dm->persist($applicationType);
+
+            $dm->persist($dbApplicationType);
             $dm->flush();
             $isSuccessful = true;
         } catch (\Exception $e) {

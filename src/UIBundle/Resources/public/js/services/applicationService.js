@@ -111,6 +111,16 @@
                     });
             };
 
+            service.applyChanges = function (applicationId) {
+                return ApplicationFactory.applyChanges(applicationId)
+                    .then(function(response) {
+                        return response.data;
+                    })
+                    .catch(function (err) {
+                        throw new Error(err);
+                    });
+            }
+
             return service;
         });
 })(window.angular);

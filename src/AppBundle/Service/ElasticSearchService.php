@@ -363,7 +363,17 @@ class ElasticSearchService
         $monitoringSets = $application->getType()->getMonitoringSets();
 
         foreach ($monitoringSets as $monitoringSet) {
-            /** @var Template|bool $template */
+            if ($monitoringSet->isValid() === false) {
+                $this->logger->warning(
+                    "leadwire.es.createIndexTemplate",
+                    [
+                        'event' => 'Ignoring invalid MonitoringSet',
+                        'monitoring_set' => $monitoringSet->getName(),
+                    ]
+                );
+                continue;
+            }
+            /** @var ?Template $template */
             $template = $monitoringSet->getTemplateByType(Template::INDEX_TEMPLATE);
 
             if (($template instanceof Template) === false) {
