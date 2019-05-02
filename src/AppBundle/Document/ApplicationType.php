@@ -91,19 +91,11 @@ class ApplicationType
     private $version;
 
     /**
-     * @var bool
-     * @JMS\Type("boolean")
-     * @JMS\Expose
-     */
-    private $canApplyChanges;
-
-    /**
      * Constructor
      */
     public function __construct()
     {
         $this->monitoringSets = new ArrayCollection();
-        $this->canApplyChanges = false;
     }
 
     /**
@@ -293,31 +285,6 @@ class ApplicationType
     public function incrementVersion()
     {
         $this->version += 1;
-        $this->canApplyChanges = true;
-
-        return $this;
-    }
-
-    /**
-     * Get the value of canApplyChanges
-     *
-     * @return  bool
-     */
-    public function getCanApplyChanges()
-    {
-        return $this->canApplyChanges;
-    }
-
-    /**
-     * Set the value of canApplyChanges
-     *
-     * @param  bool  $canApplyChanges
-     *
-     * @return  self
-     */
-    public function setCanApplyChanges(bool $canApplyChanges)
-    {
-        $this->canApplyChanges = $canApplyChanges;
 
         return $this;
     }

@@ -94,3 +94,8 @@ services:
             $sgConfig: "%sg%"
         tags:
             - { name: monolog.logger, channel: search_guard }
+    AppBundle\Service\CuratorService:
+        arguments:
+            $curatorConfig: "%curator%"
+        tags:
+            - { name: monolog.logger, channel: curator }

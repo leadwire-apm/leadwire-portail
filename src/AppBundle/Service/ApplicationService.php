@@ -246,6 +246,7 @@ class ApplicationService
         $application = $this
             ->serializer
             ->deserialize($json, Application::class, 'json', $context);
+        $application->setDeployedTypeVersion($application->getType()->getVersion());
         $application->setName(\str_replace(' ', '_', $application->getName())); // Make sure thare are no spaces
         $dbApplication = $this->applicationManager->getOneBy(['name' => $application->getName()]);
 

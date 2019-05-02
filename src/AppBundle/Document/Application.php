@@ -3,11 +3,11 @@
 namespace AppBundle\Document;
 
 use AppBundle\Document\User;
-use JMS\Serializer\Annotation as JMS;
+use Doctrine\Bundle\MongoDBBundle\Validator\Constraints\Unique;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
+use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
-use Doctrine\Bundle\MongoDBBundle\Validator\Constraints\Unique;
 
 /**
  * @ODM\Document(repositoryClass="AppBundle\Repository\ApplicationRepository")
@@ -116,6 +116,15 @@ class Application
      * @JMS\Groups({"full", "Default"})
      */
     private $type;
+
+    /**
+     * @var int
+     *
+     * @ODM\Field(type="int")
+     * @JMS\Type("integer")
+     * @JMS\Expose
+     */
+    private $deployedTypeVersion;
 
     /**
      * @ODM\ReferenceMany(targetDocument="AppBundle\Document\Invitation", mappedBy="app", storeAs="dbRef")
@@ -395,7 +404,7 @@ class Application
      */
     public function getApplicationIndex(): string
     {
-        return "app_". $this->uuid;
+        return "app_" . $this->uuid;
     }
 
     /**
@@ -472,5 +481,39 @@ class Application
         $this->createdAt = $createdAt;
 
         return $this;
+    }
+
+    /**
+     * Get the value of deployedTypeVersion
+     *
+     * @return  int
+     */
+    public function getDeployedTypeVersion(): int
+    {
+        return $this->deployedTypeVersion;
+    }
+
+    /**
+     * Set the value of deployedTypeVersion
+     *
+     * @param  int  $deployedTypeVersion
+     *
+     * @return  self
+     */
+    public function setDeployedTypeVersion(int $deployedTypeVersion)
+    {
+        $this->deployedTypeVersion = $deployedTypeVersion;
+
+        return $this;
+    }
+
+    /**
+     * @JMS\VirtualProperty
+     *
+     * @return boolean
+     */
+    public function canApplyChanges(): bool
+    {
+        return $this->deployedTypeVersion !== $this->getType()->getVersion();
     }
 }

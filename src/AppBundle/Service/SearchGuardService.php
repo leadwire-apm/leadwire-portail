@@ -14,6 +14,8 @@ use JMS\Serializer\SerializerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Filesystem;
+use function unlink;
+use function is_file;
 
 class SearchGuardService
 {
