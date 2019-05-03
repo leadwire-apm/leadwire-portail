@@ -55,7 +55,6 @@ services:
     AppBundle\Service\KibanaService:
         arguments:
             $settings: "%kibana%"
-            $hasAllUserTenant: '%has_all_user_tenant%'
         tags:
             - { name: monolog.logger, channel: kibana }
 

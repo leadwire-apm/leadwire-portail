@@ -59,10 +59,6 @@ class KibanaService
      */
     private $jwtHelper;
 
-    /**
-     * @var bool
-     */
-    private $hasAllUserTenant;
 
     /**
      * Undocumented function
@@ -70,20 +66,17 @@ class KibanaService
      * @param LoggerInterface $logger
      * @param ApplicationPermissionManager $permissionManager,
      * @param JWTHelper $jwtHelper
-     * @param bool $hasAllUserTenant
      * @param array $settings
      */
     public function __construct(
         LoggerInterface $logger,
         ApplicationPermissionManager $permissionManager,
         JWTHelper $jwtHelper,
-        bool $hasAllUserTenant,
         array $settings = []
     ) {
         $this->logger = $logger;
         $this->permissionManager = $permissionManager;
         $this->jwtHelper = $jwtHelper;
-        $this->hasAllUserTenant = $hasAllUserTenant;
         $this->httpClient = new Client(
             [
                 'curl' => array(CURLOPT_SSL_VERIFYPEER => false),
@@ -94,21 +87,6 @@ class KibanaService
         $this->url = $settings['host'] . ":" . (string) $settings['port'] . "/";
         $this->kibanaAdminUsername = $settings['kibana_admin_username'];
         $this->kibanaAdminUuid = $settings['kibana_admin_uuid'];
-    }
-
-    /**
-     * @deprecated 1.3.0
-     * @param User $user
-     *
-     * @return bool
-     */
-    public function createAllUserDashboard(User $user)
-    {
-        if ($this->hasAllUserTenant === false) {
-            return false;
-        }
-
-        throw new NotImplementedException("This feature is not implemented");
     }
 
     /**
@@ -187,21 +165,6 @@ class KibanaService
         }
 
         return true;
-    }
-
-    /**
-     * @deprecated 1.3.0
-     * @param User $user
-     *
-     * @return void
-     */
-    public function loadIndexPatternForAllUser(User $user)
-    {
-        if ($this->hasAllUserTenant === false) {
-            return;
-        }
-
-        throw new NotImplementedException("This feature is not implemented");
     }
 
     /**

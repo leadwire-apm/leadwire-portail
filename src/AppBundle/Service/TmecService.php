@@ -76,7 +76,19 @@ class TmecService
     {
         /** @var Tmec $tmec */
         $tmec = $this->serializer->deserialize($json, Tmec::class, 'json');
-        $this->tmecManager->update($tmec);
+
+        $dbDocument = $this->tmecManager->getOneBy(['id' => $tmec->getId()]);
+
+        if ($dbDocument instanceof Tmec) {
+            $dbDocument->setApplication($tmec->getApplication());
+            $dbDocument->setVersion($tmec->getVersion());
+            $dbDocument->setDescription($tmec->getDescription());
+            $dbDocument->setStartDate($tmec->getStartDate());
+            $dbDocument->setEndDate($tmec->getEndDate());
+            $this->tmecManager->update($dbDocument);
+        } else {
+            throw new \Exception("Invalid document");
+        }
     }
 
     /**
