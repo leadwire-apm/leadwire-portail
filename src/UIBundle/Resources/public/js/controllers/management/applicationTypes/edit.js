@@ -38,6 +38,7 @@
                         selected.push(ms.id);
                     });
                     $('.selectpicker').selectpicker('val', selected);
+                    console.log(selected);
                 });
 
         };

@@ -16,7 +16,7 @@
                         <thead>
                         <tr>
                             <th class="text-center">Name</th>
-                            <th class="text-center">Qualifier</th>
+                            <th class="text-center">Version</th>
                             <th class="text-center">Templates</th>
                             <th class="text-center" colspan="3" style="text-align: center">Actions</th>
                         </tr>
@@ -31,14 +31,14 @@
                             <td data-title="Name" data-label="Name">
                                 [[monitoringSet.name]]
                             </td>
-                            <td data-title="Qualifier" data-label="Qualifier">
-                                [[monitoringSet.qualifier]]
+                            <td data-title="Version" data-label="Version">
+                                [[monitoringSet.version]]
                             </td>
-                            <td data-title="Qualifier" data-label="Qualifier" class="text-left">
+                            <td data-title="Templates" data-label="Templates" class="text-left">
                                 <ul>
-                                    <li style="list-style: none;"><i style="padding-right:5px;" ng-class="ctrl.templateStatus(monitoringSet, 'Dashboards') ? 'fas fa-check-circle' : 'fas fa-times-circle'"></i>Dashboards</li>
-                                    <li style="list-style: none;"><i style="padding-right:5px;" ng-class="ctrl.templateStatus(monitoringSet, 'Index-Pattern') ? 'fas fa-check-circle' : 'fas fa-times-circle'"></i>Index-Pattern</li>
-                                    <li style="list-style: none;"><i style="padding-right:5px;" ng-class="ctrl.templateStatus(monitoringSet, 'Index-Template') ? 'fas fa-check-circle' : 'fas fa-times-circle'"></i>Index-Template</li>
+                                    <li style="list-style: none;"><i style="padding-right:5px;" ng-class="ctrl.templateStatus(monitoringSet, 'Dashboards') ? 'fas fa-check-circle text-success' : 'fas fa-times-circle text-danger'"></i>Dashboards</li>
+                                    <li style="list-style: none;"><i style="padding-right:5px;" ng-class="ctrl.templateStatus(monitoringSet, 'Index-Pattern') ? 'fas fa-check-circle text-success' : 'fas fa-times-circle text-danger'"></i>Index-Pattern</li>
+                                    <li style="list-style: none;"><i style="padding-right:5px;" ng-class="ctrl.templateStatus(monitoringSet, 'Index-Template') ? 'fas fa-check-circle text-success' : 'fas fa-times-circle text-danger'"></i>Index-Template</li>
                                 </ul>
                             </td>
                             <td data-title="Actions" data-label="Actions"

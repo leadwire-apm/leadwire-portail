@@ -134,11 +134,39 @@ class MonitoringSet
         return $this->templates->toArray();
     }
 
-    public function addTemplate(Template $template)
+    /**
+     *
+     * @param ArrayCollection $templates
+     *
+     * @return self
+     */
+    public function setTemplates(ArrayCollection $templates): self
+    {
+        $this->templates = $templates;
+
+        return $this;
+    }
+
+    /**
+     * @param Template $template
+     *
+     * @return self
+     */
+    public function addTemplate(Template $template): self
     {
         if ($this->templates->contains($template) === false) {
             $this->templates->add($template);
         }
+
+        return $this;
+    }
+
+    /**
+     * @return self
+     */
+    public function resetTemplates(): self
+    {
+        $this->templates->clear();
 
         return $this;
     }

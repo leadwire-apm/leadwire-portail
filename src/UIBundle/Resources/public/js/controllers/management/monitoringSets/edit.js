@@ -31,6 +31,7 @@
         vm.loadMonitoringSet = function (id) {
             MonitoringSetService.find(id)
                 .then(function (monitoringSet) {
+                    vm.monitoringSet.id = id;
                     vm.monitoringSet.name = monitoringSet.name;
                     vm.monitoringSet.qualifier = monitoringSet.qualifier;
                     vm.monitoringSet.version = monitoringSet.version;
@@ -45,6 +46,11 @@
 
         vm.editMonitoringSet = function () {
             vm.flipActivityIndicator('isSaving')
+            vm.monitoringSet.templates = [
+                vm.monitoringSet.dashboardTemplate,
+                vm.monitoringSet.indexPatternTemplate,
+                vm.monitoringSet.indexTemplateTemplate,
+            ]
             MonitoringSetService.update(vm.monitoringSet)
                 .then(function () {
                     vm.flipActivityIndicator('isSaving')
@@ -71,12 +77,14 @@
                     isLoading: false,
                 },
                 monitoringSet: {
+                    id: '',
                     name: '',
                     qualifier: '',
                     version: '',
                     dashboardTemplate: {id:null},
                     indexPatternTemplate: {id:null},
                     indexTemplateTemplate: {id:null},
+                    templates: []
                 },
             });
             vm.loadTemplates();

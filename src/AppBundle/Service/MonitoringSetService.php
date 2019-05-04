@@ -2,11 +2,13 @@
 
 namespace AppBundle\Service;
 
-use AppBundle\Document\MonitoringSet;
-use AppBundle\Manager\ApplicationTypeManager;
-use AppBundle\Manager\MonitoringSetManager;
-use JMS\Serializer\SerializerInterface;
 use Psr\Log\LoggerInterface;
+use AppBundle\Document\Template;
+use AppBundle\Document\MonitoringSet;
+use AppBundle\Manager\TemplateManager;
+use JMS\Serializer\SerializerInterface;
+use AppBundle\Manager\MonitoringSetManager;
+use AppBundle\Manager\ApplicationTypeManager;
 
 /**
  * Service class for MonitoringSet entities
@@ -25,6 +27,11 @@ class MonitoringSetService
     private $applicationTypeManager;
 
     /**
+     * @var TemplateManager
+     */
+    private $templateManager;
+
+    /**
      * @var SerializerInterface
      */
     private $serializer;
@@ -35,20 +42,23 @@ class MonitoringSetService
     private $logger;
 
     /**
-     * Constructor
      *
      * @param MonitoringSetManager $monitoringSetManager
+     * @param ApplicationTypeManager $applicationTypeManager
+     * @param TemplateManager $templateManager
      * @param SerializerInterface $serializer
      * @param LoggerInterface $logger
      */
     public function __construct(
         MonitoringSetManager $monitoringSetManager,
         ApplicationTypeManager $applicationTypeManager,
+        TemplateManager $templateManager,
         SerializerInterface $serializer,
         LoggerInterface $logger
     ) {
         $this->monitoringSetManager = $monitoringSetManager;
         $this->applicationTypeManager = $applicationTypeManager;
+        $this->templateManager = $templateManager;
         $this->serializer = $serializer;
         $this->logger = $logger;
     }
@@ -141,8 +151,26 @@ class MonitoringSetService
         $isSuccessful = false;
 
         try {
+            /** @var MonitoringSet $monitoringSet */
             $monitoringSet = $this->serializer->deserialize($json, MonitoringSet::class, 'json');
-            $this->monitoringSetManager->update($monitoringSet);
+
+            $dbDocument = $this->monitoringSetManager->getOneBy(['id' => $monitoringSet->getId()]);
+
+            if ($dbDocument instanceof MonitoringSet) {
+                $dbDocument->setVersion($monitoringSet->getVersion());
+                $dbDocument->setQualifier($monitoringSet->getQualifier());
+                $dbDocument->setName($monitoringSet->getName());
+                $dbDocument->setVersion($monitoringSet->getVersion());
+                $dbDocument->resetTemplates();
+                foreach ($monitoringSet->getTemplates() as $template) {
+                    $loaded = $this->templateManager->getOneBy(['id' => $template->getId()]);
+                    if (($loaded instanceof Template) === false) {
+                        continue;
+                    }
+                    $dbDocument->addTemplate($loaded);
+                }
+                $this->monitoringSetManager->update($dbDocument);
+            }
             $isSuccessful = true;
         } catch (\Exception $e) {
             $this->logger->error($e->getMessage());

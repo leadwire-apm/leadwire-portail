@@ -21,6 +21,7 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Symfony\Component\Routing\Annotation\Route;
+use AppBundle\Manager\ApplicationManager;
 
 class ApplicationController extends Controller
 {
@@ -353,6 +354,7 @@ class ApplicationController extends Controller
      *
      * @param Request $request
      * @param ApplicationService $applicationService
+     * @param ApplicationManager $applicationManager
      * @param ElasticSearchService $esService
      * @param KibanaService $kibanaService
      * @param string $id
@@ -362,6 +364,7 @@ class ApplicationController extends Controller
     public function applyTypeChangeAction(
         Request $request,
         ApplicationService $applicationService,
+        ApplicationManager $applicationManager,
         ElasticSearchService $esService,
         KibanaService $kibanaService,
         string $id
@@ -389,6 +392,8 @@ class ApplicationController extends Controller
             );
 
             $kibanaService->makeDefaultIndex($application->getSharedIndex(), $aliases[0]);
+            $application->setDeployedTypeVersion($application->getType()->getVersion());
+            $applicationManager->update($application);
         } else {
             throw new NotFoundHttpException("Application with ID {$id} not found.");
         }
