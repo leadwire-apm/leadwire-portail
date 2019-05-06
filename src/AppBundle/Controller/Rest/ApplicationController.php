@@ -22,6 +22,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use AppBundle\Manager\ApplicationManager;
+use AppBundle\Service\CuratorService;
 
 class ApplicationController extends Controller
 {
@@ -152,6 +153,7 @@ class ApplicationController extends Controller
      * @param ElasticSearchService $esService
      * @param KibanaService $kibanaService
      * @param SearchGuardService $sgService
+     * @param CuratorService $curatorService
      *
      * @return JsonResponse
      */
@@ -161,7 +163,8 @@ class ApplicationController extends Controller
         LdapService $ldapService,
         ElasticSearchService $esService,
         KibanaService $kibanaService,
-        SearchGuardService $sgService
+        SearchGuardService $sgService,
+        CuratorService $curatorService
     ) {
         $status = false;
         $application = null;
@@ -200,6 +203,9 @@ class ApplicationController extends Controller
                 $kibanaService->makeDefaultIndex($application->getSharedIndex(), 'default');
 
                 $sgService->updateSearchGuardConfig();
+
+                $curatorService->updateCuratorConfig();
+
                 $status = true;
             }
         } catch (DuplicateApplicationNameException $e) {
@@ -224,8 +230,11 @@ class ApplicationController extends Controller
      *
      * @param Request $request
      * @param ApplicationService $applicationService
-     *
+     * @param ElasticSearchService $esService
+     * @param KibanaService $kibanaService
+     * @param CuratorService $curatorService
      * @param string $id
+     *
      * @return Response
      */
     public function updateApplicationAction(
@@ -233,6 +242,7 @@ class ApplicationController extends Controller
         ApplicationService $applicationService,
         ElasticSearchService $esService,
         KibanaService $kibanaService,
+        CuratorService $curatorService,
         string $id
     ) {
         try {
@@ -262,6 +272,8 @@ class ApplicationController extends Controller
                 );
 
                 $kibanaService->makeDefaultIndex($application->getSharedIndex(), $aliases[0]);
+
+                $curatorService->updateCuratorConfig();
             }
 
             return $this->renderResponse($state['successful']);
