@@ -28,6 +28,11 @@
 
         vm.saveAppType = function () {
             vm.flipActivityIndicator('isSaving');
+            vm.monitoringSet.templates = [
+                vm.monitoringSet.dashboardTemplate,
+                vm.monitoringSet.indexPatternTemplate,
+                vm.monitoringSet.indexTemplateTemplate,
+            ];
             MonitoringSetService.create(vm.monitoringSet)
                 .then(function () {
                     vm.flipActivityIndicator('isSaving');
@@ -60,6 +65,7 @@
                     dashboardTemplate: {id:null},
                     indexPatternTemplate: {id:null},
                     indexTemplateTemplate: {id:null},
+                    templates: []
                 },
             });
             vm.loadTemplates();

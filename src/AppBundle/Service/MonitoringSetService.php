@@ -131,7 +131,17 @@ class MonitoringSetService
      */
     public function newMonitoringSet($json)
     {
+        /** @var MonitoringSet $monitoringSet */
         $monitoringSet = $this->serializer->deserialize($json, MonitoringSet::class, 'json');
+        $templates = $monitoringSet->getTemplates();
+        $monitoringSet->resetTemplates();
+        foreach ($templates as $template) {
+            $loaded = $this->templateManager->getOneBy(['id' => $template->getId()]);
+            if (($loaded instanceof Template) === false) {
+                continue;
+            }
+            $monitoringSet->addTemplate($loaded);
+        }
         $this->monitoringSetManager->update($monitoringSet);
 
         return true;

@@ -50,7 +50,7 @@
                 vm.monitoringSet.dashboardTemplate,
                 vm.monitoringSet.indexPatternTemplate,
                 vm.monitoringSet.indexTemplateTemplate,
-            ]
+            ];
             MonitoringSetService.update(vm.monitoringSet)
                 .then(function () {
                     vm.flipActivityIndicator('isSaving')
