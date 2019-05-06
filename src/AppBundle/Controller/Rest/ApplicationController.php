@@ -260,7 +260,8 @@ class ApplicationController extends Controller
                     $application->getApplicationIndex()
                 );
 
-                $kibanaService->makeDefaultIndex($application->getApplicationIndex(), $aliases[0]);
+                $kibanaService->loadDefaultIndex($application->getApplicationIndex(), 'default');
+                $kibanaService->makeDefaultIndex($application->getApplicationIndex(), 'default');
 
                 $kibanaService->createApplicationDashboards($application);
 
@@ -271,7 +272,8 @@ class ApplicationController extends Controller
                     $application->getSharedIndex()
                 );
 
-                $kibanaService->makeDefaultIndex($application->getSharedIndex(), $aliases[0]);
+                $kibanaService->loadDefaultIndex($application->getSharedIndex(), 'default');
+                $kibanaService->makeDefaultIndex($application->getSharedIndex(), 'default');
 
                 $curatorService->updateCuratorConfig();
             }
@@ -392,7 +394,8 @@ class ApplicationController extends Controller
                 $application->getApplicationIndex()
             );
 
-            $kibanaService->makeDefaultIndex($application->getApplicationIndex(), $aliases[0]);
+            $kibanaService->loadDefaultIndex($application->getApplicationIndex(), 'default');
+            $kibanaService->makeDefaultIndex($application->getApplicationIndex(), 'default');
 
             $kibanaService->createApplicationDashboards($application);
 
@@ -403,7 +406,9 @@ class ApplicationController extends Controller
                 $application->getSharedIndex()
             );
 
-            $kibanaService->makeDefaultIndex($application->getSharedIndex(), $aliases[0]);
+            $kibanaService->loadDefaultIndex($application->getSharedIndex(), 'default');
+            $kibanaService->makeDefaultIndex($application->getSharedIndex(), 'default');
+            
             $application->setDeployedTypeVersion($application->getType()->getVersion());
             $applicationManager->update($application);
         } else {
