@@ -68,7 +68,7 @@ class SgRoles
                 "*" => ['READ'],
             ],
             '*' => [
-                "*" => ['indices:admin/aliases/get', 'indices:monitor/stats', 'indices:admin/template/get', 'indices:admin/mappings/get', 'indices:admin/get'],
+                "*" => ['indices:admin/aliases/get', 'indices:monitor/stats', 'indices:admin/template/get', 'indices:admin/mappings/get', 'indices:admin/get', 'indices:data/read/field_caps'],
             ],
 
         ];
