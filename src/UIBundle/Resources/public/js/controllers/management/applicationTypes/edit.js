@@ -2,6 +2,7 @@
     angular.module('leadwireApp')
         .controller('EditApplicationTypeController', [
             'ApplicationTypeService',
+            'MonitoringSetService',
             '$stateParams',
             'MESSAGES_CONSTANTS',
             '$state',
@@ -15,6 +16,7 @@
      */
     function EditApplicationTypeControllerCtrlFN (
         ApplicationTypeService,
+        MonitoringSetService,
         $stateParams,
         MESSAGES_CONSTANTS,
         $state,
@@ -29,13 +31,30 @@
         vm.loadApplicationType = function (id) {
             ApplicationTypeService.find(id)
                 .then(function (appType) {
+                    selected = [];
                     vm.applicationType = appType;
+                    vm.applicationType.monitoringSets
+                    .forEach(function(ms) {
+                        selected.push(ms.id);
+                    });
+                    $('.selectpicker').selectpicker('val', selected);
+                    console.log(selected);
                 });
 
         };
 
+        vm.loadMonitoringSets = function() {
+            MonitoringSetService.listValid()
+            .then(function(monitoringSets) {
+                vm.availableMonitoringSets = monitoringSets;
+                $('.selectpicker').selectpicker('refresh');
+            });
+        };
+
         vm.editAppType = function () {
             vm.flipActivityIndicator('isSaving')
+            vm.applicationType.monitoringSets = vm.applicationType.monitoringSets.map(function (ms) {return {'id': ms};});
+            console.log(vm.applicationType.monitoringSets);
             ApplicationTypeService.update(vm.applicationType)
                 .then(function () {
                     vm.flipActivityIndicator('isSaving')
@@ -56,10 +75,13 @@
                 },
                 applicationType: {
                     name: '',
-                    agent: '',
+                    description: '',
                     installation: '',
+                    monitoringSets:[]
                 },
+                availableMonitoringSets: []
             });
+            vm.loadMonitoringSets();
             vm.loadApplicationType($stateParams.id);
         };
 

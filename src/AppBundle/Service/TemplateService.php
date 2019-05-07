@@ -2,14 +2,12 @@
 
 namespace AppBundle\Service;
 
-use AppBundle\Document\Template;
-use Symfony\Component\Finder\Finder;
 use AppBundle\Document\MonitoringSet;
-use AppBundle\Manager\TemplateManager;
-use AppBundle\Document\ApplicationType;
-use JMS\Serializer\SerializerInterface;
+use AppBundle\Document\Template;
 use AppBundle\Manager\MonitoringSetManager;
-use AppBundle\Manager\ApplicationTypeManager;
+use AppBundle\Manager\TemplateManager;
+use Doctrine\Common\Collections\ArrayCollection;
+use JMS\Serializer\SerializerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
@@ -26,32 +24,18 @@ class TemplateService
     private $serializer;
 
     /**
-     * @var ApplicationTypeManager
-     */
-    private $applicationTypeManager;
-
-    /**
      * @var MonitoringSetManager
      */
     private $msManager;
 
-    /**
-     * @var string
-     */
-    private $defaultTemplatesPath;
-
     public function __construct(
         TemplateManager $templateManager,
-        ApplicationTypeManager $applicationTypeManager,
         MonitoringSetManager $msManager,
-        SerializerInterface $serializer,
-        string $defaultTemplatesPath
+        SerializerInterface $serializer
     ) {
         $this->templateManager = $templateManager;
         $this->serializer = $serializer;
-        $this->applicationTypeManager = $applicationTypeManager;
         $this->msManager = $msManager;
-        $this->defaultTemplatesPath = $defaultTemplatesPath;
     }
 
     public function newTemplate($json)
@@ -60,20 +44,6 @@ class TemplateService
         $template = $this
             ->serializer
             ->deserialize($json, Template::class, 'json');
-
-        /**
-         * * Author's note :
-         * * For some reason, Doctrine complains about cascade operations when flushing the unit of work on PHP 7.1.x (works on 7.2+)
-         * * Workaround -> manually fetch the applicationType from the ID
-         */
-
-         /** @var MonitoringSet $deserializedMs */
-        $deserializedMs = $template->getMonitoringSet();
-        $applicationType = $this->applicationTypeManager->getOneBy(['id' => $template->getApplicationType()->getId()]);
-        $ms = $this->msManager->getOneBy(['id' => $deserializedMs->getId()]);
-
-        $template->setApplicationType($applicationType);
-        $template->setMonitoringSet($ms);
 
         $id = $this->templateManager->update($template);
 
@@ -93,7 +63,13 @@ class TemplateService
      */
     public function listTemplates(): array
     {
-        return $this->templateManager->getAll();
+        $templates = $this->templateManager->getAll();
+
+        /** @var Template $template */
+        foreach ($templates as &$template) {
+            $template->setAttachedMonitoringSets(new ArrayCollection($this->msManager->getAssosiated($template)));
+        }
+        return $templates;
     }
 
     /**
@@ -119,32 +95,5 @@ class TemplateService
     public function getTemplate(string $id)
     {
         return $this->templateManager->getOneBy(['id' => $id]);
-    }
-
-    /**
-     * @param string $id
-     */
-    public function initializeDefaultForApplicationType(string $id)
-    {
-        $applicationType = $this->applicationTypeManager->getOneBy(['id' => $id]);
-
-        foreach ($this->msManager->getAll() as $ms) {
-            $finder = new Finder();
-            $finder->files()->in($this->defaultTemplatesPath.\strtolower($ms->getQualifier()));
-            foreach ($finder as $file) {
-                if ($file->getRealPath() === false) {
-                    throw new \Exception("Error fetching file");
-                }
-                $template = new Template();
-                $template->setName(\strtolower($ms->getName() . "-" . \str_replace(".json", "", $file->getFilename())));
-                $template->setType(\str_replace(".json", "", $file->getFilename()));
-                $template->setContent((string) file_get_contents($file->getRealPath()));
-                $template->setApplicationType($applicationType);
-                $template->setMonitoringSet($ms);
-                $template->setVersion(Template::DEFAULT_VERSION);
-
-                $this->templateManager->update($template);
-            }
-        }
     }
 }

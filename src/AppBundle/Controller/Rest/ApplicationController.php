@@ -21,6 +21,8 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Symfony\Component\Routing\Annotation\Route;
+use AppBundle\Manager\ApplicationManager;
+use AppBundle\Service\CuratorService;
 
 class ApplicationController extends Controller
 {
@@ -28,7 +30,7 @@ class ApplicationController extends Controller
     use RestControllerTrait;
 
     /**
-     * @Route("/{id}/get", methods="GET")
+     * @Route("/{id}/get/{group}", methods="GET", defaults={"group"="Default"})
      *
      * @param Request $request
      * @param ApplicationService $applicationService
@@ -36,11 +38,11 @@ class ApplicationController extends Controller
      *
      * @return Response
      */
-    public function getApplicationAction(Request $request, ApplicationService $applicationService, $id)
+    public function getApplicationAction(Request $request, ApplicationService $applicationService, $id, $group)
     {
         $data = $applicationService->getApplication($id);
 
-        return $this->renderResponse($data, Response::HTTP_OK);
+        return $this->renderResponse($data, Response::HTTP_OK, [$group]);
     }
 
     /**
@@ -151,6 +153,7 @@ class ApplicationController extends Controller
      * @param ElasticSearchService $esService
      * @param KibanaService $kibanaService
      * @param SearchGuardService $sgService
+     * @param CuratorService $curatorService
      *
      * @return JsonResponse
      */
@@ -160,7 +163,8 @@ class ApplicationController extends Controller
         LdapService $ldapService,
         ElasticSearchService $esService,
         KibanaService $kibanaService,
-        SearchGuardService $sgService
+        SearchGuardService $sgService,
+        CuratorService $curatorService
     ) {
         $status = false;
         $application = null;
@@ -173,6 +177,79 @@ class ApplicationController extends Controller
                 $ldapService->createApplicationEntry($application);
                 $ldapService->registerApplication($this->getUser(), $application);
 
+                $esService->deleteIndex($application->getApplicationIndex());
+                $esService->createIndexTemplate($application, $applicationService->getActiveApplicationsNames());
+
+                $esService->createAlias($application);
+
+                $kibanaService->loadIndexPatternForApplication(
+                    $application,
+                    $application->getApplicationIndex()
+                );
+
+                $kibanaService->loadDefaultIndex($application->getApplicationIndex(), 'default');
+                $kibanaService->makeDefaultIndex($application->getApplicationIndex(), 'default');
+
+                $kibanaService->createApplicationDashboards($application);
+
+                $esService->deleteIndex($application->getSharedIndex());
+
+                $kibanaService->loadIndexPatternForApplication(
+                    $application,
+                    $application->getSharedIndex()
+                );
+
+                $kibanaService->loadDefaultIndex($application->getSharedIndex(), 'default');
+                $kibanaService->makeDefaultIndex($application->getSharedIndex(), 'default');
+
+                $sgService->updateSearchGuardConfig();
+
+                $curatorService->updateCuratorConfig();
+
+                $status = true;
+            }
+        } catch (DuplicateApplicationNameException $e) {
+            return $this->renderResponse(['message' => $e->getMessage()], Response::HTTP_NOT_ACCEPTABLE);
+        } catch (\Exception $e) {
+            if ($application instanceof Application) {
+                $applicationService->obliterateApplication($application);
+
+                return $this->renderResponse(['message' => $e->getMessage()], Response::HTTP_NOT_ACCEPTABLE);
+            }
+        }
+
+        if ($status === true) {
+            return $this->renderResponse($application);
+        } else {
+            return $this->renderResponse(false);
+        }
+    }
+
+    /**
+     * @Route("/{id}/update", methods="PUT")
+     *
+     * @param Request $request
+     * @param ApplicationService $applicationService
+     * @param ElasticSearchService $esService
+     * @param KibanaService $kibanaService
+     * @param CuratorService $curatorService
+     * @param string $id
+     *
+     * @return Response
+     */
+    public function updateApplicationAction(
+        Request $request,
+        ApplicationService $applicationService,
+        ElasticSearchService $esService,
+        KibanaService $kibanaService,
+        CuratorService $curatorService,
+        string $id
+    ) {
+        try {
+            $data = $request->getContent();
+            $state = $applicationService->updateApplication($data, $id);
+            if ($state['esUpdateRequired'] === true) {
+                $application = $state['application'];
                 $esService->deleteIndex($application->getApplicationIndex());
                 $esService->createIndexTemplate($application, $applicationService->getActiveApplicationsNames());
 
@@ -198,69 +275,7 @@ class ApplicationController extends Controller
                 $kibanaService->loadDefaultIndex($application->getSharedIndex(), 'default');
                 $kibanaService->makeDefaultIndex($application->getSharedIndex(), 'default');
 
-                $sgService->updateSearchGuardConfig();
-                $status = true;
-            }
-        } catch (DuplicateApplicationNameException $e) {
-            return $this->renderResponse(['message' => $e->getMessage()], Response::HTTP_NOT_ACCEPTABLE);
-        } catch (\Exception $e) {
-            if ($application instanceof Application) {
-                $applicationService->obliterateApplication($application);
-
-                return $this->renderResponse(['message' => $e->getMessage()], Response::HTTP_NOT_ACCEPTABLE);
-            }
-        }
-
-        if ($status === true) {
-            return $this->renderResponse($application);
-        } else {
-            return $this->renderResponse(false);
-        }
-    }
-
-    /**
-     * @Route("/{id}/update", methods="PUT")
-     *
-     * @param Request $request
-     * @param ApplicationService $applicationService
-     *
-     * @param string $id
-     * @return Response
-     */
-    public function updateApplicationAction(
-        Request $request,
-        ApplicationService $applicationService,
-        ElasticSearchService $esService,
-        KibanaService $kibanaService,
-        string $id
-    ) {
-        try {
-            $data = $request->getContent();
-            $state = $applicationService->updateApplication($data, $id);
-            if ($state['esUpdateRequired'] === true) {
-                $application = $state['application'];
-                $esService->deleteIndex($application->getApplicationIndex());
-                $esService->createIndexTemplate($application, $applicationService->getActiveApplicationsNames());
-
-                $aliases = $esService->createAlias($application);
-
-                $kibanaService->loadIndexPatternForApplication(
-                    $application,
-                    $application->getApplicationIndex()
-                );
-
-                $kibanaService->makeDefaultIndex($application->getApplicationIndex(), $aliases[0]);
-
-                $kibanaService->createApplicationDashboards($application);
-
-                $esService->deleteIndex($application->getSharedIndex());
-
-                $kibanaService->loadIndexPatternForApplication(
-                    $application,
-                    $application->getSharedIndex()
-                );
-
-                $kibanaService->makeDefaultIndex($application->getSharedIndex(), $aliases[0]);
+                $curatorService->updateCuratorConfig();
             }
 
             return $this->renderResponse($state['successful']);
@@ -346,5 +361,60 @@ class ApplicationController extends Controller
         $successful = $applicationService->toggleActivation($id);
 
         return $this->renderResponse($successful, Response::HTTP_OK);
+    }
+
+    /**
+     * @Route("/{id}/apply-change", methods="PUT")
+     *
+     * @param Request $request
+     * @param ApplicationService $applicationService
+     * @param ApplicationManager $applicationManager
+     * @param ElasticSearchService $esService
+     * @param KibanaService $kibanaService
+     * @param string $id
+     *
+     * @return Response
+     */
+    public function applyTypeChangeAction(
+        Request $request,
+        ApplicationService $applicationService,
+        ApplicationManager $applicationManager,
+        ElasticSearchService $esService,
+        KibanaService $kibanaService,
+        string $id
+    ) {
+        $application = $applicationService->getApplication($id);
+
+        if ($application instanceof Application) {
+            $esService->deleteIndex($application->getApplicationIndex());
+            $esService->createIndexTemplate($application, $applicationService->getActiveApplicationsNames());
+            $aliases = $esService->createAlias($application);
+            $kibanaService->loadIndexPatternForApplication(
+                $application,
+                $application->getApplicationIndex()
+            );
+
+            $kibanaService->loadDefaultIndex($application->getApplicationIndex(), 'default');
+            $kibanaService->makeDefaultIndex($application->getApplicationIndex(), 'default');
+
+            $kibanaService->createApplicationDashboards($application);
+
+            $esService->deleteIndex($application->getSharedIndex());
+
+            $kibanaService->loadIndexPatternForApplication(
+                $application,
+                $application->getSharedIndex()
+            );
+
+            $kibanaService->loadDefaultIndex($application->getSharedIndex(), 'default');
+            $kibanaService->makeDefaultIndex($application->getSharedIndex(), 'default');
+            
+            $application->setDeployedTypeVersion($application->getType()->getVersion());
+            $applicationManager->update($application);
+        } else {
+            throw new NotFoundHttpException("Application with ID {$id} not found.");
+        }
+
+        return $this->renderResponse(true);
     }
 }

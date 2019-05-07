@@ -3,6 +3,7 @@
 namespace ATS\CoreBundle\Manager;
 
 use Doctrine\ODM\MongoDB\Query\Builder;
+use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Bundle\MongoDBBundle\ManagerRegistry;
 use ATS\CoreBundle\Repository\BaseDocumentRepository;
 
@@ -201,5 +202,13 @@ abstract class AbstractManager
             ->getManager($this->managerName)
             ->getRepository($this->documentClass)
             ->createQueryBuilder();
+    }
+
+    /**
+     * @return ObjectManager
+     */
+    public function getDocumentManager()
+    {
+        return $this->managerRegistry->getManager($this->managerName);
     }
 }

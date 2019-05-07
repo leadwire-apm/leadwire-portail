@@ -5,8 +5,6 @@ namespace AppBundle\Service;
 use AppBundle\Document\Application;
 use AppBundle\Document\Template;
 use AppBundle\Document\User;
-use AppBundle\Manager\MonitoringSetManager;
-use AppBundle\Manager\TemplateManager;
 use ATS\CoreBundle\Service\Util\AString;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
@@ -47,16 +45,6 @@ class ElasticSearchService
     private $httpClient;
 
     /**
-     * @var TemplateManager
-     */
-    private $templateManager;
-
-    /**
-     * @var MonitoringSetManager
-     */
-    private $msManager;
-
-    /**
      * @var bool
      */
     private $hasAllUserTenant;
@@ -64,21 +52,15 @@ class ElasticSearchService
     /**
      * ElasticSearchService constructor.
      * @param LoggerInterface $logger
-     * @param TemplateManager $templateManager
-     * @param MonitoringSetManager $msManager
      * @param bool $hasAllUserTenant
      * @param array $settings
      */
     public function __construct(
         LoggerInterface $logger,
-        TemplateManager $templateManager,
-        MonitoringSetManager $msManager,
         bool $hasAllUserTenant,
         array $settings = []
     ) {
         $this->settings = $settings;
-        $this->templateManager = $templateManager;
-        $this->msManager = $msManager;
         $this->hasAllUserTenant = $hasAllUserTenant;
         $this->logger = $logger;
         $this->httpClient = new Client(
@@ -358,18 +340,21 @@ class ElasticSearchService
      */
     public function createIndexTemplate(Application $application, array $activeApplications)
     {
-        $templates = $this->templateManager->getBy(['applicationType.id' => $application->getType()->getId()]);
+        $monitoringSets = $application->getType()->getMonitoringSets();
 
-        foreach ($this->msManager->getAll() as $monitoringSet) {
-            $filtered = \array_filter(
-                $templates,
-                function (Template $element) use ($monitoringSet) {
-                    return $element->getMonitoringSet() == $monitoringSet && $element->getType() === Template::INDEX_TEMPLATE;
-                }
-            );
-
-            /** @var Template|bool $template */
-            $template = reset($filtered);
+        foreach ($monitoringSets as $monitoringSet) {
+            if ($monitoringSet->isValid() === false) {
+                $this->logger->warning(
+                    "leadwire.es.createIndexTemplate",
+                    [
+                        'event' => 'Ignoring invalid MonitoringSet',
+                        'monitoring_set' => $monitoringSet->getName(),
+                    ]
+                );
+                continue;
+            }
+            /** @var ?Template $template */
+            $template = $monitoringSet->getTemplateByType(Template::INDEX_TEMPLATE);
 
             if (($template instanceof Template) === false) {
                 throw new \Exception(
@@ -395,7 +380,7 @@ class ElasticSearchService
             }
 
             $response = $this->httpClient->put(
-                $this->url . "_template/{$template->getFormattedVersion()}",
+                $this->url . "_template/{$monitoringSet->getFormattedVersion()}",
                 [
                     'auth' => $this->getAuth(),
                     'headers' => [
@@ -410,7 +395,7 @@ class ElasticSearchService
                 [
                     'status_code' => $response->getStatusCode(),
                     'phrase' => $response->getReasonPhrase(),
-                    'url' => $this->url . "_template/{$template->getFormattedVersion()}",
+                    'url' => $this->url . "_template/{$monitoringSet->getFormattedVersion()}",
                     'verb' => 'PUT',
                     'monitoring_set' => $monitoringSet->getName(),
                 ]

@@ -18,8 +18,3 @@ security:
             guard:
                 authenticators:
                     - AppBundle\Security\TokenAuthenticator
-
-    # access_control:
-    #     - { path: ^/login,                             roles: [ IS_AUTHENTICATED_ANONYMOUSLY ] }
-    #     - { path: ^/core/%internal_api_prefix%,        roles: [ ROLE_USER ] }
-    #     - { path: ^/%internal_api_prefix%,             roles: [ ROLE_USER ] }

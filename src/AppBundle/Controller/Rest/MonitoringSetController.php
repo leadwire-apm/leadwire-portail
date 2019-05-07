@@ -29,16 +29,20 @@ class MonitoringSetController extends Controller
     }
 
     /**
-     * @Route("/list", methods="GET")
+     * @Route("/list/{validOnly}", methods="GET", defaults={"validOnly"=false})
      *
      * @param Request $request
      * @param MonitoringSetService $monitoringSetService
      *
      * @return Response
      */
-    public function listMonitoringSetsAction(Request $request, MonitoringSetService $monitoringSetService)
+    public function listMonitoringSetsAction(Request $request, MonitoringSetService $monitoringSetService, $validOnly)
     {
-        $data = $monitoringSetService->listMonitoringSets();
+        if ($validOnly === false) {
+            $data = $monitoringSetService->listMonitoringSets();
+        } else {
+            $data = $monitoringSetService->listValidMonitoringSets();
+        }
 
         return $this->renderResponse($data);
     }

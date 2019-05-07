@@ -55,7 +55,6 @@ services:
     AppBundle\Service\KibanaService:
         arguments:
             $settings: "%kibana%"
-            $hasAllUserTenant: '%has_all_user_tenant%'
         tags:
             - { name: monolog.logger, channel: kibana }
 
@@ -72,17 +71,12 @@ services:
             $appDomain: "%app_domain%"
             $authProviderSettings: "%auth_providers%"
             $superAdminUsername: "%super_admin_username%"
-            $hasAllUserTenant: '%has_all_user_tenant%'
         tags:
             - { name: monolog.logger, channel: auth }
 
     AppBundle\Service\ActivationCodeService:
         arguments:
             $rule: "%activation_code_regex%"
-
-    AppBundle\Service\TemplateService:
-        arguments:
-            $defaultTemplatesPath: "%kernel.root_dir%/Resources/templates/"
 
     AppBundle\Service\JWTHelper:
         arguments:
@@ -94,3 +88,8 @@ services:
             $sgConfig: "%sg%"
         tags:
             - { name: monolog.logger, channel: search_guard }
+    AppBundle\Service\CuratorService:
+        arguments:
+            $curatorConfig: "%curator%"
+        tags:
+            - { name: monolog.logger, channel: curator }

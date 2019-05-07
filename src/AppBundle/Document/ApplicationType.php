@@ -3,9 +3,10 @@
 namespace AppBundle\Document;
 
 use AppBundle\Document\App;
-use JMS\Serializer\Annotation as JMS;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
+use JMS\Serializer\Annotation as JMS;
 
 /**
  * @ODM\Document(repositoryClass="AppBundle\Repository\ApplicationTypeRepository")
@@ -15,8 +16,7 @@ use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
  */
 class ApplicationType
 {
-    const DEFAULT_TYPE = 'Java';
-    const TEMPLATES_COUNT = 8; // Number of monitoring sets x number of templates per monitoring set
+    const DEFAULT_TYPE = 'DEFAULT';
 
     /**
      * @var \MongoId
@@ -47,35 +47,53 @@ class ApplicationType
     private $installation;
 
     /**
-     * @ODM\ReferenceMany(targetDocument="AppBundle\Document\Template", mappedBy="applicationType", storeAs="dbRef", cascade={"remove"})
+     * @var string
      *
-     * @var ArrayCollection
+     * @ODM\Field(type="string")
+     * @JMS\Type("string")
+     * @JMS\Expose
+     * @JMS\Groups({"Default"})
      */
-    private $templates;
+    private $description;
 
     /**
      * @var string
-     *
+     * @deprecated 1.3
      * @ODM\Field(type="string", name="agent")
-     * @JMS\Type("string")
-     * @JMS\Expose
-     * @JMS\Groups({"Default", "full"})
      */
     private $agent;
 
     /**
+     * @var Collection
      * @ODM\ReferenceMany(targetDocument="AppBundle\Document\Application", inversedBy="type", storeAs="dbRef")
      * @JMS\Groups({"full"})
      */
     public $apps;
 
     /**
+     * @var Collection
+     *
+     * @ODM\ReferenceMany(targetDocument="AppBundle\Document\MonitoringSet", storeAs="dbRef", strategy="set")
+     * @JMS\Expose
+     * @JMS\Groups({"full", "Default"})
+     * @JMS\Type("ArrayCollection<AppBundle\Document\MonitoringSet>")
+     */
+    private $monitoringSets;
+
+    /**
+     * @var int
+     * @ODM\Field(type="integer")
+     * @JMS\Type("integer")
+     * @JMS\Expose
+     */
+    private $version;
+
+    /**
      * Constructor
      */
     public function __construct()
     {
-        // auto-generated stub
-        $this->templates = new ArrayCollection();
+        $this->monitoringSets = new ArrayCollection();
     }
 
     /**
@@ -133,17 +151,8 @@ class ApplicationType
     }
 
     /**
-     * Get template
-     *
-     */
-    public function getTemplates()
-    {
-        return $this->templates;
-    }
-
-    /**
      * Get agent
-     *
+     * @deprecated 1.3
      * @return string
      */
     public function getAgent()
@@ -153,6 +162,7 @@ class ApplicationType
 
     /**
      * Set agent
+     * @deprecated 1.3
      * @param string $agent
      *
      * @return ApplicationType
@@ -173,35 +183,107 @@ class ApplicationType
         return (string) $this->id;
     }
 
+    /**
+     * Get the value of monitoringSets
+     */
     public function getMonitoringSets()
     {
-        return array_unique(
-            array_map(
-                function (Template $template) {
-                    return $template->getMonitoringSet();
-                },
-                $this->templates->toArray()
-            )
-        );
+        return $this->monitoringSets->toArray();
     }
 
     /**
-     * @JMS\VirtualProperty()
+     * Undocumented function
      *
-     * @return boolean
+     * @param MonitoringSet $ms
+     *
+     * @return self
      */
-    public function isWellDefined(): bool
+    public function addMonitoringSet(MonitoringSet $ms)
     {
-        return count($this->templates) === self::TEMPLATES_COUNT;
+        if ($this->monitoringSets->contains($ms) === false) {
+            $this->monitoringSets->add($ms);
+        }
+
+        return $this;
     }
 
     /**
-     * @JMS\VirtualProperty()
+     * Get the value of description
+     *
+     * @return  string
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    /**
+     * Set the value of description
+     *
+     * @param  string  $description
+     *
+     * @return  self
+     */
+    public function setDescription(string $description)
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of version
+     *
+     * @return  int
+     */
+    public function getVersion()
+    {
+        return $this->version;
+    }
+
+    /**
+     * Set the value of version
+     *
+     * @param  int  $version
+     *
+     * @return  self
+     */
+    public function setVersion(int $version)
+    {
+        $this->version = $version;
+
+        return $this;
+    }
+
+    /**
+     * @return self
+     */
+    public function incrementVersion(): self
+    {
+        $this->version += 1;
+
+        return $this;
+    }
+
+    public function resetMonitoringSets(): self
+    {
+        $this->monitoringSets->clear();
+
+        return $this;
+    }
+
+    /**
+     * @JMS\VirtualProperty
      *
      * @return boolean
      */
-    public function canInit(): bool
+    public function isValid(): bool
     {
-        return count($this->templates) === 0;
+        $isValid = true;
+        foreach ($this->monitoringSets as $monitoringSets) {
+            $isValid = $isValid && $monitoringSets->isValid();
+        }
+
+        return $isValid;
     }
 }

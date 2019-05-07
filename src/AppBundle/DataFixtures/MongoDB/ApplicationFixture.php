@@ -2,13 +2,13 @@
 
 namespace AppBundle\DataFixtures\MongoDB;
 
-use AppBundle\Document\User;
+use AppBundle\DataFixtures\MongoDB\ApplicationTypeFixture;
 use AppBundle\Document\Application;
 use AppBundle\Document\ApplicationType;
-use Doctrine\Common\Persistence\ObjectManager;
+use AppBundle\Document\User;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
-use AppBundle\DataFixtures\MongoDB\ApplicationTypeFixture;
+use Doctrine\Common\Persistence\ObjectManager;
 
 class ApplicationFixture extends AbstractFixture implements OrderedFixtureInterface
 {
@@ -41,6 +41,7 @@ class ApplicationFixture extends AbstractFixture implements OrderedFixtureInterf
         $jpetstore->setUuid("jpetstore") // * UUID has to be hardcoded since it will be used on Kibana and stuff
             ->setName("jpetstore")
             ->setDescription("A web application built on top of MyBatis 3, Spring 3 and Stripes")
+            ->setDeployedTypeVersion($applicationType->getVersion())
             ->setEmail("wassim.dhib@leadwire.io")
             ->setEnabled(true)
             ->setCreatedAt($now)

@@ -5,6 +5,7 @@ namespace AppBundle\Manager;
 use ATS\CoreBundle\Manager\AbstractManager;
 use Doctrine\Bundle\MongoDBBundle\ManagerRegistry;
 use AppBundle\Document\ApplicationType;
+use AppBundle\Document\MonitoringSet;
 
 /**
  * Manager class for ApplicationType entities
@@ -22,5 +23,15 @@ class ApplicationTypeManager extends AbstractManager
     public function __construct(ManagerRegistry $managerRegistry, $managerName = null)
     {
         parent::__construct($managerRegistry, ApplicationType::class, $managerName);
+    }
+
+    public function getLinkedTypes(MonitoringSet $ms)
+    {
+        return $this
+            ->qb()
+            ->field('monitoringSets.id')->equals((string) $ms->getId())
+            ->getQuery()
+            ->execute()
+            ->toArray(false);
     }
 }

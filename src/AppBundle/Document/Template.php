@@ -2,14 +2,15 @@
 
 namespace AppBundle\Document;
 
-use AppBundle\Document\ApplicationType;
 use AppBundle\Document\MonitoringSet;
-use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 use JMS\Serializer\Annotation as JMS;
+use AppBundle\Document\ApplicationType;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 
 /**
  * @ODM\Document(repositoryClass="AppBundle\Repository\TemplateRepository")
- * @ODM\UniqueIndex(keys={"name"="asc", "version"="desc", "monitoringSet"="asc"})
+ * @ODM\UniqueIndex(keys={"name"="asc", "monitoringSet"="asc"})
  * @ODM\ChangeTrackingPolicy("DEFERRED_EXPLICIT")
  * @JMS\ExclusionPolicy("all")
  */
@@ -17,7 +18,6 @@ class Template
 {
     const DEFAULT_VERSION = "6.5.1";
     const DASHBOARDS = "Dashboards";
-    const DASHBAORDS_ALL = "Dashboards-All";
     const INDEX_TEMPLATE = "Index-Template";
     const INDEX_PATTERN = "Index-Pattern";
 
@@ -34,6 +34,7 @@ class Template
      * @ODM\Field(type="string")
      * @JMS\Expose
      * @JMS\Type("string")
+     * @JMS\Groups({"Default", "template-list"})
      *
      * @var string
      */
@@ -42,6 +43,7 @@ class Template
     /**
      * @ODM\Field(type="string")
      * @JMS\Expose
+     * @JMS\Groups({"full"})
      * @JMS\Type("string")
      *
      * @var string
@@ -52,37 +54,18 @@ class Template
      * @ODM\Field(type="string")
      * @JMS\Expose
      * @JMS\Type("string")
-     *
-     * @var string
-     */
-    private $version;
-
-    /**
-     * @ODM\Field(type="string")
-     * @JMS\Expose
-     * @JMS\Type("string")
+     * @JMS\Groups({"Default", "template-list"})
      *
      * @var string
      */
     private $type;
 
     /**
-     * @ODM\ReferenceOne(targetDocument="AppBundle\Document\ApplicationType", inversedBy="templates", storeAs="dbRef")
+     * @var ArrayCollection
      * @JMS\Expose
-     * @JMS\Type("AppBundle\Document\ApplicationType")
-     *
-     * @var ApplicationType
+     * @JMS\Groups({"Default", "template-list"})
      */
-    private $applicationType;
-
-    /**
-     * @ODM\ReferenceOne(targetDocument="AppBundle\Document\MonitoringSet", inversedBy="templates", storeAs="dbRef")
-     * @JMS\Expose
-     * @JMS\Type("AppBundle\Document\MonitoringSet")
-     *
-     * @var ?MonitoringSet
-     */
-    private $monitoringSet;
+    private $attachedMonitoringSets;
 
     /**
      * Get the value of id
@@ -146,75 +129,16 @@ class Template
 
         return $this;
     }
-
-    /**
-     * Get the value of version
-     *
-     * @return  string
-     */
-    public function getVersion(): string
-    {
-        return $this->version;
-    }
-
-    /**
-     * Set the value of version
-     *
-     * @param  string  $version
-     *
-     * @return  self
-     */
-    public function setVersion(string $version): self
-    {
-        $this->version = $version;
-
-        return $this;
-    }
-
-    /**
-     * Get the value of applicationType
-     *
-     * @return  ApplicationType
-     */
-    public function getApplicationType(): ApplicationType
-    {
-        return $this->applicationType;
-    }
-
-    /**
-     * Set the value of applicationType
-     *
-     * @param  ApplicationType  $applicationType
-     *
-     * @return  self
-     */
-    public function setApplicationType(ApplicationType $applicationType): self
-    {
-        $this->applicationType = $applicationType;
-
-        return $this;
-    }
-
-    /**
-     * Get the value of monitoringSet
-     *
-     * @return  MonitoringSet|null
-     */
-    public function getMonitoringSet(): ?MonitoringSet
-    {
-        return $this->monitoringSet;
-    }
-
     /**
      * Set the value of monitoringSet
      *
-     * @param  ?MonitoringSet  $monitoringSet
+     * @param  MonitoringSet  $monitoringSet
      *
      * @return  self
      */
-    public function setMonitoringSet(?MonitoringSet $monitoringSet): self
+    public function setMonitoringSet(MonitoringSet &$monitoringSet): self
     {
-        $this->monitoringSet = $monitoringSet;
+        $monitoringSet->addTemplate($this);
 
         return $this;
     }
@@ -247,18 +171,32 @@ class Template
     {
         return [
             self::DASHBOARDS,
-            self::DASHBAORDS_ALL,
             self::INDEX_TEMPLATE,
             self::INDEX_PATTERN,
         ];
     }
 
-    public function getFormattedVersion()
+    /**
+     * Get the value of attachedMonitoringSets
+     *
+     * @return  ArrayCollection
+     */
+    public function getAttachedMonitoringSets()
     {
-        if ($this->monitoringSet !== null) {
-            return strtolower($this->monitoringSet->getQualifier()) . "-" . $this->version;
-        }
+        return $this->attachedMonitoringSets;
+    }
 
-        return '-';
+    /**
+     * Set the value of attachedMonitoringSets
+     *
+     * @param  ArrayCollection  $attachedMonitoringSets
+     *
+     * @return  self
+     */
+    public function setAttachedMonitoringSets(ArrayCollection $attachedMonitoringSets)
+    {
+        $this->attachedMonitoringSets = $attachedMonitoringSets;
+
+        return $this;
     }
 }

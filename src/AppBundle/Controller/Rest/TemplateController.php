@@ -68,7 +68,7 @@ class TemplateController extends Controller
         // Only super Admin can do this
         $this->denyAccessUnlessGranted([User::ROLE_ADMIN, User::ROLE_SUPER_ADMIN]);
 
-        return $this->renderResponse($templateService->listTemplates());
+        return $this->renderResponse($templateService->listTemplates(), Response::HTTP_OK, ['template-list']);
     }
 
     /**
@@ -103,7 +103,7 @@ class TemplateController extends Controller
     {
         $data = $templateService->getTemplate($id);
 
-        return $this->renderResponse($data, Response::HTTP_OK, ["Default"]);
+        return $this->renderResponse($data, Response::HTTP_OK, ["full"]);
     }
 
     /**

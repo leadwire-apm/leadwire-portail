@@ -4,7 +4,9 @@ namespace AppBundle\Document;
 
 use AppBundle\Document\Template;
 use JMS\Serializer\Annotation as JMS;
+use AppBundle\Document\ApplicationType;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 
 /**
@@ -15,6 +17,7 @@ use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 class MonitoringSet
 {
 
+    const TEMPLATES_COUNT = 3;
     /**
      * @ODM\Id(strategy="auto")
      * @JMS\Expose
@@ -43,12 +46,26 @@ class MonitoringSet
     private $qualifier;
 
     /**
-     * @ODM\ReferenceMany(targetDocument="AppBundle\Document\Template", storeAs="dbRef", mappedBy="monitoringSet")
-     *
-     * @var array
+     * @ODM\ReferenceMany(targetDocument="AppBundle\Document\Template", storeAs="dbRef", strategy="setArray")
+     * @JMS\Expose
+     * @JMS\Groups({"full", "Default"})
+     * @JMS\Type("ArrayCollection<AppBundle\Document\Template>")
+     * @var Collection
      */
     private $templates;
 
+    /**
+     * @ODM\Field(type="string")
+     * @JMS\Expose
+     * @JMS\Type("string")
+     * @var string
+     */
+    private $version;
+
+    public function __construct()
+    {
+        $this->templates = new ArrayCollection();
+    }
     /**
      * Get the value of id
      *
@@ -114,25 +131,121 @@ class MonitoringSet
      */
     public function getTemplates()
     {
-        return $this->templates;
+        return $this->templates->toArray();
     }
 
     /**
-     * Set the value of templates
      *
-     * @param  array  $templates
+     * @param ArrayCollection $templates
      *
-     * @return  self
+     * @return self
      */
-    public function setTemplates(array $templates)
+    public function setTemplates(ArrayCollection $templates): self
     {
         $this->templates = $templates;
 
         return $this;
     }
 
+    /**
+     * @param Template $template
+     *
+     * @return self
+     */
+    public function addTemplate(Template $template): self
+    {
+        if ($this->templates->contains($template) === false) {
+            $this->templates->add($template);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return self
+     */
+    public function resetTemplates(): self
+    {
+        $this->templates->clear();
+
+        return $this;
+    }
+
+    /**
+     *
+     * @param string $type
+     *
+     * @return Template|null
+     */
+    public function getTemplateByType(string $type): ?Template
+    {
+        $template = $this->templates->filter(
+            function (Template $template) use ($type) {
+                return $template->getType() === $type;
+            }
+        )->first();
+
+        if ($template === false) {
+            return null;
+        }
+        return $template;
+    }
+
     public function __toString()
     {
         return $this->qualifier;
+    }
+
+    /**
+     * Get the value of version
+     *
+     * @return  string
+     */
+    public function getVersion()
+    {
+        return $this->version;
+    }
+
+    /**
+     * Set the value of version
+     *
+     * @param  string  $version
+     *
+     * @return  self
+     */
+    public function setVersion(string $version)
+    {
+        $this->version = $version;
+
+        return $this;
+    }
+
+    /**
+     * Set the value of applicationType
+     *
+     * @param  ApplicationType  $applicationType
+     *
+     * @return  self
+     */
+    public function addToApplicationType(ApplicationType &$applicationType)
+    {
+        $applicationType->addMonitoringSet($this);
+
+        return $this;
+    }
+
+    /**
+     * @JMS\VirtualProperty()
+     *
+     * @return boolean
+     */
+    public function isValid(): bool
+    {
+        return $this->templates->count() === self::TEMPLATES_COUNT;
+    }
+
+    public function getFormattedVersion()
+    {
+        return strtolower($this->getQualifier()) . "-" . $this->getVersion();
     }
 }

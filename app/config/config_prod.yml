@@ -23,6 +23,13 @@ monolog:
             level: notice
             path:     '%kernel.logs_dir%/search_guard.log'
             channels: [search_guard]
+        curator:
+            type: rotating_file
+            action_level: notice
+            max_files: 10
+            level: notice
+            path:     '%kernel.logs_dir%/curator.log'
+            channels: [curator]
         es:
             type: rotating_file
             action_level: notice

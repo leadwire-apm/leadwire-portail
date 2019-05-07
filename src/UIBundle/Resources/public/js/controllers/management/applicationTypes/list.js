@@ -36,16 +36,6 @@
 
         };
 
-        vm.initWithDefaultTemplates = function(id) {
-            ApplicationTypeService.initWithDefaultTemplates(id)
-            .then(function () {
-                toastr.success(MESSAGES_CONSTANTS.SUCCESS);
-            })
-            .then(vm.loadApplicationTypes)
-            .catch(function () {
-                toastr.success(MESSAGES_CONSTANTS.ERROR);
-            });
-        }
 
         vm.loadApplicationTypes = function () {
             vm.flipActivityIndicator('isLoading');

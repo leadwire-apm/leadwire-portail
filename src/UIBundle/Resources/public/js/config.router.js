@@ -338,6 +338,18 @@ angular.module('leadwireApp')
                     controller: 'ManageApplicationsDetailController',
                     controllerAs: 'ctrl',
                 })
+                .state('app.management.editApplication', {
+                    url: '/applications/:id/edit',
+                    templateUrl: 'application/edit.html',
+                    resolve: {
+                        permissions: function (RouteGuard) {
+                            return RouteGuard.adminRequired();
+                        },
+                        menu: updateMenuItems(MenuEnum.MANAGEMENT),
+                    },
+                    controller: 'ManageApplicationsEditController',
+                    controllerAs: 'ctrl',
+                })
                 .state('app.management.applicationTypes', {
                     url: '/applicationTypes/list',
                     templateUrl: 'management/applicationTypes/list.html',

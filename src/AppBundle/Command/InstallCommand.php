@@ -17,6 +17,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Doctrine\Common\DataFixtures\Purger\MongoDBPurger;
 use Doctrine\Common\DataFixtures\Executor\MongoDBExecutor;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use AppBundle\Service\CuratorService;
 
 class InstallCommand extends ContainerAwareCommand
 {
@@ -46,6 +47,8 @@ Load default Application Type. Insert template for Kibana and more..'
         $applicationService = $this->getContainer()->get(ApplicationService::class);
         /** @var SearchGuardService $sgService */
         $sgService = $this->getContainer()->get(SearchGuardService::class);
+        /** @var CuratorService $curatorService */
+        $curatorService = $this->getContainer()->get(CuratorService::class);
 
         /** @var bool $stripeEnabled */
         $stripeEnabled = $this->getContainer()->getParameter('stripe_enabled');
@@ -72,7 +75,7 @@ Load default Application Type. Insert template for Kibana and more..'
         foreach ($demoApplications as $application) {
             $es->deleteIndex($application->getApplicationIndex());
             $es->createIndexTemplate($application, $applicationService->getActiveApplicationsNames());
-            $aliases = $es->createAlias($application);
+            $es->createAlias($application);
             $kibana->loadIndexPatternForApplication(
                 $application,
                 $application->getApplicationIndex()
@@ -89,7 +92,7 @@ Load default Application Type. Insert template for Kibana and more..'
 
             $kibana->loadDefaultIndex($application->getApplicationIndex(), 'default');
             $kibana->makeDefaultIndex($application->getApplicationIndex(), 'default');
-            
+
             $kibana->loadDefaultIndex($application->getSharedIndex(), 'default');
             $kibana->makeDefaultIndex($application->getSharedIndex(), 'default');
         }
@@ -98,6 +101,8 @@ Load default Application Type. Insert template for Kibana and more..'
             $this->display($output, "Creating Stripe Plans with new Data");
             $planService->createDefaultPlans();
         }
+
+        $curatorService->updateCuratorConfig();
 
         return 0;
     }

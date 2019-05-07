@@ -15,8 +15,8 @@ class ApplicationTypeFixture extends AbstractFixture implements OrderedFixtureIn
     {
         $defaultType = new ApplicationType();
         $defaultType->setName(ApplicationType::DEFAULT_TYPE);
-        $defaultType->setInstallation((string) file_get_contents("./app/Resources/templates/javaagent/README.md"));
-        $defaultType->setAgent("https://github.com/leadwire-apm/leadwire-javaagent");
+        $defaultType->setDescription("Elastic Stack 6.5.x");
+        $defaultType->setVersion(1);
 
         $manager->persist($defaultType);
         $manager->flush();

@@ -46,9 +46,6 @@ class InitializeUserCommand extends ContainerAwareCommand
         /** @var string $username */
         $username = $input->getOption("username");
 
-        /** @var bool $hasAllUserTenant */
-        $hasAllUserTenant = $this->getContainer()->getParameter("has_all_user_tenant");
-
         /** @var ?User $user */
         $user = $userManager->getOneBy(['username' => $username]);
         if ($user === null) {
@@ -71,15 +68,6 @@ class InitializeUserCommand extends ContainerAwareCommand
             $output->write(".");
             $kibana->loadIndexPatternForUserTenant($user);
             $output->write(".");
-
-            if ($hasAllUserTenant === true) {
-                $es->deleteIndex($user->getAllUserIndex());
-                $output->write(".");
-                $kibana->loadIndexPatternForAllUser($user);
-                $output->write(".");
-                $kibana->createAllUserDashboard($user);
-                $output->write(".");
-            }
 
             $output->writeln("Done");
         }

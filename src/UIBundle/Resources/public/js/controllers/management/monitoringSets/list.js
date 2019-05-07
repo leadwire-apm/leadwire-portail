@@ -55,6 +55,18 @@
                 });
         };
 
+        vm.templateStatus = function(ms, templateName) {
+            filtered = ms.templates.filter(function(element) {
+                return element.type === templateName;
+            });
+
+            if (filtered.length > 0) {
+                return true;
+            }
+
+            return false;
+        }
+
         vm.init = function () {
             vm = angular.extend(vm, {
                 ui: {

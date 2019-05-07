@@ -34,6 +34,12 @@ monolog:
             level: notice
             path:     '%kernel.logs_dir%/search_guard_%kernel.environment%.log'
             channels: [search_guard]
+        curator:
+            type: stream
+            action_level: notice
+            level: notice
+            path:     '%kernel.logs_dir%/curator_%kernel.environment%.log'
+            channels: [curator]
         es:
             type: stream
             action_level: notice
@@ -56,20 +62,10 @@ monolog:
             type: console
             process_psr_3_messages: false
             channels: ['!event', '!doctrine', '!console']
-        # To follow logs in real time, execute the following command:
-        # `bin/console server:log -vv`
         server_log:
             type: server_log
             process_psr_3_messages: false
             host: 127.0.0.1:9911
-        # uncomment to get logging in your browser
-        # you may have to allow bigger header sizes in your Web server configuration
-        #firephp:
-        #    type: firephp
-        #    level: info
-        #chromephp:
-        #    type: chromephp
-        #    level: info
 
 swiftmailer:
     delivery_addresses:

@@ -44,9 +44,9 @@
                  *
                  * @returns {Promise}
                  */
-                get: function (id) {
+                get: function (id, scope="Default") {
                     return $http.get(
-                        CONFIG.BASE_URL + 'api/app/' + id + '/get',
+                        CONFIG.BASE_URL + 'api/app/' + id + '/get/' + scope,
                     );
                 },
                 /**
@@ -103,6 +103,15 @@
                 stats: function (id) {
                     return $http.get(
                         CONFIG.BASE_URL + 'api/app/' + id + '/stats',
+                    );
+                },
+                /**
+                 *
+                 * @returns {Promise}
+                 */
+                applyChanges: function (id) {
+                    return $http.put(
+                        CONFIG.BASE_URL + 'api/app/' + id + '/apply-change',
                     );
                 },
             };

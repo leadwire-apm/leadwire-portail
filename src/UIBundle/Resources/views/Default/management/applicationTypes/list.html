@@ -16,7 +16,8 @@
                         <thead>
                         <tr>
                             <th class="text-center">Name</th>
-                            <th class="text-center">agent</th>
+                            <th class="text-center">Description</th>
+                            <th class="text-center">Monitoring Sets</th>
                             <th class="text-center" colspan="3"
                                 style="text-align: center">Actions
                             </th>
@@ -33,34 +34,35 @@
                             class="text-center"
                         >
                             <td data-title="Name" data-label="Name">
-                                <span
-                                title="[[appType.isWellDefined ? '' : 'There are missing templates for this type']]"
-                                data-placement="top"
-                                data-toggle="tooltip"
-                                ng-class="appType.isWellDefined ? '' : 'fas fa-times-circle'"></span>
                                 <span>
                                     [[appType.name]]
                                 </span>
                             </td>
-                            <td data-title="Agent" data-label="Agent">
-                                [[appType.agent]]
+                            <td data-title="Description" data-label="Description">
+                                [[appType.description]]
                             </td>
-                            <td data-title="Actions" data-label="Actions"
-                                class="text-center">
-                                <a class="btn btn-warning"
-                                   ui-sref="app.management.editApplicationTypes({id:appType.id})">
-                                    Edit
+                            <td data-title="MonitoringSets" data-label="MonitoringSets">
+                                <ul>
+                                    <li ng-repeat="ms in appType.monitoringSets" style="list-style: none;">[[ms.name]]</li>
+                                </ul>
+                            </td>
+                            <td data-title="Actions" data-label="Actions" class="text-left">
+                                <a
+                                    class="btn btn-warning"
+                                    title="Edit"
+                                    data-placement="top"
+                                    data-toggle="tooltip"
+                                    ui-sref="app.management.editApplicationTypes({id:appType.id})">
+                                    <i class="fas fa-pencil-alt"></i>
                                 </a>
-                                <button class="btn btn-danger"
-                                        ng-click="ctrl.handleOnDelete(appType.id)">
-                                    Delete
-                                    <spinner is-loading="ctrl.ui['isDeleting'+appType.id]"></spinner>
-                                </button>
                                 <button
-                                    class="btn btn-primary"
-                                    ng-if="appType.canInit == true"
-                                    ng-click="ctrl.initWithDefaultTemplates(appType.id)">
-                                    Init with default templates
+                                    title="Delete"
+                                    data-placement="top"
+                                    data-toggle="tooltip"
+                                    class="btn bg-red"
+                                    ng-click="ctrl.handleOnDelete(appType.id)">
+                                    <spinner is-loading="ctrl.ui['isDeleting'+appType.id]"></spinner>
+                                    <i class="fa fa-trash"></i>
                                 </button>
                             </td>
                         </tr>

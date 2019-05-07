@@ -2,6 +2,7 @@
     angular.module('leadwireApp')
         .controller('AddApplicationTypeController', [
             'ApplicationTypeService',
+            'MonitoringSetService',
             'toastr',
             'MESSAGES_CONSTANTS',
             '$state',
@@ -14,6 +15,7 @@
      */
     function AddApplicationTypeCtrlFN (
         ApplicationTypeService,
+        MonitoringSetService,
         toastr,
         MESSAGES_CONSTANTS,
         $state,
@@ -24,8 +26,17 @@
             vm.ui[key] = !vm.ui[key];
         };
 
+        vm.loadMonitoringSets = function() {
+            MonitoringSetService.listValid()
+            .then(function(monitoringSets) {
+                vm.availableMonitoringSets = monitoringSets;
+                $('.selectpicker').selectpicker('refresh');
+            });
+        };
+
         vm.saveAppType = function () {
             vm.flipActivityIndicator('isSaving');
+            vm.applicationType.monitoringSets = vm.applicationType.monitoringSets.map(function (ms) {return {'id': ms};});
             ApplicationTypeService.create(vm.applicationType)
                 .then(function () {
                     vm.flipActivityIndicator('isSaving');
@@ -46,10 +57,13 @@
                 },
                 applicationType: {
                     name: '',
-                    agent: '',
+                    description: '',
                     installation: '',
+                    monitoringSets: []
                 },
+                availableMonitoringSets: [],
             });
+            vm.loadMonitoringSets();
         };
 
     }

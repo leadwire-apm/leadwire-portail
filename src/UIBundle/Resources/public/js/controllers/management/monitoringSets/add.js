@@ -2,6 +2,7 @@
     angular.module('leadwireApp')
         .controller('AddMonitoringSetController', [
             'MonitoringSetService',
+            'TemplateService',
             'toastr',
             'MESSAGES_CONSTANTS',
             '$state',
@@ -14,6 +15,7 @@
      */
     function AddMonitoringSetCtrlFN (
         MonitoringSetService,
+        TemplateService,
         toastr,
         MESSAGES_CONSTANTS,
         $state,
@@ -26,6 +28,11 @@
 
         vm.saveAppType = function () {
             vm.flipActivityIndicator('isSaving');
+            vm.monitoringSet.templates = [
+                vm.monitoringSet.dashboardTemplate,
+                vm.monitoringSet.indexPatternTemplate,
+                vm.monitoringSet.indexTemplateTemplate,
+            ];
             MonitoringSetService.create(vm.monitoringSet)
                 .then(function () {
                     vm.flipActivityIndicator('isSaving');
@@ -39,6 +46,13 @@
                 });
         };
 
+        vm.loadTemplates = function() {
+            TemplateService.list()
+            .then(function(templates) {
+                vm.templates = templates;
+            });
+        };
+
         vm.init = function () {
             vm = angular.extend(vm, {
                 ui: {
@@ -47,8 +61,14 @@
                 monitoringSet: {
                     name: '',
                     qualifier: '',
+                    version: '',
+                    dashboardTemplate: {id:null},
+                    indexPatternTemplate: {id:null},
+                    indexTemplateTemplate: {id:null},
+                    templates: []
                 },
             });
+            vm.loadTemplates();
         };
 
     }

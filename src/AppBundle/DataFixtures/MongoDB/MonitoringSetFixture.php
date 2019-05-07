@@ -3,9 +3,11 @@
 namespace AppBundle\DataFixtures\MongoDB;
 
 use AppBundle\Document\MonitoringSet;
+use AppBundle\Document\ApplicationType;
+use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
-use Doctrine\Common\Persistence\ObjectManager;
+use AppBundle\DataFixtures\MongoDB\ApplicationTypeFixture;
 
 class MonitoringSetFixture extends AbstractFixture implements OrderedFixtureInterface
 {
@@ -14,13 +16,16 @@ class MonitoringSetFixture extends AbstractFixture implements OrderedFixtureInte
 
     public function load(ObjectManager $manager)
     {
+        /** @var ApplicationType $applicationType */
+        $applicationType = $this->getReference(ApplicationTypeFixture::DEFAULT_TYPE_REFERENCE);
         $ms = new MonitoringSet();
-        $ms->setName("APM")->setQualifier("APM");
+        $ms->setName("APM")->setQualifier("APM")->setVersion("6.5.1")->addToApplicationType($applicationType);
         $manager->persist($ms);
         $this->addReference(self::APM_MONITORING_SET, $ms);
         $ms = new MonitoringSet();
-        $ms->setName("Metricbeat")->setQualifier("METRICBEAT");
+        $ms->setName("Metricbeat")->setQualifier("METRICBEAT")->setVersion("6.5.2")->addToApplicationType($applicationType);
         $manager->persist($ms);
+        $manager->persist($applicationType);
         $this->addReference(self::METRICBEAT_MONITORING_SET, $ms);
 
         $manager->flush();

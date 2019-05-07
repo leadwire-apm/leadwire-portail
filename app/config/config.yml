@@ -10,7 +10,7 @@ imports:
 # Parameters Configuration
 parameters:
     locale: en
-    app_version: 'v1.2.3'
+    app_version: 'v1.3.2'
     app_domain: '%env(APP_DOMAIN)%'
     app_schemes: '%env(APP_SCHEME)%'
     activation_code_regex: '[A-Z0-9]B[A-Z0-9]{2}7[A-Z0-9]'
@@ -63,6 +63,10 @@ parameters:
     sg:
         script_path: '%env(SG_ADMIN_SCRIPT_PATH)%'
         config_dirpath: '%env(SG_ADMIN_CONF_DIR_PATH)%'
+    curator:
+        platformName: '%env(PLATFORM_NAME)%'
+        config_path: '%env(CURATOR_CONFIG_PATH)%'
+        script_path: '%env(CURATOR_SCRIPT_PATH)%'
 
 # Framework Configuration
 framework:
@@ -130,4 +134,3 @@ doctrine_mongodb:
             connection: default
             database: '%env(DATABASE_NAME)%'
             auto_mapping: true
-            logging: false
