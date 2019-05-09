@@ -18,14 +18,15 @@
         $stateParams,
         $rootScope,
         CONFIG,
-        CONSTANTS,
         toastr,
         MESSAGES_CONSTANTS,
     ) {
         var vm = this;
 
         vm.LOGIN_METHOD = CONFIG.LOGIN_METHOD;
-        
+
+        console.log(MESSAGES_CONSTANTS);
+
         vm.ownerTitle = "Owner Github :"
         if(vm.LOGIN_METHOD === 'proxy' || vm.LOGIN_METHOD === 'login'){
             vm.ownerTitle = "Owner Login Id :"
@@ -132,10 +133,10 @@
                 invitedUser: {
                     email: '',
                 },
-                CONSTANTS: CONSTANTS,
+                CONSTANTS: CONFIG,
                 moment: moment,
                 retention: CONFIG.STRIPE_ENABLED == true ? $rootScope.user.plan.retention : null,
-                DOWNLOAD_URL: CONSTANTS.DOWNLOAD_URL,
+                DOWNLOAD_URL: CONFIG.DOWNLOAD_URL,
             });
             vm.getApp();
             vm.loadStats();
