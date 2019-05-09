@@ -71,7 +71,14 @@ class MonitoringSetService
      */
     public function listMonitoringSets()
     {
-        return $this->monitoringSetManager->getAll();
+        $monitoringSets = $this->monitoringSetManager->getAll();
+
+        foreach ($monitoringSets as &$monitoringSet) {
+            $types = $this->applicationTypeManager->getLinkedTypes($monitoringSet);
+            $monitoringSet->setApplicationTypes($types);
+        }
+
+        return $monitoringSets;
     }
 
     public function listValidMonitoringSets()

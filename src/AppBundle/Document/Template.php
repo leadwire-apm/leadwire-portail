@@ -3,14 +3,13 @@
 namespace AppBundle\Document;
 
 use AppBundle\Document\MonitoringSet;
-use JMS\Serializer\Annotation as JMS;
-use AppBundle\Document\ApplicationType;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
+use JMS\Serializer\Annotation as JMS;
 
 /**
  * @ODM\Document(repositoryClass="AppBundle\Repository\TemplateRepository")
- * @ODM\UniqueIndex(keys={"name"="asc", "monitoringSet"="asc"})
+ * @ODM\UniqueIndex(keys={"name"="asc"})
  * @ODM\ChangeTrackingPolicy("DEFERRED_EXPLICIT")
  * @JMS\ExclusionPolicy("all")
  */
