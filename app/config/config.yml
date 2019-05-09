@@ -21,6 +21,8 @@ parameters:
     providerName: Stripe
     super_admin_username: '%env(SUPER_USER_ADMIN_NAME)%'
     mailer_transport: '%env(MAILER_TRANSPORT)%'
+    mailer_host: '%env(MAILER_HOST)%'
+    mailer_port: '%env(MAILER_PORT)%'
     mailer_user: '%env(MAILER_USER)%'
     mailer_password: '%env(MAILER_PASSWORD)%'
     sender: "%mailer_user%"
