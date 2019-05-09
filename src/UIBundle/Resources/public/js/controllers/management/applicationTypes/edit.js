@@ -38,7 +38,7 @@
                         selected.push(ms.id);
                     });
                     $('.selectpicker').selectpicker('val', selected);
-                    console.log(selected);
+                    $('.selectpicker').selectpicker('refresh');
                 });
 
         };
@@ -47,14 +47,15 @@
             MonitoringSetService.listValid()
             .then(function(monitoringSets) {
                 vm.availableMonitoringSets = monitoringSets;
+                $('.selectpicker').append(vm.availableMonitoringSets.map(function(v,k){return '<option value="' + v.id + '">'+v.name+'</option>'}));
                 $('.selectpicker').selectpicker('refresh');
+                vm.loadApplicationType($stateParams.id)
             });
         };
 
         vm.editAppType = function () {
             vm.flipActivityIndicator('isSaving')
             vm.applicationType.monitoringSets = vm.applicationType.monitoringSets.map(function (ms) {return {'id': ms};});
-            console.log(vm.applicationType.monitoringSets);
             ApplicationTypeService.update(vm.applicationType)
                 .then(function () {
                     vm.flipActivityIndicator('isSaving')
@@ -82,7 +83,6 @@
                 availableMonitoringSets: []
             });
             vm.loadMonitoringSets();
-            vm.loadApplicationType($stateParams.id);
         };
 
     }

@@ -30,6 +30,7 @@
             MonitoringSetService.listValid()
             .then(function(monitoringSets) {
                 vm.availableMonitoringSets = monitoringSets;
+                $('.selectpicker').append(vm.availableMonitoringSets.map(function(v,k){return '<option value="' + v.id + '">'+v.name+'</option>'}));
                 $('.selectpicker').selectpicker('refresh');
             });
         };

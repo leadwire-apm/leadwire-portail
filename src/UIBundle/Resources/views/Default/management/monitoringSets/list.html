@@ -56,6 +56,7 @@
                                     title="Delete"
                                     data-placement="top"
                                     data-toggle="tooltip"
+                                    ng-disabled="monitoringSet.applicationTypes.length > 0"
                                     ng-click="ctrl.handleOnDelete(monitoringSet.id)">
                                     <i class="fa fa-trash"></i>
                                     <spinner is-loading="ctrl.ui['isDeleting'+monitoringSet.id]"></spinner>

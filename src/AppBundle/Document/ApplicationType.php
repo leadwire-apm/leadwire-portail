@@ -11,8 +11,8 @@ use JMS\Serializer\Annotation as JMS;
 /**
  * @ODM\Document(repositoryClass="AppBundle\Repository\ApplicationTypeRepository")
  * @ODM\HasLifecycleCallbacks
+ * @ODM\UniqueIndex(keys={"name"="asc"})
  * @JMS\ExclusionPolicy("all")
- *
  */
 class ApplicationType
 {
