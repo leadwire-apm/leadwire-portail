@@ -11,6 +11,7 @@ use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 
 /**
  * @ODM\Document(repositoryClass="AppBundle\Repository\MonitoringSetRepository")
+ * @ODM\UniqueIndex(keys={"name"="asc", "version"="asc"})
  * @ODM\ChangeTrackingPolicy("DEFERRED_EXPLICIT")
  * @JMS\ExclusionPolicy("all")
  */
@@ -61,6 +62,12 @@ class MonitoringSet
      * @var string
      */
     private $version;
+
+    /**
+     * @JMS\Expose
+     * @var array
+     */
+    private $applicationTypes;
 
     public function __construct()
     {
@@ -247,5 +254,29 @@ class MonitoringSet
     public function getFormattedVersion()
     {
         return strtolower($this->getQualifier()) . "-" . $this->getVersion();
+    }
+
+    /**
+     * Get the value of applicationTypes
+     *
+     * @return  array
+     */
+    public function getApplicationTypes(): array
+    {
+        return $this->applicationTypes;
+    }
+
+    /**
+     * Set the value of applicationTypes
+     *
+     * @param  array  $applicationTypes
+     *
+     * @return  self
+     */
+    public function setApplicationTypes(array $applicationTypes): self
+    {
+        $this->applicationTypes = $applicationTypes;
+
+        return $this;
     }
 }
