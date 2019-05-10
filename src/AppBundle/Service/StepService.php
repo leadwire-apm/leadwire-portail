@@ -33,7 +33,7 @@ class StepService
         $this->stepManager->create($tmec, "Devis", 2, false);
         $this->stepManager->create($tmec, "CDC", 3, false);
         $this->stepManager->create($tmec, "R7J", 4, false);
-        $this->stepManager->create($tmec, "Scipts Jdd", 5, false);
+        $this->stepManager->create($tmec, "Scripts Jdd", 5, false);
         $this->stepManager->create($tmec, "PP", 6, false);
         $this->stepManager->create($tmec, "Outils Tperf", 7, false);
         $this->stepManager->create($tmec, "Tuning", 8, false);
