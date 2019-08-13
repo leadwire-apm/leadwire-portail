@@ -38,7 +38,8 @@ class StepManager extends AbstractManager
             ->setComment("")
             ->setWaiting(false)
             ->setCurrent($current)
-            ->setCompleted(false);
+            ->setCompleted(false)
+            ->setDate("");
 
         $this->update($step);
 

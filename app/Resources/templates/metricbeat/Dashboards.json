@@ -114,7 +114,7 @@
                 "title": "Disk IO (Bytes) [Metricbeat System]", 
                 "uiStateJSON": "{}", 
                 "version": 1, 
-                "visState": "{\"type\": \"metrics\", \"params\": {\"time_field\": \"@timestamp\", \"series\": [{\"line_width\": 1, \"point_size\": \"0\", \"color\": \"rgba(22,165,165,1)\", \"value_template\": \"{{value}}/s\", \"label\": \"reads\", \"metrics\": [{\"field\": \"system.diskio.read.bytes\", \"type\": \"max\", \"id\": \"d3c67db2-1b1a-11e7-b09e-037021c4f8df\"}, {\"field\": \"d3c67db2-1b1a-11e7-b09e-037021c4f8df\", \"type\": \"derivative\", \"id\": \"f55b9910-1b1a-11e7-b09e-037021c4f8df\", \"unit\": \"1s\"}, {\"field\": \"f55b9910-1b1a-11e7-b09e-037021c4f8df\", \"type\": \"positive_only\", \"id\": \"dcbbb100-1b93-11e7-8ada-3df93aab833e\", \"unit\": \"\"}], \"seperate_axis\": 0, \"split_mode\": \"everything\", \"chart_type\": \"line\", \"stacked\": \"none\", \"axis_position\": \"right\", \"formatter\": \"bytes\", \"id\": \"d3c67db1-1b1a-11e7-b09e-037021c4f8df\", \"fill\": \"1\"}, {\"line_width\": 1, \"point_size\": \"0\", \"color\": \"rgba(251,158,0,1)\", \"value_template\": \"{{value}}/s\", \"label\": \"writes\", \"metrics\": [{\"field\": \"system.diskio.write.bytes\", \"type\": \"max\", \"id\": \"144124d1-1b1b-11e7-b09e-037021c4f8df\"}, {\"field\": \"144124d1-1b1b-11e7-b09e-037021c4f8df\", \"type\": \"derivative\", \"id\": \"144124d2-1b1b-11e7-b09e-037021c4f8df\", \"unit\": \"1s\"}, {\"variables\": [{\"field\": \"144124d2-1b1b-11e7-b09e-037021c4f8df\", \"id\": \"144124d3-1b1b-11e7-b09e-037021c4f8df\", \"name\": \"rate\"}], \"type\": \"calculation\", \"id\": \"144124d4-1b1b-11e7-b09e-037021c4f8df\", \"script\": \"params.rate > 0 ? params.rate * -1 : 0\"}], \"seperate_axis\": 0, \"split_mode\": \"everything\", \"chart_type\": \"line\", \"stacked\": \"none\", \"axis_position\": \"right\", \"formatter\": \"bytes\", \"id\": \"144124d0-1b1b-11e7-b09e-037021c4f8df\", \"fill\": \"1\"}], \"axis_formatter\": \"number\", \"interval\": \"auto\", \"id\": \"d3c67db0-1b1a-11e7-b09e-037021c4f8df\", \"filter\": \"\", \"show_legend\": 1, \"show_grid\": 1, \"index_pattern\": \"__replace_token__\", \"type\": \"timeseries\", \"axis_position\": \"left\"}, \"aggs\": [], \"title\": \"Disk IO (Bytes) [Metricbeat System]\"}"
+                "visState": "{\"type\": \"metrics\", \"params\": {\"time_field\": \"@timestamp\", \"series\": [{\"line_width\": 1, \"point_size\": \"0\", \"color\": \"rgba(22,165,165,1)\", \"value_template\": \"{{value}}/s\", \"label\": \"reads\", \"metrics\": [{\"field\": \"system.diskio.read.bytes\", \"type\": \"max\", \"id\": \"d3c67db2-1b1a-11e7-b09e-037021c4f8df\"}, {\"field\": \"d3c67db2-1b1a-11e7-b09e-037021c4f8df\", \"type\": \"derivative\", \"id\": \"f55b9910-1b1a-11e7-b09e-037021c4f8df\", \"unit\": \"1s\"}, {\"field\": \"f55b9910-1b1a-11e7-b09e-037021c4f8df\", \"type\": \"positive_only\", \"id\": \"dcbbb100-1b93-11e7-8ada-3df93aab833e\", \"unit\": \"\"}], \"seperate_axis\": 0, \"split_mode\": \"everything\", \"chart_type\": \"line\", \"stacked\": \"none\", \"axis_position\": \"right\", \"formatter\": \"bytes\", \"id\": \"d3c67db1-1b1a-11e7-b09e-037021c4f8df\", \"fill\": \"1\"}, {\"line_width\": 1, \"point_size\": \"0\", \"color\": \"rgba(251,158,0,1)\", \"value_template\": \"{{value}}/s\", \"label\": \"writes\", \"metrics\": [{\"field\": \"system.diskio.write.bytes\", \"type\": \"max\", \"id\": \"144124d1-1b1b-11e7-b09e-037021c4f8df\"}, {\"field\": \"144124d1-1b1b-11e7-b09e-037021c4f8df\", \"type\": \"derivative\", \"id\": \"144124d2-1b1b-11e7-b09e-037021c4f8df\", \"unit\": \"1s\"}, {\"variables\": [{\"field\": \"144124d2-1b1b-11e7-b09e-037021c4f8df\", \"id\": \"144124d3-1b1b-11e7-b09e-037021c4f8df\", \"name\": \"rate\"}], \"type\": \"calculation\", \"id\": \"144124d4-1b1b-11e7-b09e-037021c4f8df\", \"script\": \"params.rate > 0.0 ? params.rate * -1 : 0.0\"}], \"seperate_axis\": 0, \"split_mode\": \"everything\", \"chart_type\": \"line\", \"stacked\": \"none\", \"axis_position\": \"right\", \"formatter\": \"bytes\", \"id\": \"144124d0-1b1b-11e7-b09e-037021c4f8df\", \"fill\": \"1\"}], \"axis_formatter\": \"number\", \"interval\": \"auto\", \"id\": \"d3c67db0-1b1a-11e7-b09e-037021c4f8df\", \"filter\": \"\", \"show_legend\": 1, \"show_grid\": 1, \"index_pattern\": \"__replace_token__\", \"type\": \"timeseries\", \"axis_position\": \"left\"}, \"aggs\": [], \"title\": \"Disk IO (Bytes) [Metricbeat System]\"}"
             }, 
             "id": "4e4bb1e0-1b1b-11e7-b09e-037021c4f8df", 
             "type": "visualization", 
@@ -329,33 +329,33 @@
             "id": "590a60f0-5d87-11e7-8884-1bb4c3b890e4", 
             "type": "visualization", 
             "version": 1
-        }, 
-        {
-            "attributes": {
-                "description": "", 
-                "kibanaSavedObjectMeta": {
-                    "searchSourceJSON": "{}"
-                }, 
-                "title": "Tip [Metricbeat System]", 
-                "uiStateJSON": "{}", 
-                "version": 1, 
-                "visState": "{\"type\": \"markdown\", \"params\": {\"markdown\": \"**TIP:** To select another host, go to the [System Overview](#/dashboard/Metricbeat-system-overview) dashboard and double-click a host name.\", \"fontSize\": 12}, \"aggs\": [], \"title\": \"Tip [Metricbeat System]\"}"
-            }, 
-            "id": "3d65d450-a9c3-11e7-af20-67db8aecb295", 
-            "type": "visualization", 
-            "version": 2
-        }, 
+        },       				
+		{
+		"id": "4d525530-7d5e-11e9-bae6-fd3ef927623a",
+		"type": "visualization",
+		"version": 1,
+		"attributes": {
+		  "title": "Selector [Metricbeat System]",
+		  "visState": "{\"title\":\"Selector [Metricbeat System]\",\"type\":\"input_control_vis\",\"params\":{\"controls\":[{\"id\":\"1558617939789\",\"indexPattern\":\"__replace_token__\",\"fieldName\":\"beat.hostname\",\"parent\":\"\",\"label\":\"Host\",\"type\":\"list\",\"options\":{\"type\":\"terms\",\"multiselect\":false,\"dynamicOptions\":true,\"size\":5,\"order\":\"desc\"}}],\"updateFiltersOnChange\":false,\"useTimeFilter\":false,\"pinFilters\":false},\"aggs\":[]}",
+		  "uiStateJSON": "{}",
+		  "description": "",
+		  "version": 1,
+		  "kibanaSavedObjectMeta": {
+			"searchSourceJSON": "{\"query\":{\"query\":\"\",\"language\":\"lucene\"},\"filter\":[]}"
+		  }
+		}
+	  },
         {
             "attributes": {
                 "description": "Overviw of host metrics", 
                 "hits": 0, 
                 "kibanaSavedObjectMeta": {
-                    "searchSourceJSON": "{\"filter\": [], \"query\": {\"query\": \"beat.name:\\\"CHANGEME_HOSTNAME\\\"\", \"language\": \"lucene\"}, \"version\": true, \"highlightAll\": true}"
+                    "searchSourceJSON": "{\"filter\": [], \"query\": {\"query\": \"*\", \"language\": \"lucene\"}, \"version\": true, \"highlightAll\": true}"
                 }, 
                 "optionsJSON": "{\"darkTheme\": false}", 
-                "panelsJSON": "[{\"type\": \"visualization\", \"id\": \"6b7b9a40-faa1-11e6-86b1-cd7735ff7e23\", \"size_x\": 6, \"size_y\": 3, \"panelIndex\": 1, \"col\": 1, \"row\": 12}, {\"type\": \"visualization\", \"id\": \"4d546850-1b15-11e7-b09e-037021c4f8df\", \"size_x\": 6, \"size_y\": 3, \"panelIndex\": 2, \"col\": 7, \"row\": 6}, {\"type\": \"visualization\", \"id\": \"089b85d0-1b16-11e7-b09e-037021c4f8df\", \"size_x\": 6, \"size_y\": 3, \"panelIndex\": 3, \"col\": 7, \"row\": 12}, {\"type\": \"visualization\", \"id\": \"bfa5e400-1b16-11e7-b09e-037021c4f8df\", \"size_x\": 6, \"size_y\": 3, \"panelIndex\": 4, \"col\": 1, \"row\": 9}, {\"type\": \"visualization\", \"id\": \"e0f001c0-1b18-11e7-b09e-037021c4f8df\", \"size_x\": 6, \"size_y\": 3, \"panelIndex\": 5, \"col\": 7, \"row\": 15}, {\"type\": \"visualization\", \"id\": \"2e224660-1b19-11e7-b09e-037021c4f8df\", \"size_x\": 6, \"size_y\": 3, \"panelIndex\": 6, \"col\": 1, \"row\": 15}, {\"type\": \"visualization\", \"id\": \"ab2d1e90-1b1a-11e7-b09e-037021c4f8df\", \"size_x\": 6, \"size_y\": 3, \"panelIndex\": 7, \"col\": 1, \"row\": 6}, {\"type\": \"visualization\", \"id\": \"4e4bb1e0-1b1b-11e7-b09e-037021c4f8df\", \"size_x\": 6, \"size_y\": 3, \"panelIndex\": 8, \"col\": 7, \"row\": 9}, {\"type\": \"visualization\", \"id\": \"26732e20-1b91-11e7-bec4-a5e9ec5cab8b\", \"size_x\": 2, \"size_y\": 2, \"panelIndex\": 9, \"col\": 5, \"row\": 2}, {\"type\": \"visualization\", \"id\": \"83e12df0-1b91-11e7-bec4-a5e9ec5cab8b\", \"size_x\": 2, \"size_y\": 2, \"panelIndex\": 10, \"col\": 1, \"row\": 2}, {\"type\": \"visualization\", \"id\": \"d3166e80-1b91-11e7-bec4-a5e9ec5cab8b\", \"size_x\": 2, \"size_y\": 2, \"panelIndex\": 11, \"col\": 3, \"row\": 2}, {\"type\": \"visualization\", \"id\": \"522ee670-1b92-11e7-bec4-a5e9ec5cab8b\", \"size_x\": 2, \"size_y\": 2, \"panelIndex\": 12, \"col\": 7, \"row\": 2}, {\"type\": \"visualization\", \"id\": \"1aae9140-1b93-11e7-8ada-3df93aab833e\", \"size_x\": 2, \"size_y\": 2, \"panelIndex\": 13, \"col\": 9, \"row\": 2}, {\"type\": \"visualization\", \"id\": \"34f97ee0-1b96-11e7-8ada-3df93aab833e\", \"size_x\": 4, \"size_y\": 2, \"panelIndex\": 14, \"col\": 9, \"row\": 4}, {\"type\": \"visualization\", \"id\": \"System-Navigation\", \"size_x\": 6, \"size_y\": 1, \"panelIndex\": 16, \"col\": 1, \"row\": 1}, {\"type\": \"visualization\", \"id\": \"19e123b0-4d5a-11e7-aee5-fdc812cc3bec\", \"size_x\": 2, \"size_y\": 2, \"panelIndex\": 21, \"col\": 1, \"row\": 4}, {\"type\": \"visualization\", \"id\": \"d2e80340-4d5c-11e7-aa29-87a97a796de6\", \"size_x\": 2, \"size_y\": 2, \"panelIndex\": 22, \"col\": 3, \"row\": 4}, {\"type\": \"visualization\", \"id\": \"825fdb80-4d1d-11e7-b5f2-2b7c1895bf32\", \"size_x\": 2, \"size_y\": 2, \"panelIndex\": 23, \"col\": 7, \"row\": 4}, {\"type\": \"visualization\", \"id\": \"96976150-4d5d-11e7-aa29-87a97a796de6\", \"size_x\": 2, \"size_y\": 2, \"panelIndex\": 25, \"col\": 11, \"row\": 2}, {\"type\": \"visualization\", \"id\": \"99381c80-4d60-11e7-9a4c-ed99bbcaa42b\", \"size_x\": 6, \"size_y\": 3, \"panelIndex\": 27, \"col\": 1, \"row\": 18}, {\"type\": \"visualization\", \"id\": \"c5e3cf90-4d60-11e7-9a4c-ed99bbcaa42b\", \"size_x\": 6, \"size_y\": 3, \"panelIndex\": 28, \"col\": 7, \"row\": 18}, {\"type\": \"visualization\", \"id\": \"590a60f0-5d87-11e7-8884-1bb4c3b890e4\", \"size_x\": 2, \"size_y\": 2, \"panelIndex\": 29, \"col\": 5, \"row\": 4}, {\"type\": \"visualization\", \"id\": \"3d65d450-a9c3-11e7-af20-67db8aecb295\", \"size_x\": 6, \"size_y\": 1, \"panelIndex\": 30, \"col\": 7, \"row\": 1}]", 
+                "panelsJSON": "[{\"type\": \"visualization\", \"id\": \"6b7b9a40-faa1-11e6-86b1-cd7735ff7e23\", \"size_x\": 6, \"size_y\": 3, \"panelIndex\": 1, \"col\": 1, \"row\": 12}, {\"type\": \"visualization\", \"id\": \"4d546850-1b15-11e7-b09e-037021c4f8df\", \"size_x\": 6, \"size_y\": 3, \"panelIndex\": 2, \"col\": 7, \"row\": 6}, {\"type\": \"visualization\", \"id\": \"089b85d0-1b16-11e7-b09e-037021c4f8df\", \"size_x\": 6, \"size_y\": 3, \"panelIndex\": 3, \"col\": 7, \"row\": 12}, {\"type\": \"visualization\", \"id\": \"bfa5e400-1b16-11e7-b09e-037021c4f8df\", \"size_x\": 6, \"size_y\": 3, \"panelIndex\": 4, \"col\": 1, \"row\": 9}, {\"type\": \"visualization\", \"id\": \"e0f001c0-1b18-11e7-b09e-037021c4f8df\", \"size_x\": 6, \"size_y\": 3, \"panelIndex\": 5, \"col\": 7, \"row\": 15}, {\"type\": \"visualization\", \"id\": \"2e224660-1b19-11e7-b09e-037021c4f8df\", \"size_x\": 6, \"size_y\": 3, \"panelIndex\": 6, \"col\": 1, \"row\": 15}, {\"type\": \"visualization\", \"id\": \"ab2d1e90-1b1a-11e7-b09e-037021c4f8df\", \"size_x\": 6, \"size_y\": 3, \"panelIndex\": 7, \"col\": 1, \"row\": 6}, {\"type\": \"visualization\", \"id\": \"4e4bb1e0-1b1b-11e7-b09e-037021c4f8df\", \"size_x\": 6, \"size_y\": 3, \"panelIndex\": 8, \"col\": 7, \"row\": 9}, {\"type\": \"visualization\", \"id\": \"26732e20-1b91-11e7-bec4-a5e9ec5cab8b\", \"size_x\": 2, \"size_y\": 2, \"panelIndex\": 9, \"col\": 5, \"row\": 2}, {\"type\": \"visualization\", \"id\": \"83e12df0-1b91-11e7-bec4-a5e9ec5cab8b\", \"size_x\": 2, \"size_y\": 2, \"panelIndex\": 10, \"col\": 1, \"row\": 2}, {\"type\": \"visualization\", \"id\": \"d3166e80-1b91-11e7-bec4-a5e9ec5cab8b\", \"size_x\": 2, \"size_y\": 2, \"panelIndex\": 11, \"col\": 3, \"row\": 2}, {\"type\": \"visualization\", \"id\": \"522ee670-1b92-11e7-bec4-a5e9ec5cab8b\", \"size_x\": 2, \"size_y\": 2, \"panelIndex\": 12, \"col\": 7, \"row\": 2}, {\"type\": \"visualization\", \"id\": \"1aae9140-1b93-11e7-8ada-3df93aab833e\", \"size_x\": 2, \"size_y\": 2, \"panelIndex\": 13, \"col\": 9, \"row\": 2}, {\"type\": \"visualization\", \"id\": \"34f97ee0-1b96-11e7-8ada-3df93aab833e\", \"size_x\": 4, \"size_y\": 2, \"panelIndex\": 14, \"col\": 9, \"row\": 4}, {\"type\": \"visualization\", \"id\": \"System-Navigation\", \"size_x\": 6, \"size_y\": 1, \"panelIndex\": 16, \"col\": 1, \"row\": 1}, {\"type\": \"visualization\", \"id\": \"19e123b0-4d5a-11e7-aee5-fdc812cc3bec\", \"size_x\": 2, \"size_y\": 2, \"panelIndex\": 21, \"col\": 1, \"row\": 4}, {\"type\": \"visualization\", \"id\": \"d2e80340-4d5c-11e7-aa29-87a97a796de6\", \"size_x\": 2, \"size_y\": 2, \"panelIndex\": 22, \"col\": 3, \"row\": 4}, {\"type\": \"visualization\", \"id\": \"825fdb80-4d1d-11e7-b5f2-2b7c1895bf32\", \"size_x\": 2, \"size_y\": 2, \"panelIndex\": 23, \"col\": 7, \"row\": 4}, {\"type\": \"visualization\", \"id\": \"96976150-4d5d-11e7-aa29-87a97a796de6\", \"size_x\": 2, \"size_y\": 2, \"panelIndex\": 25, \"col\": 11, \"row\": 2}, {\"type\": \"visualization\", \"id\": \"99381c80-4d60-11e7-9a4c-ed99bbcaa42b\", \"size_x\": 6, \"size_y\": 3, \"panelIndex\": 27, \"col\": 1, \"row\": 18}, {\"type\": \"visualization\", \"id\": \"c5e3cf90-4d60-11e7-9a4c-ed99bbcaa42b\", \"size_x\": 6, \"size_y\": 3, \"panelIndex\": 28, \"col\": 7, \"row\": 18}, {\"type\": \"visualization\", \"id\": \"590a60f0-5d87-11e7-8884-1bb4c3b890e4\", \"size_x\": 2, \"size_y\": 2, \"panelIndex\": 29, \"col\": 5, \"row\": 4}, {\"type\": \"visualization\", \"id\": \"4d525530-7d5e-11e9-bae6-fd3ef927623a\", \"size_x\": 6, \"size_y\": 2, \"panelIndex\": 30, \"col\": 7, \"row\": 1}]", 
                 "timeRestore": false, 
-                "title": "[Metricbeat System] Host overview", 
+                "title": "[Metricbeat] Host overview", 
                 "uiStateJSON": "{\"P-29\": {\"vis\": {\"defaultColors\": {\"0 - 100\": \"rgb(0,104,55)\"}}}}", 
                 "version": 1
             }, 
@@ -523,14 +523,947 @@
                 "optionsJSON": "{\"darkTheme\": false}", 
                 "panelsJSON": "[{\"type\": \"visualization\", \"id\": \"System-Navigation\", \"size_x\": 12, \"size_y\": 1, \"panelIndex\": 9, \"col\": 1, \"row\": 1}, {\"type\": \"visualization\", \"id\": \"c6f2ffd0-4d17-11e7-a196-69b9a7a020a9\", \"size_x\": 2, \"size_y\": 2, \"panelIndex\": 11, \"col\": 1, \"row\": 2}, {\"type\": \"visualization\", \"id\": \"fe064790-1b1f-11e7-bec4-a5e9ec5cab8b\", \"size_x\": 6, \"size_y\": 5, \"panelIndex\": 12, \"col\": 7, \"row\": 4}, {\"type\": \"visualization\", \"id\": \"855899e0-1b1c-11e7-b09e-037021c4f8df\", \"size_x\": 6, \"size_y\": 5, \"panelIndex\": 13, \"col\": 1, \"row\": 4}, {\"type\": \"visualization\", \"id\": \"7cdb1330-4d1a-11e7-a196-69b9a7a020a9\", \"size_x\": 12, \"size_y\": 6, \"panelIndex\": 14, \"col\": 1, \"row\": 9}, {\"type\": \"visualization\", \"id\": \"522ee670-1b92-11e7-bec4-a5e9ec5cab8b\", \"size_x\": 2, \"size_y\": 2, \"panelIndex\": 16, \"col\": 9, \"row\": 2}, {\"type\": \"visualization\", \"id\": \"1aae9140-1b93-11e7-8ada-3df93aab833e\", \"size_x\": 2, \"size_y\": 2, \"panelIndex\": 17, \"col\": 11, \"row\": 2}, {\"type\": \"visualization\", \"id\": \"825fdb80-4d1d-11e7-b5f2-2b7c1895bf32\", \"size_x\": 2, \"size_y\": 2, \"panelIndex\": 18, \"col\": 7, \"row\": 2}, {\"type\": \"visualization\", \"id\": \"d3166e80-1b91-11e7-bec4-a5e9ec5cab8b\", \"size_x\": 2, \"size_y\": 2, \"panelIndex\": 19, \"col\": 5, \"row\": 2}, {\"type\": \"visualization\", \"id\": \"83e12df0-1b91-11e7-bec4-a5e9ec5cab8b\", \"size_x\": 2, \"size_y\": 2, \"panelIndex\": 20, \"col\": 3, \"row\": 2}]", 
                 "timeRestore": false, 
-                "title": "[Metricbeat System] Overview", 
+                "title": "[Metricbeat] System Overview", 
                 "uiStateJSON": "{\"P-16\": {\"vis\": {\"defaultColors\": {\"0 - 100\": \"rgb(0,104,55)\"}}}, \"P-14\": {\"vis\": {\"defaultColors\": {\"45% - 60%\": \"rgb(35,139,69)\", \"30% - 45%\": \"rgb(116,196,118)\", \"15% - 30%\": \"rgb(199,233,192)\", \"0% - 15%\": \"rgb(247,252,245)\"}}}, \"P-12\": {\"vis\": {\"defaultColors\": {\"0 - 100\": \"rgb(0,104,55)\"}}}, \"P-2\": {\"vis\": {\"defaultColors\": {\"0 - 100\": \"rgb(0,104,55)\"}}}, \"P-3\": {\"vis\": {\"defaultColors\": {\"0 - 100\": \"rgb(0,104,55)\"}}}, \"P-11\": {\"vis\": {\"defaultColors\": {\"0 - 100\": \"rgb(0,104,55)\"}}}}", 
                 "version": 1
             }, 
             "id": "Metricbeat-system-overview", 
             "type": "dashboard", 
             "version": 2
+        },
+		       {
+            "attributes": {
+                "description": "", 
+                "kibanaSavedObjectMeta": {
+                    "searchSourceJSON": "{\"filter\": []}"
+                }, 
+                "savedSearchId": "Apache-HTTPD", 
+                "title": "CPU usage [Metricbeat Apache]", 
+                "uiStateJSON": "{}", 
+                "version": 1, 
+                "visState": "{\"type\": \"line\", \"listeners\": {}, \"params\": {\"scale\": \"linear\", \"showCircles\": true, \"yAxis\": {}, \"smoothLines\": false, \"addTimeMarker\": false, \"interpolate\": \"linear\", \"addLegend\": true, \"shareYAxis\": true, \"radiusRatio\": 9, \"drawLinesBetweenPoints\": true, \"defaultYExtents\": false, \"setYExtents\": false, \"addTooltip\": true, \"times\": []}, \"aggs\": [{\"type\": \"avg\", \"params\": {\"field\": \"apache.status.cpu.load\", \"customLabel\": \"CPU load\"}, \"id\": \"1\", \"schema\": \"metric\"}, {\"type\": \"date_histogram\", \"params\": {\"customInterval\": \"2h\", \"field\": \"@timestamp\", \"interval\": \"auto\", \"min_doc_count\": 1, \"extended_bounds\": {}}, \"id\": \"2\", \"schema\": \"segment\"}, {\"type\": \"terms\", \"params\": {\"orderBy\": \"1\", \"field\": \"apache.status.hostname\", \"size\": 5, \"order\": \"desc\", \"row\": true}, \"id\": \"3\", \"schema\": \"split\"}, {\"type\": \"avg\", \"params\": {\"field\": \"apache.status.cpu.user\", \"customLabel\": \"CPU user\"}, \"id\": \"4\", \"schema\": \"metric\"}, {\"type\": \"avg\", \"params\": {\"field\": \"apache.status.cpu.system\", \"customLabel\": \"CPU system\"}, \"id\": \"5\", \"schema\": \"metric\"}, {\"type\": \"avg\", \"params\": {\"field\": \"apache.status.cpu.children_user\", \"customLabel\": \"CPU children user\"}, \"id\": \"6\", \"schema\": \"metric\"}, {\"type\": \"avg\", \"params\": {\"field\": \"apache.status.cpu.children_system\", \"customLabel\": \"CPU children system\"}, \"id\": \"7\", \"schema\": \"metric\"}], \"title\": \"Apache HTTPD - CPU\"}"
+            }, 
+            "id": "Apache-HTTPD-CPU", 
+            "type": "visualization", 
+            "version": 2
+        }, 
+        {
+            "attributes": {
+                "description": "", 
+                "kibanaSavedObjectMeta": {
+                    "searchSourceJSON": "{\"filter\": []}"
+                }, 
+                "savedSearchId": "Apache-HTTPD", 
+                "title": "Hostname list [Metricbeat Apache]", 
+                "uiStateJSON": "{\"vis\": {\"params\": {\"sort\": {\"columnIndex\": null, \"direction\": null}}}}", 
+                "version": 1, 
+                "visState": "{\"type\": \"table\", \"listeners\": {}, \"params\": {\"sort\": {\"columnIndex\": null, \"direction\": null}, \"perPage\": 10, \"showPartialRows\": false, \"showMeticsAtAllLevels\": false}, \"aggs\": [{\"type\": \"count\", \"params\": {\"customLabel\": \"Events count\"}, \"id\": \"1\", \"schema\": \"metric\"}, {\"type\": \"terms\", \"params\": {\"orderBy\": \"1\", \"field\": \"apache.status.hostname\", \"customLabel\": \"Apache HTTD Hostname\", \"order\": \"desc\", \"size\": 5}, \"id\": \"2\", \"schema\": \"bucket\"}], \"title\": \"Apache HTTPD - Hostname list\"}"
+            }, 
+            "id": "Apache-HTTPD-Hostname-list", 
+            "type": "visualization", 
+            "version": 2
+        }, 
+        {
+            "attributes": {
+                "description": "", 
+                "kibanaSavedObjectMeta": {
+                    "searchSourceJSON": "{\"filter\": []}"
+                }, 
+                "savedSearchId": "Apache-HTTPD", 
+                "title": "Load1/5/15 [Metricbeat Apache]", 
+                "uiStateJSON": "{}", 
+                "version": 1, 
+                "visState": "{\"type\": \"line\", \"listeners\": {}, \"params\": {\"scale\": \"linear\", \"showCircles\": true, \"yAxis\": {}, \"smoothLines\": false, \"addTimeMarker\": false, \"interpolate\": \"linear\", \"addLegend\": true, \"shareYAxis\": true, \"radiusRatio\": 9, \"drawLinesBetweenPoints\": true, \"defaultYExtents\": false, \"setYExtents\": false, \"addTooltip\": true, \"times\": []}, \"aggs\": [{\"type\": \"avg\", \"params\": {\"field\": \"apache.status.load.5\", \"customLabel\": \"Load 5\"}, \"id\": \"1\", \"schema\": \"metric\"}, {\"type\": \"date_histogram\", \"params\": {\"customInterval\": \"2h\", \"field\": \"@timestamp\", \"interval\": \"auto\", \"min_doc_count\": 1, \"extended_bounds\": {}}, \"id\": \"2\", \"schema\": \"segment\"}, {\"type\": \"avg\", \"params\": {\"field\": \"apache.status.load.1\", \"customLabel\": \"Load 1\"}, \"id\": \"3\", \"schema\": \"metric\"}, {\"type\": \"avg\", \"params\": {\"field\": \"apache.status.load.15\", \"customLabel\": \"Load 15\"}, \"id\": \"4\", \"schema\": \"metric\"}, {\"type\": \"terms\", \"params\": {\"orderBy\": \"1\", \"customLabel\": \"Hostname\", \"field\": \"apache.status.hostname\", \"row\": true, \"order\": \"desc\", \"size\": 5}, \"id\": \"5\", \"schema\": \"split\"}], \"title\": \"Apache HTTPD - Load1/5/15\"}"
+            }, 
+            "id": "Apache-HTTPD-Load1-slash-5-slash-15", 
+            "type": "visualization", 
+            "version": 2
+        }, 
+        {
+            "attributes": {
+                "description": "", 
+                "kibanaSavedObjectMeta": {
+                    "searchSourceJSON": "{\"filter\": []}"
+                }, 
+                "savedSearchId": "Apache-HTTPD", 
+                "title": "Scoreboard [Metricbeat Apache]", 
+                "uiStateJSON": "{}", 
+                "version": 1, 
+                "visState": "{\"type\": \"line\", \"listeners\": {}, \"params\": {\"scale\": \"linear\", \"showCircles\": true, \"yAxis\": {}, \"smoothLines\": false, \"addTimeMarker\": false, \"interpolate\": \"linear\", \"addLegend\": true, \"shareYAxis\": true, \"radiusRatio\": 9, \"drawLinesBetweenPoints\": true, \"defaultYExtents\": false, \"setYExtents\": false, \"addTooltip\": true, \"times\": []}, \"aggs\": [{\"type\": \"avg\", \"params\": {\"field\": \"apache.status.scoreboard.closing_connection\", \"customLabel\": \"Closing connection\"}, \"id\": \"1\", \"schema\": \"metric\"}, {\"type\": \"date_histogram\", \"params\": {\"customInterval\": \"2h\", \"field\": \"@timestamp\", \"interval\": \"auto\", \"min_doc_count\": 1, \"extended_bounds\": {}}, \"id\": \"2\", \"schema\": \"segment\"}, {\"type\": \"terms\", \"params\": {\"orderBy\": \"1\", \"customLabel\": \"Hostname\", \"field\": \"apache.status.hostname\", \"row\": true, \"order\": \"desc\", \"size\": 5}, \"id\": \"3\", \"schema\": \"split\"}, {\"type\": \"avg\", \"params\": {\"field\": \"apache.status.scoreboard.dns_lookup\", \"customLabel\": \"DNS lookup\"}, \"id\": \"4\", \"schema\": \"metric\"}, {\"type\": \"avg\", \"params\": {\"field\": \"apache.status.scoreboard.gracefully_finishing\", \"customLabel\": \"Gracefully finishing\"}, \"id\": \"5\", \"schema\": \"metric\"}, {\"type\": \"avg\", \"params\": {\"field\": \"apache.status.scoreboard.idle_cleanup\", \"customLabel\": \"Idle cleanup\"}, \"id\": \"6\", \"schema\": \"metric\"}, {\"type\": \"avg\", \"params\": {\"field\": \"apache.status.scoreboard.keepalive\", \"customLabel\": \"Keepalive\"}, \"id\": \"7\", \"schema\": \"metric\"}, {\"type\": \"avg\", \"params\": {\"field\": \"apache.status.scoreboard.logging\", \"customLabel\": \"Logging\"}, \"id\": \"8\", \"schema\": \"metric\"}, {\"type\": \"avg\", \"params\": {\"field\": \"apache.status.scoreboard.open_slot\", \"customLabel\": \"Open slot\"}, \"id\": \"9\", \"schema\": \"metric\"}, {\"type\": \"avg\", \"params\": {\"field\": \"apache.status.scoreboard.reading_request\", \"customLabel\": \"Reading request\"}, \"id\": \"10\", \"schema\": \"metric\"}, {\"type\": \"avg\", \"params\": {\"field\": \"apache.status.scoreboard.sending_reply\", \"customLabel\": \"Sending reply\"}, \"id\": \"11\", \"schema\": \"metric\"}, {\"type\": \"avg\", \"params\": {\"field\": \"apache.status.scoreboard.starting_up\", \"customLabel\": \"Starting up\"}, \"id\": \"12\", \"schema\": \"metric\"}, {\"type\": \"avg\", \"params\": {\"field\": \"apache.status.scoreboard.total\", \"customLabel\": \"Total\"}, \"id\": \"13\", \"schema\": \"metric\"}, {\"type\": \"avg\", \"params\": {\"field\": \"apache.status.scoreboard.waiting_for_connection\", \"customLabel\": \"Waiting for connection\"}, \"id\": \"14\", \"schema\": \"metric\"}], \"title\": \"Apache HTTPD - Scoreboard\"}"
+            }, 
+            "id": "Apache-HTTPD-Scoreboard", 
+            "type": "visualization", 
+            "version": 2
+        }, 
+        {
+            "attributes": {
+                "description": "", 
+                "kibanaSavedObjectMeta": {
+                    "searchSourceJSON": "{\"filter\": []}"
+                }, 
+                "savedSearchId": "Apache-HTTPD", 
+                "title": "Total accesses and kbytes [Metricbeat Apache]", 
+                "uiStateJSON": "{}", 
+                "version": 1, 
+                "visState": "{\"type\": \"metric\", \"listeners\": {}, \"params\": {\"handleNoResults\": true, \"fontSize\": 60}, \"aggs\": [{\"type\": \"max\", \"params\": {\"field\": \"apache.status.total_kbytes\", \"customLabel\": \"Total kbytes\"}, \"id\": \"1\", \"schema\": \"metric\"}, {\"type\": \"max\", \"params\": {\"field\": \"apache.status.total_accesses\", \"customLabel\": \"Total accesses\"}, \"id\": \"2\", \"schema\": \"metric\"}], \"title\": \"Apache HTTPD - Total accesses and kbytes\"}"
+            }, 
+            "id": "Apache-HTTPD-Total-accesses-and-kbytes", 
+            "type": "visualization", 
+            "version": 2
+        }, 
+        {
+            "attributes": {
+                "description": "", 
+                "kibanaSavedObjectMeta": {
+                    "searchSourceJSON": "{\"filter\": []}"
+                }, 
+                "savedSearchId": "Apache-HTTPD", 
+                "title": "Uptime [Metricbeat Apache]", 
+                "uiStateJSON": "{}", 
+                "version": 1, 
+                "visState": "{\"type\": \"metric\", \"listeners\": {}, \"params\": {\"handleNoResults\": true, \"fontSize\": 60}, \"aggs\": [{\"type\": \"max\", \"params\": {\"field\": \"apache.status.uptime.uptime\", \"customLabel\": \"Uptime\"}, \"id\": \"1\", \"schema\": \"metric\"}, {\"type\": \"max\", \"params\": {\"field\": \"apache.status.uptime.server_uptime\", \"customLabel\": \"Server uptime\"}, \"id\": \"2\", \"schema\": \"metric\"}], \"title\": \"Apache HTTPD - Uptime\"}"
+            }, 
+            "id": "Apache-HTTPD-Uptime", 
+            "type": "visualization", 
+            "version": 2
+        }, 
+        {
+            "attributes": {
+                "description": "", 
+                "kibanaSavedObjectMeta": {
+                    "searchSourceJSON": "{\"filter\": []}"
+                }, 
+                "savedSearchId": "Apache-HTTPD", 
+                "title": "Workers [Metricbeat Apache]", 
+                "uiStateJSON": "{}", 
+                "version": 1, 
+                "visState": "{\"type\": \"line\", \"listeners\": {}, \"params\": {\"scale\": \"linear\", \"showCircles\": true, \"yAxis\": {}, \"smoothLines\": false, \"addTimeMarker\": false, \"interpolate\": \"linear\", \"addLegend\": true, \"shareYAxis\": true, \"radiusRatio\": 9, \"drawLinesBetweenPoints\": true, \"defaultYExtents\": false, \"setYExtents\": false, \"addTooltip\": true, \"times\": []}, \"aggs\": [{\"type\": \"avg\", \"params\": {\"field\": \"apache.status.workers.busy\", \"customLabel\": \"Busy workers\"}, \"id\": \"1\", \"schema\": \"metric\"}, {\"type\": \"date_histogram\", \"params\": {\"customInterval\": \"2h\", \"field\": \"@timestamp\", \"interval\": \"auto\", \"min_doc_count\": 1, \"extended_bounds\": {}}, \"id\": \"2\", \"schema\": \"segment\"}, {\"type\": \"terms\", \"params\": {\"orderBy\": \"1\", \"customLabel\": \"Hostname\", \"field\": \"apache.status.hostname\", \"row\": true, \"order\": \"desc\", \"size\": 5}, \"id\": \"3\", \"schema\": \"split\"}, {\"type\": \"avg\", \"params\": {\"field\": \"apache.status.workers.idle\", \"customLabel\": \"Idle workers\"}, \"id\": \"4\", \"schema\": \"metric\"}], \"title\": \"Apache HTTPD - Workers\"}"
+            }, 
+            "id": "Apache-HTTPD-Workers", 
+            "type": "visualization", 
+            "version": 2
+        }, 
+        {
+            "attributes": {
+                "columns": [
+                    "_source"
+                ], 
+                "description": "", 
+                "hits": 0, 
+                "kibanaSavedObjectMeta": {
+                    "searchSourceJSON": "{\"filter\": [], \"highlight\": {\"fields\": {\"*\": {}}, \"post_tags\": [\"@/kibana-highlighted-field@\"], \"pre_tags\": [\"@kibana-highlighted-field@\"], \"require_field_match\": false, \"fragment_size\": 2147483647}, \"query\": {\"query_string\": {\"analyze_wildcard\": true, \"query\": \"metricset.module: apache\"}}, \"index\": \"__replace_token__\"}"
+                }, 
+                "sort": [
+                    "@timestamp", 
+                    "desc"
+                ], 
+                "title": "Apache HTTPD", 
+                "version": 1
+            }, 
+            "id": "Apache-HTTPD", 
+            "type": "search", 
+            "version": 1
+        }, 
+        {
+            "attributes": {
+                "description": "Overview of Apache server status", 
+                "hits": 0, 
+                "kibanaSavedObjectMeta": {
+                    "searchSourceJSON": "{\"filter\": [], \"query\": {\"query\": {\"query_string\": {\"analyze_wildcard\": true, \"query\": \"*\"}}, \"language\": \"lucene\"}, \"version\": true, \"highlightAll\": true}"
+                }, 
+                "optionsJSON": "{\"darkTheme\": false}", 
+                "panelsJSON": "[{\"type\": \"visualization\", \"id\": \"Apache-HTTPD-CPU\", \"size_x\": 6, \"size_y\": 3, \"panelIndex\": 1, \"col\": 7, \"row\": 10}, {\"type\": \"visualization\", \"id\": \"Apache-HTTPD-Hostname-list\", \"size_x\": 3, \"size_y\": 3, \"panelIndex\": 2, \"col\": 1, \"row\": 1}, {\"type\": \"visualization\", \"id\": \"Apache-HTTPD-Load1-slash-5-slash-15\", \"size_x\": 6, \"size_y\": 3, \"panelIndex\": 3, \"col\": 1, \"row\": 10}, {\"type\": \"visualization\", \"id\": \"Apache-HTTPD-Scoreboard\", \"size_x\": 12, \"size_y\": 3, \"panelIndex\": 4, \"col\": 1, \"row\": 7}, {\"type\": \"visualization\", \"id\": \"Apache-HTTPD-Total-accesses-and-kbytes\", \"size_x\": 6, \"size_y\": 3, \"panelIndex\": 5, \"col\": 7, \"row\": 1}, {\"type\": \"visualization\", \"id\": \"Apache-HTTPD-Uptime\", \"size_x\": 3, \"size_y\": 3, \"panelIndex\": 6, \"col\": 4, \"row\": 1}, {\"type\": \"visualization\", \"id\": \"Apache-HTTPD-Workers\", \"size_x\": 12, \"size_y\": 3, \"panelIndex\": 7, \"col\": 1, \"row\": 4}]", 
+                "timeRestore": false, 
+                "title": "[Metricbeat] Apache Overview", 
+                "uiStateJSON": "{\"P-5\": {\"vis\": {\"defaultColors\": {\"0 - 100\": \"rgb(0,104,55)\"}}}, \"P-6\": {\"vis\": {\"defaultColors\": {\"0 - 100\": \"rgb(0,104,55)\"}}}, \"P-2\": {\"vis\": {\"params\": {\"sort\": {\"columnIndex\": null, \"direction\": null}}}}}", 
+                "version": 1
+            }, 
+            "id": "Metricbeat-Apache-HTTPD-server-status", 
+            "type": "dashboard", 
+            "version": 3
+        },
+		 {
+            "attributes": {
+                "description": "", 
+                "kibanaSavedObjectMeta": {
+                    "searchSourceJSON": "{\"filter\": [], \"index\": \"__replace_token__\", \"query\": {\"query\": {\"query_string\": {\"analyze_wildcard\": true, \"query\": \"*\"}}, \"language\": \"lucene\"}}"
+                }, 
+                "title": "Container CPU usage [Metricbeat System]", 
+                "uiStateJSON": "{\"vis\": {\"params\": {\"sort\": {\"columnIndex\": null, \"direction\": null}}}}", 
+                "version": 1, 
+                "visState": "{\"type\": \"table\", \"params\": {\"sort\": {\"columnIndex\": null, \"direction\": null}, \"perPage\": 10, \"showPartialRows\": false, \"totalFunc\": \"sum\", \"showTotal\": false, \"showMeticsAtAllLevels\": false}, \"aggs\": [{\"params\": {\"field\": \"system.process.cgroup.cpuacct.stats.user.ns\", \"customLabel\": \"CPU user\"}, \"type\": \"max\", \"enabled\": true, \"id\": \"1\", \"schema\": \"metric\"}, {\"params\": {\"field\": \"system.process.cgroup.cpu.cfs.quota.us\", \"customLabel\": \"CPU quota\"}, \"type\": \"max\", \"enabled\": true, \"id\": \"2\", \"schema\": \"metric\"}, {\"params\": {\"orderBy\": \"1\", \"field\": \"system.process.cgroup.id\", \"customLabel\": \"Container ID\", \"order\": \"desc\", \"size\": 5}, \"type\": \"terms\", \"enabled\": true, \"id\": \"3\", \"schema\": \"bucket\"}, {\"params\": {\"field\": \"system.process.cgroup.cpu.stats.throttled.ns\", \"customLabel\": \"CPU throttling\"}, \"type\": \"max\", \"enabled\": true, \"id\": \"4\", \"schema\": \"metric\"}, {\"params\": {\"field\": \"system.process.cgroup.cpuacct.stats.system.ns\", \"customLabel\": \"CPU kernel\"}, \"type\": \"max\", \"enabled\": true, \"id\": \"5\", \"schema\": \"metric\"}, {\"params\": {\"orderBy\": \"1\", \"field\": \"system.process.name\", \"customLabel\": \"Process name\", \"order\": \"desc\", \"size\": 5}, \"type\": \"terms\", \"enabled\": true, \"id\": \"6\", \"schema\": \"bucket\"}], \"title\": \"Container CPU usage [Metricbeat System]\"}"
+            }, 
+            "id": "Container-CPU-usage", 
+            "type": "visualization", 
+            "version": 1
+        }, 
+        {
+            "attributes": {
+                "description": "", 
+                "kibanaSavedObjectMeta": {
+                    "searchSourceJSON": "{\"filter\": [], \"query\": {\"query\": {\"query_string\": {\"analyze_wildcard\": true, \"query\": \"*\"}}, \"language\": \"lucene\"}}"
+                }, 
+                "title": "System Navigation [Metricbeat System]", 
+                "uiStateJSON": "{}", 
+                "version": 1, 
+                "visState": "{\"type\": \"markdown\", \"params\": {\"markdown\": \"[System Overview](#/dashboard/Metricbeat-system-overview)  | [Host Overview](#/dashboard/79ffd6e0-faa0-11e6-947f-177f697178b8) |\\n[Containers overview](#/dashboard/CPU-slash-Memory-per-container)\", \"fontSize\": 12}, \"aggs\": [], \"title\": \"System Navigation [Metricbeat System]\"}"
+            }, 
+            "id": "System-Navigation", 
+            "type": "visualization", 
+            "version": 3
+        }, 
+        {
+            "attributes": {
+                "description": "", 
+                "kibanaSavedObjectMeta": {
+                    "searchSourceJSON": "{\"filter\": [], \"index\": \"__replace_token__\", \"query\": {\"query\": {\"query_string\": {\"analyze_wildcard\": true, \"query\": \"*\"}}, \"language\": \"lucene\"}}"
+                }, 
+                "title": "Container Memory stats [Metricbeat System]", 
+                "uiStateJSON": "{\"vis\": {\"params\": {\"sort\": {\"columnIndex\": null, \"direction\": null}}}}", 
+                "version": 1, 
+                "visState": "{\"type\": \"table\", \"params\": {\"sort\": {\"columnIndex\": null, \"direction\": null}, \"perPage\": 10, \"showPartialRows\": false, \"totalFunc\": \"sum\", \"showTotal\": false, \"showMeticsAtAllLevels\": false}, \"aggs\": [{\"params\": {\"field\": \"system.process.cgroup.memory.mem.usage.bytes\", \"customLabel\": \"Usage\"}, \"type\": \"avg\", \"enabled\": true, \"id\": \"13\", \"schema\": \"metric\"}, {\"params\": {\"field\": \"system.process.cgroup.memory.mem.usage.max.bytes\", \"customLabel\": \"Max usage\"}, \"type\": \"avg\", \"enabled\": true, \"id\": \"14\", \"schema\": \"metric\"}, {\"params\": {\"field\": \"system.process.cgroup.memory.stats.page_faults\", \"customLabel\": \"Page faults\"}, \"type\": \"avg\", \"enabled\": true, \"id\": \"1\", \"schema\": \"metric\"}, {\"params\": {\"field\": \"system.process.cgroup.memory.stats.pages_in\", \"customLabel\": \"Pages in memory\"}, \"type\": \"avg\", \"enabled\": true, \"id\": \"2\", \"schema\": \"metric\"}, {\"params\": {\"field\": \"system.process.cgroup.memory.stats.pages_out\", \"customLabel\": \"Pages out of memory\"}, \"type\": \"avg\", \"enabled\": true, \"id\": \"3\", \"schema\": \"metric\"}, {\"params\": {\"orderBy\": \"1\", \"field\": \"system.process.cgroup.id\", \"customLabel\": \"Container ID\", \"order\": \"desc\", \"size\": 50}, \"type\": \"terms\", \"enabled\": true, \"id\": \"4\", \"schema\": \"bucket\"}, {\"params\": {\"field\": \"system.process.cgroup.memory.stats.inactive_file.bytes\", \"customLabel\": \"Inactive files\"}, \"type\": \"avg\", \"enabled\": true, \"id\": \"5\", \"schema\": \"metric\"}, {\"params\": {\"field\": \"system.process.cgroup.memory.stats.major_page_faults\", \"customLabel\": \"# Major page faults\"}, \"type\": \"avg\", \"enabled\": true, \"id\": \"6\", \"schema\": \"metric\"}, {\"params\": {\"orderBy\": \"1\", \"field\": \"system.process.name\", \"customLabel\": \"Process name\", \"order\": \"desc\", \"size\": 5}, \"type\": \"terms\", \"enabled\": true, \"id\": \"8\", \"schema\": \"bucket\"}, {\"params\": {\"field\": \"system.process.cgroup.memory.mem.failures\", \"customLabel\": \"Failures\"}, \"type\": \"avg\", \"enabled\": true, \"id\": \"12\", \"schema\": \"metric\"}, {\"params\": {\"field\": \"system.process.cgroup.memory.kmem_tcp.usage.bytes\", \"customLabel\": \"TCP buffers\"}, \"type\": \"avg\", \"enabled\": true, \"id\": \"10\", \"schema\": \"metric\"}, {\"params\": {\"field\": \"system.process.cgroup.memory.stats.rss_huge.bytes\", \"customLabel\": \"Huge pages\"}, \"type\": \"avg\", \"enabled\": true, \"id\": \"11\", \"schema\": \"metric\"}, {\"params\": {\"field\": \"system.process.cgroup.memory.stats.rss.bytes\", \"customLabel\": \"Swap caches\"}, \"type\": \"avg\", \"enabled\": true, \"id\": \"7\", \"schema\": \"metric\"}, {\"params\": {\"field\": \"system.process.cgroup.memory.stats.swap.bytes\", \"customLabel\": \"Swap usage\"}, \"type\": \"avg\", \"enabled\": true, \"id\": \"15\", \"schema\": \"metric\"}, {\"params\": {\"field\": \"system.process.cgroup.blkio.total.ios\", \"customLabel\": \"Block I/O\"}, \"type\": \"avg\", \"enabled\": true, \"id\": \"16\", \"schema\": \"metric\"}], \"title\": \"Container Memory stats [Metricbeat System]\"}"
+            }, 
+            "id": "Container-Memory-stats", 
+            "type": "visualization", 
+            "version": 1
+        }, 
+        {
+            "attributes": {
+                "description": "", 
+                "kibanaSavedObjectMeta": {
+                    "searchSourceJSON": "{\"filter\": [], \"index\": \"__replace_token__\", \"query\": {\"query\": {\"query_string\": {\"analyze_wildcard\": true, \"query\": \"*\"}}, \"language\": \"lucene\"}}"
+                }, 
+                "title": "Container Block IO [Metricbeat System]", 
+                "uiStateJSON": "{\"vis\": {\"params\": {\"sort\": {\"columnIndex\": null, \"direction\": null}}}}", 
+                "version": 1, 
+                "visState": "{\"type\": \"table\", \"params\": {\"sort\": {\"columnIndex\": null, \"direction\": null}, \"perPage\": 10, \"showPartialRows\": false, \"totalFunc\": \"sum\", \"showTotal\": false, \"showMeticsAtAllLevels\": false}, \"aggs\": [{\"params\": {\"field\": \"system.process.cgroup.blkio.total.bytes\", \"customLabel\": \"Total\"}, \"type\": \"avg\", \"enabled\": true, \"id\": \"1\", \"schema\": \"metric\"}, {\"params\": {\"field\": \"system.process.cgroup.blkio.total.ios\", \"customLabel\": \"I/O\"}, \"type\": \"avg\", \"enabled\": true, \"id\": \"2\", \"schema\": \"metric\"}, {\"params\": {\"orderBy\": \"1\", \"field\": \"system.process.cgroup.id\", \"customLabel\": \"Container ID\", \"order\": \"desc\", \"size\": 5}, \"type\": \"terms\", \"enabled\": true, \"id\": \"3\", \"schema\": \"bucket\"}, {\"params\": {\"orderBy\": \"1\", \"field\": \"system.process.name\", \"customLabel\": \"Process name\", \"order\": \"desc\", \"size\": 5}, \"type\": \"terms\", \"enabled\": true, \"id\": \"4\", \"schema\": \"bucket\"}], \"title\": \"Container Block IO [Metricbeat System]\"}"
+            }, 
+            "id": "Container-Block-IO", 
+            "type": "visualization", 
+            "version": 1
+        }, 
+        {
+            "attributes": {
+                "description": "Overview of container metrics", 
+                "hits": 0, 
+                "kibanaSavedObjectMeta": {
+                    "searchSourceJSON": "{\"filter\": [], \"query\": {\"query\": {\"query_string\": {\"analyze_wildcard\": true, \"query\": \"*\"}}, \"language\": \"lucene\"}, \"version\": true, \"highlightAll\": true}"
+                }, 
+                "optionsJSON": "{\"darkTheme\": false}", 
+                "panelsJSON": "[{\"type\": \"visualization\", \"id\": \"Container-CPU-usage\", \"size_x\": 12, \"size_y\": 3, \"panelIndex\": 2, \"col\": 1, \"row\": 2}, {\"type\": \"visualization\", \"id\": \"System-Navigation\", \"size_x\": 12, \"size_y\": 1, \"panelIndex\": 3, \"col\": 1, \"row\": 1}, {\"type\": \"visualization\", \"id\": \"Container-Memory-stats\", \"size_x\": 12, \"size_y\": 3, \"panelIndex\": 4, \"col\": 1, \"row\": 5}, {\"type\": \"visualization\", \"id\": \"Container-Block-IO\", \"size_x\": 12, \"size_y\": 4, \"panelIndex\": 5, \"col\": 1, \"row\": 8}]", 
+                "timeRestore": false, 
+                "title": "[Metricbeat] Containers overview", 
+                "uiStateJSON": "{\"P-4\": {\"vis\": {\"params\": {\"sort\": {\"columnIndex\": null, \"direction\": null}}}}, \"P-5\": {\"vis\": {\"params\": {\"sort\": {\"columnIndex\": null, \"direction\": null}}}}, \"P-2\": {\"vis\": {\"params\": {\"sort\": {\"columnIndex\": null, \"direction\": null}}}}}", 
+                "version": 1
+            }, 
+            "id": "CPU-slash-Memory-per-container", 
+            "type": "dashboard", 
+            "version": 1
+        },
+		   {
+            "attributes": {
+                "description": "", 
+                "kibanaSavedObjectMeta": {
+                    "searchSourceJSON": "{\"filter\": []}"
+                }, 
+                "savedSearchId": "Metricbeat-Docker", 
+                "title": "Docker containers [Metricbeat Docker]", 
+                "uiStateJSON": "{\"vis\": {\"params\": {\"sort\": {\"columnIndex\": 1, \"direction\": \"asc\"}}}}", 
+                "version": 1, 
+                "visState": "{\"type\": \"table\", \"listeners\": {}, \"params\": {\"sort\": {\"columnIndex\": null, \"direction\": null}, \"perPage\": 8, \"showPartialRows\": false, \"totalFunc\": \"sum\", \"showTotal\": true, \"showMeticsAtAllLevels\": false}, \"aggs\": [{\"params\": {\"orderBy\": \"1\", \"field\": \"docker.container.name\", \"customLabel\": \"Name\", \"order\": \"desc\", \"size\": 5}, \"type\": \"terms\", \"enabled\": true, \"id\": \"2\", \"schema\": \"bucket\"}, {\"params\": {\"field\": \"docker.cpu.total.pct\", \"customLabel\": \"CPU usage (%)\"}, \"type\": \"max\", \"enabled\": true, \"id\": \"3\", \"schema\": \"metric\"}, {\"params\": {\"field\": \"docker.diskio.total\", \"customLabel\": \"DiskIO\"}, \"type\": \"max\", \"enabled\": true, \"id\": \"4\", \"schema\": \"metric\"}, {\"params\": {\"field\": \"docker.memory.usage.pct\", \"customLabel\": \"Mem (%)\"}, \"type\": \"max\", \"enabled\": true, \"id\": \"5\", \"schema\": \"metric\"}, {\"params\": {\"field\": \"docker.memory.rss.total\", \"customLabel\": \"Mem RSS\"}, \"type\": \"max\", \"enabled\": true, \"id\": \"6\", \"schema\": \"metric\"}, {\"params\": {\"field\": \"docker.container.id\", \"customLabel\": \"Number of Containers\"}, \"type\": \"cardinality\", \"enabled\": true, \"id\": \"1\", \"schema\": \"metric\"}], \"title\": \"Docker containers [Metricbeat Docker]\"}"
+            }, 
+            "col": 1, 
+            "id": "Docker-containers", 
+            "panelIndex": 1, 
+            "row": 1, 
+            "size_x": 7, 
+            "size_y": 5, 
+            "type": "visualization", 
+            "version": 2
+        }, 
+        {
+            "attributes": {
+                "description": "", 
+                "kibanaSavedObjectMeta": {
+                    "searchSourceJSON": "{\"filter\": []}"
+                }, 
+                "savedSearchId": "Metricbeat-Docker", 
+                "title": "Number of Containers [Metricbeat Docker]", 
+                "uiStateJSON": "{\"vis\": {\"defaultColors\": {\"0 - 100\": \"rgb(0,104,55)\"}}}", 
+                "version": 1, 
+                "visState": "{\"type\": \"metric\", \"listeners\": {}, \"params\": {\"addTooltip\": true, \"addLegend\": false, \"fontSize\": \"36\", \"handleNoResults\": true, \"gauge\": {\"useRange\": false, \"gaugeType\": \"Metric\", \"style\": {\"subText\": \"\", \"bgColor\": false, \"fontSize\": 60, \"labelColor\": false}, \"colorSchema\": \"Green to Red\", \"invertColors\": false, \"orientation\": \"vertical\", \"gaugeStyle\": \"Full\", \"autoExtend\": false, \"labels\": {\"color\": \"black\", \"show\": true}, \"backStyle\": \"Full\", \"colorsRange\": [{\"to\": 100, \"from\": 0}], \"scale\": {\"color\": \"#333\", \"width\": 2, \"labels\": false, \"show\": false}, \"verticalSplit\": false, \"percentageMode\": false, \"type\": \"simple\", \"gaugeColorMode\": \"None\"}, \"type\": \"gauge\"}, \"aggs\": [{\"params\": {\"field\": \"docker.info.containers.running\", \"customLabel\": \"Running\"}, \"type\": \"max\", \"enabled\": true, \"id\": \"2\", \"schema\": \"metric\"}, {\"params\": {\"field\": \"docker.info.containers.paused\", \"customLabel\": \"Paused\"}, \"type\": \"max\", \"enabled\": true, \"id\": \"3\", \"schema\": \"metric\"}, {\"params\": {\"field\": \"docker.info.containers.stopped\", \"customLabel\": \"Stopped\"}, \"type\": \"max\", \"enabled\": true, \"id\": \"4\", \"schema\": \"metric\"}], \"title\": \"Number of Containers [Metricbeat Docker]\"}"
+            }, 
+            "col": 8, 
+            "id": "Docker-Number-of-Containers", 
+            "panelIndex": 2, 
+            "row": 1, 
+            "size_x": 5, 
+            "size_y": 2, 
+            "type": "visualization", 
+            "version": 2
+        }, 
+        {
+            "attributes": {
+                "description": "", 
+                "kibanaSavedObjectMeta": {
+                    "searchSourceJSON": "{\"filter\": []}"
+                }, 
+                "savedSearchId": "Metricbeat-Docker", 
+                "title": "Docker containers per host [Metricbeat Docker]", 
+                "uiStateJSON": "{}", 
+                "version": 1, 
+                "visState": "{\"type\": \"pie\", \"listeners\": {}, \"params\": {\"legendPosition\": \"bottom\", \"isDonut\": true, \"addTooltip\": true, \"shareYAxis\": true, \"addLegend\": true}, \"aggs\": [{\"params\": {\"field\": \"docker.container.id\", \"customLabel\": \"Number of containers\"}, \"type\": \"cardinality\", \"enabled\": true, \"id\": \"1\", \"schema\": \"metric\"}, {\"params\": {\"orderBy\": \"1\", \"field\": \"beat.hostname\", \"customLabel\": \"Hosts\", \"order\": \"desc\", \"size\": 5}, \"type\": \"terms\", \"enabled\": true, \"id\": \"2\", \"schema\": \"segment\"}], \"title\": \"Docker containers per host [Metricbeat Docker]\"}"
+            }, 
+            "col": 8, 
+            "id": "Docker-containers-per-host", 
+            "panelIndex": 3, 
+            "row": 3, 
+            "size_x": 2, 
+            "size_y": 3, 
+            "type": "visualization", 
+            "version": 2
+        }, 
+        {
+            "attributes": {
+                "description": "", 
+                "kibanaSavedObjectMeta": {
+                    "searchSourceJSON": "{\"filter\": []}"
+                }, 
+                "savedSearchId": "Metricbeat-Docker", 
+                "title": "Docker images and names [Metricbeat Docker]", 
+                "uiStateJSON": "{}", 
+                "version": 1, 
+                "visState": "{\"type\": \"pie\", \"listeners\": {}, \"params\": {\"legendPosition\": \"bottom\", \"isDonut\": true, \"addTooltip\": true, \"shareYAxis\": true, \"addLegend\": true}, \"aggs\": [{\"params\": {}, \"type\": \"count\", \"enabled\": true, \"id\": \"1\", \"schema\": \"metric\"}, {\"params\": {\"orderBy\": \"1\", \"field\": \"docker.container.image\", \"order\": \"desc\", \"size\": 5}, \"type\": \"terms\", \"enabled\": true, \"id\": \"2\", \"schema\": \"segment\"}, {\"params\": {\"orderBy\": \"1\", \"field\": \"docker.container.name\", \"order\": \"desc\", \"size\": 5}, \"type\": \"terms\", \"enabled\": true, \"id\": \"3\", \"schema\": \"segment\"}], \"title\": \"Docker images and names [Metricbeat Docker]\"}"
+            }, 
+            "col": 10, 
+            "id": "Docker-images-and-names", 
+            "panelIndex": 7, 
+            "row": 3, 
+            "size_x": 3, 
+            "size_y": 3, 
+            "type": "visualization", 
+            "version": 2
+        }, 
+        {
+            "attributes": {
+                "description": "", 
+                "kibanaSavedObjectMeta": {
+                    "searchSourceJSON": "{\"filter\": [], \"highlight\": {\"fields\": {\"*\": {}}, \"post_tags\": [\"@/kibana-highlighted-field@\"], \"pre_tags\": [\"@kibana-highlighted-field@\"], \"require_field_match\": false, \"fragment_size\": 2147483647}, \"query\": {\"query_string\": {\"analyze_wildcard\": true, \"query\": \"metricset.module:docker AND metricset.name:cpu\"}}, \"index\": \"__replace_token__\"}"
+                }, 
+                "title": "CPU usage [Metricbeat Docker]", 
+                "uiStateJSON": "{}", 
+                "version": 1, 
+                "visState": "{\"type\": \"area\", \"listeners\": {}, \"params\": {\"scale\": \"linear\", \"seriesParams\": [{\"showCircles\": true, \"show\": \"true\", \"type\": \"area\", \"interpolate\": \"linear\", \"mode\": \"stacked\", \"drawLinesBetweenPoints\": true, \"valueAxis\": \"ValueAxis-1\", \"data\": {\"id\": \"1\", \"label\": \"Count\"}}], \"yAxis\": {}, \"smoothLines\": true, \"categoryAxes\": [{\"style\": {}, \"scale\": {\"type\": \"linear\"}, \"show\": true, \"title\": {}, \"labels\": {\"truncate\": 100, \"show\": true}, \"position\": \"bottom\", \"type\": \"category\", \"id\": \"CategoryAxis-1\"}], \"legendPosition\": \"top\", \"addTimeMarker\": false, \"interpolate\": \"linear\", \"addLegend\": true, \"shareYAxis\": true, \"grid\": {\"style\": {\"color\": \"#eee\"}, \"categoryLines\": false}, \"mode\": \"stacked\", \"defaultYExtents\": false, \"setYExtents\": false, \"addTooltip\": true, \"valueAxes\": [{\"style\": {}, \"scale\": {\"type\": \"linear\", \"mode\": \"normal\"}, \"name\": \"LeftAxis-1\", \"show\": true, \"title\": {\"text\": \"Count\"}, \"labels\": {\"filter\": false, \"rotate\": 0, \"truncate\": 100, \"show\": true}, \"position\": \"left\", \"type\": \"value\", \"id\": \"ValueAxis-1\"}], \"times\": []}, \"aggs\": [{\"params\": {\"field\": \"docker.cpu.total.pct\", \"customLabel\": \"Total CPU time\", \"percents\": [75]}, \"type\": \"percentiles\", \"enabled\": true, \"id\": \"1\", \"schema\": \"metric\"}, {\"params\": {\"customInterval\": \"2h\", \"field\": \"@timestamp\", \"interval\": \"auto\", \"min_doc_count\": 1, \"extended_bounds\": {}}, \"type\": \"date_histogram\", \"enabled\": true, \"id\": \"2\", \"schema\": \"segment\"}, {\"params\": {\"orderBy\": \"1.75\", \"field\": \"docker.container.name\", \"customLabel\": \"Container name\", \"order\": \"desc\", \"size\": 5}, \"type\": \"terms\", \"enabled\": true, \"id\": \"3\", \"schema\": \"group\"}], \"title\": \"CPU usage [Metricbeat Docker]\"}"
+            }, 
+            "col": 1, 
+            "id": "Docker-CPU-usage", 
+            "panelIndex": 4, 
+            "row": 6, 
+            "size_x": 6, 
+            "size_y": 3, 
+            "type": "visualization", 
+            "version": 2
+        }, 
+        {
+            "attributes": {
+                "description": "", 
+                "kibanaSavedObjectMeta": {
+                    "searchSourceJSON": "{\"filter\": [], \"highlight\": {\"fields\": {\"*\": {}}, \"post_tags\": [\"@/kibana-highlighted-field@\"], \"pre_tags\": [\"@kibana-highlighted-field@\"], \"require_field_match\": false, \"fragment_size\": 2147483647}, \"query\": {\"query_string\": {\"analyze_wildcard\": true, \"query\": \"metricset.module:docker AND metricset.name:memory\"}}, \"index\": \"__replace_token__\"}"
+                }, 
+                "title": "Memory usage [Metricbeat Docker]", 
+                "uiStateJSON": "{}", 
+                "version": 1, 
+                "visState": "{\"type\": \"area\", \"listeners\": {}, \"params\": {\"scale\": \"linear\", \"seriesParams\": [{\"showCircles\": true, \"show\": \"true\", \"type\": \"area\", \"interpolate\": \"linear\", \"mode\": \"stacked\", \"drawLinesBetweenPoints\": true, \"valueAxis\": \"ValueAxis-1\", \"data\": {\"id\": \"1\", \"label\": \"Count\"}}], \"yAxis\": {}, \"smoothLines\": false, \"categoryAxes\": [{\"style\": {}, \"scale\": {\"type\": \"linear\"}, \"show\": true, \"title\": {}, \"labels\": {\"truncate\": 100, \"show\": true}, \"position\": \"bottom\", \"type\": \"category\", \"id\": \"CategoryAxis-1\"}], \"legendPosition\": \"top\", \"addTimeMarker\": false, \"interpolate\": \"linear\", \"addLegend\": true, \"shareYAxis\": true, \"grid\": {\"style\": {\"color\": \"#eee\"}, \"categoryLines\": false}, \"mode\": \"stacked\", \"defaultYExtents\": false, \"setYExtents\": false, \"addTooltip\": true, \"valueAxes\": [{\"style\": {}, \"scale\": {\"type\": \"linear\", \"mode\": \"normal\"}, \"name\": \"LeftAxis-1\", \"show\": true, \"title\": {\"text\": \"Count\"}, \"labels\": {\"filter\": false, \"rotate\": 0, \"truncate\": 100, \"show\": true}, \"position\": \"left\", \"type\": \"value\", \"id\": \"ValueAxis-1\"}], \"times\": []}, \"aggs\": [{\"params\": {\"field\": \"docker.memory.usage.total\", \"customLabel\": \"Memory\"}, \"type\": \"max\", \"enabled\": true, \"id\": \"1\", \"schema\": \"metric\"}, {\"params\": {\"customInterval\": \"2h\", \"field\": \"@timestamp\", \"interval\": \"auto\", \"min_doc_count\": 1, \"extended_bounds\": {}}, \"type\": \"date_histogram\", \"enabled\": true, \"id\": \"2\", \"schema\": \"segment\"}, {\"params\": {\"orderBy\": \"1\", \"field\": \"docker.container.name\", \"customLabel\": \"Container name\", \"order\": \"desc\", \"size\": 5}, \"type\": \"terms\", \"enabled\": true, \"id\": \"3\", \"schema\": \"group\"}], \"title\": \"Memory usage [Metricbeat Docker]\"}"
+            }, 
+            "col": 7, 
+            "id": "Docker-memory-usage", 
+            "panelIndex": 5, 
+            "row": 6, 
+            "size_x": 6, 
+            "size_y": 3, 
+            "type": "visualization", 
+            "version": 2
+        }, 
+        {
+            "attributes": {
+                "description": "", 
+                "kibanaSavedObjectMeta": {
+                    "searchSourceJSON": "{\"filter\": [], \"highlight\": {\"fields\": {\"*\": {}}, \"post_tags\": [\"@/kibana-highlighted-field@\"], \"pre_tags\": [\"@kibana-highlighted-field@\"], \"require_field_match\": false, \"fragment_size\": 2147483647}, \"query\": {\"query_string\": {\"analyze_wildcard\": true, \"query\": \"metricset.module:docker AND metricset.name:network\"}}, \"index\": \"__replace_token__\"}"
+                }, 
+                "title": "Network IO [Metricbeat Docker]", 
+                "uiStateJSON": "{}", 
+                "version": 1, 
+                "visState": "{\"type\": \"area\", \"listeners\": {}, \"params\": {\"scale\": \"linear\", \"seriesParams\": [{\"showCircles\": true, \"show\": \"true\", \"type\": \"area\", \"interpolate\": \"linear\", \"mode\": \"stacked\", \"drawLinesBetweenPoints\": true, \"valueAxis\": \"ValueAxis-1\", \"data\": {\"id\": \"1\", \"label\": \"Count\"}}], \"yAxis\": {}, \"smoothLines\": true, \"categoryAxes\": [{\"style\": {}, \"scale\": {\"type\": \"linear\"}, \"show\": true, \"title\": {}, \"labels\": {\"truncate\": 100, \"show\": true}, \"position\": \"bottom\", \"type\": \"category\", \"id\": \"CategoryAxis-1\"}], \"legendPosition\": \"top\", \"addTimeMarker\": false, \"interpolate\": \"linear\", \"addLegend\": true, \"shareYAxis\": true, \"grid\": {\"style\": {\"color\": \"#eee\"}, \"categoryLines\": false}, \"mode\": \"stacked\", \"defaultYExtents\": false, \"setYExtents\": false, \"addTooltip\": true, \"valueAxes\": [{\"style\": {}, \"scale\": {\"type\": \"linear\", \"mode\": \"normal\"}, \"name\": \"LeftAxis-1\", \"show\": true, \"title\": {\"text\": \"Count\"}, \"labels\": {\"filter\": false, \"rotate\": 0, \"truncate\": 100, \"show\": true}, \"position\": \"left\", \"type\": \"value\", \"id\": \"ValueAxis-1\"}], \"times\": []}, \"aggs\": [{\"params\": {\"field\": \"docker.network.in.bytes\", \"customLabel\": \"IN bytes\"}, \"type\": \"max\", \"enabled\": true, \"id\": \"1\", \"schema\": \"metric\"}, {\"params\": {\"customInterval\": \"2h\", \"field\": \"@timestamp\", \"interval\": \"auto\", \"min_doc_count\": 1, \"extended_bounds\": {}}, \"type\": \"date_histogram\", \"enabled\": true, \"id\": \"2\", \"schema\": \"segment\"}, {\"params\": {\"orderBy\": \"1\", \"field\": \"docker.container.name\", \"customLabel\": \"Container name\", \"order\": \"desc\", \"size\": 5}, \"type\": \"terms\", \"enabled\": true, \"id\": \"3\", \"schema\": \"group\"}, {\"params\": {\"field\": \"docker.network.out.bytes\", \"customLabel\": \"OUT bytes\"}, \"type\": \"max\", \"enabled\": true, \"id\": \"4\", \"schema\": \"metric\"}], \"title\": \"Network IO [Metricbeat Docker]\"}"
+            }, 
+            "col": 1, 
+            "id": "Docker-Network-IO", 
+            "panelIndex": 6, 
+            "row": 9, 
+            "size_x": 12, 
+            "size_y": 3, 
+            "type": "visualization", 
+            "version": 2
+        }, 
+        {
+            "attributes": {
+                "columns": [
+                    "_source"
+                ], 
+                "description": "", 
+                "hits": 0, 
+                "kibanaSavedObjectMeta": {
+                    "searchSourceJSON": "{\"filter\": [], \"highlight\": {\"fields\": {\"*\": {}}, \"post_tags\": [\"@/kibana-highlighted-field@\"], \"pre_tags\": [\"@kibana-highlighted-field@\"], \"require_field_match\": false, \"fragment_size\": 2147483647}, \"query\": {\"query_string\": {\"analyze_wildcard\": true, \"query\": \"metricset.module:docker\"}}, \"index\": \"__replace_token__\"}"
+                }, 
+                "sort": [
+                    "@timestamp", 
+                    "desc"
+                ], 
+                "title": "Metricbeat Docker", 
+                "version": 1
+            }, 
+            "id": "Metricbeat-Docker", 
+            "type": "search", 
+            "version": 4
+        }, 
+        {
+            "attributes": {
+                "description": "Overview of docker containers", 
+                "hits": 0, 
+                "kibanaSavedObjectMeta": {
+                    "searchSourceJSON": "{\"filter\": [{\"query\": {\"query_string\": {\"analyze_wildcard\": true, \"query\": \"*\"}}}], \"version\": true, \"highlightAll\": true}"
+                }, 
+                "optionsJSON": "{\"darkTheme\": false}", 
+                "panelsJSON": "[{\"type\": \"visualization\", \"id\": \"Docker-containers\", \"size_x\": 7, \"size_y\": 5, \"panelIndex\": 1, \"col\": 1, \"row\": 1}, {\"type\": \"visualization\", \"id\": \"Docker-Number-of-Containers\", \"size_x\": 5, \"size_y\": 2, \"panelIndex\": 2, \"col\": 8, \"row\": 1}, {\"type\": \"visualization\", \"id\": \"Docker-containers-per-host\", \"size_x\": 2, \"size_y\": 3, \"panelIndex\": 3, \"col\": 8, \"row\": 3}, {\"type\": \"visualization\", \"id\": \"Docker-images-and-names\", \"size_x\": 3, \"size_y\": 3, \"panelIndex\": 7, \"col\": 10, \"row\": 3}, {\"type\": \"visualization\", \"id\": \"Docker-CPU-usage\", \"size_x\": 6, \"size_y\": 3, \"panelIndex\": 4, \"col\": 1, \"row\": 6}, {\"type\": \"visualization\", \"id\": \"Docker-memory-usage\", \"size_x\": 6, \"size_y\": 3, \"panelIndex\": 5, \"col\": 7, \"row\": 6}, {\"type\": \"visualization\", \"id\": \"Docker-Network-IO\", \"size_x\": 12, \"size_y\": 3, \"panelIndex\": 6, \"col\": 1, \"row\": 9}]", 
+                "timeRestore": false, 
+                "title": "[Metricbeat] Docker Overview", 
+                "uiStateJSON": "{\"P-5\": {\"vis\": {\"legendOpen\": true}}, \"P-7\": {\"vis\": {\"legendOpen\": true}}, \"P-1\": {\"vis\": {\"params\": {\"sort\": {\"columnIndex\": 1, \"direction\": \"asc\"}}}}, \"P-2\": {\"vis\": {\"defaultColors\": {\"0 - 100\": \"rgb(0,104,55)\"}}}, \"P-3\": {\"vis\": {\"legendOpen\": true}}}", 
+                "version": 1
+            }, 
+            "id": "AV4REOpp5NkDleZmzKkE", 
+            "type": "dashboard", 
+            "version": 3
+        },
+		  {
+            "attributes": {
+                "description": "", 
+                "kibanaSavedObjectMeta": {
+                    "searchSourceJSON": "{\"filter\": [], \"index\": \"__replace_token__\", \"query\": {\"query\": \"\", \"language\": \"lucene\"}}"
+                }, 
+                "title": "Service States [Metricbeat Windows]", 
+                "uiStateJSON": "{\"vis\": {\"params\": {\"sort\": {\"columnIndex\": null, \"direction\": null}}}}", 
+                "version": 1, 
+                "visState": "{\"type\": \"table\", \"params\": {\"sort\": {\"columnIndex\": null, \"direction\": null}, \"perPage\": 10, \"showPartialRows\": false, \"totalFunc\": \"sum\", \"showTotal\": false, \"showMeticsAtAllLevels\": false}, \"aggs\": [{\"params\": {\"sortField\": \"@timestamp\", \"customLabel\": \"Latest Report\", \"field\": \"@timestamp\", \"sortOrder\": \"desc\", \"aggregate\": \"concat\", \"size\": 1}, \"type\": \"top_hits\", \"enabled\": true, \"id\": \"1\", \"schema\": \"metric\"}, {\"params\": {\"orderBy\": \"_term\", \"field\": \"windows.service.display_name\", \"customLabel\": \"Service\", \"order\": \"asc\", \"size\": 100}, \"type\": \"terms\", \"enabled\": true, \"id\": \"2\", \"schema\": \"bucket\"}, {\"params\": {\"orderBy\": \"_term\", \"field\": \"beat.name\", \"customLabel\": \"Host\", \"order\": \"desc\", \"size\": 5}, \"type\": \"terms\", \"enabled\": true, \"id\": \"5\", \"schema\": \"bucket\"}, {\"params\": {\"orderBy\": \"custom\", \"customLabel\": \"State\", \"field\": \"windows.service.state\", \"orderAgg\": {\"params\": {\"field\": \"@timestamp\"}, \"type\": \"max\", \"enabled\": true, \"id\": \"3-orderAgg\", \"schema\": {\"group\": \"none\", \"name\": \"orderAgg\", \"min\": 0, \"aggFilter\": [\"!top_hits\", \"!percentiles\", \"!median\", \"!std_dev\", \"!derivative\", \"!moving_avg\", \"!serial_diff\", \"!cumulative_sum\", \"!avg_bucket\", \"!max_bucket\", \"!min_bucket\", \"!sum_bucket\"], \"max\": null, \"title\": \"Order Agg\", \"hideCustomLabel\": true, \"params\": [], \"editor\": false, \"deprecate\": false}}, \"order\": \"desc\", \"size\": 1}, \"type\": \"terms\", \"enabled\": true, \"id\": \"3\", \"schema\": \"bucket\"}, {\"params\": {\"orderBy\": \"custom\", \"customLabel\": \"Startup Type\", \"field\": \"windows.service.start_type\", \"orderAgg\": {\"params\": {\"field\": \"@timestamp\"}, \"type\": \"max\", \"enabled\": true, \"id\": \"4-orderAgg\", \"schema\": {\"group\": \"none\", \"name\": \"orderAgg\", \"min\": 0, \"aggFilter\": [\"!top_hits\", \"!percentiles\", \"!median\", \"!std_dev\", \"!derivative\", \"!moving_avg\", \"!serial_diff\", \"!cumulative_sum\", \"!avg_bucket\", \"!max_bucket\", \"!min_bucket\", \"!sum_bucket\"], \"max\": null, \"title\": \"Order Agg\", \"hideCustomLabel\": true, \"params\": [], \"editor\": false, \"deprecate\": false}}, \"order\": \"desc\", \"size\": 1}, \"type\": \"terms\", \"enabled\": true, \"id\": \"4\", \"schema\": \"bucket\"}], \"title\": \"Service States [Metricbeat Windows]\"}"
+            }, 
+            "id": "eb8277d0-c98c-11e7-9835-2f31fe08873b", 
+            "type": "visualization", 
+            "version": 1
+        }, 
+        {
+            "attributes": {
+                "description": "", 
+                "kibanaSavedObjectMeta": {
+                    "searchSourceJSON": "{\"filter\": [], \"query\": {\"query\": \"\", \"language\": \"lucene\"}}"
+                }, 
+                "savedSearchId": "b6b7ccc0-c98d-11e7-9835-2f31fe08873b", 
+                "title": "Hosts [Metricbeat Windows]", 
+                "uiStateJSON": "{\"vis\": {\"params\": {\"sort\": {\"columnIndex\": null, \"direction\": null}}}}", 
+                "version": 1, 
+                "visState": "{\"type\": \"table\", \"params\": {\"sort\": {\"columnIndex\": null, \"direction\": null}, \"perPage\": 10, \"showPartialRows\": false, \"totalFunc\": \"sum\", \"showTotal\": false, \"showMeticsAtAllLevels\": false}, \"aggs\": [{\"params\": {\"field\": \"windows.service.id\", \"customLabel\": \"Total Services\"}, \"type\": \"cardinality\", \"enabled\": true, \"id\": \"1\", \"schema\": \"metric\"}, {\"params\": {\"orderBy\": \"1\", \"field\": \"beat.name\", \"customLabel\": \"Host\", \"order\": \"desc\", \"size\": 100}, \"type\": \"terms\", \"enabled\": true, \"id\": \"2\", \"schema\": \"bucket\"}], \"title\": \"Hosts [Metricbeat Windows]\"}"
+            }, 
+            "id": "23a5fff0-c98e-11e7-9835-2f31fe08873b", 
+            "type": "visualization", 
+            "version": 2
+        }, 
+        {
+            "attributes": {
+                "description": "", 
+                "kibanaSavedObjectMeta": {
+                    "searchSourceJSON": "{\"filter\": [], \"query\": {\"query\": \"\", \"language\": \"lucene\"}}"
+                }, 
+                "savedSearchId": "b6b7ccc0-c98d-11e7-9835-2f31fe08873b", 
+                "title": "Startup States [Metricbeat Windows]", 
+                "uiStateJSON": "{}", 
+                "version": 1, 
+                "visState": "{\"type\": \"pie\", \"params\": {\"legendPosition\": \"right\", \"type\": \"pie\", \"isDonut\": true, \"addTooltip\": true, \"addLegend\": true}, \"aggs\": [{\"params\": {\"field\": \"windows.service.id\", \"customLabel\": \"Service Count\"}, \"type\": \"cardinality\", \"enabled\": true, \"id\": \"1\", \"schema\": \"metric\"}, {\"params\": {\"orderBy\": \"1\", \"field\": \"windows.service.start_type\", \"customLabel\": \"Startup Type\", \"order\": \"desc\", \"size\": 5}, \"type\": \"terms\", \"enabled\": true, \"id\": \"4\", \"schema\": \"segment\"}, {\"params\": {\"orderBy\": \"1\", \"field\": \"windows.service.state\", \"customLabel\": \"State\", \"order\": \"desc\", \"size\": 5}, \"type\": \"terms\", \"enabled\": true, \"id\": \"3\", \"schema\": \"segment\"}], \"title\": \"Startup States [Metricbeat Windows]\"}"
+            }, 
+            "id": "830c45f0-c991-11e7-9835-2f31fe08873b", 
+            "type": "visualization", 
+            "version": 2
+        }, 
+        {
+            "attributes": {
+                "description": "", 
+                "kibanaSavedObjectMeta": {
+                    "searchSourceJSON": "{\"filter\": [], \"query\": {\"query\": \"\", \"language\": \"lucene\"}}"
+                }, 
+                "savedSearchId": "b6b7ccc0-c98d-11e7-9835-2f31fe08873b", 
+                "title": "Unique Services [Metricbeat Windows]", 
+                "uiStateJSON": "{\"vis\": {\"defaultColors\": {\"0 - 100\": \"rgb(0,104,55)\"}}}", 
+                "version": 1, 
+                "visState": "{\"type\": \"metric\", \"params\": {\"gauge\": {\"useRange\": false, \"gaugeType\": \"Metric\", \"style\": {\"subText\": \"\", \"bgColor\": false, \"fontSize\": 60, \"labelColor\": false}, \"colorSchema\": \"Green to Red\", \"invertColors\": false, \"orientation\": \"vertical\", \"gaugeStyle\": \"Full\", \"autoExtend\": false, \"labels\": {\"color\": \"black\", \"show\": false}, \"backStyle\": \"Full\", \"colorsRange\": [{\"to\": 100, \"from\": 0}], \"scale\": {\"color\": \"#333\", \"width\": 2, \"labels\": false, \"show\": false}, \"verticalSplit\": false, \"percentageMode\": false, \"type\": \"simple\", \"gaugeColorMode\": \"None\"}, \"type\": \"gauge\", \"addTooltip\": true, \"addLegend\": false}, \"aggs\": [{\"params\": {\"field\": \"windows.service.id\", \"customLabel\": \"Services\"}, \"type\": \"cardinality\", \"enabled\": true, \"id\": \"1\", \"schema\": \"metric\"}], \"title\": \"Unique Services [Metricbeat Windows]\"}"
+            }, 
+            "id": "35f5ad60-c996-11e7-9835-2f31fe08873b", 
+            "type": "visualization", 
+            "version": 2
+        }, 
+        {
+            "attributes": {
+                "description": "", 
+                "kibanaSavedObjectMeta": {
+                    "searchSourceJSON": "{\"filter\": [{\"meta\": {\"index\": \"__replace_token__\", \"value\": \"exists\", \"disabled\": false, \"alias\": null, \"key\": \"windows.service.exit_code\", \"negate\": false, \"type\": \"exists\"}, \"$state\": {\"store\": \"appState\"}, \"exists\": {\"field\": \"windows.service.exit_code\"}}, {\"query\": {\"match\": {\"windows.service.exit_code\": {\"query\": \"0\", \"type\": \"phrase\"}}}, \"meta\": {\"index\": \"__replace_token__\", \"value\": \"0\", \"disabled\": false, \"alias\": null, \"params\": {\"query\": \"0\", \"type\": \"phrase\"}, \"key\": \"windows.service.exit_code\", \"negate\": true, \"type\": \"phrase\"}, \"$state\": {\"store\": \"appState\"}}, {\"query\": {\"match\": {\"windows.service.exit_code\": {\"query\": \"ERROR_SERVICE_NEVER_STARTED\", \"type\": \"phrase\"}}}, \"meta\": {\"index\": \"__replace_token__\", \"value\": \"ERROR_SERVICE_NEVER_STARTED\", \"disabled\": false, \"alias\": null, \"params\": {\"query\": \"ERROR_SERVICE_NEVER_STARTED\", \"type\": \"phrase\"}, \"key\": \"windows.service.exit_code\", \"negate\": true, \"type\": \"phrase\"}, \"$state\": {\"store\": \"appState\"}}], \"query\": {\"query\": \"\", \"language\": \"lucene\"}}"
+                }, 
+                "savedSearchId": "b6b7ccc0-c98d-11e7-9835-2f31fe08873b", 
+                "title": "Non-zero Service Exit Codes [Metricbeat Windows]", 
+                "uiStateJSON": "{\"vis\": {\"defaultColors\": {\"0 - 100\": \"rgb(0,104,55)\"}}}", 
+                "version": 1, 
+                "visState": "{\"type\": \"metric\", \"params\": {\"gauge\": {\"useRange\": false, \"gaugeType\": \"Metric\", \"style\": {\"subText\": \"\", \"bgColor\": false, \"fontSize\": 60, \"labelColor\": false}, \"colorSchema\": \"Green to Red\", \"invertColors\": false, \"orientation\": \"vertical\", \"gaugeStyle\": \"Full\", \"autoExtend\": false, \"labels\": {\"color\": \"black\", \"show\": false}, \"backStyle\": \"Full\", \"colorsRange\": [{\"to\": 100, \"from\": 0}], \"scale\": {\"color\": \"#333\", \"width\": 2, \"labels\": false, \"show\": false}, \"verticalSplit\": false, \"percentageMode\": false, \"type\": \"simple\", \"gaugeColorMode\": \"None\"}, \"type\": \"gauge\", \"addTooltip\": true, \"addLegend\": false}, \"aggs\": [{\"params\": {\"field\": \"windows.service.id\", \"customLabel\": \"Non-zero Exit Codes\"}, \"type\": \"cardinality\", \"enabled\": true, \"id\": \"1\", \"schema\": \"metric\"}], \"title\": \"Non-zero Service Exit Codes [Metricbeat Windows]\"}"
+            }, 
+            "id": "c36b2ba0-ca29-11e7-9835-2f31fe08873b", 
+            "type": "visualization", 
+            "version": 1
+        }, 
+        {
+            "attributes": {
+                "columns": [
+                    "beat.name", 
+                    "windows.service.display_name", 
+                    "windows.service.state", 
+                    "windows.service.start_type", 
+                    "windows.service.uptime.ms", 
+                    "windows.service.pid", 
+                    "windows.service.exit_code"
+                ], 
+                "description": "", 
+                "hits": 0, 
+                "kibanaSavedObjectMeta": {
+                    "searchSourceJSON": "{\"filter\": [{\"query\": {\"match\": {\"metricset.module\": {\"query\": \"windows\", \"type\": \"phrase\"}}}, \"meta\": {\"index\": \"__replace_token__\", \"value\": \"windows\", \"disabled\": false, \"alias\": null, \"params\": {\"query\": \"windows\", \"type\": \"phrase\"}, \"key\": \"metricset.module\", \"negate\": false, \"type\": \"phrase\"}, \"$state\": {\"store\": \"appState\"}}, {\"query\": {\"match\": {\"metricset.name\": {\"query\": \"service\", \"type\": \"phrase\"}}}, \"meta\": {\"index\": \"__replace_token__\", \"value\": \"service\", \"disabled\": false, \"alias\": null, \"params\": {\"query\": \"service\", \"type\": \"phrase\"}, \"key\": \"metricset.name\", \"negate\": false, \"type\": \"phrase\"}, \"$state\": {\"store\": \"appState\"}}], \"index\": \"__replace_token__\", \"version\": true, \"highlightAll\": true, \"query\": {\"query\": \"\", \"language\": \"lucene\"}}"
+                }, 
+                "sort": [
+                    "@timestamp", 
+                    "desc"
+                ], 
+                "title": "Services [Metricbeat Windows]", 
+                "version": 1
+            }, 
+            "id": "b6b7ccc0-c98d-11e7-9835-2f31fe08873b", 
+            "type": "search", 
+            "version": 2
+        }, 
+        {
+            "attributes": {
+                "description": "Overview of the Windows Service States", 
+                "hits": 0, 
+                "kibanaSavedObjectMeta": {
+                    "searchSourceJSON": "{\"filter\": [], \"query\": {\"query\": \"\", \"language\": \"lucene\"}, \"version\": true, \"highlightAll\": true}"
+                }, 
+                "optionsJSON": "{\"darkTheme\": false}", 
+                "panelsJSON": "[{\"type\": \"visualization\", \"id\": \"eb8277d0-c98c-11e7-9835-2f31fe08873b\", \"size_x\": 9, \"size_y\": 5, \"panelIndex\": 1, \"col\": 4, \"row\": 4}, {\"type\": \"visualization\", \"id\": \"23a5fff0-c98e-11e7-9835-2f31fe08873b\", \"size_x\": 3, \"size_y\": 5, \"panelIndex\": 2, \"col\": 1, \"row\": 4}, {\"type\": \"visualization\", \"id\": \"830c45f0-c991-11e7-9835-2f31fe08873b\", \"size_x\": 4, \"size_y\": 3, \"panelIndex\": 3, \"col\": 1, \"row\": 1}, {\"type\": \"visualization\", \"id\": \"35f5ad60-c996-11e7-9835-2f31fe08873b\", \"size_x\": 4, \"size_y\": 3, \"panelIndex\": 4, \"col\": 5, \"row\": 1}, {\"type\": \"visualization\", \"id\": \"c36b2ba0-ca29-11e7-9835-2f31fe08873b\", \"size_x\": 4, \"size_y\": 3, \"panelIndex\": 5, \"col\": 9, \"row\": 1}]", 
+                "timeRestore": false, 
+                "title": "[Metricbeat] Windows Services", 
+                "uiStateJSON": "{\"P-4\": {\"vis\": {\"defaultColors\": {\"0 - 100\": \"rgb(0,104,55)\"}}}, \"P-5\": {\"vis\": {\"defaultColors\": {\"0 - 100\": \"rgb(0,104,55)\"}}}, \"P-1\": {\"vis\": {\"params\": {\"sort\": {\"columnIndex\": null, \"direction\": null}}}}, \"P-2\": {\"vis\": {\"params\": {\"sort\": {\"columnIndex\": null, \"direction\": null}}}}}", 
+                "version": 1
+            }, 
+            "id": "d9eba730-c991-11e7-9835-2f31fe08873b", 
+            "type": "dashboard", 
+            "version": 6
+        },
+		 {
+            "attributes": {
+                "description": "", 
+                "kibanaSavedObjectMeta": {
+                    "searchSourceJSON": "{}"
+                }, 
+                "title": "Connections rate [Metricbeat MySQL]", 
+                "uiStateJSON": "{}", 
+                "version": 1, 
+                "visState": "{\"type\": \"metrics\", \"params\": {\"time_field\": \"@timestamp\", \"series\": [{\"line_width\": 1, \"point_size\": 1, \"color\": \"#68BC00\", \"label\": \"Connections rate\", \"metrics\": [{\"field\": \"mysql.status.connections\", \"type\": \"avg\", \"id\": \"61ca57f2-469d-11e7-af02-69e470af7417\"}, {\"field\": \"61ca57f2-469d-11e7-af02-69e470af7417\", \"type\": \"derivative\", \"id\": \"aee9bbf0-f1f3-11e7-a752-236fe3270d99\", \"unit\": \"\"}], \"seperate_axis\": 0, \"split_mode\": \"everything\", \"chart_type\": \"line\", \"stacked\": \"none\", \"axis_position\": \"right\", \"formatter\": \"number\", \"id\": \"61ca57f1-469d-11e7-af02-69e470af7417\", \"fill\": 0.5}], \"axis_formatter\": \"number\", \"interval\": \"auto\", \"id\": \"61ca57f0-469d-11e7-af02-69e470af7417\", \"show_legend\": 1, \"show_grid\": 1, \"legend_position\": \"bottom\", \"index_pattern\": \"__replace_token__\", \"type\": \"timeseries\", \"axis_position\": \"left\"}, \"aggs\": [], \"title\": \"Connections rate [Metricbeat MySQL]\"}"
+            }, 
+            "id": "d7e6bee0-f1f3-11e7-85ab-594b1652e0d1", 
+            "type": "visualization", 
+            "updated_at": "2018-01-05T09:14:45.934Z", 
+            "version": 2
+        }, 
+        {
+            "attributes": {
+                "description": "", 
+                "kibanaSavedObjectMeta": {
+                    "searchSourceJSON": "{}"
+                }, 
+                "title": "Command rates [Metricbeat MySQL]", 
+                "uiStateJSON": "{}", 
+                "version": 1, 
+                "visState": "{\"type\": \"metrics\", \"params\": {\"time_field\": \"@timestamp\", \"series\": [{\"line_width\": 1, \"point_size\": 1, \"color\": \"#68BC00\", \"label\": \"SELECT\", \"metrics\": [{\"field\": \"mysql.status.command.select\", \"type\": \"avg\", \"id\": \"61ca57f2-469d-11e7-af02-69e470af7417\"}, {\"field\": \"61ca57f2-469d-11e7-af02-69e470af7417\", \"type\": \"derivative\", \"id\": \"2d149f90-f1f4-11e7-a752-236fe3270d99\", \"unit\": \"\"}], \"seperate_axis\": 0, \"split_mode\": \"everything\", \"chart_type\": \"line\", \"stacked\": \"none\", \"axis_position\": \"right\", \"formatter\": \"number\", \"id\": \"61ca57f1-469d-11e7-af02-69e470af7417\", \"fill\": \"0.2\"}, {\"line_width\": 1, \"point_size\": 1, \"color\": \"rgba(104,204,202,1)\", \"label\": \"INSERT\", \"metrics\": [{\"field\": \"mysql.status.command.insert\", \"type\": \"avg\", \"id\": \"3c2a2a41-f1f4-11e7-a752-236fe3270d99\"}, {\"field\": \"3c2a2a41-f1f4-11e7-a752-236fe3270d99\", \"type\": \"derivative\", \"id\": \"3c2a2a42-f1f4-11e7-a752-236fe3270d99\", \"unit\": \"\"}], \"seperate_axis\": 0, \"split_mode\": \"everything\", \"chart_type\": \"line\", \"stacked\": \"none\", \"axis_position\": \"right\", \"formatter\": \"number\", \"id\": \"3c2a2a40-f1f4-11e7-a752-236fe3270d99\", \"fill\": \"0.2\"}, {\"line_width\": 1, \"point_size\": 1, \"color\": \"rgba(252,220,0,1)\", \"label\": \"UPDATE\", \"metrics\": [{\"field\": \"mysql.status.command.update\", \"type\": \"avg\", \"id\": \"485ce051-f1f4-11e7-a752-236fe3270d99\"}, {\"field\": \"485ce051-f1f4-11e7-a752-236fe3270d99\", \"type\": \"derivative\", \"id\": \"485ce052-f1f4-11e7-a752-236fe3270d99\", \"unit\": \"\"}], \"seperate_axis\": 0, \"split_mode\": \"everything\", \"chart_type\": \"line\", \"stacked\": \"none\", \"axis_position\": \"right\", \"formatter\": \"number\", \"id\": \"485ce050-f1f4-11e7-a752-236fe3270d99\", \"fill\": \"0.2\"}, {\"line_width\": 1, \"point_size\": 1, \"color\": \"rgba(244,78,59,1)\", \"label\": \"DELETE\", \"metrics\": [{\"field\": \"mysql.status.command.delete\", \"type\": \"avg\", \"id\": \"543a4a71-f1f4-11e7-a752-236fe3270d99\"}, {\"field\": \"543a4a71-f1f4-11e7-a752-236fe3270d99\", \"type\": \"derivative\", \"id\": \"543a4a72-f1f4-11e7-a752-236fe3270d99\", \"unit\": \"\"}], \"seperate_axis\": 0, \"split_mode\": \"everything\", \"chart_type\": \"line\", \"stacked\": \"none\", \"axis_position\": \"right\", \"formatter\": \"number\", \"id\": \"543a4a70-f1f4-11e7-a752-236fe3270d99\", \"fill\": \"0.2\"}], \"axis_formatter\": \"number\", \"interval\": \"auto\", \"id\": \"61ca57f0-469d-11e7-af02-69e470af7417\", \"show_legend\": 1, \"show_grid\": 1, \"index_pattern\": \"__replace_token__\", \"type\": \"timeseries\", \"axis_position\": \"left\"}, \"aggs\": [], \"title\": \"Command rates [Metricbeat MySQL]\"}"
+            }, 
+            "id": "695a4f90-f1f4-11e7-85ab-594b1652e0d1", 
+            "type": "visualization", 
+            "updated_at": "2018-01-05T09:14:45.934Z", 
+            "version": 2
+        }, 
+        {
+            "attributes": {
+                "description": "", 
+                "kibanaSavedObjectMeta": {
+                    "searchSourceJSON": "{}"
+                }, 
+                "title": "Running threads [Metricbeat MySQL]", 
+                "uiStateJSON": "{}", 
+                "version": 1, 
+                "visState": "{\"type\": \"metrics\", \"params\": {\"time_field\": \"@timestamp\", \"series\": [{\"line_width\": 1, \"point_size\": 1, \"color\": \"rgba(174,161,255,1)\", \"label\": \"Running threads\", \"metrics\": [{\"field\": \"mysql.status.threads.running\", \"type\": \"avg\", \"id\": \"61ca57f2-469d-11e7-af02-69e470af7417\"}], \"seperate_axis\": 0, \"split_mode\": \"everything\", \"chart_type\": \"line\", \"stacked\": \"none\", \"axis_position\": \"right\", \"formatter\": \"number\", \"id\": \"61ca57f1-469d-11e7-af02-69e470af7417\", \"fill\": 0.5}], \"axis_formatter\": \"number\", \"interval\": \"auto\", \"id\": \"61ca57f0-469d-11e7-af02-69e470af7417\", \"show_legend\": 1, \"show_grid\": 1, \"legend_position\": \"bottom\", \"index_pattern\": \"__replace_token__\", \"type\": \"timeseries\", \"axis_position\": \"left\"}, \"aggs\": [], \"title\": \"Running threads [Metricbeat MySQL]\"}"
+            }, 
+            "id": "124dce60-f1f5-11e7-85ab-594b1652e0d1", 
+            "type": "visualization", 
+            "updated_at": "2018-01-05T09:14:45.934Z", 
+            "version": 2
+        }, 
+        {
+            "attributes": {
+                "description": "", 
+                "kibanaSavedObjectMeta": {
+                    "searchSourceJSON": "{}"
+                }, 
+                "title": "Opened tables rate [Metricbeat MySQL]", 
+                "uiStateJSON": "{}", 
+                "version": 1, 
+                "visState": "{\"type\": \"metrics\", \"params\": {\"time_field\": \"@timestamp\", \"series\": [{\"line_width\": 1, \"point_size\": 1, \"color\": \"rgba(252,196,0,1)\", \"label\": \"Opened tables rate\", \"metrics\": [{\"field\": \"mysql.status.opened_tables\", \"type\": \"avg\", \"id\": \"61ca57f2-469d-11e7-af02-69e470af7417\"}, {\"field\": \"61ca57f2-469d-11e7-af02-69e470af7417\", \"type\": \"derivative\", \"id\": \"9972d250-f1f5-11e7-a752-236fe3270d99\", \"unit\": \"\"}], \"seperate_axis\": 0, \"split_mode\": \"everything\", \"chart_type\": \"line\", \"stacked\": \"none\", \"axis_position\": \"right\", \"formatter\": \"number\", \"id\": \"61ca57f1-469d-11e7-af02-69e470af7417\", \"fill\": 0.5}], \"axis_formatter\": \"number\", \"interval\": \"auto\", \"id\": \"61ca57f0-469d-11e7-af02-69e470af7417\", \"show_legend\": 1, \"show_grid\": 1, \"legend_position\": \"bottom\", \"index_pattern\": \"__replace_token__\", \"type\": \"timeseries\", \"axis_position\": \"left\"}, \"aggs\": [], \"title\": \"Opened tables rate [Metricbeat MySQL]\"}"
+            }, 
+            "id": "aaa326b0-f1f5-11e7-85ab-594b1652e0d1", 
+            "type": "visualization", 
+            "updated_at": "2018-01-05T09:14:45.934Z", 
+            "version": 3
+        }, 
+        {
+            "attributes": {
+                "description": "", 
+                "kibanaSavedObjectMeta": {
+                    "searchSourceJSON": "{}"
+                }, 
+                "title": "Threads created rate [Metricbeat MySQL]", 
+                "uiStateJSON": "{}", 
+                "version": 1, 
+                "visState": "{\"type\": \"metrics\", \"params\": {\"time_field\": \"@timestamp\", \"series\": [{\"line_width\": 1, \"point_size\": 1, \"color\": \"rgba(123,100,255,1)\", \"label\": \"Threads created rate\", \"metrics\": [{\"field\": \"mysql.status.threads.created\", \"type\": \"avg\", \"id\": \"61ca57f2-469d-11e7-af02-69e470af7417\"}, {\"field\": \"61ca57f2-469d-11e7-af02-69e470af7417\", \"type\": \"derivative\", \"id\": \"9972d250-f1f5-11e7-a752-236fe3270d99\", \"unit\": \"\"}], \"seperate_axis\": 0, \"split_mode\": \"everything\", \"chart_type\": \"line\", \"stacked\": \"none\", \"axis_position\": \"right\", \"formatter\": \"number\", \"id\": \"61ca57f1-469d-11e7-af02-69e470af7417\", \"fill\": 0.5}], \"axis_formatter\": \"number\", \"interval\": \"auto\", \"id\": \"61ca57f0-469d-11e7-af02-69e470af7417\", \"show_legend\": 1, \"show_grid\": 1, \"legend_position\": \"bottom\", \"index_pattern\": \"__replace_token__\", \"type\": \"timeseries\", \"axis_position\": \"left\"}, \"aggs\": [], \"title\": \"Threads created rate [Metricbeat MySQL]\"}"
+            }, 
+            "id": "fb1f3f20-f1f5-11e7-85ab-594b1652e0d1", 
+            "type": "visualization", 
+            "updated_at": "2018-01-05T09:14:45.934Z", 
+            "version": 2
+        }, 
+        {
+            "attributes": {
+                "description": "", 
+                "kibanaSavedObjectMeta": {
+                    "searchSourceJSON": "{}"
+                }, 
+                "title": "Open files [Metricbeat MySQL]", 
+                "uiStateJSON": "{}", 
+                "version": 1, 
+                "visState": "{\"type\": \"metrics\", \"params\": {\"time_field\": \"@timestamp\", \"series\": [{\"line_width\": 1, \"point_size\": 1, \"color\": \"rgba(22,165,165,1)\", \"label\": \"Open files\", \"metrics\": [{\"field\": \"mysql.status.open.files\", \"type\": \"avg\", \"id\": \"61ca57f2-469d-11e7-af02-69e470af7417\"}], \"seperate_axis\": 0, \"split_mode\": \"everything\", \"chart_type\": \"line\", \"stacked\": \"none\", \"axis_position\": \"right\", \"formatter\": \"number\", \"id\": \"61ca57f1-469d-11e7-af02-69e470af7417\", \"fill\": 0.5}], \"axis_formatter\": \"number\", \"interval\": \"auto\", \"id\": \"61ca57f0-469d-11e7-af02-69e470af7417\", \"show_legend\": 1, \"show_grid\": 1, \"legend_position\": \"bottom\", \"index_pattern\": \"__replace_token__\", \"type\": \"timeseries\", \"axis_position\": \"left\"}, \"aggs\": [], \"title\": \"Open files [Metricbeat MySQL]\"}"
+            }, 
+            "id": "f5b35930-f1f6-11e7-85ab-594b1652e0d1", 
+            "type": "visualization", 
+            "updated_at": "2018-01-05T09:14:45.934Z", 
+            "version": 2
+        }, 
+        {
+            "attributes": {
+                "description": "", 
+                "kibanaSavedObjectMeta": {
+                    "searchSourceJSON": "{}"
+                }, 
+                "title": "Sent and received bytes rates [Metricbeat MySQL]", 
+                "uiStateJSON": "{}", 
+                "version": 1, 
+                "visState": "{\"type\": \"metrics\", \"params\": {\"time_field\": \"@timestamp\", \"series\": [{\"line_width\": 1, \"point_size\": 1, \"color\": \"rgba(0,98,177,1)\", \"label\": \"Received bytes\", \"metrics\": [{\"field\": \"mysql.status.bytes.received\", \"type\": \"avg\", \"id\": \"2b1c2391-f1f7-11e7-a752-236fe3270d99\"}, {\"field\": \"2b1c2391-f1f7-11e7-a752-236fe3270d99\", \"type\": \"derivative\", \"id\": \"2b1c2392-f1f7-11e7-a752-236fe3270d99\", \"unit\": \"\"}], \"seperate_axis\": 0, \"split_mode\": \"everything\", \"chart_type\": \"line\", \"stacked\": \"none\", \"axis_position\": \"right\", \"formatter\": \"number\", \"id\": \"2b1c2390-f1f7-11e7-a752-236fe3270d99\", \"fill\": 0.5}, {\"line_width\": 1, \"point_size\": 1, \"color\": \"#68BC00\", \"label\": \"Sent bytes\", \"metrics\": [{\"field\": \"mysql.status.bytes.sent\", \"type\": \"avg\", \"id\": \"61ca57f2-469d-11e7-af02-69e470af7417\"}, {\"field\": \"61ca57f2-469d-11e7-af02-69e470af7417\", \"type\": \"derivative\", \"id\": \"23cfda50-f1f7-11e7-a752-236fe3270d99\", \"unit\": \"\"}], \"seperate_axis\": 0, \"split_mode\": \"everything\", \"chart_type\": \"line\", \"stacked\": \"none\", \"axis_position\": \"right\", \"formatter\": \"number\", \"id\": \"61ca57f1-469d-11e7-af02-69e470af7417\", \"fill\": 0.5}], \"axis_formatter\": \"number\", \"interval\": \"auto\", \"id\": \"61ca57f0-469d-11e7-af02-69e470af7417\", \"show_legend\": 1, \"show_grid\": 1, \"legend_position\": \"bottom\", \"index_pattern\": \"__replace_token__\", \"type\": \"timeseries\", \"axis_position\": \"left\"}, \"aggs\": [], \"title\": \"Sent and received bytes rates [Metricbeat MySQL]\"}"
+            }, 
+            "id": "7404feb0-f1f7-11e7-85ab-594b1652e0d1", 
+            "type": "visualization", 
+            "updated_at": "2018-01-05T09:15:49.714Z", 
+            "version": 3
+        }, 
+        {
+            "attributes": {
+                "description": "Overview of MySQL server", 
+                "hits": 0, 
+                "kibanaSavedObjectMeta": {
+                    "searchSourceJSON": "{\"filter\": [], \"query\": {\"query\": {\"query_string\": {\"analyze_wildcard\": true, \"query\": \"*\"}}, \"language\": \"lucene\"}, \"version\": true, \"highlightAll\": true}"
+                }, 
+                "optionsJSON": "{\"darkTheme\": false, \"useMargins\": false}", 
+                "panelsJSON": "[{\"gridData\": {\"i\": \"10\", \"h\": 3, \"y\": 3, \"w\": 6, \"x\": 0}, \"type\": \"visualization\", \"version\": \"6.2.4\", \"panelIndex\": \"10\", \"id\": \"d7e6bee0-f1f3-11e7-85ab-594b1652e0d1\"}, {\"gridData\": {\"i\": \"11\", \"h\": 3, \"y\": 0, \"w\": 12, \"x\": 0}, \"type\": \"visualization\", \"version\": \"6.2.4\", \"panelIndex\": \"11\", \"id\": \"695a4f90-f1f4-11e7-85ab-594b1652e0d1\"}, {\"gridData\": {\"i\": \"13\", \"h\": 3, \"y\": 3, \"w\": 6, \"x\": 6}, \"type\": \"visualization\", \"version\": \"6.2.4\", \"panelIndex\": \"13\", \"id\": \"124dce60-f1f5-11e7-85ab-594b1652e0d1\"}, {\"gridData\": {\"i\": \"14\", \"h\": 3, \"y\": 6, \"w\": 6, \"x\": 0}, \"type\": \"visualization\", \"version\": \"6.2.4\", \"panelIndex\": \"14\", \"id\": \"aaa326b0-f1f5-11e7-85ab-594b1652e0d1\"}, {\"gridData\": {\"i\": \"15\", \"h\": 3, \"y\": 6, \"w\": 6, \"x\": 6}, \"type\": \"visualization\", \"version\": \"6.2.4\", \"panelIndex\": \"15\", \"id\": \"fb1f3f20-f1f5-11e7-85ab-594b1652e0d1\"}, {\"gridData\": {\"i\": \"16\", \"h\": 3, \"y\": 9, \"w\": 6, \"x\": 6}, \"type\": \"visualization\", \"version\": \"6.2.4\", \"panelIndex\": \"16\", \"id\": \"f5b35930-f1f6-11e7-85ab-594b1652e0d1\"}, {\"gridData\": {\"i\": \"17\", \"h\": 3, \"y\": 9, \"w\": 6, \"x\": 0}, \"type\": \"visualization\", \"version\": \"6.2.4\", \"panelIndex\": \"17\", \"id\": \"7404feb0-f1f7-11e7-85ab-594b1652e0d1\"}]", 
+                "timeRestore": false, 
+                "title": "[Metricbeat] MySQL Overview", 
+                "version": 1
+            }, 
+            "id": "66881e90-0006-11e7-bf7f-c9acc3d3e306", 
+            "type": "dashboard", 
+            "updated_at": "2018-01-05T09:14:45.934Z", 
+            "version": 3
+        },
+		 {
+            "attributes": {
+                "description": "", 
+                "kibanaSavedObjectMeta": {
+                    "searchSourceJSON": "{\"filter\": []}"
+                }, 
+                "savedSearchId": "MongoDB-search", 
+                "title": "Hosts [Metricbeat MongoDB]", 
+                "uiStateJSON": "{\"vis\": {\"params\": {\"sort\": {\"columnIndex\": null, \"direction\": null}}}}", 
+                "version": 1, 
+                "visState": "{\"type\": \"table\", \"params\": {\"sort\": {\"columnIndex\": null, \"direction\": null}, \"perPage\": 10, \"showPartialRows\": false, \"totalFunc\": \"sum\", \"showTotal\": false, \"showMeticsAtAllLevels\": false}, \"aggs\": [{\"params\": {\"field\": \"mongodb.status.connections.current\", \"customLabel\": \"Number of connections\"}, \"type\": \"avg\", \"enabled\": true, \"id\": \"1\", \"schema\": \"metric\"}, {\"params\": {\"orderBy\": \"1\", \"field\": \"metricset.host\", \"order\": \"desc\", \"size\": 5}, \"type\": \"terms\", \"enabled\": true, \"id\": \"2\", \"schema\": \"bucket\"}, {\"params\": {\"field\": \"mongodb.status.memory.bits\", \"customLabel\": \"Arch\"}, \"type\": \"avg\", \"enabled\": true, \"id\": \"3\", \"schema\": \"metric\"}, {\"params\": {\"field\": \"mongodb.status.memory.resident.mb\", \"customLabel\": \"Resident memory\"}, \"type\": \"avg\", \"enabled\": true, \"id\": \"4\", \"schema\": \"metric\"}, {\"params\": {\"field\": \"mongodb.status.memory.virtual.mb\", \"customLabel\": \"Virtual memory\"}, \"type\": \"avg\", \"enabled\": true, \"id\": \"5\", \"schema\": \"metric\"}], \"title\": \"Hosts [Metricbeat MongoDB]\"}"
+            }, 
+            "id": "MongoDB-hosts", 
+            "type": "visualization", 
+            "version": 2
+        }, 
+        {
+            "attributes": {
+                "description": "", 
+                "kibanaSavedObjectMeta": {
+                    "searchSourceJSON": "{\"filter\": []}"
+                }, 
+                "savedSearchId": "MongoDB-search", 
+                "title": "Engine & Version [Metricbeat MongoDB]", 
+                "uiStateJSON": "{}", 
+                "version": 1, 
+                "visState": "{\"type\": \"pie\", \"params\": {\"addTooltip\": true, \"isDonut\": true, \"legendPosition\": \"bottom\", \"addLegend\": true, \"shareYAxis\": true, \"type\": \"pie\"}, \"aggs\": [{\"params\": {\"field\": \"metricset.host\"}, \"type\": \"cardinality\", \"enabled\": true, \"id\": \"1\", \"schema\": \"metric\"}, {\"params\": {\"orderBy\": \"1\", \"field\": \"mongodb.status.storage_engine.name\", \"customLabel\": \"Engine\", \"order\": \"desc\", \"size\": 5}, \"type\": \"terms\", \"enabled\": true, \"id\": \"2\", \"schema\": \"segment\"}, {\"params\": {\"orderBy\": \"1\", \"field\": \"mongodb.status.version\", \"customLabel\": \"Version\", \"order\": \"desc\", \"size\": 5}, \"type\": \"terms\", \"enabled\": true, \"id\": \"3\", \"schema\": \"segment\"}], \"title\": \"Engine & Version [Metricbeat MongoDB]\"}"
+            }, 
+            "id": "MongoDB-Engine-ampersand-Version", 
+            "type": "visualization", 
+            "version": 2
+        }, 
+        {
+            "attributes": {
+                "description": "", 
+                "kibanaSavedObjectMeta": {
+                    "searchSourceJSON": "{\"filter\": []}"
+                }, 
+                "savedSearchId": "MongoDB-search", 
+                "title": "Operation counters [Metricbeat MongoDB]", 
+                "uiStateJSON": "{}", 
+                "version": 1, 
+                "visState": "{\"type\": \"area\", \"params\": {\"scale\": \"linear\", \"seriesParams\": [{\"showCircles\": true, \"show\": \"true\", \"type\": \"area\", \"interpolate\": \"linear\", \"mode\": \"stacked\", \"drawLinesBetweenPoints\": true, \"valueAxis\": \"ValueAxis-1\", \"data\": {\"id\": \"1\", \"label\": \"Count\"}}], \"yAxis\": {}, \"smoothLines\": false, \"categoryAxes\": [{\"style\": {}, \"scale\": {\"type\": \"linear\"}, \"show\": true, \"title\": {}, \"labels\": {\"truncate\": 100, \"show\": true}, \"position\": \"bottom\", \"type\": \"category\", \"id\": \"CategoryAxis-1\"}], \"legendPosition\": \"bottom\", \"addTimeMarker\": false, \"interpolate\": \"linear\", \"addLegend\": true, \"shareYAxis\": true, \"grid\": {\"style\": {\"color\": \"#eee\"}, \"categoryLines\": false}, \"mode\": \"stacked\", \"type\": \"area\", \"defaultYExtents\": false, \"setYExtents\": false, \"addTooltip\": true, \"valueAxes\": [{\"style\": {}, \"scale\": {\"type\": \"linear\", \"mode\": \"normal\"}, \"name\": \"LeftAxis-1\", \"show\": true, \"title\": {\"text\": \"Count\"}, \"labels\": {\"filter\": false, \"rotate\": 0, \"truncate\": 100, \"show\": true}, \"position\": \"left\", \"type\": \"value\", \"id\": \"ValueAxis-1\"}], \"times\": []}, \"aggs\": [{\"params\": {\"field\": \"mongodb.status.opcounters.command\", \"customLabel\": \"command\"}, \"type\": \"avg\", \"enabled\": true, \"id\": \"1\", \"schema\": \"metric\"}, {\"params\": {\"customInterval\": \"2h\", \"field\": \"@timestamp\", \"interval\": \"auto\", \"min_doc_count\": 1, \"extended_bounds\": {}}, \"type\": \"date_histogram\", \"enabled\": true, \"id\": \"2\", \"schema\": \"segment\"}, {\"params\": {\"field\": \"mongodb.status.opcounters.delete\", \"customLabel\": \"delete\"}, \"type\": \"avg\", \"enabled\": true, \"id\": \"3\", \"schema\": \"metric\"}, {\"params\": {\"field\": \"mongodb.status.opcounters.getmore\", \"customLabel\": \"getmore\"}, \"type\": \"avg\", \"enabled\": true, \"id\": \"4\", \"schema\": \"metric\"}, {\"params\": {\"field\": \"mongodb.status.opcounters.insert\", \"customLabel\": \"insert\"}, \"type\": \"avg\", \"enabled\": true, \"id\": \"5\", \"schema\": \"metric\"}, {\"params\": {\"field\": \"mongodb.status.opcounters.query\", \"customLabel\": \"query\"}, \"type\": \"avg\", \"enabled\": true, \"id\": \"6\", \"schema\": \"metric\"}, {\"params\": {\"field\": \"mongodb.status.opcounters_replicated.update\", \"customLabel\": \"update\"}, \"type\": \"avg\", \"enabled\": true, \"id\": \"7\", \"schema\": \"metric\"}], \"title\": \"Operation counters [Metricbeat MongoDB]\"}"
+            }, 
+            "id": "MongoDB-operation-counters", 
+            "type": "visualization", 
+            "version": 2
+        }, 
+        {
+            "attributes": {
+                "description": "", 
+                "kibanaSavedObjectMeta": {
+                    "searchSourceJSON": "{\"filter\": []}"
+                }, 
+                "savedSearchId": "MongoDB-search", 
+                "title": "Concurrent transactions Read [Metricbeat MongoDB]", 
+                "uiStateJSON": "{\"vis\": {\"colors\": {\"Read Used\": \"#BF1B00\", \"Read Available\": \"#508642\"}}}", 
+                "version": 1, 
+                "visState": "{\"type\": \"area\", \"params\": {\"scale\": \"linear\", \"seriesParams\": [{\"showCircles\": true, \"show\": \"true\", \"type\": \"area\", \"interpolate\": \"linear\", \"mode\": \"stacked\", \"drawLinesBetweenPoints\": true, \"valueAxis\": \"ValueAxis-1\", \"data\": {\"id\": \"1\", \"label\": \"Count\"}}], \"yAxis\": {}, \"smoothLines\": false, \"categoryAxes\": [{\"style\": {}, \"scale\": {\"type\": \"linear\"}, \"show\": true, \"title\": {}, \"labels\": {\"truncate\": 100, \"show\": true}, \"position\": \"bottom\", \"type\": \"category\", \"id\": \"CategoryAxis-1\"}], \"legendPosition\": \"bottom\", \"addTimeMarker\": false, \"interpolate\": \"linear\", \"addLegend\": true, \"shareYAxis\": true, \"grid\": {\"style\": {\"color\": \"#eee\"}, \"categoryLines\": false}, \"mode\": \"stacked\", \"type\": \"area\", \"defaultYExtents\": false, \"setYExtents\": false, \"addTooltip\": true, \"valueAxes\": [{\"style\": {}, \"scale\": {\"type\": \"linear\", \"mode\": \"normal\"}, \"name\": \"LeftAxis-1\", \"show\": true, \"title\": {\"text\": \"Count\"}, \"labels\": {\"filter\": false, \"rotate\": 0, \"truncate\": 100, \"show\": true}, \"position\": \"left\", \"type\": \"value\", \"id\": \"ValueAxis-1\"}], \"times\": []}, \"aggs\": [{\"params\": {\"field\": \"mongodb.status.wired_tiger.concurrent_transactions.read.available\", \"customLabel\": \"Read Available\"}, \"type\": \"avg\", \"enabled\": true, \"id\": \"1\", \"schema\": \"metric\"}, {\"params\": {\"customInterval\": \"2h\", \"field\": \"@timestamp\", \"interval\": \"auto\", \"min_doc_count\": 1, \"extended_bounds\": {}}, \"type\": \"date_histogram\", \"enabled\": true, \"id\": \"2\", \"schema\": \"segment\"}, {\"params\": {\"field\": \"mongodb.status.wired_tiger.concurrent_transactions.read.out\", \"customLabel\": \"Read Used\"}, \"type\": \"avg\", \"enabled\": true, \"id\": \"3\", \"schema\": \"metric\"}], \"title\": \"Concurrent transactions Read [Metricbeat MongoDB]\"}"
+            }, 
+            "id": "MongoDB-Concurrent-transactions-Read", 
+            "type": "visualization", 
+            "version": 2
+        }, 
+        {
+            "attributes": {
+                "description": "", 
+                "kibanaSavedObjectMeta": {
+                    "searchSourceJSON": "{\"filter\": []}"
+                }, 
+                "savedSearchId": "MongoDB-search", 
+                "title": "Concurrent transactions Write [Metricbeat MongoDB]", 
+                "uiStateJSON": "{\"vis\": {\"colors\": {\"Write Used\": \"#BF1B00\", \"Write Available\": \"#629E51\"}}}", 
+                "version": 1, 
+                "visState": "{\"type\": \"area\", \"params\": {\"scale\": \"linear\", \"seriesParams\": [{\"showCircles\": true, \"show\": \"true\", \"type\": \"area\", \"interpolate\": \"linear\", \"mode\": \"stacked\", \"drawLinesBetweenPoints\": true, \"valueAxis\": \"ValueAxis-1\", \"data\": {\"id\": \"1\", \"label\": \"Count\"}}], \"yAxis\": {}, \"smoothLines\": false, \"categoryAxes\": [{\"style\": {}, \"scale\": {\"type\": \"linear\"}, \"show\": true, \"title\": {}, \"labels\": {\"truncate\": 100, \"show\": true}, \"position\": \"bottom\", \"type\": \"category\", \"id\": \"CategoryAxis-1\"}], \"legendPosition\": \"bottom\", \"addTimeMarker\": false, \"interpolate\": \"linear\", \"addLegend\": true, \"shareYAxis\": true, \"grid\": {\"style\": {\"color\": \"#eee\"}, \"categoryLines\": false}, \"mode\": \"stacked\", \"type\": \"area\", \"defaultYExtents\": false, \"setYExtents\": false, \"addTooltip\": true, \"valueAxes\": [{\"style\": {}, \"scale\": {\"type\": \"linear\", \"mode\": \"normal\"}, \"name\": \"LeftAxis-1\", \"show\": true, \"title\": {\"text\": \"Count\"}, \"labels\": {\"filter\": false, \"rotate\": 0, \"truncate\": 100, \"show\": true}, \"position\": \"left\", \"type\": \"value\", \"id\": \"ValueAxis-1\"}], \"times\": []}, \"aggs\": [{\"params\": {\"field\": \"mongodb.status.wired_tiger.concurrent_transactions.write.available\", \"customLabel\": \"Write Available\"}, \"type\": \"avg\", \"enabled\": true, \"id\": \"1\", \"schema\": \"metric\"}, {\"params\": {\"customInterval\": \"2h\", \"field\": \"@timestamp\", \"interval\": \"auto\", \"min_doc_count\": 1, \"extended_bounds\": {}}, \"type\": \"date_histogram\", \"enabled\": true, \"id\": \"2\", \"schema\": \"segment\"}, {\"params\": {\"field\": \"mongodb.status.wired_tiger.concurrent_transactions.write.out\", \"customLabel\": \"Write Used\"}, \"type\": \"avg\", \"enabled\": true, \"id\": \"3\", \"schema\": \"metric\"}], \"title\": \"Concurrent transactions Write [Metricbeat MongoDB]\"}"
+            }, 
+            "id": "MongoDB-Concurrent-transactions-Write", 
+            "type": "visualization", 
+            "version": 2
+        }, 
+        {
+            "attributes": {
+                "description": "", 
+                "kibanaSavedObjectMeta": {
+                    "searchSourceJSON": "{\"filter\": []}"
+                }, 
+                "savedSearchId": "MongoDB-search", 
+                "title": "Memory stats [Metricbeat MongoDB]", 
+                "uiStateJSON": "{}", 
+                "version": 1, 
+                "visState": "{\"type\": \"line\", \"params\": {\"scale\": \"log\", \"seriesParams\": [{\"showCircles\": true, \"show\": \"true\", \"data\": {\"id\": \"1\", \"label\": \"Count\"}, \"mode\": \"normal\", \"drawLinesBetweenPoints\": true, \"valueAxis\": \"ValueAxis-1\", \"type\": \"line\"}], \"yAxis\": {}, \"smoothLines\": false, \"times\": [], \"categoryAxes\": [{\"style\": {}, \"scale\": {\"type\": \"linear\"}, \"show\": true, \"title\": {}, \"labels\": {\"truncate\": 100, \"show\": true}, \"position\": \"bottom\", \"type\": \"category\", \"id\": \"CategoryAxis-1\"}], \"legendPosition\": \"bottom\", \"addTimeMarker\": false, \"interpolate\": \"linear\", \"addLegend\": true, \"shareYAxis\": true, \"grid\": {\"style\": {\"color\": \"#eee\"}, \"categoryLines\": false}, \"drawLinesBetweenPoints\": true, \"type\": \"line\", \"defaultYExtents\": false, \"radiusRatio\": 9, \"setYExtents\": false, \"addTooltip\": true, \"valueAxes\": [{\"style\": {}, \"scale\": {\"type\": \"linear\", \"mode\": \"normal\"}, \"name\": \"LeftAxis-1\", \"show\": true, \"title\": {\"text\": \"Count\"}, \"labels\": {\"filter\": false, \"rotate\": 0, \"truncate\": 100, \"show\": true}, \"position\": \"left\", \"type\": \"value\", \"id\": \"ValueAxis-1\"}], \"showCircles\": true}, \"aggs\": [{\"params\": {\"field\": \"mongodb.status.memory.mapped.mb\", \"customLabel\": \"Mapped\"}, \"type\": \"avg\", \"enabled\": true, \"id\": \"1\", \"schema\": \"metric\"}, {\"params\": {\"customInterval\": \"2h\", \"field\": \"@timestamp\", \"interval\": \"auto\", \"min_doc_count\": 1, \"extended_bounds\": {}}, \"type\": \"date_histogram\", \"enabled\": true, \"id\": \"2\", \"schema\": \"segment\"}, {\"params\": {\"field\": \"mongodb.status.memory.mapped_with_journal.mb\", \"customLabel\": \"Mapped with journal\"}, \"type\": \"avg\", \"enabled\": true, \"id\": \"3\", \"schema\": \"metric\"}, {\"params\": {\"field\": \"mongodb.status.memory.resident.mb\", \"customLabel\": \"Rezident\"}, \"type\": \"avg\", \"enabled\": true, \"id\": \"4\", \"schema\": \"metric\"}, {\"params\": {\"field\": \"mongodb.status.memory.virtual.mb\", \"customLabel\": \"Virtual\"}, \"type\": \"avg\", \"enabled\": true, \"id\": \"5\", \"schema\": \"metric\"}], \"title\": \"Memory stats [Metricbeat MongoDB]\"}"
+            }, 
+            "id": "MongoDB-memory-stats", 
+            "type": "visualization", 
+            "version": 2
+        }, 
+        {
+            "attributes": {
+                "description": "", 
+                "kibanaSavedObjectMeta": {
+                    "searchSourceJSON": "{\"filter\": []}"
+                }, 
+                "savedSearchId": "MongoDB-search", 
+                "title": "Asserts [Metricbeat MongoDB]", 
+                "uiStateJSON": "{}", 
+                "version": 1, 
+                "visState": "{\"type\": \"area\", \"params\": {\"scale\": \"linear\", \"seriesParams\": [{\"showCircles\": true, \"show\": \"true\", \"type\": \"area\", \"interpolate\": \"linear\", \"mode\": \"stacked\", \"drawLinesBetweenPoints\": true, \"valueAxis\": \"ValueAxis-1\", \"data\": {\"id\": \"1\", \"label\": \"Count\"}}], \"yAxis\": {}, \"smoothLines\": false, \"categoryAxes\": [{\"style\": {}, \"scale\": {\"type\": \"linear\"}, \"show\": true, \"title\": {}, \"labels\": {\"truncate\": 100, \"show\": true}, \"position\": \"bottom\", \"type\": \"category\", \"id\": \"CategoryAxis-1\"}], \"legendPosition\": \"bottom\", \"addTimeMarker\": false, \"interpolate\": \"linear\", \"addLegend\": true, \"shareYAxis\": true, \"grid\": {\"style\": {\"color\": \"#eee\"}, \"categoryLines\": false}, \"mode\": \"stacked\", \"type\": \"area\", \"defaultYExtents\": false, \"setYExtents\": false, \"addTooltip\": true, \"valueAxes\": [{\"style\": {}, \"scale\": {\"type\": \"linear\", \"mode\": \"normal\"}, \"name\": \"LeftAxis-1\", \"show\": true, \"title\": {\"text\": \"Count\"}, \"labels\": {\"filter\": false, \"rotate\": 0, \"truncate\": 100, \"show\": true}, \"position\": \"left\", \"type\": \"value\", \"id\": \"ValueAxis-1\"}], \"times\": []}, \"aggs\": [{\"params\": {\"field\": \"mongodb.status.asserts.msg\", \"customLabel\": \"message\"}, \"type\": \"max\", \"enabled\": true, \"id\": \"1\", \"schema\": \"metric\"}, {\"params\": {\"customInterval\": \"2h\", \"field\": \"@timestamp\", \"interval\": \"auto\", \"min_doc_count\": 1, \"extended_bounds\": {}}, \"type\": \"date_histogram\", \"enabled\": true, \"id\": \"2\", \"schema\": \"segment\"}, {\"params\": {\"field\": \"mongodb.status.asserts.regular\", \"customLabel\": \"regular\"}, \"type\": \"max\", \"enabled\": true, \"id\": \"3\", \"schema\": \"metric\"}, {\"params\": {\"field\": \"mongodb.status.asserts.rollovers\", \"customLabel\": \"rollover\"}, \"type\": \"max\", \"enabled\": true, \"id\": \"4\", \"schema\": \"metric\"}, {\"params\": {\"field\": \"mongodb.status.asserts.user\", \"customLabel\": \"user\"}, \"type\": \"max\", \"enabled\": true, \"id\": \"5\", \"schema\": \"metric\"}, {\"params\": {\"field\": \"mongodb.status.asserts.warning\", \"customLabel\": \"warning\"}, \"type\": \"max\", \"enabled\": true, \"id\": \"6\", \"schema\": \"metric\"}], \"title\": \"Asserts [Metricbeat MongoDB]\"}"
+            }, 
+            "id": "MongoDB-asserts", 
+            "type": "visualization", 
+            "version": 2
+        }, 
+        {
+            "attributes": {
+                "description": "", 
+                "kibanaSavedObjectMeta": {
+                    "searchSourceJSON": "{\"filter\": []}"
+                }, 
+                "savedSearchId": "MongoDB-search", 
+                "title": "WiredTiger Cache [Metricbeat MongoDB]", 
+                "uiStateJSON": "{}", 
+                "version": 1, 
+                "visState": "{\"type\": \"area\", \"params\": {\"scale\": \"linear\", \"seriesParams\": [{\"showCircles\": true, \"show\": \"true\", \"type\": \"area\", \"interpolate\": \"linear\", \"mode\": \"stacked\", \"drawLinesBetweenPoints\": true, \"valueAxis\": \"ValueAxis-1\", \"data\": {\"id\": \"1\", \"label\": \"Count\"}}], \"yAxis\": {}, \"smoothLines\": false, \"categoryAxes\": [{\"style\": {}, \"scale\": {\"type\": \"linear\"}, \"show\": true, \"title\": {}, \"labels\": {\"truncate\": 100, \"show\": true}, \"position\": \"bottom\", \"type\": \"category\", \"id\": \"CategoryAxis-1\"}], \"legendPosition\": \"bottom\", \"addTimeMarker\": false, \"interpolate\": \"linear\", \"addLegend\": true, \"shareYAxis\": true, \"grid\": {\"style\": {\"color\": \"#eee\"}, \"categoryLines\": false}, \"mode\": \"overlap\", \"type\": \"area\", \"defaultYExtents\": false, \"setYExtents\": false, \"addTooltip\": true, \"valueAxes\": [{\"style\": {}, \"scale\": {\"type\": \"linear\", \"mode\": \"normal\"}, \"name\": \"LeftAxis-1\", \"show\": true, \"title\": {\"text\": \"Count\"}, \"labels\": {\"filter\": false, \"rotate\": 0, \"truncate\": 100, \"show\": true}, \"position\": \"left\", \"type\": \"value\", \"id\": \"ValueAxis-1\"}], \"times\": []}, \"aggs\": [{\"params\": {\"field\": \"mongodb.status.wired_tiger.cache.maximum.bytes\", \"customLabel\": \"max\"}, \"type\": \"avg\", \"enabled\": true, \"id\": \"1\", \"schema\": \"metric\"}, {\"params\": {\"customInterval\": \"2h\", \"field\": \"@timestamp\", \"interval\": \"auto\", \"min_doc_count\": 1, \"extended_bounds\": {}}, \"type\": \"date_histogram\", \"enabled\": true, \"id\": \"2\", \"schema\": \"segment\"}, {\"params\": {\"field\": \"mongodb.status.wired_tiger.cache.used.bytes\", \"customLabel\": \"used\"}, \"type\": \"avg\", \"enabled\": true, \"id\": \"3\", \"schema\": \"metric\"}, {\"params\": {\"field\": \"mongodb.status.wired_tiger.cache.dirty.bytes\", \"customLabel\": \"dirty\"}, \"type\": \"avg\", \"enabled\": true, \"id\": \"4\", \"schema\": \"metric\"}], \"title\": \"WiredTiger Cache [Metricbeat MongoDB]\"}"
+            }, 
+            "id": "MongoDB-WiredTiger-Cache", 
+            "type": "visualization", 
+            "version": 2
+        }, 
+        {
+            "attributes": {
+                "columns": [
+                    "_source"
+                ], 
+                "description": "", 
+                "hits": 0, 
+                "kibanaSavedObjectMeta": {
+                    "searchSourceJSON": "{\"filter\": [], \"highlight\": {\"fields\": {\"*\": {}}, \"post_tags\": [\"@/kibana-highlighted-field@\"], \"pre_tags\": [\"@kibana-highlighted-field@\"], \"require_field_match\": false, \"fragment_size\": 2147483647}, \"query\": {\"query_string\": {\"analyze_wildcard\": true, \"query\": \"metricset.module:mongodb\"}}, \"index\": \"__replace_token__\"}"
+                }, 
+                "sort": [
+                    "@timestamp", 
+                    "desc"
+                ], 
+                "title": "MongoDB search", 
+                "version": 1
+            }, 
+            "id": "MongoDB-search", 
+            "type": "search", 
+            "version": 1
+        }, 
+        {
+            "attributes": {
+                "description": "Overview of MongoDB server status", 
+                "hits": 0, 
+                "kibanaSavedObjectMeta": {
+                    "searchSourceJSON": "{\"filter\": [], \"query\": {\"query\": {\"query_string\": {\"analyze_wildcard\": true, \"query\": \"*\"}}, \"language\": \"lucene\"}, \"version\": true, \"highlightAll\": true}"
+                }, 
+                "optionsJSON": "{\"darkTheme\": false}", 
+                "panelsJSON": "[{\"type\": \"visualization\", \"id\": \"MongoDB-hosts\", \"size_x\": 8, \"size_y\": 3, \"panelIndex\": 1, \"col\": 1, \"row\": 1}, {\"type\": \"visualization\", \"id\": \"MongoDB-Engine-ampersand-Version\", \"size_x\": 4, \"size_y\": 3, \"panelIndex\": 4, \"col\": 9, \"row\": 1}, {\"type\": \"visualization\", \"id\": \"MongoDB-operation-counters\", \"size_x\": 6, \"size_y\": 3, \"panelIndex\": 2, \"col\": 1, \"row\": 4}, {\"type\": \"visualization\", \"id\": \"MongoDB-Concurrent-transactions-Read\", \"size_x\": 3, \"size_y\": 3, \"panelIndex\": 6, \"col\": 7, \"row\": 4}, {\"type\": \"visualization\", \"id\": \"MongoDB-Concurrent-transactions-Write\", \"size_x\": 3, \"size_y\": 3, \"panelIndex\": 7, \"col\": 10, \"row\": 4}, {\"type\": \"visualization\", \"id\": \"MongoDB-memory-stats\", \"size_x\": 12, \"size_y\": 4, \"panelIndex\": 5, \"col\": 1, \"row\": 10}, {\"type\": \"visualization\", \"id\": \"MongoDB-asserts\", \"size_x\": 6, \"size_y\": 3, \"panelIndex\": 3, \"col\": 7, \"row\": 7}, {\"type\": \"visualization\", \"id\": \"MongoDB-WiredTiger-Cache\", \"size_x\": 6, \"size_y\": 3, \"panelIndex\": 8, \"col\": 1, \"row\": 7}]", 
+                "timeRestore": false, 
+                "title": "[Metricbeat] MongoDB Overview", 
+                "uiStateJSON": "{\"P-1\": {\"vis\": {\"params\": {\"sort\": {\"columnIndex\": null, \"direction\": null}}}}}", 
+                "version": 1
+            }, 
+            "id": "Metricbeat-MongoDB", 
+            "type": "dashboard", 
+            "version": 3
+        },
+		        {
+            "attributes": {
+                "description": "", 
+                "kibanaSavedObjectMeta": {
+                    "searchSourceJSON": "{}"
+                }, 
+                "title": "Request Rate [Metricbeat Nginx]", 
+                "uiStateJSON": "{}", 
+                "version": 1, 
+                "visState": "{\"type\": \"metrics\", \"params\": {\"time_field\": \"@timestamp\", \"series\": [{\"line_width\": 1, \"point_size\": 1, \"color\": \"#68BC00\", \"label\": \"Request rate\", \"metrics\": [{\"field\": \"nginx.stubstatus.requests\", \"type\": \"avg\", \"id\": \"61ca57f2-469d-11e7-af02-69e470af7417\"}, {\"field\": \"61ca57f2-469d-11e7-af02-69e470af7417\", \"type\": \"derivative\", \"id\": \"396ec980-f1a1-11e7-95d0-8ddf041d42a2\", \"unit\": \"\"}], \"seperate_axis\": 0, \"split_mode\": \"everything\", \"chart_type\": \"line\", \"stacked\": \"none\", \"axis_position\": \"right\", \"formatter\": \"number\", \"id\": \"61ca57f1-469d-11e7-af02-69e470af7417\", \"fill\": 0.5}], \"axis_formatter\": \"number\", \"interval\": \"auto\", \"id\": \"61ca57f0-469d-11e7-af02-69e470af7417\", \"show_legend\": 1, \"show_grid\": 1, \"legend_position\": \"bottom\", \"index_pattern\": \"__replace_token__\", \"type\": \"timeseries\", \"axis_position\": \"left\"}, \"aggs\": [], \"title\": \"Request Rate [Metricbeat Nginx]\"}"
+            }, 
+            "id": "555df8a0-f1a1-11e7-a9ef-93c69af7b129", 
+            "type": "visualization", 
+            "updated_at": "2018-01-04T22:48:58.542Z", 
+            "version": 2
+        }, 
+        {
+            "attributes": {
+                "description": "", 
+                "kibanaSavedObjectMeta": {
+                    "searchSourceJSON": "{}"
+                }, 
+                "title": "Accepts and Handled Rate [Metricbeat Nginx]", 
+                "uiStateJSON": "{}", 
+                "version": 1, 
+                "visState": "{\"type\": \"metrics\", \"params\": {\"time_field\": \"@timestamp\", \"series\": [{\"line_width\": 1, \"point_size\": 1, \"color\": \"#68BC00\", \"label\": \"Accepts rate\", \"metrics\": [{\"field\": \"nginx.stubstatus.accepts\", \"type\": \"avg\", \"id\": \"61ca57f2-469d-11e7-af02-69e470af7417\"}, {\"field\": \"61ca57f2-469d-11e7-af02-69e470af7417\", \"type\": \"derivative\", \"id\": \"396ec980-f1a1-11e7-95d0-8ddf041d42a2\", \"unit\": \"\"}], \"seperate_axis\": 0, \"split_mode\": \"everything\", \"chart_type\": \"line\", \"stacked\": \"none\", \"axis_position\": \"right\", \"formatter\": \"number\", \"id\": \"61ca57f1-469d-11e7-af02-69e470af7417\", \"split_color_mode\": \"gradient\", \"fill\": \"0.5\"}, {\"line_width\": 1, \"point_size\": \"3\", \"color\": \"rgba(0,156,224,1)\", \"label\": \"Handled rate\", \"metrics\": [{\"field\": \"nginx.stubstatus.handled\", \"type\": \"avg\", \"id\": \"56dd33b1-f1a3-11e7-95d0-8ddf041d42a2\"}, {\"field\": \"56dd33b1-f1a3-11e7-95d0-8ddf041d42a2\", \"type\": \"derivative\", \"id\": \"56dd33b2-f1a3-11e7-95d0-8ddf041d42a2\", \"unit\": \"\"}], \"seperate_axis\": 0, \"split_mode\": \"everything\", \"chart_type\": \"line\", \"stacked\": \"none\", \"axis_position\": \"right\", \"formatter\": \"number\", \"id\": \"56dd33b0-f1a3-11e7-95d0-8ddf041d42a2\", \"fill\": \"0.9\"}], \"axis_formatter\": \"number\", \"interval\": \"auto\", \"axis_position\": \"left\", \"id\": \"61ca57f0-469d-11e7-af02-69e470af7417\", \"show_legend\": 1, \"show_grid\": 1, \"legend_position\": \"bottom\", \"index_pattern\": \"__replace_token__\", \"type\": \"timeseries\", \"annotations\": [{\"ignore_panel_filters\": 1, \"color\": \"#F00\", \"ignore_global_filters\": 1, \"time_field\": \"@timestamp\", \"index_pattern\": \"*\", \"id\": \"8644f980-f1a3-11e7-95d0-8ddf041d42a2\", \"icon\": \"fa-tag\"}]}, \"aggs\": [], \"title\": \"Accepts and Handled Rate [Metricbeat Nginx]\"}"
+            }, 
+            "id": "a1d92240-f1a1-11e7-a9ef-93c69af7b129", 
+            "type": "visualization", 
+            "updated_at": "2018-01-04T23:07:23.056Z", 
+            "version": 2
+        }, 
+        {
+            "attributes": {
+                "description": "", 
+                "kibanaSavedObjectMeta": {
+                    "searchSourceJSON": "{}"
+                }, 
+                "title": "Drops Rate [Metricbeat Nginx]", 
+                "uiStateJSON": "{}", 
+                "version": 1, 
+                "visState": "{\"type\": \"metrics\", \"params\": {\"time_field\": \"@timestamp\", \"series\": [{\"line_width\": 1, \"point_size\": 1, \"color\": \"rgba(188,0,65,1)\", \"label\": \"Drops rate\", \"metrics\": [{\"field\": \"nginx.stubstatus.dropped\", \"type\": \"avg\", \"id\": \"61ca57f2-469d-11e7-af02-69e470af7417\"}, {\"field\": \"61ca57f2-469d-11e7-af02-69e470af7417\", \"type\": \"derivative\", \"id\": \"396ec980-f1a1-11e7-95d0-8ddf041d42a2\", \"unit\": \"\"}], \"seperate_axis\": 0, \"split_mode\": \"everything\", \"chart_type\": \"line\", \"stacked\": \"none\", \"axis_position\": \"right\", \"formatter\": \"number\", \"id\": \"61ca57f1-469d-11e7-af02-69e470af7417\", \"fill\": 0.5}], \"axis_formatter\": \"number\", \"interval\": \"auto\", \"id\": \"61ca57f0-469d-11e7-af02-69e470af7417\", \"show_legend\": 1, \"show_grid\": 1, \"legend_position\": \"bottom\", \"index_pattern\": \"__replace_token__\", \"type\": \"timeseries\", \"axis_position\": \"left\"}, \"aggs\": [], \"title\": \"Drops Rate [Metricbeat Nginx]\"}"
+            }, 
+            "id": "d763a570-f1a1-11e7-a9ef-93c69af7b129", 
+            "type": "visualization", 
+            "updated_at": "2018-01-04T22:51:46.375Z", 
+            "version": 1
+        }, 
+        {
+            "attributes": {
+                "description": "", 
+                "kibanaSavedObjectMeta": {
+                    "searchSourceJSON": "{}"
+                }, 
+                "title": "Active connections [Metricbeat Nginx]", 
+                "uiStateJSON": "{}", 
+                "version": 1, 
+                "visState": "{\"type\": \"metrics\", \"params\": {\"time_field\": \"@timestamp\", \"series\": [{\"line_width\": 1, \"point_size\": 1, \"color\": \"#68BC00\", \"metrics\": [{\"field\": \"nginx.stubstatus.active\", \"type\": \"avg\", \"id\": \"61ca57f2-469d-11e7-af02-69e470af7417\"}], \"seperate_axis\": 0, \"split_mode\": \"everything\", \"chart_type\": \"line\", \"stacked\": \"none\", \"axis_position\": \"right\", \"formatter\": \"number\", \"id\": \"61ca57f1-469d-11e7-af02-69e470af7417\", \"fill\": 0.5}], \"axis_formatter\": \"number\", \"interval\": \"auto\", \"id\": \"61ca57f0-469d-11e7-af02-69e470af7417\", \"show_legend\": 1, \"show_grid\": 1, \"legend_position\": \"bottom\", \"index_pattern\": \"__replace_token__\", \"type\": \"timeseries\", \"axis_position\": \"left\"}, \"aggs\": [], \"title\": \"Active connections [Metricbeat Nginx]\"}"
+            }, 
+            "id": "47a8e0f0-f1a4-11e7-a9ef-93c69af7b129", 
+            "type": "visualization", 
+            "updated_at": "2018-01-04T23:09:55.944Z", 
+            "version": 2
+        }, 
+        {
+            "attributes": {
+                "description": "", 
+                "kibanaSavedObjectMeta": {
+                    "searchSourceJSON": "{}"
+                }, 
+                "title": "Reading / Writing / Waiting Rates [Metricbeat Nginx]", 
+                "uiStateJSON": "{}", 
+                "version": 1, 
+                "visState": "{\"type\": \"metrics\", \"params\": {\"time_field\": \"@timestamp\", \"series\": [{\"line_width\": 1, \"point_size\": 1, \"color\": \"#68BC00\", \"label\": \"Reading\", \"metrics\": [{\"field\": \"nginx.stubstatus.reading\", \"type\": \"avg\", \"id\": \"61ca57f2-469d-11e7-af02-69e470af7417\"}], \"seperate_axis\": 0, \"split_mode\": \"everything\", \"chart_type\": \"line\", \"stacked\": \"none\", \"axis_position\": \"right\", \"formatter\": \"number\", \"id\": \"61ca57f1-469d-11e7-af02-69e470af7417\", \"fill\": 0.5}, {\"line_width\": 1, \"point_size\": 1, \"color\": \"rgba(0,156,224,1)\", \"label\": \"Writing\", \"metrics\": [{\"field\": \"nginx.stubstatus.writing\", \"type\": \"avg\", \"id\": \"b1773681-f1a4-11e7-95d0-8ddf041d42a2\"}], \"seperate_axis\": 0, \"split_mode\": \"everything\", \"chart_type\": \"line\", \"stacked\": \"none\", \"axis_position\": \"right\", \"formatter\": \"number\", \"id\": \"b1773680-f1a4-11e7-95d0-8ddf041d42a2\", \"fill\": 0.5}, {\"line_width\": 1, \"point_size\": 1, \"color\": \"rgba(252,220,0,1)\", \"label\": \"Waiting\", \"metrics\": [{\"field\": \"nginx.stubstatus.waiting\", \"type\": \"avg\", \"id\": \"b68aa6c1-f1a4-11e7-95d0-8ddf041d42a2\"}], \"seperate_axis\": 0, \"split_mode\": \"everything\", \"chart_type\": \"line\", \"stacked\": \"none\", \"axis_position\": \"right\", \"formatter\": \"number\", \"id\": \"b68aa6c0-f1a4-11e7-95d0-8ddf041d42a2\", \"fill\": 0.5}], \"axis_formatter\": \"number\", \"interval\": \"auto\", \"id\": \"61ca57f0-469d-11e7-af02-69e470af7417\", \"show_legend\": 1, \"show_grid\": 1, \"legend_position\": \"bottom\", \"index_pattern\": \"__replace_token__\", \"type\": \"timeseries\", \"axis_position\": \"left\"}, \"aggs\": [], \"title\": \"Reading / Writing / Waiting Rates [Metricbeat Nginx]\"}"
+            }, 
+            "id": "dcbffe30-f1a4-11e7-a9ef-93c69af7b129", 
+            "type": "visualization", 
+            "updated_at": "2018-01-04T23:13:23.859Z", 
+            "version": 1
+        }, 
+        {
+            "attributes": {
+                "description": "Overview dashboard for the Nginx module in Metricbeat", 
+                "hits": 0, 
+                "kibanaSavedObjectMeta": {
+                    "searchSourceJSON": "{\"filter\": [], \"query\": {\"query\": \"\", \"language\": \"lucene\"}, \"version\": true, \"highlightAll\": true}"
+                }, 
+                "optionsJSON": "{\"useMargins\": true, \"darkTheme\": false, \"hidePanelTitles\": false}", 
+                "panelsJSON": "[{\"gridData\": {\"i\": \"1\", \"h\": 3, \"y\": 0, \"w\": 6, \"x\": 6}, \"type\": \"visualization\", \"version\": \"6.2.4\", \"panelIndex\": \"1\", \"id\": \"555df8a0-f1a1-11e7-a9ef-93c69af7b129\"}, {\"gridData\": {\"i\": \"2\", \"h\": 3, \"y\": 3, \"w\": 6, \"x\": 6}, \"type\": \"visualization\", \"version\": \"6.2.4\", \"panelIndex\": \"2\", \"id\": \"a1d92240-f1a1-11e7-a9ef-93c69af7b129\"}, {\"gridData\": {\"i\": \"3\", \"h\": 3, \"y\": 3, \"w\": 6, \"x\": 0}, \"type\": \"visualization\", \"version\": \"6.2.4\", \"panelIndex\": \"3\", \"id\": \"d763a570-f1a1-11e7-a9ef-93c69af7b129\"}, {\"gridData\": {\"i\": \"4\", \"h\": 3, \"y\": 0, \"w\": 6, \"x\": 0}, \"type\": \"visualization\", \"version\": \"6.2.4\", \"panelIndex\": \"4\", \"id\": \"47a8e0f0-f1a4-11e7-a9ef-93c69af7b129\"}, {\"gridData\": {\"i\": \"5\", \"h\": 3, \"y\": 6, \"w\": 12, \"x\": 0}, \"type\": \"visualization\", \"version\": \"6.2.4\", \"panelIndex\": \"5\", \"id\": \"dcbffe30-f1a4-11e7-a9ef-93c69af7b129\"}]", 
+                "timeRestore": false, 
+                "title": "[Metricbeat] Nginx Overview", 
+                "version": 1
+            }, 
+            "id": "023d2930-f1a5-11e7-a9ef-93c69af7b129", 
+            "type": "dashboard", 
+            "updated_at": "2018-01-04T23:14:26.755Z", 
+            "version": 1
         }
+		
+		
 		], 
     "version": "6.0.0-rc1-SNAPSHOT"
 }

@@ -1,0 +1,994 @@
+{
+    "objects": [
+        {
+            "attributes": {
+                "description": "", 
+                "kibanaSavedObjectMeta": {
+                    "searchSourceJSON": "{\"filter\": [], \"query\": {\"query\": {\"query_string\": {\"analyze_wildcard\": true, \"query\": \"*\"}}, \"language\": \"lucene\"}}"
+                }, 
+                "title": "Navigation", 
+                "uiStateJSON": "{}", 
+                "version": 1, 
+                "visState": "{\"type\": \"markdown\", \"params\": {\"markdown\": \"### Packetbeat:\\n\\n[Overview](#/dashboard/Packetbeat-Dashboard)\\n\\n[Flows](#/dashboard/Packetbeat-Flows)\\n\\n[Web transactions](#/dashboard/Packetbeat-HTTP)\\n\\n[MySQL performance](#/dashboard/Packetbeat-MySQL-performance)\\n\\n[PostgreSQL performance](#/dashboard/Packetbeat-PgSQL-performance)\\n\\n[MongoDB performance](#/dashboard/Packetbeat-MongoDB-performance)\\n\\n[Thrift-RPC performance](#/dashboard/Packetbeat-Thrift-performance)\\n\\n[NFS transactions](#/dashboard/Packetbeat-NFS)\\n\\n[Cassandra performance](#/dashboard/Packetbeat-Cassandra)\", \"fontSize\": \"10\"}, \"aggs\": [], \"title\": \"Navigation\"}"
+            }, 
+            "id": "Navigation", 
+            "type": "visualization", 
+            "version": 10
+        }, 
+        {
+            "attributes": {
+                "description": "", 
+                "kibanaSavedObjectMeta": {
+                    "searchSourceJSON": "{\"filter\": []}"
+                }, 
+                "savedSearchId": "PgSQL-errors", 
+                "title": "PgSQL Errors", 
+                "uiStateJSON": "{}", 
+                "version": 1, 
+                "visState": "{\"type\": \"area\", \"listeners\": {}, \"params\": {\"scale\": \"linear\", \"yAxis\": {}, \"smoothLines\": false, \"addTimeMarker\": false, \"interpolate\": \"linear\", \"addLegend\": false, \"shareYAxis\": true, \"mode\": \"stacked\", \"defaultYExtents\": false, \"setYExtents\": false, \"addTooltip\": true, \"times\": []}, \"aggs\": [{\"type\": \"count\", \"params\": {}, \"id\": \"1\", \"schema\": \"metric\"}, {\"type\": \"date_histogram\", \"params\": {\"customInterval\": \"2h\", \"field\": \"@timestamp\", \"interval\": \"auto\", \"min_doc_count\": 1, \"extended_bounds\": {}}, \"id\": \"2\", \"schema\": \"segment\"}], \"title\": \"PgSQL Errors\"}"
+            }, 
+            "id": "PgSQL-Errors", 
+            "type": "visualization", 
+            "version": 1
+        }, 
+        {
+            "attributes": {
+                "description": "", 
+                "kibanaSavedObjectMeta": {
+                    "searchSourceJSON": "{\"filter\": []}"
+                }, 
+                "savedSearchId": "PgSQL-transactions", 
+                "title": "PgSQL Methods", 
+                "uiStateJSON": "{}", 
+                "version": 1, 
+                "visState": "{\"type\": \"area\", \"listeners\": {}, \"params\": {\"scale\": \"linear\", \"yAxis\": {}, \"smoothLines\": false, \"addTimeMarker\": false, \"interpolate\": \"linear\", \"addLegend\": true, \"shareYAxis\": true, \"mode\": \"wiggle\", \"defaultYExtents\": false, \"setYExtents\": false, \"addTooltip\": true, \"times\": []}, \"aggs\": [{\"type\": \"count\", \"params\": {}, \"id\": \"1\", \"schema\": \"metric\"}, {\"type\": \"date_histogram\", \"params\": {\"customInterval\": \"2h\", \"field\": \"@timestamp\", \"interval\": \"auto\", \"min_doc_count\": 1, \"extended_bounds\": {}}, \"id\": \"2\", \"schema\": \"segment\"}, {\"type\": \"terms\", \"params\": {\"orderBy\": \"1\", \"field\": \"method\", \"order\": \"desc\", \"size\": 5}, \"id\": \"3\", \"schema\": \"group\"}], \"title\": \"PgSQL Methods\"}"
+            }, 
+            "id": "PgSQL-Methods", 
+            "type": "visualization", 
+            "version": 1
+        }, 
+        {
+            "attributes": {
+                "description": "", 
+                "kibanaSavedObjectMeta": {
+                    "searchSourceJSON": "{\"filter\": []}"
+                }, 
+                "savedSearchId": "PgSQL-transactions", 
+                "title": "PgSQL response times percentiles", 
+                "version": 1, 
+                "visState": "{\"type\": \"line\", \"listeners\": {}, \"params\": {\"defaultYExtents\": false, \"shareYAxis\": true, \"addTooltip\": true, \"addLegend\": true}, \"aggs\": [{\"type\": \"percentiles\", \"params\": {\"field\": \"responsetime\", \"percents\": [75, 99, 99.5]}, \"id\": \"1\", \"schema\": \"metric\"}, {\"type\": \"date_histogram\", \"params\": {\"field\": \"@timestamp\", \"interval\": \"auto\", \"min_doc_count\": 1, \"extended_bounds\": {}}, \"id\": \"2\", \"schema\": \"segment\"}]}"
+            }, 
+            "id": "PgSQL-response-times-percentiles", 
+            "type": "visualization", 
+            "version": 1
+        }, 
+        {
+            "attributes": {
+                "description": "", 
+                "kibanaSavedObjectMeta": {
+                    "searchSourceJSON": "{\"filter\": []}"
+                }, 
+                "savedSearchId": "PgSQL-transactions", 
+                "title": "PgSQL throughput", 
+                "version": 1, 
+                "visState": "{\"type\": \"line\", \"listeners\": {}, \"params\": {\"defaultYExtents\": false, \"shareYAxis\": true, \"addTooltip\": true, \"addLegend\": true}, \"aggs\": [{\"type\": \"sum\", \"params\": {\"field\": \"bytes_out\"}, \"id\": \"1\", \"schema\": \"metric\"}, {\"type\": \"sum\", \"params\": {\"field\": \"bytes_in\"}, \"id\": \"2\", \"schema\": \"metric\"}, {\"type\": \"date_histogram\", \"params\": {\"field\": \"@timestamp\", \"interval\": \"auto\", \"min_doc_count\": 1, \"extended_bounds\": {}}, \"id\": \"3\", \"schema\": \"segment\"}]}"
+            }, 
+            "id": "PgSQL-throughput", 
+            "type": "visualization", 
+            "version": 1
+        }, 
+        {
+            "attributes": {
+                "description": "", 
+                "kibanaSavedObjectMeta": {
+                    "searchSourceJSON": "{\"filter\": []}"
+                }, 
+                "savedSearchId": "PgSQL-transactions", 
+                "title": "PgSQL Reads vs Writes", 
+                "uiStateJSON": "{}", 
+                "version": 1, 
+                "visState": "{\"type\": \"area\", \"params\": {\"scale\": \"linear\", \"seriesParams\": [{\"showCircles\": true, \"show\": \"true\", \"type\": \"area\", \"interpolate\": \"linear\", \"mode\": \"stacked\", \"drawLinesBetweenPoints\": true, \"valueAxis\": \"ValueAxis-1\", \"data\": {\"id\": \"1\", \"label\": \"Count\"}}], \"yAxis\": {}, \"smoothLines\": false, \"categoryAxes\": [{\"style\": {}, \"scale\": {\"type\": \"linear\"}, \"show\": true, \"title\": {\"text\": \"@timestamp per 30 seconds\"}, \"labels\": {\"truncate\": 100, \"show\": true}, \"position\": \"bottom\", \"type\": \"category\", \"id\": \"CategoryAxis-1\"}], \"legendPosition\": \"right\", \"addTimeMarker\": false, \"interpolate\": \"linear\", \"addLegend\": true, \"shareYAxis\": true, \"grid\": {\"style\": {\"color\": \"#eee\"}, \"categoryLines\": false}, \"mode\": \"stacked\", \"type\": \"area\", \"defaultYExtents\": false, \"setYExtents\": false, \"addTooltip\": true, \"valueAxes\": [{\"style\": {}, \"scale\": {\"type\": \"linear\", \"mode\": \"normal\"}, \"name\": \"LeftAxis-1\", \"show\": true, \"title\": {\"text\": \"Count\"}, \"labels\": {\"filter\": false, \"rotate\": 0, \"truncate\": 100, \"show\": true}, \"position\": \"left\", \"type\": \"value\", \"id\": \"ValueAxis-1\"}], \"times\": []}, \"aggs\": [{\"params\": {}, \"type\": \"count\", \"enabled\": true, \"id\": \"1\", \"schema\": \"metric\"}, {\"params\": {\"customInterval\": \"2h\", \"field\": \"@timestamp\", \"interval\": \"auto\", \"min_doc_count\": 1, \"extended_bounds\": {}}, \"type\": \"date_histogram\", \"enabled\": true, \"id\": \"2\", \"schema\": \"segment\"}, {\"params\": {\"filters\": [{\"input\": {\"query\": {\"query_string\": {\"analyze_wildcard\": true, \"query\": \"method: SELECT\"}}}}, {\"input\": {\"query\": \"method: INSERT OR method: UPDATE OR method: DELETE\"}}]}, \"type\": \"filters\", \"enabled\": true, \"id\": \"3\", \"schema\": \"group\"}], \"title\": \"PgSQL Reads vs Writes\"}"
+            }, 
+            "id": "PgSQL-Reads-vs-Writes", 
+            "type": "visualization", 
+            "version": 2
+        }, 
+        {
+            "attributes": {
+                "description": "", 
+                "kibanaSavedObjectMeta": {
+                    "searchSourceJSON": "{\"filter\": []}"
+                }, 
+                "savedSearchId": "PgSQL-transactions", 
+                "title": "Most frequent PgSQL queries", 
+                "uiStateJSON": "{}", 
+                "version": 1, 
+                "visState": "{\"type\": \"table\", \"listeners\": {}, \"params\": {\"perPage\": 10, \"showPartialRows\": false, \"showMeticsAtAllLevels\": false}, \"aggs\": [{\"type\": \"count\", \"params\": {}, \"id\": \"1\", \"schema\": \"metric\"}, {\"type\": \"terms\", \"params\": {\"orderBy\": \"1\", \"field\": \"query\", \"order\": \"desc\", \"size\": 10}, \"id\": \"2\", \"schema\": \"bucket\"}], \"title\": \"Most frequent PgSQL queries\"}"
+            }, 
+            "id": "Most-frequent-PgSQL-queries", 
+            "type": "visualization", 
+            "version": 1
+        }, 
+        {
+            "attributes": {
+                "description": "", 
+                "kibanaSavedObjectMeta": {
+                    "searchSourceJSON": "{\"filter\": []}"
+                }, 
+                "savedSearchId": "PgSQL-transactions", 
+                "title": "Slowest PgSQL queries", 
+                "version": 1, 
+                "visState": "{\"type\": \"table\", \"listeners\": {}, \"params\": {\"perPage\": 10, \"showPartialRows\": false, \"showMeticsAtAllLevels\": false}, \"aggs\": [{\"type\": \"avg\", \"params\": {\"field\": \"responsetime\"}, \"id\": \"1\", \"schema\": \"metric\"}, {\"type\": \"terms\", \"params\": {\"orderBy\": \"1\", \"field\": \"query\", \"order\": \"desc\", \"size\": 10}, \"id\": \"2\", \"schema\": \"bucket\"}]}"
+            }, 
+            "id": "Slowest-PgSQL-queries", 
+            "type": "visualization", 
+            "version": 1
+        }, 
+        {
+            "attributes": {
+                "columns": [
+                    "method", 
+                    "type", 
+                    "path", 
+                    "responsetime", 
+                    "status"
+                ], 
+                "description": "", 
+                "hits": 0, 
+                "kibanaSavedObjectMeta": {
+                    "searchSourceJSON": "{\"filter\": [{\"query\": {\"match\": {\"type\": {\"query\": \"pgsql\", \"type\": \"phrase\"}}}, \"meta\": {\"disabled\": false, \"index\": \"__replace_token__\", \"negate\": false, \"value\": \"pgsql\", \"key\": \"type\"}}, {\"query\": {\"match\": {\"status\": {\"query\": \"OK\", \"type\": \"phrase\"}}}, \"meta\": {\"disabled\": false, \"index\": \"__replace_token__\", \"negate\": true, \"value\": \"OK\", \"key\": \"status\"}}], \"highlight\": {\"fields\": {\"*\": {}}, \"pre_tags\": [\"@kibana-highlighted-field@\"], \"post_tags\": [\"@/kibana-highlighted-field@\"]}, \"query\": {\"query_string\": {\"analyze_wildcard\": true, \"query\": \"*\"}}, \"index\": \"__replace_token__\"}"
+                }, 
+                "sort": [
+                    "@timestamp", 
+                    "desc"
+                ], 
+                "title": "PgSQL errors", 
+                "version": 1
+            }, 
+            "id": "PgSQL-errors", 
+            "type": "search", 
+            "version": 1
+        }, 
+        {
+            "attributes": {
+                "columns": [
+                    "method", 
+                    "type", 
+                    "path", 
+                    "responsetime", 
+                    "status"
+                ], 
+                "description": "", 
+                "hits": 0, 
+                "kibanaSavedObjectMeta": {
+                    "searchSourceJSON": "{\"filter\": [{\"query\": {\"match\": {\"type\": {\"query\": \"pgsql\", \"type\": \"phrase\"}}}, \"meta\": {\"disabled\": false, \"index\": \"__replace_token__\", \"negate\": false, \"value\": \"pgsql\", \"key\": \"type\"}}], \"highlight\": {\"fields\": {\"*\": {}}, \"pre_tags\": [\"@kibana-highlighted-field@\"], \"post_tags\": [\"@/kibana-highlighted-field@\"]}, \"query\": {\"query_string\": {\"analyze_wildcard\": true, \"query\": \"*\"}}, \"index\": \"__replace_token__\"}"
+                }, 
+                "sort": [
+                    "@timestamp", 
+                    "desc"
+                ], 
+                "title": "PgSQL transactions", 
+                "version": 1
+            }, 
+            "id": "PgSQL-transactions", 
+            "type": "search", 
+            "version": 1
+        }, 
+        {
+            "attributes": {
+                "description": "", 
+                "hits": 0, 
+                "kibanaSavedObjectMeta": {
+                    "searchSourceJSON": "{\"filter\": [], \"query\": {\"query\": {\"query_string\": {\"analyze_wildcard\": true, \"query\": \"*\"}}, \"language\": \"lucene\"}, \"version\": true, \"highlightAll\": true}"
+                }, 
+                "optionsJSON": "{\"darkTheme\": false}", 
+                "panelsJSON": "[{\"type\": \"visualization\", \"id\": \"Navigation\", \"size_x\": 3, \"size_y\": 4, \"panelIndex\": 1, \"col\": 1, \"row\": 1}, {\"type\": \"visualization\", \"id\": \"PgSQL-Errors\", \"size_x\": 5, \"size_y\": 4, \"panelIndex\": 2, \"col\": 4, \"row\": 1}, {\"type\": \"visualization\", \"id\": \"PgSQL-Methods\", \"size_x\": 4, \"size_y\": 4, \"panelIndex\": 3, \"col\": 9, \"row\": 1}, {\"type\": \"visualization\", \"id\": \"PgSQL-response-times-percentiles\", \"size_x\": 12, \"size_y\": 3, \"panelIndex\": 4, \"col\": 1, \"row\": 5}, {\"type\": \"visualization\", \"id\": \"PgSQL-throughput\", \"size_x\": 6, \"size_y\": 3, \"panelIndex\": 5, \"col\": 7, \"row\": 8}, {\"type\": \"visualization\", \"id\": \"PgSQL-Reads-vs-Writes\", \"size_x\": 6, \"size_y\": 3, \"panelIndex\": 6, \"col\": 1, \"row\": 8}, {\"type\": \"visualization\", \"id\": \"Most-frequent-PgSQL-queries\", \"size_x\": 6, \"size_y\": 6, \"panelIndex\": 7, \"col\": 1, \"row\": 11}, {\"type\": \"visualization\", \"id\": \"Slowest-PgSQL-queries\", \"size_x\": 6, \"size_y\": 6, \"panelIndex\": 8, \"col\": 7, \"row\": 11}]", 
+                "timeRestore": false, 
+                "title": "[Packetbeat] PgSQL performance", 
+                "uiStateJSON": "{\"P-7\": {\"vis\": {\"params\": {\"sort\": {\"columnIndex\": null, \"direction\": null}}}}, \"P-8\": {\"vis\": {\"params\": {\"sort\": {\"columnIndex\": null, \"direction\": null}}}}}", 
+                "version": 1
+            }, 
+            "id": "Packetbeat-PgSQL-performance", 
+            "type": "dashboard", 
+            "version": 2
+        },
+		 {
+            "attributes": {
+                "description": "", 
+                "kibanaSavedObjectMeta": {
+                    "searchSourceJSON": "{\"filter\": []}"
+                }, 
+                "savedSearchId": "71908f00-88ca-11e7-ad9c-db80de0bf8d3", 
+                "title": "Web transactions", 
+                "uiStateJSON": "{}", 
+                "version": 1, 
+                "visState": "{\"type\": \"histogram\", \"listeners\": {}, \"params\": {\"scale\": \"linear\", \"yAxis\": {}, \"addTimeMarker\": false, \"addLegend\": false, \"shareYAxis\": true, \"mode\": \"stacked\", \"defaultYExtents\": false, \"setYExtents\": false, \"addTooltip\": true, \"times\": []}, \"aggs\": [{\"type\": \"count\", \"params\": {}, \"id\": \"1\", \"schema\": \"metric\"}, {\"type\": \"date_histogram\", \"params\": {\"customInterval\": \"2h\", \"field\": \"@timestamp\", \"interval\": \"auto\", \"min_doc_count\": 1, \"extended_bounds\": {}}, \"id\": \"2\", \"schema\": \"segment\"}], \"title\": \"Web transactions\"}"
+            }, 
+            "id": "Web-transactions", 
+            "type": "visualization", 
+            "version": 3
+        }, 
+        {
+            "attributes": {
+                "description": "", 
+                "kibanaSavedObjectMeta": {
+                    "searchSourceJSON": "{\"filter\": [{\"query\": {\"match\": {\"type\": {\"query\": \"http\", \"type\": \"phrase\"}}}, \"meta\": {\"index\": \"__replace_token__\", \"value\": \"http\", \"disabled\": false, \"alias\": null, \"key\": \"type\", \"negate\": false}, \"$state\": {\"store\": \"appState\"}}], \"highlight\": {\"fields\": {\"*\": {}}, \"pre_tags\": [\"@kibana-highlighted-field@\"], \"post_tags\": [\"@/kibana-highlighted-field@\"]}, \"query\": {\"query_string\": {\"analyze_wildcard\": true, \"query\": \"http.response.code: [300 TO *]\"}}, \"index\": \"__replace_token__\"}"
+                }, 
+                "title": "HTTP error codes", 
+                "uiStateJSON": "{}", 
+                "version": 1, 
+                "visState": "{\"type\": \"histogram\", \"listeners\": {}, \"params\": {\"scale\": \"linear\", \"yAxis\": {}, \"addTimeMarker\": false, \"addLegend\": false, \"shareYAxis\": true, \"mode\": \"stacked\", \"defaultYExtents\": false, \"setYExtents\": false, \"addTooltip\": true, \"times\": []}, \"aggs\": [{\"type\": \"cardinality\", \"params\": {\"field\": \"type\"}, \"id\": \"1\", \"schema\": \"metric\"}, {\"type\": \"terms\", \"params\": {\"orderBy\": \"1\", \"field\": \"http.response.code\", \"order\": \"desc\", \"size\": 5}, \"id\": \"2\", \"schema\": \"segment\"}], \"title\": \"HTTP error codes\"}"
+            }, 
+            "id": "HTTP-error-codes", 
+            "type": "visualization", 
+            "version": 1
+        }, 
+        {
+            "attributes": {
+                "description": "", 
+                "kibanaSavedObjectMeta": {
+                    "searchSourceJSON": "{\"filter\": [{\"query\": {\"match\": {\"type\": {\"query\": \"http\", \"type\": \"phrase\"}}}, \"meta\": {\"index\": \"__replace_token__\", \"value\": \"http\", \"disabled\": false, \"alias\": null, \"key\": \"type\", \"negate\": false}, \"$state\": {\"store\": \"appState\"}}], \"highlight\": {\"fields\": {\"*\": {}}, \"pre_tags\": [\"@kibana-highlighted-field@\"], \"post_tags\": [\"@/kibana-highlighted-field@\"]}, \"query\": {\"query_string\": {\"analyze_wildcard\": true, \"query\": \"!http.response.code: [200 TO 299]\"}}, \"index\": \"__replace_token__\"}"
+                }, 
+                "title": "HTTP error codes evolution", 
+                "uiStateJSON": "{}", 
+                "version": 1, 
+                "visState": "{\"type\": \"line\", \"listeners\": {}, \"params\": {\"scale\": \"linear\", \"showCircles\": true, \"yAxis\": {}, \"smoothLines\": false, \"addTimeMarker\": false, \"interpolate\": \"linear\", \"addLegend\": true, \"shareYAxis\": true, \"radiusRatio\": 9, \"drawLinesBetweenPoints\": true, \"defaultYExtents\": false, \"setYExtents\": false, \"addTooltip\": true, \"times\": []}, \"aggs\": [{\"type\": \"cardinality\", \"params\": {\"field\": \"type\"}, \"id\": \"1\", \"schema\": \"metric\"}, {\"type\": \"date_histogram\", \"params\": {\"customInterval\": \"2h\", \"field\": \"@timestamp\", \"interval\": \"auto\", \"min_doc_count\": 1, \"extended_bounds\": {}}, \"id\": \"2\", \"schema\": \"segment\"}, {\"type\": \"terms\", \"params\": {\"orderBy\": \"1\", \"field\": \"http.response.code\", \"order\": \"desc\", \"size\": 5}, \"id\": \"3\", \"schema\": \"group\"}], \"title\": \"HTTP error codes evolution\"}"
+            }, 
+            "id": "HTTP-error-codes-evolution", 
+            "type": "visualization", 
+            "version": 1
+        }, 
+        {
+            "attributes": {
+                "description": "", 
+                "kibanaSavedObjectMeta": {
+                    "searchSourceJSON": "{\"filter\": [], \"query\": {\"query\": {\"query_string\": {\"analyze_wildcard\": true, \"query\": \"*\"}}, \"language\": \"lucene\"}}"
+                }, 
+                "title": "Navigation", 
+                "uiStateJSON": "{}", 
+                "version": 1, 
+                "visState": "{\"type\": \"markdown\", \"params\": {\"markdown\": \"### Packetbeat:\\n\\n[Overview](#/dashboard/Packetbeat-Dashboard)\\n\\n[Flows](#/dashboard/Packetbeat-Flows)\\n\\n[Web transactions](#/dashboard/Packetbeat-HTTP)\\n\\n[MySQL performance](#/dashboard/Packetbeat-MySQL-performance)\\n\\n[PostgreSQL performance](#/dashboard/Packetbeat-PgSQL-performance)\\n\\n[MongoDB performance](#/dashboard/Packetbeat-MongoDB-performance)\\n\\n[Thrift-RPC performance](#/dashboard/Packetbeat-Thrift-performance)\\n\\n[NFS transactions](#/dashboard/Packetbeat-NFS)\\n\\n[Cassandra performance](#/dashboard/Packetbeat-Cassandra)\", \"fontSize\": \"10\"}, \"aggs\": [], \"title\": \"Navigation\"}"
+            }, 
+            "id": "Navigation", 
+            "type": "visualization", 
+            "version": 10
+        }, 
+        {
+            "attributes": {
+                "description": "", 
+                "kibanaSavedObjectMeta": {
+                    "searchSourceJSON": "{\"filter\": []}"
+                }, 
+                "savedSearchId": "71908f00-88ca-11e7-ad9c-db80de0bf8d3", 
+                "title": "Total number of HTTP transactions", 
+                "uiStateJSON": "{}", 
+                "version": 1, 
+                "visState": "{\"type\": \"metric\", \"listeners\": {}, \"params\": {\"handleNoResults\": true, \"fontSize\": \"37\"}, \"aggs\": [{\"type\": \"count\", \"params\": {}, \"id\": \"1\", \"schema\": \"metric\"}], \"title\": \"Total number of HTTP transactions\"}"
+            }, 
+            "id": "Total-number-of-HTTP-transactions", 
+            "type": "visualization", 
+            "version": 2
+        }, 
+        {
+            "attributes": {
+                "description": "", 
+                "kibanaSavedObjectMeta": {
+                    "searchSourceJSON": "{\"filter\": []}"
+                }, 
+                "savedSearchId": "71908f00-88ca-11e7-ad9c-db80de0bf8d3", 
+                "title": "HTTP codes for the top queries", 
+                "version": 1, 
+                "visState": "{\"type\": \"pie\", \"listeners\": {}, \"params\": {\"isDonut\": false, \"addTooltip\": true, \"shareYAxis\": true, \"addLegend\": true}, \"aggs\": [{\"type\": \"count\", \"params\": {}, \"id\": \"1\", \"schema\": \"metric\"}, {\"type\": \"terms\", \"params\": {\"orderBy\": \"1\", \"field\": \"query\", \"size\": 5, \"order\": \"desc\", \"row\": false}, \"id\": \"2\", \"schema\": \"split\"}, {\"type\": \"terms\", \"params\": {\"orderBy\": \"1\", \"field\": \"http.response.code\", \"order\": \"desc\", \"size\": 10}, \"id\": \"3\", \"schema\": \"segment\"}]}"
+            }, 
+            "id": "HTTP-codes-for-the-top-queries", 
+            "type": "visualization", 
+            "version": 2
+        }, 
+        {
+            "attributes": {
+                "description": "", 
+                "kibanaSavedObjectMeta": {
+                    "searchSourceJSON": "{\"filter\": []}"
+                }, 
+                "savedSearchId": "71908f00-88ca-11e7-ad9c-db80de0bf8d3", 
+                "title": "Top 10 HTTP requests", 
+                "uiStateJSON": "{}", 
+                "version": 1, 
+                "visState": "{\"type\": \"table\", \"listeners\": {}, \"params\": {\"perPage\": 10, \"showPartialRows\": false, \"showMeticsAtAllLevels\": false}, \"aggs\": [{\"type\": \"count\", \"params\": {}, \"id\": \"1\", \"schema\": \"metric\"}, {\"type\": \"terms\", \"params\": {\"orderBy\": \"1\", \"field\": \"query\", \"order\": \"desc\", \"size\": 10}, \"id\": \"2\", \"schema\": \"bucket\"}], \"title\": \"Top 10 HTTP requests\"}"
+            }, 
+            "id": "Top-10-HTTP-requests", 
+            "type": "visualization", 
+            "version": 2
+        }, 
+        {
+            "attributes": {
+                "columns": [
+                    "_source"
+                ], 
+                "description": "", 
+                "hits": 0, 
+                "kibanaSavedObjectMeta": {
+                    "searchSourceJSON": "{\"filter\": [{\"query\": {\"match\": {\"type\": {\"query\": \"http\", \"type\": \"phrase\"}}}, \"meta\": {\"index\": \"__replace_token__\", \"value\": \"http\", \"disabled\": false, \"alias\": null, \"params\": {\"query\": \"http\", \"type\": \"phrase\"}, \"key\": \"type\", \"negate\": false, \"type\": \"phrase\"}, \"$state\": {\"store\": \"appState\"}}], \"index\": \"__replace_token__\", \"version\": true, \"highlightAll\": true, \"query\": {\"query\": \"*\", \"language\": \"lucene\"}}"
+                }, 
+                "sort": [
+                    "@timestamp", 
+                    "desc"
+                ], 
+                "title": "Web Transactions [Packetbeat]", 
+                "version": 1
+            }, 
+            "id": "71908f00-88ca-11e7-ad9c-db80de0bf8d3", 
+            "type": "search", 
+            "version": 2
+        }, 
+        {
+            "attributes": {
+                "description": "", 
+                "hits": 0, 
+                "kibanaSavedObjectMeta": {
+                    "searchSourceJSON": "{\"filter\": [], \"query\": {\"query\": {\"query_string\": {\"analyze_wildcard\": true, \"query\": \"*\"}}, \"language\": \"lucene\"}, \"version\": true, \"highlightAll\": true}"
+                }, 
+                "optionsJSON": "{\"darkTheme\": false}", 
+                "panelsJSON": "[{\"type\": \"visualization\", \"id\": \"Web-transactions\", \"size_x\": 9, \"size_y\": 4, \"panelIndex\": 1, \"col\": 4, \"row\": 1}, {\"type\": \"visualization\", \"id\": \"HTTP-error-codes\", \"size_x\": 6, \"size_y\": 3, \"panelIndex\": 2, \"col\": 1, \"row\": 8}, {\"type\": \"visualization\", \"id\": \"HTTP-error-codes-evolution\", \"size_x\": 6, \"size_y\": 3, \"panelIndex\": 3, \"col\": 7, \"row\": 8}, {\"type\": \"visualization\", \"id\": \"Navigation\", \"size_x\": 3, \"size_y\": 4, \"panelIndex\": 4, \"col\": 1, \"row\": 1}, {\"type\": \"visualization\", \"id\": \"Total-number-of-HTTP-transactions\", \"size_x\": 3, \"size_y\": 3, \"panelIndex\": 5, \"col\": 1, \"row\": 5}, {\"type\": \"visualization\", \"id\": \"HTTP-codes-for-the-top-queries\", \"size_x\": 9, \"size_y\": 3, \"panelIndex\": 6, \"col\": 4, \"row\": 5}, {\"type\": \"visualization\", \"id\": \"Top-10-HTTP-requests\", \"size_x\": 12, \"size_y\": 5, \"panelIndex\": 7, \"col\": 1, \"row\": 11}]", 
+                "timeRestore": false, 
+                "title": "[Packetbeat] HTTP", 
+                "uiStateJSON": "{\"P-5\": {\"vis\": {\"defaultColors\": {\"0 - 100\": \"rgb(0,104,55)\"}}}, \"P-7\": {\"vis\": {\"params\": {\"sort\": {\"columnIndex\": null, \"direction\": null}}}}}", 
+                "version": 1
+            }, 
+            "id": "Packetbeat-HTTP", 
+            "type": "dashboard", 
+            "version": 2
+        },
+		   {
+            "attributes": {
+                "description": "", 
+                "kibanaSavedObjectMeta": {
+                    "searchSourceJSON": "{\"filter\": []}"
+                }, 
+                "savedSearchId": "71908f00-88ca-11e7-ad9c-db80de0bf8d3", 
+                "title": "Web transactions", 
+                "uiStateJSON": "{}", 
+                "version": 1, 
+                "visState": "{\"type\": \"histogram\", \"listeners\": {}, \"params\": {\"scale\": \"linear\", \"yAxis\": {}, \"addTimeMarker\": false, \"addLegend\": false, \"shareYAxis\": true, \"mode\": \"stacked\", \"defaultYExtents\": false, \"setYExtents\": false, \"addTooltip\": true, \"times\": []}, \"aggs\": [{\"type\": \"count\", \"params\": {}, \"id\": \"1\", \"schema\": \"metric\"}, {\"type\": \"date_histogram\", \"params\": {\"customInterval\": \"2h\", \"field\": \"@timestamp\", \"interval\": \"auto\", \"min_doc_count\": 1, \"extended_bounds\": {}}, \"id\": \"2\", \"schema\": \"segment\"}], \"title\": \"Web transactions\"}"
+            }, 
+            "id": "Web-transactions", 
+            "type": "visualization", 
+            "version": 3
+        }, 
+        {
+            "attributes": {
+                "description": "", 
+                "kibanaSavedObjectMeta": {
+                    "searchSourceJSON": "{\"filter\": []}"
+                }, 
+                "savedSearchId": "800e2a00-88cb-11e7-ad9c-db80de0bf8d3", 
+                "title": "DB transactions", 
+                "uiStateJSON": "{}", 
+                "version": 1, 
+                "visState": "{\"type\": \"histogram\", \"listeners\": {}, \"params\": {\"scale\": \"linear\", \"yAxis\": {}, \"addTimeMarker\": false, \"addLegend\": true, \"shareYAxis\": true, \"mode\": \"stacked\", \"defaultYExtents\": false, \"setYExtents\": false, \"addTooltip\": true, \"times\": []}, \"aggs\": [{\"type\": \"count\", \"params\": {}, \"id\": \"1\", \"schema\": \"metric\"}, {\"type\": \"date_histogram\", \"params\": {\"customInterval\": \"2h\", \"field\": \"@timestamp\", \"interval\": \"auto\", \"min_doc_count\": 1, \"extended_bounds\": {}}, \"id\": \"2\", \"schema\": \"segment\"}, {\"type\": \"terms\", \"params\": {\"orderBy\": \"1\", \"field\": \"type\", \"order\": \"desc\", \"size\": 5}, \"id\": \"3\", \"schema\": \"group\"}], \"title\": \"DB transactions\"}"
+            }, 
+            "id": "DB-transactions", 
+            "type": "visualization", 
+            "version": 2
+        }, 
+        {
+            "attributes": {
+                "description": "", 
+                "kibanaSavedObjectMeta": {
+                    "searchSourceJSON": "{\"filter\": []}"
+                }, 
+                "savedSearchId": "3dd366e0-88cc-11e7-ad9c-db80de0bf8d3", 
+                "title": "Cache transactions", 
+                "uiStateJSON": "{}", 
+                "version": 1, 
+                "visState": "{\"type\": \"histogram\", \"listeners\": {}, \"params\": {\"scale\": \"linear\", \"yAxis\": {}, \"addTimeMarker\": false, \"addLegend\": false, \"shareYAxis\": true, \"mode\": \"stacked\", \"defaultYExtents\": false, \"setYExtents\": false, \"addTooltip\": true, \"times\": []}, \"aggs\": [{\"type\": \"count\", \"params\": {}, \"id\": \"1\", \"schema\": \"metric\"}, {\"type\": \"date_histogram\", \"params\": {\"customInterval\": \"2h\", \"field\": \"@timestamp\", \"interval\": \"auto\", \"min_doc_count\": 1, \"extended_bounds\": {}}, \"id\": \"2\", \"schema\": \"segment\"}], \"title\": \"Cache transactions\"}"
+            }, 
+            "id": "Cache-transactions", 
+            "type": "visualization", 
+            "version": 2
+        }, 
+        {
+            "attributes": {
+                "description": "", 
+                "kibanaSavedObjectMeta": {
+                    "searchSourceJSON": "{\"filter\": []}"
+                }, 
+                "savedSearchId": "d3089370-88cc-11e7-ad9c-db80de0bf8d3", 
+                "title": "RPC transactions", 
+                "uiStateJSON": "{}", 
+                "version": 1, 
+                "visState": "{\"type\": \"histogram\", \"listeners\": {}, \"params\": {\"scale\": \"linear\", \"yAxis\": {}, \"addTimeMarker\": false, \"addLegend\": false, \"shareYAxis\": true, \"mode\": \"stacked\", \"defaultYExtents\": false, \"setYExtents\": false, \"addTooltip\": true, \"times\": []}, \"aggs\": [{\"type\": \"cardinality\", \"params\": {\"field\": \"type\"}, \"id\": \"1\", \"schema\": \"metric\"}, {\"type\": \"date_histogram\", \"params\": {\"customInterval\": \"2h\", \"field\": \"@timestamp\", \"interval\": \"auto\", \"min_doc_count\": 1, \"extended_bounds\": {}}, \"id\": \"2\", \"schema\": \"segment\"}], \"title\": \"RPC transactions\"}"
+            }, 
+            "id": "RPC-transactions", 
+            "type": "visualization", 
+            "version": 2
+        }, 
+        {
+            "attributes": {
+                "description": "", 
+                "kibanaSavedObjectMeta": {
+                    "searchSourceJSON": "{\"filter\": []}"
+                }, 
+                "savedSearchId": "Packetbeat-Search", 
+                "title": "Response times percentiles", 
+                "uiStateJSON": "{}", 
+                "version": 1, 
+                "visState": "{\"type\": \"line\", \"listeners\": {}, \"params\": {\"scale\": \"linear\", \"showCircles\": true, \"yAxis\": {}, \"smoothLines\": true, \"legendPosition\": \"right\", \"addTimeMarker\": false, \"interpolate\": \"linear\", \"addLegend\": true, \"shareYAxis\": true, \"radiusRatio\": 9, \"drawLinesBetweenPoints\": true, \"defaultYExtents\": false, \"setYExtents\": false, \"addTooltip\": true, \"times\": []}, \"aggs\": [{\"params\": {\"field\": \"responsetime\", \"percents\": [75, 95, 99]}, \"type\": \"percentiles\", \"enabled\": true, \"id\": \"1\", \"schema\": \"metric\"}, {\"params\": {\"customInterval\": \"2h\", \"field\": \"@timestamp\", \"interval\": \"auto\", \"min_doc_count\": 1, \"extended_bounds\": {}}, \"type\": \"date_histogram\", \"enabled\": true, \"id\": \"2\", \"schema\": \"segment\"}], \"title\": \"Response times percentiles\"}"
+            }, 
+            "id": "Response-times-percentiles", 
+            "type": "visualization", 
+            "version": 1
+        }, 
+        {
+            "attributes": {
+                "description": "", 
+                "kibanaSavedObjectMeta": {
+                    "searchSourceJSON": "{\"filter\": []}"
+                }, 
+                "savedSearchId": "Transactions-errors", 
+                "title": "Errors count over time", 
+                "uiStateJSON": "{}", 
+                "version": 1, 
+                "visState": "{\"type\": \"histogram\", \"listeners\": {}, \"params\": {\"scale\": \"linear\", \"yAxis\": {}, \"addTimeMarker\": false, \"addLegend\": true, \"shareYAxis\": true, \"mode\": \"stacked\", \"defaultYExtents\": false, \"setYExtents\": false, \"addTooltip\": true, \"times\": []}, \"aggs\": [{\"type\": \"count\", \"params\": {}, \"id\": \"1\", \"schema\": \"metric\"}, {\"type\": \"date_histogram\", \"params\": {\"customInterval\": \"30s\", \"field\": \"@timestamp\", \"interval\": \"custom\", \"min_doc_count\": 1, \"extended_bounds\": {}}, \"id\": \"2\", \"schema\": \"segment\"}, {\"type\": \"terms\", \"params\": {\"orderBy\": \"1\", \"field\": \"type\", \"order\": \"desc\", \"size\": 5}, \"id\": \"3\", \"schema\": \"group\"}], \"title\": \"New Visualization\"}"
+            }, 
+            "id": "Errors-count-over-time", 
+            "type": "visualization", 
+            "version": 1
+        }, 
+        {
+            "attributes": {
+                "description": "", 
+                "kibanaSavedObjectMeta": {
+                    "searchSourceJSON": "{\"filter\": []}"
+                }, 
+                "savedSearchId": "Packetbeat-Search", 
+                "title": "Errors vs successful transactions", 
+                "uiStateJSON": "{}", 
+                "version": 1, 
+                "visState": "{\"type\": \"histogram\", \"listeners\": {}, \"params\": {\"scale\": \"linear\", \"yAxis\": {}, \"addTimeMarker\": false, \"addLegend\": true, \"shareYAxis\": true, \"mode\": \"percentage\", \"defaultYExtents\": false, \"setYExtents\": false, \"addTooltip\": true, \"times\": []}, \"aggs\": [{\"type\": \"count\", \"params\": {}, \"id\": \"1\", \"schema\": \"metric\"}, {\"type\": \"date_histogram\", \"params\": {\"customInterval\": \"2h\", \"field\": \"@timestamp\", \"interval\": \"auto\", \"min_doc_count\": 1, \"extended_bounds\": {}}, \"id\": \"2\", \"schema\": \"segment\"}, {\"type\": \"terms\", \"params\": {\"orderBy\": \"1\", \"field\": \"status\", \"order\": \"desc\", \"size\": 5}, \"id\": \"3\", \"schema\": \"group\"}], \"title\": \"Errors vs successful transactions\"}"
+            }, 
+            "id": "Errors-vs-successful-transactions", 
+            "type": "visualization", 
+            "version": 1
+        }, 
+        {
+            "attributes": {
+                "description": "", 
+                "kibanaSavedObjectMeta": {
+                    "searchSourceJSON": "{\"filter\": []}"
+                }, 
+                "savedSearchId": "Packetbeat-Search", 
+                "title": "Latency histogram", 
+                "uiStateJSON": "{}", 
+                "version": 1, 
+                "visState": "{\"type\": \"area\", \"listeners\": {}, \"params\": {\"scale\": \"linear\", \"yAxis\": {}, \"smoothLines\": true, \"legendPosition\": \"right\", \"addTimeMarker\": false, \"interpolate\": \"linear\", \"addLegend\": true, \"shareYAxis\": true, \"mode\": \"stacked\", \"defaultYExtents\": false, \"setYExtents\": false, \"addTooltip\": true, \"times\": []}, \"aggs\": [{\"params\": {}, \"type\": \"count\", \"enabled\": true, \"id\": \"1\", \"schema\": \"metric\"}, {\"params\": {\"field\": \"responsetime\", \"interval\": 10, \"extended_bounds\": {}}, \"type\": \"histogram\", \"enabled\": true, \"id\": \"2\", \"schema\": \"segment\"}], \"title\": \"Latency histogram\"}"
+            }, 
+            "id": "Latency-histogram", 
+            "type": "visualization", 
+            "version": 1
+        }, 
+        {
+            "attributes": {
+                "description": "", 
+                "kibanaSavedObjectMeta": {
+                    "searchSourceJSON": "{\"filter\": [], \"index\": \"__replace_token__\", \"query\": {\"query_string\": {\"analyze_wildcard\": true, \"query\": \"*\"}}}"
+                }, 
+                "title": "Client locations", 
+                "uiStateJSON": "{\"mapCenter\": [0, -0.17578125]}", 
+                "version": 1, 
+                "visState": "{\"type\": \"tile_map\", \"listeners\": {}, \"params\": {\"mapCenter\": [15, 5], \"heatMaxZoom\": 16, \"wms\": {\"url\": \"https://basemap.nationalmap.gov/arcgis/services/USGSTopo/MapServer/WMSServer\", \"enabled\": false, \"options\": {\"layers\": \"0\", \"styles\": \"\", \"attribution\": \"Maps provided by USGS\", \"format\": \"image/png\", \"version\": \"1.3.0\", \"transparent\": true}}, \"heatBlur\": 15, \"heatRadius\": 25, \"heatMinOpacity\": 0.1, \"mapZoom\": 2, \"heatNormalizeData\": true, \"mapType\": \"Scaled Circle Markers\", \"isDesaturated\": true, \"addTooltip\": true}, \"aggs\": [{\"params\": {}, \"type\": \"count\", \"enabled\": true, \"id\": \"1\", \"schema\": \"metric\"}, {\"params\": {\"field\": \"client_geoip.location\", \"autoPrecision\": true}, \"type\": \"geohash_grid\", \"enabled\": true, \"id\": \"2\", \"schema\": \"segment\"}], \"title\": \"Client locations\"}"
+            }, 
+            "id": "Client-locations", 
+            "type": "visualization", 
+            "version": 1
+        }, 
+        {
+            "attributes": {
+                "description": "", 
+                "kibanaSavedObjectMeta": {
+                    "searchSourceJSON": "{\"filter\": []}"
+                }, 
+                "savedSearchId": "Packetbeat-Search", 
+                "title": "Response times repartition", 
+                "uiStateJSON": "{}", 
+                "version": 1, 
+                "visState": "{\"type\": \"histogram\", \"listeners\": {}, \"params\": {\"scale\": \"linear\", \"yAxis\": {}, \"addTimeMarker\": false, \"addLegend\": true, \"shareYAxis\": true, \"mode\": \"stacked\", \"defaultYExtents\": false, \"setYExtents\": false, \"addTooltip\": true, \"times\": []}, \"aggs\": [{\"type\": \"count\", \"params\": {}, \"id\": \"1\", \"schema\": \"metric\"}, {\"type\": \"date_histogram\", \"params\": {\"customInterval\": \"2h\", \"field\": \"@timestamp\", \"interval\": \"auto\", \"min_doc_count\": 1, \"extended_bounds\": {}}, \"id\": \"2\", \"schema\": \"segment\"}, {\"type\": \"histogram\", \"params\": {\"field\": \"responsetime\", \"interval\": 10, \"extended_bounds\": {}}, \"id\": \"3\", \"schema\": \"group\"}], \"title\": \"Response times repartition\"}"
+            }, 
+            "id": "Response-times-repartition", 
+            "type": "visualization", 
+            "version": 1
+        }, 
+        {
+            "attributes": {
+                "description": "", 
+                "kibanaSavedObjectMeta": {
+                    "searchSourceJSON": "{\"filter\": [], \"query\": {\"query\": {\"query_string\": {\"analyze_wildcard\": true, \"query\": \"*\"}}, \"language\": \"lucene\"}}"
+                }, 
+                "title": "Navigation", 
+                "uiStateJSON": "{}", 
+                "version": 1, 
+                "visState": "{\"type\": \"markdown\", \"params\": {\"markdown\": \"### Packetbeat:\\n\\n[Overview](#/dashboard/Packetbeat-Dashboard)\\n\\n[Flows](#/dashboard/Packetbeat-Flows)\\n\\n[Web transactions](#/dashboard/Packetbeat-HTTP)\\n\\n[MySQL performance](#/dashboard/Packetbeat-MySQL-performance)\\n\\n[PostgreSQL performance](#/dashboard/Packetbeat-PgSQL-performance)\\n\\n[MongoDB performance](#/dashboard/Packetbeat-MongoDB-performance)\\n\\n[Thrift-RPC performance](#/dashboard/Packetbeat-Thrift-performance)\\n\\n[NFS transactions](#/dashboard/Packetbeat-NFS)\\n\\n[Cassandra performance](#/dashboard/Packetbeat-Cassandra)\", \"fontSize\": \"10\"}, \"aggs\": [], \"title\": \"Navigation\"}"
+            }, 
+            "id": "Navigation", 
+            "type": "visualization", 
+            "version": 10
+        }, 
+        {
+            "attributes": {
+                "columns": [
+                    "_source"
+                ], 
+                "description": "", 
+                "hits": 0, 
+                "kibanaSavedObjectMeta": {
+                    "searchSourceJSON": "{\"filter\": [{\"query\": {\"match\": {\"type\": {\"query\": \"http\", \"type\": \"phrase\"}}}, \"meta\": {\"index\": \"__replace_token__\", \"value\": \"http\", \"disabled\": false, \"alias\": null, \"params\": {\"query\": \"http\", \"type\": \"phrase\"}, \"key\": \"type\", \"negate\": false, \"type\": \"phrase\"}, \"$state\": {\"store\": \"appState\"}}], \"index\": \"__replace_token__\", \"version\": true, \"highlightAll\": true, \"query\": {\"query\": \"*\", \"language\": \"lucene\"}}"
+                }, 
+                "sort": [
+                    "@timestamp", 
+                    "desc"
+                ], 
+                "title": "Web Transactions [Packetbeat]", 
+                "version": 1
+            }, 
+            "id": "71908f00-88ca-11e7-ad9c-db80de0bf8d3", 
+            "type": "search", 
+            "version": 2
+        }, 
+        {
+            "attributes": {
+                "columns": [
+                    "_source"
+                ], 
+                "description": "", 
+                "hits": 0, 
+                "kibanaSavedObjectMeta": {
+                    "searchSourceJSON": "{\"filter\": [{\"query\": {\"bool\": {\"minimum_should_match\": 1, \"should\": [{\"match_phrase\": {\"type\": \"mysql\"}}, {\"match_phrase\": {\"type\": \"postgresql\"}}]}}, \"meta\": {\"index\": \"__replace_token__\", \"value\": \"mysql, postgresql\", \"disabled\": false, \"alias\": null, \"key\": \"type\", \"negate\": false, \"type\": \"phrases\"}, \"$state\": {\"store\": \"appState\"}}], \"index\": \"__replace_token__\", \"version\": true, \"highlightAll\": true, \"query\": {\"query\": \"\", \"language\": \"lucene\"}}"
+                }, 
+                "sort": [
+                    "@timestamp", 
+                    "desc"
+                ], 
+                "title": "DB transactions", 
+                "version": 1
+            }, 
+            "id": "800e2a00-88cb-11e7-ad9c-db80de0bf8d3", 
+            "type": "search", 
+            "version": 1
+        }, 
+        {
+            "attributes": {
+                "columns": [
+                    "_source"
+                ], 
+                "description": "", 
+                "hits": 0, 
+                "kibanaSavedObjectMeta": {
+                    "searchSourceJSON": "{\"filter\": [{\"query\": {\"bool\": {\"minimum_should_match\": 1, \"should\": [{\"match_phrase\": {\"type\": \"redis\"}}, {\"match_phrase\": {\"type\": \"memcache\"}}]}}, \"meta\": {\"index\": \"__replace_token__\", \"value\": \"redis, memcache\", \"disabled\": false, \"alias\": null, \"key\": \"type\", \"negate\": false, \"type\": \"phrases\"}, \"$state\": {\"store\": \"appState\"}}], \"index\": \"__replace_token__\", \"version\": true, \"highlightAll\": true, \"query\": {\"query\": \"\", \"language\": \"lucene\"}}"
+                }, 
+                "sort": [
+                    "@timestamp", 
+                    "desc"
+                ], 
+                "title": "Cache Transactions [Packetbeat]", 
+                "version": 1
+            }, 
+            "id": "3dd366e0-88cc-11e7-ad9c-db80de0bf8d3", 
+            "type": "search", 
+            "version": 1
+        }, 
+        {
+            "attributes": {
+                "columns": [
+                    "_source"
+                ], 
+                "description": "", 
+                "hits": 0, 
+                "kibanaSavedObjectMeta": {
+                    "searchSourceJSON": "{\"filter\": [{\"query\": {\"match\": {\"type\": {\"query\": \"thrift\", \"type\": \"phrase\"}}}, \"meta\": {\"index\": \"__replace_token__\", \"value\": \"thrift\", \"disabled\": false, \"alias\": null, \"params\": {\"query\": \"thrift\", \"type\": \"phrase\"}, \"key\": \"type\", \"negate\": false, \"type\": \"phrase\"}, \"$state\": {\"store\": \"appState\"}}], \"index\": \"__replace_token__\", \"version\": true, \"highlightAll\": true, \"query\": {\"query\": \"\", \"language\": \"lucene\"}}"
+                }, 
+                "sort": [
+                    "@timestamp", 
+                    "desc"
+                ], 
+                "title": "RPC transactions", 
+                "version": 1
+            }, 
+            "id": "d3089370-88cc-11e7-ad9c-db80de0bf8d3", 
+            "type": "search", 
+            "version": 1
+        }, 
+        {
+            "attributes": {
+                "columns": [
+                    "client_ip", 
+                    "client_port", 
+                    "ip", 
+                    "port", 
+                    "type", 
+                    "query", 
+                    "method", 
+                    "responsetime", 
+                    "status"
+                ], 
+                "description": "", 
+                "hits": 0, 
+                "kibanaSavedObjectMeta": {
+                    "searchSourceJSON": "{\"filter\": [], \"highlight\": {\"fields\": {\"*\": {}}, \"post_tags\": [\"@/kibana-highlighted-field@\"], \"pre_tags\": [\"@kibana-highlighted-field@\"], \"require_field_match\": false, \"fragment_size\": 2147483647}, \"query\": {\"query_string\": {\"analyze_wildcard\": true, \"query\": \"NOT type: flow\"}}, \"index\": \"__replace_token__\"}"
+                }, 
+                "sort": [
+                    "@timestamp", 
+                    "desc"
+                ], 
+                "title": "Packetbeat Search", 
+                "version": 1
+            }, 
+            "id": "Packetbeat-Search", 
+            "type": "search", 
+            "version": 1
+        }, 
+        {
+            "attributes": {
+                "columns": [
+                    "client_ip", 
+                    "client_port", 
+                    "ip", 
+                    "port", 
+                    "type", 
+                    "query", 
+                    "method", 
+                    "responsetime", 
+                    "status"
+                ], 
+                "description": "", 
+                "hits": 0, 
+                "kibanaSavedObjectMeta": {
+                    "searchSourceJSON": "{\"filter\": [], \"highlight\": {\"fields\": {\"*\": {}}, \"post_tags\": [\"@/kibana-highlighted-field@\"], \"pre_tags\": [\"@kibana-highlighted-field@\"], \"require_field_match\": false, \"fragment_size\": 2147483647}, \"query\": {\"query_string\": {\"analyze_wildcard\": true, \"query\": \"!type: flow AND !status: OK\"}}, \"index\": \"__replace_token__\"}"
+                }, 
+                "sort": [
+                    "@timestamp", 
+                    "desc"
+                ], 
+                "title": "Transactions errors", 
+                "version": 1
+            }, 
+            "id": "Transactions-errors", 
+            "type": "search", 
+            "version": 1
+        }, 
+        {
+            "attributes": {
+                "description": "Packetbeat overview dashboard", 
+                "hits": 0, 
+                "kibanaSavedObjectMeta": {
+                    "searchSourceJSON": "{\"filter\": [], \"query\": {\"query\": {\"query_string\": {\"analyze_wildcard\": true, \"query\": \"*\"}}, \"language\": \"lucene\"}, \"version\": true, \"highlightAll\": true}"
+                }, 
+                "optionsJSON": "{\"darkTheme\": false}", 
+                "panelsJSON": "[{\"type\": \"visualization\", \"id\": \"Web-transactions\", \"size_x\": 3, \"size_y\": 2, \"panelIndex\": 1, \"col\": 1, \"row\": 5}, {\"type\": \"visualization\", \"id\": \"DB-transactions\", \"size_x\": 3, \"size_y\": 2, \"panelIndex\": 2, \"col\": 4, \"row\": 5}, {\"type\": \"visualization\", \"id\": \"Cache-transactions\", \"size_x\": 3, \"size_y\": 2, \"panelIndex\": 3, \"col\": 7, \"row\": 5}, {\"type\": \"visualization\", \"id\": \"RPC-transactions\", \"size_x\": 3, \"size_y\": 2, \"panelIndex\": 4, \"col\": 10, \"row\": 5}, {\"type\": \"visualization\", \"id\": \"Response-times-percentiles\", \"size_x\": 6, \"size_y\": 3, \"panelIndex\": 5, \"col\": 1, \"row\": 10}, {\"type\": \"visualization\", \"id\": \"Errors-count-over-time\", \"size_x\": 6, \"size_y\": 3, \"panelIndex\": 6, \"col\": 1, \"row\": 13}, {\"type\": \"visualization\", \"id\": \"Errors-vs-successful-transactions\", \"size_x\": 6, \"size_y\": 3, \"panelIndex\": 7, \"col\": 7, \"row\": 10}, {\"type\": \"visualization\", \"id\": \"Latency-histogram\", \"size_x\": 6, \"size_y\": 3, \"panelIndex\": 8, \"col\": 7, \"row\": 13}, {\"type\": \"visualization\", \"id\": \"Client-locations\", \"size_x\": 9, \"size_y\": 4, \"panelIndex\": 9, \"col\": 4, \"row\": 1}, {\"type\": \"visualization\", \"id\": \"Response-times-repartition\", \"size_x\": 12, \"size_y\": 3, \"panelIndex\": 10, \"col\": 1, \"row\": 7}, {\"type\": \"visualization\", \"id\": \"Navigation\", \"size_x\": 3, \"size_y\": 4, \"panelIndex\": 11, \"col\": 1, \"row\": 1}]", 
+                "timeRestore": false, 
+                "title": "[Packetbeat] Overview", 
+                "uiStateJSON": "{\"P-9\": {\"mapCollar\": {\"zoom\": 2, \"bottom_right\": {\"lat\": -90, \"lon\": 180}, \"top_left\": {\"lat\": 90, \"lon\": -180}}, \"mapZoom\": 2, \"mapBounds\": {\"bottom_right\": {\"lat\": -54.97761367069625, \"lon\": 153.984375}, \"top_left\": {\"lat\": 54.97761367069628, \"lon\": -153.984375}}}}", 
+                "version": 1
+            }, 
+            "id": "Packetbeat-Dashboard", 
+            "type": "dashboard", 
+            "version": 2
+        },
+		   {
+            "attributes": {
+                "description": "", 
+                "kibanaSavedObjectMeta": {
+                    "searchSourceJSON": "{\"filter\": []}"
+                }, 
+                "savedSearchId": "nfs", 
+                "title": "NFS clients pie chart", 
+                "uiStateJSON": "{}", 
+                "version": 1, 
+                "visState": "{\"type\": \"pie\", \"listeners\": {}, \"params\": {\"isDonut\": true, \"addTooltip\": true, \"shareYAxis\": true, \"addLegend\": true}, \"aggs\": [{\"type\": \"count\", \"params\": {}, \"id\": \"1\", \"schema\": \"metric\"}, {\"type\": \"terms\", \"params\": {\"orderBy\": \"1\", \"field\": \"rpc.cred.machinename\", \"order\": \"desc\", \"size\": 16}, \"id\": \"2\", \"schema\": \"segment\"}], \"title\": \"NFS clients pie chart\"}"
+            }, 
+            "id": "NFS-clients-pie-chart", 
+            "type": "visualization", 
+            "version": 1
+        }, 
+        {
+            "attributes": {
+                "description": "", 
+                "kibanaSavedObjectMeta": {
+                    "searchSourceJSON": "{\"filter\": []}"
+                }, 
+                "savedSearchId": "nfs", 
+                "title": "NFS operations area chart", 
+                "uiStateJSON": "{}", 
+                "version": 1, 
+                "visState": "{\"type\": \"area\", \"listeners\": {}, \"params\": {\"scale\": \"linear\", \"yAxis\": {}, \"smoothLines\": true, \"addTimeMarker\": false, \"interpolate\": \"linear\", \"addLegend\": true, \"shareYAxis\": true, \"mode\": \"stacked\", \"defaultYExtents\": false, \"setYExtents\": false, \"addTooltip\": true, \"times\": []}, \"aggs\": [{\"type\": \"count\", \"params\": {}, \"id\": \"1\", \"schema\": \"metric\"}, {\"type\": \"terms\", \"params\": {\"orderBy\": \"1\", \"field\": \"nfs.opcode\", \"order\": \"desc\", \"size\": 16}, \"id\": \"2\", \"schema\": \"group\"}, {\"type\": \"date_histogram\", \"params\": {\"customInterval\": \"2h\", \"field\": \"@timestamp\", \"interval\": \"auto\", \"min_doc_count\": 1, \"extended_bounds\": {}}, \"id\": \"3\", \"schema\": \"segment\"}], \"title\": \"NFS operations area chart\"}"
+            }, 
+            "id": "NFS-operations-area-chart", 
+            "type": "visualization", 
+            "version": 1
+        }, 
+        {
+            "attributes": {
+                "description": "", 
+                "kibanaSavedObjectMeta": {
+                    "searchSourceJSON": "{\"filter\": []}"
+                }, 
+                "savedSearchId": "nfs", 
+                "title": "NFS top group pie chart", 
+                "uiStateJSON": "{}", 
+                "version": 1, 
+                "visState": "{\"type\": \"pie\", \"listeners\": {}, \"params\": {\"isDonut\": false, \"addTooltip\": true, \"shareYAxis\": true, \"addLegend\": true}, \"aggs\": [{\"type\": \"count\", \"params\": {}, \"id\": \"1\", \"schema\": \"metric\"}, {\"type\": \"terms\", \"params\": {\"orderBy\": \"1\", \"field\": \"rpc.cred.gid\", \"order\": \"desc\", \"size\": 16}, \"id\": \"2\", \"schema\": \"segment\"}], \"title\": \"New Visualization\"}"
+            }, 
+            "id": "NFS-top-group-pie-chart", 
+            "type": "visualization", 
+            "version": 1
+        }, 
+        {
+            "attributes": {
+                "description": "", 
+                "kibanaSavedObjectMeta": {
+                    "searchSourceJSON": "{\"filter\": []}"
+                }, 
+                "savedSearchId": "nfs", 
+                "title": "NFS top users pie chart", 
+                "uiStateJSON": "{}", 
+                "version": 1, 
+                "visState": "{\"type\": \"pie\", \"listeners\": {}, \"params\": {\"isDonut\": false, \"addTooltip\": true, \"shareYAxis\": true, \"addLegend\": true}, \"aggs\": [{\"type\": \"count\", \"params\": {}, \"id\": \"1\", \"schema\": \"metric\"}, {\"type\": \"terms\", \"params\": {\"orderBy\": \"1\", \"field\": \"rpc.cred.uid\", \"order\": \"desc\", \"size\": 16}, \"id\": \"2\", \"schema\": \"segment\"}], \"title\": \"New Visualization\"}"
+            }, 
+            "id": "NFS-top-users-pie-chart", 
+            "type": "visualization", 
+            "version": 1
+        }, 
+        {
+            "attributes": {
+                "description": "", 
+                "kibanaSavedObjectMeta": {
+                    "searchSourceJSON": "{\"filter\": []}"
+                }, 
+                "savedSearchId": "nfs", 
+                "title": "NFS response times", 
+                "uiStateJSON": "{}", 
+                "version": 1, 
+                "visState": "{\"type\": \"line\", \"listeners\": {}, \"params\": {\"scale\": \"linear\", \"showCircles\": true, \"yAxis\": {}, \"smoothLines\": true, \"addTimeMarker\": false, \"interpolate\": \"linear\", \"addLegend\": true, \"shareYAxis\": true, \"radiusRatio\": \"9\", \"drawLinesBetweenPoints\": true, \"defaultYExtents\": true, \"setYExtents\": false, \"addTooltip\": true, \"times\": []}, \"aggs\": [{\"type\": \"median\", \"params\": {\"field\": \"rpc.time\", \"percents\": [50]}, \"id\": \"1\", \"schema\": \"metric\"}, {\"type\": \"date_histogram\", \"params\": {\"customInterval\": \"2h\", \"field\": \"@timestamp\", \"interval\": \"auto\", \"min_doc_count\": 1, \"extended_bounds\": {}}, \"id\": \"2\", \"schema\": \"segment\"}], \"title\": \"NFS response times\"}"
+            }, 
+            "id": "NFS-response-times", 
+            "type": "visualization", 
+            "version": 1
+        }, 
+        {
+            "attributes": {
+                "description": "", 
+                "kibanaSavedObjectMeta": {
+                    "searchSourceJSON": "{\"filter\": []}"
+                }, 
+                "savedSearchId": "NFS-errors-search", 
+                "title": "NFS errors", 
+                "uiStateJSON": "{}", 
+                "version": 1, 
+                "visState": "{\"type\": \"area\", \"listeners\": {}, \"params\": {\"scale\": \"linear\", \"yAxis\": {}, \"smoothLines\": false, \"legendPosition\": \"right\", \"addTimeMarker\": false, \"interpolate\": \"linear\", \"addLegend\": true, \"shareYAxis\": true, \"mode\": \"stacked\", \"defaultYExtents\": false, \"setYExtents\": false, \"addTooltip\": true, \"times\": []}, \"aggs\": [{\"params\": {}, \"type\": \"count\", \"enabled\": true, \"id\": \"1\", \"schema\": \"metric\"}, {\"params\": {\"customInterval\": \"2h\", \"field\": \"@timestamp\", \"interval\": \"auto\", \"min_doc_count\": 1, \"extended_bounds\": {}}, \"type\": \"date_histogram\", \"enabled\": true, \"id\": \"2\", \"schema\": \"segment\"}, {\"params\": {\"orderBy\": \"1\", \"field\": \"nfs.status\", \"order\": \"desc\", \"size\": 12}, \"type\": \"terms\", \"enabled\": true, \"id\": \"3\", \"schema\": \"group\"}], \"title\": \"NFS errors\"}"
+            }, 
+            "id": "NFS-errors", 
+            "type": "visualization", 
+            "version": 1
+        }, 
+        {
+            "attributes": {
+                "description": "", 
+                "kibanaSavedObjectMeta": {
+                    "searchSourceJSON": "{\"filter\": []}"
+                }, 
+                "savedSearchId": "nfs", 
+                "title": "NFS operation table", 
+                "uiStateJSON": "{}", 
+                "version": 1, 
+                "visState": "{\"type\": \"table\", \"listeners\": {}, \"params\": {\"perPage\": 10, \"showPartialRows\": false, \"showMeticsAtAllLevels\": false}, \"aggs\": [{\"type\": \"avg\", \"params\": {\"field\": \"rpc.time\"}, \"id\": \"1\", \"schema\": \"metric\"}, {\"type\": \"terms\", \"params\": {\"orderBy\": \"1\", \"field\": \"nfs.opcode\", \"order\": \"desc\", \"size\": 16}, \"id\": \"2\", \"schema\": \"bucket\"}, {\"type\": \"count\", \"params\": {}, \"id\": \"3\", \"schema\": \"metric\"}], \"title\": \"NFS operation table\"}"
+            }, 
+            "id": "NFS-operation-table", 
+            "type": "visualization", 
+            "version": 1
+        }, 
+        {
+            "attributes": {
+                "description": "", 
+                "kibanaSavedObjectMeta": {
+                    "searchSourceJSON": "{\"filter\": []}"
+                }, 
+                "savedSearchId": "nfs", 
+                "title": "NFS bytes in / out", 
+                "uiStateJSON": "{\"vis\": {\"colors\": {\"Sum of rpc.reply_size\": \"#7EB26D\"}}}", 
+                "version": 1, 
+                "visState": "{\"type\": \"line\", \"listeners\": {}, \"params\": {\"scale\": \"linear\", \"showCircles\": true, \"yAxis\": {}, \"smoothLines\": false, \"addTimeMarker\": false, \"interpolate\": \"linear\", \"addLegend\": true, \"shareYAxis\": true, \"radiusRatio\": 9, \"drawLinesBetweenPoints\": true, \"defaultYExtents\": false, \"setYExtents\": false, \"addTooltip\": true, \"times\": []}, \"aggs\": [{\"type\": \"sum\", \"params\": {\"field\": \"rpc.call_size\"}, \"id\": \"1\", \"schema\": \"metric\"}, {\"type\": \"sum\", \"params\": {\"field\": \"rpc.reply_size\"}, \"id\": \"2\", \"schema\": \"metric\"}, {\"type\": \"date_histogram\", \"params\": {\"customInterval\": \"2h\", \"field\": \"@timestamp\", \"interval\": \"auto\", \"min_doc_count\": 1, \"extended_bounds\": {}}, \"id\": \"3\", \"schema\": \"segment\"}], \"title\": \"NFS bytes in / out\"}"
+            }, 
+            "id": "NFS-bytes-in-slash-out", 
+            "type": "visualization", 
+            "version": 1
+        }, 
+        {
+            "attributes": {
+                "description": "", 
+                "kibanaSavedObjectMeta": {
+                    "searchSourceJSON": "{\"filter\": [], \"query\": {\"query\": {\"query_string\": {\"analyze_wildcard\": true, \"query\": \"*\"}}, \"language\": \"lucene\"}}"
+                }, 
+                "title": "Navigation", 
+                "uiStateJSON": "{}", 
+                "version": 1, 
+                "visState": "{\"type\": \"markdown\", \"params\": {\"markdown\": \"### Packetbeat:\\n\\n[Overview](#/dashboard/Packetbeat-Dashboard)\\n\\n[Flows](#/dashboard/Packetbeat-Flows)\\n\\n[Web transactions](#/dashboard/Packetbeat-HTTP)\\n\\n[MySQL performance](#/dashboard/Packetbeat-MySQL-performance)\\n\\n[PostgreSQL performance](#/dashboard/Packetbeat-PgSQL-performance)\\n\\n[MongoDB performance](#/dashboard/Packetbeat-MongoDB-performance)\\n\\n[Thrift-RPC performance](#/dashboard/Packetbeat-Thrift-performance)\\n\\n[NFS transactions](#/dashboard/Packetbeat-NFS)\\n\\n[Cassandra performance](#/dashboard/Packetbeat-Cassandra)\", \"fontSize\": \"10\"}, \"aggs\": [], \"title\": \"Navigation\"}"
+            }, 
+            "id": "Navigation", 
+            "type": "visualization", 
+            "version": 10
+        }, 
+        {
+            "attributes": {
+                "columns": [
+                    "_source"
+                ], 
+                "description": "", 
+                "hits": 0, 
+                "kibanaSavedObjectMeta": {
+                    "searchSourceJSON": "{\"filter\": [{\"query\": {\"match\": {\"type\": {\"query\": \"nfs\", \"type\": \"phrase\"}}}, \"meta\": {\"index\": \"__replace_token__\", \"value\": \"nfs\", \"disabled\": false, \"alias\": null, \"key\": \"type\", \"negate\": false}, \"$state\": {\"store\": \"appState\"}}], \"highlight\": {\"fields\": {\"*\": {}}, \"post_tags\": [\"@/kibana-highlighted-field@\"], \"pre_tags\": [\"@kibana-highlighted-field@\"], \"require_field_match\": false, \"fragment_size\": 2147483647}, \"query\": {\"query_string\": {\"analyze_wildcard\": true, \"query\": \"*\"}}, \"index\": \"__replace_token__\"}"
+                }, 
+                "sort": [
+                    "@timestamp", 
+                    "desc"
+                ], 
+                "title": "nfs", 
+                "version": 1
+            }, 
+            "id": "nfs", 
+            "type": "search", 
+            "version": 1
+        }, 
+        {
+            "attributes": {
+                "columns": [
+                    "_source"
+                ], 
+                "description": "", 
+                "hits": 0, 
+                "kibanaSavedObjectMeta": {
+                    "searchSourceJSON": "{\"filter\": [{\"query\": {\"match\": {\"type\": {\"query\": \"nfs\", \"type\": \"phrase\"}}}, \"meta\": {\"index\": \"__replace_token__\", \"value\": \"nfs\", \"disabled\": false, \"alias\": null, \"key\": \"type\", \"negate\": false}, \"$state\": {\"store\": \"appState\"}}, {\"query\": {\"match\": {\"nfs.status\": {\"query\": \"NFSERR_NOENT\", \"type\": \"phrase\"}}}, \"meta\": {\"index\": \"__replace_token__\", \"value\": \"NFSERR_NOENT\", \"disabled\": false, \"alias\": null, \"key\": \"nfs.status\", \"negate\": true}, \"$state\": {\"store\": \"appState\"}}, {\"query\": {\"match\": {\"nfs.status\": {\"query\": \"NFS_OK\", \"type\": \"phrase\"}}}, \"meta\": {\"index\": \"__replace_token__\", \"value\": \"NFS_OK\", \"disabled\": false, \"alias\": null, \"key\": \"nfs.status\", \"negate\": true}, \"$state\": {\"store\": \"appState\"}}], \"highlight\": {\"fields\": {\"*\": {}}, \"post_tags\": [\"@/kibana-highlighted-field@\"], \"pre_tags\": [\"@kibana-highlighted-field@\"], \"require_field_match\": false, \"fragment_size\": 2147483647}, \"query\": {\"query_string\": {\"analyze_wildcard\": true, \"query\": \"*\"}}, \"index\": \"__replace_token__\"}"
+                }, 
+                "sort": [
+                    "@timestamp", 
+                    "desc"
+                ], 
+                "title": "NFS errors search", 
+                "version": 1
+            }, 
+            "id": "NFS-errors-search", 
+            "type": "search", 
+            "version": 1
+        }, 
+        {
+            "attributes": {
+                "description": "", 
+                "hits": 0, 
+                "kibanaSavedObjectMeta": {
+                    "searchSourceJSON": "{\"filter\": [], \"query\": {\"query\": {\"query_string\": {\"analyze_wildcard\": true, \"query\": \"*\"}}, \"language\": \"lucene\"}, \"version\": true, \"highlightAll\": true}"
+                }, 
+                "optionsJSON": "{\"darkTheme\": false}", 
+                "panelsJSON": "[{\"type\": \"visualization\", \"id\": \"NFS-clients-pie-chart\", \"size_x\": 4, \"size_y\": 5, \"panelIndex\": 1, \"col\": 5, \"row\": 1}, {\"type\": \"visualization\", \"id\": \"NFS-operations-area-chart\", \"size_x\": 6, \"size_y\": 4, \"panelIndex\": 3, \"col\": 1, \"row\": 12}, {\"type\": \"visualization\", \"id\": \"NFS-top-group-pie-chart\", \"size_x\": 4, \"size_y\": 2, \"panelIndex\": 4, \"col\": 9, \"row\": 1}, {\"type\": \"visualization\", \"id\": \"NFS-top-users-pie-chart\", \"size_x\": 4, \"size_y\": 3, \"panelIndex\": 5, \"col\": 9, \"row\": 3}, {\"type\": \"visualization\", \"id\": \"NFS-response-times\", \"size_x\": 6, \"size_y\": 3, \"panelIndex\": 6, \"col\": 7, \"row\": 6}, {\"type\": \"visualization\", \"id\": \"NFS-errors\", \"size_x\": 6, \"size_y\": 3, \"panelIndex\": 7, \"col\": 7, \"row\": 9}, {\"type\": \"visualization\", \"id\": \"NFS-operation-table\", \"size_x\": 6, \"size_y\": 4, \"panelIndex\": 8, \"col\": 7, \"row\": 12}, {\"type\": \"visualization\", \"id\": \"NFS-bytes-in-slash-out\", \"size_x\": 6, \"size_y\": 6, \"panelIndex\": 9, \"col\": 1, \"row\": 6}, {\"type\": \"visualization\", \"id\": \"Navigation\", \"size_x\": 4, \"size_y\": 5, \"panelIndex\": 10, \"col\": 1, \"row\": 1}]", 
+                "timeRestore": false, 
+                "title": "[Packetbeat] NFS", 
+                "uiStateJSON": "{\"P-4\": {\"spy\": {\"mode\": {\"name\": null, \"fill\": false}}, \"vis\": {\"legendOpen\": true}}, \"P-5\": {\"vis\": {\"legendOpen\": true}}, \"P-6\": {\"vis\": {\"legendOpen\": false}}, \"P-1\": {\"vis\": {\"legendOpen\": true}}, \"P-8\": {\"vis\": {\"params\": {\"sort\": {\"columnIndex\": null, \"direction\": null}}}}, \"P-9\": {\"vis\": {\"legendOpen\": true}}}", 
+                "version": 1
+            }, 
+            "id": "Packetbeat-NFS", 
+            "type": "dashboard", 
+            "version": 2
+        },
+		  {
+            "attributes": {
+                "description": "", 
+                "kibanaSavedObjectMeta": {
+                    "searchSourceJSON": "{\"filter\": []}"
+                }, 
+                "savedSearchId": "DNS", 
+                "title": "DNS Count and Response Time", 
+                "uiStateJSON": "{}", 
+                "version": 1, 
+                "visState": "{\"type\": \"histogram\", \"listeners\": {}, \"params\": {\"scale\": \"linear\", \"yAxis\": {}, \"legendPosition\": \"right\", \"addTimeMarker\": false, \"addLegend\": true, \"shareYAxis\": true, \"mode\": \"stacked\", \"defaultYExtents\": false, \"setYExtents\": false, \"addTooltip\": true, \"times\": []}, \"aggs\": [{\"params\": {}, \"type\": \"count\", \"enabled\": true, \"id\": \"1\", \"schema\": \"metric\"}, {\"params\": {\"customInterval\": \"2h\", \"field\": \"@timestamp\", \"interval\": \"auto\", \"min_doc_count\": 1, \"extended_bounds\": {}}, \"type\": \"date_histogram\", \"enabled\": true, \"id\": \"2\", \"schema\": \"segment\"}, {\"params\": {\"field\": \"responsetime\", \"interval\": 50, \"min_doc_count\": false, \"extended_bounds\": {}}, \"type\": \"histogram\", \"enabled\": true, \"id\": \"3\", \"schema\": \"group\"}], \"title\": \"DNS Count and Response Time\"}"
+            }, 
+            "id": "DNS-Count-and-Response-Time", 
+            "type": "visualization", 
+            "version": 2
+        }, 
+        {
+            "attributes": {
+                "description": "", 
+                "kibanaSavedObjectMeta": {
+                    "searchSourceJSON": "{\"filter\": []}"
+                }, 
+                "savedSearchId": "DNS", 
+                "title": "DNS Query Summary", 
+                "uiStateJSON": "{}", 
+                "version": 1, 
+                "visState": "{\"type\": \"metric\", \"listeners\": {}, \"params\": {\"handleNoResults\": true, \"fontSize\": \"17\"}, \"aggs\": [{\"params\": {}, \"type\": \"count\", \"enabled\": true, \"id\": \"1\", \"schema\": \"metric\"}, {\"params\": {\"field\": \"bytes_in\", \"customLabel\": \"Bytes In\"}, \"type\": \"sum\", \"enabled\": true, \"id\": \"2\", \"schema\": \"metric\"}, {\"params\": {\"field\": \"bytes_out\", \"customLabel\": \"Bytes Out\"}, \"type\": \"sum\", \"enabled\": true, \"id\": \"3\", \"schema\": \"metric\"}, {\"params\": {\"field\": \"responsetime\", \"customLabel\": \"Avg Response Time (ms)\"}, \"type\": \"avg\", \"enabled\": true, \"id\": \"4\", \"schema\": \"metric\"}], \"title\": \"DNS Query Summary\"}"
+            }, 
+            "id": "DNS-Query-Summary", 
+            "type": "visualization", 
+            "version": 2
+        }, 
+        {
+            "attributes": {
+                "description": "", 
+                "kibanaSavedObjectMeta": {
+                    "searchSourceJSON": "{\"filter\": [], \"index\": \"__replace_token__\", \"query\": {\"query_string\": {\"analyze_wildcard\": true, \"query\": \"*\"}}}"
+                }, 
+                "title": "DNS Question Types", 
+                "uiStateJSON": "{}", 
+                "version": 1, 
+                "visState": "{\"type\": \"pie\", \"listeners\": {}, \"params\": {\"legendPosition\": \"right\", \"isDonut\": false, \"addTooltip\": true, \"shareYAxis\": true, \"addLegend\": true}, \"aggs\": [{\"params\": {}, \"type\": \"count\", \"enabled\": true, \"id\": \"1\", \"schema\": \"metric\"}, {\"params\": {\"orderBy\": \"1\", \"field\": \"dns.question.type\", \"order\": \"desc\", \"size\": 5}, \"type\": \"terms\", \"enabled\": true, \"id\": \"2\", \"schema\": \"segment\"}], \"title\": \"DNS Question Types\"}"
+            }, 
+            "id": "DNS-Question-Types", 
+            "type": "visualization", 
+            "version": 2
+        }, 
+        {
+            "attributes": {
+                "description": "", 
+                "kibanaSavedObjectMeta": {
+                    "searchSourceJSON": "{\"filter\": [], \"index\": \"__replace_token__\", \"query\": {\"query_string\": {\"analyze_wildcard\": true, \"query\": \"type: dns\"}}}"
+                }, 
+                "title": "DNS Request Status Over Time", 
+                "uiStateJSON": "{\"vis\": {\"colors\": {\"OK\": \"#0A50A1\", \"Error\": \"#890F02\"}}}", 
+                "version": 1, 
+                "visState": "{\"type\": \"area\", \"listeners\": {}, \"params\": {\"scale\": \"linear\", \"yAxis\": {}, \"smoothLines\": false, \"legendPosition\": \"right\", \"addTimeMarker\": false, \"interpolate\": \"linear\", \"addLegend\": true, \"shareYAxis\": true, \"mode\": \"stacked\", \"defaultYExtents\": false, \"setYExtents\": false, \"addTooltip\": true, \"times\": []}, \"aggs\": [{\"params\": {}, \"type\": \"count\", \"enabled\": true, \"id\": \"1\", \"schema\": \"metric\"}, {\"params\": {\"customInterval\": \"2h\", \"field\": \"@timestamp\", \"interval\": \"auto\", \"min_doc_count\": 1, \"extended_bounds\": {}}, \"type\": \"date_histogram\", \"enabled\": true, \"id\": \"2\", \"schema\": \"segment\"}, {\"params\": {\"orderBy\": \"1\", \"field\": \"status\", \"order\": \"desc\", \"size\": 5}, \"type\": \"terms\", \"enabled\": true, \"id\": \"3\", \"schema\": \"group\"}], \"title\": \"DNS Request Status Over Time\"}"
+            }, 
+            "id": "DNS-Request-Status-Over-Time", 
+            "type": "visualization", 
+            "version": 2
+        }, 
+        {
+            "attributes": {
+                "description": "", 
+                "kibanaSavedObjectMeta": {
+                    "searchSourceJSON": "{\"filter\": [], \"highlight\": {\"fields\": {\"*\": {}}, \"post_tags\": [\"@/kibana-highlighted-field@\"], \"pre_tags\": [\"@kibana-highlighted-field@\"], \"require_field_match\": false, \"fragment_size\": 2147483647}, \"query\": {\"query_string\": {\"analyze_wildcard\": true, \"query\": \"type: dns AND status: OK\"}}, \"index\": \"__replace_token__\"}"
+                }, 
+                "title": "DNS Top 10 Questions", 
+                "uiStateJSON": "{\"vis\": {\"params\": {\"sort\": {\"columnIndex\": null, \"direction\": null}}}}", 
+                "version": 1, 
+                "visState": "{\"type\": \"table\", \"listeners\": {}, \"params\": {\"sort\": {\"columnIndex\": null, \"direction\": null}, \"perPage\": 10, \"showPartialRows\": false, \"totalFunc\": \"sum\", \"showTotal\": false, \"showMeticsAtAllLevels\": false}, \"aggs\": [{\"params\": {}, \"type\": \"count\", \"enabled\": true, \"id\": \"1\", \"schema\": \"metric\"}, {\"params\": {\"orderBy\": \"1\", \"field\": \"dns.question.name\", \"customLabel\": \"Question\", \"order\": \"desc\", \"size\": 30}, \"type\": \"terms\", \"enabled\": true, \"id\": \"2\", \"schema\": \"bucket\"}], \"title\": \"DNS Top 10 Questions\"}"
+            }, 
+            "id": "DNS-Top-10-Questions", 
+            "type": "visualization", 
+            "version": 2
+        }, 
+        {
+            "attributes": {
+                "description": "", 
+                "kibanaSavedObjectMeta": {
+                    "searchSourceJSON": "{\"filter\": [], \"highlight\": {\"fields\": {\"*\": {}}, \"post_tags\": [\"@/kibana-highlighted-field@\"], \"pre_tags\": [\"@kibana-highlighted-field@\"], \"require_field_match\": false, \"fragment_size\": 2147483647}, \"query\": {\"query_string\": {\"analyze_wildcard\": true, \"query\": \"type: dns\"}}, \"index\": \"__replace_token__\"}"
+                }, 
+                "title": "DNS Response Codes", 
+                "uiStateJSON": "{\"vis\": {\"params\": {\"sort\": {\"columnIndex\": null, \"direction\": null}}}}", 
+                "version": 1, 
+                "visState": "{\"type\": \"table\", \"listeners\": {}, \"params\": {\"sort\": {\"columnIndex\": null, \"direction\": null}, \"perPage\": 10, \"showPartialRows\": false, \"totalFunc\": \"sum\", \"showTotal\": false, \"showMeticsAtAllLevels\": false}, \"aggs\": [{\"params\": {}, \"type\": \"count\", \"enabled\": true, \"id\": \"1\", \"schema\": \"metric\"}, {\"params\": {\"orderBy\": \"1\", \"field\": \"dns.response_code\", \"customLabel\": \"Response Code\", \"order\": \"desc\", \"size\": 5}, \"type\": \"terms\", \"enabled\": true, \"id\": \"2\", \"schema\": \"bucket\"}], \"title\": \"DNS Response Codes\"}"
+            }, 
+            "id": "DNS-Response-Codes", 
+            "type": "visualization", 
+            "version": 2
+        }, 
+        {
+            "attributes": {
+                "columns": [
+                    "_source"
+                ], 
+                "description": "", 
+                "hits": 0, 
+                "kibanaSavedObjectMeta": {
+                    "searchSourceJSON": "{\"filter\": [], \"highlight\": {\"fields\": {\"*\": {}}, \"post_tags\": [\"@/kibana-highlighted-field@\"], \"pre_tags\": [\"@kibana-highlighted-field@\"], \"require_field_match\": false, \"fragment_size\": 2147483647}, \"query\": {\"query_string\": {\"analyze_wildcard\": true, \"query\": \"type: dns\"}}, \"index\": \"__replace_token__\"}"
+                }, 
+                "sort": [
+                    "@timestamp", 
+                    "desc"
+                ], 
+                "title": "DNS", 
+                "version": 1
+            }, 
+            "id": "DNS", 
+            "type": "search", 
+            "version": 10
+        }
+    ], 
+    "version": "6.0.0-beta1-SNAPSHOT"
+}

@@ -7,6 +7,7 @@
             '$state',
             'toastr',
             'ApplicationFactory',
+            'UserService',
             EditCompagnesCtrlFN,
         ]);
 
@@ -21,6 +22,7 @@
         $state,
         toastr,
         ApplicationFactory,
+        UserService,
     ) {
         var vm = this;
 
@@ -47,6 +49,16 @@
                 }
             });
 
+            vm.users.forEach(element => {
+                if (element.id === vm.compagne.user) {
+                    vm.compagne.userName = element.username;
+                }
+
+                if (element.id === vm.compagne.cp) {
+                    vm.compagne.cpName = element.username;
+                }
+            });
+
             TmecService.update(vm.compagne)
                 .then(function () {
                     vm.flipActivityIndicator('isSaving')
@@ -70,6 +82,16 @@
             });
         }
 
+        
+        function loadUsers(){
+            UserService.list()
+            .then(function (users) {
+                vm.users = users;
+            })
+            .catch(function (err) {
+            });
+        }
+
         vm.init = function () {
             vm = angular.extend(vm, {
                 ui: {
@@ -77,17 +99,25 @@
                     isLoading: false,
                 },
                 applications: [],
+                users: [],
                 compagne: {
                     version: '',
                     description: '',
                     startDate: '',
                     endDate: '',
                     application: '',
-                    applicationName: ''
+                    applicationName: '',
+                    user: '',
+                    cp: '',
+                    testEnvr:'',
+                    nTir:'',
+                    cpName: '',
+                    userName: ''
                 },
             });
             vm.loadCompagne($stateParams.id);
             loadApplications();
+            loadUsers();
         };
 
     }

@@ -22,6 +22,9 @@
             vm.stepData.forEach(function(element){
                 if(element.current){
                     vm.current = element;
+                    if(vm.current.date && vm.current.date != ""){
+                        vm.current.date = new Date(vm.current.date);
+                    }
                     vm.stepProgress = element.order - 1;
                     vm.max = element.order - 1;
                 }
@@ -44,6 +47,9 @@
             if (vm.stepProgress < vm.max) {
                 vm.stepProgress++;
                 vm.current = vm.stepData[vm.stepProgress];
+                if(vm.current.date && vm.current.date != ""){
+                    vm.current.date = new Date(vm.current.date);
+                }
             }
         }
 
@@ -51,6 +57,9 @@
             if (vm.stepProgress > 0) {
                 vm.stepProgress--;
                 vm.current = vm.stepData[vm.stepProgress];
+                if(vm.current.date && vm.current.date != ""){
+                    vm.current.date = new Date(vm.current.date);
+                }
             }
         }
 

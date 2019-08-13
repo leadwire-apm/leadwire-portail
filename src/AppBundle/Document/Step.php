@@ -88,6 +88,15 @@ class Step
     private $tmec;
 
     /**
+     * @ODM\Field(type="string")
+     * @JMS\Expose
+     * @JMS\Type("string")
+     *
+     * @var string
+     */
+    private $date;
+
+    /**
      * Get tmec
      *
      * @return Tmec
@@ -262,5 +271,29 @@ class Step
     public function getCompleted()
     {
         return $this->completed;
+    }
+
+    /**
+     * Get the value of date
+     *
+     * @return  string
+     */
+    public function getDate()
+    {
+        return $this->date;
+    }
+
+    /**
+     * Set the value of date
+     *
+     * @param  string  $date
+     *
+     * @return  self
+     */
+    public function setDate(string $date)
+    {
+        $this->date = $date;
+
+        return $this;
     }
 }

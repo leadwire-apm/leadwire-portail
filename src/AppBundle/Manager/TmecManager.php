@@ -76,10 +76,17 @@ class TmecManager extends AbstractManager
      * @param string $endDate
      * @param string $application
      * @param string $applicationName
+     * @param string $user
+     * @param string $cp
+     * 
+     * @param string $testEnvr
+     * @param string $nTir
+     * @param string $userName
+     * @param string $cpName
      *
      * @return Tmec
      */
-    public function create($version, $description, $startDate, $endDate, $application, $applicationName): Tmec
+    public function create($version, $description, $startDate, $endDate, $application, $applicationName, $user, $cp, $testEnvr, $nTir, $userName, $cpName): Tmec
     {
         $tmec = new Tmec();
         $tmec
@@ -89,6 +96,14 @@ class TmecManager extends AbstractManager
             ->setEndDate($endDate)
             ->setApplication($application)
             ->setApplicationName($applicationName)
+            ->setUser($user)
+            ->setCp($cp)
+
+            ->setTestEnvr($testEnvr)
+            ->setnTir($nTir)
+            ->setUserName($userName)
+            ->setCpName($cpName)
+
             ->setCompleted(false);
 
         $this->update($tmec);

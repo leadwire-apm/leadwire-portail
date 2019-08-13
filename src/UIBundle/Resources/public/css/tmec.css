@@ -1,3 +1,11 @@
+.text-center.padingTr{
+  padding: 10px 0px !important;
+}
+
+.padingTd {
+  padding: 10px 0px !important;
+}
+
 .flex{
 display: flex;
 }
@@ -324,6 +332,7 @@ display-flex, .form-flex, .form-date-group, .steps ul, .title, .title .step-numb
     .stepsSpan{
       margin: 3px;
       font-size: 14px;
+      padding: 0.2em 2px 0.3em;
     }
 
     .stepCheckbox{

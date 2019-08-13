@@ -25,6 +25,10 @@
             vm.compagne.steps.forEach(function(element){
                 if(element.current){
                     vm.current = element;
+                    if(vm.current.date && vm.current.date != ""){
+                        vm.current.date = new Date(vm.current.date);
+                    }
+
                     vm.stepProgress = element.order - 1;
                 }
             });
@@ -44,6 +48,9 @@
             if (vm.stepProgress < vm.compagne.steps.length) {
                 vm.stepProgress++;
                 vm.current = vm.compagne.steps[vm.stepProgress];
+                if(vm.current.date && vm.current.date != ""){
+                    vm.current.date = new Date(vm.current.date);
+                }
             }
         }
 
@@ -51,6 +58,10 @@
             if (vm.stepProgress > 0) {
                 vm.stepProgress--;
                 vm.current = vm.compagne.steps[vm.stepProgress];
+
+                if(vm.current.date && vm.current.date != ""){
+                    vm.current.date = new Date(vm.current.date);
+                }
             }
         }
 

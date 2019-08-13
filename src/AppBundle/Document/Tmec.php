@@ -78,6 +78,61 @@ class Tmec
     private $applicationName;
 
     /**
+     * @ODM\Field(type="string")
+     * @JMS\Expose
+     * @JMS\Type("string")
+     *
+     * @var string
+     */
+    private $user;
+
+    /**
+     * @ODM\Field(type="string")
+     * @JMS\Expose
+     * @JMS\Type("string")
+     *
+     * @var string
+     */
+    private $userName;
+
+
+    /**
+     * @ODM\Field(type="string")
+     * @JMS\Expose
+     * @JMS\Type("string")
+     *
+     * @var string
+     */
+    private $cp;
+
+    /**
+     * @ODM\Field(type="string")
+     * @JMS\Expose
+     * @JMS\Type("string")
+     *
+     * @var string
+     */
+    private $cpName;
+
+    /**
+     * @ODM\Field(type="string")
+     * @JMS\Expose
+     * @JMS\Type("string")
+     *
+     * @var string
+     */
+    private $testEnvr;
+
+    /**
+     * @ODM\Field(type="string")
+     * @JMS\Expose
+     * @JMS\Type("string")
+     *
+     * @var string
+     */
+    private $nTir;
+
+    /**
      * @var bool
      *
      * @ODM\Field(type="bool")
@@ -267,6 +322,150 @@ class Tmec
     public function setApplicationName(string $applicationName)
     {
         $this->applicationName = $applicationName;
+
+        return $this;
+    }
+
+        /**
+     * Get the value of user
+     *
+     * @return  string
+     */
+    public function getUser()
+    {
+        return $this->user;
+    }
+
+    /**
+     * Set the value of user
+     *
+     * @param  string  $user
+     *
+     * @return  self
+     */
+    public function setUser(string $user)
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of cp
+     *
+     * @return  string
+     */
+    public function getCp()
+    {
+        return $this->cp;
+    }
+
+    /**
+     * Set the value of cp
+     *
+     * @param  string  $cp
+     *
+     * @return  self
+     */
+    public function setCp(string $cp)
+    {
+        $this->cp = $cp;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of testEnvr
+     *
+     * @return  string
+     */
+    public function getTestEnvr()
+    {
+        return $this->testEnvr;
+    }
+
+    /**
+     * Set the value of testEnvr
+     *
+     * @param  string  $testEnvr
+     *
+     * @return  self
+     */
+    public function setTestEnvr(string $testEnvr)
+    {
+        $this->testEnvr = $testEnvr;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of nTir
+     *
+     * @return  string
+     */
+    public function getnTir()
+    {
+        return $this->nTir;
+    }
+
+    /**
+     * Set the value of nTir
+     *
+     * @param  string  $nTir
+     *
+     * @return  self
+     */
+    public function setnTir(string $nTir)
+    {
+        $this->nTir = $nTir;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of userName
+     *
+     * @return  string
+     */
+    public function getUserName()
+    {
+        return $this->userName;
+    }
+
+    /**
+     * Set the value of userName
+     *
+     * @param  string  $userName
+     *
+     * @return  self
+     */
+    public function setUserName(string $userName)
+    {
+        $this->userName = $userName;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of cpName
+     *
+     * @return  string
+     */
+    public function getCpName()
+    {
+        return $this->cpName;
+    }
+
+    /**
+     * Set the value of cpName
+     *
+     * @param  string  $cpName
+     *
+     * @return  self
+     */
+    public function setCpName(string $cpName)
+    {
+        $this->cpName = $cpName;
 
         return $this;
     }

@@ -4861,7 +4861,7 @@ a.label:focus {
   cursor: pointer;
 }
 .label:empty {
-  display: none;
+  display: flex !important;
 }
 .btn .label {
   position: relative;

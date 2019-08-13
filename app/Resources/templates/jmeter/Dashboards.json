@@ -1,0 +1,222 @@
+{
+    "objects": [
+  
+  {
+    "id": "c82b4d70-7e08-11e9-bae6-fd3ef927623a",
+    "type": "dashboard",
+    "attributes": {
+      "title": "[JMeter] Graphs",
+      "hits": 0,
+      "description": "",
+      "panelsJSON": "[{\"gridData\":{\"x\":0,\"y\":7,\"w\":24,\"h\":15,\"i\":\"1\"},\"version\":\"6.5.1\",\"panelIndex\":\"1\",\"type\":\"visualization\",\"id\":\"39565940-7e04-11e9-bae6-fd3ef927623a\",\"embeddableConfig\":{}},{\"gridData\":{\"x\":24,\"y\":7,\"w\":24,\"h\":15,\"i\":\"2\"},\"version\":\"6.5.1\",\"panelIndex\":\"2\",\"type\":\"visualization\",\"id\":\"6037a820-7e04-11e9-bae6-fd3ef927623a\",\"embeddableConfig\":{}},{\"gridData\":{\"x\":0,\"y\":22,\"w\":24,\"h\":15,\"i\":\"4\"},\"version\":\"6.5.1\",\"panelIndex\":\"4\",\"type\":\"visualization\",\"id\":\"a13e38a0-7af0-11e9-bae6-fd3ef927623a\",\"embeddableConfig\":{}},{\"gridData\":{\"x\":24,\"y\":22,\"w\":24,\"h\":15,\"i\":\"6\"},\"version\":\"6.5.1\",\"panelIndex\":\"6\",\"type\":\"visualization\",\"id\":\"885f7010-7aeb-11e9-bae6-fd3ef927623a\",\"embeddableConfig\":{}},{\"gridData\":{\"x\":24,\"y\":0,\"w\":23,\"h\":7,\"i\":\"8\"},\"version\":\"6.5.1\",\"panelIndex\":\"8\",\"type\":\"visualization\",\"id\":\"add9e870-7e0b-11e9-bae6-fd3ef927623a\",\"embeddableConfig\":{}},{\"gridData\":{\"x\":0,\"y\":0,\"w\":24,\"h\":7,\"i\":\"9\"},\"version\":\"6.5.1\",\"panelIndex\":\"9\",\"type\":\"visualization\",\"id\":\"49faa0a0-7e0c-11e9-bae6-fd3ef927623a\",\"embeddableConfig\":{}}]",
+      "optionsJSON": "{\"darkTheme\":false,\"useMargins\":true,\"hidePanelTitles\":false}",
+      "version": 1,
+      "timeRestore": false,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"query\":{\"query\":\"\",\"language\":\"lucene\"},\"filter\":[]}"
+      }
+    }
+  },
+  {
+    "id": "e34fc7a0-7e0a-11e9-bae6-fd3ef927623a",
+    "type": "dashboard",
+    "attributes": {
+      "title": "[JMeter] Errors",
+      "hits": 0,
+      "description": "",
+      "panelsJSON": "[{\"gridData\":{\"x\":23,\"y\":0,\"w\":25,\"h\":13,\"i\":\"1\"},\"version\":\"6.5.1\",\"panelIndex\":\"1\",\"type\":\"visualization\",\"id\":\"56ce1240-7e06-11e9-bae6-fd3ef927623a\",\"embeddableConfig\":{}},{\"gridData\":{\"x\":0,\"y\":13,\"w\":48,\"h\":15,\"i\":\"2\"},\"version\":\"6.5.1\",\"panelIndex\":\"2\",\"type\":\"visualization\",\"id\":\"16ed92d0-7e07-11e9-bae6-fd3ef927623a\",\"embeddableConfig\":{}},{\"gridData\":{\"x\":0,\"y\":0,\"w\":23,\"h\":5,\"i\":\"3\"},\"version\":\"6.5.1\",\"panelIndex\":\"3\",\"type\":\"visualization\",\"id\":\"49faa0a0-7e0c-11e9-bae6-fd3ef927623a\",\"embeddableConfig\":{}},{\"gridData\":{\"x\":0,\"y\":5,\"w\":23,\"h\":8,\"i\":\"4\"},\"version\":\"6.5.1\",\"panelIndex\":\"4\",\"type\":\"visualization\",\"id\":\"add9e870-7e0b-11e9-bae6-fd3ef927623a\",\"embeddableConfig\":{}},{\"gridData\":{\"x\":0,\"y\":28,\"w\":48,\"h\":27,\"i\":\"5\"},\"version\":\"6.5.1\",\"panelIndex\":\"5\",\"type\":\"visualization\",\"id\":\"3858b0e0-7d6b-11e9-bae6-fd3ef927623a\",\"embeddableConfig\":{}}]",
+      "optionsJSON": "{\"darkTheme\":false,\"useMargins\":true,\"hidePanelTitles\":false}",
+      "version": 1,
+      "timeRestore": false,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"query\":{\"query\":\"\",\"language\":\"lucene\"},\"filter\":[]}"
+      }
+    }
+  },
+  {
+    "id": "0f483f00-7e05-11e9-bae6-fd3ef927623a",
+    "type": "dashboard",
+    "attributes": {
+      "title": "[JMeter] Dashboard",
+      "hits": 0,
+      "description": "",
+      "panelsJSON": "[{\"gridData\":{\"x\":0,\"y\":12,\"w\":48,\"h\":16,\"i\":\"1\"},\"version\":\"6.5.1\",\"panelIndex\":\"1\",\"type\":\"visualization\",\"id\":\"8c9b6f00-7dff-11e9-bae6-fd3ef927623a\",\"embeddableConfig\":{}},{\"gridData\":{\"x\":0,\"y\":28,\"w\":48,\"h\":20,\"i\":\"2\"},\"version\":\"6.5.1\",\"panelIndex\":\"2\",\"type\":\"visualization\",\"id\":\"f72c4d50-7d67-11e9-bae6-fd3ef927623a\",\"embeddableConfig\":{}},{\"gridData\":{\"x\":0,\"y\":0,\"w\":24,\"h\":5,\"i\":\"3\"},\"version\":\"6.5.1\",\"panelIndex\":\"3\",\"type\":\"visualization\",\"id\":\"49faa0a0-7e0c-11e9-bae6-fd3ef927623a\",\"embeddableConfig\":{}},{\"gridData\":{\"x\":0,\"y\":5,\"w\":24,\"h\":7,\"i\":\"5\"},\"version\":\"6.5.1\",\"panelIndex\":\"5\",\"type\":\"visualization\",\"id\":\"add9e870-7e0b-11e9-bae6-fd3ef927623a\",\"embeddableConfig\":{}},{\"gridData\":{\"x\":24,\"y\":0,\"w\":23,\"h\":12,\"i\":\"6\"},\"version\":\"6.5.1\",\"panelIndex\":\"6\",\"type\":\"visualization\",\"id\":\"7e6f2b80-7e02-11e9-bae6-fd3ef927623a\",\"embeddableConfig\":{}}]",
+      "optionsJSON": "{\"darkTheme\":false,\"useMargins\":true,\"hidePanelTitles\":false}",
+      "version": 1,
+      "timeRestore": false,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"query\":{\"query\":\"\",\"language\":\"lucene\"},\"filter\":[]}"
+      }
+    }
+  },
+  {
+    "id": "6037a820-7e04-11e9-bae6-fd3ef927623a",
+    "type": "visualization",
+    "attributes": {
+      "title": "Erros Per Second [JMeter]",
+      "visState": "{\"title\":\"Erros Per Second [JMeter]\",\"type\":\"metrics\",\"params\":{\"id\":\"61ca57f0-469d-11e7-af02-69e470af7417\",\"type\":\"timeseries\",\"series\":[{\"id\":\"61ca57f1-469d-11e7-af02-69e470af7417\",\"color\":\"rgba(244,78,59,1)\",\"split_mode\":\"terms\",\"metrics\":[{\"id\":\"61ca57f2-469d-11e7-af02-69e470af7417\",\"type\":\"sum\",\"field\":\"ErrorCount\"}],\"separate_axis\":0,\"axis_position\":\"right\",\"formatter\":\"number\",\"chart_type\":\"line\",\"line_width\":\"2\",\"point_size\":1,\"fill\":\"0\",\"stacked\":\"none\",\"label\":\"Transactions\",\"terms_field\":\"SampleLabel.keyword\",\"value_template\":\"{{value}}\",\"terms_size\":\"10\",\"terms_order_by\":\"61ca57f2-469d-11e7-af02-69e470af7417\",\"split_color_mode\":\"rainbow\"}],\"time_field\":\"Timestamp\",\"index_pattern\":\"__replace_token__\",\"interval\":\"auto\",\"axis_position\":\"left\",\"axis_formatter\":\"number\",\"axis_scale\":\"normal\",\"show_legend\":1,\"show_grid\":1},\"aggs\":[]}",
+      "uiStateJSON": "{}",
+      "description": "",
+      "version": 1,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"query\":{\"query\":\"\",\"language\":\"lucene\"},\"filter\":[]}"
+      }
+    }
+  },
+  {
+    "id": "39565940-7e04-11e9-bae6-fd3ef927623a",
+    "type": "visualization",
+    "attributes": {
+      "title": "Transactions Per Second [JMeter]",
+      "visState": "{\"title\":\"Transactions Per Second [JMeter]\",\"type\":\"metrics\",\"params\":{\"id\":\"61ca57f0-469d-11e7-af02-69e470af7417\",\"type\":\"timeseries\",\"series\":[{\"id\":\"61ca57f1-469d-11e7-af02-69e470af7417\",\"color\":\"#68BC00\",\"split_mode\":\"terms\",\"metrics\":[{\"id\":\"61ca57f2-469d-11e7-af02-69e470af7417\",\"type\":\"sum\",\"field\":\"SampleCount\"}],\"separate_axis\":0,\"axis_position\":\"right\",\"formatter\":\"number\",\"chart_type\":\"line\",\"line_width\":\"2\",\"point_size\":1,\"fill\":\"0\",\"stacked\":\"none\",\"label\":\"Transactions\",\"terms_field\":\"SampleLabel.keyword\",\"value_template\":\"{{value}}\",\"terms_size\":\"10\",\"terms_order_by\":\"61ca57f2-469d-11e7-af02-69e470af7417\",\"split_color_mode\":\"rainbow\"}],\"time_field\":\"Timestamp\",\"index_pattern\":\"__replace_token__\",\"interval\":\"auto\",\"axis_position\":\"left\",\"axis_formatter\":\"number\",\"axis_scale\":\"normal\",\"show_legend\":1,\"show_grid\":1},\"aggs\":[]}",
+      "uiStateJSON": "{}",
+      "description": "",
+      "version": 1,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"query\":{\"query\":\"\",\"language\":\"lucene\"},\"filter\":[]}"
+      }
+    }
+  },
+  {
+    "id": "16ed92d0-7e07-11e9-bae6-fd3ef927623a",
+    "type": "visualization",
+    "attributes": {
+      "title": "Errors Heat Map [JMeter]",
+      "visState": "{\"aggs\":[{\"enabled\":true,\"id\":\"1\",\"params\":{\"customLabel\":\"#Errors\",\"field\":\"ErrorCount\"},\"schema\":\"metric\",\"type\":\"sum\"},{\"enabled\":true,\"id\":\"2\",\"params\":{\"customInterval\":\"2h\",\"drop_partials\":false,\"extended_bounds\":{},\"field\":\"Timestamp\",\"interval\":\"auto\",\"min_doc_count\":1,\"timeRange\":{\"from\":{\"_d\":\"2019-05-22T13:54:57.393Z\",\"_i\":\"2019-05-22T13:54:57.393Z\",\"_isAMomentObject\":true,\"_isUTC\":false,\"_isValid\":true,\"_locale\":{\"_abbr\":\"en\",\"_calendar\":{\"lastDay\":\"[Yesterday at] LT\",\"lastWeek\":\"[Last] dddd [at] LT\",\"nextDay\":\"[Tomorrow at] LT\",\"nextWeek\":\"dddd [at] LT\",\"sameDay\":\"[Today at] LT\",\"sameElse\":\"L\"},\"_config\":{\"abbr\":\"en\",\"calendar\":{\"lastDay\":\"[Yesterday at] LT\",\"lastWeek\":\"[Last] dddd [at] LT\",\"nextDay\":\"[Tomorrow at] LT\",\"nextWeek\":\"dddd [at] LT\",\"sameDay\":\"[Today at] LT\",\"sameElse\":\"L\"},\"dayOfMonthOrdinalParse\":{},\"invalidDate\":\"Invalid date\",\"longDateFormat\":{\"L\":\"MM/DD/YYYY\",\"LL\":\"MMMM D, YYYY\",\"LLL\":\"MMMM D, YYYY h:mm A\",\"LLLL\":\"dddd, MMMM D, YYYY h:mm A\",\"LT\":\"h:mm A\",\"LTS\":\"h:mm:ss A\"},\"meridiemParse\":{},\"months\":[\"January\",\"February\",\"March\",\"April\",\"May\",\"June\",\"July\",\"August\",\"September\",\"October\",\"November\",\"December\"],\"monthsShort\":[\"Jan\",\"Feb\",\"Mar\",\"Apr\",\"May\",\"Jun\",\"Jul\",\"Aug\",\"Sep\",\"Oct\",\"Nov\",\"Dec\"],\"relativeTime\":{\"M\":\"a month\",\"MM\":\"%d months\",\"d\":\"a day\",\"dd\":\"%d days\",\"future\":\"in %s\",\"h\":\"an hour\",\"hh\":\"%d hours\",\"m\":\"a minute\",\"mm\":\"%d minutes\",\"past\":\"%s ago\",\"s\":\"a few seconds\",\"ss\":\"%d seconds\",\"y\":\"a year\",\"yy\":\"%d years\"},\"week\":{\"dow\":0,\"doy\":6},\"weekdays\":[\"Sunday\",\"Monday\",\"Tuesday\",\"Wednesday\",\"Thursday\",\"Friday\",\"Saturday\"],\"weekdaysMin\":[\"Su\",\"Mo\",\"Tu\",\"We\",\"Th\",\"Fr\",\"Sa\"],\"weekdaysShort\":[\"Sun\",\"Mon\",\"Tue\",\"Wed\",\"Thu\",\"Fri\",\"Sat\"]},\"_dayOfMonthOrdinalParse\":{},\"_dayOfMonthOrdinalParseLenient\":{},\"_invalidDate\":\"Invalid date\",\"_longDateFormat\":{\"L\":\"MM/DD/YYYY\",\"LL\":\"MMMM D, YYYY\",\"LLL\":\"MMMM D, YYYY h:mm A\",\"LLLL\":\"dddd, MMMM D, YYYY h:mm A\",\"LT\":\"h:mm A\",\"LTS\":\"h:mm:ss A\"},\"_meridiemParse\":{},\"_months\":[\"January\",\"February\",\"March\",\"April\",\"May\",\"June\",\"July\",\"August\",\"September\",\"October\",\"November\",\"December\"],\"_monthsShort\":[\"Jan\",\"Feb\",\"Mar\",\"Apr\",\"May\",\"Jun\",\"Jul\",\"Aug\",\"Sep\",\"Oct\",\"Nov\",\"Dec\"],\"_relativeTime\":{\"M\":\"a month\",\"MM\":\"%d months\",\"d\":\"a day\",\"dd\":\"%d days\",\"future\":\"in %s\",\"h\":\"an hour\",\"hh\":\"%d hours\",\"m\":\"a minute\",\"mm\":\"%d minutes\",\"past\":\"%s ago\",\"s\":\"a few seconds\",\"ss\":\"%d seconds\",\"y\":\"a year\",\"yy\":\"%d years\"},\"_week\":{\"dow\":0,\"doy\":6},\"_weekdays\":[\"Sunday\",\"Monday\",\"Tuesday\",\"Wednesday\",\"Thursday\",\"Friday\",\"Saturday\"],\"_weekdaysMin\":[\"Su\",\"Mo\",\"Tu\",\"We\",\"Th\",\"Fr\",\"Sa\"],\"_weekdaysShort\":[\"Sun\",\"Mon\",\"Tue\",\"Wed\",\"Thu\",\"Fri\",\"Sat\"],\"parentLocale\":{\"_abbr\":\"en\",\"_calendar\":{\"lastDay\":\"[Yesterday at] LT\",\"lastWeek\":\"[Last] dddd [at] LT\",\"nextDay\":\"[Tomorrow at] LT\",\"nextWeek\":\"dddd [at] LT\",\"sameDay\":\"[Today at] LT\",\"sameElse\":\"L\"},\"_config\":{\"abbr\":\"en\",\"calendar\":{\"lastDay\":\"[Yesterday at] LT\",\"lastWeek\":\"[Last] dddd [at] LT\",\"nextDay\":\"[Tomorrow at] LT\",\"nextWeek\":\"dddd [at] LT\",\"sameDay\":\"[Today at] LT\",\"sameElse\":\"L\"},\"dayOfMonthOrdinalParse\":{},\"invalidDate\":\"Invalid date\",\"longDateFormat\":{\"L\":\"MM/DD/YYYY\",\"LL\":\"MMMM D, YYYY\",\"LLL\":\"MMMM D, YYYY h:mm A\",\"LLLL\":\"dddd, MMMM D, YYYY h:mm A\",\"LT\":\"h:mm A\",\"LTS\":\"h:mm:ss A\"},\"meridiemParse\":{},\"months\":[\"January\",\"February\",\"March\",\"April\",\"May\",\"June\",\"July\",\"August\",\"September\",\"October\",\"November\",\"December\"],\"monthsShort\":[\"Jan\",\"Feb\",\"Mar\",\"Apr\",\"May\",\"Jun\",\"Jul\",\"Aug\",\"Sep\",\"Oct\",\"Nov\",\"Dec\"],\"relativeTime\":{\"M\":\"a month\",\"MM\":\"%d months\",\"d\":\"a day\",\"dd\":\"%d days\",\"future\":\"in %s\",\"h\":\"an hour\",\"hh\":\"%d hours\",\"m\":\"a minute\",\"mm\":\"%d minutes\",\"past\":\"%s ago\",\"s\":\"a few seconds\",\"ss\":\"%d seconds\",\"y\":\"a year\",\"yy\":\"%d years\"},\"week\":{\"dow\":0,\"doy\":6},\"weekdays\":[\"Sunday\",\"Monday\",\"Tuesday\",\"Wednesday\",\"Thursday\",\"Friday\",\"Saturday\"],\"weekdaysMin\":[\"Su\",\"Mo\",\"Tu\",\"We\",\"Th\",\"Fr\",\"Sa\"],\"weekdaysShort\":[\"Sun\",\"Mon\",\"Tue\",\"Wed\",\"Thu\",\"Fri\",\"Sat\"]},\"_dayOfMonthOrdinalParse\":{},\"_dayOfMonthOrdinalParseLenient\":{},\"_invalidDate\":\"Invalid date\",\"_longDateFormat\":{\"L\":\"MM/DD/YYYY\",\"LL\":\"MMMM D, YYYY\",\"LLL\":\"MMMM D, YYYY h:mm A\",\"LLLL\":\"dddd, MMMM D, YYYY h:mm A\",\"LT\":\"h:mm A\",\"LTS\":\"h:mm:ss A\"},\"_meridiemParse\":{},\"_months\":[\"January\",\"February\",\"March\",\"April\",\"May\",\"June\",\"July\",\"August\",\"September\",\"October\",\"November\",\"December\"],\"_monthsShort\":[\"Jan\",\"Feb\",\"Mar\",\"Apr\",\"May\",\"Jun\",\"Jul\",\"Aug\",\"Sep\",\"Oct\",\"Nov\",\"Dec\"],\"_relativeTime\":{\"M\":\"a month\",\"MM\":\"%d months\",\"d\":\"a day\",\"dd\":\"%d days\",\"future\":\"in %s\",\"h\":\"an hour\",\"hh\":\"%d hours\",\"m\":\"a minute\",\"mm\":\"%d minutes\",\"past\":\"%s ago\",\"s\":\"a few seconds\",\"ss\":\"%d seconds\",\"y\":\"a year\",\"yy\":\"%d years\"},\"_week\":{\"dow\":0,\"doy\":6},\"_weekdays\":[\"Sunday\",\"Monday\",\"Tuesday\",\"Wednesday\",\"Thursday\",\"Friday\",\"Saturday\"],\"_weekdaysMin\":[\"Su\",\"Mo\",\"Tu\",\"We\",\"Th\",\"Fr\",\"Sa\"],\"_weekdaysShort\":[\"Sun\",\"Mon\",\"Tue\",\"Wed\",\"Thu\",\"Fri\",\"Sat\"]}},\"_pf\":{\"charsLeftOver\":0,\"empty\":false,\"invalidFormat\":false,\"invalidMonth\":null,\"iso\":false,\"meridiem\":null,\"nullInput\":false,\"overflow\":-2,\"parsedDateParts\":[],\"rfc2822\":false,\"unusedInput\":[],\"unusedTokens\":[],\"userInvalidated\":false,\"weekdayMismatch\":false},\"_z\":null},\"mode\":\"absolute\",\"to\":{\"_d\":\"2019-05-22T14:18:32.636Z\",\"_i\":\"2019-05-22T14:18:32.636Z\",\"_isAMomentObject\":true,\"_isUTC\":false,\"_isValid\":true,\"_locale\":{\"_abbr\":\"en\",\"_calendar\":{\"lastDay\":\"[Yesterday at] LT\",\"lastWeek\":\"[Last] dddd [at] LT\",\"nextDay\":\"[Tomorrow at] LT\",\"nextWeek\":\"dddd [at] LT\",\"sameDay\":\"[Today at] LT\",\"sameElse\":\"L\"},\"_config\":{\"abbr\":\"en\",\"calendar\":{\"lastDay\":\"[Yesterday at] LT\",\"lastWeek\":\"[Last] dddd [at] LT\",\"nextDay\":\"[Tomorrow at] LT\",\"nextWeek\":\"dddd [at] LT\",\"sameDay\":\"[Today at] LT\",\"sameElse\":\"L\"},\"dayOfMonthOrdinalParse\":{},\"invalidDate\":\"Invalid date\",\"longDateFormat\":{\"L\":\"MM/DD/YYYY\",\"LL\":\"MMMM D, YYYY\",\"LLL\":\"MMMM D, YYYY h:mm A\",\"LLLL\":\"dddd, MMMM D, YYYY h:mm A\",\"LT\":\"h:mm A\",\"LTS\":\"h:mm:ss A\"},\"meridiemParse\":{},\"months\":[\"January\",\"February\",\"March\",\"April\",\"May\",\"June\",\"July\",\"August\",\"September\",\"October\",\"November\",\"December\"],\"monthsShort\":[\"Jan\",\"Feb\",\"Mar\",\"Apr\",\"May\",\"Jun\",\"Jul\",\"Aug\",\"Sep\",\"Oct\",\"Nov\",\"Dec\"],\"relativeTime\":{\"M\":\"a month\",\"MM\":\"%d months\",\"d\":\"a day\",\"dd\":\"%d days\",\"future\":\"in %s\",\"h\":\"an hour\",\"hh\":\"%d hours\",\"m\":\"a minute\",\"mm\":\"%d minutes\",\"past\":\"%s ago\",\"s\":\"a few seconds\",\"ss\":\"%d seconds\",\"y\":\"a year\",\"yy\":\"%d years\"},\"week\":{\"dow\":0,\"doy\":6},\"weekdays\":[\"Sunday\",\"Monday\",\"Tuesday\",\"Wednesday\",\"Thursday\",\"Friday\",\"Saturday\"],\"weekdaysMin\":[\"Su\",\"Mo\",\"Tu\",\"We\",\"Th\",\"Fr\",\"Sa\"],\"weekdaysShort\":[\"Sun\",\"Mon\",\"Tue\",\"Wed\",\"Thu\",\"Fri\",\"Sat\"]},\"_dayOfMonthOrdinalParse\":{},\"_dayOfMonthOrdinalParseLenient\":{},\"_invalidDate\":\"Invalid date\",\"_longDateFormat\":{\"L\":\"MM/DD/YYYY\",\"LL\":\"MMMM D, YYYY\",\"LLL\":\"MMMM D, YYYY h:mm A\",\"LLLL\":\"dddd, MMMM D, YYYY h:mm A\",\"LT\":\"h:mm A\",\"LTS\":\"h:mm:ss A\"},\"_meridiemParse\":{},\"_months\":[\"January\",\"February\",\"March\",\"April\",\"May\",\"June\",\"July\",\"August\",\"September\",\"October\",\"November\",\"December\"],\"_monthsShort\":[\"Jan\",\"Feb\",\"Mar\",\"Apr\",\"May\",\"Jun\",\"Jul\",\"Aug\",\"Sep\",\"Oct\",\"Nov\",\"Dec\"],\"_relativeTime\":{\"M\":\"a month\",\"MM\":\"%d months\",\"d\":\"a day\",\"dd\":\"%d days\",\"future\":\"in %s\",\"h\":\"an hour\",\"hh\":\"%d hours\",\"m\":\"a minute\",\"mm\":\"%d minutes\",\"past\":\"%s ago\",\"s\":\"a few seconds\",\"ss\":\"%d seconds\",\"y\":\"a year\",\"yy\":\"%d years\"},\"_week\":{\"dow\":0,\"doy\":6},\"_weekdays\":[\"Sunday\",\"Monday\",\"Tuesday\",\"Wednesday\",\"Thursday\",\"Friday\",\"Saturday\"],\"_weekdaysMin\":[\"Su\",\"Mo\",\"Tu\",\"We\",\"Th\",\"Fr\",\"Sa\"],\"_weekdaysShort\":[\"Sun\",\"Mon\",\"Tue\",\"Wed\",\"Thu\",\"Fri\",\"Sat\"],\"parentLocale\":{\"_abbr\":\"en\",\"_calendar\":{\"lastDay\":\"[Yesterday at] LT\",\"lastWeek\":\"[Last] dddd [at] LT\",\"nextDay\":\"[Tomorrow at] LT\",\"nextWeek\":\"dddd [at] LT\",\"sameDay\":\"[Today at] LT\",\"sameElse\":\"L\"},\"_config\":{\"abbr\":\"en\",\"calendar\":{\"lastDay\":\"[Yesterday at] LT\",\"lastWeek\":\"[Last] dddd [at] LT\",\"nextDay\":\"[Tomorrow at] LT\",\"nextWeek\":\"dddd [at] LT\",\"sameDay\":\"[Today at] LT\",\"sameElse\":\"L\"},\"dayOfMonthOrdinalParse\":{},\"invalidDate\":\"Invalid date\",\"longDateFormat\":{\"L\":\"MM/DD/YYYY\",\"LL\":\"MMMM D, YYYY\",\"LLL\":\"MMMM D, YYYY h:mm A\",\"LLLL\":\"dddd, MMMM D, YYYY h:mm A\",\"LT\":\"h:mm A\",\"LTS\":\"h:mm:ss A\"},\"meridiemParse\":{},\"months\":[\"January\",\"February\",\"March\",\"April\",\"May\",\"June\",\"July\",\"August\",\"September\",\"October\",\"November\",\"December\"],\"monthsShort\":[\"Jan\",\"Feb\",\"Mar\",\"Apr\",\"May\",\"Jun\",\"Jul\",\"Aug\",\"Sep\",\"Oct\",\"Nov\",\"Dec\"],\"relativeTime\":{\"M\":\"a month\",\"MM\":\"%d months\",\"d\":\"a day\",\"dd\":\"%d days\",\"future\":\"in %s\",\"h\":\"an hour\",\"hh\":\"%d hours\",\"m\":\"a minute\",\"mm\":\"%d minutes\",\"past\":\"%s ago\",\"s\":\"a few seconds\",\"ss\":\"%d seconds\",\"y\":\"a year\",\"yy\":\"%d years\"},\"week\":{\"dow\":0,\"doy\":6},\"weekdays\":[\"Sunday\",\"Monday\",\"Tuesday\",\"Wednesday\",\"Thursday\",\"Friday\",\"Saturday\"],\"weekdaysMin\":[\"Su\",\"Mo\",\"Tu\",\"We\",\"Th\",\"Fr\",\"Sa\"],\"weekdaysShort\":[\"Sun\",\"Mon\",\"Tue\",\"Wed\",\"Thu\",\"Fri\",\"Sat\"]},\"_dayOfMonthOrdinalParse\":{},\"_dayOfMonthOrdinalParseLenient\":{},\"_invalidDate\":\"Invalid date\",\"_longDateFormat\":{\"L\":\"MM/DD/YYYY\",\"LL\":\"MMMM D, YYYY\",\"LLL\":\"MMMM D, YYYY h:mm A\",\"LLLL\":\"dddd, MMMM D, YYYY h:mm A\",\"LT\":\"h:mm A\",\"LTS\":\"h:mm:ss A\"},\"_meridiemParse\":{},\"_months\":[\"January\",\"February\",\"March\",\"April\",\"May\",\"June\",\"July\",\"August\",\"September\",\"October\",\"November\",\"December\"],\"_monthsShort\":[\"Jan\",\"Feb\",\"Mar\",\"Apr\",\"May\",\"Jun\",\"Jul\",\"Aug\",\"Sep\",\"Oct\",\"Nov\",\"Dec\"],\"_relativeTime\":{\"M\":\"a month\",\"MM\":\"%d months\",\"d\":\"a day\",\"dd\":\"%d days\",\"future\":\"in %s\",\"h\":\"an hour\",\"hh\":\"%d hours\",\"m\":\"a minute\",\"mm\":\"%d minutes\",\"past\":\"%s ago\",\"s\":\"a few seconds\",\"ss\":\"%d seconds\",\"y\":\"a year\",\"yy\":\"%d years\"},\"_week\":{\"dow\":0,\"doy\":6},\"_weekdays\":[\"Sunday\",\"Monday\",\"Tuesday\",\"Wednesday\",\"Thursday\",\"Friday\",\"Saturday\"],\"_weekdaysMin\":[\"Su\",\"Mo\",\"Tu\",\"We\",\"Th\",\"Fr\",\"Sa\"],\"_weekdaysShort\":[\"Sun\",\"Mon\",\"Tue\",\"Wed\",\"Thu\",\"Fri\",\"Sat\"]}},\"_pf\":{\"charsLeftOver\":0,\"empty\":false,\"invalidFormat\":false,\"invalidMonth\":null,\"iso\":false,\"meridiem\":null,\"nullInput\":false,\"overflow\":-2,\"parsedDateParts\":[],\"rfc2822\":false,\"unusedInput\":[],\"unusedTokens\":[],\"userInvalidated\":false,\"weekdayMismatch\":false},\"_z\":null}},\"time_zone\":\"Europe/Berlin\",\"useNormalizedEsInterval\":true},\"schema\":\"segment\",\"type\":\"date_histogram\"},{\"enabled\":true,\"id\":\"3\",\"params\":{\"field\":\"SampleLabel.keyword\",\"missingBucket\":false,\"missingBucketLabel\":\"Missing\",\"order\":\"desc\",\"orderBy\":\"1\",\"otherBucket\":false,\"otherBucketLabel\":\"Other\",\"size\":10},\"schema\":\"group\",\"type\":\"terms\"}],\"params\":{\"addLegend\":true,\"addTooltip\":true,\"colorSchema\":\"Reds\",\"colorsNumber\":4,\"colorsRange\":[],\"enableHover\":false,\"invertColors\":false,\"legendPosition\":\"right\",\"percentageMode\":false,\"setColorRange\":false,\"times\":[],\"type\":\"heatmap\",\"valueAxes\":[{\"id\":\"ValueAxis-1\",\"labels\":{\"color\":\"#555\",\"overwriteColor\":false,\"rotate\":0,\"show\":false},\"scale\":{\"defaultYExtents\":false,\"type\":\"linear\"},\"show\":false,\"type\":\"value\"}]},\"title\":\"Errors Heat Map [JMeter]\",\"type\":\"heatmap\"}",
+      "uiStateJSON": "{\"vis\":{\"defaultColors\":{\"0 - 1\":\"rgb(255,245,240)\",\"1 - 2\":\"rgb(252,187,161)\",\"2 - 3\":\"rgb(251,106,74)\",\"3 - 4\":\"rgb(203,24,29)\"}}}",
+      "description": "",
+      "version": 1,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"index\":\"__replace_token__\",\"query\":{\"query\":\"\",\"language\":\"lucene\"},\"filter\":[]}"
+      }
+    }
+  },
+  {
+    "id": "885f7010-7aeb-11e9-bae6-fd3ef927623a",
+    "type": "visualization",
+    "attributes": {
+      "title": "Transferred Bytes per Sample [JMeter]",
+      "visState": "{\"title\":\"Transferred Bytes per Sample [JMeter]\",\"type\":\"vega\",\"params\":{\"spec\":\"{\\n  $schema: \\\"https://vega.github.io/schema/vega-lite/v2.json\\\"\\n  // Use points for drawing to actually create a scatterplot\\n  mark: point\\n  // Specify where to load data from\\n  data: {\\n    // By using an object to the url parameter we will\\n    // construct an Elasticsearch query\\n    url: {\\n      // Context == true means filters of the dashboard will be taken into account\\n      %context%: true\\n      // Specify on which field the time picker should operate\\n      %timefield%: Timestamp\\n      // Specify the index pattern to load data from\\n      index: __replace_token__\\n      // This body will be send to Elasticsearch's _search endpoint\\n      // You can use everything the ES Query DSL supports here\\n      body: {\\n        // Set the size to load 10000 documents\\n        size: 10000,\\n        // Just ask for the fields we actually need for visualization\\n        _source: [\\\"Timestamp\\\", \\\"Bytes\\\", \\\"SampleLabel\\\"]\\n      }\\n    }\\n    // Tell Vega, that the array of data will be inside hits.hits of the response\\n    // since the result returned from Elasticsearch fill have a format like:\\n    // {\\n    //   hits: {\\n    //     total: 42000,\\n    //     max_score: 2,\\n    //     hits: [\\n    //       < our individual documents >\\n    //     ]\\n    //   }\\n    // }\\n    format: { property: \\\"hits.hits\\\" }\\n  }\\n  // You can do transformation and calculation of the data before drawing it\\n  transform: [\\n    // Since timestamp is a string value, we need to convert it to a unix timestamp\\n    // so that Vega can work on it properly.\\n    {\\n      // Convert _source.timestamp field to a date\\n      calculate: \\\"toDate(datum._source['Timestamp'])\\\"\\n      // Store the result in a field named \\\"time\\\" in the object\\n      as: \\\"time\\\"\\n    }\\n  ]\\n  // Specify what data will be drawn on which axis\\n  encoding: {\\n    x: {\\n      // Draw the time field on the x-axis in temporal mode (i.e. as a time axis)\\n      field: time\\n      type: temporal\\n      \\n      // Hide the axis label for the x-axis\\n      axis: {format: '%H:%M',\\\"title\\\": \\\"horaire\\\"}\\n    }\\n    y: {\\n      // Draw the bytes of each document on the y-axis\\n      field: _source.Bytes\\n      // Mark the y-axis as quantitative\\n      type: quantitative\\n      // Specify the label for this axis\\n      axis: { title: \\\"Transferred bytes\\\" }\\n    }\\n    color: {\\n      // Make the color of each point depend on the _source.extension field\\n      field: _source.SampleLabel\\n      // Treat different values as completely unrelated values to each other.\\n      // You could switch this to quantitative if you have a numeric field and\\n      // want to create a color scale from one color to another depending on that\\n      // field's value.\\n      type: nominal\\n      // Rename the legend title so it won't just state: \\\"_source.extension\\\"\\n      legend: { title: 'Sample Label' }\\n    }\\n    shape: {\\n      // Also make the shape of each point dependent on the extension.\\n      field: _source.SampleLabel\\n      type: nominal\\n    }\\n  }\\n}\"},\"aggs\":[]}",
+      "uiStateJSON": "{}",
+      "description": "",
+      "version": 1,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"query\":{\"query\":\"\",\"language\":\"lucene\"},\"filter\":[]}"
+      }
+    }
+  },
+  {
+    "id": "a13e38a0-7af0-11e9-bae6-fd3ef927623a",
+    "type": "visualization",
+    "attributes": {
+      "title": "Response Time per Sample [JMeter]",
+      "visState": "{\"title\":\"Response Time per Sample [JMeter]\",\"type\":\"vega\",\"params\":{\"spec\":\"{\\n  $schema: \\\"https://vega.github.io/schema/vega-lite/v2.json\\\"\\n  // Use points for drawing to actually create a scatterplot\\n  mark: point\\n  // Specify where to load data from\\n  data: {\\n    // By using an object to the url parameter we will\\n    // construct an Elasticsearch query\\n    url: {\\n      // Context == true means filters of the dashboard will be taken into account\\n      %context%: true\\n      // Specify on which field the time picker should operate\\n      %timefield%: Timestamp\\n      // Specify the index pattern to load data from\\n      index: __replace_token__\\n      // This body will be send to Elasticsearch's _search endpoint\\n      // You can use everything the ES Query DSL supports here\\n      body: {\\n        // Set the size to load 10000 documents\\n        size: 10000,\\n        // Just ask for the fields we actually need for visualization\\n        _source: [\\\"Timestamp\\\", \\\"ResponseTime\\\", \\\"SampleLabel\\\"]\\n      }\\n    }\\n    // Tell Vega, that the array of data will be inside hits.hits of the response\\n    // since the result returned from Elasticsearch fill have a format like:\\n    // {\\n    //   hits: {\\n    //     total: 42000,\\n    //     max_score: 2,\\n    //     hits: [\\n    //       < our individual documents >\\n    //     ]\\n    //   }\\n    // }\\n    format: { property: \\\"hits.hits\\\" }\\n  }\\n  // You can do transformation and calculation of the data before drawing it\\n  transform: [\\n    // Since timestamp is a string value, we need to convert it to a unix timestamp\\n    // so that Vega can work on it properly.\\n    {\\n      // Convert _source.timestamp field to a date\\n      calculate: \\\"toDate(datum._source['Timestamp'])\\\"\\n      // Store the result in a field named \\\"time\\\" in the object\\n      as: \\\"time\\\"\\n    }\\n  ]\\n  // Specify what data will be drawn on which axis\\n  encoding: {\\n    x: {\\n      // Draw the time field on the x-axis in temporal mode (i.e. as a time axis)\\n      field: time\\n      type: temporal\\n      // Hide the axis label for the x-axis\\n      axis: {format: '%H:%M',\\\"title\\\": \\\"horaire\\\"}\\n    }\\n    y: {\\n      // Draw the bytes of each document on the y-axis\\n      field: _source.ResponseTime\\n      // Mark the y-axis as quantitative\\n      type: quantitative\\n      // Specify the label for this axis\\n      axis: { title: \\\"Response Time\\\" }\\n    }\\n    color: {\\n      // Make the color of each point depend on the _source.extension field\\n      field: _source.SampleLabel\\n      // Treat different values as completely unrelated values to each other.\\n      // You could switch this to quantitative if you have a numeric field and\\n      // want to create a color scale from one color to another depending on that\\n      // field's value.\\n      type: nominal\\n      // Rename the legend title so it won't just state: \\\"_source.extension\\\"\\n      legend: { title: 'Sample Label' }\\n    }\\n    shape: {\\n      // Also make the shape of each point dependent on the extension.\\n      field: _source.SampleLabel\\n      type: nominal\\n    }\\n  }\\n}\"},\"aggs\":[]}",
+      "uiStateJSON": "{}",
+      "description": "",
+      "version": 1,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"query\":{\"query\":\"\",\"language\":\"lucene\"},\"filter\":[]}"
+      }
+    }
+  },
+  {
+    "id": "add9e870-7e0b-11e9-bae6-fd3ef927623a",
+    "type": "visualization",
+    "attributes": {
+      "title": "Selector [JMeter]",
+      "visState": "{\"title\":\"Selector [JMeter]\",\"type\":\"input_control_vis\",\"params\":{\"controls\":[{\"id\":\"1558692408987\",\"indexPattern\":\"__replace_token__\",\"fieldName\":\"SampleLabel.keyword\",\"parent\":\"\",\"label\":\"Sample\",\"type\":\"list\",\"options\":{\"type\":\"terms\",\"multiselect\":true,\"dynamicOptions\":true,\"size\":5,\"order\":\"desc\"}}],\"updateFiltersOnChange\":false,\"useTimeFilter\":false,\"pinFilters\":false},\"aggs\":[]}",
+      "uiStateJSON": "{}",
+      "description": "",
+      "version": 1,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"query\":{\"query\":\"\",\"language\":\"lucene\"},\"filter\":[]}"
+      }
+    }
+  },
+  {
+    "id": "7e6f2b80-7e02-11e9-bae6-fd3ef927623a",
+    "type": "visualization",
+    "attributes": {
+      "title": "Active Threads Over Time [JMeter]",
+      "visState": "{\"title\":\"Active Threads Over Time [JMeter]\",\"type\":\"area\",\"params\":{\"type\":\"area\",\"grid\":{\"categoryLines\":false,\"style\":{\"color\":\"#eee\"}},\"categoryAxes\":[{\"id\":\"CategoryAxis-1\",\"type\":\"category\",\"position\":\"bottom\",\"show\":true,\"style\":{},\"scale\":{\"type\":\"linear\"},\"labels\":{\"show\":true,\"truncate\":100},\"title\":{}}],\"valueAxes\":[{\"id\":\"ValueAxis-1\",\"name\":\"LeftAxis-1\",\"type\":\"value\",\"position\":\"left\",\"show\":true,\"style\":{},\"scale\":{\"type\":\"linear\",\"mode\":\"normal\"},\"labels\":{\"show\":true,\"rotate\":0,\"filter\":false,\"truncate\":100},\"title\":{\"text\":\"Active Threads\"}}],\"seriesParams\":[{\"show\":\"true\",\"type\":\"line\",\"mode\":\"normal\",\"data\":{\"label\":\"Active Threads\",\"id\":\"1\"},\"drawLinesBetweenPoints\":true,\"showCircles\":true,\"interpolate\":\"step-after\",\"valueAxis\":\"ValueAxis-1\"}],\"addTooltip\":true,\"addLegend\":true,\"legendPosition\":\"top\",\"times\":[],\"addTimeMarker\":false},\"aggs\":[{\"id\":\"1\",\"enabled\":true,\"type\":\"avg\",\"schema\":\"metric\",\"params\":{\"field\":\"AllThreads\",\"customLabel\":\"Active Threads\"}},{\"id\":\"3\",\"enabled\":true,\"type\":\"date_histogram\",\"schema\":\"segment\",\"params\":{\"field\":\"Timestamp\",\"timeRange\":{\"from\":\"2019-05-22T13:48:47.516Z\",\"to\":\"2019-05-22T14:56:36.069Z\",\"mode\":\"absolute\"},\"useNormalizedEsInterval\":true,\"interval\":\"auto\",\"time_zone\":\"Europe/Berlin\",\"drop_partials\":false,\"customInterval\":\"2h\",\"min_doc_count\":1,\"extended_bounds\":{}}}]}",
+      "uiStateJSON": "{}",
+      "description": "",
+      "version": 1,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"index\":\"__replace_token__\",\"query\":{\"query\":\"\",\"language\":\"lucene\"},\"filter\":[]}"
+      }
+    }
+  },
+  {
+    "id": "8c9b6f00-7dff-11e9-bae6-fd3ef927623a",
+    "type": "visualization",
+    "attributes": {
+      "title": " Response Times Over Time [JMeter]",
+      "visState": "{\"title\":\" Response Times Over Time [JMeter]\",\"type\":\"metrics\",\"params\":{\"id\":\"61ca57f0-469d-11e7-af02-69e470af7417\",\"type\":\"timeseries\",\"series\":[{\"id\":\"61ca57f1-469d-11e7-af02-69e470af7417\",\"color\":\"rgba(0,156,224,1)\",\"split_mode\":\"everything\",\"metrics\":[{\"id\":\"61ca57f2-469d-11e7-af02-69e470af7417\",\"type\":\"avg\",\"field\":\"ResponseTime\"}],\"separate_axis\":0,\"axis_position\":\"right\",\"formatter\":\"ms,ms,0\",\"chart_type\":\"line\",\"line_width\":\"2\",\"point_size\":1,\"fill\":\"0\",\"stacked\":\"none\",\"label\":\"Average\",\"value_template\":\"{{value}} ms\"},{\"id\":\"0cdb9380-7dff-11e9-9663-4146312fbf9a\",\"color\":\"rgba(115,216,255,1)\",\"split_mode\":\"everything\",\"metrics\":[{\"id\":\"0cdbba90-7dff-11e9-9663-4146312fbf9a\",\"type\":\"percentile\",\"percentiles\":[{\"value\":\"95\",\"percentile\":\"\",\"shade\":0.2,\"id\":\"122296e0-7dff-11e9-9663-4146312fbf9a\",\"mode\":\"line\"}],\"field\":\"ResponseTime\"}],\"separate_axis\":0,\"axis_position\":\"right\",\"formatter\":\"ms,ms,0\",\"chart_type\":\"line\",\"line_width\":\"2\",\"point_size\":1,\"fill\":\"0\",\"stacked\":\"none\",\"label\":\"Percentile 95\",\"value_template\":\"{{value}} ms\"},{\"id\":\"2f69a2f0-7e01-11e9-986a-3ba950e58458\",\"color\":\"rgba(254,146,0,1)\",\"split_mode\":\"everything\",\"metrics\":[{\"id\":\"2f69a2f1-7e01-11e9-986a-3ba950e58458\",\"type\":\"percentile\",\"percentiles\":[{\"value\":\"99\",\"percentile\":\"\",\"shade\":0.2,\"id\":\"122296e0-7dff-11e9-9663-4146312fbf9a\",\"mode\":\"line\"}],\"field\":\"ResponseTime\"}],\"separate_axis\":0,\"axis_position\":\"right\",\"formatter\":\"ms,ms,0\",\"chart_type\":\"line\",\"line_width\":\"2\",\"point_size\":1,\"fill\":\"0\",\"stacked\":\"none\",\"label\":\"Percentile 99\",\"value_template\":\"{{value}} ms\"}],\"time_field\":\"Timestamp\",\"index_pattern\":\"__replace_token__\",\"interval\":\">=1m\",\"axis_position\":\"left\",\"axis_formatter\":\"number\",\"axis_scale\":\"normal\",\"show_legend\":1,\"show_grid\":1},\"aggs\":[]}",
+      "uiStateJSON": "{}",
+      "description": "",
+      "version": 1,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"query\":{\"query\":\"\",\"language\":\"lucene\"},\"filter\":[]}"
+      }
+    }
+  },
+  {
+    "id": "f72c4d50-7d67-11e9-bae6-fd3ef927623a",
+    "type": "visualization",
+    "attributes": {
+      "title": "Statistics [JMeter]",
+      "visState": "{\"title\":\"Statistics [JMeter]\",\"type\":\"table\",\"params\":{\"perPage\":10,\"showPartialRows\":false,\"showMetricsAtAllLevels\":false,\"sort\":{\"columnIndex\":1,\"direction\":\"desc\"},\"showTotal\":true,\"totalFunc\":\"sum\"},\"aggs\":[{\"id\":\"2\",\"enabled\":true,\"type\":\"terms\",\"schema\":\"bucket\",\"params\":{\"field\":\"SampleLabel.keyword\",\"size\":50,\"order\":\"desc\",\"orderBy\":\"_key\",\"otherBucket\":false,\"otherBucketLabel\":\"Other\",\"missingBucket\":false,\"missingBucketLabel\":\"Missing\",\"customLabel\":\"Sample\"}},{\"id\":\"7\",\"enabled\":true,\"type\":\"sum\",\"schema\":\"metric\",\"params\":{\"field\":\"SampleCount\",\"customLabel\":\"#Samples\"}},{\"id\":\"3\",\"enabled\":true,\"type\":\"sum\",\"schema\":\"metric\",\"params\":{\"field\":\"ErrorCount\",\"customLabel\":\"KO\"}},{\"id\":\"4\",\"enabled\":true,\"type\":\"avg\",\"schema\":\"metric\",\"params\":{\"field\":\"ResponseTime\",\"customLabel\":\"Average\"}},{\"id\":\"5\",\"enabled\":true,\"type\":\"min\",\"schema\":\"metric\",\"params\":{\"field\":\"ResponseTime\",\"customLabel\":\"Min\"}},{\"id\":\"10\",\"enabled\":true,\"type\":\"max\",\"schema\":\"metric\",\"params\":{\"field\":\"ResponseTime\",\"customLabel\":\"Max\"}},{\"id\":\"6\",\"enabled\":true,\"type\":\"percentiles\",\"schema\":\"metric\",\"params\":{\"field\":\"ResponseTime\",\"percents\":[90],\"customLabel\":\"\"}},{\"id\":\"8\",\"enabled\":true,\"type\":\"avg\",\"schema\":\"metric\",\"params\":{\"field\":\"Bytes\",\"customLabel\":\"Received Bytes\"}},{\"id\":\"9\",\"enabled\":true,\"type\":\"avg\",\"schema\":\"metric\",\"params\":{\"field\":\"SentBytes\",\"customLabel\":\"Sent Bytes\"}},{\"id\":\"11\",\"enabled\":true,\"type\":\"avg\",\"schema\":\"metric\",\"params\":{\"field\":\"BodySize\",\"customLabel\":\"Body Size\"}}]}",
+      "uiStateJSON": "{\"vis\":{\"params\":{\"sort\":{\"columnIndex\":1,\"direction\":\"desc\"}}}}",
+      "description": "",
+      "version": 1,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"index\":\"__replace_token__\",\"query\":{\"query\":\"\",\"language\":\"lucene\"},\"filter\":[]}"
+      }
+    }
+  },
+  {
+    "id": "3858b0e0-7d6b-11e9-bae6-fd3ef927623a",
+    "type": "visualization",
+    "attributes": {
+      "title": "Top Errors [JMeter]",
+      "visState": "{\"title\":\"Top Errors [JMeter]\",\"type\":\"table\",\"params\":{\"perPage\":10,\"showPartialRows\":false,\"showMetricsAtAllLevels\":true,\"sort\":{\"columnIndex\":1,\"direction\":\"desc\"},\"showTotal\":false,\"totalFunc\":\"sum\"},\"aggs\":[{\"id\":\"1\",\"enabled\":false,\"type\":\"sum\",\"schema\":\"metric\",\"params\":{\"field\":\"SampleCount\",\"customLabel\":\"#Samples\"}},{\"id\":\"2\",\"enabled\":true,\"type\":\"terms\",\"schema\":\"bucket\",\"params\":{\"field\":\"SampleLabel.keyword\",\"size\":50,\"order\":\"desc\",\"orderBy\":\"3\",\"otherBucket\":false,\"otherBucketLabel\":\"Other\",\"missingBucket\":false,\"missingBucketLabel\":\"Missing\",\"customLabel\":\"Sample\"}},{\"id\":\"3\",\"enabled\":true,\"type\":\"sum\",\"schema\":\"metric\",\"params\":{\"field\":\"ErrorCount\",\"customLabel\":\"#Errors\"}},{\"id\":\"4\",\"enabled\":true,\"type\":\"terms\",\"schema\":\"bucket\",\"params\":{\"field\":\"ResponseMessage.keyword\",\"size\":50,\"order\":\"desc\",\"orderBy\":\"3\",\"otherBucket\":false,\"otherBucketLabel\":\"Other\",\"missingBucket\":false,\"missingBucketLabel\":\"Missing\",\"customLabel\":\"Response message\"}}]}",
+      "uiStateJSON": "{\"vis\":{\"params\":{\"sort\":{\"columnIndex\":1,\"direction\":\"desc\"}}}}",
+      "description": "",
+      "version": 1,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"index\":\"__replace_token__\",\"query\":{\"query\":\"\",\"language\":\"lucene\"},\"filter\":[]}"
+      }
+    }
+  },
+  {
+    "id": "56ce1240-7e06-11e9-bae6-fd3ef927623a",
+    "type": "visualization",
+    "attributes": {
+      "title": "Error Tag Cloud [JMeter]",
+      "visState": "{\"title\":\"Error Tag Cloud [JMeter]\",\"type\":\"tagcloud\",\"params\":{\"scale\":\"linear\",\"orientation\":\"single\",\"minFontSize\":18,\"maxFontSize\":72,\"showLabel\":true},\"aggs\":[{\"id\":\"1\",\"enabled\":true,\"type\":\"sum\",\"schema\":\"metric\",\"params\":{\"field\":\"ErrorCount\"}},{\"id\":\"2\",\"enabled\":true,\"type\":\"terms\",\"schema\":\"segment\",\"params\":{\"field\":\"ResponseMessage.keyword\",\"size\":5,\"order\":\"desc\",\"orderBy\":\"1\",\"otherBucket\":false,\"otherBucketLabel\":\"Other\",\"missingBucket\":false,\"missingBucketLabel\":\"Missing\"}}]}",
+      "uiStateJSON": "{}",
+      "description": "",
+      "version": 1,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"index\":\"__replace_token__\",\"query\":{\"query\":\"\",\"language\":\"lucene\"},\"filter\":[]}"
+      }
+    }
+  },
+  {
+    "id": "49faa0a0-7e0c-11e9-bae6-fd3ef927623a",
+    "type": "visualization",
+    "attributes": {
+      "title": "Link [JMeter]",
+      "visState": "{\"title\":\"Link [JMeter]\",\"type\":\"markdown\",\"params\":{\"fontSize\":12,\"openLinksInNewTab\":false,\"markdown\":\"[Dashboard](#/dashboard/0f483f00-7e05-11e9-bae6-fd3ef927623a) |\\n[Graphs](#/dashboard/c82b4d70-7e08-11e9-bae6-fd3ef927623a) |\\n[Errors](#/dashboard/e34fc7a0-7e0a-11e9-bae6-fd3ef927623a)\"},\"aggs\":[]}",
+      "uiStateJSON": "{}",
+      "description": "",
+      "version": 1,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"query\":{\"query\":\"\",\"language\":\"lucene\"},\"filter\":[]}"
+      }
+    }
+  }
+    ], 
+    "version": "6.0.0-beta1-SNAPSHOT"
+}

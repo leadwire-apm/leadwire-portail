@@ -20,32 +20,108 @@
                         <table class="table table-striped mb0">
                             <thead>
                             <tr>
-                                <th class="text-center">Application Name</th>
-                                <th class="text-center">Version</th>
-                                <th class="text-center">Status</th>
+                                <th class="text-center padingTr">Application Name</th>
+                                <th class="text-center padingTr">Version</th>
+                                <th class="text-center padingTr">Test Manager</th>
+                                <th class="text-center padingTr">Project Manager</th>
+                                <th class="text-center padingTr">Test Env.</th>
+                                <th class="text-center padingTr">Cadrage</th>
+                                <th class="text-center padingTr">Cahier des charges</th>
+                                <th class="text-center padingTr">Recette jmeter</th>
+                                <th class="text-center padingTr">Scripts</th>
+                                <th class="text-center padingTr">Dump</th>
+                                <th class="text-center padingTr">Jeux de donnes</th>
+                                <th class="text-center padingTr">TMEC</th>
+                                <th class="text-center padingTr">Rapport</th>
+                                <th class="text-center padingTr">N° Squash</th>
                             </tr>
                             </thead>
                             <tbody >
                             <tr ng-if="ctrl.ui.isLoading" class="text-center">
-                                <td colspan="6">
+                                <td colspan="6" >
                                     <spinner is-loading="ctrl.ui.isLoading" size="24"></spinner>
                                 </td>
                             </tr>
                             <tr ng-repeat="compagne in ctrl.compagnes" class="text-center">
                                 
-                                <td data-title="Name" data-label="Name">
+                                <td data-title="Name" data-label="Name" class="padingTd">
                                     [[compagne.applicationName]]
                                 </td>
 
-                                <td data-title="version" data-label="version">
+                                <td data-title="version" data-label="version"  class="padingTd"> 
                                     [[compagne.version]]
                                 </td>
 
-                                <td data-title="version" class="flex" data-label="version">
-                                    <div class="tooltips" ng-repeat="step in compagne.steps">
-                                        <span class="stepsSpan" ng-class="ctrl.getClass(step)">[[step.label]]</span>
-                                        <div class="tooltipstext" ng-if="step.comment.length > 1">[[step.comment]]</div>
+                                <td data-title="userName" data-label="version" class="padingTd">
+                                    [[compagne.userName]]
+                                </td>
+
+                                <td data-title="cp" data-label="version" class="padingTd">
+                                    [[compagne.cpName]]
+                                </td>
+
+                                <td data-title="Test Env." data-label="version" class="padingTd">
+                                    [[compagne.testEnvr]]
+                                </td>
+
+                                <td data-title="Cadrage" data-label="version" class="padingTd">
+                                    <div class="tooltips">
+                                        <span class="stepsSpan" ng-class="ctrl.getClass(compagne.steps[0])">[[compagne.steps[0].date | date:'dd/MM/yyyy']]</span>
+                                        <div class="tooltipstext" ng-if="compagne.steps[0].comment.length > 1">[[compagne.steps[0].comment]]</div>
                                     </div>
+                                </td>
+
+                                <td data-title="Cahier des charges" data-label="version" class="padingTd">
+                                    <div class="tooltips">
+                                        <span class="stepsSpan" ng-class="ctrl.getClass(compagne.steps[1])">[[compagne.steps[1].date | date:'dd/MM/yyyy']]</span>
+                                        <div class="tooltipstext" ng-if="compagne.steps[1].comment.length > 1">[[compagne.steps[1].comment]]</div>
+                                    </div>
+                                </td>
+
+                                <td data-title="Recette jmeter" data-label="version" class="padingTd">
+                                    <div class="tooltips">
+                                        <span class="stepsSpan" ng-class="ctrl.getClass(compagne.steps[2])">[[compagne.steps[2].date | date:'dd/MM/yyyy']]</span>
+                                        <div class="tooltipstext" ng-if="compagne.steps[2].comment.length > 1">[[compagne.steps[2].comment]]</div>
+                                    </div>
+                                </td>
+
+                                <td data-title="Scripts" data-label="version" class="padingTd">
+                                    <div class="tooltips">
+                                        <span class="stepsSpan" ng-class="ctrl.getClass(compagne.steps[3])">[[compagne.steps[3].date | date:'dd/MM/yyyy']]</span>
+                                        <div class="tooltipstext" ng-if="compagne.steps[3].comment.length > 1">[[compagne.steps[3].comment]]</div>
+                                    </div>
+                                </td>
+                                
+                                <td data-title="Dump" data-label="version" class="padingTd">
+                                    <div class="tooltips">
+                                        <span class="stepsSpan" ng-class="ctrl.getClass(compagne.steps[4])">[[compagne.steps[4].date | date:'dd/MM/yyyy']]</span>
+                                        <div class="tooltipstext" ng-if="compagne.steps[4].comment.length > 1">[[compagne.steps[4].comment]]</div>
+                                    </div>
+                                </td>
+
+                                <td data-title="Jeux de donnes" data-label="version" class="padingTd">
+                                    <div class="tooltips">
+                                        <span class="stepsSpan" ng-class="ctrl.getClass(compagne.steps[5])">[[compagne.steps[5].date | date:'dd/MM/yyyy']]</span>
+                                        <div class="tooltipstext" ng-if="compagne.steps[5].comment.length > 1">[[compagne.steps[5].comment]]</div>
+                                    </div>
+                                </td>
+
+                                <td data-title="TMEC" data-label="version">
+                                    <div class="tooltips">
+                                        <span class="stepsSpan" ng-class="ctrl.getClass(compagne.steps[6])">[[compagne.steps[6].date | date:'dd/MM/yyyy']]</span>
+                                        <div class="tooltipstext" ng-if="compagne.steps[6].comment.length > 1">[[compagne.steps[6].comment]]</div>
+                                    </div>
+                                </td>
+
+                                <td data-title="Rapport" data-label="version" class="padingTd">
+                                    <div class="tooltips">
+                                        <span class="stepsSpan" ng-class="ctrl.getClass(compagne.steps[7])">[[compagne.steps[7].date | date:'dd/MM/yyyy']]</span>
+                                        <div class="tooltipstext" ng-if="compagne.steps[7].comment.length > 1">[[compagne.steps[7].comment]]</div>
+                                    </div>
+                                </td>
+
+                                <td data-title="N Tir Squash" data-label="version" class="padingTd">
+                                    [[compagne.nTir]]
                                 </td>
 
                             </tr>

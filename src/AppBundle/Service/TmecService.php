@@ -61,7 +61,13 @@ class TmecService
                 $params['startDate'],
                 $params['endDate'],
                 $params['application'],
-                $params['applicationName']
+                $params['applicationName'],
+                $params['user'],
+                $params['cp'],
+                $params['testEnvr'],
+                $params['nTir'],
+                $params['userName'],
+                $params['cpName']
             );
 
             $this->stepService->initSteps($tmec);
@@ -85,6 +91,13 @@ class TmecService
             $dbDocument->setDescription($tmec->getDescription());
             $dbDocument->setStartDate($tmec->getStartDate());
             $dbDocument->setEndDate($tmec->getEndDate());
+            $dbDocument->setUser($tmec->getUser());
+            $dbDocument->setCp($tmec->getCp());
+
+            $dbDocument->setTestEnvr($tmec->getTestEnvr());
+            $dbDocument->setnTir($tmec->getnTir());
+            $dbDocument->setUserName($tmec->getUserName());
+            $dbDocument->setCpName($tmec->getCpName());
             $this->tmecManager->update($dbDocument);
         } else {
             throw new \Exception("Invalid document");

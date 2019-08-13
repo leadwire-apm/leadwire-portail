@@ -1,5 +1,21 @@
 {
     "objects": [
+    
+    {
+    "id": "d8fc7650-8133-11e9-bae6-fd3ef927623a",
+    "type": "visualization",
+	"version": 1, 
+    "attributes": {
+      "title": "Water Fall [APM]",
+      "visState": "{\"title\":\"Water Fall [APM]\",\"type\":\"vega\",\"params\":{\"spec\":\"\\r\\n{\\r\\n  \\\"$schema\\\": \\\"https://vega.github.io/schema/vega-lite/v2.json\\\",\\r\\n  \\\"title\\\": \\\"Transaction WaterFall\\\",\\r\\n  \\\"data\\\": {\\r\\n    \\\"url\\\": {\\r\\n      \\\"%context%\\\": true,\\r\\n      \\\"%timefield%\\\": \\\"@timestamp\\\",\\r\\n      \\\"index\\\": \\\"apm-6.5.1-span-tperf-pilot-*,apm-6.5.1-transaction-tperf-pilot-*\\\",\\r\\n      \\\"body\\\": {\\r\\n        // Set the size to load 10000 documents\\r\\n        size: 1000\\r\\n      }\\r\\n    },\\r\\n    \\\"format\\\": {\\\"property\\\": \\\"hits.hits\\\"}\\r\\n  },\\r\\n  \\\"transform\\\": [\\r\\n  \\r\\n   {\\r\\n      \\\"calculate\\\": \\\"if((null != datum._source.span), datum._source.span.duration.us,datum._source.transaction.duration.us)/1000\\\",\\r\\n      \\\"as\\\": \\\"duration\\\"\\r\\n    },\\r\\n\\r\\n{ filter: \\\"datum.duration > 3 \\\" }  ,\\r\\n\\r\\n\\r\\n    {\\r\\n      \\\"calculate\\\": \\\"toDate(datum._source.timestamp.us/1000)\\\",\\r\\n      \\\"as\\\": \\\"start\\\"\\r\\n    },\\r\\n    {\\r\\n      \\\"calculate\\\": \\\"toDate(if(if((null != datum._source.span), datum._source.span.duration.us  + datum._source.timestamp.us,datum._source.transaction.duration.us + datum._source.timestamp.us)>0,if((null != datum._source.span), datum._source.span.duration.us  + datum._source.timestamp.us,datum._source.transaction.duration.us + datum._source.timestamp.us),0)/1000)\\\",\\r\\n      \\\"as\\\": \\\"end\\\"\\r\\n    },\\r\\n    {\\r\\n      \\\"calculate\\\": \\\"if((null != datum._source.span), if ((null != datum._source.context.db ),substring(datum._source.context.db.statement,0,500) + ' / id / ' + datum._source.span.id ,datum._source.span.name),datum._source.transaction.name)\\\",\\r\\n      \\\"as\\\": \\\"name\\\"\\r\\n    }\\r\\n  ],\\r\\n  \\\"mark\\\": \\\"bar\\\",\\r\\n  \\\"encoding\\\": {\\r\\n    \\\"y\\\": {\\\"field\\\": \\\"name\\\", \\\"type\\\": \\\"nominal\\\" ,\\\"sort\\\": {\\\"op\\\": \\\"mean\\\", \\\"field\\\": \\\"start\\\", \\\"order\\\" : \\\"ascending\\\"} },\\r\\n    \\\"x\\\": {\\\"field\\\": \\\"start\\\", \\\"type\\\": \\\"temporal\\\", \\r\\n     axis: {format: '%H:%M:%S',\\\"title\\\": \\\"horaire\\\"}\\r\\n     },\\r\\n    \\\"x2\\\": {\\\"field\\\": \\\"end\\\", \\\"type\\\": \\\"temporal\\\"},\\r\\n     \\\"tooltip\\\": [ {\\\"field\\\": \\\"duration\\\", \\\"type\\\": \\\"quantitative\\\"}]\\r\\n     \\r\\n      \\\"color\\\": {\\r\\n    \\\"condition\\\": [\\r\\n       { \\\"test\\\": \\\"datum._source.transaction.name != null\\\", \\\"value\\\": \\\"blue\\\" },\\r\\n        {  \\\"test\\\": \\\"datum._source.span!= null && datum._source.context.db != null\\\", \\\"value\\\": \\\"green\\\" },\\r\\n       {  \\\"test\\\": \\\"datum._source.span!= null\\\", \\\"value\\\": \\\"red\\\" },\\r\\n       \\r\\n    ],\\r\\n    \\\"value\\\": \\\"red\\\"\\r\\n  }\\r\\n  \\r\\n  }\\r\\n}\\r\\n\"},\"aggs\":[]}",
+      "uiStateJSON": "{}",
+      "description": "",
+      "version": 1,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"query\":{\"query\":\"transaction.id:b1a4e3dd58862a7b\",\"language\":\"lucene\"},\"filter\":[]}"
+      }
+    }
+  },
         {
             "attributes": {
                 "description": "", 
@@ -244,17 +260,16 @@
         }, 
         {
             "attributes": {
-                "description": "", 
-                "hits": 0, 
-                "kibanaSavedObjectMeta": {
-                    "searchSourceJSON": "{\"filter\": [], \"query\": {\"query\": \"\", \"language\": \"lucene\"}, \"version\": true, \"highlightAll\": true}"
-                }, 
-                "optionsJSON": "{\"darkTheme\": false}", 
-                "panelsJSON": "[{\"sort\": [\"span.start.us\", \"asc\"], \"type\": \"search\", \"col\": 1, \"size_x\": 12, \"size_y\": 23, \"panelIndex\": 1, \"id\": \"d7735b90-7ddf-11e7-b115-df9c90da2df1\", \"columns\": [\"span.type\", \"span.name\", \"span.duration.us\", \"span.start.us\"], \"row\": 1}]", 
-                "timeRestore": false, 
-                "title": "[APM] Span Details", 
-                "uiStateJSON": "{}", 
-                "version": 1
+      "title": "[APM] Span Details",
+      "hits": 0,
+      "description": "",
+      "panelsJSON": "[{\"type\":\"search\",\"panelIndex\":\"1\",\"id\":\"d7735b90-7ddf-11e7-b115-df9c90da2df1\",\"embeddableConfig\":{\"columns\":[\"span.type\",\"span.name\",\"span.duration.us\",\"span.start.us\"],\"sort\":[\"span.start.us\",\"asc\"]},\"gridData\":{\"x\":0,\"y\":29,\"w\":48,\"h\":115,\"i\":\"1\"},\"version\":\"6.5.1\"},{\"gridData\":{\"x\":0,\"y\":0,\"w\":48,\"h\":29,\"i\":\"2\"},\"version\":\"6.5.1\",\"panelIndex\":\"2\",\"type\":\"visualization\",\"id\":\"d8fc7650-8133-11e9-bae6-fd3ef927623a\",\"embeddableConfig\":{}}]",
+      "optionsJSON": "{\"darkTheme\":false}",
+      "version": 1,
+      "timeRestore": false,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"filter\":[],\"query\":{\"language\":\"lucene\",\"query\":\"transaction.id:3bc9516578b2b6b2\"},\"version\":true,\"highlightAll\":true}"
+      }
             }, 
             "id": "3e3de700-7de0-11e7-b115-df9c90da2df1", 
             "type": "dashboard", 

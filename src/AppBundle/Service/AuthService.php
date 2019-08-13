@@ -207,9 +207,9 @@ class AuthService
     protected function addUserWithEmail(array $userData): ?User
     {
         try {
-            if ($userData['group'] === 'utilisateur') {
+            if (strtolower($userData['group']) === 'utilisateur') {
                 $role = [User::DEFAULT_ROLE];
-            } else if ($userData['group'] === 'administrateur') {
+            } else if (strtolower($userData['group']) === 'administrateur') {
                 $role = [User::ROLE_SUPER_ADMIN];
             } else {
                 $role = []; // Should never happen
