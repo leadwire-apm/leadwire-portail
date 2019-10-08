@@ -81,7 +81,8 @@ class ElasticSearchService
     public function getDashboads(Application $app, User $user)
     {
         try {
-            return $this->filter($this->getRawDashboards($app, $user));
+            $dashboards = $this->filter($this->getRawDashboards($app, $user));         
+            return $dashboards;
         } catch (\Exception $e) {
             $this->logger->error($e->getMessage());
             throw new HttpException("An error has occurred while executing your request.", 500);
@@ -443,13 +444,14 @@ class ElasticSearchService
                     foreach ($body as $element) {
                         if ($element->_source->type === "dashboard") {
                             $title = $element->_source->{$element->_source->type}->title;
-
                             $res[$groupName][] = [
                                 "id" => $this->transformeId($element->_id),
                                 "name" => $title,
                                 "private" => $groupName === "Custom" && (new AString($tenant))->startsWith("shared_") === false,
                                 "tenant" => $tenant,
+                                "visible" => true,
                             ];
+                           
                         }
                     }
                 } else {
@@ -480,6 +482,7 @@ class ElasticSearchService
                 "id" => $item['id'],
                 "tenant" => $item['tenant'],
                 "name" => \str_replace("[$theme] ", "", $item['name']),
+                "visible" => $item['visible'],
             ];
         }
 
@@ -491,6 +494,7 @@ class ElasticSearchService
                 "id" => $item['id'],
                 "tenant" => $item['tenant'],
                 "name" => \str_replace("[$theme] ", "", $item['name']),
+                "visible" => $item['visible'],
             ];
         }
 
