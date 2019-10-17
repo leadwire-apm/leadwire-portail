@@ -60,11 +60,23 @@ class Dashboard
     /**
      * @var string
      *
-     * @ODM\Field(type="string", name="email")
+     * @ODM\Field(type="string", name="applicationName")
      * @JMS\Type("string")
      * @JMS\Expose
      * @JMS\Groups({"Default"})
      */
+    private $applicationName;
+
+        /**
+     * @var string
+     *
+     * @ODM\Field(type="string", name="name")
+     * @JMS\Type("string")
+     * @JMS\Expose
+     * @JMS\Groups({"Default"})
+     */
+    private $name;
+
 
     /**
      * @var boolean
@@ -101,7 +113,7 @@ class Dashboard
      *
      * @return Dashboard
      */
-    public function setDescription($userId)
+    public function setUserId($userId)
     {
         $this->userId = $userId;
         return $this;
@@ -152,13 +164,13 @@ class Dashboard
     }
 
     /**
-     * Get enabled
+     * Get visible
      *
      * @return boolean
      */
-    public function isEnabled()
+    public function isVisible()
     {
-        return $this->enabled;
+        return $this->visible;
     }
 
     /**
@@ -171,6 +183,51 @@ class Dashboard
     {
         $this->visible = $visible;
 
+        return $this;
+    }
+
+
+    /**
+     * Get applicationName
+     *
+     * @return string
+     */
+    public function getApplicationName()
+    {
+        return $this->applicationName;
+    }
+
+    /**
+     * Set applicationName
+     * @param string $applicationName
+     *
+     * @return Dashboard
+     */
+    public function setApplicationName($applicationName)
+    {
+        $this->applicationName = $applicationName;
+        return $this;
+    }
+
+    /**
+     * Get name
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * Set name
+     * @param string $name
+     *
+     * @return Dashboard
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
         return $this;
     }
 }
