@@ -7,6 +7,7 @@
             '$stateParams',
             'MESSAGES_CONSTANTS',
             '$state',
+            'DashboardService',
             ManageApplicationsEditCtrlFN,
         ]);
 
@@ -21,6 +22,7 @@
         $stateParams,
         MESSAGES_CONSTANTS,
         $state,
+        DashboardService,
     ) {
         var vm = this;
 
@@ -34,6 +36,15 @@
                     vm.applicationTypes = response.data;
                 });
         };
+
+        /**
+         * get dashboards list
+         */
+        DashboardService.fetchDashboardsListByAppId($stateParams.id).then(function(dashboardsList){
+            vm.dashboardsList = dashboardsList;
+            console.log("dashboardsList #### ", dashboardsList)
+        })
+        
 
         vm.editApp = function() {
             vm.flipActivityIndicator();

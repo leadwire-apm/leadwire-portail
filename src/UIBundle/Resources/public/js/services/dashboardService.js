@@ -93,5 +93,23 @@
                     });
             });
         };
+
+        /**
+         *
+         * @param appId
+         * @returns {Promise}
+         */
+        service.fetchDashboardsListByAppId = function (appId) {
+            return new Promise(function (resolve, reject) {
+                ApplicationFactory.findMyDashboard(appId)
+                    .then(function (response) {                      
+                        resolve(response.data.Default);
+                    })
+                    .catch(function (error) {
+                        console.log('Error', error);
+                        reject(error);
+                    });
+            });
+        };
     }
 })(window.angular);
