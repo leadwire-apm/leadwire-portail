@@ -37,12 +37,17 @@
                 });
         };
 
+        vm.getDashboardByTheme = function(name){
+            return vm.dashboardsList[name];
+        }
+
         /**
          * get dashboards list
          */
         DashboardService.fetchDashboardsListByAppId($stateParams.id).then(function(dashboardsList){
             vm.dashboardsList = dashboardsList;
-            console.log("dashboardsList #### ", dashboardsList)
+            vm.dashboardsNameList = Object.keys(dashboardsList);
+            console.log("dashboardsList #### ", vm.dashboardsNameList ,"####",dashboardsList)
         })
         
 

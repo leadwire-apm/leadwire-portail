@@ -10,6 +10,13 @@
 
                     <div ng-include="'application/form.html'"></div>
 
+                    <div ng-repeat="name in ctrl.dashboardsNameList track by $index">
+                        <h3>[[name]]</h3>
+                        <div ng-repeat="dashboard in ctrl.getDashboardByTheme(name) track by $index">
+                            [[dashboard.name]]
+                        </div>
+                    </div>
+
                     <button type="submit" ng-disabled="applicationForm.$invalid"
                             class="btn btn-primary pull-right">Edit
                     </button>
