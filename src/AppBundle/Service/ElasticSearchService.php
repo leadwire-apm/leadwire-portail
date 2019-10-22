@@ -90,7 +90,7 @@ class ElasticSearchService
     public function getDashboads(Application $app, User $user)
     {
         try {
-            $dashboards = $this->filter($user, $this->getRawDashboards($app, $user));         
+            $dashboards = $this->filter($app, $user, $this->getRawDashboards($app, $user));         
             return $dashboards;
         } catch (\Exception $e) {
             $this->logger->error($e->getMessage());
@@ -479,7 +479,7 @@ class ElasticSearchService
         return $res;
     }
 
-    protected function filter($user, $dashboards)
+    protected function filter($app, $user, $dashboards)
     {
         $custom = [];
         $default = [];
@@ -487,7 +487,7 @@ class ElasticSearchService
             \preg_match_all('/\[([^]]+)\]/', $item['name'], $out);
             $theme = isset($out[1][0]) === true ? $out[1][0] : 'Misc';
 
-            $dashboard = $this->dashboardManager->getDashboard($user->getId(), $item['id'], $item['tenant'], $item['name'] ,\str_replace("[$theme] ", "", $item['name']), true);
+            $dashboard = $this->dashboardManager->getDashboard($user->getId(), $app->getId(), $item['id'], true);
 
             $custom[$theme][] = [
                 "private" => $item['private'],
@@ -502,7 +502,8 @@ class ElasticSearchService
             \preg_match_all('/\[([^]]+)\]/', $item['name'], $out);
             $theme = isset($out[1][0]) === true ? $out[1][0] : 'Misc';
       
-            $dashboard = $this->dashboardManager->getDashboard($user->getId(), $item['id'], $item['tenant'], $item['name'] ,\str_replace("[$theme] ", "", $item['name']), true);
+            $dashboard = $this->dashboardManager->getDashboard($user->getId(), $app->getId(), $item['id'], true);
+
 
             $default[$theme][] = [
                 "private" => $item['private'],

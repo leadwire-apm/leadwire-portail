@@ -23,20 +23,17 @@ class DashboardManager extends AbstractManager
      *
      * @param string $userId
      * @param string $applicationId
-     * @param string $tenant
-     * @param string $applicationName
-     * @param string $name
-     * @param boolean $visible
+     * @param string $dashboardId
      *
      * @return Dashboard
      */
-    public function getDashboard($userId, $applicationId, $tenant, $applicationName, $name, $visible = true)
+    public function getDashboard($userId, $applicationId, $dashboardId, $visible = true)
     {
         /** @var Dashboard $dashboard */
-        $dashboard = $this->getDocumentRepository()->findOneBy(['applicationId' => $applicationId, 'userId' => $userId, 'tenant' => $tenant, 'name' => $name, 'applicationName' => $applicationName]);
+        $dashboard = $this->getDocumentRepository()->findOneBy(['applicationId' => $applicationId, 'userId' => $userId, 'dashboardId' => $dashboardId]);
 
         if ($dashboard === null) {
-            $dashboard = $this->create($userId, $applicationId, $tenant, $applicationName, $name, $visible);
+            $dashboard = $this->create($userId, $applicationId, $dashboardId, $visible);
         }
 
         return $dashboard;
@@ -46,22 +43,18 @@ class DashboardManager extends AbstractManager
      *
      * @param string $userId
      * @param string $applicationId
-     * @param string $tenant
-     * @param string $applicationName
-     * @param string $name
+     * @param string $dashboardId
      * @param boolean $visible
      *
      * @return Dashboard
      */
-    public function create($userId, $applicationId, $tenant, $applicationName, $name, $visible = true): Dashboard
+    public function create($userId, $applicationId, $dashboardId, $visible = true): Dashboard
     {
         $dashboard = new Dashboard();
         $dashboard
             ->setUserId($userId)
             ->setApplicationId($applicationId)
-            ->setTenant($tenant)
-            ->setApplicationName($applicationName)
-            ->setName($name)
+            ->setDashboardId($dashboardId)
             ->setVisible($visible);
 
         $this->update($dashboard);

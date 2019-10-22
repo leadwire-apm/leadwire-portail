@@ -50,33 +50,12 @@ class Dashboard
     /**
      * @var string
      *
-     * @ODM\Field(type="string", name="tenant")
+     * @ODM\Field(type="string", name="dashboardId")
      * @JMS\Type("string")
      * @JMS\Expose
      * @JMS\Groups({"Default"})
      */
-    private $tenant;
-
-    /**
-     * @var string
-     *
-     * @ODM\Field(type="string", name="applicationName")
-     * @JMS\Type("string")
-     * @JMS\Expose
-     * @JMS\Groups({"Default"})
-     */
-    private $applicationName;
-
-        /**
-     * @var string
-     *
-     * @ODM\Field(type="string", name="name")
-     * @JMS\Type("string")
-     * @JMS\Expose
-     * @JMS\Groups({"Default"})
-     */
-    private $name;
-
+    private $dashboardId;
 
     /**
      * @var boolean
@@ -142,24 +121,24 @@ class Dashboard
     }
 
     /**
-     * Get tenant
+     * Get dashboardId
      *
      * @return string
      */
-    public function getTenant()
+    public function getDashboardId()
     {
-        return $this->tenant;
+        return $this->dashboardId;
     }
 
     /**
-     * Set tenant
-     * @param string $tenant
+     * Set dashboardId
+     * @param string $dashboardId
      *
      * @return Dashboard
      */
-    public function setTenant($tenant)
+    public function setDashboardId($dashboardId)
     {
-        $this->tenant = $tenant;
+        $this->dashboardId = $dashboardId;
         return $this;
     }
 
@@ -186,48 +165,4 @@ class Dashboard
         return $this;
     }
 
-
-    /**
-     * Get applicationName
-     *
-     * @return string
-     */
-    public function getApplicationName()
-    {
-        return $this->applicationName;
-    }
-
-    /**
-     * Set applicationName
-     * @param string $applicationName
-     *
-     * @return Dashboard
-     */
-    public function setApplicationName($applicationName)
-    {
-        $this->applicationName = $applicationName;
-        return $this;
-    }
-
-    /**
-     * Get name
-     *
-     * @return string
-     */
-    public function getName()
-    {
-        return $this->name;
-    }
-
-    /**
-     * Set name
-     * @param string $name
-     *
-     * @return Dashboard
-     */
-    public function setName($name)
-    {
-        $this->name = $name;
-        return $this;
-    }
 }
