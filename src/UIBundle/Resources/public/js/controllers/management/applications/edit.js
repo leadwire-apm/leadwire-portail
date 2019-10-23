@@ -7,6 +7,7 @@
             '$stateParams',
             'MESSAGES_CONSTANTS',
             '$state',
+            '$scope',
             'DashboardService',
             ManageApplicationsEditCtrlFN,
         ]);
@@ -22,10 +23,11 @@
         $stateParams,
         MESSAGES_CONSTANTS,
         $state,
+        $scope,
         DashboardService,
     ) {
         var vm = this;
-        vm.isLoading = true;
+
 
         ApplicationFactory.get($stateParams.id, 'edit').then(function(res) {
             vm.application = res.data;
@@ -48,11 +50,11 @@
         DashboardService.fetchDashboardsListByAppId($stateParams.id).then(function(dashboardsList){
             vm.dashboardsList = dashboardsList;
             vm.dashboardsNameList = Object.keys(dashboardsList);
-            vm.isLoading = false;
-
+            $scope.$apply();
         })
         
 
+    
         vm.editApp = function() {
             vm.flipActivityIndicator();
             const updatedApp = angular.extend({},vm.application);
@@ -82,7 +84,7 @@
             vm = angular.extend(vm, {
                 ui : {
                     isSaving: false,
-                    isEditing: true
+                    isEditing: true,
                 },
             });
             vm.loadApplicationTypes();

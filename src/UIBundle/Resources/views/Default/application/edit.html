@@ -5,32 +5,32 @@
     <div class="panel-body">
         <div class="row no-margin">
             <div class="col-lg-12">
+
                 <form class="form-horizontal bordered-group" name="applicationForm" ng-submit="ctrl.editApp()"
                       role="form">
 
                     <div ng-include="'application/form.html'"></div>
-                   
-                    <spinner is-loading="ctrl.isLoading"></spinner>
 
                     <accordion close-others="true">
-    
-                        <accordion-group ng-repeat="name in ctrl.dashboardsNameList track by $index" is-open="false">
-                          
+                
+                        <accordion-group ng-repeat="name in ctrl.dashboardsNameList" is-open="false">
+                
                             <accordion-heading>
-                                [[name]] <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': isopen, 'glyphicon-chevron-right': !isopen}"></i>
+                                [[name]] <i class="pull-right glyphicon"
+                                    ng-class="{'glyphicon-chevron-down': isopen, 'glyphicon-chevron-right': !isopen}"></i>
                             </accordion-heading>
-                        
-                            <div ng-repeat="dashboard in ctrl.getDashboardByTheme(name) track by $index">
-                                 <label class="checkbox-edit">
-                                    [[dashboard.name]] 
+                
+                            <div ng-repeat="dashboard in ctrl.getDashboardByTheme(name)">
+                                <label class="checkbox-edit">
+                                    [[dashboard.name]]
                                     <input type="checkbox" ng-model="dashboard.visible">
-                                  </label>
+                                </label>
                             </div>
-                    
+                
                         </accordion-group>
-
+                
                     </accordion>
-
+                
                     <button type="submit" ng-disabled="applicationForm.$invalid"
                             class="btn btn-primary pull-right">Edit
                     </button>
