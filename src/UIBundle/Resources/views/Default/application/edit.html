@@ -9,7 +9,9 @@
                       role="form">
 
                     <div ng-include="'application/form.html'"></div>
-                    
+                   
+                    <spinner is-loading="ctrl.isLoading"></spinner>
+
                     <accordion close-others="true">
     
                         <accordion-group ng-repeat="name in ctrl.dashboardsNameList track by $index" is-open="false">

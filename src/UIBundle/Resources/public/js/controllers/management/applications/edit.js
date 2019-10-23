@@ -25,6 +25,7 @@
         DashboardService,
     ) {
         var vm = this;
+        vm.isLoading = true;
 
         ApplicationFactory.get($stateParams.id, 'edit').then(function(res) {
             vm.application = res.data;
@@ -47,6 +48,8 @@
         DashboardService.fetchDashboardsListByAppId($stateParams.id).then(function(dashboardsList){
             vm.dashboardsList = dashboardsList;
             vm.dashboardsNameList = Object.keys(dashboardsList);
+            vm.isLoading = false;
+
         })
         
 
