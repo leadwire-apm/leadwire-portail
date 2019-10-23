@@ -47,7 +47,6 @@
         DashboardService.fetchDashboardsListByAppId($stateParams.id).then(function(dashboardsList){
             vm.dashboardsList = dashboardsList;
             vm.dashboardsNameList = Object.keys(dashboardsList);
-            console.log("dashboardsList #### ", vm.dashboardsNameList ,"####",dashboardsList)
         })
         
 

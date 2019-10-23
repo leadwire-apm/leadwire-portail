@@ -9,13 +9,25 @@
                       role="form">
 
                     <div ng-include="'application/form.html'"></div>
+                    
+                    <accordion close-others="true">
+    
+                        <accordion-group ng-repeat="name in ctrl.dashboardsNameList track by $index" is-open="false">
+                          
+                            <accordion-heading>
+                                [[name]] <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': isopen, 'glyphicon-chevron-right': !isopen}"></i>
+                            </accordion-heading>
+                        
+                            <div ng-repeat="dashboard in ctrl.getDashboardByTheme(name) track by $index">
+                                 <label class="checkbox-edit">
+                                    [[dashboard.name]] 
+                                    <input type="checkbox" ng-model="dashboard.visible">
+                                  </label>
+                            </div>
+                    
+                        </accordion-group>
 
-                    <div ng-repeat="name in ctrl.dashboardsNameList track by $index">
-                        <h3>[[name]]</h3>
-                        <div ng-repeat="dashboard in ctrl.getDashboardByTheme(name) track by $index">
-                            [[dashboard.name]]
-                        </div>
-                    </div>
+                    </accordion>
 
                     <button type="submit" ng-disabled="applicationForm.$invalid"
                             class="btn btn-primary pull-right">Edit
