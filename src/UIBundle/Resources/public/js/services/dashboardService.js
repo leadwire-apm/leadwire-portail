@@ -53,6 +53,9 @@
                 function (menu) {
                     return menu.icon || 'fas fa-tachometer-alt';
                 },
+                function (menu) {
+                    return menu.visible;
+                },
             );
             $rootScope.menus = $localStorage.currentMenu;
             $localStorage.currentApplicationMenus = $localStorage.currentMenu;

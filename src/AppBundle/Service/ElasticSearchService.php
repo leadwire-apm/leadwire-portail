@@ -487,7 +487,7 @@ class ElasticSearchService
             \preg_match_all('/\[([^]]+)\]/', $item['name'], $out);
             $theme = isset($out[1][0]) === true ? $out[1][0] : 'Misc';
 
-            $dashboard = $this->dashboardManager->getDashboard($user->getId(), $app->getId(), $item['id'], true);
+            $dashboard = $this->dashboardManager->getOrCreateDashboard($user->getId(), $app->getId(), $item['id'], true);
 
             $custom[$theme][] = [
                 "private" => $item['private'],
@@ -502,7 +502,7 @@ class ElasticSearchService
             \preg_match_all('/\[([^]]+)\]/', $item['name'], $out);
             $theme = isset($out[1][0]) === true ? $out[1][0] : 'Misc';
       
-            $dashboard = $this->dashboardManager->getDashboard($user->getId(), $app->getId(), $item['id'], true);
+            $dashboard = $this->dashboardManager->getOrCreateDashboard($user->getId(), $app->getId(), $item['id'], true);
 
 
             $default[$theme][] = [

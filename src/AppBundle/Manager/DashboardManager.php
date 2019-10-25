@@ -27,7 +27,7 @@ class DashboardManager extends AbstractManager
      *
      * @return Dashboard
      */
-    public function getDashboard($userId, $applicationId, $dashboardId, $visible = true)
+    public function getOrCreateDashboard($userId, $applicationId, $dashboardId, $visible = true)
     {
         /** @var Dashboard $dashboard */
         $dashboard = $this->getDocumentRepository()->findOneBy(['applicationId' => $applicationId, 'userId' => $userId, 'dashboardId' => $dashboardId]);
@@ -37,6 +37,20 @@ class DashboardManager extends AbstractManager
         }
 
         return $dashboard;
+    }
+
+    /**
+     * Get Dashboard 
+     *
+     * @param string $userId
+     * @param string $applicationId
+     * @param string $dashboardId
+     *
+     * @return Dashboard
+     */
+    public function getDashboard($userId, $applicationId, $dashboardId)
+    {
+        return $this->getDocumentRepository()->findOneBy(['applicationId' => $applicationId, 'userId' => $userId, 'dashboardId' => $dashboardId]);
     }
 
     /**

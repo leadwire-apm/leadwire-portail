@@ -68,11 +68,17 @@ class ApplicationService
      * @var ActivationCodeService
      */
     private $activationCodeService;
-
+    
     /**
      * @var DeleteTaskManager
      */
     private $taskManager;
+
+    
+    /**
+     * @var DashboardManager
+     */
+    private $dashboardManager;
 
     /**
      * Constructor
@@ -86,6 +92,7 @@ class ApplicationService
      * @param LoggerInterface $logger
      * @param ApplicationTypeService $appTypeService
      * @param ActivationCodeService $activationCodeService
+     * @param DashboardManager $dashboardManager
      */
     public function __construct(
         ApplicationManager $applicationManager,
@@ -96,7 +103,8 @@ class ApplicationService
         SerializerInterface $serializer,
         LoggerInterface $logger,
         ApplicationTypeService $appTypeService,
-        ActivationCodeService $activationCodeService
+        ActivationCodeService $activationCodeService,
+        DashboardManager $dashboardManager
     ) {
         $this->applicationManager = $applicationManager;
         $this->applicationTypeManager = $applicationTypeManager;
@@ -107,6 +115,7 @@ class ApplicationService
         $this->logger = $logger;
         $this->appTypeService = $appTypeService;
         $this->activationCodeService = $activationCodeService;
+        $this->dashboardManager = $dashboardManager;
     }
 
     /**
@@ -465,7 +474,6 @@ class ApplicationService
 
         try {
 
-            $state['successful'] = true;
             $array = json_decode($dashboards, true);
             $array_keys = array_keys( $array);
 
@@ -474,7 +482,11 @@ class ApplicationService
 
             foreach ($array_keys as $value) {
                 foreach ($array[$value] as $element) {
-                    $this->logger->error("" . $element['id'] . "   " . $applicationId . "   " . $userId);
+                   
+                    $dashboard = $this->dashboardManager->getDashboard($userId, $applicationId, $element['id']);
+                    $dashboard->setVisible($element['visible']);
+                    $this->dashboardManager->update($dashboard);
+                    $state['successful'] = true;
                 }
             }
 

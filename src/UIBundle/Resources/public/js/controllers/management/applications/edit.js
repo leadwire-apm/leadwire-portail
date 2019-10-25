@@ -52,6 +52,23 @@
             vm.dashboardsNameList = Object.keys(dashboardsList);
             $scope.$apply();
         })
+
+        vm.updateDashboards = function() {
+            ApplicationFactory.updateDashbaords(vm.application.id, vm.dashboardsList)
+            .then(function() {
+                vm.flipActivityIndicator();
+                toastr.success(MESSAGES_CONSTANTS.EDIT_APP_SUCCESS);
+                $state.go('app.management.applications');
+            })
+            .catch(function(error) {
+                vm.flipActivityIndicator();
+                toastr.error(
+                    error.message ||
+                        MESSAGES_CONSTANTS.EDIT_APP_FAILURE ||
+                        MESSAGES_CONSTANTS.ERROR
+                );
+            });
+        }
         
 
     
@@ -63,24 +80,7 @@
 
             ApplicationFactory.update(vm.application.id, updatedApp)
                 .then(function() {
-                    vm.flipActivityIndicator();
-                    toastr.success(MESSAGES_CONSTANTS.EDIT_APP_SUCCESS);
-                    $state.go('app.management.applications');
-                })
-                .catch(function(error) {
-                    vm.flipActivityIndicator();
-                    toastr.error(
-                        error.message ||
-                            MESSAGES_CONSTANTS.EDIT_APP_FAILURE ||
-                            MESSAGES_CONSTANTS.ERROR
-                    );
-                });
-
-                ApplicationFactory.updateDashbaords(vm.application.id, vm.dashboardsList)
-                .then(function() {
-                    vm.flipActivityIndicator();
-                    toastr.success(MESSAGES_CONSTANTS.EDIT_APP_SUCCESS);
-                    $state.go('app.management.applications');
+                    vm.updateDashboards();
                 })
                 .catch(function(error) {
                     vm.flipActivityIndicator();
