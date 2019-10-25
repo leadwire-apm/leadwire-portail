@@ -60,7 +60,23 @@
             const updatedApp = angular.extend({},vm.application);
             delete updatedApp.invitations;
             delete updatedApp.owner;
+
             ApplicationFactory.update(vm.application.id, updatedApp)
+                .then(function() {
+                    vm.flipActivityIndicator();
+                    toastr.success(MESSAGES_CONSTANTS.EDIT_APP_SUCCESS);
+                    $state.go('app.management.applications');
+                })
+                .catch(function(error) {
+                    vm.flipActivityIndicator();
+                    toastr.error(
+                        error.message ||
+                            MESSAGES_CONSTANTS.EDIT_APP_FAILURE ||
+                            MESSAGES_CONSTANTS.ERROR
+                    );
+                });
+
+                ApplicationFactory.updateDashbaords(vm.application.id, vm.dashboardsList)
                 .then(function() {
                     vm.flipActivityIndicator();
                     toastr.success(MESSAGES_CONSTANTS.EDIT_APP_SUCCESS);

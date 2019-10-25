@@ -7,11 +7,13 @@ use AppBundle\Document\ApplicationPermission;
 use AppBundle\Document\DeleteTask;
 use AppBundle\Document\Task;
 use AppBundle\Document\User;
+use AppBundle\Document\Dashboard;
 use AppBundle\Exception\DuplicateApplicationNameException;
 use AppBundle\Manager\ActivationCodeManager;
 use AppBundle\Manager\ApplicationManager;
 use AppBundle\Manager\ApplicationPermissionManager;
 use AppBundle\Manager\DeleteTaskManager;
+use AppBundle\Manager\DashboardManager;
 use AppBundle\Service\ActivationCodeService;
 use JMS\Serializer\DeserializationContext;
 use JMS\Serializer\SerializerInterface;
@@ -443,4 +445,47 @@ class ApplicationService
             $this->apManager->update($permission);
         }
     }
+
+
+    /**
+     * Updates a specific app from JSON data
+     *
+     * @param string $dashboards
+     * @param string $applicationId
+     * @param string $userId
+     *    
+     * */
+    public function updateApplicationDashboards($dashboards, $applicationId, $userId):array    {
+      
+        $state = [
+            'successful' => false,
+            'esUpdateRequired' => false,
+            'application' => null,
+        ];
+
+        try {
+
+            $state['successful'] = true;
+            $array = json_decode($dashboards, true);
+            $array_keys = array_keys( $array);
+
+            $context = new DeserializationContext();
+            $context->setGroups(['Default']);
+
+            foreach ($array_keys as $value) {
+                foreach ($array[$value] as $element) {
+                    $this->logger->error("" . $element['id'] . "   " . $applicationId . "   " . $userId);
+                }
+            }
+
+        } catch (\Exception $e) {
+            $this->logger->error($e->getMessage());
+            $state['successful'] = false;
+            $state['esUpdateRequired'] = false;
+            $state['application'] = null;
+        }
+
+        return $state;
+    }
+
 }
