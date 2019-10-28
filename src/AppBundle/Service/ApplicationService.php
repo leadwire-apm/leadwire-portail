@@ -382,6 +382,15 @@ class ApplicationService
             $this->taskManager->update($task);
 
             $this->applicationManager->update($application);
+
+        /**
+         * clear dashboard table
+         */
+        $dashboards = $this->dashboardManager->getBy(['applicationId' => $id]);
+        foreach ($dashboards as $dashboard) {
+            $this->dashboardManager->delete($dashboard);
+        }
+
         }
     }
 
