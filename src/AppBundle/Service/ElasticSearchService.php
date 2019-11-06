@@ -88,6 +88,20 @@ class ElasticSearchService
         }
     }
 
+    /**
+     * @param Application $app
+     * @param User $user
+     */
+    public function getReports(Application $app, User $user)
+    {
+        try {
+            return $this->filter($this->getRawReports($app, $user));
+        } catch (\Exception $e) {
+            $this->logger->error($e->getMessage());
+            throw new HttpException("An error has occurred while executing your request.", 500);
+        }
+    }
+
     /*********************************************
      *          LOWER LEVEL ACTIONS              *
      *********************************************/
@@ -455,6 +469,67 @@ class ElasticSearchService
                 } else {
                     $this->logger->error(
                         'leadwire.es.getRawDashboards',
+                        [
+                            'error' => $response->getReasonPhrase(),
+                            'status_code' => $response->getStatusCode(),
+                            'url' => $this->url . ".kibana_$tenant" . "/_search?pretty&from=0&size=10000",
+                        ]
+                    );
+                }
+            }
+        }
+
+        return $res;
+    }
+
+    /**
+     * @param Application $app
+     * @param User $user
+     */
+    protected function getRawReports(Application $app, User $user)
+    {
+        $res = [
+            "Default" => [],
+            "Custom" => [],
+        ];
+
+        $tenants = [
+            "Default" => $this->hasAllUserTenant === true ? [$user->getAllUserIndex(), $app->getApplicationIndex()] : [$app->getApplicationIndex()],
+            "Custom" => [$user->getUserIndex(), $app->getSharedIndex()],
+        ];
+
+        foreach ($tenants as $groupName => $tenantGroup) {
+            foreach ($tenantGroup as $tenant) {
+                $response = $this->httpClient->get(
+                    $this->url . ".kibana_$tenant" . "/_search?pretty&from=0&size=10000",
+                    [
+                        'headers' => [
+                            'Content-type' => 'application/json',
+                        ],
+                        'auth' => [
+                            $this->settings['username'],
+                            $this->settings['password'],
+                        ],
+                    ]
+                );
+
+                if ($response->getStatusCode() === Response::HTTP_OK) {
+                    $body = \json_decode($response->getBody())->hits->hits;
+                    foreach ($body as $element) {
+                        if ($element->_source->type === "report") {
+                            $title = $element->_source->{$element->_source->type}->title;
+
+                            $res[$groupName][] = [
+                                "id" => $this->transformeId($element->_id),
+                                "name" => $title,
+                                "private" => $groupName === "Custom" && (new AString($tenant))->startsWith("shared_") === false,
+                                "tenant" => $tenant,
+                            ];
+                        }
+                    }
+                } else {
+                    $this->logger->error(
+                        'leadwire.es.getRawReports',
                         [
                             'error' => $response->getReasonPhrase(),
                             'status_code' => $response->getStatusCode(),

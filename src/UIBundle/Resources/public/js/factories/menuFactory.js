@@ -44,7 +44,7 @@
                         if (menuKey in Menus) {
                             menus = Menus[menuKey].map(function (menu) {
                                 return angular.extend({}, menu, {
-                                    route: $state.href(menu.route),
+                                    route: $state.href(menu.route, menu.params),
                                 });
                             });
                         }
@@ -184,6 +184,9 @@
                     abstractRoute: 'app.management',
                     icon: 'fa fa-cogs',
                     label: 'Manage reports',
+                    params: {
+                        tenant: "shared_sentinl_watcher"
+                    }
                 },
             ],
         });
