@@ -11,6 +11,7 @@ use GuzzleHttp\Exception\ClientException;
 use Psr\Log\LoggerInterface;
 use SensioLabs\Security\Exception\HttpException;
 use Symfony\Component\HttpFoundation\Response;
+use AppBundle\Manager\DashboardManager;
 
 /**
  * Class ElasticSearchService Service. Manage connexions with Kibana Rest API.
@@ -50,19 +51,27 @@ class ElasticSearchService
     private $hasAllUserTenant;
 
     /**
+     * @var DashboardManager
+     */
+    private $DashboardManager;
+
+    /**
      * ElasticSearchService constructor.
      * @param LoggerInterface $logger
      * @param bool $hasAllUserTenant
      * @param array $settings
+     * @param DashboardManager $dashboardManager
      */
     public function __construct(
         LoggerInterface $logger,
         bool $hasAllUserTenant,
-        array $settings = []
+        array $settings = [],
+        DashboardManager $dashboardManager
     ) {
         $this->settings = $settings;
         $this->hasAllUserTenant = $hasAllUserTenant;
         $this->logger = $logger;
+        $this->dashboardManager = $dashboardManager;
         $this->httpClient = new Client(
             [
                 'curl' => array(CURLOPT_SSL_VERIFYPEER => false),
@@ -81,7 +90,8 @@ class ElasticSearchService
     public function getDashboads(Application $app, User $user)
     {
         try {
-            return $this->filter($this->getRawDashboards($app, $user));
+            $dashboards = $this->filter($app, $user, $this->getRawDashboards($app, $user));         
+            return $dashboards;
         } catch (\Exception $e) {
             $this->logger->error($e->getMessage());
             throw new HttpException("An error has occurred while executing your request.", 500);
@@ -443,13 +453,14 @@ class ElasticSearchService
                     foreach ($body as $element) {
                         if ($element->_source->type === "dashboard") {
                             $title = $element->_source->{$element->_source->type}->title;
-
                             $res[$groupName][] = [
                                 "id" => $this->transformeId($element->_id),
                                 "name" => $title,
                                 "private" => $groupName === "Custom" && (new AString($tenant))->startsWith("shared_") === false,
                                 "tenant" => $tenant,
+                                "visible" => true,
                             ];
+                           
                         }
                     }
                 } else {
@@ -468,29 +479,38 @@ class ElasticSearchService
         return $res;
     }
 
-    protected function filter($dashboards)
+    protected function filter($app, $user, $dashboards)
     {
         $custom = [];
         $default = [];
         foreach ($dashboards['Custom'] as $item) {
             \preg_match_all('/\[([^]]+)\]/', $item['name'], $out);
             $theme = isset($out[1][0]) === true ? $out[1][0] : 'Misc';
+
+            $dashboard = $this->dashboardManager->getOrCreateDashboard($user->getId(), $app->getId(), $item['id'], true);
+
             $custom[$theme][] = [
                 "private" => $item['private'],
                 "id" => $item['id'],
                 "tenant" => $item['tenant'],
                 "name" => \str_replace("[$theme] ", "", $item['name']),
+                "visible" => $dashboard->isVisible(),
             ];
         }
 
         foreach ($dashboards['Default'] as $item) {
             \preg_match_all('/\[([^]]+)\]/', $item['name'], $out);
             $theme = isset($out[1][0]) === true ? $out[1][0] : 'Misc';
+      
+            $dashboard = $this->dashboardManager->getOrCreateDashboard($user->getId(), $app->getId(), $item['id'], true);
+
+
             $default[$theme][] = [
                 "private" => $item['private'],
                 "id" => $item['id'],
                 "tenant" => $item['tenant'],
                 "name" => \str_replace("[$theme] ", "", $item['name']),
+                "visible" => $dashboard->isVisible(),
             ];
         }
 

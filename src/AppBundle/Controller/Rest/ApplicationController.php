@@ -417,4 +417,21 @@ class ApplicationController extends Controller
 
         return $this->renderResponse(true);
     }
+
+    /**
+     * @Route("/{id}/update-dashboards", methods="PUT")
+     *
+     * @param Request $request
+     * @param ApplicationService $applicationService
+     * @param string $id
+     */
+    public function updateApplicationActionDashboards( Request $request, ApplicationService $applicationService, string $id){
+        try{
+            $data = $request->getContent();
+            $state = $applicationService->updateApplicationDashboards($data, $id, $this->getUser()->getId());
+            return $this->renderResponse($state['successful']);
+        } catch (MongoDuplicateKeyException $e) {
+            return $this->renderResponse(['message' => $e->getMessage()], Response::HTTP_NOT_ACCEPTABLE);       
+        }
+    }
 }

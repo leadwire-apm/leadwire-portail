@@ -15,3 +15,11 @@
 .actionsCell > a, button {
     margin-left: 5px;
 }
+
+.checkbox-edit {
+    padding-right: 10px;
+}
+
+.spin{
+    text-align: center;
+}

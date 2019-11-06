@@ -53,6 +53,9 @@
                 function (menu) {
                     return menu.icon || 'fas fa-tachometer-alt';
                 },
+                function (menu) {
+                    return menu.visible;
+                },
             );
             $rootScope.menus = $localStorage.currentMenu;
             $localStorage.currentApplicationMenus = $localStorage.currentMenu;
@@ -86,6 +89,24 @@
                             custom: response.data.Custom,
                             path: 'app.dashboard.home',
                         });
+                    })
+                    .catch(function (error) {
+                        console.log('Error', error);
+                        reject(error);
+                    });
+            });
+        };
+
+        /**
+         *
+         * @param appId
+         * @returns {Promise}
+         */
+        service.fetchDashboardsListByAppId = function (appId) {
+            return new Promise(function (resolve, reject) {
+                ApplicationFactory.findMyDashboard(appId)
+                    .then(function (response) {                      
+                        resolve(response.data.Default);
                     })
                     .catch(function (error) {
                         console.log('Error', error);
