@@ -41,7 +41,7 @@
             </li>
             <ul class="sub-menu collapse" id="[[menu.split(' ').join('')]]">
                 <li ng-repeat="submenu in menus[menu]" style="list-style-type: none;">
-                    <a ng-href="[[submenu.route]]" style="padding: 13px 21px;">
+                    <a ng-href="[[submenu.route]]" ng-if="submenu.visible" style="padding: 13px 21px;">
                             <i class="[[submenu.icon]]"></i>
                             <span>[[submenu.label]]</span>
                     </a>

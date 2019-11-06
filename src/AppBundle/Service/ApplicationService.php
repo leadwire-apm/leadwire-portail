@@ -7,11 +7,13 @@ use AppBundle\Document\ApplicationPermission;
 use AppBundle\Document\DeleteTask;
 use AppBundle\Document\Task;
 use AppBundle\Document\User;
+use AppBundle\Document\Dashboard;
 use AppBundle\Exception\DuplicateApplicationNameException;
 use AppBundle\Manager\ActivationCodeManager;
 use AppBundle\Manager\ApplicationManager;
 use AppBundle\Manager\ApplicationPermissionManager;
 use AppBundle\Manager\DeleteTaskManager;
+use AppBundle\Manager\DashboardManager;
 use AppBundle\Service\ActivationCodeService;
 use JMS\Serializer\DeserializationContext;
 use JMS\Serializer\SerializerInterface;
@@ -66,11 +68,17 @@ class ApplicationService
      * @var ActivationCodeService
      */
     private $activationCodeService;
-
+    
     /**
      * @var DeleteTaskManager
      */
     private $taskManager;
+
+    
+    /**
+     * @var DashboardManager
+     */
+    private $dashboardManager;
 
     /**
      * Constructor
@@ -84,6 +92,7 @@ class ApplicationService
      * @param LoggerInterface $logger
      * @param ApplicationTypeService $appTypeService
      * @param ActivationCodeService $activationCodeService
+     * @param DashboardManager $dashboardManager
      */
     public function __construct(
         ApplicationManager $applicationManager,
@@ -94,7 +103,8 @@ class ApplicationService
         SerializerInterface $serializer,
         LoggerInterface $logger,
         ApplicationTypeService $appTypeService,
-        ActivationCodeService $activationCodeService
+        ActivationCodeService $activationCodeService,
+        DashboardManager $dashboardManager
     ) {
         $this->applicationManager = $applicationManager;
         $this->applicationTypeManager = $applicationTypeManager;
@@ -105,6 +115,7 @@ class ApplicationService
         $this->logger = $logger;
         $this->appTypeService = $appTypeService;
         $this->activationCodeService = $activationCodeService;
+        $this->dashboardManager = $dashboardManager;
     }
 
     /**
@@ -371,6 +382,15 @@ class ApplicationService
             $this->taskManager->update($task);
 
             $this->applicationManager->update($application);
+
+        /**
+         * clear dashboard table
+         */
+        $dashboards = $this->dashboardManager->getBy(['applicationId' => $id]);
+        foreach ($dashboards as $dashboard) {
+            $this->dashboardManager->delete($dashboard);
+        }
+
         }
     }
 
@@ -443,4 +463,50 @@ class ApplicationService
             $this->apManager->update($permission);
         }
     }
+
+
+    /**
+     * Updates a specific app from JSON data
+     *
+     * @param string $dashboards
+     * @param string $applicationId
+     * @param string $userId
+     *    
+     * */
+    public function updateApplicationDashboards($dashboards, $applicationId, $userId):array    {
+      
+        $state = [
+            'successful' => false,
+            'esUpdateRequired' => false,
+            'application' => null,
+        ];
+
+        try {
+
+            $array = json_decode($dashboards, true);
+            $array_keys = array_keys( $array);
+
+            $context = new DeserializationContext();
+            $context->setGroups(['Default']);
+
+            foreach ($array_keys as $value) {
+                foreach ($array[$value] as $element) {
+                   
+                    $dashboard = $this->dashboardManager->getDashboard($userId, $applicationId, $element['id']);
+                    $dashboard->setVisible($element['visible']);
+                    $this->dashboardManager->update($dashboard);
+                    $state['successful'] = true;
+                }
+            }
+
+        } catch (\Exception $e) {
+            $this->logger->error($e->getMessage());
+            $state['successful'] = false;
+            $state['esUpdateRequired'] = false;
+            $state['application'] = null;
+        }
+
+        return $state;
+    }
+
 }

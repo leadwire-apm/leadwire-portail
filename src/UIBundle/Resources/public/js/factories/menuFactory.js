@@ -84,6 +84,7 @@
                         labelCallback,
                         routeCallback,
                         iconCallback,
+                        visibleCallback,
                     ) {
                         try {
                             newMenus = Object.keys(menus);
@@ -94,6 +95,7 @@
                                         label: labelCallback(menu),
                                         route: routeCallback(menu),
                                         icon: iconCallback(menu),
+                                        visible: visibleCallback(menu),
                                     };
                                 });
 

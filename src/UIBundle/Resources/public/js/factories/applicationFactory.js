@@ -68,6 +68,16 @@
                         body,
                     );
                 },
+                 /**
+                 *
+                 * @returns {Promise}
+                 */
+                updateDashbaords: function (id, body) {
+                    return $http.put(
+                        CONFIG.BASE_URL + 'api/app/'+ id +'/update-dashboards',
+                        body,
+                    );
+                },
                 /**
                  *
                  * @returns {Promise}
