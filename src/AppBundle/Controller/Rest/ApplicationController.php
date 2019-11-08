@@ -88,7 +88,7 @@ class ApplicationController extends Controller
         if ($app === null) {
             throw new HttpException(Response::HTTP_NOT_FOUND, "App not Found");
         } else {
-            $reports = $esService->getDashboads($app, $this->getUser());
+            $reports = $esService->getReports($app, $this->getUser());
             return $this->renderResponse($reports);
         }
     }
