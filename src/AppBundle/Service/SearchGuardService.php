@@ -111,6 +111,9 @@ class SearchGuardService
                     "sg_{$application->getName()}_index" => [
                         'cluster' => ['CLUSTER_COMPOSITE_OPS'],
                         'indices' => [
+                            "*-sentinl-*" => [
+                                "*" => ["READ"],
+                            ],
                             "*-{$application->getName()}-*" => [
                                 "*" => ["READ"],
                             ],
@@ -146,6 +149,15 @@ class SearchGuardService
             $permissions = $this->permissionManager->getPermissionsForUser($user);
 
             $indices = [];
+            if (in_array(User::ROLE_ADMIN, $user->getRoles()) || in_array(User::ROLE_SUPER_ADMIN, $user->getRoles())) {
+                $indices["*-sentinl-*"] = [
+                    "*" => [
+                        "READ",
+                        "indices:data/read/field_caps[index]",
+                        "indices:data/read/field_caps",
+                    ],
+                ];
+            }
             /** @var ApplicationPermission $permission */
             foreach ($permissions as $permission) {
                 $indices["*-{$permission->getApplication()->getUuid()}-*"] = [
