@@ -105,7 +105,8 @@ class ElasticSearchService
     public function getReports(Application $app, User $user)
     {
         try {
-            return $this->filter($this->getRawReports($app, $user));
+            $reports = $this->filter($this->getRawReports($app, $user));
+            return $reports;
         } catch (\Exception $e) {
             $this->logger->error($e->getMessage());
             throw new HttpException("An error has occurred while executing your request.", 500);
