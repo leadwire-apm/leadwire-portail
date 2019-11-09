@@ -23,3 +23,7 @@
 .spin{
     text-align: center;
 }
+
+body.iframe {
+    overflow-y: hidden;
+}

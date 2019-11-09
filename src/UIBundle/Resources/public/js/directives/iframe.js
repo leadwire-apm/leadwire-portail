@@ -4,20 +4,31 @@
  * vector - jvectormap directive
  */
 function iframeSetDimensionsOnload() {
-return {
-    restrict: 'A',
-    link: function(scope, element, attrs){
-
-        element.on('load', function(){
-            /* Set the dimensions here,
-               I think that you were trying to do something like this: */
-               //var iFrameHeight = element[0].contentWindow.document.body.scrollHeight + 'px';
-               var iFrameHeight = '1400px'
-               var iFrameWidth = '100%';
-               element.css('width', iFrameWidth);
-               element.css('height', iFrameHeight);
-        })
-    }};
+    return {
+        restrict: 'A',
+        link: function(scope, element, attrs) {
+            element.on('load', function() {
+                setElementDimension(element);
+            })
+        }
+    };
 }
+
+
+function setElementDimension(element) {
+    $('body').addClass('iframe');
+    $('.main-content').css('margin', '-15px 0px 0px 0px');
+    $('.main-content').css('padding', '80px 0px 0px 0px');
+    var height = window.innerHeight - 120;
+    var iFrameHeight = height + 'px'
+    var iFrameWidth = '100%';
+    element.css('width', iFrameWidth);
+    element.css('height', iFrameHeight);
+}
+
+$(window).on('resize', function() {
+    console.log('here');
+    setElementDimension($('iframe'));
+});
 
 angular.module('leadwireApp').directive('iframeSetDimensionsOnload', iframeSetDimensionsOnload);
