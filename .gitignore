@@ -36,3 +36,5 @@
 /uploads/*
 !/uploads/.gitkeep
 .tmp
+.env
+curator-alias.yml

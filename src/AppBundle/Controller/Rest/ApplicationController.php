@@ -70,6 +70,30 @@ class ApplicationController extends Controller
     }
 
     /**
+     * @Route("/{id}/reports", methods="GET")
+     *
+     * @param Request $request
+     * @param ApplicationService $applicationService
+     * @param string  $id
+     *
+     * @return Response
+     */
+    public function getApplicationReportsAction(
+        Request $request,
+        ApplicationService $applicationService,
+        ElasticSearchService $esService,
+        $id
+    ) {
+        $app = $applicationService->getApplication($id);
+        if ($app === null) {
+            throw new HttpException(Response::HTTP_NOT_FOUND, "App not Found");
+        } else {
+            $reports = $esService->getReports($app, $this->getUser());
+            return $this->renderResponse($reports);
+        }
+    }
+
+    /**
      * @Route("/{id}/stats", methods="GET")
      *
      * @param StatService $statService

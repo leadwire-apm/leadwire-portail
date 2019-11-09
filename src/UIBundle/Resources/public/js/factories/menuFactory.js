@@ -35,6 +35,19 @@
                     )
                 }
 
+                function normalizeRouteParams(params) {
+                    if(!_.has(params,'ls')) return params;
+                    var result = Object.keys(params.ls).reduce(function(acc, current) {
+                        acc[current] = _.get($localStorage,params.ls[current]);
+
+                        return acc;
+
+                    },params);
+                    delete result.ls;
+
+                    return result;
+                }
+
                 return {
                     update : function(){
 
@@ -43,8 +56,9 @@
                         var menus = [];
                         if (menuKey in Menus) {
                             menus = Menus[menuKey].map(function (menu) {
+
                                 return angular.extend({}, menu, {
-                                    route: $state.href(menu.route),
+                                    route: $state.href(menu.route, normalizeRouteParams(menu.params)),
                                 });
                             });
                         }
@@ -180,6 +194,17 @@
                     abstractRoute: 'app.management',
                     icon: 'fa fa-file-alt',
                     label: 'Manage templates',
+                },
+                {
+                    route: 'app.management.reports',
+                    abstractRoute: 'app.management',
+                    icon: 'fa fa-cogs',
+                    label: 'Manage reports',
+                    params: {
+                        ls: {
+                            tenant: 'user.userIndex',
+                        }
+                    }
                 },
             ],
         });

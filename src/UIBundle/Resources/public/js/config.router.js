@@ -458,6 +458,18 @@ angular.module('leadwireApp')
                     controller: 'EditTemplateController',
                     controllerAs: 'ctrl',
                 })
+                .state('app.management.reports', {
+                    url: '/reports/{tenant}',
+                    templateUrl: 'management/reports/manageReports.html',
+                    controller: 'ManageReportController',
+                    controllerAs: 'ctrl',
+                    resolve: {
+                        permissions: function (RouteGuard) {
+                            return RouteGuard.adminRequired();
+                        },
+                        menu: updateMenuItems(MenuEnum.MANAGEMENT),
+                    },
+                })
                 .state('app.management.codes', {
                     url: '/codes/list',
                     templateUrl: 'management/codes/list.html',

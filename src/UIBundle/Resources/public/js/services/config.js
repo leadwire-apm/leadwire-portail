@@ -53,6 +53,21 @@
             return url;
         };
 
+        service.getReport = function(tenantPrefix, hasParameter) {
+            var url = this.getUrl(tenantPrefix, '#/app/sentinl', hasParameter);
+            return url;
+        };
+
+        service.setReport = function(tenant) {
+            var url =
+                service.baseUrl +
+                tenant +
+                '/app/sentinl' +
+                '?token=' +
+                $auth.getToken();
+            return url;
+        };
+
         return service;
     }
 })();

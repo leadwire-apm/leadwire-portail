@@ -30,6 +30,15 @@
                  *
                  * @returns {Promise}
                  */
+                findMyReports: function (id) {
+                    return $http.get(
+                        CONFIG.BASE_URL + 'api/app/' + id + '/reports',
+                    );
+                },
+                /**
+                 *
+                 * @returns {Promise}
+                 */
                 findInvitedApps: function () {
                     return $http.get(CONFIG.BASE_URL + 'api/app/invited/list');
                 },
