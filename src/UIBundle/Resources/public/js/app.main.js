@@ -6,7 +6,8 @@
                        CONFIG, $templateCache,
                        $state,
                        MenuFactory,
-                       $location) {
+                       $location,
+                       iFrameService) {
             // $rootScope.menus = $localStorage.currentMenu;
             $rootScope.applications = $localStorage.applications;
             $rootScope.dashboards = $localStorage.dashboards;
@@ -43,6 +44,16 @@
                 '</div>\n' +
                 '',
             );
+
+            $rootScope.$on("$locationChangeSuccess", function (event) {
+                iFrameService.resetDimensions($('iframe'));
+            });
+
+            $(window).on('resize', function() {
+                if ($('body').hasClass('iframe')) {
+                    iFrameService.setDimensions($('iframe'));
+                }
+            });
         });
 
 })(window.angular);
