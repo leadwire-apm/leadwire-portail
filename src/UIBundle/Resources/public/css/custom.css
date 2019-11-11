@@ -27,3 +27,8 @@
 body.iframe {
     overflow-y: hidden;
 }
+
+.resisable-iframe {
+    margin: -15px 0px 0px 0px !important;
+    padding: 80px 0px 0px 0px !important;
+}
