@@ -3,6 +3,7 @@
 namespace AppBundle\Document;
 
 use AppBundle\Document\User;
+use AppBundle\Document\Environment;
 use Doctrine\Bundle\MongoDBBundle\Validator\Constraints\Unique;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
@@ -106,6 +107,16 @@ class Application
      * @JMS\Groups({"full", "Default"})
      */
     private $owner;
+
+     /**
+     * @var Environment
+     *
+     * @ODM\ReferenceOne(targetDocument="AppBundle\Document\Environment", name="environment", cascade={"persist"}, inversedBy="applications", storeAs="dbRef")
+     * @JMS\Type("AppBundle\Document\Environment")
+     * @JMS\Expose
+     * @JMS\Groups({"full", "Default"})
+     */
+    private $environment;
 
     /**
      * @var ApplicationType
@@ -305,6 +316,29 @@ class Application
     public function setOwner(User $owner)
     {
         $this->owner = $owner;
+
+        return $this;
+    }
+
+    /**
+     * Get environment
+     *
+     * @return Environment
+     */
+    public function getEnvironment()
+    {
+        return $this->environment;
+    }
+
+    /**
+     * Set environment
+     * @param Environment $nvironment
+     *
+     * @return Application
+     */
+    public function setEnvironment(Environment $environment)
+    {
+        $this->environment = $environment;
 
         return $this;
     }
