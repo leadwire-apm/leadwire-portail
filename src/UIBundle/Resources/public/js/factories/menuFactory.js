@@ -196,6 +196,12 @@
                     label: 'Manage templates',
                 },
                 {
+                    route: 'app.management.environment',
+                    abstractRoute: 'app.management',
+                    icon: 'fa fa-file-alt',
+                    label: 'Manage Environment',
+                },
+                {
                     route: 'app.management.reports',
                     abstractRoute: 'app.management',
                     icon: 'fa fa-cogs',

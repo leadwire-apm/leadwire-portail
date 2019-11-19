@@ -458,6 +458,42 @@ angular.module('leadwireApp')
                     controller: 'EditTemplateController',
                     controllerAs: 'ctrl',
                 })
+                .state('app.management.environmentList', {
+                    url: '/environment/list',
+                    templateUrl: 'management/environment/list.html',
+                    resolve: {
+                        permissions: function (RouteGuard) {
+                            return RouteGuard.adminRequired();
+                        },
+                        menu: updateMenuItems(MenuEnum.MANAGEMENT),
+                    },
+                    controller: 'ListEnvironmentController',
+                    controllerAs: 'ctrl',
+                })
+                .state('app.management.addEnvironment', {
+                    url: '/environment/new',
+                    templateUrl: 'management/environment/add.html',
+                    resolve: {
+                        permissions: function (RouteGuard) {
+                            return RouteGuard.adminRequired();
+                        },
+                        menu: updateMenuItems(MenuEnum.MANAGEMENT),
+                    },
+                    controller: 'AddEnvironmentController',
+                    controllerAs: 'ctrl',
+                })
+                .state('app.management.editEnvironment', {
+                    url: '/environment/:id/edit',
+                    templateUrl: 'management/environment/edit.html',
+                    resolve: {
+                        permissions: function (RouteGuard) {
+                            return RouteGuard.adminRequired();
+                        },
+                        menu: updateMenuItems(MenuEnum.MANAGEMENT),
+                    },
+                    controller: 'EditEnvironmentController',
+                    controllerAs: 'ctrl',
+                })
                 .state('app.management.reports', {
                     url: '/reports/{tenant}',
                     templateUrl: 'management/reports/manageReports.html',
