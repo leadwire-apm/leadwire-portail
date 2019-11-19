@@ -1,0 +1,24 @@
+<div class="panel mb25" ng-init="ctrl.init()">
+    <div class="panel-heading border">
+        Add Environment
+    </div>
+    <div class="panel-body">
+        <div class="row no-margin">
+            <div class="col-lg-12">
+                <form class="form-horizontal bordered-group"
+                      name="environmetForm" ng-submit="ctrl.saveEnvironmet()"
+                      role="form"
+                      novalidate
+                >
+                    <div ng-include="'management/environmet/form.html'"></div>
+                    <button type="submit"
+                            ng-disabled="environmetForm.$invalid"
+                            class="btn btn-primary pull-right">
+                        <spinner is-loading="ctrl.ui.isSaving"></spinner>
+                        Save
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

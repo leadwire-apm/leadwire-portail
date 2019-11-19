@@ -1,0 +1,22 @@
+<div class="panel mb25" ng-init="ctrl.init()">
+    <div class="panel-heading border">
+        Edit Environment
+    </div>
+    <div class="panel-body">
+        <div class="row no-margin">
+            <div class="col-lg-12">
+                <form class="form-horizontal bordered-group"
+                      name="environmentForm" ng-submit="ctrl.editEnvironment()"
+                      role="form"
+                >
+                    <div ng-include="'management/environment/form.html'"></div>
+                    <button type="submit" ng-disabled="environmentForm.$invalid || !ctrl.environment.installation"
+                            class="btn btn-primary pull-right">
+                        <spinner is-loading="ctrl.ui.isSaving"></spinner>
+                        Save
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

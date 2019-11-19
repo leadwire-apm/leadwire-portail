@@ -1,0 +1,65 @@
+<div class="panel" ng-init="ctrl.init()">
+    <div class="panel-heading">
+        <h4>Manage Environments</h4>
+        <hr>
+    </div>
+    <div class="panel-body">
+        <div class="row no-margin">
+            <div class="col-lg-12 ">
+                <div class="row mb30">
+                    <a ui-sref="app.management.addApplicationTypes"
+                       class="btn btn-success pull-right">
+                        <i class="fa fa-plus"></i> Add new environment</a>
+                </div>
+                <div class="no-more-tables">
+                    <table class="table table-striped mb0">
+                        <thead>
+                        <tr>
+                            <th class="text-center">Name</th>
+                            <th class="text-center" colspan="3"
+                                style="text-align: center">Actions
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-if="ctrl.ui.isLoading" class="text-center">
+                            <td colspan="6">
+                                <spinner is-loading="ctrl.ui.isLoading"
+                                         size="24"></spinner>
+                            </td>
+                        </tr>
+                        <tr ng-repeat="environment in ctrl.environments"
+                            class="text-center"
+                        >
+                            <td data-title="Name" data-label="Name">
+                                <span>
+                                    [[environment.name]]
+                                </span>
+                            </td>
+                            <td data-title="Actions" data-label="Actions" class="text-left">
+                                <a
+                                    class="btn btn-warning"
+                                    title="Edit"
+                                    data-placement="top"
+                                    data-toggle="tooltip"
+                                    ui-sref="app.management.editEnvironment({id:environment.id})">
+                                    <i class="fas fa-pencil-alt"></i>
+                                </a>
+                                <button
+                                    title="Delete"
+                                    data-placement="top"
+                                    data-toggle="tooltip"
+                                    class="btn bg-red"
+                                    ng-click="ctrl.handleOnDelete(environment.id)">
+                                    <spinner is-loading="ctrl.ui['isDeleting'+environment.id]"></spinner>
+                                    <i class="fa fa-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
