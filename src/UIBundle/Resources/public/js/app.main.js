@@ -7,16 +7,21 @@
                        $state,
                        MenuFactory,
                        $location,
-                       iFrameService) {
+                       iFrameService,
+                       SatellizerConfig,
+                       $http,
+                       rx) {
             // $rootScope.menus = $localStorage.currentMenu;
             $rootScope.applications = $localStorage.applications;
             $rootScope.dashboards = $localStorage.dashboards;
             $rootScope.ASSETS_BASE_URL = CONFIG.ASSETS_BASE_URL;
             $rootScope.DOWNLOAD_URL = CONFIG.DOWNLOAD_URL;
             $rootScope.UPLOAD_URL = CONFIG.UPLOAD_URL;
+
             $rootScope.$watch('applications', function (newVal) {
                 $localStorage.applications = newVal;
             });
+
             $state.defaultErrorHandler(function (error) {
 // This is a naive example of how to silence the default error handler.
                 if (error.detail === 'UNAUTHORIZED') {
@@ -54,6 +59,50 @@
                     iFrameService.setDimensions($('iframe'));
                 }
             });
+
+            function checkLoadingProcess () {
+                var deferred = $http({
+                    url: CONFIG.BASE_URL + 'api/process/get',
+                    method: "get"
+                });
+
+                return rx.Observable
+                    .fromPromise(deferred)
+                    .retry(10)
+                    .map(function(response) {
+                        return response.data;
+                    });
+            }
+
+            $rootScope.$createObservableFunction('checkProcess')
+                .debounce(200)
+                .flatMapLatest(checkLoadingProcess)
+                .subscribe(
+                    function(result) {
+                        if (result != null && result.status == "in-progress") {
+                            if ($('#toast-container').hasClass('.toast-top-right') == false) {
+                                toastr.remove();
+                                toastr.info(
+                                    result.message + '...',
+                                    "Opération in progress",
+                                    {
+                                        timeOut: 0,
+                                        extendedTimeOut: 0,
+                                        closeButton: true,
+                                        onClick: null,
+                                        preventDuplicates: true
+                                    }
+                                );
+                            } else {
+                                $('.toast-message').html(result.message + '...');
+                            }
+                            $rootScope.checkProcess();
+                        } else {
+                            toastr.remove();
+                        }
+                    }
+                )
+            ;
         });
 
 })(window.angular);

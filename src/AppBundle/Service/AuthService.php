@@ -8,6 +8,7 @@ use AppBundle\Service\ElasticSearchService;
 use AppBundle\Service\JWTHelper;
 use AppBundle\Service\KibanaService;
 use AppBundle\Service\LdapService;
+use AppBundle\Service\ProcessService;
 use Firebase\JWT\ExpiredException;
 use GuzzleHttp\Client;
 use Psr\Log\LoggerInterface;
@@ -40,6 +41,11 @@ class AuthService
      * @var KibanaService
      */
     private $kibanaService;
+
+    /**
+     * @var ProcessService
+     */
+    private $processService;
 
     /**
      * @var LoggerInterface
@@ -77,6 +83,7 @@ class AuthService
         LdapService $ldapService,
         ElasticSearchService $esService,
         KibanaService $kibanaService,
+        ProcessService $processService,
         LoggerInterface $logger,
         JWTHelper $jwtHelper,
         SearchGuardService $sgService,
@@ -89,6 +96,7 @@ class AuthService
         $this->ldapService = $ldapService;
         $this->esService = $esService;
         $this->kibanaService = $kibanaService;
+        $this->processService = $processService;
         $this->jwtHelper = $jwtHelper;
         $this->logger = $logger;
         $this->appDomain = $appDomain;
@@ -118,6 +126,8 @@ class AuthService
         if ($user === null) {
             $user = $this->handleNewUser($data);
         } else {
+            $process = $this->processService->getInProgressLoginProcess(true);
+            $this->processService->successLoginProcess($process);
             $this->validateActiveStatus($user);
         }
 
@@ -134,8 +144,12 @@ class AuthService
         $user = $this->userManager->getOneBy($params);
 
         if ($user === null) {
+            $process = $this->processService->getInProgressLoginProcess(true);
+            $this->processService->failLoginProcess($process);
             throw new AccessDeniedHttpException("User is undefined");
         } else {
+            $process = $this->processService->getInProgressLoginProcess(true);
+            $this->processService->successLoginProcess($process);
             $this->validateActiveStatus($user);
 
             $this->checkSuperAdminRoles($user);
@@ -150,6 +164,8 @@ class AuthService
         if ($user === null) {
             $user = $this->handleNewUser($params);
         } else {
+            $process = $this->processService->getInProgressLoginProcess(true);
+            $this->processService->successLoginProcess($process);
             $this->validateActiveStatus($user);
         }
 
@@ -282,20 +298,27 @@ class AuthService
             $user = $this->addUser($parameters);
         }
 
+        $process = $this->processService->getInProgressLoginProcess(true);
         if ($user !== null) {
             // User creation in DB is successful
             // Should create LDAP & ElasticSearch entries
+            $process = $this->processService->updateInProgressLoginProcess($process, "Creating LDAP Entries");
             $this->ldapService->createNewUserEntries($user);
             $this->ldapService->registerDemoApplications($user);
+            $process = $this->processService->updateInProgressLoginProcess($process, "Register Applications");
             $this->applicationService->registerDemoApplications($user);
 
+            $process = $this->processService->updateInProgressLoginProcess($process, "Creating ES Indexe-patterns");
             $this->esService->deleteIndex($user->getUserIndex());
+            $process = $this->processService->updateInProgressLoginProcess($process, "Creating Kibana Dashboards");
             $this->kibanaService->loadIndexPatternForUserTenant($user);
 
             $this->kibanaService->loadDefaultIndex($user->getUserIndex(), 'default');
             $this->kibanaService->makeDefaultIndex($user->getUserIndex(), 'default');
 
+            $process = $this->processService->updateInProgressLoginProcess($process, "Configuring SearchGuard");
             $this->sgService->updateSearchGuardConfig();
+            $this->processService->successLoginProcess($process);
         }
 
         return $user;
