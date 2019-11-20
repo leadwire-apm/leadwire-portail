@@ -3,8 +3,8 @@
 namespace AppBundle\Service;
 
 use AppBundle\Document\Application;
+use AppBundle\Document\Environment;
 use AppBundle\Exception\DuplicateApplicationNameException;
-
 use AppBundle\Manager\ApplicationManager;
 use AppBundle\Manager\EnvironmentManager;
 
@@ -77,7 +77,7 @@ class EnvironmentService
             ->serializer
             ->deserialize($json, Environment::class, 'json');
 
-        $id = $this->environmentManager->update($environments);
+        $id = $this->environmentManager->update($environment);
 
         return $id;
     }

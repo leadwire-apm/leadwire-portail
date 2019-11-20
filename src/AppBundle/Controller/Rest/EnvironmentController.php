@@ -38,32 +38,33 @@ class EnvironmentController extends Controller
     public function updateEnvironment(Request $request, EnvironmentService $environmentService)
     {
         // Only super Admin can do this
-        $this->denyAccessUnlessGranted([User::ROLE_SUPER_ADMIN]);
+        $this->denyAccessUnlessGranted([User::ROLE_ADMIN, User::ROLE_SUPER_ADMIN]);
 
         $data = $request->getContent();
-        $successful = $EnvironmentService->update($data);
+        $successful = $environmentService->update($data);
         return $this->renderResponse($successful);
     }
 
     /**
-     * @Route("/add", methods="PUT")
+     * @Route("/new", methods="POST")
      *
      * @param Request $request
      * @param EnvironmentService $environmentService
+     * 
      * @return Response
      */
     public function addEnvironment(Request $request, EnvironmentService $environmentService)
     {
         // Only super Admin can do this
-        $this->denyAccessUnlessGranted([User::ROLE_SUPER_ADMIN]);
+        $this->denyAccessUnlessGranted([User::ROLE_ADMIN, User::ROLE_SUPER_ADMIN]);
 
         $data = $request->getContent();
-        $successful = $EnvironmentService->add($data);
+        $successful = $environmentService->add($data);
         return $this->renderResponse($successful);
     }
 
     /**
-     * @Route("/{id}/delete", methods="PUT")
+     * @Route("/{id}/delete", methods="DELETE")
      *
      * @param Request $request
      * @param EnvironmentService $environmentService

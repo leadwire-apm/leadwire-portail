@@ -24,6 +24,19 @@
             vm.ui[key] = !vm.ui[key];
         };
 
+        EnvironmentService.find($state.params.id)
+                .then(function (environment) {
+                    if (environment === null) {
+                        throw new Error();
+                    }
+                    vm.flipActivityIndicator('isLoading');
+                    vm.environment = environment;
+                })
+                .catch(function () {
+                    vm.flipActivityIndicator('isLoading');
+                    $state.go('app.management.templates');
+                });
+
         vm.editEnvironment = function () {
             vm.flipActivityIndicator('isSaving')
             EnvironmentService.update(vm.environment)
@@ -45,7 +58,8 @@
                     isLoading: false,
                 },
                 environment: {
-                    name: ''
+                    name: '',
+                    ip: ''
                 }
             });
         };

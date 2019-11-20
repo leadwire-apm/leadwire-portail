@@ -33,11 +33,13 @@ class Environment
     private $name;
 
     /**
-     * @ODM\ReferenceMany(targetDocument="AppBundle\Document\Application", mappedBy="environment", storeAs="dbRef")
-     * @JMS\Type("array<AppBundle\Document\Application>")
+     * @ODM\Field(type="string")
      * @JMS\Expose
+     * @JMS\Type("string")
+     *
+     * @var string
      */
-    private $applications;
+    private $ip;
 
 
     /**
@@ -75,23 +77,28 @@ class Environment
     }
 
     /**
-     * Get the value of applications
-     */
-    public function getApplications()
-    {
-        return $this->applications;
-    }
-
-    /**
-     * Set the value of applications
+     * Set the value of ip
+     *
+     * @param  string  $ip
      *
      * @return  self
      */
-    public function setApplications($applications)
+    public function setIp(string $ip)
     {
-        $this->applications = $applications;
+        $this->ip = $ip;
 
         return $this;
     }
+
+    /**
+     * Get the value of ip
+     *
+     * @return string
+     */
+    public function getIp()
+    {
+        return $this->ip;
+    }
+
 
 }

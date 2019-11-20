@@ -196,7 +196,7 @@
                     label: 'Manage templates',
                 },
                 {
-                    route: 'app.management.environment',
+                    route: 'app.management.environmentList',
                     abstractRoute: 'app.management',
                     icon: 'fa fa-file-alt',
                     label: 'Manage Environment',

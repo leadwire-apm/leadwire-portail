@@ -10,7 +10,7 @@
                       role="form"
                 >
                     <div ng-include="'management/environment/form.html'"></div>
-                    <button type="submit" ng-disabled="environmentForm.$invalid || !ctrl.environment.installation"
+                    <button type="submit" ng-disabled="environmentForm.$invalid"
                             class="btn btn-primary pull-right">
                         <spinner is-loading="ctrl.ui.isSaving"></spinner>
                         Save

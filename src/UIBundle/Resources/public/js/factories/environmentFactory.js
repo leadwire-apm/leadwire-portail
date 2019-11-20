@@ -15,17 +15,16 @@
                  */
                 get: function (id) {
                     return $http.get(
-                        CONFIG.BASE_URL + 'api/environment/' + id + '/get',
-                    );
+                        CONFIG.BASE_URL + 'api/environment/' + id + '/get');
                 },
                 /**
                  *
                  * @returns {Promise}
                  */
-                update: function (id, body) {
+                update: function (body) {
                     return $http.put(
                         CONFIG.BASE_URL + 'api/environment/update',
-                        body,
+                        body
                     );
                 },
                  /**
@@ -33,9 +32,9 @@
                  * @returns {Promise}
                  */
                 add: function (body) {
-                    return $http.put(
-                        CONFIG.BASE_URL + 'api/environment/add',
-                        body,
+                    return $http.post(
+                        CONFIG.BASE_URL + 'api/environment/new',
+                        body
                     );
                 },
                 /**
@@ -44,8 +43,7 @@
                  */
                 delete: function (id) {
                     return $http.delete(
-                        CONFIG.BASE_URL + 'api/environment/' + id + '/delete',
-                    );
+                        CONFIG.BASE_URL + 'api/environment/' + id + '/delete');
                 },
             };
         });
