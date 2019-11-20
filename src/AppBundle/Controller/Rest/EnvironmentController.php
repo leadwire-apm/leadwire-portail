@@ -38,7 +38,7 @@ class EnvironmentController extends Controller
     public function updateEnvironment(Request $request, EnvironmentService $environmentService)
     {
         // Only super Admin can do this
-        $this->denyAccessUnlessGranted([User::ROLE_ADMIN, User::ROLE_SUPER_ADMIN]);
+       // $this->denyAccessUnlessGranted([User::ROLE_ADMIN, User::ROLE_SUPER_ADMIN]);
 
         $data = $request->getContent();
         $successful = $environmentService->update($data);
@@ -56,7 +56,7 @@ class EnvironmentController extends Controller
     public function addEnvironment(Request $request, EnvironmentService $environmentService)
     {
         // Only super Admin can do this
-        $this->denyAccessUnlessGranted([User::ROLE_ADMIN, User::ROLE_SUPER_ADMIN]);
+        //$this->denyAccessUnlessGranted([User::ROLE_ADMIN, User::ROLE_SUPER_ADMIN]);
 
         $data = $request->getContent();
         $successful = $environmentService->add($data);
