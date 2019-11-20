@@ -74,7 +74,7 @@ class EnvironmentController extends Controller
     public function deleteEnvironment(Request $request, EnvironmentService $environmentService, $id)
     {
         // Only super Admin can do this
-        $this->denyAccessUnlessGranted([User::ROLE_ADMIN, User::ROLE_SUPER_ADMIN]);
+        //$this->denyAccessUnlessGranted([User::ROLE_ADMIN, User::ROLE_SUPER_ADMIN]);
 
         $environmentService->delete($id);
 
