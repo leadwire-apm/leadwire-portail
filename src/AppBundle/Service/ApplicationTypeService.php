@@ -173,6 +173,9 @@ class ApplicationTypeService
                 }
                 $dbApplicationType->addMonitoringSet($loaded);
             }
+            $dbApplicationType->setName($applicationType->getName());
+            $dbApplicationType->setDescription($applicationType->getDescription());
+            $dbApplicationType->setInstallation($applicationType->getInstallation());
 
             $dm->persist($dbApplicationType);
             $dm->flush();
