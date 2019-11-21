@@ -99,17 +99,23 @@
                         routeCallback,
                         iconCallback,
                         visibleCallback,
+                        routeNameCallback,
+                        routeOptsCallback,
+                        routeIdCallback
                     ) {
                         try {
-                            newMenus = Object.keys(menus);
+                            newMenus = {};
 
-                            newMenus.forEach(function(theme) {
+                            Object.keys(menus).forEach(function(theme) {
                                 sub = menus[theme].map(function (menu) {
                                     return {
                                         label: labelCallback(menu),
                                         route: routeCallback(menu),
                                         icon: iconCallback(menu),
                                         visible: visibleCallback(menu),
+                                        routeName: routeNameCallback(menu),
+                                        routeOpts: routeOptsCallback(menu),
+                                        routeId: routeIdCallback(menu)
                                     };
                                 });
 

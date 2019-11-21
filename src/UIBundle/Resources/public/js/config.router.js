@@ -108,9 +108,8 @@ angular.module('leadwireApp')
                         },
                         deps: updateMenuItems(MenuEnum.SETTINGS),
                         beforeMount: [
-                            '$rootScope',
                             'UserService',
-                            function ($rootScope, UserService) {
+                            function (UserService) {
                                 UserService.handleFirstLogin();
                                 return Promise.resolve();
                             },
@@ -585,7 +584,9 @@ angular.module('leadwireApp')
 
             function updateMenuItems (key) {
                 return function (MenuFactory, $rootScope) {
-                    $rootScope.menus = MenuFactory.get(key);
+                    if (key != "DASHBOARD") {
+                        $rootScope.menus = MenuFactory.get(key);
+                    }
                     return Promise.resolve();
                 };
             }
