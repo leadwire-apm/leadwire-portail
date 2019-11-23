@@ -23,7 +23,7 @@ class AuthController extends Controller
     public function getAuthAction(Request $request, AuthService $authService, ProcessService $processService, $provider)
     {
         if (method_exists($this, $provider . 'Action') === true) {
-            $processService->createLoginProcess("Processing login");
+            $processService->emit("heavy-operations-in-progress", "Processing login");
             return $this->{$provider . 'Action'}($request, $authService);
         } else {
             return new JsonResponse("Provider not found", 404);

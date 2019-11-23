@@ -1,0 +1,14 @@
+{
+    "name": "leadwire_emitter",
+    "version": "3.0.0",
+    "main": "server.js",
+    "scripts": {
+        "start": "./node_modules/forever/bin/forever start server.js",
+        "stop": "./node_modules/forever/bin/forever stop server.js"
+    },
+    "dependencies": {
+        "forever": "^1.0.0",
+        "socket.io": "~1",
+        "winston": "*"
+    }
+}

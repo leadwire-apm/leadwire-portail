@@ -8,9 +8,7 @@
                        MenuFactory,
                        $location,
                        iFrameService,
-                       SatellizerConfig,
-                       $http,
-                       rx) {
+                       SatellizerConfig) {
             // $rootScope.menus = $localStorage.currentMenu;
             $rootScope.applications = $localStorage.applications;
             $rootScope.dashboards = $localStorage.dashboards;
@@ -59,50 +57,6 @@
                     iFrameService.setDimensions($('iframe'));
                 }
             });
-
-            function checkLoadingProcess () {
-                var deferred = $http({
-                    url: CONFIG.BASE_URL + 'api/process/get',
-                    method: "get"
-                });
-
-                return rx.Observable
-                    .fromPromise(deferred)
-                    .retry(10)
-                    .map(function(response) {
-                        return response.data;
-                    });
-            }
-
-            $rootScope.$createObservableFunction('checkProcess')
-                .debounce(200)
-                .flatMapLatest(checkLoadingProcess)
-                .subscribe(
-                    function(result) {
-                        if (result != null && result.status == "in-progress") {
-                            if ($('#toast-container').hasClass('.toast-top-right') == false) {
-                                toastr.remove();
-                                toastr.info(
-                                    result.message + '...',
-                                    "Opération in progress",
-                                    {
-                                        timeOut: 0,
-                                        extendedTimeOut: 0,
-                                        closeButton: true,
-                                        onClick: null,
-                                        preventDuplicates: true
-                                    }
-                                );
-                            } else {
-                                $('.toast-message').html(result.message + '...');
-                            }
-                            $rootScope.checkProcess();
-                        } else {
-                            toastr.remove();
-                        }
-                    }
-                )
-            ;
         });
 
 })(window.angular);

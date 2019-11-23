@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6165d77a38718246e65a29df1433976b",
+    "content-hash": "be835eb1b5e9005467b81a4ce81e13a6",
     "packages": [
         {
             "name": "alcaeus/mongo-php-adapter",
@@ -3056,17 +3056,6 @@
         {
             "name": "league/omnipay",
             "version": "v3.0.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/thephpleague/omnipay.git",
-                "reference": "9e10d91cbf84744207e13d4483e79de39b133368"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/omnipay/zipball/9e10d91cbf84744207e13d4483e79de39b133368",
-                "reference": "9e10d91cbf84744207e13d4483e79de39b133368",
-                "shasum": ""
-            },
             "require": {
                 "omnipay/common": "^3",
                 "php": "^5.6|^7",
@@ -5939,6 +5928,72 @@
             ],
             "description": "JSONP callback validator.",
             "time": "2014-01-20T22:35:06+00:00"
+        },
+        {
+            "name": "wisembly/elephant.io",
+            "version": "v3.3.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Wisembly/elephant.io.git",
+                "reference": "9d56f409fe231a906af87005f83a135565632d3f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Wisembly/elephant.io/zipball/9d56f409fe231a906af87005f83a135565632d3f",
+                "reference": "9d56f409fe231a906af87005f83a135565632d3f",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4.0",
+                "psr/log": "~1.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "ElephantIO\\": [
+                        "src/",
+                        "test/"
+                    ]
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Baptiste Clavié",
+                    "email": "baptiste@wisembly.com",
+                    "homepage": "http://baptiste.xn--clavi-fsa.net/",
+                    "role": "Maintainer"
+                },
+                {
+                    "name": "Guillaume Potier",
+                    "email": "guillaume@wisembly.com",
+                    "role": "Maintainer"
+                },
+                {
+                    "name": "Ludovic Barreca",
+                    "email": "ludogp2@gmail.com",
+                    "role": "Project Founder"
+                },
+                {
+                    "name": "Elephant.IO Community",
+                    "role": "Contributors :)"
+                }
+            ],
+            "description": "Send events to a websocket real time engine though PHP",
+            "homepage": "http://elephant.io",
+            "keywords": [
+                "dialog",
+                "nodejs",
+                "real time",
+                "websocket"
+            ],
+            "time": "2017-09-10T20:38:38+00:00"
         }
     ],
     "packages-dev": [

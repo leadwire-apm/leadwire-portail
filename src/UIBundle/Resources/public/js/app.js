@@ -22,11 +22,17 @@ angular.module('leadwireApp', [
     'toastr',
     'simplemde',
     'ng.jsoneditor',
-    'rx',
+    'ysilvela.socket-io',
 ], function ($interpolateProvider) {
     $interpolateProvider.startSymbol('[[');
     $interpolateProvider.endSymbol(']]');
 })
+    .factory('socket', function (socketFactory) {
+        return socketFactory({
+            prefix: "",
+            ioSocket: io.connect('http://localhost:8000')
+        });
+    })
     .constant('COLORS', {
         default: '#e2e2e2',
         primary: '#09c',

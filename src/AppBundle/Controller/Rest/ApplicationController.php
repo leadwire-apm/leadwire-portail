@@ -194,24 +194,24 @@ class ApplicationController extends Controller
     ) {
         $status = false;
         $application = null;
-        $process = $processService->createProcess($this->getUser(), "Creating application settings");
+        $processService->emit("heavy-operations-in-progress", "Creating application settings");
         try {
             $data = $request->getContent();
             $application = $applicationService->newApplication($data, $this->getUser());
 
             if ($application !== null) {
                 // Application created in MongoDB. proceed with LDAP & ES entries
-                $process = $processService->updateInProgressProcess($process, $message = "Creating LDAP Entries");
+                $processService->emit("heavy-operations-in-progress", "Creating LDAP Entries");
                 $ldapService->createApplicationEntry($application);
                 $ldapService->registerApplication($this->getUser(), $application);
 
-                $process = $processService->updateInProgressProcess($process, $message = "Creating Index-patterns");
+                $processService->emit("heavy-operations-in-progress", "Creating Index-patterns");
                 $esService->deleteIndex($application->getApplicationIndex());
                 $esService->createIndexTemplate($application, $applicationService->getActiveApplicationsNames());
 
                 $esService->createAlias($application);
 
-                $process = $processService->updateInProgressProcess($process, $message = "Creating Kibana Dashboards");
+                $processService->emit("heavy-operations-in-progress", "Creating Kibana Dashboards");
                 $kibanaService->loadIndexPatternForApplication(
                     $application,
                     $application->getApplicationIndex()
@@ -232,20 +232,20 @@ class ApplicationController extends Controller
                 $kibanaService->loadDefaultIndex($application->getSharedIndex(), 'default');
                 $kibanaService->makeDefaultIndex($application->getSharedIndex(), 'default');
 
-                $process = $processService->updateInProgressProcess($process, $message = "Configuring SearchGuard");
+                $processService->emit("heavy-operations-in-progress", "Configuring SearchGuard");
                 $sgService->updateSearchGuardConfig();
 
-                $process = $processService->updateInProgressProcess($process, $message = "Updating Curator Configurations");
+                $processService->emit("heavy-operations-in-progress", "Updating Curator Configurations");
                 $curatorService->updateCuratorConfig();
 
                 $status = true;
             }
-            $processService->successProcess($process);
+            $processService->emit("heavy-operations-done", "Successeded");
         } catch (DuplicateApplicationNameException $e) {
-            $processService->failProcess($process);
+            $processService->emit("heavy-operations-done", "Failed");
             return $this->renderResponse(['message' => $e->getMessage()], Response::HTTP_NOT_ACCEPTABLE);
         } catch (\Exception $e) {
-            $processService->failProcess($process);
+            $processService->emit("heavy-operations-done", "Failed");
             if ($application instanceof Application) {
                 $applicationService->obliterateApplication($application);
 
@@ -281,13 +281,13 @@ class ApplicationController extends Controller
         ProcessService $processService,
         string $id
     ) {
-        $process = $processService->createProcess($this->getUser(), "Updating application settings");
+        $processService->emit("heavy-operations-in-progress", "Updating application settings");
         try {
             $data = $request->getContent();
             $state = $applicationService->updateApplication($data, $id);
             if ($state['esUpdateRequired'] === true) {
                 $application = $state['application'];
-                $process = $processService->updateInProgressProcess($process, $message = "Updating Index-patterns");
+                $processService->emit("heavy-operations-in-progress", "Updating Index-patterns");
                 $esService->deleteIndex($application->getApplicationIndex());
                 $esService->createIndexTemplate($application, $applicationService->getActiveApplicationsNames());
 
@@ -298,7 +298,7 @@ class ApplicationController extends Controller
                     $application->getApplicationIndex()
                 );
 
-                $process = $processService->updateInProgressProcess($process, $message = "Updating Kibana Dashboards");
+                $processService->emit("heavy-operations-in-progress", "Updating Kibana Dashboards");
                 $kibanaService->loadDefaultIndex($application->getApplicationIndex(), 'default');
                 $kibanaService->makeDefaultIndex($application->getApplicationIndex(), 'default');
 
@@ -314,14 +314,14 @@ class ApplicationController extends Controller
                 $kibanaService->loadDefaultIndex($application->getSharedIndex(), 'default');
                 $kibanaService->makeDefaultIndex($application->getSharedIndex(), 'default');
 
-                $process = $processService->updateInProgressProcess($process, $message = "Updating Curator Configurations");
+                $processService->emit("heavy-operations-in-progress", "Updating Curator Configurations");
                 $curatorService->updateCuratorConfig();
             }
-            $processService->successProcess($process);
+            $processService->emit("heavy-operations-done", "Succeeded");
 
             return $this->renderResponse($state['successful']);
         } catch (MongoDuplicateKeyException $e) {
-            $processService->failProcess($process);
+            $processService->emit("heavy-operations-done", "Failed");
             return $this->renderResponse(['message' => "Application's name must be unique"], Response::HTTP_UNAUTHORIZED);
         }
     }
@@ -427,13 +427,13 @@ class ApplicationController extends Controller
         string $id
     ) {
         $application = $applicationService->getApplication($id);
-        $process = $processService->createProcess($this->getUser(), "Updating Application Type");
+        $processService->emit("heavy-operations-in-progress", "Updating Application Type");
         if ($application instanceof Application) {
-            $process = $processService->updateInProgressProcess($process, $message = "Updating Index-patterns");
+            $processService->emit("heavy-operations-in-progress", "Updating Index-patterns");
             $esService->deleteIndex($application->getApplicationIndex());
             $esService->createIndexTemplate($application, $applicationService->getActiveApplicationsNames());
             $aliases = $esService->createAlias($application);
-            $process = $processService->updateInProgressProcess($process, $message = "Updating Kibana Dashboards");
+            $processService->emit("heavy-operations-in-progress", "Updating Kibana Dashboards");
             $kibanaService->loadIndexPatternForApplication(
                 $application,
                 $application->getApplicationIndex()
@@ -456,9 +456,9 @@ class ApplicationController extends Controller
 
             $application->setDeployedTypeVersion($application->getType()->getVersion());
             $applicationManager->update($application);
-            $processService->successProcess($process);
+            $processService->emit("heavy-operations-done", "Succeeded");
         } else {
-            $processService->failProcess($process);
+            $processService->emit("heavy-operations-done", "Failed");
             throw new NotFoundHttpException("Application with ID {$id} not found.");
         }
 

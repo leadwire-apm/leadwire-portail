@@ -52,8 +52,3 @@ app_rest_step:
     resource: "@AppBundle/Controller/Rest/StepController.php"
     type: "annotation"
     prefix: "/%internal_api_prefix%/step"
-
-app_rest_process:
-    resource: "@AppBundle/Controller/Rest/ProcessController.php"
-    type: "annotation"
-    prefix: "/%internal_api_prefix%/process"

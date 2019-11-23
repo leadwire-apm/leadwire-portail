@@ -126,8 +126,7 @@ class AuthService
         if ($user === null) {
             $user = $this->handleNewUser($data);
         } else {
-            $process = $this->processService->getInProgressLoginProcess(true);
-            $this->processService->successLoginProcess($process);
+            $this->processService->emit("heavy-operations-done", "Succeeded");
             $this->validateActiveStatus($user);
         }
 
@@ -144,12 +143,10 @@ class AuthService
         $user = $this->userManager->getOneBy($params);
 
         if ($user === null) {
-            $process = $this->processService->getInProgressLoginProcess(true);
-            $this->processService->failLoginProcess($process);
+            $this->processService->emit("heavy-operations-done", "Failed");
             throw new AccessDeniedHttpException("User is undefined");
         } else {
-            $process = $this->processService->getInProgressLoginProcess(true);
-            $this->processService->successLoginProcess($process);
+            $this->processService->emit("heavy-operations-done", "Succeded");
             $this->validateActiveStatus($user);
 
             $this->checkSuperAdminRoles($user);
@@ -164,8 +161,7 @@ class AuthService
         if ($user === null) {
             $user = $this->handleNewUser($params);
         } else {
-            $process = $this->processService->getInProgressLoginProcess(true);
-            $this->processService->successLoginProcess($process);
+            $this->processService->emit("heavy-operations-done", "Succeded");
             $this->validateActiveStatus($user);
         }
 
@@ -298,27 +294,26 @@ class AuthService
             $user = $this->addUser($parameters);
         }
 
-        $process = $this->processService->getInProgressLoginProcess(true);
         if ($user !== null) {
             // User creation in DB is successful
             // Should create LDAP & ElasticSearch entries
-            $process = $this->processService->updateInProgressLoginProcess($process, "Creating LDAP Entries");
+            $this->processService->emit("heavy-operations-in-progress", "Creating LDAP Entries");
             $this->ldapService->createNewUserEntries($user);
             $this->ldapService->registerDemoApplications($user);
-            $process = $this->processService->updateInProgressLoginProcess($process, "Register Applications");
+            $this->processService->emit("heavy-operations-in-progress", "Register Applications");
             $this->applicationService->registerDemoApplications($user);
 
-            $process = $this->processService->updateInProgressLoginProcess($process, "Creating ES Indexe-patterns");
+            $this->processService->emit("heavy-operations-in-progress", "Creating ES Indexe-patterns");
             $this->esService->deleteIndex($user->getUserIndex());
-            $process = $this->processService->updateInProgressLoginProcess($process, "Creating Kibana Dashboards");
+            $this->processService->emit("heavy-operations-in-progress", "Creating Kibana Dashboards");
             $this->kibanaService->loadIndexPatternForUserTenant($user);
 
             $this->kibanaService->loadDefaultIndex($user->getUserIndex(), 'default');
             $this->kibanaService->makeDefaultIndex($user->getUserIndex(), 'default');
 
-            $process = $this->processService->updateInProgressLoginProcess($process, "Configuring SearchGuard");
+            $this->processService->emit("heavy-operations-in-progress", "Configuring SearchGuard");
             $this->sgService->updateSearchGuardConfig();
-            $this->processService->successLoginProcess($process);
+            $this->processService->emit("heavy-operations-done", "Succeded");
         }
 
         return $user;

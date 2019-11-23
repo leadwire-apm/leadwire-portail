@@ -47,7 +47,6 @@
                  * @returns {Promise}
                  */
                 save: function (body) {
-                    $rootScope.checkProcess();
                     return $http.post(CONFIG.BASE_URL + 'api/app/new', body);
                 },
                 /**
@@ -64,7 +63,6 @@
                  * @returns {Promise}
                  */
                 update: function (id, body) {
-                    $rootScope.checkProcess();
                     return $http.put(
                         CONFIG.BASE_URL + 'api/app/' + id + '/update',
                         body,

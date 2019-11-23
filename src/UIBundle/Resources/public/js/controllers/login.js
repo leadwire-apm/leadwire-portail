@@ -30,16 +30,40 @@
         $rootScope,
         $state,
         CONFIG,
-        $http,
-        rx,
-        $timeout
+        socket
     ) {
         var vm = this;
+
+        socket.on('heavy-operation', function(data) {
+
+            if (data.status == "in-progress") {
+                if ($('#toast-container').hasClass('toast-top-right') == false) {
+                    toastr.info(
+                        data.message + '...',
+                        "Operation in progress",
+                        {
+                            timeOut: 0,
+                            extendedTimeOut: 0,
+                            closeButton: true,
+                            onClick: null,
+                            preventDuplicates: true
+                        }
+                    );
+                } else {
+                    $('.toast-message').html(data.message + '...');
+                }
+            }
+            if (data.status == "done") {
+                toastr.clear();
+            }
+        });
+
         vm.invitationId =
             $location.$$search && $location.$$search.invitation
             ? $location.$$search.invitation
             : undefined
         ;
+
         onLoad();
 
         vm.authenticate = authenticate;
@@ -63,7 +87,6 @@
 
     function providerAuthenticate(provider) {
         vm.isChecking = true;
-        $timeout(loginProcess, 1800);
         $auth
             .authenticate(provider)
             .then(getMe) // accept invitation and update Localstorage
@@ -79,7 +102,6 @@
             return;
         }
         vm.isChecking = true;
-        $timeout(loginProcess, 1800);
         $auth
           .login({ username: vm.login })
           .then(getMe) // accept invitation and update Localstorage
@@ -93,7 +115,7 @@
 
         UserService.getProxyHeaders(function(headers) {
             vm.isChecking = true;
-            $timeout(loginProcess, 1800);
+
             $auth
               .login()
               .then(getMe) // accept invitation and update Localstorage
@@ -114,7 +136,6 @@
 
     function handleLoginSuccess(provider) {
         return function(response) {
-            toastr.clear();
             toastr.success(MESSAGES_CONSTANTS.LOGIN_SUCCESS(provider));
             // clear query string (?invitationId=***)
             $location.search({});
@@ -134,7 +155,6 @@
 
     function handleLoginFailure(error) {
         vm.isChecking = false;
-        toastr.clear();
         var message = null;
         if (error.message) {
             message = error.message;
@@ -149,6 +169,7 @@
         } else {
             message = error;
         }
+        toastr.remove();
         toastr.error(message);
     }
 
@@ -176,6 +197,7 @@
     }
 
     function onLoad() {
+
         if ($auth.isAuthenticated()) {
             if ($localStorage.user) {
 
@@ -185,6 +207,7 @@
                         $localStorage.user.id
                         )
                     .then(function(app) {
+                        toastr.remove();
                         toastr.success(MESSAGES_CONSTANTS.INVITATION_ACCEPTED);
                         (
                             $localStorage.applications || ($localStorage.applications = [])
@@ -192,6 +215,7 @@
                         $state.go("app.applicationsList");
                     })
                     .catch(function(error) {
+                        toastr.remove();
                         toastr.error(MESSAGES_CONSTANTS.ERROR);
                         console.log("onLoad Login", error);
                     });
@@ -203,50 +227,6 @@
             }
         }
     }
-
-    function checkLoginProcess () {
-        var deferred = $http({
-            url: CONFIG.BASE_URL + 'api/process/login/get',
-            method: "get"
-        });
-
-        return rx.Observable
-            .fromPromise(deferred)
-            .retry(10)
-            .map(function(response) {
-                return response.data;
-            });
-    }
-
-    $rootScope.$createObservableFunction ('checkLoginProcess')
-        .debounce(250)
-        .flatMapLatest(checkLoginProcess)
-        .subscribe(
-            function(result) {
-                if (result != null && result.status == "in-progress") {
-                    if ($('#toast-container').hasClass('.toast-top-right') == false) {
-                        toastr.info(
-                            result.message + '...',
-                            "Opération in progress",
-                            {
-                                timeOut: 0,
-                                extendedTimeOut: 0,
-                                closeButton: false,
-                                onClick: null,
-                                preventDuplicates: true,
-                                progressBar: false
-                            }
-                        );
-                    } else {
-                        $('.toast-message').html(result.message + '...');
-                    }
-                    $rootScope.checkLoginProcess();
-                } else {
-                    toastr.clear();
-                }
-            }
-        )
-    ;
 }
 
 (function(angular) {
@@ -266,9 +246,7 @@
         "$rootScope",
         "$state",
         "CONFIG",
-        "$http",
-        "rx",
-        "$timeout",
+        "socket",
         LoginControllerFN
         ]);
 })(window.angular);
