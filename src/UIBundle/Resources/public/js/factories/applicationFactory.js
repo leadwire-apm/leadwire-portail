@@ -1,6 +1,6 @@
 (function (angular) {
     angular.module('leadwireApp')
-        .factory('ApplicationFactory', function ($http, CONFIG) {
+        .factory('ApplicationFactory', function ($http, CONFIG, $rootScope) {
             return {
 
                 /**

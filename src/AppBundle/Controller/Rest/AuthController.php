@@ -3,6 +3,7 @@
 namespace AppBundle\Controller\Rest;
 
 use AppBundle\Service\AuthService;
+use AppBundle\Service\ProcessService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -19,9 +20,10 @@ class AuthController extends Controller
      *
      * @return Response
      */
-    public function getAuthAction(Request $request, AuthService $authService, $provider)
+    public function getAuthAction(Request $request, AuthService $authService, ProcessService $processService, $provider)
     {
         if (method_exists($this, $provider . 'Action') === true) {
+            $processService->emit("heavy-operations-in-progress", "Processing login");
             return $this->{$provider . 'Action'}($request, $authService);
         } else {
             return new JsonResponse("Provider not found", 404);

@@ -31,9 +31,10 @@
         MESSAGES_CONSTANTS,
         toastr,
         Paginator,
-        CONFIG,
+        CONFIG
     ) {
         onLoad();
+
         $scope.COMPAGNE_ENABLED = CONFIG.COMPAGNE_ENABLED;
         $scope.LOGIN_METHOD     = CONFIG.LOGIN_METHOD;
 

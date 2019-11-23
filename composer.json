@@ -55,7 +55,8 @@
         "symfony/polyfill-apcu": "^1.0",
         "symfony/swiftmailer-bundle": "^3.2",
         "symfony/symfony": "3.4.*",
-        "twig/twig": "^1.0||^2.0"
+        "twig/twig": "^1.0||^2.0",
+        "wisembly/elephant.io": "^3.3"
     },
     "require-dev": {
         "fzaninotto/faker": "^1.7",

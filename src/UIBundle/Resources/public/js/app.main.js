@@ -9,14 +9,17 @@
                        MenuFactory,
                        $location,
                        iFrameService) {
+            // $rootScope.menus = $localStorage.currentMenu;
             $rootScope.applications = $localStorage.applications;
             $rootScope.dashboards = $localStorage.dashboards;
             $rootScope.ASSETS_BASE_URL = CONFIG.ASSETS_BASE_URL;
             $rootScope.DOWNLOAD_URL = CONFIG.DOWNLOAD_URL;
             $rootScope.UPLOAD_URL = CONFIG.UPLOAD_URL;
+
             $rootScope.$watch('applications', function (newVal) {
                 $localStorage.applications = newVal;
             });
+
             $state.defaultErrorHandler(function (error) {
             // This is a naive example of how to silence the default error handler.
                 if (error.detail === 'UNAUTHORIZED') {
