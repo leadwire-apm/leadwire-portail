@@ -3,6 +3,7 @@
 namespace AppBundle\Document;
 
 use AppBundle\Document\User;
+use AppBundle\Document\Environment;
 use Doctrine\Bundle\MongoDBBundle\Validator\Constraints\Unique;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
