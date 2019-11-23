@@ -8,6 +8,7 @@
             '$state',
             'toastr',
             'socket',
+            '$timeout',
             EditApplicationTypeControllerCtrlFN,
         ]);
 
@@ -22,7 +23,8 @@
         MESSAGES_CONSTANTS,
         $state,
         toastr,
-        socket
+        socket,
+        $timeout
     ) {
         var vm = this;
 
@@ -63,8 +65,10 @@
                     .forEach(function(ms) {
                         selected.push(ms.id);
                     });
-                    $('.selectpicker').selectpicker('val', selected);
-                    $('.selectpicker').selectpicker('refresh');
+                    $timeout(function () {
+                        $('.selectpicker').selectpicker('val', selected);
+                        $('.selectpicker').selectpicker('refresh');
+                    });
                 });
 
         };
@@ -75,13 +79,19 @@
                 vm.availableMonitoringSets = monitoringSets;
                 $('.selectpicker').append(vm.availableMonitoringSets.map(function(v,k){return '<option value="' + v.id + '">'+v.name+'</option>'}));
                 $('.selectpicker').selectpicker('refresh');
-                vm.loadApplicationType($stateParams.id)
+                vm.loadApplicationType($stateParams.id);
             });
         };
 
         vm.editAppType = function () {
             vm.flipActivityIndicator('isSaving')
-            vm.applicationType.monitoringSets = vm.applicationType.monitoringSets.map(function (ms) {return {'id': ms};});
+            vm.applicationType.monitoringSets = vm.applicationType.monitoringSets.map(function (ms) {
+                if (ms instanceof Object) {
+                    return {"id": ms.id};
+                }
+
+                return {"id": ms};
+            });
             ApplicationTypeService.update(vm.applicationType)
                 .then(function () {
                     vm.flipActivityIndicator('isSaving')
@@ -104,7 +114,7 @@
                     name: '',
                     description: '',
                     installation: '',
-                    monitoringSets:[]
+                    monitoringSets: []
                 },
                 availableMonitoringSets: []
             });

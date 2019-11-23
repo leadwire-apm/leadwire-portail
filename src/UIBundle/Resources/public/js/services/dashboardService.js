@@ -51,11 +51,23 @@
                     });
                 },
                 function (menu) {
-                    return menu.icon || 'fas fa-tachometer-alt';
+                    return menu.icon || 'fa fa-tachometer-alt';
                 },
                 function (menu) {
                     return menu.visible;
                 },
+                function (menu) {
+                    return 'app.dashboard.home({id:"' + menu.id + '",tenant:"' + menu.tenant + '"})';
+                },
+                function (menu) {
+                    return {
+                        id: menu.id,
+                        tenant: menu.tenant
+                    }
+                },
+                function (menu) {
+                    return "L" + menu.id.replace(/-/g, "");
+                }
             );
             $rootScope.menus = $localStorage.currentMenu;
             $localStorage.currentApplicationMenus = $localStorage.currentMenu;
@@ -105,7 +117,7 @@
         service.fetchDashboardsListByAppId = function (appId) {
             return new Promise(function (resolve, reject) {
                 ApplicationFactory.findMyDashboard(appId)
-                    .then(function (response) {                      
+                    .then(function (response) {
                         resolve(response.data.Default);
                     })
                     .catch(function (error) {

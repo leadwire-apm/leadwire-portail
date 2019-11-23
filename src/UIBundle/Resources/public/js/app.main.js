@@ -5,10 +5,10 @@
                        $localStorage,
                        CONFIG, $templateCache,
                        $state,
+                       $stateParams,
                        MenuFactory,
                        $location,
-                       iFrameService,
-                       SatellizerConfig) {
+                       iFrameService) {
             // $rootScope.menus = $localStorage.currentMenu;
             $rootScope.applications = $localStorage.applications;
             $rootScope.dashboards = $localStorage.dashboards;
@@ -21,7 +21,7 @@
             });
 
             $state.defaultErrorHandler(function (error) {
-// This is a naive example of how to silence the default error handler.
+            // This is a naive example of how to silence the default error handler.
                 if (error.detail === 'UNAUTHORIZED') {
                     $rootScope.menus = MenuFactory.get('SETTINGS');
                     $location.path('/applications/list');

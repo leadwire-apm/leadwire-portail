@@ -23,7 +23,7 @@
         <li class="text-center" ng-if="isChangingContext">
             <spinner is-loading="true" size="32" color="'antiquewhite'"></spinner>
         </li>
-        <li ng-repeat="menu in menus track by $index"
+        <li ng-repeat="(key, menu) in menus"
             ng-if="!isChangingContext && state.includes('app.dashboard') == false"
             ui-sref-active="active">
              <a ng-if="menu.route" ng-href="[[menu.route]]">
@@ -35,19 +35,21 @@
                 <span>[[menu.label]]</span>
             </a>
         </li>
-        <div ng-repeat="menu in menus track by $index" ng-if="!isChangingContext && state.includes('app.dashboard')">
-            <li data-toggle="collapse" data-target="#[[menu.split(' ').join('')]]" ng-class="collapsed" ui-sref-active="active" style="padding: 13px 21px;">
-                <a href="#"><i ng-class="menu == 'APM' ? 'fa fa-eye' : 'fa fa-exchange-alt'"></i><span>[[menu]]</span></a>
+
+        <div ng-repeat="(key, menu) in menus" ng-if="!isChangingContext && state.includes('app.dashboard')">
+            <li data-toggle="collapse" data-target="#[[key]]" ng-class="collapsed" ui-sref-active-eq style="padding: 13px 21px;">
+                <a><i ng-class="key == 'APM' ? 'fa fa-eye' : 'fa fa-exchange-alt'"></i><span>[[key]]</span></a>
             </li>
-            <ul class="sub-menu collapse" id="[[menu.split(' ').join('')]]">
-                <li ng-repeat="submenu in menus[menu]" style="list-style-type: none;">
-                    <a ng-href="[[submenu.route]]" ng-if="submenu.visible" style="padding: 13px 21px;">
+            <ul class="sub-menu collapse" id="[[key]]">
+                <li ng-repeat="submenu in menu" style="list-style-type: none;" ui-sref-active="active">
+                    <a id="[[submenu.routeId]]" ui-sref="[[submenu.routeName]]" ui-sref-opts="{reload: true}" ng-if="submenu.visible" style="padding: 13px 21px;">
                             <i class="[[submenu.icon]]"></i>
                             <span>[[submenu.label]]</span>
                     </a>
                 </li>
             </ul>
         </div>
+
         <li ng-if="!isChangingContext && state.includes('app.dashboard')">
             <a ng-href="[['#/dashboard/custom/' + $localStorage.selectedAppId]]">
                 <i class="fa fa-file-alt"></i>
