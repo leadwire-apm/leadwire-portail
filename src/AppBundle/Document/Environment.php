@@ -41,6 +41,12 @@ class Environment
      */
     private $ip;
 
+    /**
+     * @JMS\Expose
+     * @var array
+     */
+    private $applications;
+
 
     /**
      * Get id
@@ -59,7 +65,7 @@ class Environment
      *
      * @return  self
      */
-    public function setName(string $named)
+    public function setName(string $name)
     {
         $this->name = $name;
 
@@ -101,4 +107,41 @@ class Environment
     }
 
 
+    /**
+     * Get the value of applications
+     *
+     * @return  array
+     */
+    public function getApplications(): array
+    {
+        return $this->applications;
+    }
+
+    /**
+     * Set the value of applications
+     *
+     * @param  array  $applications
+     *
+     * @return  self
+     */
+    public function setApplications(array $applications): self
+    {
+        $this->applications = $applications;
+
+        return $this;
+    }
+
+    /**
+     * Set the value of application
+     *
+     * @param  Application  $application
+     *
+     * @return  self
+     */
+    public function addToApplication(Application &$application)
+    {
+        $application->addEnvironment($this);
+
+        return $this;
+    }
 }

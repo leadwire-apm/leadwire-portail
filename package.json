@@ -4,9 +4,10 @@
     "main": "server.js",
     "scripts": {
         "start": "./node_modules/forever/bin/forever start server.js",
-        "stop": "./node_modules/forever/bin/forever stop server.js"
+        "stop": "./node_modules/forever/bin/forever stopall"
     },
     "dependencies": {
+        "dotenv": "^8.2.0",
         "forever": "^1.0.0",
         "socket.io": "~1",
         "winston": "*"

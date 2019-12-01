@@ -1,7 +1,9 @@
-var server     = require('http').createServer('localhost'),
+var dotenv     = require('dotenv');
+dotenv.config();
+var server     = require('http').createServer('${process.env.APP_DOMAIN}'),
     io         = require('socket.io')(server),
     logger     = require('winston'),
-    port       = 8000;
+    port       = process.env.SOCKET_IO_PORT;
 
 io.on('connection', function (socket) {
     socket.on('broadcast', function (data) {

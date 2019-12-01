@@ -14,10 +14,13 @@ class ProcessService
 
     /**
      * Constructor
+     *
+     * @param string $appDomain
+     * @param string $port
      */
-    public function __construct()
+    public function __construct($appDomain, $port)
     {
-        $this->elephant = new Elephant(new Version1X('http://localhost:8000'));
+        $this->elephant = new Elephant(new Version1X(sprintf('http://%s:%s', $appDomain, $port)));
     }
 
     /**

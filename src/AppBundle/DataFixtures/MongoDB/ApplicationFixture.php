@@ -3,8 +3,10 @@
 namespace AppBundle\DataFixtures\MongoDB;
 
 use AppBundle\DataFixtures\MongoDB\ApplicationTypeFixture;
+use AppBundle\DataFixtures\MongoDB\EnvironmentFixture;
 use AppBundle\Document\Application;
 use AppBundle\Document\ApplicationType;
+use AppBundle\Document\Environment;
 use AppBundle\Document\User;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
@@ -18,6 +20,9 @@ class ApplicationFixture extends AbstractFixture implements OrderedFixtureInterf
     {
         /** @var ApplicationType $applicationType */
         $applicationType = $this->getReference(ApplicationTypeFixture::DEFAULT_TYPE_REFERENCE);
+
+        /** @var Environment $environment */
+        $environment = $this->getReference(EnvironmentFixture::DEFAULT_ENVIRONMENT);
 
         $now = new \DateTime();
 
@@ -48,7 +53,8 @@ class ApplicationFixture extends AbstractFixture implements OrderedFixtureInterf
             ->setDemo(true)
             ->setRemoved(false)
             ->setOwner($user)
-            ->setType($applicationType);
+            ->setType($applicationType)
+            ->addEnvironment($environment);
 
         $manager->persist($jpetstore);
 
