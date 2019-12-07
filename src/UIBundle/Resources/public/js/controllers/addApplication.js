@@ -9,6 +9,7 @@
             'MESSAGES_CONSTANTS',
             '$state',
             'socket',
+            '$rootScope',
             addApplicationCtrlFN,
         ]);
 
@@ -29,7 +30,8 @@
         toastr,
         MESSAGES_CONSTANTS,
         $state,
-        socket
+        socket,
+        $rootScope
     ) {
         var vm = this;
 
@@ -87,6 +89,7 @@
 
         function handleAfterSuccess (success) {
             if (success) {
+                $rootScope.$broadcast("new:app", {});
                 vm.flipActivityIndicator();
                 $state.go('app.applicationsList');
             }

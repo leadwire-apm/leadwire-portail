@@ -92,6 +92,8 @@ twig:
     strict_variables: '%kernel.debug%'
     globals:
         APP_VERSION:  '%app_version%'
+        APP_DOMAIN: '%app_domain%'
+        SOCKET_IO_PORT: '%socket_io_port%'
         BASE_URL: '%app_schemes%://%app_domain%/'
         ASSETS_BASE_URL: '/'
         UPLOAD_URL: '%app_schemes%://%app_domain%/uploads/'

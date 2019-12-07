@@ -39,9 +39,7 @@
                     if(!_.has(params,'ls')) return params;
                     var result = Object.keys(params.ls).reduce(function(acc, current) {
                         acc[current] = _.get($localStorage,params.ls[current]);
-
                         return acc;
-
                     },params);
                     delete result.ls;
 
@@ -214,10 +212,16 @@
                     label: 'Manage reports',
                     params: {
                         ls: {
-                            tenant: 'user.userIndex',
+                            tenant: 'user.userIndex'
                         }
                     }
                 },
+                {
+                    route: 'app.management.accessLevel',
+                    abstractRoute: 'app.management',
+                    icon: 'fa fa-shield-alt',
+                    label: 'Access Levels'
+                }
             ],
         });
 })(window.angular);

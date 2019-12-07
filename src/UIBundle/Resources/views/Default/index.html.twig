@@ -263,6 +263,10 @@
     {% include 'management/reports/manageReports.html' %}
 </script>
 
+<script type="text/ng-template" id="management/accessLevel/accessLevel.html">
+    {% include 'management/accessLevel/accessLevel.html' %}
+</script>
+
 <script type="text/ng-template" id="management/codes/list.html">
     {% include 'management/codes/list.html' %}
 </script>
@@ -332,6 +336,8 @@
 {% block javascripts %}
     <script type="text/javascript">
         APP_VERSION = '{{ APP_VERSION }}';
+        APP_DOMAIN = '{{ APP_DOMAIN }}';
+        SOCKET_IO_PORT = '{{ SOCKET_IO_PORT }}';
         BASE_URL = '{{ BASE_URL }}';
         ASSETS_BASE_URL = '{{ ASSETS_BASE_URL }}';
         UPLOAD_URL = '{{ UPLOAD_URL }}';
@@ -480,14 +486,12 @@
         'bundles/ui/js/controllers/management/templates/add.js'
         'bundles/ui/js/controllers/management/templates/edit.js'
         'bundles/ui/js/controllers/management/reports/manageReport.js'
+        'bundles/ui/js/controllers/management/accessLevel/accessLevel.js'
         'bundles/ui/js/controllers/management/codes/list.js'
 
         'bundles/ui/js/controllers/management/environment/edit.js'
         'bundles/ui/js/controllers/management/environment/add.js'
         'bundles/ui/js/controllers/management/environment/list.js'
-        
-        
-
 
         'bundles/ui/js/controllers/tmec/list.js'
         'bundles/ui/js/controllers/tmec/edit.js'

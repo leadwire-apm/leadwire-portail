@@ -143,6 +143,7 @@
                     itemsPerPage: 5,
                 }),
             });
+            vm.selectedEnvId = $localStorage.selectedEnvId;
             vm.getApps = getApps;
             vm.getApps();
         };

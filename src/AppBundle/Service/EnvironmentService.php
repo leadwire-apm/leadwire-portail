@@ -117,4 +117,56 @@ class EnvironmentService
 
     }
 
+    /**
+     * Get default env
+     *
+     * @return Environment
+     */
+    public function getDefault()
+    {
+        $environment = $this->environmentManager->getOneBy(['default' => true]);
+        if ($environment === null) {
+            throw new HttpException(Response::HTTP_NOT_FOUND, "Environment not Found");
+        } else {
+            return $environment;
+        }
+
+    }
+
+    /**
+     * Set default env
+     *
+     * @param string $id
+     *
+     * @return Environment
+     */
+    public function setDefault($id)
+    {
+        $environments = $this->environmentManager->getAll();
+        foreach ($environments as $environment) {
+            $environment->setDefault(false);
+            if ((string)$environment->getId() == $id) {
+                $environment->setDefault(true);
+            }
+        }
+
+        $environment = $this->environmentManager->getOneBy(['default' => true]);
+        if ($environment === null) {
+            throw new HttpException(Response::HTTP_NOT_FOUND, "Environment not Found");
+        } else {
+            return $environment;
+        }
+
+    }
+
+    /**
+     * Get all environments
+     *
+     * @return array
+     */
+    public function getAll()
+    {
+        return $this->environmentManager->getAll();
+    }
+
 }

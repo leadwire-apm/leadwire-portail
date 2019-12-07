@@ -140,6 +140,7 @@
             // clear query string (?invitationId=***)
             $location.search({});
             vm.isChecking = false;
+            $rootScope.setDefaultEnv();
             if (response && response.dashboards && response.dashboards.length) {
                 //redirect to first dashboard
                 $state.go(response.path, {

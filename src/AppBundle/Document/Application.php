@@ -147,10 +147,10 @@ class Application
     /**
      * @var Collection
      *
-     * @ODM\ReferenceMany(targetDocument="AppBundle\Document\Environment", storeAs="dbRef", strategy="set")
+     * @ODM\ReferenceMany(targetDocument="AppBundle\Document\Environment", cascade={"persist"}, inversedBy="applications", storeAs="dbRef")
      * @JMS\Expose
      * @JMS\Groups({"full", "Default"})
-     * @JMS\Type("ArrayCollection<AppBundle\Document\Environment>")
+     * @JMS\Type("array<AppBundle\Document\Environment>")
      */
     private $environments;
 
@@ -475,22 +475,29 @@ class Application
     /**
      * Get the value of environments
      */
-    public function getEnvironments()
+    public function getEnvironments($toArray = true)
     {
-        return $this->environments->toArray();
+        if ($this->environments === null) {
+            $this->environments = new ArrayCollection();
+        }
+
+        return $toArray ? $this->environments->toArray() : $this->environments;
     }
 
     /**
-     * Undocumented function
+     * Add  environment
      *
-     * @param Environment $env
+     * @param  Environment  $environment
      *
-     * @return self
+     * @return  self
      */
-    public function addEnvironment(Environment $env)
+    public function addEnvironment(Environment $environment)
     {
-        if ($this->environments->contains($env) === false) {
-            $this->environments->add($env);
+        if ($this->environments == null) {
+            $this->environments = new ArrayCollection();
+        }
+        if (!$this->environments->contains($environment)) {
+            $this->environments->add($environment);
         }
 
         return $this;

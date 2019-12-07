@@ -56,6 +56,26 @@
                     });
             };
 
+            service.setDefault = function (id) {
+                return EnvironementFactory.setDefault(id)
+                    .then(function (response) {
+                        return response.data;
+                    })
+                    .catch(function (error) {
+                        throw new Error(error);
+                    });
+            };
+
+            service.getDefault = function () {
+                return EnvironementFactory.getDefault()
+                    .then(function (response) {
+                        return response.data;
+                    })
+                    .catch(function (error) {
+                        throw new Error(error);
+                    });
+            };
+
             return service;
         });
 })(window.angular);

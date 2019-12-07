@@ -14,7 +14,7 @@ class EnvironmentFixture extends AbstractFixture implements OrderedFixtureInterf
     public function load(ObjectManager $manager)
     {
         $env = new Environment();
-        $env->setName("DEFAULT")->setIp("127.0.0.1");
+        $env->setName("test")->setIp("127.0.0.1")->setDefault();
         $manager->persist($env);
         $this->addReference(self::DEFAULT_ENVIRONMENT, $env);
 
