@@ -177,11 +177,11 @@
                                     [[user.uuid]]
                                 </span>
                             </td>
-                            <td data-title="AclEnvironment" data-label="AclEnvironment" ng-if="!ctrl.view.applications">
+                            <td data-title="AclEnvironment" data-label="AclEnvironment" ng-if="!ctrl.selectedApplication">
                                 <span ng-if="user.readAccessByEnvironment[ctrl.selectedEnvironment]">READ</span>
                                 <span ng-if="user.writeAccessByEnvironment[ctrl.selectedEnvironment]">WRITE</span>
                             </td>
-                            <td data-title="AclApplication" data-label="AclApplication" ng-if="ctrl.view.applications">
+                            <td data-title="AclApplication" data-label="AclApplication" ng-if="ctrl.selectedApplication">
                                 <span ng-if="user.accessLevels[ctrl.selectedEnvironment][ctrl.selectedApplication].READ">READ</span>
                                 <span ng-if="user.accessLevels[ctrl.selectedEnvironment][ctrl.selectedApplication].WRITE">WRITE</span>
                             </td>
