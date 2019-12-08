@@ -13,6 +13,7 @@ parameters:
     app_version: 'v1.3.3'
     app_domain: '%env(APP_DOMAIN)%'
     app_schemes: '%env(APP_SCHEME)%'
+    socket_io_port: '%env(SOCKET_IO_PORT)%'
     activation_code_regex: '[A-Z0-9]B[A-Z0-9]{2}7[A-Z0-9]'
     default_lock_message: 'Your account has been locked'
     secret: 06abd8f87b9d3b88feb152891421cb20017e56dd
@@ -91,6 +92,8 @@ twig:
     strict_variables: '%kernel.debug%'
     globals:
         APP_VERSION:  '%app_version%'
+        APP_DOMAIN: '%app_domain%'
+        SOCKET_IO_PORT: '%socket_io_port%'
         BASE_URL: '%app_schemes%://%app_domain%/'
         ASSETS_BASE_URL: '/'
         UPLOAD_URL: '%app_schemes%://%app_domain%/uploads/'

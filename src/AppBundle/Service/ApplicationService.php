@@ -22,6 +22,9 @@ use Ramsey\Uuid\Uuid;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use AppBundle\Manager\ApplicationTypeManager;
+use AppBundle\Service\EnvironmentService;
+use AppBundle\Document\AccessLevel;
+use AppBundle\Manager\UserManager;
 
 /**
  * Service class for App entities
@@ -68,17 +71,26 @@ class ApplicationService
      * @var ActivationCodeService
      */
     private $activationCodeService;
-    
+
     /**
      * @var DeleteTaskManager
      */
     private $taskManager;
 
-    
     /**
      * @var DashboardManager
      */
     private $dashboardManager;
+
+    /**
+     * @var EnvironmentService
+     */
+    private $environmentService;
+
+    /**
+     * @var UserManager
+     */
+    private $userManager;
 
     /**
      * Constructor
@@ -93,6 +105,8 @@ class ApplicationService
      * @param ApplicationTypeService $appTypeService
      * @param ActivationCodeService $activationCodeService
      * @param DashboardManager $dashboardManager
+     * @param EnvironmentService $environmentService
+     * @param UserManager $userManager
      */
     public function __construct(
         ApplicationManager $applicationManager,
@@ -104,7 +118,9 @@ class ApplicationService
         LoggerInterface $logger,
         ApplicationTypeService $appTypeService,
         ActivationCodeService $activationCodeService,
-        DashboardManager $dashboardManager
+        DashboardManager $dashboardManager,
+        EnvironmentService $environmentService,
+        UserManager $userManager
     ) {
         $this->applicationManager = $applicationManager;
         $this->applicationTypeManager = $applicationTypeManager;
@@ -116,6 +132,8 @@ class ApplicationService
         $this->appTypeService = $appTypeService;
         $this->activationCodeService = $activationCodeService;
         $this->dashboardManager = $dashboardManager;
+        $this->environmentService = $environmentService;
+        $this->userManager = $userManager;
     }
 
     /**
@@ -284,6 +302,10 @@ class ApplicationService
             ->setUuid($uuid1->toString())
             ->setRemoved(false);
 
+        foreach ($this->environmentService->getAll() as $environment) {
+            $application->addEnvironment($environment);
+        }
+
         /** @var string $applicationTypeId */
         $applicationTypeId = $application->getType()->getId();
         $ap = $this->appTypeService->getApplicationType($applicationTypeId);
@@ -297,6 +319,21 @@ class ApplicationService
             ->setModifiedAt(new \DateTime());
 
         $this->apManager->update($applicationPermission);
+        // owner has full access level
+        $ownerAccessLevel = new AccessLevel($environment, $application, true, true);
+        $user->addAccessLevel($ownerAccessLevel);
+        $this->userManager->update($user);
+
+        // all user has access read to the new application on all env
+        $users = $this->userManager->getAll();
+        foreach ($users as $usr) {
+            if ($usr->getId() == $user->getId()) {
+                continue; // owner already has access granted
+            }
+            $accessLevel = new AccessLevel($environment, $application, true, false);
+            $usr->addAccessLevel($accessLevel);
+            $this->userManager->update($usr);
+        }
 
         return $application;
     }

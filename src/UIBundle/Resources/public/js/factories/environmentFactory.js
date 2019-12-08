@@ -45,6 +45,24 @@
                     return $http.delete(
                         CONFIG.BASE_URL + 'api/environment/' + id + '/delete');
                 },
+                /**
+                 *
+                 * @returns {Promise}
+                 */
+                setDefault: function ($id) {
+                    return $http.put(
+                        CONFIG.BASE_URL + 'api/environment/' + id + '/default',
+                    );
+                },
+                /**
+                 *
+                 * @returns {Promise}
+                 */
+                getDefault: function () {
+                    return $http.get(
+                        CONFIG.BASE_URL + 'api/environment/default',
+                    );
+                },
             };
         });
 })(window.angular);

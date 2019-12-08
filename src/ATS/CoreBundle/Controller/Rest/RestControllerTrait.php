@@ -52,6 +52,7 @@ trait RestControllerTrait
         } catch (\Exception $e) {
             $error = [
                 'message' => $e->getMessage(),
+                'trave' => $e->getTraceAsString(),
             ];
 
             $response = new JsonResponse(

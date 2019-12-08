@@ -5,6 +5,7 @@ namespace AppBundle\Document;
 use AppBundle\Document\Application;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 use JMS\Serializer\Annotation as JMS;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ODM\Document(repositoryClass="AppBundle\Repository\StatRepository")
@@ -41,6 +42,32 @@ class Environment
      */
     private $ip;
 
+    /**
+     * @ODM\ReferenceMany(targetDocument="AppBundle\Document\Application", mappedBy="environments", storeAs="dbRef")
+     * @JMS\Type("array<AppBundle\Document\Application>")
+     * @JMS\Expose
+     *
+     * @var ArrayCollection
+     */
+    private $applications;
+
+    /**
+     * @ODM\Field(type="boolean")
+     * @JMS\Expose
+     * @JMS\Type("boolean")
+     *
+     * @var boolean
+     */
+    private $default;
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->default = false;
+        $this->applications = new ArrayCollection();
+    }
 
     /**
      * Get id
@@ -59,7 +86,7 @@ class Environment
      *
      * @return  self
      */
-    public function setName(string $named)
+    public function setName(string $name)
     {
         $this->name = $name;
 
@@ -101,4 +128,74 @@ class Environment
     }
 
 
+    /**
+     * Get the value of applications
+     *
+     * @return array
+     */
+    public function getApplications($toArray = true)
+    {
+        if ($this->applications == null) {
+            $this->applications = new ArrayCollection();
+        }
+
+        return $toArray ? $this->applications->toArray() : $this->applications;
+    }
+
+    /**
+     * Set the value of applications
+     *
+     * @param  array  $applications
+     *
+     * @return  self
+     */
+    public function setApplications(array $applications)
+    {
+        $this->applications = $applications;
+
+        return $this;
+    }
+
+    /**
+     * Set the value of application
+     *
+     * @param  Application  $application
+     *
+     * @return  self
+     */
+    public function addApplication(Application $application)
+    {
+        if ($this->applications == null) {
+            $this->applications = new ArrayCollection();
+        }
+        if (!$this->getApplications()->contains($application)) {
+            $this->applications->add($application);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set default
+     *
+     * @param boolean $default
+     *
+     * @return  self
+     */
+    public function setDefault($default = true)
+    {
+        $this->default = $default;
+
+        return $this;
+    }
+
+    /**
+     * Get default
+     *
+     * @return boolean
+     */
+    public function getDefault()
+    {
+        return $this->default;
+    }
 }

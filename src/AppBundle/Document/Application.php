@@ -145,6 +145,16 @@ class Application
     private $demo;
 
     /**
+     * @var Collection
+     *
+     * @ODM\ReferenceMany(targetDocument="AppBundle\Document\Environment", cascade={"persist"}, inversedBy="applications", storeAs="dbRef")
+     * @JMS\Expose
+     * @JMS\Groups({"full", "Default"})
+     * @JMS\Type("array<AppBundle\Document\Environment>")
+     */
+    private $environments;
+
+    /**
      * @ODM\Field(type="date")
      * @JMS\Type("DateTime")
      * @JMS\Expose
@@ -153,12 +163,14 @@ class Application
      * @var \DateTime
      */
     private $createdAt;
+
     /**
      * Constructor
      */
     public function __construct()
     {
         $this->invitations = new ArrayCollection();
+        $this->environments = new ArrayCollection();
         $this->enabled = false;
         $this->removed = false;
     }
@@ -458,6 +470,37 @@ class Application
     public function getInvitations()
     {
         return $this->invitations;
+    }
+
+    /**
+     * Get the value of environments
+     */
+    public function getEnvironments($toArray = true)
+    {
+        if ($this->environments === null) {
+            $this->environments = new ArrayCollection();
+        }
+
+        return $toArray ? $this->environments->toArray() : $this->environments;
+    }
+
+    /**
+     * Add  environment
+     *
+     * @param  Environment  $environment
+     *
+     * @return  self
+     */
+    public function addEnvironment(Environment $environment)
+    {
+        if ($this->environments == null) {
+            $this->environments = new ArrayCollection();
+        }
+        if (!$this->environments->contains($environment)) {
+            $this->environments->add($environment);
+        }
+
+        return $this;
     }
 
     /**

@@ -249,8 +249,8 @@ class ApplicationController extends Controller
             if ($application instanceof Application) {
                 $applicationService->obliterateApplication($application);
 
-                return $this->renderResponse(['message' => $e->getMessage()], Response::HTTP_NOT_ACCEPTABLE);
             }
+            return $this->renderResponse(['message' => $e->getMessage()], Response::HTTP_NOT_ACCEPTABLE);
         }
 
         if ($status === true) {

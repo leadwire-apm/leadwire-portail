@@ -50,7 +50,7 @@ class EnvironmentController extends Controller
      *
      * @param Request $request
      * @param EnvironmentService $environmentService
-     * 
+     *
      * @return Response
      */
     public function addEnvironment(Request $request, EnvironmentService $environmentService)
@@ -80,7 +80,6 @@ class EnvironmentController extends Controller
 
         return $this->renderResponse(null, Response::HTTP_OK);
     }
-    
 
     /**
      * @Route("/{id}/get", methods="GET")
@@ -93,6 +92,36 @@ class EnvironmentController extends Controller
     public function getById(Request $request, EnvironmentService $environmentService, $id)
     {
         $data = $environmentService->getById($id);
+
+        return $this->renderResponse($data, Response::HTTP_OK, ["full"]);
+    }
+
+    /**
+     * @Route("/default", methods="GET")
+     *
+     * @param Request $request
+     * @param EnvironmentService $environmentService
+     * @param string $id
+     * @return Response
+     */
+    public function getDefault(Request $request, EnvironmentService $environmentService)
+    {
+        $data = $environmentService->getDefault();
+
+        return $this->renderResponse($data, Response::HTTP_OK, ["full"]);
+    }
+
+    /**
+     * @Route("/{id}/default", methods="PUT")
+     *
+     * @param Request $request
+     * @param EnvironmentService $environmentService
+     * @param string $id
+     * @return Response
+     */
+    public function setDefault(Request $request, EnvironmentService $environmentService, $id)
+    {
+        $data = $environmentService->setDefault($id);
 
         return $this->renderResponse($data, Response::HTTP_OK, ["full"]);
     }

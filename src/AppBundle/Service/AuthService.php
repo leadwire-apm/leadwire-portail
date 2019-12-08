@@ -3,12 +3,14 @@
 namespace AppBundle\Service;
 
 use AppBundle\Document\User;
+use AppBundle\Document\AccessLevel;
 use AppBundle\Manager\UserManager;
 use AppBundle\Service\ElasticSearchService;
 use AppBundle\Service\JWTHelper;
 use AppBundle\Service\KibanaService;
 use AppBundle\Service\LdapService;
 use AppBundle\Service\ProcessService;
+use AppBundle\Service\EnvironmentService;
 use Firebase\JWT\ExpiredException;
 use GuzzleHttp\Client;
 use Psr\Log\LoggerInterface;
@@ -77,6 +79,11 @@ class AuthService
      */
     private $sgService;
 
+    /**
+     * @var EnvironmentService
+     */
+    private $environmentService;
+
     public function __construct(
         UserManager $userManage,
         ApplicationService $applicationService,
@@ -87,6 +94,7 @@ class AuthService
         LoggerInterface $logger,
         JWTHelper $jwtHelper,
         SearchGuardService $sgService,
+        EnvironmentService $environmentService,
         string $appDomain,
         array $authProviderSettings,
         string $superAdminUsername
@@ -103,6 +111,7 @@ class AuthService
         $this->authProviderSettings = $authProviderSettings;
         $this->superAdminUsername = $superAdminUsername;
         $this->sgService = $sgService;
+        $this->environmentService = $environmentService;
     }
 
     /**
@@ -279,8 +288,21 @@ class AuthService
             $user->hasRole(User::ROLE_SUPER_ADMIN) === false
         ) {
             $user->promote(User::ROLE_SUPER_ADMIN);
-            $this->userManager->update($user);
+            foreach ($this->environmentService->getAll() as $environment) {
+                foreach ($environment->getApplications() as $application) {
+                    $accessLevel = new AccessLevel($environment, $application, true, true);
+                    $user->addAccessLevel($accessLevel);
+                }
+            }
+        } else {
+            foreach ($this->environmentService->getAll() as $environment) {
+                foreach ($environment->getApplications() as $application) {
+                    $accessLevel = new AccessLevel($environment, $application, true, false);
+                    $user->addAccessLevel($accessLevel);
+                }
+            }
         }
+        $this->userManager->update($user);
     }
 
     private function handleNewUser(array $parameters): ?User

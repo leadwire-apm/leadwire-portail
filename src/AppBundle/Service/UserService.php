@@ -4,6 +4,8 @@ namespace AppBundle\Service;
 
 use AppBundle\Document\User;
 use AppBundle\Manager\UserManager;
+use AppBundle\Manager\ApplicationManager;
+use AppBundle\Manager\EnvironmentManager;
 use ATS\EmailBundle\Document\Email;
 use ATS\EmailBundle\Service\SimpleMailerService;
 use ATS\PaymentBundle\Service\CustomerService;
@@ -15,6 +17,7 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\Router;
 use Symfony\Component\Routing\RouterInterface;
+use AppBundle\Service\SearchGuardService;
 
 /**
  * Service class for User entities
@@ -26,6 +29,21 @@ class UserService
      * @var UserManager
      */
     private $userManager;
+
+    /**
+     * @var EnvironmentManager
+     */
+    private $environmentManager;
+
+    /**
+     * @var ApplicationManager
+     */
+    private $applicationManager;
+
+    /**
+     * @var SearchGuardService
+     */
+    private $searchGuardService;
 
     /**
      * @var SerializerInterface
@@ -71,6 +89,9 @@ class UserService
      * Constructor
      *
      * @param UserManager $userManager
+     * @param EnvironmentManager $environmentManager
+     * @param ApplicationManager $applicationManager
+     * @param SearchGuardService $searchGuardService
      * @param SerializerInterface $serializer
      * @param LoggerInterface $logger
      * @param SimpleMailerService $mailer
@@ -81,6 +102,9 @@ class UserService
      */
     public function __construct(
         UserManager $userManager,
+        EnvironmentManager $environmentManager,
+        ApplicationManager $applicationManager,
+        SearchGuardService $searchGuardService,
         SerializerInterface $serializer,
         LoggerInterface $logger,
         SimpleMailerService $mailer,
@@ -91,6 +115,9 @@ class UserService
         string $sender
     ) {
         $this->userManager = $userManager;
+        $this->environmentManager = $environmentManager;
+        $this->applicationManager = $applicationManager;
+        $this->searchGuardService = $searchGuardService;
         $this->serializer = $serializer;
         $this->logger = $logger;
         $this->mailer = $mailer;
@@ -451,5 +478,115 @@ class UserService
         }
 
         return $isSuccessful;
+    }
+
+    /**
+     * Grant access level to user
+     *
+     * @param array $payload
+     *
+     * @return User
+     */
+    public function grantAccess(array $payload)
+    {
+        $user = $this->userManager->getOneBy(['id' => $payload['idUser']]);
+
+        if (!isset($payload['idApplication'])) {
+            foreach ($user->getAccessLevels() as $accessLevel) {
+                if ((string)$accessLevel->getEnvironment()->getId() == $payload['idEnvironment']) {
+                    $acl = clone $accessLevel;
+                    $user->removeAccessLevel($accessLevel);
+                    switch ($payload['access']) {
+                        case 'READ':
+                            $acl->grantReadAccess();
+                            break;
+                        case 'WRITE':
+                            $acl->grantWriteAccess();
+                            break;
+                        default:
+                            break;
+                    }
+                    $user->addAccessLevel($acl);
+                }
+            }
+        } else {
+            foreach ($user->getAccessLevels() as $accessLevel) {
+                if ((string)$accessLevel->getEnvironment()->getId() == $payload['idEnvironment']
+                    && (string)$accessLevel->getApplication()->getId() == $payload['idApplication']) {
+                    $acl = clone $accessLevel;
+                    $user->removeAccessLevel($accessLevel);
+                    switch ($payload['access']) {
+                        case 'READ':
+                            $acl->grantReadAccess();
+                            break;
+                        case 'WRITE':
+                            $acl->grantWriteAccess();
+                            break;
+                        default:
+                            break;
+                    }
+                    $user->addAccessLevel($acl);
+                }
+            }
+        }
+        $this->userManager->update($user);
+        $this->searchGuardService->updateSearchGuardConfig();
+
+        return $user;
+    }
+
+    /**
+     * Revoke access level from user
+     *
+     * @param array $payload
+     *
+     * @return User
+     */
+    public function revokeAccess(array $payload)
+    {
+        $user = $this->userManager->getOneBy(['id' => $payload['idUser']]);
+
+        if (!isset($payload['idApplication'])) {
+            foreach ($user->getAccessLevels() as $accessLevel) {
+                if ((string)$accessLevel->getEnvironment()->getId() == $payload['idEnvironment']) {
+                    $acl = clone $accessLevel;
+                    $user->removeAccessLevel($accessLevel);
+                    switch ($payload['access']) {
+                        case 'READ':
+                            $acl->revokeReadAccess();
+                            break;
+                        case 'WRITE':
+                            $acl->revokeWriteAccess();
+                            break;
+                        default:
+                            break;
+                    }
+                    $user->addAccessLevel($acl);
+                }
+            }
+        } else {
+            foreach ($user->getAccessLevels() as $accessLevel) {
+                if ((string)$accessLevel->getEnvironment()->getId() == $payload['idEnvironment']
+                    && (string)$accessLevel->getApplication()->getId() == $payload['idApplication']) {
+                    $acl = clone $accessLevel;
+                    $user->removeAccessLevel($accessLevel);
+                    switch ($payload['access']) {
+                        case 'READ':
+                            $acl->revokeReadAccess();
+                            break;
+                        case 'WRITE':
+                            $acl->revokeWriteAccess();
+                            break;
+                        default:
+                            break;
+                    }
+                    $user->addAccessLevel($acl);
+                }
+            }
+        }
+        $this->userManager->update($user);
+        $this->searchGuardService->updateSearchGuardConfig();
+
+        return $user;
     }
 }

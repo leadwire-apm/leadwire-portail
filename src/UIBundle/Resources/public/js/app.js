@@ -30,7 +30,7 @@ angular.module('leadwireApp', [
     .factory('socket', function (socketFactory) {
         return socketFactory({
             prefix: "",
-            ioSocket: io.connect('http://localhost:8000')
+            ioSocket: io.connect('http://' + APP_DOMAIN + ':' + SOCKET_IO_PORT)
         });
     })
     .constant('COLORS', {
@@ -48,6 +48,8 @@ angular.module('leadwireApp', [
     })
     .constant('CONFIG', {
         APP_VERSION: APP_VERSION,
+        APP_DOMAIN: APP_DOMAIN,
+        SOCKET_IO_PORT: SOCKET_IO_PORT,
         BASE_URL: BASE_URL,
         ASSETS_BASE_URL: ASSETS_BASE_URL,
         UPLOAD_URL: UPLOAD_URL,
@@ -65,7 +67,7 @@ angular.module('leadwireApp', [
     })
     .constant('MESSAGES_CONSTANTS', {
         ERROR: 'Something went wrong,please try again.',
-        SUCCESS: 'Operation successfully completed\n.',
+        SUCCESS: 'Operation successfully completed.',
         EDIT_APP_SUCCESS: 'Your app has been updated successfully.',
         ACTIVATE_APP_SUCCESS: 'Your app has been activated successfully.',
         ACTIVATE_APP_FAILURE:
