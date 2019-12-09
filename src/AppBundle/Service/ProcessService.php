@@ -20,7 +20,7 @@ class ProcessService
      */
     public function __construct($appDomain, $port)
     {
-        $this->elephant = new Elephant(new Version1X(sprintf('http://%s:%s', $appDomain, $port)));
+        $this->elephant = new Elephant(new Version1X(sprintf('https://%s:%s', $appDomain, $port)));
     }
 
     /**
