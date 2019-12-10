@@ -1,6 +1,14 @@
 var dotenv     = require('dotenv');
 dotenv.config();
-var server     = require('http').createServer('${process.env.APP_DOMAIN}'),
+var fs = require('fs');
+var https        = require('https');
+var server = https.createServer({
+        key: fs.readFileSync('/etc/letsencrypt/live/apm.leadwire.io/privkey.pem'),
+        cert: fs.readFileSync('/etc/letsencrypt/live/apm.leadwire.io/fullchain.pem'),
+        ca: fs.readFileSync('/etc/letsencrypt/live/apm.leadwire.io/chain.pem'),
+        requestCert: false,
+        rejectUnauthorized: false
+    }),
     io         = require('socket.io')(server),
     logger     = require('winston'),
     port       = process.env.SOCKET_IO_PORT;
