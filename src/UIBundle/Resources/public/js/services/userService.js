@@ -352,6 +352,7 @@
         };
         service.isAdmin = function (user) {
             return ADMINS.some(function (role) {
+                if(user && user.roles)
                 return user.roles.includes(role);
             });
         };
