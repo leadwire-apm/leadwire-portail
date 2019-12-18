@@ -3,7 +3,7 @@
 namespace AppBundle\Service;
 
 use ElephantIO\Client as Elephant;
-use ElephantIO\Engine\SocketIO\Version1X;
+use ElephantIO\Engine\SocketIO\Version2X;
 
 class ProcessService
 {
@@ -20,7 +20,7 @@ class ProcessService
      */
     public function __construct($appDomain, $port)
     {
-        $this->elephant = new Elephant(new Version1X(sprintf('https://%s:%s', $appDomain, $port)));
+        $this->elephant = new Elephant(new Version2X(sprintf('https://%s:%s', $appDomain, $port)));
     }
 
     /**
