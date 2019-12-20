@@ -630,10 +630,37 @@ angular.module('leadwireApp')
                 })
                 //END TMEC
 
+                .state('app.clusterOverview', {
+                    url: '/overview',
+                    templateUrl: 'overview/overview.html',
+                    resolve: {
+                        permissions: function (RouteGuard) {
+                            return RouteGuard.loginRequired();
+                        },
+                        menu: getMenuItems(),
+                    },
+                    controller: 'OverviewController',
+                    controllerAs: 'ctrl',
+                })
+
             function updateMenuItems (key) {
                 return function (MenuFactory, $rootScope) {
                     if (key != "DASHBOARD") {
                         $rootScope.menus = MenuFactory.get(key);
+                    }
+                    return Promise.resolve();
+                };
+            }
+
+            function getMenuItems () {
+                return function (MenuFactory, $rootScope, $localStorage, UserService) {
+
+                    const isAdmin = UserService.isAdmin($localStorage.user);
+                    const isSuperAdmin = $localStorage.user.roles.indexOf(UserService.getRoles().SUPER_ADMIN) !== -1;
+                    if (isAdmin || isSuperAdmin) {
+                        $rootScope.menus = MenuFactory.get("MANAGEMENT");
+                    }else{
+                        $rootScope.menus = MenuFactory.get("DASHBOARD");
                     }
                     return Promise.resolve();
                 };

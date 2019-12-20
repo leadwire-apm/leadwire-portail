@@ -1,0 +1,21 @@
+<div class="panel" ng-init="ctrl.init()">
+    <div class="panel-heading">
+        <h4>Cluster Overview </h4>
+        <hr>
+    </div>
+    <div class="panel-body">
+        <div class="row no-margin">
+            <div class="col-lg-12 ">
+                <div ng-class="ctrl.border" class="card  mb-3" style="max-width: 32rem;margin-left: 35%">
+                    <div ng-class="ctrl.border" class="card-header bg-transparent "><h3>Cluster name : [[ctrl.stats.name]]</h3></div>
+                    <div class="card-body" ng-class="ctrl.text">
+                        <h3 class="card-title">Cluster Status : [[ctrl.stats.status]]</h3>
+                        <p class="card-text">Documents number <i class="fas fa-file-alt"></i> : [[ctrl.stats.documents]]</p>
+                        <p class="card-text">Memory Used <i class="fas fa-memory"></i> : [[ctrl.stats.memory]] %</p>
+                        <p class="card-text">CPU <i class="fas fa-microchip"></i> : [[ctrl.stats.cpu]] %</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
