@@ -40,5 +40,10 @@
             });
             vm.load();
         };
+
+        setInterval(function() {
+            vm.init();
+          }, 20000);
+         
     }
 })(window.angular);

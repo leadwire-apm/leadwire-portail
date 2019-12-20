@@ -23,13 +23,34 @@
                                         ng-class="{'glyphicon-chevron-down': isopen, 'glyphicon-chevron-right': !isopen}"></i>
                                 </accordion-heading>
 
-                                <div ng-repeat="dashboard in ctrl.getDashboardByTheme(name)">
-                                    <label class="checkbox-edit">
-                                        [[dashboard.name]]
-                                        <input type="checkbox" ng-model="dashboard.visible">
-                                    </label>
-                                </div>
+                                <div ng-repeat="dashboard in ctrl.getDashboardByTheme(name)"
+                                    class="bordered-group form-group">
+                                    <label class="col-sm-2 control-label">[[dashboard.name]]</label>
+                                    <div class="col-sm-10">
+                                        <label class="col-sm-2 control-label">Is visible</label>
+                                        <div class="col-sm-10">
+                                            <label class="switch switch-sm"> 
+                                                <input type="checkbox" ng-model="dashboard.visible">
+                                                 <span>
+                                                    <i class="handle"></i> 
+                                                </span> 
+                                            </label>
+                                        </div>
 
+                                         <!--<label class="col-sm-2 control-label">Icon</label>
+                                        <div class="col-sm-10">
+
+                                            <select name="type" id="type" class="form-control"
+                                                data-ng-model="dashboard.icon" required>
+                                                <option value="">Select a icon</option>
+                                                <option ng-selected="icon.name == dashboard.icon"
+                                                    ng-repeat="icon in ctrl.icons" value="[[icon.div]]" ng-bind-html="[[icon.div]]">
+                                                       
+                                                </option>
+                                            </select>
+                                        </div> -->
+                                    </div>
+                                </div>
                             </accordion-group>
 
                         </accordion>

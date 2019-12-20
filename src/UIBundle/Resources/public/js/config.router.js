@@ -660,7 +660,7 @@ angular.module('leadwireApp')
                     if (isAdmin || isSuperAdmin) {
                         $rootScope.menus = MenuFactory.get("MANAGEMENT");
                     }else{
-                        $rootScope.menus = MenuFactory.get("DASHBOARD");
+                        $rootScope.menus = MenuFactory.get("SETTINGS");
                     }
                     return Promise.resolve();
                 };
