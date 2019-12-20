@@ -448,8 +448,38 @@ class ElasticSearchService
             "Custom" => [$user->getUserIndex(), $app->getSharedIndex()],
         ];
 
+
+        $health = $this->httpClient->get(
+            $this->url . "_nodes/stats",
+
+            [
+                'headers' => [
+                    'Content-type' => 'application/json',
+                ],
+                'auth' => [
+                    $this->settings['username'],
+                    $this->settings['password'],
+                ],
+            ]
+        );
+
+        $stats = $this->httpClient->get(
+            $this->url . "_cluster/stats?human&pretty",
+
+            [
+                'headers' => [
+                    'Content-type' => 'application/json',
+                ],
+                'auth' => [
+                    $this->settings['username'],
+                    $this->settings['password'],
+                ],
+            ]
+        );
+        
         foreach ($tenants as $groupName => $tenantGroup) {
             foreach ($tenantGroup as $tenant) {
+
                 $response = $this->httpClient->get(
                     $this->url . ".kibana_$tenant" . "/_search?pretty&from=0&size=10000",
                     [
@@ -610,5 +640,42 @@ class ElasticSearchService
             $this->settings['username'],
             $this->settings['password'],
         ];
+    }
+
+
+    public function getClusterInformations()
+    {
+        try {
+            $data = [];
+
+            $_stats = \json_decode($stats->getBody());
+
+            $_health = \json_decode($health->getBody());
+    
+            $a = (array)$_health->nodes;
+            $b = json_decode(json_encode($a),true);
+            $key = '';
+    
+            foreach($b as $k => $v) {
+               $key = $k;
+            }
+    
+            
+            $data = [
+                "name" => $_stats->cluster_name,
+                "status" => $_stats->status,
+                "documents" => $_stats->indices->docs->count,
+                "memory" => $b[$key]["os"]["mem"]["used_percent"],
+                "cpu" => $b[$key]["os"]["cpu"]["percent"]
+            ];
+    
+    
+            $this->logger->error("---------------------------------#####################");
+    
+            $this->logger->error("eeeee", $data);
+        } catch (\Exception $e) {
+            $this->logger->error($e->getMessage());
+            throw new HttpException("An error has occurred while executing your request.", 500);
+        }
     }
 }
