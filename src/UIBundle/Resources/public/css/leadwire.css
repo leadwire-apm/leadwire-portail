@@ -5006,6 +5006,12 @@ a.bg-danger-light:hover {
 a.bg-white:hover {
   background-color: #e6e6e6;
 }
+
+.bg-whiteGrey {
+  color: #616161;
+  background-color: #e6e6e6;
+}
+
 /* Color Variant: Dark */
 .bg-dark {
   color: white;

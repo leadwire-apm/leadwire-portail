@@ -3,30 +3,68 @@
         <h4>Cluster Overview </h4>
         <hr>
     </div>
-    <div class="panel-body">
-        <div class="row no-margin">
-            <div class="col-lg-12 ">
-                <div ng-class="ctrl.border" class="card  mb-3" style="max-width: 32rem;margin-left: 35%">
-                    <div ng-class="ctrl.border" class="card-header bg-transparent "><h3>Cluster Name : [[ctrl.stats.name]]</h3></div>
-                    <div class="card-body" ng-class="ctrl.text">
-                        <h3 class="card-title">Cluster Status : [[ctrl.stats.status]]</h3>
-                        <div class="widget bg-white">
-                            <div class="widget-icon bg-blue pull-left fas fa-file-alt"> </div>
-                            <div class="overflow-hidden"> <span class="widget-title">[[ctrl.stats.documents]]</span> <span
-                                    class="widget-subtitle">Documents Number</span> </div>
-                        </div>
-                        <div class="widget bg-white">
-                            <div class="widget-icon bg-danger pull-left fas fa-memory"> </div>
-                            <div class="overflow-hidden"> <span class="widget-title percent">[[ctrl.stats.memory]]</span> <span
-                                    class="widget-subtitle">Memory Used</span> </div>
-                        </div>
-                        <div class="widget bg-white">
-                            <div class="widget-icon bg-success pull-left fas fa-microchip"> </div>
-                            <div class="overflow-hidden"> <span class="widget-title percent">[[ctrl.stats.cpu]]</span> <span class="widget-subtitle">CPU Used</span> </div>
-                        </div>
-                    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <h3>Node : [[ctrl.stats.nodeName]]</h3>
+            <section class="widget text-center" ng-class="ctrl.border">
+                <div class="widget-details col-xs-3">
+                    <h2 class="no-margin">[[ctrl.stats.status]]</h2> <small class="text-uppercase">Status</small>
                 </div>
-            </div>
+                <div class="widget-details col-xs-3">
+                    <h2 class="no-margin">[[ctrl.stats.ip]]</h2> <small class="text-uppercase">Ip</small>
+                </div>
+                <div class="widget-details col-xs-3">
+                    <h2 class="no-margin">[[ctrl.stats.host]]</h2> <small class="text-uppercase">Host</small>
+                </div>
+                <div class="widget-details col-xs-3">
+                    <h2 class="no-margin">[[ctrl.stats.documents]]</h2> <small class="text-uppercase">Documents</small>
+                </div>
+            </section>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <h3>OS statistics</h3>
+
+            <section class="widget bg-grey text-center">
+                <div class="widget-details col-xs-4">
+                    <h2 class="no-margin">[[ctrl.bytesToSize(ctrl.stats.os.memory_used_byte)]]</h2> <small class="text-uppercase">Memory used</small>
+                </div>
+                <div class="widget-details col-xs-4">
+                    <h2 class="no-margin">[[ctrl.bytesToSize(ctrl.stats.os.memory_Total_byte)]]</h2> <small class="text-uppercase">Memory Total</small>
+                </div>
+                <div class="widget-details col-xs-4">
+                    <h2 class="no-margin percent">[[ctrl.stats.os.memory_used_percent]]</h2> <small class="text-uppercase">Memory Used</small>
+                </div>
+            </section>
+        </div>
+        <div class="col-md-4">
+            <h3>FS information</h3>
+
+            <section class="widget bg-grey text-center">
+                <div class="widget-details col-xs-6">
+                    <h2 class="no-margin">[[ctrl.bytesToSize(ctrl.stats.fs.total_available_in_bytes)]]</h2> <small class="text-uppercase">Available</small>
+                </div>
+                <div class="widget-details col-xs-6">
+                    <h2 class="no-margin">[[ctrl.bytesToSize(ctrl.stats.fs.total_in_bytes)]]</h2> <small class="text-uppercase">Total</small>
+                </div>
+            </section>
+        </div>
+        <div class="col-md-4">
+            <h3>JVM information</h3>
+
+            <section class="widget bg-grey text-center">
+                <div class="widget-details col-xs-4">
+                    <h2 class="no-margin">[[ctrl.msToTime(ctrl.stats.jvm.uptime_in_millis)]]</h2> <small class="text-uppercase">Up time</small>
+                </div>
+                <div class="widget-details col-xs-4">
+                    <h2 class="no-margin percent">[[ctrl.stats.jvm.mem_heap_used_percent]]</h2> <small class="text-uppercase">Heap used</small>
+                </div>
+                <div class="widget-details col-xs-4">
+                    <h2 class="no-margin">[[ctrl.stats.jvm.threads_count]]</h2> <small class="text-uppercase">Threads count</small>
+                </div>
+            </section>
         </div>
     </div>
 </div>

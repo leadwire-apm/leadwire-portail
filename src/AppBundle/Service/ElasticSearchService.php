@@ -620,7 +620,7 @@ class ElasticSearchService
             $data = [];
 
             $health = $this->httpClient->get(
-                $this->url . "_nodes/stats",
+                $this->url . "_nodes/stats/os,fs,jvm",
     
                 [
                     'headers' => [
@@ -647,8 +647,8 @@ class ElasticSearchService
                 ]
             );
 
-            $_stats = \json_decode($stats->getBody());
 
+            $_stats = \json_decode($stats->getBody());
             $_health = \json_decode($health->getBody());
     
             $a = (array)$_health->nodes;
@@ -658,20 +658,34 @@ class ElasticSearchService
             foreach($b as $k => $v) {
                $key = $k;
             }
-    
+            
+            $os = ["cpu" => $b[$key]["os"]["cpu"]["percent"],
+                   "memory_used_byte" => $b[$key]["os"]["mem"]["used_in_bytes"],
+                   "memory_Total_byte" => $b[$key]["os"]["mem"]["total_in_bytes"],
+                   "memory_used_percent" => $b[$key]["os"]["mem"]["used_percent"]];
+
+            $jvm = ["uptime_in_millis" => $b[$key]["jvm"]["uptime_in_millis"],
+                    "mem_heap_used_percent" => $b[$key]["jvm"]["mem"]["heap_used_percent"],
+                    "threads_count" => $b[$key]["jvm"]["threads"]["count"]];
+
+            $fs = ["total_available_in_bytes" =>  $b[$key]["fs"]["total"]["available_in_bytes"],
+                   "total_in_bytes" =>  $b[$key]["fs"]["total"]["total_in_bytes"]];
             
             $data = [
-                "name" => $_stats->cluster_name,
+                "clusterName" => $_stats->cluster_name,
                 "status" => $_stats->status,
+                "nodeName" => $b[$key]["name"],
+                "ip" =>  $b[$key]["ip"],
+                "host" =>  $b[$key]["host"],
                 "documents" => $_stats->indices->docs->count,
-                "memory" => $b[$key]["os"]["mem"]["used_percent"],
-                "cpu" => $b[$key]["os"]["cpu"]["percent"]
+                "os" => $os,
+                "jvm" => $jvm,
+                "fs" => $fs
             ];
     
     
-            $this->logger->error("---------------------------------#####################");
+            //$this->logger->error("---------------------------------#####################",$b);
     
-            $this->logger->error("eeeee", $data);
 
             return $data;
         } catch (\Exception $e) {
