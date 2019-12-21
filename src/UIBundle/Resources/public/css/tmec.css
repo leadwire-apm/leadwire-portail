@@ -859,4 +859,5 @@ display-flex, .form-flex, .form-date-group, .steps ul, .title, .title .step-numb
 
       .black{
         color: black !important;
+        margin-left: 35px;
       }
