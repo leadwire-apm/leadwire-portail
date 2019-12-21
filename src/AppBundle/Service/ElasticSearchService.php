@@ -450,6 +450,7 @@ class ElasticSearchService
 
         foreach ($tenants as $groupName => $tenantGroup) {
             foreach ($tenantGroup as $tenant) {
+
                 $response = $this->httpClient->get(
                     $this->url . ".kibana_$tenant" . "/_search?pretty&from=0&size=10000",
                     [
@@ -610,5 +611,110 @@ class ElasticSearchService
             $this->settings['username'],
             $this->settings['password'],
         ];
+    }
+
+
+    public function getClusterInformations()
+    {
+        try {
+            $response = [];
+
+            $health = $this->httpClient->get(
+                $this->url . "_nodes/stats/os,fs,jvm",
+    
+                [
+                    'headers' => [
+                        'Content-type' => 'application/json',
+                    ],
+                    'auth' => [
+                        $this->settings['username'],
+                        $this->settings['password'],
+                    ],
+                ]
+            );
+    
+            $stats = $this->httpClient->get(
+                $this->url . "_cluster/stats?human&pretty",
+    
+                [
+                    'headers' => [
+                        'Content-type' => 'application/json',
+                    ],
+                    'auth' => [
+                        $this->settings['username'],
+                        $this->settings['password'],
+                    ],
+                ]
+            );
+
+
+            $_stats = \json_decode($stats->getBody());
+            $_health = \json_decode($health->getBody());
+    
+            $__health = (array)$_health->nodes;
+            $nodeHealth = json_decode(json_encode($__health),true);
+            $key = '';
+    
+            foreach($nodeHealth as $k => $v) {
+               
+               $key = $k;
+               $data = array();
+
+
+               $nodeOs = $this->httpClient->get(
+                $this->url . "_nodes/". $key . "/os",
+    
+                [
+                    'headers' => [
+                        'Content-type' => 'application/json',
+                    ],
+                    'auth' => [
+                        $this->settings['username'],
+                        $this->settings['password'],
+                    ],
+                ]
+            );
+
+            $_nodeOs = \json_decode($nodeOs->getBody());
+            $__nodeOs = (array)$_nodeOs->nodes;
+            $___nodeOs = json_decode(json_encode($__nodeOs),true);
+               
+            $os = ["cpu" => $nodeHealth[key]["os"]["cpu"]["percent"],
+            "memory_used_byte" => $nodeHealth[$key]["os"]["mem"]["used_in_bytes"],
+            "memory_Total_byte" => $nodeHealth[$key]["os"]["mem"]["total_in_bytes"],
+            "os_name" => $___nodeOs[$key]["os"]["name"],
+            "os_arche" => $___nodeOs[$key]["os"]["arche"],
+            "os_version" => $___nodeOs[$key]["os"]["version"],
+            "os_allocated_processors" => $___nodeOs[$key]["os"]["allocated_processors"]];
+
+            $jvm = ["uptime_in_millis" => $nodeHealth[$key]["jvm"]["uptime_in_millis"],
+                    "mem_heap_used_percent" => $nodeHealth[$key]["jvm"]["mem"]["heap_used_percent"],
+                    "threads_count" => $nodeHealth[$key]["jvm"]["threads"]["count"]];
+
+            $fs = ["total_available_in_bytes" =>  $nodeHealth[$key]["fs"]["total"]["available_in_bytes"],
+                "total_in_bytes" =>  $nodeHealth[$key]["fs"]["total"]["total_in_bytes"]];
+            
+            $data = [
+                "clusterName" => $_stats->cluster_name,
+                "status" => $_stats->status,
+                "nodeName" => $___nodeOs[$key]["name"],
+                "ip" =>  $___nodeOs[$key]["ip"],
+                "host" =>  $___nodeOs[$key]["host"],
+                "documents" => $_stats->indices->docs->count,
+                "os" => $os,
+                "jvm" => $jvm,
+                "fs" => $fs,
+                "isOpen" => false,
+            ];
+
+            array_push($response, $data);
+
+        }
+            
+            return $response;
+        } catch (\Exception $e) {
+            $this->logger->error($e->getMessage());
+            throw new HttpException("An error has occurred while executing your request.", 500);
+        }
     }
 }

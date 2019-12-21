@@ -28,6 +28,10 @@
     ) {
         var vm = this;
 
+        vm.icons = [{"name":"fas fa-wrench", "div":"<i class='fas fa-wrench'></i>"}, 
+        {"name":"fas fa-wrench", "div":'<i class="fad fa-angel"></i>'}, 
+        {"name":"fa fa-table2", "div":'<i class="fad fa-angel"></i>'}];
+
 
         ApplicationFactory.get($stateParams.id, 'edit').then(function(res) {
             vm.application = res.data;

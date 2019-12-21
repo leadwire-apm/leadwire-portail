@@ -185,6 +185,9 @@
             $auth.logout()
                 .then(function () {
                     toastr.info(MESSAGES_CONSTANTS.LOGOUT_SUCCESS);
+                    if(CONFIG.LOGIN_METHOD === "proxy")
+                    window.location.href = 'https://auth.leadwire.io/?logout=1';
+                    else
                     $location.path('/login');
                 });
         };

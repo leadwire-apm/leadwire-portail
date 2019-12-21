@@ -175,7 +175,7 @@
     }
 
     function handleAfterRedirect(user) {
-        const isAdmin = UserService.isAdmin(user);
+      /*  const isAdmin = UserService.isAdmin(user);
         const isSuperAdmin =
         user.roles.indexOf(UserService.getRoles().SUPER_ADMIN) !== -1;
         if (isAdmin || isSuperAdmin) {
@@ -194,7 +194,8 @@
                     return { path: "app.applicationsList" };
                 }
             });
-        }
+        }*/
+        return { path: "app.clusterOverview" };
     }
 
     function onLoad() {
