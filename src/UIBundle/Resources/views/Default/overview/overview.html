@@ -29,35 +29,46 @@
                         <div class="col-md-9">
 
                             <section class="widget bg-grey text-center">
-                                <div class="widget-details col-xs-4">
+                                <div class="widget-details col-xs-6">
                                     <h2 class="no-margin">[[node.ip]]</h2> <small class="text-uppercase">Ip</small>
                                 </div>
-                                <div class="widget-details col-xs-4">
+                                <div class="widget-details col-xs-6">
                                     <h2 class="no-margin">[[node.host]]</h2> <small class="text-uppercase">Host</small>
-                                </div>
-                                <div class="widget-details col-xs-4">
-                                    <h2 class="no-margin">[[node.documents]]</h2> <small
-                                        class="text-uppercase">Documents</small>
                                 </div>
                             </section>
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-4">
+                        <div class="col-md-12">
                             <h3>OS statistics</h3>
 
                             <section class="widget bg-grey text-center">
-                                <div class="widget-details col-xs-6">
+                                <div class="widget-details col-xs-2">
                                     <h2 class="no-margin">[[ctrl.bytesToSize(node.os.memory_used_byte)]]</h2> <small
                                         class="text-uppercase">Memory used</small>
                                 </div>
-                                <div class="widget-details col-xs-6">
+                                <div class="widget-details col-xs-2">
                                     <h2 class="no-margin">[[ctrl.bytesToSize(node.os.memory_Total_byte)]]</h2>
                                     <small class="text-uppercase">Memory Total</small>
                                 </div>
+                                <div class="widget-details col-xs-2">
+                                    <h2 class="no-margin">[[node.os.os_name]]</h2>
+                                    <small class="text-uppercase">Name</small>
+                                </div>
+                                <div class="widget-details col-xs-3">
+                                    <h2 class="no-margin">[[node.os.os_version]]</h2>
+                                    <small class="text-uppercase">OS Version</small>
+                                </div>
+                                <div class="widget-details col-xs-3">
+                                    <h2 class="no-margin">[[node.os.os_allocated_processors]]</h2>
+                                    <small class="text-uppercase">Allocated Processors</small>
+                                </div>
+
                             </section>
                         </div>
-                        <div class="col-md-4">
+                    </div>
+                    <div class="row">
+                        <div class="col-md-5">
                             <h3>FS information</h3>
 
                             <section class="widget bg-grey text-center">
@@ -72,7 +83,19 @@
                                 </div>
                             </section>
                         </div>
-                        <div class="col-md-4">
+
+                        <div class="col-md-2">
+                            <h3>Documents</h3>
+                            <section class="widget bg-grey text-center">
+                                <div class="widget-details col-xs-12">
+                                    <h2 class="no-margin">[[node.documents]]</h2> <small
+                                        class="text-uppercase">Documents</small>
+                                </div>
+                            </section>
+                        </div>
+
+
+                        <div class="col-md-5">
                             <h3>JVM information</h3>
 
                             <section class="widget bg-grey text-center">
@@ -92,7 +115,6 @@
                             </section>
                         </div>
                     </div>
-
                 </div>
             </accordion-group>
         </accordion>

@@ -651,43 +651,65 @@ class ElasticSearchService
             $_stats = \json_decode($stats->getBody());
             $_health = \json_decode($health->getBody());
     
-            $a = (array)$_health->nodes;
-            $b = json_decode(json_encode($a),true);
+            $__health = (array)$_health->nodes;
+            $nodeHealth = json_decode(json_encode($__health),true);
             $key = '';
     
-            foreach($b as $k => $v) {
+            foreach($nodeHealth as $k => $v) {
                
                $key = $k;
                $data = array();
+
+
+               $nodeOs = $this->httpClient->get(
+                $this->url . "_nodes/". $key . "/os",
+    
+                [
+                    'headers' => [
+                        'Content-type' => 'application/json',
+                    ],
+                    'auth' => [
+                        $this->settings['username'],
+                        $this->settings['password'],
+                    ],
+                ]
+            );
+
+            $_nodeOs = \json_decode($nodeOs->getBody());
+            $__nodeOs = (array)$_nodeOs->nodes;
+            $___nodeOs = json_decode(json_encode($__nodeOs),true);
                
-               $os = ["cpu" => $b[$key]["os"]["cpu"]["percent"],
-               "memory_used_byte" => $b[$key]["os"]["mem"]["used_in_bytes"],
-               "memory_Total_byte" => $b[$key]["os"]["mem"]["total_in_bytes"],
-               "memory_used_percent" => $b[$key]["os"]["mem"]["used_percent"]];
+            $os = ["cpu" => $nodeHealth[key]["os"]["cpu"]["percent"],
+            "memory_used_byte" => $nodeHealth[$key]["os"]["mem"]["used_in_bytes"],
+            "memory_Total_byte" => $nodeHealth[$key]["os"]["mem"]["total_in_bytes"],
+            "os_name" => $___nodeOs[$key]["os"]["name"],
+            "os_arche" => $___nodeOs[$key]["os"]["arche"],
+            "os_version" => $___nodeOs[$key]["os"]["version"],
+            "os_allocated_processors" => $___nodeOs[$key]["os"]["allocated_processors"]];
 
-                $jvm = ["uptime_in_millis" => $b[$key]["jvm"]["uptime_in_millis"],
-                        "mem_heap_used_percent" => $b[$key]["jvm"]["mem"]["heap_used_percent"],
-                        "threads_count" => $b[$key]["jvm"]["threads"]["count"]];
+            $jvm = ["uptime_in_millis" => $nodeHealth[$key]["jvm"]["uptime_in_millis"],
+                    "mem_heap_used_percent" => $nodeHealth[$key]["jvm"]["mem"]["heap_used_percent"],
+                    "threads_count" => $nodeHealth[$key]["jvm"]["threads"]["count"]];
 
-                $fs = ["total_available_in_bytes" =>  $b[$key]["fs"]["total"]["available_in_bytes"],
-                    "total_in_bytes" =>  $b[$key]["fs"]["total"]["total_in_bytes"]];
-                
-                $data = [
-                    "clusterName" => $_stats->cluster_name,
-                    "status" => $_stats->status,
-                    "nodeName" => $b[$key]["name"],
-                    "ip" =>  $b[$key]["ip"],
-                    "host" =>  $b[$key]["host"],
-                    "documents" => $_stats->indices->docs->count,
-                    "os" => $os,
-                    "jvm" => $jvm,
-                    "fs" => $fs,
-                    "isOpen" => false,
-                ];
+            $fs = ["total_available_in_bytes" =>  $nodeHealth[$key]["fs"]["total"]["available_in_bytes"],
+                "total_in_bytes" =>  $nodeHealth[$key]["fs"]["total"]["total_in_bytes"]];
+            
+            $data = [
+                "clusterName" => $_stats->cluster_name,
+                "status" => $_stats->status,
+                "nodeName" => $___nodeOs[$key]["name"],
+                "ip" =>  $___nodeOs[$key]["ip"],
+                "host" =>  $___nodeOs[$key]["host"],
+                "documents" => $_stats->indices->docs->count,
+                "os" => $os,
+                "jvm" => $jvm,
+                "fs" => $fs,
+                "isOpen" => false,
+            ];
 
-                array_push($response, $data);
+            array_push($response, $data);
 
-            }
+        }
             
             return $response;
         } catch (\Exception $e) {
