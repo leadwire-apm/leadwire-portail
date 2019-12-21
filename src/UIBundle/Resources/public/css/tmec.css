@@ -856,3 +856,7 @@ display-flex, .form-flex, .form-date-group, .steps ul, .title, .title .step-numb
           padding:0 10px;
           border-bottom:none;
       }
+
+      .black{
+        color: black !important;
+      }
