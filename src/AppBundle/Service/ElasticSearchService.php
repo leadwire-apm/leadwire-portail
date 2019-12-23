@@ -617,7 +617,8 @@ class ElasticSearchService
     public function getClusterInformations()
     {
         try {
-            $response = [];
+
+            $response = ["nodes" => array()];
 
             $health = $this->httpClient->get(
                 $this->url . "_nodes/stats/os,fs,jvm",
@@ -654,6 +655,12 @@ class ElasticSearchService
             $__health = (array)$_health->nodes;
             $nodeHealth = json_decode(json_encode($__health),true);
             $key = '';
+
+            $cluster = ["name" => $_stats->cluster_name,
+            "status" => $_stats->status,
+            "documents" => $_stats->indices->docs->count,];
+
+            $response["cluster"] = $cluster;
     
             foreach($nodeHealth as $k => $v) {
                
@@ -695,20 +702,16 @@ class ElasticSearchService
                 "total_in_bytes" =>  $nodeHealth[$key]["fs"]["total"]["total_in_bytes"]];
             
             $data = [
-                "clusterName" => $_stats->cluster_name,
-                "status" => $_stats->status,
                 "nodeName" => $___nodeOs[$key]["name"],
                 "ip" =>  $___nodeOs[$key]["ip"],
                 "host" =>  $___nodeOs[$key]["host"],
-                "documents" => $_stats->indices->docs->count,
                 "os" => $os,
                 "jvm" => $jvm,
                 "fs" => $fs,
                 "isOpen" => false,
             ];
 
-            array_push($response, $data);
-
+            array_push($response["nodes"], $data);
         }
             
             return $response;

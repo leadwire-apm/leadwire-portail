@@ -29,15 +29,16 @@
 
         vm.load = function () {
             OverviewService.getClusterInformations()
-                .then(function (nodes) {
+                .then(function (data) {
                     vm.nodes.forEach(element => {
-                        nodes.forEach(node => {
+                        data.nodes.forEach(node => {
                             if (element.nodeName === node.nodeName && element.isOpen === true) {
                                 node.isOpen = element.isOpen;
                             }
                         })
                     });
-                    vm.nodes = nodes;
+                    vm.nodes = data.nodes;
+                    vm.cluster = data.cluster;
                 })
                 .catch(function (error) {
                 });
@@ -63,6 +64,7 @@
                     isLoading: false,
                 },
                 nodes: [],
+                cluster: {},
                 border: "border-success"
             });
             vm.load();
