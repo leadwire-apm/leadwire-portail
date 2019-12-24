@@ -620,8 +620,8 @@ class ElasticSearchService
 
             $response = ["nodes" => array()];
 
-            $health = $this->httpClient->get(
-                $this->url . "_nodes/stats/os,fs,jvm",
+            $nodesStats = $this->httpClient->get(
+                $this->url . "_nodes/stats/os,fs,jvm,indices",
     
                 [
                     'headers' => [
@@ -634,7 +634,7 @@ class ElasticSearchService
                 ]
             );
     
-            $stats = $this->httpClient->get(
+            $clusterStats = $this->httpClient->get(
                 $this->url . "_cluster/stats?human&pretty",
     
                 [
@@ -648,28 +648,8 @@ class ElasticSearchService
                 ]
             );
 
-
-            $_stats = \json_decode($stats->getBody());
-            $_health = \json_decode($health->getBody());
-    
-            $__health = (array)$_health->nodes;
-            $nodeHealth = json_decode(json_encode($__health),true);
-            $key = '';
-
-            $cluster = ["name" => $_stats->cluster_name,
-            "status" => $_stats->status,
-            "documents" => $_stats->indices->docs->count,];
-
-            $response["cluster"] = $cluster;
-    
-            foreach($nodeHealth as $k => $v) {
-               
-               $key = $k;
-               $data = array();
-
-
-               $nodeOs = $this->httpClient->get(
-                $this->url . "_nodes/". $key . "/os",
+            $clusterHealth = $this->httpClient->get(
+                $this->url . "_cluster/health",
     
                 [
                     'headers' => [
@@ -682,38 +662,79 @@ class ElasticSearchService
                 ]
             );
 
-            $_nodeOs = \json_decode($nodeOs->getBody());
-            $__nodeOs = (array)$_nodeOs->nodes;
-            $___nodeOs = json_decode(json_encode($__nodeOs),true);
+
+            $clusterStats = \json_decode($clusterStats->getBody());
+
+            $nodesStats = \json_decode($nodesStats->getBody());
+            $nodesStats = (array) $nodesStats->nodes;
+            $nodesStats = json_decode(json_encode($nodesStats),true);
+            $clusterHealth = json_decode($clusterHealth->getBody());
+
+            $key = '';
+
+            $cluster = ["name" => $clusterStats->cluster_name,
+            "status" => $clusterStats->status,
+            "documents" => $clusterStats->indices->docs->count,
+            "nodes" => $clusterHealth->number_of_nodes,
+            "data_nodes" => $clusterHealth->number_of_data_nodes];
+
+            $response["cluster"] = $cluster;
+    
+            foreach($nodesStats as $k => $v) {
                
-            $os = ["cpu" => $nodeHealth[key]["os"]["cpu"]["percent"],
-            "memory_used_byte" => $nodeHealth[$key]["os"]["mem"]["used_in_bytes"],
-            "memory_Total_byte" => $nodeHealth[$key]["os"]["mem"]["total_in_bytes"],
-            "os_name" => $___nodeOs[$key]["os"]["name"],
-            "os_arche" => $___nodeOs[$key]["os"]["arche"],
-            "os_version" => $___nodeOs[$key]["os"]["version"],
-            "os_allocated_processors" => $___nodeOs[$key]["os"]["allocated_processors"]];
+               $key = $k;
+               $data = array();
 
-            $jvm = ["uptime_in_millis" => $nodeHealth[$key]["jvm"]["uptime_in_millis"],
-                    "mem_heap_used_percent" => $nodeHealth[$key]["jvm"]["mem"]["heap_used_percent"],
-                    "threads_count" => $nodeHealth[$key]["jvm"]["threads"]["count"]];
 
-            $fs = ["total_available_in_bytes" =>  $nodeHealth[$key]["fs"]["total"]["available_in_bytes"],
-                "total_in_bytes" =>  $nodeHealth[$key]["fs"]["total"]["total_in_bytes"]];
+               $nodeOs = $this->httpClient->get(
+                $this->url . "_nodes/". $key . "/info/os,roles",
+    
+                [
+                    'headers' => [
+                        'Content-type' => 'application/json',
+                    ],
+                    'auth' => [
+                        $this->settings['username'],
+                        $this->settings['password'],
+                    ],
+                ]
+            );
+
+            $nodeOs = \json_decode($nodeOs->getBody());
+            $nodeOs = (array)$nodeOs->nodes;
+            $nodeOs = json_decode(json_encode($nodeOs),true);
+               
+            $os = ["cpu" => $nodesStats[key]["os"]["cpu"]["percent"],
+            "memory_used_byte" => $nodesStats[$key]["os"]["mem"]["used_in_bytes"],
+            "memory_Total_byte" => $nodesStats[$key]["os"]["mem"]["total_in_bytes"],
+            "os_name" => $nodeOs[$key]["os"]["name"],
+            "os_arche" => $nodeOs[$key]["os"]["arche"],
+            "os_version" => $nodeOs[$key]["os"]["version"],
+            "os_allocated_processors" => $nodeOs[$key]["os"]["allocated_processors"]];
+
+            $jvm = ["uptime_in_millis" => $nodesStats[$key]["jvm"]["uptime_in_millis"],
+                    "mem_heap_used_percent" => $nodesStats[$key]["jvm"]["mem"]["heap_used_percent"],
+                    "threads_count" => $nodesStats[$key]["jvm"]["threads"]["count"]];
+
+            $fs = ["total_available_in_bytes" =>  $nodesStats[$key]["fs"]["total"]["available_in_bytes"],
+                "total_in_bytes" =>  $nodesStats[$key]["fs"]["total"]["total_in_bytes"]];
             
             $data = [
-                "nodeName" => $___nodeOs[$key]["name"],
-                "ip" =>  $___nodeOs[$key]["ip"],
-                "host" =>  $___nodeOs[$key]["host"],
+                "nodeName" => $nodeOs[$key]["name"],
+                "ip" =>  $nodeOs[$key]["ip"],
+                "host" =>  $nodeOs[$key]["host"],
                 "os" => $os,
                 "jvm" => $jvm,
                 "fs" => $fs,
+                "documents" => $nodesStats[$key]["indices"]["docs"]["count"],
+                "roles" => $nodeOs[$key]["roles"],
                 "isOpen" => false,
             ];
 
             array_push($response["nodes"], $data);
         }
-            
+
+
             return $response;
         } catch (\Exception $e) {
             $this->logger->error($e->getMessage());

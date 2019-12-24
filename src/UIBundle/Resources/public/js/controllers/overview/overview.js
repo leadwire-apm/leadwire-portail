@@ -53,7 +53,14 @@
             } else if (statu === "green") {
                 return "bg-success";
             }
+        }
 
+        vm.isMasterNode = function (node){
+            return (node.roles.indexOf("master") > -1);
+        }
+
+        vm.isDataNode = function (node){
+            return (node.roles.indexOf("data")  > -1);
         }
 
 

@@ -8,19 +8,27 @@
 
         <div class="row">
 
-            <div class="col-md-6">
+            <div class="col-md-3">
                 <section class="widget text-center" ng-class="ctrl.getColor(ctrl.cluster.status)">
-                    <div class="widget-details col-md-3">
+                    <div class="widget-details col-xs-12">
                         <h2 class="no-margin">[[ctrl.cluster.status]]</h2> <small class="text-uppercase">Status</small>
                     </div>
                 </section>
             </div>
+            <div class="col-md-9">
 
-            <div class="col-md-6">
                 <section class="widget bg-grey text-center">
-                    <div class="widget-details col-xs-12">
+                    <div class="widget-details col-xs-4">
                         <h2 class="no-margin">[[ctrl.cluster.documents]]</h2> <small
                             class="text-uppercase">Documents</small>
+                    </div>
+                
+                    <div class="widget-details col-xs-4">
+                        <h2 class="no-margin">[[ctrl.cluster.nodes]]</h2> <small class="text-uppercase">Nodes</small>
+                    </div>
+
+                    <div class="widget-details col-xs-4">
+                        <h2 class="no-margin">[[ctrl.cluster.data_nodes]]</h2> <small class="text-uppercase">Data Nodes</small>
                     </div>
                 </section>
             </div>
@@ -29,14 +37,25 @@
         <accordion close-others="true">
             <accordion-group ng-repeat="node in ctrl.nodes" is-open="node.isOpen">
                 <accordion-heading>
-                    [[node.nodeName]]
+                    <i class="fas fa-server"></i>
+                        [[node.nodeName]]
+                    <span style="margin-left: 25px;" class="label label-primary" ng-if="ctrl.isMasterNode(node)"> Master </span>
+                    <span style="margin-left: 25px;" class="label label-success" ng-if="ctrl.isDataNode(node)"> Data </span>
                     <i class="pull-right glyphicon"
                         ng-class="{'glyphicon-chevron-down': isopen, 'glyphicon-chevron-right': !isopen}"></i>
                 </accordion-heading>
                 <div class="form-group row">
 
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-4">
+                            <section class="widget bg-grey text-center">
+                                <div class="widget-details col-xs-12">
+                                    <h2 class="no-margin">[[node.documents]]</h2> <small class="text-uppercase">Documents</small>
+                                </div>
+                            </section>
+                        </div>
+
+                        <div class="col-md-4">
                             <section class="widget bg-grey text-center">
                                 <div class="widget-details col-xs-12">
                                     <h2 class="no-margin">[[node.ip]]</h2> <small class="text-uppercase">Ip</small>
@@ -44,7 +63,8 @@
                             </section>
                         </div>
 
-                        <div class="col-md-6">
+
+                        <div class="col-md-4">
                             <section class="widget bg-grey text-center">
                                 <div class="widget-details col-xs-12">
                                     <h2 class="no-margin">[[node.host]]</h2> <small class="text-uppercase">Host</small>
