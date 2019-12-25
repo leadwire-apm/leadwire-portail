@@ -4,6 +4,7 @@ namespace AppBundle\Service;
 
 use ElephantIO\Client as Elephant;
 use ElephantIO\Engine\SocketIO\Version2X;
+use ElephantIO\Exception\ServerConnectionFailureException;
 
 class ProcessService
 {
@@ -20,7 +21,12 @@ class ProcessService
      */
     public function __construct($appDomain, $port)
     {
-        $this->elephant = new Elephant(new Version2X(sprintf('https://%s:%s', $appDomain, $port)));
+        try {
+            $server = new Version2X(sprintf('https://%s:%s', $appDomain, $port));
+            $this->elephant = new Elephant($server);
+        } catch (ServerConnectionFailureException $e) {
+            $this->elephant = null;
+        }
     }
 
     /**
@@ -31,14 +37,19 @@ class ProcessService
      */
     public function emit($event = null, $message = null)
     {
-        if ($event == null || $message == null) {
+        if ($this->elephant == null || $event == null || $message == null) {
             return;
         }
-        $this->elephant->initialize();
-        $this->elephant->emit('broadcast', [
-            'event' => $event,
-            'message' => $message
-        ]);
-        $this->elephant->close();
+
+        try {
+            $this->elephant->initialize();
+            $this->elephant->emit('broadcast', [
+                'event' => $event,
+                'message' => $message
+            ]);
+            $this->elephant->close();
+        } catch (ServerConnectionFailureException $e) {
+            return;
+        }
     }
 }
