@@ -4913,7 +4913,7 @@ a.bg-default-light:hover {
 /* Color Variant: Warning */
 .bg-warning {
   color: white;
-  background-color: #ffc65d !important;
+  background-color: #ffc65d;
 }
 a.bg-warning:hover {
   background-color: #ffb42a;
@@ -4935,7 +4935,7 @@ a.bg-warning-light:hover {
 /* Color Variant: Success */
 .bg-success {
   color: white;
-  background-color: #2ECC71 !important;
+  background-color: #2ECC71;
 }
 a.bg-success:hover {
   background-color: #25a25a;
@@ -4979,8 +4979,7 @@ a.bg-info-light:hover {
 /* Color Variant: Danger */
 .bg-danger {
   color: white;
-  background-color: #d96557 !important;
-
+  background-color: #d96557;
 }
 a.bg-danger:hover {
   background-color: #ce402f;
@@ -5007,12 +5006,6 @@ a.bg-danger-light:hover {
 a.bg-white:hover {
   background-color: #e6e6e6;
 }
-
-.bg-whiteGrey {
-  color: #616161;
-  background-color: #e6e6e6;
-}
-
 /* Color Variant: Dark */
 .bg-dark {
   color: white;

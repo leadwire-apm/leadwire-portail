@@ -209,28 +209,6 @@
         };
 
         /**
-         * Grant access for user
-         *
-         * @param string payload
-         *
-         * @return obj
-         */
-        service.grantAccess = function(payload) {
-            return UserFactory.grantAccess(payload);
-        }
-
-        /**
-         * Revoke access for user
-         *
-         * @param string payload
-         *
-         * @return obj
-         */
-        service.revokeAccess = function(payload) {
-            return UserFactory.revokeAccess(payload);
-        }
-
-        /**
          * On first login we need to show a model
          * to update user information
          * and subscribe to a plan
@@ -352,7 +330,6 @@
         };
         service.isAdmin = function (user) {
             return ADMINS.some(function (role) {
-                if(user && user.roles)
                 return user.roles.includes(role);
             });
         };

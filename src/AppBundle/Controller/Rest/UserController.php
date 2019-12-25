@@ -225,44 +225,4 @@ class UserController extends Controller
 
         return $this->renderResponse($successful);
     }
-
-    /**
-     * @Route("/access-level/grant", methods="PUT")
-     *
-     * @param Request     $request
-     * @param UserService $userService
-     *
-     * @return Response
-     */
-    public function grantAccessAction(Request $request, UserService $userService)
-    {
-        try {
-            $payload = $request->getContent();
-            $user = $userService->grantAccess(json_decode($payload, true));
-
-            return $this->renderResponse($user);
-        } catch (\Exception $e) {
-            return $this->exception($e->getMessage(), 400);
-        }
-    }
-
-    /**
-     * @Route("/access-level/revoke", methods="PUT")
-     *
-     * @param Request     $request
-     * @param UserService $userService
-     *
-     * @return Response
-     */
-    public function revokeAccessAction(Request $request, UserService $userService)
-    {
-        try {
-            $payload = $request->getContent();
-            $user = $userService->revokeAccess(json_decode($payload, true));
-
-            return $this->renderResponse($user);
-        } catch (\Exception $e) {
-            return $this->exception($e->getTraceAsString(), 400);
-        }
-    }
 }

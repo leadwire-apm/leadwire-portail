@@ -22,17 +22,10 @@ angular.module('leadwireApp', [
     'toastr',
     'simplemde',
     'ng.jsoneditor',
-    'ysilvela.socket-io',
 ], function ($interpolateProvider) {
     $interpolateProvider.startSymbol('[[');
     $interpolateProvider.endSymbol(']]');
 })
-    .factory('socket', function (socketFactory) {
-        return socketFactory({
-            prefix: "",
-            ioSocket: io.connect('https://' + APP_DOMAIN + ':' + SOCKET_IO_PORT)
-        });
-    })
     .constant('COLORS', {
         default: '#e2e2e2',
         primary: '#09c',
@@ -48,8 +41,6 @@ angular.module('leadwireApp', [
     })
     .constant('CONFIG', {
         APP_VERSION: APP_VERSION,
-        APP_DOMAIN: APP_DOMAIN,
-        SOCKET_IO_PORT: SOCKET_IO_PORT,
         BASE_URL: BASE_URL,
         ASSETS_BASE_URL: ASSETS_BASE_URL,
         UPLOAD_URL: UPLOAD_URL,
@@ -67,7 +58,7 @@ angular.module('leadwireApp', [
     })
     .constant('MESSAGES_CONSTANTS', {
         ERROR: 'Something went wrong,please try again.',
-        SUCCESS: 'Operation successfully completed.',
+        SUCCESS: 'Operation successfully completed\n.',
         EDIT_APP_SUCCESS: 'Your app has been updated successfully.',
         ACTIVATE_APP_SUCCESS: 'Your app has been activated successfully.',
         ACTIVATE_APP_FAILURE:
