@@ -7,11 +7,13 @@ use AppBundle\Document\ApplicationPermission;
 use AppBundle\Document\DeleteTask;
 use AppBundle\Document\Task;
 use AppBundle\Document\User;
+use AppBundle\Document\Dashboard;
 use AppBundle\Exception\DuplicateApplicationNameException;
 use AppBundle\Manager\ActivationCodeManager;
 use AppBundle\Manager\ApplicationManager;
 use AppBundle\Manager\ApplicationPermissionManager;
 use AppBundle\Manager\DeleteTaskManager;
+use AppBundle\Manager\DashboardManager;
 use AppBundle\Service\ActivationCodeService;
 use JMS\Serializer\DeserializationContext;
 use JMS\Serializer\SerializerInterface;
@@ -20,6 +22,9 @@ use Ramsey\Uuid\Uuid;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use AppBundle\Manager\ApplicationTypeManager;
+use AppBundle\Service\EnvironmentService;
+use AppBundle\Document\AccessLevel;
+use AppBundle\Manager\UserManager;
 
 /**
  * Service class for App entities
@@ -73,6 +78,21 @@ class ApplicationService
     private $taskManager;
 
     /**
+     * @var DashboardManager
+     */
+    private $dashboardManager;
+
+    /**
+     * @var EnvironmentService
+     */
+    private $environmentService;
+
+    /**
+     * @var UserManager
+     */
+    private $userManager;
+
+    /**
      * Constructor
      *
      * @param ApplicationManager $applicationManager
@@ -84,6 +104,9 @@ class ApplicationService
      * @param LoggerInterface $logger
      * @param ApplicationTypeService $appTypeService
      * @param ActivationCodeService $activationCodeService
+     * @param DashboardManager $dashboardManager
+     * @param EnvironmentService $environmentService
+     * @param UserManager $userManager
      */
     public function __construct(
         ApplicationManager $applicationManager,
@@ -94,7 +117,10 @@ class ApplicationService
         SerializerInterface $serializer,
         LoggerInterface $logger,
         ApplicationTypeService $appTypeService,
-        ActivationCodeService $activationCodeService
+        ActivationCodeService $activationCodeService,
+        DashboardManager $dashboardManager,
+        EnvironmentService $environmentService,
+        UserManager $userManager
     ) {
         $this->applicationManager = $applicationManager;
         $this->applicationTypeManager = $applicationTypeManager;
@@ -105,6 +131,9 @@ class ApplicationService
         $this->logger = $logger;
         $this->appTypeService = $appTypeService;
         $this->activationCodeService = $activationCodeService;
+        $this->dashboardManager = $dashboardManager;
+        $this->environmentService = $environmentService;
+        $this->userManager = $userManager;
     }
 
     /**
@@ -273,6 +302,10 @@ class ApplicationService
             ->setUuid($uuid1->toString())
             ->setRemoved(false);
 
+        foreach ($this->environmentService->getAll() as $environment) {
+            $application->addEnvironment($environment);
+        }
+
         /** @var string $applicationTypeId */
         $applicationTypeId = $application->getType()->getId();
         $ap = $this->appTypeService->getApplicationType($applicationTypeId);
@@ -286,6 +319,21 @@ class ApplicationService
             ->setModifiedAt(new \DateTime());
 
         $this->apManager->update($applicationPermission);
+        // owner has full access level
+        $ownerAccessLevel = new AccessLevel($environment, $application, true, true);
+        $user->addAccessLevel($ownerAccessLevel);
+        $this->userManager->update($user);
+
+        // all user has access read to the new application on all env
+        $users = $this->userManager->getAll();
+        foreach ($users as $usr) {
+            if ($usr->getId() == $user->getId()) {
+                continue; // owner already has access granted
+            }
+            $accessLevel = new AccessLevel($environment, $application, true, false);
+            $usr->addAccessLevel($accessLevel);
+            $this->userManager->update($usr);
+        }
 
         return $application;
     }
@@ -371,6 +419,15 @@ class ApplicationService
             $this->taskManager->update($task);
 
             $this->applicationManager->update($application);
+
+        /**
+         * clear dashboard table
+         */
+        $dashboards = $this->dashboardManager->getBy(['applicationId' => $id]);
+        foreach ($dashboards as $dashboard) {
+            $this->dashboardManager->delete($dashboard);
+        }
+
         }
     }
 
@@ -443,4 +500,50 @@ class ApplicationService
             $this->apManager->update($permission);
         }
     }
+
+
+    /**
+     * Updates a specific app from JSON data
+     *
+     * @param string $dashboards
+     * @param string $applicationId
+     * @param string $userId
+     *    
+     * */
+    public function updateApplicationDashboards($dashboards, $applicationId, $userId):array    {
+      
+        $state = [
+            'successful' => false,
+            'esUpdateRequired' => false,
+            'application' => null,
+        ];
+
+        try {
+
+            $array = json_decode($dashboards, true);
+            $array_keys = array_keys( $array);
+
+            $context = new DeserializationContext();
+            $context->setGroups(['Default']);
+
+            foreach ($array_keys as $value) {
+                foreach ($array[$value] as $element) {
+                   
+                    $dashboard = $this->dashboardManager->getDashboard($userId, $applicationId, $element['id']);
+                    $dashboard->setVisible($element['visible']);
+                    $this->dashboardManager->update($dashboard);
+                    $state['successful'] = true;
+                }
+            }
+
+        } catch (\Exception $e) {
+            $this->logger->error($e->getMessage());
+            $state['successful'] = false;
+            $state['esUpdateRequired'] = false;
+            $state['application'] = null;
+        }
+
+        return $state;
+    }
+
 }

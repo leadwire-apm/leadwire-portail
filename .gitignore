@@ -36,3 +36,7 @@
 /uploads/*
 !/uploads/.gitkeep
 .tmp
+.env
+curator-alias.yml
+/node_modules/
+/package-lock.json

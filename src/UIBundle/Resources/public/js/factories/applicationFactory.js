@@ -1,6 +1,6 @@
 (function (angular) {
     angular.module('leadwireApp')
-        .factory('ApplicationFactory', function ($http, CONFIG) {
+        .factory('ApplicationFactory', function ($http, CONFIG, $rootScope) {
             return {
 
                 /**
@@ -24,6 +24,15 @@
                 findMyDashboard: function (id) {
                     return $http.get(
                         CONFIG.BASE_URL + 'api/app/' + id + '/dashboards',
+                    );
+                },
+                /**
+                 *
+                 * @returns {Promise}
+                 */
+                findMyReports: function (id) {
+                    return $http.get(
+                        CONFIG.BASE_URL + 'api/app/' + id + '/reports',
                     );
                 },
                 /**
@@ -56,6 +65,16 @@
                 update: function (id, body) {
                     return $http.put(
                         CONFIG.BASE_URL + 'api/app/' + id + '/update',
+                        body,
+                    );
+                },
+                 /**
+                 *
+                 * @returns {Promise}
+                 */
+                updateDashbaords: function (id, body) {
+                    return $http.put(
+                        CONFIG.BASE_URL + 'api/app/'+ id +'/update-dashboards',
                         body,
                     );
                 },

@@ -106,55 +106,81 @@ class SearchGuardService
 
         /** @var Application $application */
         foreach ($applications as $application) {
-            $serialized .= $this->serializer->serialize(
-                [
-                    "sg_{$application->getName()}_index" => [
-                        'cluster' => ['CLUSTER_COMPOSITE_OPS'],
-                        'indices' => [
-                            "*-{$application->getName()}-*" => [
-                                "*" => ["READ"],
-                            ],
-                        ],
-                    ],
-                ],
-                'yml'
-            );
-
-            $serialized .= $this->serializer->serialize(
-                [
-                    "sg_{$application->getName()}_kibana_index" => [
-                        'cluster' => ['CLUSTER_COMPOSITE_OPS'],
-                        'indices' => [
-                            "?kibana_{$application->getApplicationIndex()}" => [
-                                "*" => [
-                                    "READ",
-                                    "indices:data/read/get",
-                                    "indices:data/read/search",
+            foreach ($application->getEnvironments() as $environment) {
+                $serialized .= $this->serializer->serialize(
+                    [
+                        "sg_{$environment->getName()}_{$application->getName()}_index" => [
+                            'cluster' => ['CLUSTER_COMPOSITE_OPS'],
+                            'indices' => [
+                                "*-sentinl-*" => [
+                                    "*" => ["READ"],
+                                ],
+                                "*-{$environment->getName()}-{$application->getName()}-*" => [
+                                    "*" => ["READ"],
                                 ],
                             ],
-                            "?kibana_{$application->getSharedIndex()}" => ["*" => ["INDICES_ALL"]],
                         ],
                     ],
-                ],
-                'yml'
-            );
+                    'yml'
+                );
+
+                $serialized .= $this->serializer->serialize(
+                    [
+                        "sg_{$environment->getName()}_{$application->getName()}_kibana_index" => [
+                            'cluster' => ['CLUSTER_COMPOSITE_OPS'],
+                            'indices' => [
+                                "?kibana_{$environment->getName()}_{$application->getApplicationIndex()}" => [
+                                    "*" => [
+                                        "READ",
+                                        "indices:data/read/get",
+                                        "indices:data/read/search",
+                                    ],
+                                ],
+                                "?kibana_{$environment->getName()}_{$application->getSharedIndex()}" => ["*" => ["INDICES_ALL"]],
+                            ],
+                        ],
+                    ],
+                    'yml'
+                );
+            }
         }
 
         $users = $this->userManager->getActiveUsers();
         /** @var User $user */
         foreach ($users as $user) {
             $permissions = $this->permissionManager->getPermissionsForUser($user);
+            $accessLevels = $user->getAccessLevels();
 
             $indices = [];
-            /** @var ApplicationPermission $permission */
-            foreach ($permissions as $permission) {
-                $indices["*-{$permission->getApplication()->getUuid()}-*"] = [
+            if (in_array(User::ROLE_ADMIN, $user->getRoles()) || in_array(User::ROLE_SUPER_ADMIN, $user->getRoles())) {
+                $indices["*-sentinl-*"] = [
                     "*" => [
                         "READ",
                         "indices:data/read/field_caps[index]",
                         "indices:data/read/field_caps",
                     ],
                 ];
+            }
+            /** @var ApplicationPermission $permission */
+            // foreach ($permissions as $permission) {
+            //     $indices["*-{$accessLevel->getEnvironment()->getName()}-{$permission->getApplication()->getUuid()}-*"] = [
+            //         "*" => [
+            //             "READ",
+            //             "indices:data/read/field_caps[index]",
+            //             "indices:data/read/field_caps",
+            //         ],
+            //     ];
+            // }
+            foreach ($accessLevels as $accessLevel) {
+                if ($accessLevel->getRead() || $accessLevel->getWrite()) {
+                    $indices["*-{$accessLevel->getEnvironment()->getName()}-{$accessLevel->getApplication()->getUuid()}-*"] = [
+                        "*" => [
+                            "READ",
+                            "indices:data/read/field_caps[index]",
+                            "indices:data/read/field_caps",
+                        ],
+                    ];
+                }
             }
 
             $serialized .= $this->serializer->serialize(

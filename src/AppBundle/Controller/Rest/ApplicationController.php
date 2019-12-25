@@ -22,6 +22,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use AppBundle\Manager\ApplicationManager;
+use AppBundle\Service\ProcessService;
 use AppBundle\Service\CuratorService;
 
 class ApplicationController extends Controller
@@ -66,6 +67,30 @@ class ApplicationController extends Controller
         } else {
             $dashboards = $esService->getDashboads($app, $this->getUser());
             return $this->renderResponse($dashboards);
+        }
+    }
+
+    /**
+     * @Route("/{id}/reports", methods="GET")
+     *
+     * @param Request $request
+     * @param ApplicationService $applicationService
+     * @param string  $id
+     *
+     * @return Response
+     */
+    public function getApplicationReportsAction(
+        Request $request,
+        ApplicationService $applicationService,
+        ElasticSearchService $esService,
+        $id
+    ) {
+        $app = $applicationService->getApplication($id);
+        if ($app === null) {
+            throw new HttpException(Response::HTTP_NOT_FOUND, "App not Found");
+        } else {
+            $reports = $esService->getReports($app, $this->getUser());
+            return $this->renderResponse($reports);
         }
     }
 
@@ -164,24 +189,29 @@ class ApplicationController extends Controller
         ElasticSearchService $esService,
         KibanaService $kibanaService,
         SearchGuardService $sgService,
-        CuratorService $curatorService
+        CuratorService $curatorService,
+        ProcessService $processService
     ) {
         $status = false;
         $application = null;
+        $processService->emit("heavy-operations-in-progress", "Creating application settings");
         try {
             $data = $request->getContent();
             $application = $applicationService->newApplication($data, $this->getUser());
 
             if ($application !== null) {
                 // Application created in MongoDB. proceed with LDAP & ES entries
+                $processService->emit("heavy-operations-in-progress", "Creating LDAP Entries");
                 $ldapService->createApplicationEntry($application);
                 $ldapService->registerApplication($this->getUser(), $application);
 
+                $processService->emit("heavy-operations-in-progress", "Creating Index-patterns");
                 $esService->deleteIndex($application->getApplicationIndex());
                 $esService->createIndexTemplate($application, $applicationService->getActiveApplicationsNames());
 
                 $esService->createAlias($application);
 
+                $processService->emit("heavy-operations-in-progress", "Creating Kibana Dashboards");
                 $kibanaService->loadIndexPatternForApplication(
                     $application,
                     $application->getApplicationIndex()
@@ -202,20 +232,25 @@ class ApplicationController extends Controller
                 $kibanaService->loadDefaultIndex($application->getSharedIndex(), 'default');
                 $kibanaService->makeDefaultIndex($application->getSharedIndex(), 'default');
 
+                $processService->emit("heavy-operations-in-progress", "Configuring SearchGuard");
                 $sgService->updateSearchGuardConfig();
 
+                $processService->emit("heavy-operations-in-progress", "Updating Curator Configurations");
                 $curatorService->updateCuratorConfig();
 
                 $status = true;
             }
+            $processService->emit("heavy-operations-done", "Successeded");
         } catch (DuplicateApplicationNameException $e) {
+            $processService->emit("heavy-operations-done", "Failed");
             return $this->renderResponse(['message' => $e->getMessage()], Response::HTTP_NOT_ACCEPTABLE);
         } catch (\Exception $e) {
+            $processService->emit("heavy-operations-done", "Failed");
             if ($application instanceof Application) {
                 $applicationService->obliterateApplication($application);
 
-                return $this->renderResponse(['message' => $e->getMessage()], Response::HTTP_NOT_ACCEPTABLE);
             }
+            return $this->renderResponse(['message' => $e->getMessage()], Response::HTTP_NOT_ACCEPTABLE);
         }
 
         if ($status === true) {
@@ -243,13 +278,16 @@ class ApplicationController extends Controller
         ElasticSearchService $esService,
         KibanaService $kibanaService,
         CuratorService $curatorService,
+        ProcessService $processService,
         string $id
     ) {
+        $processService->emit("heavy-operations-in-progress", "Updating application settings");
         try {
             $data = $request->getContent();
             $state = $applicationService->updateApplication($data, $id);
             if ($state['esUpdateRequired'] === true) {
                 $application = $state['application'];
+                $processService->emit("heavy-operations-in-progress", "Updating Index-patterns");
                 $esService->deleteIndex($application->getApplicationIndex());
                 $esService->createIndexTemplate($application, $applicationService->getActiveApplicationsNames());
 
@@ -260,6 +298,7 @@ class ApplicationController extends Controller
                     $application->getApplicationIndex()
                 );
 
+                $processService->emit("heavy-operations-in-progress", "Updating Kibana Dashboards");
                 $kibanaService->loadDefaultIndex($application->getApplicationIndex(), 'default');
                 $kibanaService->makeDefaultIndex($application->getApplicationIndex(), 'default');
 
@@ -275,11 +314,14 @@ class ApplicationController extends Controller
                 $kibanaService->loadDefaultIndex($application->getSharedIndex(), 'default');
                 $kibanaService->makeDefaultIndex($application->getSharedIndex(), 'default');
 
+                $processService->emit("heavy-operations-in-progress", "Updating Curator Configurations");
                 $curatorService->updateCuratorConfig();
             }
+            $processService->emit("heavy-operations-done", "Succeeded");
 
             return $this->renderResponse($state['successful']);
         } catch (MongoDuplicateKeyException $e) {
+            $processService->emit("heavy-operations-done", "Failed");
             return $this->renderResponse(['message' => "Application's name must be unique"], Response::HTTP_UNAUTHORIZED);
         }
     }
@@ -381,14 +423,17 @@ class ApplicationController extends Controller
         ApplicationManager $applicationManager,
         ElasticSearchService $esService,
         KibanaService $kibanaService,
+        ProcessService $processService,
         string $id
     ) {
         $application = $applicationService->getApplication($id);
-
+        $processService->emit("heavy-operations-in-progress", "Updating Application Type");
         if ($application instanceof Application) {
+            $processService->emit("heavy-operations-in-progress", "Updating Index-patterns");
             $esService->deleteIndex($application->getApplicationIndex());
             $esService->createIndexTemplate($application, $applicationService->getActiveApplicationsNames());
             $aliases = $esService->createAlias($application);
+            $processService->emit("heavy-operations-in-progress", "Updating Kibana Dashboards");
             $kibanaService->loadIndexPatternForApplication(
                 $application,
                 $application->getApplicationIndex()
@@ -408,13 +453,32 @@ class ApplicationController extends Controller
 
             $kibanaService->loadDefaultIndex($application->getSharedIndex(), 'default');
             $kibanaService->makeDefaultIndex($application->getSharedIndex(), 'default');
-            
+
             $application->setDeployedTypeVersion($application->getType()->getVersion());
             $applicationManager->update($application);
+            $processService->emit("heavy-operations-done", "Succeeded");
         } else {
+            $processService->emit("heavy-operations-done", "Failed");
             throw new NotFoundHttpException("Application with ID {$id} not found.");
         }
 
         return $this->renderResponse(true);
+    }
+
+    /**
+     * @Route("/{id}/update-dashboards", methods="PUT")
+     *
+     * @param Request $request
+     * @param ApplicationService $applicationService
+     * @param string $id
+     */
+    public function updateApplicationActionDashboards( Request $request, ApplicationService $applicationService, string $id){
+        try{
+            $data = $request->getContent();
+            $state = $applicationService->updateApplicationDashboards($data, $id, $this->getUser()->getId());
+            return $this->renderResponse($state['successful']);
+        } catch (MongoDuplicateKeyException $e) {
+            return $this->renderResponse(['message' => $e->getMessage()], Response::HTTP_NOT_ACCEPTABLE);
+        }
     }
 }

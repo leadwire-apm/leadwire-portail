@@ -8,6 +8,8 @@
             'toastr',
             'MESSAGES_CONSTANTS',
             '$state',
+            'socket',
+            '$rootScope',
             addApplicationCtrlFN,
         ]);
 
@@ -28,8 +30,35 @@
         toastr,
         MESSAGES_CONSTANTS,
         $state,
+        socket,
+        $rootScope
     ) {
         var vm = this;
+
+        socket.on('heavy-operation', function(data) {
+
+            if (data.status == "in-progress") {
+                if ($('#toast-container').hasClass('toast-top-right') == false) {
+                    toastr.info(
+                        data.message + '...',
+                        "Operation in progress",
+                        {
+                            timeOut: 0,
+                            extendedTimeOut: 0,
+                            closeButton: true,
+                            onClick: null,
+                            preventDuplicates: true
+                        }
+                    );
+                } else {
+                    $('.toast-message').html(data.message + '...');
+                }
+            }
+            if (data.status == "done") {
+                toastr.clear();
+            }
+        });
+
         vm.saveApp = function () {
             vm.flipActivityIndicator();
             ApplicationFactory.save(vm.application)
@@ -60,6 +89,7 @@
 
         function handleAfterSuccess (success) {
             if (success) {
+                $rootScope.$broadcast("new:app", {});
                 vm.flipActivityIndicator();
                 $state.go('app.applicationsList');
             }

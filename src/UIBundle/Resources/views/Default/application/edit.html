@@ -5,13 +5,59 @@
     <div class="panel-body">
         <div class="row no-margin">
             <div class="col-lg-12">
+
                 <form class="form-horizontal bordered-group" name="applicationForm" ng-submit="ctrl.editApp()"
-                      role="form">
+                    role="form">
 
                     <div ng-include="'application/form.html'"></div>
 
-                    <button type="submit" ng-disabled="applicationForm.$invalid"
-                            class="btn btn-primary pull-right">Edit
+                    <fieldset class="scheduler-border">
+                        <legend class="scheduler-border"> Edit Application Menu</legend>
+
+                        <accordion close-others="true">
+
+                            <accordion-group ng-repeat="name in ctrl.dashboardsNameList" is-open="false">
+
+                                <accordion-heading>
+                                    [[name]] <i class="pull-right glyphicon"
+                                        ng-class="{'glyphicon-chevron-down': isopen, 'glyphicon-chevron-right': !isopen}"></i>
+                                </accordion-heading>
+
+                                <div ng-repeat="dashboard in ctrl.getDashboardByTheme(name)"
+                                    class="bordered-group form-group">
+                                    <label class="col-sm-2 control-label">[[dashboard.name]]</label>
+                                    <div class="col-sm-10">
+                                        <label class="col-sm-2 control-label">Is visible</label>
+                                        <div class="col-sm-10">
+                                            <label class="switch switch-sm"> 
+                                                <input type="checkbox" ng-model="dashboard.visible">
+                                                 <span>
+                                                    <i class="handle"></i> 
+                                                </span> 
+                                            </label>
+                                        </div>
+
+                                         <!--<label class="col-sm-2 control-label">Icon</label>
+                                        <div class="col-sm-10">
+
+                                            <select name="type" id="type" class="form-control"
+                                                data-ng-model="dashboard.icon" required>
+                                                <option value="">Select a icon</option>
+                                                <option ng-selected="icon.name == dashboard.icon"
+                                                    ng-repeat="icon in ctrl.icons" value="[[icon.div]]" ng-bind-html="[[icon.div]]">
+                                                       
+                                                </option>
+                                            </select>
+                                        </div> -->
+                                    </div>
+                                </div>
+                            </accordion-group>
+
+                        </accordion>
+
+                    </fieldset>
+
+                    <button type="submit" ng-disabled="applicationForm.$invalid" class="btn btn-primary pull-right">Edit
                     </button>
                 </form>
             </div>
