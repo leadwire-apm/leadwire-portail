@@ -35,17 +35,6 @@
                     )
                 }
 
-                function normalizeRouteParams(params) {
-                    if(!_.has(params,'ls')) return params;
-                    var result = Object.keys(params.ls).reduce(function(acc, current) {
-                        acc[current] = _.get($localStorage,params.ls[current]);
-                        return acc;
-                    },params);
-                    delete result.ls;
-
-                    return result;
-                }
-
                 return {
                     update : function(){
 
@@ -54,9 +43,8 @@
                         var menus = [];
                         if (menuKey in Menus) {
                             menus = Menus[menuKey].map(function (menu) {
-
                                 return angular.extend({}, menu, {
-                                    route: $state.href(menu.route, normalizeRouteParams(menu.params)),
+                                    route: $state.href(menu.route),
                                 });
                             });
                         }
@@ -96,24 +84,16 @@
                         labelCallback,
                         routeCallback,
                         iconCallback,
-                        visibleCallback,
-                        routeNameCallback,
-                        routeOptsCallback,
-                        routeIdCallback
                     ) {
                         try {
-                            newMenus = {};
+                            newMenus = Object.keys(menus);
 
-                            Object.keys(menus).forEach(function(theme) {
+                            newMenus.forEach(function(theme) {
                                 sub = menus[theme].map(function (menu) {
                                     return {
                                         label: labelCallback(menu),
                                         route: routeCallback(menu),
                                         icon: iconCallback(menu),
-                                        visible: visibleCallback(menu),
-                                        routeName: routeNameCallback(menu),
-                                        routeOpts: routeOptsCallback(menu),
-                                        routeId: routeIdCallback(menu)
                                     };
                                 });
 
@@ -199,29 +179,6 @@
                     icon: 'fa fa-file-alt',
                     label: 'Manage templates',
                 },
-                {
-                    route: 'app.management.environmentList',
-                    abstractRoute: 'app.management',
-                    icon: 'fa fa-file-alt',
-                    label: 'Manage Environment',
-                },
-                {
-                    route: 'app.management.reports',
-                    abstractRoute: 'app.management',
-                    icon: 'fa fa-cogs',
-                    label: 'Manage reports',
-                    params: {
-                        ls: {
-                            tenant: 'user.userIndex'
-                        }
-                    }
-                },
-                {
-                    route: 'app.management.accessLevel',
-                    abstractRoute: 'app.management',
-                    icon: 'fa fa-shield-alt',
-                    label: 'Access Levels'
-                }
             ],
         });
 })(window.angular);

@@ -11,7 +11,6 @@ use GuzzleHttp\Exception\ClientException;
 use Psr\Log\LoggerInterface;
 use SensioLabs\Security\Exception\HttpException;
 use Symfony\Component\HttpFoundation\Response;
-use AppBundle\Manager\DashboardManager;
 
 /**
  * Class ElasticSearchService Service. Manage connexions with Kibana Rest API.
@@ -51,27 +50,19 @@ class ElasticSearchService
     private $hasAllUserTenant;
 
     /**
-     * @var DashboardManager
-     */
-    private $DashboardManager;
-
-    /**
      * ElasticSearchService constructor.
      * @param LoggerInterface $logger
      * @param bool $hasAllUserTenant
      * @param array $settings
-     * @param DashboardManager $dashboardManager
      */
     public function __construct(
         LoggerInterface $logger,
         bool $hasAllUserTenant,
-        array $settings = [],
-        DashboardManager $dashboardManager
+        array $settings = []
     ) {
         $this->settings = $settings;
         $this->hasAllUserTenant = $hasAllUserTenant;
         $this->logger = $logger;
-        $this->dashboardManager = $dashboardManager;
         $this->httpClient = new Client(
             [
                 'curl' => array(CURLOPT_SSL_VERIFYPEER => false),
@@ -90,23 +81,7 @@ class ElasticSearchService
     public function getDashboads(Application $app, User $user)
     {
         try {
-            $dashboards = $this->filter($app, $user, $this->getRawDashboards($app, $user));
-            return $dashboards;
-        } catch (\Exception $e) {
-            $this->logger->error($e->getMessage());
-            throw new HttpException("An error has occurred while executing your request.", 500);
-        }
-    }
-
-    /**
-     * @param Application $app
-     * @param User $user
-     */
-    public function getReports(Application $app, User $user)
-    {
-        try {
-            $reports = $this->filter($this->getRawReports($app, $user));
-            return $reports;
+            return $this->filter($this->getRawDashboards($app, $user));
         } catch (\Exception $e) {
             $this->logger->error($e->getMessage());
             throw new HttpException("An error has occurred while executing your request.", 500);
@@ -450,7 +425,6 @@ class ElasticSearchService
 
         foreach ($tenants as $groupName => $tenantGroup) {
             foreach ($tenantGroup as $tenant) {
-
                 $response = $this->httpClient->get(
                     $this->url . ".kibana_$tenant" . "/_search?pretty&from=0&size=10000",
                     [
@@ -469,14 +443,13 @@ class ElasticSearchService
                     foreach ($body as $element) {
                         if ($element->_source->type === "dashboard") {
                             $title = $element->_source->{$element->_source->type}->title;
+
                             $res[$groupName][] = [
                                 "id" => $this->transformeId($element->_id),
                                 "name" => $title,
                                 "private" => $groupName === "Custom" && (new AString($tenant))->startsWith("shared_") === false,
                                 "tenant" => $tenant,
-                                "visible" => true,
                             ];
-
                         }
                     }
                 } else {
@@ -495,99 +468,29 @@ class ElasticSearchService
         return $res;
     }
 
-    /**
-     * @param Application $app
-     * @param User $user
-     */
-    protected function getRawReports(Application $app, User $user)
-    {
-        $res = [
-            "Default" => [],
-            "Custom" => [],
-        ];
-
-        $tenants = [
-            "Default" => $this->hasAllUserTenant === true ? [$user->getAllUserIndex(), $app->getApplicationIndex()] : [$app->getApplicationIndex()],
-            "Custom" => [$user->getUserIndex(), $app->getSharedIndex()],
-        ];
-
-        foreach ($tenants as $groupName => $tenantGroup) {
-            foreach ($tenantGroup as $tenant) {
-                $response = $this->httpClient->get(
-                    $this->url . ".kibana_$tenant" . "/_search?pretty&from=0&size=10000",
-                    [
-                        'headers' => [
-                            'Content-type' => 'application/json',
-                        ],
-                        'auth' => [
-                            $this->settings['username'],
-                            $this->settings['password'],
-                        ],
-                    ]
-                );
-
-                if ($response->getStatusCode() === Response::HTTP_OK) {
-                    $body = \json_decode($response->getBody())->hits->hits;
-                    foreach ($body as $element) {
-                        if ($element->_source->type === "report") {
-                            $title = $element->_source->{$element->_source->type}->title;
-
-                            $res[$groupName][] = [
-                                "id" => $this->transformeId($element->_id),
-                                "name" => $title,
-                                "private" => $groupName === "Custom" && (new AString($tenant))->startsWith("shared_") === false,
-                                "tenant" => $tenant,
-                            ];
-                        }
-                    }
-                } else {
-                    $this->logger->error(
-                        'leadwire.es.getRawReports',
-                        [
-                            'error' => $response->getReasonPhrase(),
-                            'status_code' => $response->getStatusCode(),
-                            'url' => $this->url . ".kibana_$tenant" . "/_search?pretty&from=0&size=10000",
-                        ]
-                    );
-                }
-            }
-        }
-
-        return $res;
-    }
-
-    protected function filter($app, $user, $dashboards)
+    protected function filter($dashboards)
     {
         $custom = [];
         $default = [];
         foreach ($dashboards['Custom'] as $item) {
             \preg_match_all('/\[([^]]+)\]/', $item['name'], $out);
             $theme = isset($out[1][0]) === true ? $out[1][0] : 'Misc';
-
-            $dashboard = $this->dashboardManager->getOrCreateDashboard($user->getId(), $app->getId(), $item['id'], true);
-
             $custom[$theme][] = [
                 "private" => $item['private'],
                 "id" => $item['id'],
                 "tenant" => $item['tenant'],
                 "name" => \str_replace("[$theme] ", "", $item['name']),
-                "visible" => $dashboard->isVisible(),
             ];
         }
 
         foreach ($dashboards['Default'] as $item) {
             \preg_match_all('/\[([^]]+)\]/', $item['name'], $out);
             $theme = isset($out[1][0]) === true ? $out[1][0] : 'Misc';
-
-            $dashboard = $this->dashboardManager->getOrCreateDashboard($user->getId(), $app->getId(), $item['id'], true);
-
-
             $default[$theme][] = [
                 "private" => $item['private'],
                 "id" => $item['id'],
                 "tenant" => $item['tenant'],
                 "name" => \str_replace("[$theme] ", "", $item['name']),
-                "visible" => $dashboard->isVisible(),
             ];
         }
 
@@ -611,134 +514,5 @@ class ElasticSearchService
             $this->settings['username'],
             $this->settings['password'],
         ];
-    }
-
-
-    public function getClusterInformations()
-    {
-        try {
-
-            $response = ["nodes" => array()];
-
-            $nodesStats = $this->httpClient->get(
-                $this->url . "_nodes/stats/os,fs,jvm,indices",
-    
-                [
-                    'headers' => [
-                        'Content-type' => 'application/json',
-                    ],
-                    'auth' => [
-                        $this->settings['username'],
-                        $this->settings['password'],
-                    ],
-                ]
-            );
-    
-            $clusterStats = $this->httpClient->get(
-                $this->url . "_cluster/stats?human&pretty",
-    
-                [
-                    'headers' => [
-                        'Content-type' => 'application/json',
-                    ],
-                    'auth' => [
-                        $this->settings['username'],
-                        $this->settings['password'],
-                    ],
-                ]
-            );
-
-            $clusterHealth = $this->httpClient->get(
-                $this->url . "_cluster/health",
-    
-                [
-                    'headers' => [
-                        'Content-type' => 'application/json',
-                    ],
-                    'auth' => [
-                        $this->settings['username'],
-                        $this->settings['password'],
-                    ],
-                ]
-            );
-
-
-            $clusterStats = \json_decode($clusterStats->getBody());
-
-            $nodesStats = \json_decode($nodesStats->getBody());
-            $nodesStats = (array) $nodesStats->nodes;
-            $nodesStats = json_decode(json_encode($nodesStats),true);
-            $clusterHealth = json_decode($clusterHealth->getBody());
-
-            $key = '';
-
-            $cluster = ["name" => $clusterStats->cluster_name,
-            "status" => $clusterStats->status,
-            "documents" => $clusterStats->indices->docs->count,
-            "nodes" => $clusterHealth->number_of_nodes,
-            "data_nodes" => $clusterHealth->number_of_data_nodes];
-
-            $response["cluster"] = $cluster;
-    
-            foreach($nodesStats as $k => $v) {
-               
-               $key = $k;
-               $data = array();
-
-
-               $nodeOs = $this->httpClient->get(
-                $this->url . "_nodes/". $key . "/info/os,roles",
-    
-                [
-                    'headers' => [
-                        'Content-type' => 'application/json',
-                    ],
-                    'auth' => [
-                        $this->settings['username'],
-                        $this->settings['password'],
-                    ],
-                ]
-            );
-
-            $nodeOs = \json_decode($nodeOs->getBody());
-            $nodeOs = (array)$nodeOs->nodes;
-            $nodeOs = json_decode(json_encode($nodeOs),true);
-               
-            $os = ["cpu" => $nodesStats[key]["os"]["cpu"]["percent"],
-            "memory_used_byte" => $nodesStats[$key]["os"]["mem"]["used_in_bytes"],
-            "memory_Total_byte" => $nodesStats[$key]["os"]["mem"]["total_in_bytes"],
-            "os_name" => $nodeOs[$key]["os"]["name"],
-            "os_arche" => $nodeOs[$key]["os"]["arche"],
-            "os_version" => $nodeOs[$key]["os"]["version"],
-            "os_allocated_processors" => $nodeOs[$key]["os"]["allocated_processors"]];
-
-            $jvm = ["uptime_in_millis" => $nodesStats[$key]["jvm"]["uptime_in_millis"],
-                    "mem_heap_used_percent" => $nodesStats[$key]["jvm"]["mem"]["heap_used_percent"],
-                    "threads_count" => $nodesStats[$key]["jvm"]["threads"]["count"]];
-
-            $fs = ["total_available_in_bytes" =>  $nodesStats[$key]["fs"]["total"]["available_in_bytes"],
-                "total_in_bytes" =>  $nodesStats[$key]["fs"]["total"]["total_in_bytes"]];
-            
-            $data = [
-                "nodeName" => $nodeOs[$key]["name"],
-                "ip" =>  $nodeOs[$key]["ip"],
-                "host" =>  $nodeOs[$key]["host"],
-                "os" => $os,
-                "jvm" => $jvm,
-                "fs" => $fs,
-                "documents" => $nodesStats[$key]["indices"]["docs"]["count"],
-                "roles" => $nodeOs[$key]["roles"],
-                "isOpen" => false,
-            ];
-
-            array_push($response["nodes"], $data);
-        }
-
-
-            return $response;
-        } catch (\Exception $e) {
-            $this->logger->error($e->getMessage());
-            throw new HttpException("An error has occurred while executing your request.", 500);
-        }
     }
 }

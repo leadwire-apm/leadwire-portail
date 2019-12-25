@@ -15,32 +15,3 @@
 .actionsCell > a, button {
     margin-left: 5px;
 }
-
-.checkbox-edit {
-    padding-right: 10px;
-}
-
-.spin{
-    text-align: center;
-}
-
-body.iframe {
-    overflow-y: hidden;
-}
-
-.resisable-iframe {
-    margin: -15px 0px 0px 0px !important;
-    padding: 80px 0px 0px 0px !important;
-}
-
-.sidebar-panel > nav ul > div > li > a .fa,
-.sidebar-panel > nav > ul > div > ul > li > a .fa {
-    padding-right: 15px;
-    width: 30px;
-    font-size: 12px;
-    text-align: center;
-}
-
-ul.sub-menu {
-    padding-left: 20px !important;
-}

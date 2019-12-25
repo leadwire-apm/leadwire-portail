@@ -88,14 +88,8 @@ services:
             $sgConfig: "%sg%"
         tags:
             - { name: monolog.logger, channel: search_guard }
-
     AppBundle\Service\CuratorService:
         arguments:
             $curatorConfig: "%curator%"
         tags:
             - { name: monolog.logger, channel: curator }
-
-    AppBundle\Service\ProcessService:
-        arguments:
-            $appDomain: "%app_domain%"
-            $port: "%socket_io_port%"

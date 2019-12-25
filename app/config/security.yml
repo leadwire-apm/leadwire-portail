@@ -10,9 +10,6 @@ security:
         dev:
             pattern:  ^/(_(profiler|wdt)|css|images|js|login)/
             security: false
-        health_check:
-            pattern: /api/process/login/get
-            security: false
         api:
             pattern:  ^(/core)?/%internal_api_prefix%
             provider: simple_user_provider

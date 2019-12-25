@@ -5,23 +5,19 @@
                        $localStorage,
                        CONFIG, $templateCache,
                        $state,
-                       $stateParams,
                        MenuFactory,
-                       $location,
-                       iFrameService) {
+                       $location) {
             // $rootScope.menus = $localStorage.currentMenu;
             $rootScope.applications = $localStorage.applications;
             $rootScope.dashboards = $localStorage.dashboards;
             $rootScope.ASSETS_BASE_URL = CONFIG.ASSETS_BASE_URL;
             $rootScope.DOWNLOAD_URL = CONFIG.DOWNLOAD_URL;
             $rootScope.UPLOAD_URL = CONFIG.UPLOAD_URL;
-
             $rootScope.$watch('applications', function (newVal) {
                 $localStorage.applications = newVal;
             });
-
             $state.defaultErrorHandler(function (error) {
-            // This is a naive example of how to silence the default error handler.
+// This is a naive example of how to silence the default error handler.
                 if (error.detail === 'UNAUTHORIZED') {
                     $rootScope.menus = MenuFactory.get('SETTINGS');
                     $location.path('/applications/list');
@@ -47,16 +43,6 @@
                 '</div>\n' +
                 '',
             );
-
-            $rootScope.$on("$locationChangeSuccess", function (event) {
-                iFrameService.resetDimensions($('iframe'));
-            });
-
-            $(window).on('resize', function() {
-                if ($('body').hasClass('iframe')) {
-                    iFrameService.setDimensions($('iframe'));
-                }
-            });
         });
 
 })(window.angular);

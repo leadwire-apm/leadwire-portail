@@ -11,7 +11,6 @@
             'ApplicationFactory',
             'UserService',
             'DashboardService',
-            'EnvironmentService',
             'MESSAGES_CONSTANTS',
             'toastr',
             'Paginator',
@@ -29,14 +28,12 @@
         ApplicationFactory,
         UserService,
         DashboardService,
-        EnvironmentService,
         MESSAGES_CONSTANTS,
         toastr,
         Paginator,
-        CONFIG
+        CONFIG,
     ) {
         onLoad();
-
         $scope.COMPAGNE_ENABLED = CONFIG.COMPAGNE_ENABLED;
         $scope.LOGIN_METHOD     = CONFIG.LOGIN_METHOD;
 
@@ -45,20 +42,6 @@
         });
         $scope.$on('update:image', function (event, data) {
             $scope.$broadcast('reload:src', data);
-        });
-        $scope.$on('new:app', function(event, data) {
-            UserService.get($localStorage.user.id)
-                .then(function(user){
-                    $rootScope.user = $localStorage.user = user;
-                    $scope.$apply();
-                })
-                .catch(function () {
-                    $scope.$apply(function () {
-                        $scope.isChangingContext = false;
-                    });
-                    toastr.error(MESSAGES_CONSTANTS.ERROR);
-                })
-            ;
         });
 
         $scope.$on('set:apps', function (event, apps) {
@@ -70,7 +53,6 @@
         });
 
         $scope.$on('set:contextApp', function (event, appId) {
-            console.log($localStorage.selectedAppId);
             $scope.selectedAppId = $localStorage.selectedAppId = appId;
             $localStorage.selectedApp = $localStorage.applications.find(
                 function (currApp) {
@@ -79,7 +61,6 @@
             );
             $scope.$emit('context:updated');
         });
-
         $scope.$on('set:customMenus', function (event, customMenus) {
             $localStorage.customMenus = customMenus;
             $scope.withCustom = $localStorage.customMenus.withCustom;
@@ -137,23 +118,6 @@
                 });
         };
 
-        $rootScope.setDefaultEnv = function () {
-            $scope.isChangingContextEnv = true;
-            EnvironmentService.getDefault()
-                .then(function (response) {
-                    $scope.isChangingContext = false;
-                    $scope.selectedEnvId = $localStorage.selectedEnvId = response.id;
-                    $scope.selectedEnv = $localStorage.selectedEnv = response;
-                    $scope.$apply();
-                })
-                .catch(function () {
-                    $scope.$apply(function () {
-                        $scope.isChangingContext = false;
-                    });
-                    toastr.error(MESSAGES_CONSTANTS.ERROR);
-                });
-        };
-
         $scope.brandRedirectTo = function () {
             if ($localStorage.dashboards && $localStorage.dashboards.length) {
                 $state.go('app.dashboard.home', {
@@ -179,15 +143,10 @@
             delete $localStorage.dashboards;
             delete $localStorage.selectedAppId;
             delete $localStorage.selectedApp;
-            delete $localStorage.selectedEnvId;
-            delete $localStorage.selectedEnv;
 
             $auth.logout()
                 .then(function () {
                     toastr.info(MESSAGES_CONSTANTS.LOGOUT_SUCCESS);
-                    if(CONFIG.LOGIN_METHOD === "proxy")
-                    window.location.href = 'https://auth.leadwire.io/?logout=1';
-                    else
                     $location.path('/login');
                 });
         };
@@ -227,7 +186,6 @@
             $scope.isAdmin = function () {
                 return UserService.isAdmin($localStorage.user);
             };
-
             $rootScope.user = $localStorage.user;
             $scope.applications = $localStorage.applications;
             $scope.selectedAppId = $localStorage.selectedAppId;

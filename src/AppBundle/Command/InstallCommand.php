@@ -5,7 +5,6 @@ namespace AppBundle\Command;
 use AppBundle\Service\LdapService;
 use AppBundle\Document\Application;
 use AppBundle\Service\KibanaService;
-use AppBundle\Service\EnvironmentService;
 use AppBundle\Service\ApplicationService;
 use AppBundle\Service\SearchGuardService;
 use Doctrine\ODM\MongoDB\DocumentManager;
@@ -44,8 +43,6 @@ Load default Application Type. Insert template for Kibana and more..'
         $kibana = $this->getContainer()->get(KibanaService::class);
         /** @var PlanService $planService */
         $planService = $this->getContainer()->get(PlanService::class);
-        /** @var EnvironmentService $curatorService */
-        $environmentService = $this->getContainer()->get(EnvironmentService::class);
         /** @var ApplicationService $applicationService */
         $applicationService = $this->getContainer()->get(ApplicationService::class);
         /** @var SearchGuardService $sgService */
@@ -106,10 +103,6 @@ Load default Application Type. Insert template for Kibana and more..'
         }
 
         $curatorService->updateCuratorConfig();
-
-        exec('npm stop');
-        exec('npm install');
-        exec('npm start');
 
         return 0;
     }
