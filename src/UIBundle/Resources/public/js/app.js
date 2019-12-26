@@ -23,6 +23,7 @@ angular.module('leadwireApp', [
     'simplemde',
     'ng.jsoneditor',
     'ysilvela.socket-io',
+    'angularjs.daterangepicker',
 ], function ($interpolateProvider) {
     $interpolateProvider.startSymbol('[[');
     $interpolateProvider.endSymbol(']]');
