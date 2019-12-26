@@ -1,11 +1,11 @@
 var dotenv     = require('dotenv');
 dotenv.config();
 var fs = require('fs');
-var https        = require('https');
+var https = require('https');
 var server = https.createServer({
-        key: fs.readFileSync('/etc/letsencrypt/live/apm.leadwire.io/privkey.pem'),
-        cert: fs.readFileSync('/etc/letsencrypt/live/apm.leadwire.io/fullchain.pem'),
-        ca: fs.readFileSync('/etc/letsencrypt/live/apm.leadwire.io/chain.pem'),
+        key: fs.readFileSync(process.env.SSL_KEY),
+        cert: fs.readFileSync(process.env.SSL_CERT),
+        ca: fs.readFileSync(process.env.SSL_CA),
         requestCert: false,
         rejectUnauthorized: false
     }),

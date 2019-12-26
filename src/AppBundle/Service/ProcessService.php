@@ -22,7 +22,16 @@ class ProcessService
     public function __construct($appDomain, $port)
     {
         try {
-            $server = new Version2X(sprintf('https://%s:%s', $appDomain, $port));
+            // Do not verify peer
+            $options = [
+                "context" => [
+                    "ssl" => [
+                        "verify_peer" => false,
+                        "verify_peer_name" => false,
+                    ],
+                ],
+            ];
+            $server = new Version2X(sprintf('https://%s:%s', $appDomain, $port), $options);
             $this->elephant = new Elephant($server);
         } catch (ServerConnectionFailureException $e) {
             $this->elephant = null;
