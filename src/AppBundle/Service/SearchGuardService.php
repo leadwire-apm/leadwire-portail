@@ -3,6 +3,7 @@
 namespace AppBundle\Service;
 
 use AppBundle\Document\Application;
+use AppBundle\Document\AccessLevel;
 use AppBundle\Document\ApplicationPermission;
 use AppBundle\Document\User;
 use AppBundle\Manager\ApplicationManager;
@@ -173,9 +174,9 @@ class SearchGuardService
             // }
             foreach ($accessLevels as $accessLevel) {
                 if ($accessLevel->getRead() || $accessLevel->getWrite()) {
-                    $indices["*-{$accessLevel->getEnvironment()->getName()}-{$accessLevel->getApplication()->getUuid()}-*"] = [
+                    $indices["*-{$accessLevel->getEnvironment()->getName()}-{$accessLevel->getApplication()->getName()}-*"] = [
                         "*" => [
-                            "READ",
+                            "{$accessLevel->getAccess()}",
                             "indices:data/read/field_caps[index]",
                             "indices:data/read/field_caps",
                         ],

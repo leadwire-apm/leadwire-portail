@@ -21,6 +21,14 @@
                  *
                  * @returns {Promise}
                  */
+                getMinimalist: function (id) {
+                    return $http.get(
+                        CONFIG.BASE_URL + 'api/environment/' + id + '/get/minimalist');
+                },
+                /**
+                 *
+                 * @returns {Promise}
+                 */
                 update: function (body) {
                     return $http.put(
                         CONFIG.BASE_URL + 'api/environment/update',

@@ -58,8 +58,38 @@ class ApplicationFixture extends AbstractFixture implements OrderedFixtureInterf
         $manager->persist($jpetstore);
         $manager->flush();
 
-        $accessLevel = new AccessLevel($environment, $jpetstore, true, true);
-        $user->addAccessLevel($accessLevel);
+        // set shared dashboard access level to write
+        $accessLevelSharedDashboard = new AccessLevel();
+        $accessLevelSharedDashboard
+            ->setUser($user)
+            ->setEnvironment($environment)
+            ->setApplication()
+            ->setLevel(AccessLevel::SHARED_DASHBOARD_LEVEL)
+            ->setAccess(AccessLevel::WRITE_ACCESS)
+        ;
+        $user->addAccessLevel($accessLevelSharedDashboard);
+
+        // set app dashboard access level to write
+        $accessLevelSharedDashboard = new AccessLevel();
+        $accessLevelSharedDashboard
+            ->setUser($user)
+            ->setEnvironment($environment)
+            ->setApplication()
+            ->setLevel(AccessLevel::APP_DASHBOARD_LEVEL)
+            ->setAccess(AccessLevel::WRITE_ACCESS)
+        ;
+        $user->addAccessLevel($accessLevelSharedDashboard);
+
+        // set app data access level to write
+        $accessLevelSharedDashboard = new AccessLevel();
+        $accessLevelSharedDashboard
+            ->setUser($user)
+            ->setEnvironment($environment)
+            ->setApplication()
+            ->setLevel(AccessLevel::APP_DATA_LEVEL)
+            ->setAccess(AccessLevel::WRITE_ACCESS)
+        ;
+        $user->addAccessLevel($accessLevelSharedDashboard);
 
         $manager->persist($user);
         $manager->flush();

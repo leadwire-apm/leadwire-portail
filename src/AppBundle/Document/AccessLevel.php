@@ -10,7 +10,7 @@ use AppBundle\Document\Application;
 /**
  * Class Access Level
  *
- * @ODM\EmbeddedDocument
+ * @ODM\Document(repositoryClass="AppBundle\Repository\AccessLevelRepository")
  * @ODM\HasLifecycleCallbacks
  * @ODM\ChangeTrackingPolicy("DEFERRED_EXPLICIT")
  * @JMS\ExclusionPolicy("all")
@@ -19,6 +19,23 @@ use AppBundle\Document\Application;
  */
 class AccessLevel
 {
+    const SHARED_DASHBOARD_LEVEL = "SHARED_DASHBOARD_LEVEL";
+    const APP_DASHBOARD_LEVEL = "APP_DASHBOARD_LEVEL";
+    const APP_DATA_LEVEL = "APP_DATA_LEVEL";
+
+    const READ_ACCESS = "READ";
+    const WRITE_ACCESS = "INDICE_ALL";
+
+    /**
+     * @var User
+     *
+     * @ODM\ReferenceOne(targetDocument="AppBundle\Document\User", mappedBy="accessLevels", storeAs="dbRef")
+     * @JMS\Type("AppBundle\Document\User")
+     * @JMS\Expose
+     * @JMS\Groups({"Default"})
+     */
+    private $user;
+
     /**
      * @var Environment
      *
@@ -40,39 +57,47 @@ class AccessLevel
     private $application;
 
     /**
-     * @var boolean
+     * @var string
      *
-     * @ODM\Field(type="boolean")
-     * @JMS\Type("boolean")
+     * @ODM\Field(type="string")
+     * @JMS\Type("string")
      * @JMS\Expose
      * @JMS\Groups({"Default"})
      */
-    private $read;
+    private $access;
 
     /**
-     * @var boolean
+     * @var string
      *
-     * @ODM\Field(type="boolean")
-     * @JMS\Type("boolean")
+     * @ODM\Field(type="string")
+     * @JMS\Type("string")
      * @JMS\Expose
      * @JMS\Groups({"Default"})
      */
-    private $write;
+    private $level;
 
     /**
-     * Constructor
+     * Set user
      *
-     * @param Environment $environment
-     * @param Application $application
-     * @param boolean     $read
-     * @param boolean     $write
+     * @param User $user
+     *
+     * @return AccessLevel
      */
-    public function __construct(Environment $environment, Application $application, $read = true, $write = false)
+    public function setUser(User $user)
     {
-        $this->environment = $environment;
-        $this->application = $application;
-        $this->read = $read;
-        $this->write = $write;
+        $this->user = $user;
+
+        return $this;
+    }
+
+    /**
+     * Get user
+     *
+     * @return User
+     */
+    public function getUser()
+    {
+        return $this->user;
     }
 
     /**
@@ -124,62 +149,50 @@ class AccessLevel
     }
 
     /**
-     * Get read access
+     * Set access
+     *
+     * @param string $access
+     *
+     * @return AccessLevel
+     */
+    public function setAccess($access)
+    {
+        $this->access = $access;
+
+        return $this;
+    }
+
+    /**
+     * Get access
      *
      * @return boolean
      */
-    public function getRead()
+    public function getAceess()
     {
-        return $this->read;
+        return $this->access;
     }
 
     /**
-     * Grand read access
-     *
-     * @return AccessLevel
-     */
-    public function grantReadAccess()
-    {
-        $this->read = true;
-    }
-
-    /**
-     * Revoke read access
-     *
-     * @return AccessLevel
-     */
-    public function revokeReadAccess()
-    {
-        $this->read = false;
-    }
-
-    /**
-     * Get read access
+     * Get level
      *
      * @return boolean
      */
-    public function getWrite()
+    public function getLevel()
     {
-        return $this->write;
+        return $this->level;
     }
 
     /**
-     * Grand write access
+     * Set level
+     *
+     * @param string $level
      *
      * @return AccessLevel
      */
-    public function grantWriteAccess()
+    public function setLevel($level)
     {
-        $this->write = true;
-    }
+        $this->level = $level;
 
-    /**
-     * Revoke write access
-     *
-     * @return AccessLevel
-     */
-    public function revokeWriteAccess()
-    {
-        $this->write = false;
+        return $this;
     }
 }

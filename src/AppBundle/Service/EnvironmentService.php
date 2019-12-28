@@ -84,7 +84,9 @@ class EnvironmentService
 
     public function update($json)
     {
-        $environment = $this->serializer->deserialize($json, Environment::class, 'json');
+        $context = new DeserializationContext();
+        $context->setGroups(['minimalist']);
+        $environment = $this->serializer->deserialize($json, Environment::class, 'json', $context);
         $this->environmentManager->update($environment);
 
     }

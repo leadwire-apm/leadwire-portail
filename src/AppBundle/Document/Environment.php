@@ -21,6 +21,7 @@ class Environment
      * @ODM\Id("strategy=auto")
      * @JMS\Type("string")
      * @JMS\Expose
+     * @JMS\Groups({"minimalist"})
      */
     private $id;
 
@@ -28,6 +29,7 @@ class Environment
      * @ODM\Field(type="string")
      * @JMS\Expose
      * @JMS\Type("string")
+     * @JMS\Groups({"minimalist"})
      *
      * @var string
      */
@@ -37,6 +39,7 @@ class Environment
      * @ODM\Field(type="string")
      * @JMS\Expose
      * @JMS\Type("string")
+     * @JMS\Groups({"minimalist"})
      *
      * @var string
      */
@@ -55,6 +58,7 @@ class Environment
      * @ODM\Field(type="boolean")
      * @JMS\Expose
      * @JMS\Type("boolean")
+     * @JMS\Groups({"minimalist"})
      *
      * @var boolean
      */

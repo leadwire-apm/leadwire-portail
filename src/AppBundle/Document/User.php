@@ -2,7 +2,6 @@
 namespace AppBundle\Document;
 
 use AppBundle\Document\Application;
-use AppBundle\Document\AccessLevel;
 use ATS\PaymentBundle\Document\Plan;
 use JMS\Serializer\Annotation as JMS;
 use ATS\PaymentBundle\Document\Customer;
@@ -60,6 +59,7 @@ class User implements AdvancedUserInterface
      * @var bool
      *
      * @ODM\Field(type="boolean")
+     * @JMS\Type("boolean")
      * @JMS\Expose
      */
     private $active;
@@ -240,7 +240,9 @@ class User implements AdvancedUserInterface
     private $lockMessage;
 
     /**
-     * @ODM\EmbedMany(targetDocument="AccessLevel")
+     * @ODM\ReferenceMany(targetDocument="AccessLevel", inversedBy="user", cascade={"persist", "remove"}, storeAs="dbRef")
+     * @JMS\Type("array<AppBundle\Document\AccessLevel>")
+     * @JMS\Expose
      */
     private $accessLevels;
 
@@ -1027,80 +1029,16 @@ class User implements AdvancedUserInterface
     }
 
     /**
-     * Get access levels
+     * Remove all access level
      *
-     * @JMS\VirtualProperty
-     * @JMS\Type("array")
-     * @JMS\Expose
-     * @JMS\Groups({"Default"})
+     * @param AccessLevel $accessLevel
      *
-     * @return array
+     * @return User
      */
-    public function accessLevels()
+    public function removeAllAccessLevel()
     {
-        $acls = [];
+        $this->accessLevels->clear();
 
-        foreach ($this->getAccessLevels() as $accessLevel) {
-            $acls["{$accessLevel->getEnvironment()->getId()}"]["{$accessLevel->getApplication()->getId()}"] = [
-                "READ" => $accessLevel->getRead(),
-                "WRITE" => $accessLevel->getWrite(),
-            ];
-        }
-
-        return $acls;
-    }
-
-    /**
-     * Get read access levels by environments
-     *
-     * @JMS\VirtualProperty
-     * @JMS\Type("array")
-     * @JMS\Expose
-     * @JMS\Groups({"Default"})
-     *
-     * @return array
-     */
-    public function getReadAccessByEnvironment()
-    {
-        $acls = $this->accessLevels();
-        $readAccess = [];
-
-        foreach ($acls as $idEnv => $aclApps) {
-            $readAccess[$idEnv] = true;
-            foreach ($aclApps as $aclApp) {
-                if (!$aclApp["READ"]) {
-                   $readAccess[$idEnv] = false;
-                }
-            }
-        }
-
-        return $readAccess;
-    }
-
-    /**
-     * Get write access levels by environments
-     *
-     * @JMS\VirtualProperty
-     * @JMS\Type("array")
-     * @JMS\Expose
-     * @JMS\Groups({"Default"})
-     *
-     * @return array
-     */
-    public function getWriteAccessByEnvironment()
-    {
-        $acls = $this->accessLevels();
-        $readAccess = [];
-
-        foreach ($acls as $idEnv => $aclApps) {
-            $readAccess[$idEnv] = true;
-            foreach ($aclApps as $aclApp) {
-                if (!$aclApp["WRITE"]) {
-                   $readAccess[$idEnv] = false;
-                }
-            }
-        }
-
-        return $readAccess;
+        return $this;
     }
 }

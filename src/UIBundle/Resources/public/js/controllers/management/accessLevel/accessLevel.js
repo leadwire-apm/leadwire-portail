@@ -61,7 +61,7 @@
                     vm.applications = applications;
                     vm.view.applications = true;
                     vm.selectedEnvironment = idEnvironment;
-                    EnvironmentService.find(idEnvironment).then(function(environment) {
+                    EnvironmentService.findMinimalist(idEnvironment).then(function(environment) {
                         vm.selectedEnvironmentName = environment.name;
                     }).catch(function(error) {
                         vm.flipActivityIndicator('isLoading');
@@ -84,7 +84,7 @@
                     vm.users = users;
                     vm.view.users = true;
                     vm.selectedEnvironment = idEnvironment;
-                    EnvironmentService.find(idEnvironment).then(function(environment) {
+                    EnvironmentService.findMinimalist(idEnvironment).then(function(environment) {
                         vm.selectedEnvironmentName = environment.name;
                     }).catch(function(error) {
                         vm.flipActivityIndicator('isLoading');
