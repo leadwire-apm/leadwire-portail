@@ -5,8 +5,8 @@ namespace AppBundle\Service;
 use AppBundle\Document\Application;
 use AppBundle\Document\Environment;
 use AppBundle\Exception\DuplicateApplicationNameException;
-use AppBundle\Manager\ApplicationManager;
 use AppBundle\Manager\EnvironmentManager;
+use AppBundle\Manager\ApplicationManager;
 
 use JMS\Serializer\DeserializationContext;
 use JMS\Serializer\SerializerInterface;
@@ -22,15 +22,14 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 class EnvironmentService
 {
     /**
+     * @var EnvironmentManager
+     */
+    private $environmentManager;
+
+    /**
      * @var ApplicationManager
      */
     private $applicationManager;
-
-    /**
-     * @var EnvironmentManager
-     */
-
-    private $environmentManager;
 
     /**
      * @var SerializerInterface
@@ -46,19 +45,19 @@ class EnvironmentService
     /**
      * Constructor
      *
-     * @param ApplicationManager $applicationManager
      * @param EnvironmentManager $environmentManager
+     * @param ApplicationManager $applicationManager
      * @param SerializerInterface $serializer
      * @param LoggerInterface $logger
      */
     public function __construct(
-        ApplicationManager $applicationManager,
         EnvironmentManager $environmentManager,
+        ApplicationManager $applicationManager,
         SerializerInterface $serializer,
         LoggerInterface $logger
     ) {
-        $this->applicationManager = $applicationManager;
         $this->environmentManager = $environmentManager;
+        $this->applicationManager = $applicationManager;
         $this->serializer = $serializer;
         $this->logger = $logger;
     }
@@ -99,6 +98,10 @@ class EnvironmentService
         if ($environment === null) {
             throw new HttpException(Response::HTTP_NOT_FOUND, "Environment not Found");
         } else {
+            foreach ($environment->getApplications() as $application) {
+                $application->removeEnvironment($environment);
+                $this->applicationManager->update($application);
+            }
             return $this->environmentManager->delete($environment);
         }
 
