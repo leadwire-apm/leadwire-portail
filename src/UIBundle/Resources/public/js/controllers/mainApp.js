@@ -16,6 +16,7 @@
             'toastr',
             'Paginator',
             'CONFIG',
+            'EnvironmentService',
             AppCtrlFN,
         ]);
 
@@ -33,9 +34,11 @@
         MESSAGES_CONSTANTS,
         toastr,
         Paginator,
-        CONFIG
+        CONFIG,
+        EnvironmentService
     ) {
         onLoad();
+        $scope.environments = [];
 
         $scope.COMPAGNE_ENABLED = CONFIG.COMPAGNE_ENABLED;
         $scope.LOGIN_METHOD     = CONFIG.LOGIN_METHOD;
@@ -197,6 +200,13 @@
                 start: 0,
                 items: $scope.applications,
             });
+
+            EnvironmentService.list()
+                .then(function (environments) {
+                    $scope.environments = environments;
+                })
+                .catch(function (error) {
+                });
 
             $scope.mobileView = 767;
             $scope.state = $state;

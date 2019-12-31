@@ -12,21 +12,15 @@
   <!-- /logo -->
 
   <ul class="nav navbar-nav navbar-right pull-right">
-        <li class="dropdown pull-left" ng-if="COMPAGNE_ENABLED === true">
-            <a  href="" ui-sref="app.overview"  title="Campaigns">
+    <li class="dropdown pull-left" ng-if="COMPAGNE_ENABLED === true">
+      <a href="" ui-sref="app.overview" title="Campaigns">
         <i class="fa fa-paper-plane"></i>
       </a>
     </li>
 
     <li class="pull-left">
-      <a
-        href=""
-        ng-click="loadApplications()"
-        title="Dashboards"
-        data-placement="left"
-        data-toggle="tooltip"
-        quick-launch
-      >
+      <a href="" ng-click="loadApplications()" title="Dashboards" data-placement="left" data-toggle="tooltip"
+        quick-launch>
         <img src="images/elasticsearch.png" width="15px"></img>
       </a>
     </li>
@@ -37,12 +31,7 @@
       </a>
     </li>
     <li class="pull-left hidden-xs">
-      <a
-        ui-sref="app.user"
-        title="User Settings"
-        data-placement="left"
-        data-toggle="tooltip"
-      >
+      <a ui-sref="app.user" title="User Settings" data-placement="left" data-toggle="tooltip">
         <i style="font-size: 15px;" class="fa fa-cog"></i>
       </a>
     </li>
@@ -62,11 +51,7 @@
               <a href="javascript:;">
                 <span class="pull-left mt2 mr15">
                   <span class="img-circle">
-                    <img
-                      data-ng-src="images/avatar.jpg"
-                      class="avatar avatar-xs"
-                      alt=""
-                    />
+                    <img data-ng-src="images/avatar.jpg" class="avatar avatar-xs" alt="" />
                   </span>
                 </span>
                 <div class="overflow-hidden">
@@ -91,11 +76,7 @@
             <li>
               <a href="javascript:;">
                 <span class="pull-left mt2 mr15">
-                  <img
-                    data-ng-src="images/face3.jpg"
-                    class="avatar avatar-xs img-circle"
-                    alt=""
-                  />
+                  <img data-ng-src="images/face3.jpg" class="avatar avatar-xs img-circle" alt="" />
                 </span>
                 <div class="overflow-hidden">
                   <span class="text-muted">Jack Hunt has registered</span>
@@ -114,12 +95,7 @@
     <li class="dropdown pull-left" dropdown>
       <a href="javascript:;" class="dropdown-toggle" dropdown-toggle>
         <span class="img-circle ml10">
-          <img
-            http-src="[[user.avatar]]"
-            class="header-avatar "
-            alt="[[user.name]]"
-            title="[[user.name]]"
-          />
+          <img http-src="[[user.avatar]]" class="header-avatar " alt="[[user.name]]" title="[[user.name]]" />
         </span>
         <span class="pull-left">[[user.fname]] </span>
       </a>
@@ -127,7 +103,7 @@
         <li ng-if="LOGIN_METHOD === 'github'">
           <a ui-sref="app.user">Settings</a>
         </li>
-        <li ng-if="LOGIN_METHOD === 'github'"> 
+        <li ng-if="LOGIN_METHOD === 'github'">
           <a ui-sref="app.updateSubscription({action:'upgrade'})">Upgrade</a>
         </li>
         <li ng-if="LOGIN_METHOD === 'github'">
@@ -140,6 +116,10 @@
           <a data-ng-click="logout()">Logout</a>
         </li>
       </ul>
+    </li>
+    <li>
+      <a href="javascript:;" class="hamburger-icon v2" data-ng-click="app.layout.isChatOpen = !app.layout.isChatOpen">
+        <span></span> <span></span> <span></span> </a>
     </li>
   </ul>
   <!-- toggle chat sidebar small screen-->
