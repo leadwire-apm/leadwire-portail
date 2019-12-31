@@ -21,15 +21,15 @@ class Environment
      * @ODM\Id("strategy=auto")
      * @JMS\Type("string")
      * @JMS\Expose
-     * @JMS\Groups({"minimalist"})
+     * @JMS\Groups({"full", "minimalist"})
      */
     private $id;
 
     /**
      * @ODM\Field(type="string")
-     * @JMS\Expose
      * @JMS\Type("string")
-     * @JMS\Groups({"minimalist"})
+     * @JMS\Expose
+     * @JMS\Groups({"full", "minimalist"})
      *
      * @var string
      */
@@ -37,9 +37,9 @@ class Environment
 
     /**
      * @ODM\Field(type="string")
-     * @JMS\Expose
      * @JMS\Type("string")
-     * @JMS\Groups({"minimalist"})
+     * @JMS\Expose
+     * @JMS\Groups({"full", "minimalist"})
      *
      * @var string
      */
@@ -49,6 +49,7 @@ class Environment
      * @ODM\ReferenceMany(targetDocument="AppBundle\Document\Application", mappedBy="environments", storeAs="dbRef")
      * @JMS\Type("array<AppBundle\Document\Application>")
      * @JMS\Expose
+     * @JMS\Groups({"full"})
      *
      * @var ArrayCollection
      */
@@ -56,8 +57,8 @@ class Environment
 
     /**
      * @ODM\Field(type="boolean")
-     * @JMS\Expose
      * @JMS\Type("boolean")
+     * @JMS\Expose
      * @JMS\Groups({"minimalist"})
      *
      * @var boolean

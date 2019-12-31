@@ -612,4 +612,19 @@ class ApplicationService
         return $state;
     }
 
+    /**
+     * Remove environment from application
+     *
+     * @param  Application $application
+     * @param  Environment $environment
+     *
+     * @return Application
+     */
+    public function removeEnvironment(Application $application, Environment $environment)
+    {
+        $application->removeEnvironment($environment);
+        $this->applicationManager->update($application);
+
+        return $application;
+    }
 }

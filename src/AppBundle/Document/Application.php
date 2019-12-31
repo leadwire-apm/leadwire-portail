@@ -504,6 +504,25 @@ class Application
     }
 
     /**
+     * Remove environment
+     *
+     * @param  Environment  $environment
+     *
+     * @return  self
+     */
+    public function removeEnvironment(Environment $environment)
+    {
+        if ($this->environments == null) {
+            $this->environments = new ArrayCollection();
+        }
+        if ($this->environments->contains($environment)) {
+            $this->environments->removeElement($environment);
+        }
+
+        return $this;
+    }
+
+    /**
      * Get the value of createdAt
      *
      * @return  \DateTime
