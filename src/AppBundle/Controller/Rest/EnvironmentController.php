@@ -24,7 +24,7 @@ class EnvironmentController extends Controller
      */
     public function getAllEnvironments(Request $request, EnvironmentService $environmentService)
     {
-        return $this->renderResponse($environmentService->list(), Response::HTTP_OK, ['template-list']);
+        return $this->renderResponse($environmentService->list(), Response::HTTP_OK, ['minimalist']);
     }
 
 
@@ -93,7 +93,22 @@ class EnvironmentController extends Controller
     {
         $data = $environmentService->getById($id);
 
-        return $this->renderResponse($data, Response::HTTP_OK, ["full"]);
+        return $this->renderResponse($data, Response::HTTP_OK, ["minimalist"]);
+    }
+
+    /**
+     * @Route("/{id}/get/minimalist", methods="GET")
+     *
+     * @param Request $request
+     * @param EnvironmentService $environmentService
+     * @param string $id
+     * @return Response
+     */
+    public function getMinimalistById(Request $request, EnvironmentService $environmentService, $id)
+    {
+        $data = $environmentService->getById($id);
+
+        return $this->renderResponse($data, Response::HTTP_OK, ["minimalist"]);
     }
 
     /**
@@ -123,7 +138,7 @@ class EnvironmentController extends Controller
     {
         $data = $environmentService->setDefault($id);
 
-        return $this->renderResponse($data, Response::HTTP_OK, ["full"]);
+        return $this->renderResponse($data, Response::HTTP_OK, ["minimalist"]);
     }
 
 }
