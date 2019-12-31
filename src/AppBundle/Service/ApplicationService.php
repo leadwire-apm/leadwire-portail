@@ -320,8 +320,31 @@ class ApplicationService
 
         $this->apManager->update($applicationPermission);
         // owner has full access level
-        $ownerAccessLevel = new AccessLevel($environment, $application, true, true);
-        $user->addAccessLevel($ownerAccessLevel);
+        foreach ($application->getEnvironments() as $environment) {
+            $user
+                // set shared dashboard access level to write
+                ->addAccessLevel((new AccessLevel())
+                    ->setEnvironment($environment)
+                    ->setApplication($application)
+                    ->setLevel(AccessLevel::SHARED_DASHBOARD_LEVEL)
+                    ->setAccess(AccessLevel::WRITE_ACCESS)
+                )
+                // set app dashboard access level to write
+                ->addAccessLevel((new AccessLevel())
+                    ->setEnvironment($environment)
+                    ->setApplication($application)
+                    ->setLevel(AccessLevel::APP_DASHBOARD_LEVEL)
+                    ->setAccess(AccessLevel::WRITE_ACCESS)
+                )
+                // set app data access level to write
+                ->addAccessLevel((new AccessLevel())
+                    ->setEnvironment($environment)
+                    ->setApplication($application)
+                    ->setLevel(AccessLevel::APP_DATA_LEVEL)
+                    ->setAccess(AccessLevel::WRITE_ACCESS)
+                )
+            ;
+        }
         $this->userManager->update($user);
 
         // all user has access read to the new application on all env
@@ -330,8 +353,51 @@ class ApplicationService
             if ($usr->getId() == $user->getId()) {
                 continue; // owner already has access granted
             }
-            $accessLevel = new AccessLevel($environment, $application, true, false);
-            $usr->addAccessLevel($accessLevel);
+            foreach ($application->getEnvironments() as $environment) {
+                $usr
+                    // set shared dashboard access level
+                    ->addAccessLevel((new AccessLevel())
+                        ->setEnvironment($environment)
+                        ->setApplication($application)
+                        ->setLevel(AccessLevel::SHARED_DASHBOARD_LEVEL)
+                        ->setAccess(AccessLevel::WRITE_ACCESS)
+                    );
+                if ($usr->hasRole(User::ROLE_SUPER_ADMIN) === true) {
+                    // set app dashboard access level
+                    $usr
+                        ->addAccessLevel((new AccessLevel())
+                            ->setEnvironment($environment)
+                            ->setApplication($application)
+                            ->setLevel(AccessLevel::APP_DASHBOARD_LEVEL)
+                            ->setAccess(AccessLevel::WRITE_ACCESS)
+                        )
+                        // set app data access level
+                        ->addAccessLevel((new AccessLevel())
+                            ->setEnvironment($environment)
+                            ->setApplication($application)
+                            ->setLevel(AccessLevel::APP_DATA_LEVEL)
+                            ->setAccess(AccessLevel::WRITE_ACCESS)
+                        )
+                    ;
+                } else {
+                    // set app dashboard access level
+                    $usr
+                        ->addAccessLevel((new AccessLevel())
+                            ->setEnvironment($environment)
+                            ->setApplication($application)
+                            ->setLevel(AccessLevel::APP_DASHBOARD_LEVEL)
+                            ->setAccess(AccessLevel::READ_ACCESS)
+                        )
+                        // set app data access level
+                        ->addAccessLevel((new AccessLevel())
+                            ->setEnvironment($environment)
+                            ->setApplication($application)
+                            ->setLevel(AccessLevel::APP_DATA_LEVEL)
+                            ->setAccess(AccessLevel::READ_ACCESS)
+                        )
+                    ;
+                }
+            }
             $this->userManager->update($usr);
         }
 

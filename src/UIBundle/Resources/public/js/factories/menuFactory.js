@@ -57,6 +57,7 @@
 
                                 return angular.extend({}, menu, {
                                     route: $state.href(menu.route, normalizeRouteParams(menu.params)),
+                                    routeName: menu.route
                                 });
                             });
                         }

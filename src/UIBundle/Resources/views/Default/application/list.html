@@ -30,7 +30,6 @@
                         </tr>
                         <tr ng-repeat="app in ctrl.apps"
                             ng-if="ctrl.paginator.start<=$index && ctrl.paginator.end>$index"
-                            ng-show="user.accessLevels[ctrl.selectedEnvId][app.id].READ || user.accessLevels[ctrl.selectedEnvId][app.id].WRITE"
                         >
                             <td data-title="Name" data-label="Name">
                                 <span></span>[[app.name]]
@@ -64,13 +63,13 @@
                                     <i class="fas fa-key"></i>
                                 </a>
                                 <a class="btn btn-warning"
-                                   ng-if="app.enabled && (app.owner.id == user.id || user.accessLevels[ctrl.selectedEnvId][app.id].WRITE)"
+                                   ng-if="app.enabled && (app.owner.id == user.id
                                    title="Edit application"
                                    data-placement="left"
                                    data-toggle="tooltip"
                                    ui-sref="app.applicationEdit({id:app.id})"><i class="fas fa-pencil-alt"></i></a>
                                 <button class="btn btn-danger"
-                                        ng-if="app.owner.id == user.id || user.accessLevels[ctrl.selectedEnvId][app.id].WRITE"
+                                        ng-if="app.owner.id == user.id
                                         title="Delete application"
                                         data-placement="left"
                                         data-toggle="tooltip"
@@ -80,7 +79,7 @@
                                     <spinner is-loading="ctrl.ui.isDeleting"></spinner>
                                 </button>
                                 <button class="btn btn-warning"
-                                        ng-if="app.owner.id != user.id || user.accessLevels[ctrl.selectedEnvId][app.id].WRITE"
+                                        ng-if="app.owner.id != user.id
                                         title="Remove this application"
                                         data-placement="left"
                                         data-toggle="tooltip"

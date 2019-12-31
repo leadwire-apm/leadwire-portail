@@ -24,7 +24,16 @@ class AccessLevel
     const APP_DATA_LEVEL = "APP_DATA_LEVEL";
 
     const READ_ACCESS = "READ";
-    const WRITE_ACCESS = "INDICE_ALL";
+    const WRITE_ACCESS = "INDICES_ALL";
+
+    /**
+     * @var \MongoId
+     *
+     * @ODM\Id("strategy=auto")
+     * @JMS\Type("string")
+     * @JMS\Expose
+     */
+    private $id;
 
     /**
      * @var User
@@ -167,7 +176,7 @@ class AccessLevel
      *
      * @return boolean
      */
-    public function getAceess()
+    public function getAccess()
     {
         return $this->access;
     }
