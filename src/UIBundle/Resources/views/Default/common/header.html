@@ -113,12 +113,15 @@
           <a ui-sref="app.clusterOverview">Cluster</a>
         </li>
         <li>
+          <a ui-sref="app.applicationsOverview">Applications Overview</a>
+        </li>
+        <li>
           <a data-ng-click="logout()">Logout</a>
         </li>
       </ul>
     </li>
     <li>
-      <a href="javascript:;" class="hamburger-icon v2" data-ng-click="app.layout.isChatOpen = !app.layout.isChatOpen">
+      <a href ng-init="app.layout.isChatOpen = flase" class="hamburger-icon v2" ng-click="app.layout.isChatOpen = !app.layout.isChatOpen; getEnvironments()">
         <span></span> <span></span> <span></span> </a>
     </li>
   </ul>

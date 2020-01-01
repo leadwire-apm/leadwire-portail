@@ -25,8 +25,7 @@
 <!-- /bottom footer -->
 
 <!-- chat -->
-<div class="chat-panel" data-ng-class="{'conversation-open': app.layout.isConversationOpen}"
-  ng-include="'common/chat-panel.html'" style="height: 30%;"></div>
+<div class="chat-panel" ng-show="app.layout.isChatOpen" ng-include="'common/chat-panel.html'" style="height: 30%;"></div>
 <!-- /chat -->
 
 <!-- options panel -->

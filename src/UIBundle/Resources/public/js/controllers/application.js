@@ -136,6 +136,10 @@
             });
         };
 
+        $scope.$on('environment:updated', function (event, data) {
+            vm.init();
+        });
+
         vm.init = function () {
             vm = angular.extend(vm, {
                 ui: {},

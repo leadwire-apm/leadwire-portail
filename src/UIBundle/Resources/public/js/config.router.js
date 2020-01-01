@@ -643,6 +643,19 @@ angular.module('leadwireApp')
                     controllerAs: 'ctrl',
                 })
 
+                .state('app.applicationsOverview', {
+                    url: '/applicationsSverview',
+                    templateUrl: 'applicationsOverview/overview.html',
+                    resolve: {
+                        permissions: function (RouteGuard) {
+                            return RouteGuard.loginRequired();
+                        },
+                        menu: getMenuItems(),
+                    },
+                    controller: 'ApplicationOverviewController',
+                    controllerAs: 'ctrl',
+                })
+
             function updateMenuItems (key) {
                 return function (MenuFactory, $rootScope) {
                     if (key != "DASHBOARD") {

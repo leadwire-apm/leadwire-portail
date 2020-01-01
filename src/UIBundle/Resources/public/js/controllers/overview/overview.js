@@ -1,12 +1,12 @@
 (function (angular) {
     angular.module('leadwireApp')
-        .controller('OverviewController', ['OverviewService', 'toastr', OverviewCtrlFN]);
+        .controller('OverviewController', ['OverviewService', '$scope', OverviewCtrlFN]);
 
     /**
      * Handle clustyer stats
      *
      */
-    function OverviewCtrlFN(OverviewService, toastr) {
+    function OverviewCtrlFN(OverviewService, $scope) {
         var vm = this;
 
         vm.msToTime = function (duration) {
@@ -77,9 +77,13 @@
             vm.load();
         };
 
-        setInterval(function () {
+       var overviewInterval = setInterval(function () {
             vm.load();
         }, 20000);
+
+        $scope.$on("$destroy", function() {
+            clearInterval(overviewInterval);
+        });
 
     }
 })(window.angular);

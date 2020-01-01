@@ -3,7 +3,7 @@
     <div class="favourite-list ng-scope"  ng-repeat="environement in environments">
       <a href="#" ng-click="setSelectedEnv(environement)">
         <div class="media-left relative">
-          <div class="status border-white mr10" ng-class="environement.name === selectedEnv.name ? 'bg-success' : 'bg-default'"></div>
+          <div class="status border-white mr10" ng-class="selectedEnv.name === environement.name ? 'bg-success' : 'bg-default'"></div>
         </div>
         <div class="media-body">
           <span class="block">[[environement.name]]</span>
