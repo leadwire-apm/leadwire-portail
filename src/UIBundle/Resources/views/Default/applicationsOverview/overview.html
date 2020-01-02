@@ -6,6 +6,27 @@
 
     <div class="panel-body no-margin">
         <div class="row">
-            
+
+            <div class="col-md-12">
+                <div class="col-md-3">
+                    <div class="widget bg-grey" ng-repeat="application in ctrl.applications">
+                        <div class="widget-icon bg-danger pull-left fa fa-desktop"> </div>
+                        <div class="overflow-hidden"> <span class="widget-title">372 Documents</span> <span
+                                class="widget-subtitle">[[application.name]]</span> </div>
+                    </div>
+                </div>
+
+                <!--<div class="widget bg-white">
+                    <div class="widget-icon bg-blue pull-left fa fa-tint"> </div>
+                    <div class="overflow-hidden"> <span class="widget-title percent">86</span> <span
+                            class="widget-subtitle">Revenue increase</span> </div>
+                </div>
+                <div class="widget bg-white">
+                    <div class="widget-icon bg-success pull-left fa fa-paper-plane"> </div>
+                    <div class="overflow-hidden"> <span class="widget-title">7,355K</span> <span
+                            class="widget-subtitle">Pending orders</span> </div>
+                </div>-->
+            </div>
+
         </div>
     </div>

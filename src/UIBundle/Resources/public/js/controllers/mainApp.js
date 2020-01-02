@@ -170,7 +170,6 @@
                     $scope.isChangingContext = false;
                     $scope.selectedEnvId = $localStorage.selectedEnvId = response.id;
                     $scope.selectedEnv = $localStorage.selectedEnv = response;
-                    $scope.$apply();
                 })
                 .catch(function () {
                     $scope.$apply(function () {
