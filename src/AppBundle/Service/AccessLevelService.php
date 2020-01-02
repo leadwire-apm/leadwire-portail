@@ -2,16 +2,15 @@
 
 namespace AppBundle\Service;
 
-use AppBundle\Document\Application;
+use AppBundle\Document\User;
 use AppBundle\Document\AccessLevel;
 use AppBundle\Exception\DuplicateApplicationNameException;
-use AppBundle\Manager\ApplicationManager;
+use AppBundle\Manager\UserManager;
 use AppBundle\Manager\AccessLevelManager;
 
 use JMS\Serializer\DeserializationContext;
 use JMS\Serializer\SerializerInterface;
 use Psr\Log\LoggerInterface;
-use Ramsey\Uuid\Uuid;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
@@ -22,14 +21,13 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 class AccessLevelService
 {
     /**
-     * @var ApplicationManager
+     * @var UserManager
      */
-    private $applicationManager;
+    private $userManager;
 
     /**
      * @var AccessLevelManager
      */
-
     private $accessLevelManager;
 
     /**
@@ -46,75 +44,67 @@ class AccessLevelService
     /**
      * Constructor
      *
-     * @param ApplicationManager $applicationManager
-     * @param AccessLevelManager $accessLevelManager
+     * @param UserManager         $userManager
+     * @param AccessLevelManager  $accessLevelManager
      * @param SerializerInterface $serializer
-     * @param LoggerInterface $logger
+     * @param LoggerInterface     $logger
      */
     public function __construct(
-        ApplicationManager $applicationManager,
+        UserManager $userManager,
         AccessLevelManager $accessLevelManager,
         SerializerInterface $serializer,
         LoggerInterface $logger
     ) {
-        $this->applicationManager = $applicationManager;
+        $this->userManager = $userManager;
         $this->accessLevelManager = $accessLevelManager;
         $this->serializer = $serializer;
         $this->logger = $logger;
     }
 
-
-    public function list()
-    {
-        $accessLevels = $this->accessLevelManager->getAll();
-
-        return $accessLevels;
-    }
-
-    public function add($json)
-    {
-        $accessLevel = $this
-            ->serializer
-            ->deserialize($json, AccessLevel::class, 'json');
-
-        $id = $this->accessLevelManager->update($accessLevel);
-
-        return $id;
-    }
-
-    public function update($json)
-    {
-        $context = new DeserializationContext();
-        $context->setGroups(['minimalist']);
-        $accessLevel = $this->serializer->deserialize($json, AccessLevel::class, 'json', $context);
-        $this->accessLevelManager->update($accessLevel);
-
-    }
-
     /**
-     * @param string $id
+     * Update
+     *
+     * @param array $json
+     *
+     * @return User
      */
-    public function delete($id)
+    public function update($payload)
     {
-        $accessLevel = $this->accessLevelManager->getOneBy(['id' => $id]);
-        if ($accessLevel === null) {
-            throw new HttpException(Response::HTTP_NOT_FOUND, "AccessLevel not Found");
+        $user = $this->userManager->getOneBy(['id' => $payload['user']]);
+        if (isset($payload['app'])) {
+            $this->updateByApplication($user, $payload['env'], $payload['app'], $payload['level'], $payload['access']);
         } else {
-            return $this->accessLevelManager->delete($accessLevel);
+            $this->updateByEnvironment($user, $payload['env'], $payload['level'], $payload['access']);
         }
 
+        return $user;
     }
 
-     /**
-     * @param string $id
-     */
-    public function getById($id)
+    private function updateByEnvironment(User $user, $env, $level, $access)
     {
-        $accessLevel = $this->accessLevelManager->getOneBy(['id' => $id]);
-        if ($accessLevel === null) {
-            throw new HttpException(Response::HTTP_NOT_FOUND, "AccessLevel not Found");
-        } else {
-            return $accessLevel;
+        foreach ($user->getAccessLevels() as $accessLevel) {
+            if (
+                $env == (string) $accessLevel->getEnvironment()->getId()
+                && $level == $accessLevel->getLevel()
+            ) {
+                $accessLevel->setAccess($access);
+                $this->accessLevelManager->update($accessLevel);
+            }
+        }
+    }
+
+    private function updateByApplication(User $user, $env, $app, $level, $access)
+    {
+        $acl = null;
+        foreach ($user->getAccessLevels() as $accessLevel) {
+            if (
+                $env == (string) $accessLevel->getEnvironment()->getId()
+                && $app == (string) $accessLevel->getApplication()->getId()
+                && $level == $accessLevel->getLevel()
+            ) {
+                $accessLevel->setAccess($access);
+                $this->accessLevelManager->update($accessLevel);
+            }
         }
     }
 

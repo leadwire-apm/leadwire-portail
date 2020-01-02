@@ -25,6 +25,7 @@ class Application
      * @ODM\Id("strategy=auto")
      * @JMS\Type("string")
      * @JMS\Expose
+     * @JMS\Groups({"acl"})
      */
     private $id;
 
@@ -407,7 +408,7 @@ class Application
      */
     public function getIndex()
     {
-        return 'app_' . $this->getUuid();
+        return 'app_' . $this->uuid;
     }
 
     /**

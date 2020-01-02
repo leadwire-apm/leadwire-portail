@@ -28,16 +28,18 @@ class User implements AdvancedUserInterface
      * @var \MongoId
      *
      * @ODM\Id("strategy=auto")
-     * @JMS\Expose
      * @JMS\Type("string")
+     * @JMS\Expose
+     * @JMS\Groups({"acl"})
      */
     protected $id;
 
     /**
      * @var string
      * @ODM\Field(type="string")
-     * @JMS\Expose
      * @JMS\Type("string")
+     * @JMS\Expose
+     * @JMS\Groups({"acl"})
      */
     protected $username;
 
@@ -103,8 +105,9 @@ class User implements AdvancedUserInterface
     /**
      * @var string
      * @ODM\Field(type="string")
-     * @JMS\Expose
      * @JMS\Type("string")
+     * @JMS\Expose
+     * @JMS\Groups({"acl"})
      */
     private $name;
 
@@ -160,6 +163,7 @@ class User implements AdvancedUserInterface
 
      * @JMS\Type("string")
      * @JMS\Expose
+     * @JMS\Groups({"acl"})
      */
     private $email;
 
@@ -439,6 +443,10 @@ class User implements AdvancedUserInterface
      */
     public function hasRole($role)
     {
+        if ($this->roles == null) {
+            return false;
+        }
+
         return in_array($role, $this->roles);
     }
 
@@ -1040,5 +1048,29 @@ class User implements AdvancedUserInterface
         $this->accessLevels->clear();
 
         return $this;
+    }
+
+    /**
+     * Normalize access levels
+     *
+     * @JMS\VirtualProperty
+     * @JMS\Type("array")
+     * @JMS\Expose
+     * @JMS\Groups({"acl"})
+     *
+     * @return array
+     */
+    public function normalizeAccessLevels()
+    {
+        $acls = [];
+
+        foreach ($this->accessLevels as $acl) {
+            $acls
+                [$acl->getEnvironment()->getId()]
+                [$acl->getApplication()->getId()]
+                [$acl->getLevel()] = $acl->getAccess();
+        }
+
+        return $acls;
     }
 }

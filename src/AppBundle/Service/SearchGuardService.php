@@ -176,6 +176,8 @@ class SearchGuardService
             //     ];
             // }
             foreach ($accessLevels as $accessLevel) {
+                $env = $accessLevel->getEnvironment();
+                $app = $accessLevel->getApplication();
                 $acl = [
                     "READ" => [
                         "READ",
@@ -187,21 +189,28 @@ class SearchGuardService
                     ]
                 ];
                 if ($accessLevel->getLevel() == AccessLevel::APP_DATA_LEVEL) {
-                    $indices["*-{$accessLevel->getEnvironment()->getName()}-{$accessLevel->getApplication()->getName()}-*"] = [
+                    $indices["*-{$env->getName()}-{$app->getName()}-*"] = [
                         "*" => $acl[$accessLevel->getAccess()],
                     ];
                 }
                 $kibanaAcl = [];
                 if ($accessLevel->getLevel() == AccessLevel::APP_DASHBOARD_LEVEL) {
-                    $kibanaAcl["?kibana_{$environment->getName()}_{$application->getApplicationIndex()}"] = [
+                    $kibanaAcl["?kibana_{$env->getName()}_{$app->getApplicationIndex()}"] = [
                         "*" => $acl[$accessLevel->getAccess()]
                     ];
                 }
                 if ($accessLevel->getLevel() == AccessLevel::SHARED_DASHBOARD_LEVEL) {
-                    $kibanaAcl["?kibana_{$environment->getName()}_{$application->getSharedIndex()}"] = [
+                    $kibanaAcl["?kibana_{$env->getName()}_{$app->getSharedIndex()}"] = [
                         "*" => $acl[$accessLevel->getAccess()]
                     ];
                 }
+                // echo
+                //     $accessLevel->getApplication()->getName()
+                //     . ": " .
+                //     $accessLevel->getApplication()->getApplicationIndex()
+                //     .
+                //     PHP_EOL
+                // ;
 
                 $indices = array_merge($indices, $kibanaAcl);
             }

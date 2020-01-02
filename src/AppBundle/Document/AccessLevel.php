@@ -32,6 +32,7 @@ class AccessLevel
      * @ODM\Id("strategy=auto")
      * @JMS\Type("string")
      * @JMS\Expose
+     * @JMS\Groups({"acl"})
      */
     private $id;
 
@@ -41,7 +42,7 @@ class AccessLevel
      * @ODM\ReferenceOne(targetDocument="AppBundle\Document\User", mappedBy="accessLevels", storeAs="dbRef")
      * @JMS\Type("AppBundle\Document\User")
      * @JMS\Expose
-     * @JMS\Groups({"Default"})
+     * @JMS\Groups({"Default", "acl"})
      */
     private $user;
 
@@ -51,7 +52,7 @@ class AccessLevel
      * @ODM\ReferenceOne(targetDocument="AppBundle\Document\Environment", storeAs="dbRef")
      * @JMS\Type("AppBundle\Document\Environment")
      * @JMS\Expose
-     * @JMS\Groups({"Default"})
+     * @JMS\Groups({"Default", "acl"})
      */
     private $environment;
 
@@ -61,7 +62,7 @@ class AccessLevel
      * @ODM\ReferenceOne(targetDocument="AppBundle\Document\Application", storeAs="dbRef")
      * @JMS\Type("AppBundle\Document\Application")
      * @JMS\Expose
-     * @JMS\Groups({"Default"})
+     * @JMS\Groups({"Default", "acl"})
      */
     private $application;
 
@@ -71,7 +72,7 @@ class AccessLevel
      * @ODM\Field(type="string")
      * @JMS\Type("string")
      * @JMS\Expose
-     * @JMS\Groups({"Default"})
+     * @JMS\Groups({"Default", "acl"})
      */
     private $access;
 
@@ -81,9 +82,19 @@ class AccessLevel
      * @ODM\Field(type="string")
      * @JMS\Type("string")
      * @JMS\Expose
-     * @JMS\Groups({"Default"})
+     * @JMS\Groups({"Default", "acl"})
      */
     private $level;
+
+    /**
+     * Get id
+     *
+     * @return \MongoId
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
 
     /**
      * Set user

@@ -363,8 +363,8 @@ class ApplicationService
                         ->setAccess(AccessLevel::WRITE_ACCESS)
                     );
                 if ($usr->hasRole(User::ROLE_SUPER_ADMIN) === true) {
-                    // set app dashboard access level
                     $usr
+                        // set app dashboard access level
                         ->addAccessLevel((new AccessLevel())
                             ->setEnvironment($environment)
                             ->setApplication($application)
@@ -380,8 +380,8 @@ class ApplicationService
                         )
                     ;
                 } else {
-                    // set app dashboard access level
                     $usr
+                        // set app dashboard access level
                         ->addAccessLevel((new AccessLevel())
                             ->setEnvironment($environment)
                             ->setApplication($application)

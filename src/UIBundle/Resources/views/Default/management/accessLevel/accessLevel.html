@@ -17,7 +17,7 @@
                         <tr>
                             <th class="text-left">Environment Name</th>
                             <th class="text-left">Ip</th>
-                            <th class="text-left">Access Levels
+                            <th class="text-left">Action
                             </th>
                         </tr>
                         </thead>
@@ -82,7 +82,7 @@
                         <tr>
                             <th class="text-left">Application Name</th>
                             <th class="text-left">Uuid</th>
-                            <th class="text-left">Access Levels
+                            <th class="text-left">Action
                             </th>
                         </tr>
                         </thead>
@@ -145,11 +145,9 @@
                         <tr>
                             <th class="text-left">Name</th>
                             <th class="text-left">Email</th>
-                            <th class="text-left">Uuid</th>
-                            <th class="text-left">
-                                Granted access <span ng-if="!ctrl.selectedApplication">(full)</span></th>
-                            <th class="text-left">Actions
-                            </th>
+                            <th class="text-left">Shared Dashboard</th>
+                            <th class="text-left">App Dashboard</th>
+                            <th class="text-left">App Data</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -160,8 +158,7 @@
                             </td>
                         </tr>
                         <tr ng-repeat="user in ctrl.users"
-                            class="text-left"
-                        >
+                            class="text-left">
                             <td data-title="Name" data-label="Name">
                                 <span>
                                     [[user.name]]
@@ -172,94 +169,89 @@
                                     [[user.email]]
                                 </span>
                             </td>
-                            <td data-title="Uuid" data-label="Uuid">
-                                <span>
-                                    [[user.uuid]]
-                                </span>
+                            <td data-title="Shared Dashboard" data-label="Shared Dashboard">
+                                <div ng-init="shared_dashboard_$index=user.normalizeAccessLevels[ctrl.selectedEnvironment][ctrl.selectedApplication]['SHARED_DASHBOARD_LEVEL']" />
+                                <input
+                                    class="shared_dashboard"
+                                    type="radio"
+                                    ng-model="shared_dashboard_[[ $index ]]"
+                                    value="READ"
+                                    ng-click="ctrl.setAccess(
+                                        user.id,
+                                        ctrl.selectedEnvironment,
+                                        ctrl.selectedApplication,
+                                        'SHARED_DASHBOARD_LEVEL',
+                                        'READ'
+                                    )" /> Read
+                                &nbsp;&nbsp;
+                                <input
+                                    class="shared_dashboard"
+                                    type="radio"
+                                    ng-model="shared_dashboard_[[ $index ]]"
+                                    value="INDICES_ALL"
+                                    ng-click="ctrl.setAccess(
+                                        user.id,
+                                        ctrl.selectedEnvironment,
+                                        ctrl.selectedApplication,
+                                        'SHARED_DASHBOARD_LEVEL',
+                                        'INDICES_ALL'
+                                    )" /> Write
                             </td>
-                            <td data-title="AclEnvironment" data-label="AclEnvironment" ng-if="!ctrl.selectedApplication">
-                                <span ng-if="user.readAccessByEnvironment[ctrl.selectedEnvironment]">READ</span>
-                                <span ng-if="user.writeAccessByEnvironment[ctrl.selectedEnvironment]">WRITE</span>
+                            <td data-title="App Dashboard" data-label="App Dashboard">
+                                <div ng-init="app_dashboard_$index=user.normalizeAccessLevels[ctrl.selectedEnvironment][ctrl.selectedApplication]['APP_DASHBOARD_LEVEL']" />
+                                <input
+                                    class="app_dashboard"
+                                    type="radio"
+                                    ng-model="app_dashboard_[[ $index ]]"
+                                    value="READ"
+                                    ng-click="ctrl.setAccess(
+                                        user.id,
+                                        ctrl.selectedEnvironment,
+                                        ctrl.selectedApplication,
+                                        'APP_DASHBOARD_LEVEL',
+                                        'READ'
+                                    )" /> Read
+                                &nbsp;&nbsp;
+                                <input
+                                    class="app_dashboard"
+                                    type="radio"
+                                    ng-model="app_dashboard_[[ $index ]]"
+                                    value="INDICES_ALL"
+                                    ng-click="ctrl.setAccess(
+                                        user.id,
+                                        ctrl.selectedEnvironment,
+                                        ctrl.selectedApplication,
+                                        'APP_DASHBOARD_LEVEL',
+                                        'INDICES_ALL'
+                                    )" /> Write
                             </td>
-                            <td data-title="AclApplication" data-label="AclApplication" ng-if="ctrl.selectedApplication">
-                                <span ng-if="user.accessLevels[ctrl.selectedEnvironment][ctrl.selectedApplication].READ">READ</span>
-                                <span ng-if="user.accessLevels[ctrl.selectedEnvironment][ctrl.selectedApplication].WRITE">WRITE</span>
-                            </td>
-                            <td data-title="Actions" data-label="Actions" class="text-left" ng-if="!ctrl.selectedApplication">
-                                <button
-                                    title="Grant Read Access"
-                                    data-placement="top"
-                                    data-toggle="tooltip"
-                                    class="btn bg-blue"
-                                    ng-if="!user.readAccessByEnvironment[ctrl.selectedEnvironment]"
-                                    ng-click="ctrl.grantAccess(user.id, ctrl.selectedEnvironment, ctrl.selectedApplication, 'READ')">
-                                    <i class="fa fa-eye"></i>
-                                </button>
-                                <button
-                                    title="Revoke Read Access"
-                                    data-placement="top"
-                                    data-toggle="tooltip"
-                                    class="btn bg-red"
-                                    ng-if="user.readAccessByEnvironment[ctrl.selectedEnvironment]"
-                                    ng-click="ctrl.revokeAccess(user.id, ctrl.selectedEnvironment, ctrl.selectedApplication, 'READ')">
-                                    <i class="fa fa-eye-slash"></i>
-                                </button>
-                                <button
-                                    title="Grant Write Access"
-                                    data-placement="top"
-                                    data-toggle="tooltip"
-                                    class="btn bg-blue"
-                                    ng-if="!user.writeAccessByEnvironment[ctrl.selectedEnvironment]"
-                                    ng-click="ctrl.grantAccess(user.id, ctrl.selectedEnvironment, ctrl.selectedApplication, 'WRITE')">
-                                    <i class="fa fa-file-signature"></i>
-                                </button>
-                                <button
-                                    title="Revoke Write Access"
-                                    data-placement="top"
-                                    data-toggle="tooltip"
-                                    class="btn bg-red"
-                                    ng-if="user.writeAccessByEnvironment[ctrl.selectedEnvironment]"
-                                    ng-click="ctrl.revokeAccess(user.id, ctrl.selectedEnvironment, ctrl.selectedApplication, 'WRITE')">
-                                    <i class="fa fa-file-contract"></i>
-                                </button>
-                            </td>
-                            <td data-title="Actions" data-label="Actions" class="text-left" ng-if="ctrl.selectedApplication">
-                                <button
-                                    title="Grant Read Access"
-                                    data-placement="top"
-                                    data-toggle="tooltip"
-                                    class="btn bg-blue"
-                                    ng-if="!user.accessLevels[ctrl.selectedEnvironment][ctrl.selectedApplication].READ"
-                                    ng-click="ctrl.grantAccess(user.id, ctrl.selectedEnvironment, ctrl.selectedApplication, 'READ')">
-                                    <i class="fa fa-eye"></i>
-                                </button>
-                                <button
-                                    title="Revoke Read Access"
-                                    data-placement="top"
-                                    data-toggle="tooltip"
-                                    class="btn bg-red"
-                                    ng-if="user.accessLevels[ctrl.selectedEnvironment][ctrl.selectedApplication].READ"
-                                    ng-click="ctrl.revokeAccess(user.id, ctrl.selectedEnvironment, ctrl.selectedApplication, 'READ')">
-                                    <i class="fa fa-eye-slash"></i>
-                                </button>
-                                <button
-                                    title="Grant Write Access"
-                                    data-placement="top"
-                                    data-toggle="tooltip"
-                                    class="btn bg-blue"
-                                    ng-if="!user.accessLevels[ctrl.selectedEnvironment][ctrl.selectedApplication].WRITE"
-                                    ng-click="ctrl.grantAccess(user.id, ctrl.selectedEnvironment, ctrl.selectedApplication, 'WRITE')">
-                                    <i class="fa fa-file-signature"></i>
-                                </button>
-                                <button
-                                    title="Revoke Write Access"
-                                    data-placement="top"
-                                    data-toggle="tooltip"
-                                    class="btn bg-red"
-                                    ng-if="user.accessLevels[ctrl.selectedEnvironment][ctrl.selectedApplication].WRITE"
-                                    ng-click="ctrl.revokeAccess(user.id, ctrl.selectedEnvironment, ctrl.selectedApplication, 'WRITE')">
-                                    <i class="fa fa-file-contract"></i>
-                                </button>
+                            <td data-title="App Data" data-label="App Data">
+                                <div ng-init="app_data_$index=user.normalizeAccessLevels[ctrl.selectedEnvironment][ctrl.selectedApplication]['APP_DATA_LEVEL']" />
+                                <input
+                                    class="app_data"
+                                    type="radio"
+                                    ng-model="app_data_[[ $index ]]"
+                                    value="READ"
+                                    ng-click="ctrl.setAccess(
+                                        user.id,
+                                        ctrl.selectedEnvironment,
+                                        ctrl.selectedApplication,
+                                        'APP_DATA_LEVEL',
+                                        'READ'
+                                    )" /> Read
+                                &nbsp;&nbsp;
+                                <input
+                                    class="app_data"
+                                    type="radio"
+                                    ng-model="app_data_[[ $index ]]"
+                                    value="INDICES_ALL"
+                                    ng-click="ctrl.setAccess(
+                                        user.id,
+                                        ctrl.selectedEnvironment,
+                                        ctrl.selectedApplication,
+                                        'APP_DATA_LEVEL',
+                                        'INDICES_ALL'
+                                    )" /> Write
                             </td>
                         </tr>
                         </tbody>

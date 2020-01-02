@@ -3,6 +3,7 @@
         .controller('AccessLevelController', [
             'EnvironmentService',
             'ApplicationService',
+            'AccessLevelService',
             'UserService',
             'toastr',
             'MESSAGES_CONSTANTS',
@@ -18,6 +19,7 @@
     function AccessLevelControllerFN (
         EnvironmentService,
         ApplicationService,
+        AccessLevelService,
         UserService,
         toastr,
         MESSAGES_CONSTANTS,
@@ -78,7 +80,7 @@
             vm.selectedApplicationName = null;
             vm.reset();
             // should send some criteria
-            UserService.list()
+            UserService.listACLManagement()
                 .then(function (users) {
                     vm.flipActivityIndicator('isLoading');
                     vm.users = users;
@@ -105,15 +107,15 @@
                 });
         };
 
-        vm.grantAccess= function(idUser, idEnvironment, idApplication, access) {
-
-            var payload = {
-                'idUser': idUser,
-                'idEnvironment': idEnvironment,
-                'idApplication': idApplication,
-                'access': access
+        vm.setAccess = function(user, env, app, level, access) {
+            acl = {
+                "user": user,
+                "env": env,
+                "app": app,
+                "level": level,
+                "access": access
             };
-            UserService.grantAccess(payload)
+            AccessLevelService.setAccess(acl)
                 .then(function(response) {
                     var user = response.data;
                     var index = _.findIndex(vm.users, {id: user.id});
@@ -123,27 +125,9 @@
                     vm.flipActivityIndicator('isLoading');
                 })
             ;
-        };
 
-        vm.revokeAccess = function(idUser, idEnvironment, idApplication, access) {
-
-            var payload = {
-                'idUser': idUser,
-                'idEnvironment': idEnvironment,
-                'idApplication': idApplication,
-                'access': access
-            };
-            UserService.revokeAccess(payload)
-                .then(function(response) {
-                    var user = response.data;
-                    var index = _.findIndex(vm.users, {id: user.id});
-                    vm.users.splice(index, 1, user);
-                })
-                .catch(function (error) {
-                    vm.flipActivityIndicator('isLoading');
-                })
-            ;
-        };
+            console.log(acl);
+        }
 
         vm.reset = function() {
             vm.environments = [];

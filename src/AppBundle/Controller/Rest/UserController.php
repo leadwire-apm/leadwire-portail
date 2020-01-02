@@ -45,6 +45,18 @@ class UserController extends Controller
     }
 
     /**
+     * @Route("/list/acl/management", methods="GET")
+     *
+     * @return Response
+     */
+    public function listUsersACLManagementAction(Request $request, UserService $userService)
+    {
+        $users = $userService->listUsersByRole("all");
+
+        return $this->renderResponse($users, Response::HTTP_OK, ["acl"]);
+    }
+
+    /**
      * @Route("/{id}/get", methods="GET")
      *
      * @param Request $request
@@ -224,45 +236,5 @@ class UserController extends Controller
         $successful = $userService->lockToggle($id, $lockMessage);
 
         return $this->renderResponse($successful);
-    }
-
-    /**
-     * @Route("/access-level/grant", methods="PUT")
-     *
-     * @param Request     $request
-     * @param UserService $userService
-     *
-     * @return Response
-     */
-    public function grantAccessAction(Request $request, UserService $userService)
-    {
-        try {
-            $payload = $request->getContent();
-            $user = $userService->grantAccess(json_decode($payload, true));
-
-            return $this->renderResponse($user);
-        } catch (\Exception $e) {
-            return $this->exception($e->getMessage(), 400);
-        }
-    }
-
-    /**
-     * @Route("/access-level/revoke", methods="PUT")
-     *
-     * @param Request     $request
-     * @param UserService $userService
-     *
-     * @return Response
-     */
-    public function revokeAccessAction(Request $request, UserService $userService)
-    {
-        try {
-            $payload = $request->getContent();
-            $user = $userService->revokeAccess(json_decode($payload, true));
-
-            return $this->renderResponse($user);
-        } catch (\Exception $e) {
-            return $this->exception($e->getTraceAsString(), 400);
-        }
     }
 }

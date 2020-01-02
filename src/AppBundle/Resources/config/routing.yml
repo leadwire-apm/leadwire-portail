@@ -62,3 +62,8 @@ app_rest_overview:
     resource: "@AppBundle/Controller/Rest/OverviewController.php"
     type: "annotation"
     prefix: "/%internal_api_prefix%/overview"
+
+app_rest_access_level:
+    resource: "@AppBundle/Controller/Rest/AccessLevelController.php"
+    type: "annotation"
+    prefix: "/%internal_api_prefix%/access-level"

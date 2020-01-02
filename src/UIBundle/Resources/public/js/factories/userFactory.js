@@ -7,6 +7,9 @@
             list: function () {
                 return $http.get(CONFIG.BASE_URL + 'api/user/list');
             },
+            listACLManagement: function () {
+                return $http.get(CONFIG.BASE_URL + 'api/user/list/acl/management');
+            },
             delete: function (id) {
                 return $http.delete(
                     CONFIG.BASE_URL + 'api/user/' + id + '/delete');

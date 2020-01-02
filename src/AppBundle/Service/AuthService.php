@@ -293,7 +293,8 @@ class AuthService
      */
     private function checkSuperAdminRoles(User $user): void
     {
-        if ($user->getUsername() === $this->superAdminUsername && $user->hasRole(User::ROLE_SUPER_ADMIN) === true) {
+        if ($user->getUsername() === $this->superAdminUsername) {
+            $user->revoke(User::ROLE_SUPER_ADMIN);
             $user->promote(User::ROLE_SUPER_ADMIN);
             foreach ($this->environmentService->getAll() as $environment) {
                 foreach ($environment->getApplications() as $application) {
