@@ -733,12 +733,38 @@ class ElasticSearchService
 
             array_push($response["nodes"], $data);
         }
-
-
-            return $response;
+        return $response;
         } catch (\Exception $e) {
             $this->logger->error($e->getMessage());
             throw new HttpException("An error has occurred while executing your request.", 500);
         }
+    }
+
+    public function getApplicationTransactions($app, $env)
+    {
+        try {
+
+            $stats = $this->httpClient->get(
+                $this->url ."*-". $env . "-". $app ."-transaction-*/_count",
+    
+                [
+                    'headers' => [
+                        'Content-type' => 'application/json',
+                    ],
+                    'auth' => [
+                        $this->settings['username'],
+                        $this->settings['password'],
+                    ],
+                ]
+            );
+    
+            $res =  json_decode($stats->getBody(),true);
+            return $res;
+
+        } catch (\Exception $e) {
+            $this->logger->error($e->getMessage());
+            throw new HttpException("An error has occurred while executing your request.",400);
+        }
+      
     }
 }

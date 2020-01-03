@@ -133,6 +133,14 @@
                         CONFIG.BASE_URL + 'api/app/' + id + '/apply-change',
                     );
                 },
+                /**
+                 * 
+                 */
+                getApplicationDocumentsCount : function(appName, envName){
+                    return $http.get(
+                        CONFIG.BASE_URL + 'api/app/' + appName + '/'+ envName +'/documents',
+                    );
+                }
             };
         });
 })(window.angular);

@@ -19,7 +19,7 @@
             AppCtrlFN,
         ]);
 
-    function AppCtrlFN (
+    function AppCtrlFN(
         $scope,
         $state,
         $rootScope,
@@ -33,12 +33,33 @@
         MESSAGES_CONSTANTS,
         toastr,
         Paginator,
-        CONFIG
+        CONFIG,
     ) {
+
         onLoad();
 
+        $scope.environments = [];
+
+        $scope.getEnvironments = function () {
+            $scope.getDefaultEnv();
+            EnvironmentService.list()
+                .then(function (environments) {
+                    $scope.environments = environments;
+                })
+                .catch(function (error) {
+                });
+        }
+
+        $scope.setSelectedEnv = function(environment){
+            $scope.selectedEnvId = $localStorage.selectedEnvId = environment.id;
+            $scope.selectedEnv = $localStorage.selectedEnv = environment;
+            $rootScope.$broadcast('environment:updated');
+            $scope.app.layout.isChatOpen = false;
+            $location.path('/applicationsSverview');
+        }
+
         $scope.COMPAGNE_ENABLED = CONFIG.COMPAGNE_ENABLED;
-        $scope.LOGIN_METHOD     = CONFIG.LOGIN_METHOD;
+        $scope.LOGIN_METHOD = CONFIG.LOGIN_METHOD;
 
         $scope.$on('user:updated', function (event, data) {
             $rootScope.user = data;
@@ -46,9 +67,9 @@
         $scope.$on('update:image', function (event, data) {
             $scope.$broadcast('reload:src', data);
         });
-        $scope.$on('new:app', function(event, data) {
+        $scope.$on('new:app', function (event, data) {
             UserService.get($localStorage.user.id)
-                .then(function(user){
+                .then(function (user) {
                     $rootScope.user = $localStorage.user = user;
                     $scope.$apply();
                 })
@@ -58,7 +79,7 @@
                     });
                     toastr.error(MESSAGES_CONSTANTS.ERROR);
                 })
-            ;
+                ;
         });
 
         $scope.$on('set:apps', function (event, apps) {
@@ -70,7 +91,6 @@
         });
 
         $scope.$on('set:contextApp', function (event, appId) {
-            console.log($localStorage.selectedAppId);
             $scope.selectedAppId = $localStorage.selectedAppId = appId;
             $localStorage.selectedApp = $localStorage.applications.find(
                 function (currApp) {
@@ -137,14 +157,19 @@
                 });
         };
 
-        $rootScope.setDefaultEnv = function () {
+         $scope.getDefaultEnv = function () {
             $scope.isChangingContextEnv = true;
+            if ($localStorage.selectedEnvId && $localStorage.selectedEnv) {
+                $scope.selectedEnvId = $localStorage.selectedEnvId;
+                $scope.selectedEnv = $localStorage.selectedEnv;
+                return;
+            }
+
             EnvironmentService.getDefault()
                 .then(function (response) {
                     $scope.isChangingContext = false;
                     $scope.selectedEnvId = $localStorage.selectedEnvId = response.id;
                     $scope.selectedEnv = $localStorage.selectedEnv = response;
-                    $scope.$apply();
                 })
                 .catch(function () {
                     $scope.$apply(function () {
@@ -153,6 +178,8 @@
                     toastr.error(MESSAGES_CONSTANTS.ERROR);
                 });
         };
+
+        $rootScope.setDefaultEnv = $scope.getDefaultEnv;
 
         $scope.brandRedirectTo = function () {
             if ($localStorage.dashboards && $localStorage.dashboards.length) {
@@ -164,7 +191,7 @@
             }
         };
 
-        $scope.loadApplications = function() {
+        $scope.loadApplications = function () {
             ApplicationFactory.findMyApplications().then(function (response) {
                 $localStorage.applications = response.data;
                 $scope.$emit('set:apps', response.data);
@@ -185,14 +212,14 @@
             $auth.logout()
                 .then(function () {
                     toastr.info(MESSAGES_CONSTANTS.LOGOUT_SUCCESS);
-                    if(CONFIG.LOGIN_METHOD === "proxy")
-                    window.location.href = 'https://auth.leadwire.io/?logout=1';
+                    if (CONFIG.LOGIN_METHOD === "proxy")
+                        window.location.href = 'https://auth.leadwire.io/?logout=1';
                     else
-                    $location.path('/login');
+                        $location.path('/login');
                 });
         };
 
-        function onLoad () {
+        function onLoad() {
             $scope.paginator = Paginator.create({
                 start: 0,
                 items: $scope.applications,
