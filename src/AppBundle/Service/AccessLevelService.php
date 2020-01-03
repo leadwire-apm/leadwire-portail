@@ -7,6 +7,8 @@ use AppBundle\Document\AccessLevel;
 use AppBundle\Exception\DuplicateApplicationNameException;
 use AppBundle\Manager\UserManager;
 use AppBundle\Manager\AccessLevelManager;
+use AppBundle\Service\SearchGuardService;
+use AppBundle\Service\ProcessService;
 
 use JMS\Serializer\DeserializationContext;
 use JMS\Serializer\SerializerInterface;
@@ -31,6 +33,11 @@ class AccessLevelService
     private $accessLevelManager;
 
     /**
+     * @var SearchGuardService
+     */
+    private $searchGuardService;
+
+    /**
      * @var SerializerInterface
      */
     private $serializer;
@@ -46,17 +53,23 @@ class AccessLevelService
      *
      * @param UserManager         $userManager
      * @param AccessLevelManager  $accessLevelManager
+     * @param SearchGuardService  $searchGuardService
+     * @param ProcessService      $processService
      * @param SerializerInterface $serializer
      * @param LoggerInterface     $logger
      */
     public function __construct(
         UserManager $userManager,
         AccessLevelManager $accessLevelManager,
+        SearchGuardService $searchGuardService,
+        ProcessService $processService,
         SerializerInterface $serializer,
         LoggerInterface $logger
     ) {
         $this->userManager = $userManager;
         $this->accessLevelManager = $accessLevelManager;
+        $this->searchGuardService = $searchGuardService;
+        $this->processService = $processService;
         $this->serializer = $serializer;
         $this->logger = $logger;
     }
@@ -70,12 +83,19 @@ class AccessLevelService
      */
     public function update($payload)
     {
-        $user = $this->userManager->getOneBy(['id' => $payload['user']]);
-        if (isset($payload['app'])) {
-            $this->updateByApplication($user, $payload['env'], $payload['app'], $payload['level'], $payload['access']);
-        } else {
-            $this->updateByEnvironment($user, $payload['env'], $payload['level'], $payload['access']);
+        try {
+            $this->processService->emit("heavy-operations-in-progress", "Updating SearchGuard Configuration");
+            $user = $this->userManager->getOneBy(['id' => $payload['user']]);
+            if (isset($payload['app'])) {
+                $this->updateByApplication($user, $payload['env'], $payload['app'], $payload['level'], $payload['access']);
+            } else {
+                $this->updateByEnvironment($user, $payload['env'], $payload['level'], $payload['access']);
+            }
+        } catch (\Exception $e) {
+            $this->processService->emit("heavy-operations-done", "Failed");
+            throw $e;
         }
+        $this->processService->emit("heavy-operations-done", "Successeded");
 
         return $user;
     }
@@ -89,6 +109,7 @@ class AccessLevelService
             ) {
                 $accessLevel->setAccess($access);
                 $this->accessLevelManager->update($accessLevel);
+                $this->searchGuardService->updateSearchGuardConfig();
             }
         }
     }
@@ -104,6 +125,7 @@ class AccessLevelService
             ) {
                 $accessLevel->setAccess($access);
                 $this->accessLevelManager->update($accessLevel);
+                $this->searchGuardService->updateSearchGuardConfig();
             }
         }
     }

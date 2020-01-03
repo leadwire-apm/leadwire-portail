@@ -25,7 +25,6 @@ class Application
      * @ODM\Id("strategy=auto")
      * @JMS\Type("string")
      * @JMS\Expose
-     * @JMS\Groups({"acl"})
      */
     private $id;
 

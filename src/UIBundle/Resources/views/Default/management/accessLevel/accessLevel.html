@@ -170,11 +170,10 @@
                                 </span>
                             </td>
                             <td data-title="Shared Dashboard" data-label="Shared Dashboard">
-                                <div ng-init="shared_dashboard_$index=user.normalizeAccessLevels[ctrl.selectedEnvironment][ctrl.selectedApplication]['SHARED_DASHBOARD_LEVEL']" />
                                 <input
                                     class="shared_dashboard"
                                     type="radio"
-                                    ng-model="shared_dashboard_[[ $index ]]"
+                                    name="shared_dashboard_[[ $index ]]"
                                     value="READ"
                                     ng-click="ctrl.setAccess(
                                         user.id,
@@ -182,12 +181,13 @@
                                         ctrl.selectedApplication,
                                         'SHARED_DASHBOARD_LEVEL',
                                         'READ'
-                                    )" /> Read
+                                    )"
+                                    ng-checked="user.normalizeAccessLevels[ctrl.selectedEnvironment][ctrl.selectedApplication]['SHARED_DASHBOARD_LEVEL'] == 'READ'" /> Read
                                 &nbsp;&nbsp;
                                 <input
                                     class="shared_dashboard"
                                     type="radio"
-                                    ng-model="shared_dashboard_[[ $index ]]"
+                                    name="shared_dashboard_[[ $index ]]"
                                     value="INDICES_ALL"
                                     ng-click="ctrl.setAccess(
                                         user.id,
@@ -195,14 +195,14 @@
                                         ctrl.selectedApplication,
                                         'SHARED_DASHBOARD_LEVEL',
                                         'INDICES_ALL'
-                                    )" /> Write
+                                    )"
+                                    ng-checked="user.normalizeAccessLevels[ctrl.selectedEnvironment][ctrl.selectedApplication]['SHARED_DASHBOARD_LEVEL'] == 'INDICES_ALL'" /> Write
                             </td>
                             <td data-title="App Dashboard" data-label="App Dashboard">
-                                <div ng-init="app_dashboard_$index=user.normalizeAccessLevels[ctrl.selectedEnvironment][ctrl.selectedApplication]['APP_DASHBOARD_LEVEL']" />
                                 <input
                                     class="app_dashboard"
                                     type="radio"
-                                    ng-model="app_dashboard_[[ $index ]]"
+                                    name="app_dashboard_[[ $index ]]"
                                     value="READ"
                                     ng-click="ctrl.setAccess(
                                         user.id,
@@ -210,12 +210,13 @@
                                         ctrl.selectedApplication,
                                         'APP_DASHBOARD_LEVEL',
                                         'READ'
-                                    )" /> Read
+                                    )"
+                                    ng-checked="user.normalizeAccessLevels[ctrl.selectedEnvironment][ctrl.selectedApplication]['APP_DASHBOARD_LEVEL'] == 'READ'" /> Read
                                 &nbsp;&nbsp;
                                 <input
                                     class="app_dashboard"
                                     type="radio"
-                                    ng-model="app_dashboard_[[ $index ]]"
+                                    name="app_dashboard_[[ $index ]]"
                                     value="INDICES_ALL"
                                     ng-click="ctrl.setAccess(
                                         user.id,
@@ -223,14 +224,14 @@
                                         ctrl.selectedApplication,
                                         'APP_DASHBOARD_LEVEL',
                                         'INDICES_ALL'
-                                    )" /> Write
+                                    )"
+                                    ng-checked="user.normalizeAccessLevels[ctrl.selectedEnvironment][ctrl.selectedApplication]['APP_DASHBOARD_LEVEL'] == 'INDICES_ALL'" /> Write
                             </td>
                             <td data-title="App Data" data-label="App Data">
-                                <div ng-init="app_data_$index=user.normalizeAccessLevels[ctrl.selectedEnvironment][ctrl.selectedApplication]['APP_DATA_LEVEL']" />
                                 <input
                                     class="app_data"
                                     type="radio"
-                                    ng-model="app_data_[[ $index ]]"
+                                    name="app_data_[[ $index ]]"
                                     value="READ"
                                     ng-click="ctrl.setAccess(
                                         user.id,
@@ -238,12 +239,13 @@
                                         ctrl.selectedApplication,
                                         'APP_DATA_LEVEL',
                                         'READ'
-                                    )" /> Read
+                                    )"
+                                    ng-checked="user.normalizeAccessLevels[ctrl.selectedEnvironment][ctrl.selectedApplication]['APP_DATA_LEVEL'] == 'READ'" /> Read
                                 &nbsp;&nbsp;
                                 <input
                                     class="app_data"
                                     type="radio"
-                                    ng-model="app_data_[[ $index ]]"
+                                    name="app_data_[[ $index ]]"
                                     value="INDICES_ALL"
                                     ng-click="ctrl.setAccess(
                                         user.id,
@@ -251,7 +253,8 @@
                                         ctrl.selectedApplication,
                                         'APP_DATA_LEVEL',
                                         'INDICES_ALL'
-                                    )" /> Write
+                                    )"
+                                    ng-checked="user.normalizeAccessLevels[ctrl.selectedEnvironment][ctrl.selectedApplication]['APP_DATA_LEVEL'] == 'INDICES_ALL'" /> Write
                             </td>
                         </tr>
                         </tbody>

@@ -21,7 +21,7 @@ class Environment
      * @ODM\Id("strategy=auto")
      * @JMS\Type("string")
      * @JMS\Expose
-     * @JMS\Groups({"full", "minimalist", "acl"})
+     * @JMS\Groups({"full", "minimalist"})
      */
     private $id;
 

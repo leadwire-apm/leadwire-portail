@@ -30,7 +30,6 @@ class User implements AdvancedUserInterface
      * @ODM\Id("strategy=auto")
      * @JMS\Type("string")
      * @JMS\Expose
-     * @JMS\Groups({"acl"})
      */
     protected $id;
 
@@ -39,7 +38,6 @@ class User implements AdvancedUserInterface
      * @ODM\Field(type="string")
      * @JMS\Type("string")
      * @JMS\Expose
-     * @JMS\Groups({"acl"})
      */
     protected $username;
 
@@ -107,7 +105,6 @@ class User implements AdvancedUserInterface
      * @ODM\Field(type="string")
      * @JMS\Type("string")
      * @JMS\Expose
-     * @JMS\Groups({"acl"})
      */
     private $name;
 
@@ -163,7 +160,6 @@ class User implements AdvancedUserInterface
 
      * @JMS\Type("string")
      * @JMS\Expose
-     * @JMS\Groups({"acl"})
      */
     private $email;
 
@@ -1056,7 +1052,6 @@ class User implements AdvancedUserInterface
      * @JMS\VirtualProperty
      * @JMS\Type("array")
      * @JMS\Expose
-     * @JMS\Groups({"acl"})
      *
      * @return array
      */

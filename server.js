@@ -5,7 +5,7 @@ var https = require('https');
 var server = https.createServer({
         key: fs.readFileSync(process.env.SSL_KEY),
         cert: fs.readFileSync(process.env.SSL_CERT),
-        ca: fs.readFileSync(process.env.SSL_CA),
+        //ca: fs.readFileSync(process.env.SSL_CA),
         requestCert: false,
         rejectUnauthorized: false
     }),

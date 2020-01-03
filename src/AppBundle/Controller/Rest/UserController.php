@@ -53,7 +53,7 @@ class UserController extends Controller
     {
         $users = $userService->listUsersByRole("all");
 
-        return $this->renderResponse($users, Response::HTTP_OK, ["acl"]);
+        return $this->renderResponse($users, Response::HTTP_OK, []);
     }
 
     /**
