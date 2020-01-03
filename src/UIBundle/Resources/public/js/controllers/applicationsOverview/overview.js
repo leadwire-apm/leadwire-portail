@@ -1,18 +1,24 @@
 (function (angular) {
     angular.module('leadwireApp')
-        .controller('ApplicationOverviewController', ['ApplicationFactory', ApplicationsOverviewCtrlFN]);
+        .controller('ApplicationOverviewController', ['ApplicationFactory','ApplicationService', ApplicationsOverviewCtrlFN]);
 
     /**
      * Handle Applications stats
      *
      */
-    function ApplicationsOverviewCtrlFN(ApplicationFactory) {
+    function ApplicationsOverviewCtrlFN(ApplicationFactory, ApplicationService) {
         
         var vm = this;
 
         vm.load = function () {
             ApplicationFactory.findMyApplications().then(function (response) {
                 vm.applications = response.data;
+                vm.applications.forEach(application => {
+                    ApplicationService.getApplicationDocumentsCount(application.name).then(function (response){
+                        application.count = response.count;
+                    })
+                });
+                
             }).catch(function () {
             });
         };

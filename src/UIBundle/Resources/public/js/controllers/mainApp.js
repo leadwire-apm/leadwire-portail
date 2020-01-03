@@ -55,6 +55,7 @@
             $scope.selectedEnv = $localStorage.selectedEnv = environment;
             $rootScope.$broadcast('environment:updated');
             $scope.app.layout.isChatOpen = false;
+            $location.path('/applicationsSverview');
         }
 
         $scope.COMPAGNE_ENABLED = CONFIG.COMPAGNE_ENABLED;
@@ -90,7 +91,6 @@
         });
 
         $scope.$on('set:contextApp', function (event, appId) {
-            console.log($localStorage.selectedAppId);
             $scope.selectedAppId = $localStorage.selectedAppId = appId;
             $localStorage.selectedApp = $localStorage.applications.find(
                 function (currApp) {

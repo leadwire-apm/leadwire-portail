@@ -121,6 +121,16 @@
                     });
             }
 
+            service.getApplicationDocumentsCount = function (appName) {
+                return ApplicationFactory.getApplicationDocumentsCount(appName,$localStorage.selectedEnv.name)
+                    .then(function(response) {
+                        return response.data;
+                    })
+                    .catch(function (err) {
+                        throw new Error(err);
+                    });
+            }
+
             return service;
         });
 })(window.angular);
