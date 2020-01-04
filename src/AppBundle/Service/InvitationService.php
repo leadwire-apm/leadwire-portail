@@ -17,6 +17,9 @@ use ATS\EmailBundle\Service\SimpleMailerService;
 use AppBundle\Manager\ApplicationPermissionManager;
 use AppBundle\Service\ApplicationPermissionService;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use AppBundle\Service\SearchGuardService;
+use AppBundle\Service\EnvironmentService;
+use AppBundle\Document\AccessLevel;
 
 /**
  * Service class for Invitation entities
@@ -75,6 +78,16 @@ class InvitationService
     private $userManager;
 
     /**
+     * @var SearchGuardService
+     */
+    private $searchGuardService;
+
+    /**
+     * @var EnvironmentService
+     */
+    private $environmentService;
+
+    /**
      * Constructor
      *
      * @param InvitationManager $invitationManager
@@ -86,6 +99,8 @@ class InvitationService
      * @param ApplicationService $applicationService
      * @param ApplicationPermissionService $permissionService
      * @param UserManager $userManager
+     * @param SearchGuardService $searchGuardService
+     * @param EnvironmentService $environmentService
      */
     public function __construct(
         InvitationManager $invitationManager,
@@ -97,6 +112,8 @@ class InvitationService
         ApplicationService $applicationService,
         ApplicationPermissionService $permissionService,
         UserManager $userManager,
+        SearchGuardService $searchGuardService,
+        EnvironmentService $environmentService,
         string $sender
     ) {
         $this->invitationManager = $invitationManager;
@@ -110,6 +127,8 @@ class InvitationService
         $this->applicationService = $applicationService;
         $this->permissionService = $permissionService;
         $this->userManager = $userManager;
+        $this->searchGuardService = $searchGuardService;
+        $this->environmentService = $environmentService;
     }
 
     /**
@@ -278,8 +297,34 @@ class InvitationService
             $invitation->setUser($invitedUser);
             $application = $invitation->getApplication();
             $this->permissionService->grantPermission($application, $invitedUser, ApplicationPermission::ACCESS_GUEST);
+            foreach ($application->getEnvironments() as $environment) {
+                $invitedUser
+                    // set shared dashboard access level to write
+                    ->addAccessLevel((new AccessLevel())
+                        ->setEnvironment($environment)
+                        ->setApplication($application)
+                        ->setLevel(AccessLevel::SHARED_DASHBOARD_LEVEL)
+                        ->setAccess(AccessLevel::WRITE_ACCESS)
+                    )
+                    // set app dashboard access level to write
+                    ->addAccessLevel((new AccessLevel())
+                        ->setEnvironment($environment)
+                        ->setApplication($application)
+                        ->setLevel(AccessLevel::APP_DASHBOARD_LEVEL)
+                        ->setAccess(AccessLevel::READ_ACCESS)
+                    )
+                    // set app data access level to write
+                    ->addAccessLevel((new AccessLevel())
+                        ->setEnvironment($environment)
+                        ->setApplication($application)
+                        ->setLevel(AccessLevel::APP_DATA_LEVEL)
+                        ->setAccess(AccessLevel::READ_ACCESS)
+                    )
+                ;
+            }
             $this->ldap->registerApplication($invitedUser, $application);
             $this->invitationManager->update($invitation);
+            $userManager->update($invitedUser);
         }
     }
 }

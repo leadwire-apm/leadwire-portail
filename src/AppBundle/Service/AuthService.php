@@ -140,6 +140,9 @@ class AuthService
         }
 
         $this->checkSuperAdminRoles($user);
+        $this->processService->emit("heavy-operations-in-progress", "Configuring SearchGuard");
+        $this->sgService->updateSearchGuardConfig();
+        $this->processService->emit("heavy-operations-done", "Succeded");
 
         return $user;
     }
@@ -159,6 +162,9 @@ class AuthService
             $this->validateActiveStatus($user);
 
             $this->checkSuperAdminRoles($user);
+            $this->processService->emit("heavy-operations-in-progress", "Configuring SearchGuard");
+            $this->sgService->updateSearchGuardConfig();
+            $this->processService->emit("heavy-operations-done", "Succeded");
         }
         return $user;
     }
@@ -175,6 +181,9 @@ class AuthService
         }
 
         $this->checkSuperAdminRoles($user);
+        $this->processService->emit("heavy-operations-in-progress", "Configuring SearchGuard");
+        $this->sgService->updateSearchGuardConfig();
+        $this->processService->emit("heavy-operations-done", "Succeded");
 
         return $user;
     }
@@ -284,21 +293,62 @@ class AuthService
      */
     private function checkSuperAdminRoles(User $user): void
     {
-        if ($user->getUsername() === $this->superAdminUsername &&
-            $user->hasRole(User::ROLE_SUPER_ADMIN) === false
-        ) {
+        if ($user->getUsername() === $this->superAdminUsername) {
+            $user->revoke(User::ROLE_SUPER_ADMIN);
             $user->promote(User::ROLE_SUPER_ADMIN);
             foreach ($this->environmentService->getAll() as $environment) {
                 foreach ($environment->getApplications() as $application) {
-                    $accessLevel = new AccessLevel($environment, $application, true, true);
-                    $user->addAccessLevel($accessLevel);
+                    $user
+                        // set shared dashboard access level to write
+                        ->addAccessLevel((new AccessLevel())
+                            ->setEnvironment($environment)
+                            ->setApplication($application)
+                            ->setLevel(AccessLevel::SHARED_DASHBOARD_LEVEL)
+                            ->setAccess(AccessLevel::WRITE_ACCESS)
+                        )
+                        // set app dashboard access level to write
+                        ->addAccessLevel((new AccessLevel())
+                            ->setEnvironment($environment)
+                            ->setApplication($application)
+                            ->setLevel(AccessLevel::APP_DASHBOARD_LEVEL)
+                            ->setAccess(AccessLevel::WRITE_ACCESS)
+                        )
+                        // set app data access level to write
+                        ->addAccessLevel((new AccessLevel())
+                            ->setEnvironment($environment)
+                            ->setApplication($application)
+                            ->setLevel(AccessLevel::APP_DATA_LEVEL)
+                            ->setAccess(AccessLevel::WRITE_ACCESS)
+                        )
+                    ;
                 }
             }
         } else {
             foreach ($this->environmentService->getAll() as $environment) {
                 foreach ($environment->getApplications() as $application) {
-                    $accessLevel = new AccessLevel($environment, $application, true, false);
-                    $user->addAccessLevel($accessLevel);
+                    $user
+                        // set shared dashboard access level to write
+                        ->addAccessLevel((new AccessLevel())
+                            ->setEnvironment($environment)
+                            ->setApplication($application)
+                            ->setLevel(AccessLevel::SHARED_DASHBOARD_LEVEL)
+                            ->setAccess(AccessLevel::WRITE_ACCESS)
+                        )
+                        // set app dashboard access level to write
+                        ->addAccessLevel((new AccessLevel())
+                            ->setEnvironment($environment)
+                            ->setApplication($application)
+                            ->setLevel(AccessLevel::APP_DASHBOARD_LEVEL)
+                            ->setAccess(AccessLevel::READ_ACCESS)
+                        )
+                        // set app data access level to write
+                        ->addAccessLevel((new AccessLevel())
+                            ->setEnvironment($environment)
+                            ->setApplication($application)
+                            ->setLevel(AccessLevel::APP_DATA_LEVEL)
+                            ->setAccess(AccessLevel::READ_ACCESS)
+                        )
+                    ;
                 }
             }
         }

@@ -209,28 +209,6 @@
         };
 
         /**
-         * Grant access for user
-         *
-         * @param string payload
-         *
-         * @return obj
-         */
-        service.grantAccess = function(payload) {
-            return UserFactory.grantAccess(payload);
-        }
-
-        /**
-         * Revoke access for user
-         *
-         * @param string payload
-         *
-         * @return obj
-         */
-        service.revokeAccess = function(payload) {
-            return UserFactory.revokeAccess(payload);
-        }
-
-        /**
          * On first login we need to show a model
          * to update user information
          * and subscribe to a plan
@@ -328,6 +306,16 @@
 
         service.list = function () {
             return UserFactory.list()
+                .then(function (response) {
+                    return response.data;
+                })
+                .catch(function (err) {
+                    throw new Error(err);
+                });
+        };
+
+        service.listACLManagement = function () {
+            return UserFactory.listACLManagement()
                 .then(function (response) {
                     return response.data;
                 })

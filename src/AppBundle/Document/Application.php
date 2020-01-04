@@ -407,7 +407,7 @@ class Application
      */
     public function getIndex()
     {
-        return 'app_' . $this->getUuid();
+        return 'app_' . $this->uuid;
     }
 
     /**

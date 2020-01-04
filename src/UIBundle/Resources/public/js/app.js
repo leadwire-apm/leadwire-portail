@@ -30,7 +30,12 @@ angular.module('leadwireApp', [
     .factory('socket', function (socketFactory) {
         return socketFactory({
             prefix: "",
-            ioSocket: io.connect('https://' + APP_DOMAIN + ':' + SOCKET_IO_PORT)
+            ioSocket: io.connect('https://' + APP_DOMAIN + ':' + SOCKET_IO_PORT, {
+                secure: true,
+                reconnect: true,
+                requestCert: false,
+                rejectUnauthorized : false
+            })
         });
     })
     .constant('COLORS', {

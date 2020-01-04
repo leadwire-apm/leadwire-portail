@@ -3,6 +3,7 @@
 namespace AppBundle\Service;
 
 use AppBundle\Document\Application;
+use AppBundle\Document\AccessLevel;
 use AppBundle\Document\ApplicationPermission;
 use AppBundle\Document\User;
 use AppBundle\Manager\ApplicationManager;
@@ -72,19 +73,22 @@ class SearchGuardService
 
         /** @var Application $application */
         foreach ($applications as $application) {
-            $applicationIndex = "sg_{$application->getName()}_index";
-            $kibanaIndex = "sg_{$application->getName()}_kibana_index";
-            $users = ['adm-portail'];
-            $permissions = $this->permissionManager->getGrantedAccessForApplication($application);
+            /** @var Environment $environment */
+            foreach ($application->getEnvironments() as $environment) {
+                $applicationIndex = "sg_{$environment->getName()}_{$application->getName()}_index";
+                $kibanaIndex = "sg_{$environment->getName()}_{$application->getName()}_kibana_index";
+                $users = ['adm-portail'];
+                $permissions = $this->permissionManager->getGrantedAccessForApplication($application);
 
-            /** @var ApplicationPermission $permission */
-            foreach ($permissions as $permission) {
-                $users[] = $permission->getUser()->getUserIndex();
-                $allUsers[] = $permission->getUser()->getUserIndex();
+                /** @var ApplicationPermission $permission */
+                foreach ($permissions as $permission) {
+                    $users[] = $permission->getUser()->getUserIndex();
+                    $allUsers[] = $permission->getUser()->getUserIndex();
+                }
+
+                $serialized .= $this->serializer->serialize([$applicationIndex => ['users' => $users]], 'yml');
+                $serialized .= $this->serializer->serialize([$kibanaIndex => ['users' => $users]], 'yml');
             }
-
-            $serialized .= $this->serializer->serialize([$applicationIndex => ['users' => $users]], 'yml');
-            $serialized .= $this->serializer->serialize([$kibanaIndex => ['users' => $users]], 'yml');
         }
 
         $allUsers = \array_unique($allUsers);
@@ -172,16 +176,46 @@ class SearchGuardService
             //     ];
             // }
             foreach ($accessLevels as $accessLevel) {
-                if ($accessLevel->getRead() || $accessLevel->getWrite()) {
-                    $indices["*-{$accessLevel->getEnvironment()->getName()}-{$accessLevel->getApplication()->getUuid()}-*"] = [
-                        "*" => [
-                            "READ",
-                            "indices:data/read/field_caps[index]",
-                            "indices:data/read/field_caps",
-                        ],
+                $env = $accessLevel->getEnvironment();
+                $app = $accessLevel->getApplication();
+                $acl = [
+                    "READ" => [
+                        "READ",
+                        "indices:data/read/field_caps[index]",
+                        "indices:data/read/field_caps",
+                    ],
+                    "INDICES_ALL" => [
+                        "INDICES_ALL",
+                    ]
+                ];
+                if ($accessLevel->getLevel() == AccessLevel::APP_DATA_LEVEL) {
+                    $indices["*-{$env->getName()}-{$app->getName()}-*"] = [
+                        "*" => $acl[$accessLevel->getAccess()],
                     ];
                 }
+                $kibanaAcl = [];
+                if ($accessLevel->getLevel() == AccessLevel::APP_DASHBOARD_LEVEL) {
+                    $kibanaAcl["?kibana_{$env->getName()}_{$app->getApplicationIndex()}"] = [
+                        "*" => $acl[$accessLevel->getAccess()]
+                    ];
+                }
+                if ($accessLevel->getLevel() == AccessLevel::SHARED_DASHBOARD_LEVEL) {
+                    $kibanaAcl["?kibana_{$env->getName()}_{$app->getSharedIndex()}"] = [
+                        "*" => $acl[$accessLevel->getAccess()]
+                    ];
+                }
+                // echo
+                //     $accessLevel->getApplication()->getName()
+                //     . ": " .
+                //     $accessLevel->getApplication()->getApplicationIndex()
+                //     .
+                //     PHP_EOL
+                // ;
+
+                $indices = array_merge($indices, $kibanaAcl);
             }
+
+
 
             $serialized .= $this->serializer->serialize(
                 [

@@ -26,7 +26,10 @@
         <li ng-repeat="(key, menu) in menus"
             ng-if="!isChangingContext && state.includes('app.dashboard') == false"
             ui-sref-active="active">
-             <a ng-if="menu.route" ng-href="[[menu.route]]">
+            <a style="cursor: pointer;" ng-if="menu.route && menu.routeName != 'app.management.reports'" ui-sref="[[menu.routeName]]" ui-sref-opts="{reload: true}"><i class="[[menu.icon]]"></i>
+                <span>[[menu.label]]</span>
+            </a>
+            <a style="cursor: pointer;" ng-if="menu.route && menu.routeName == 'app.management.reports'" ng-href="[[menu.route]]">
                 <i class="[[menu.icon]]"></i>
                 <span>[[menu.label]]</span>
             </a>

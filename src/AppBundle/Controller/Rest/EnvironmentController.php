@@ -123,7 +123,7 @@ class EnvironmentController extends Controller
     {
         $data = $environmentService->getDefault();
 
-        return $this->renderResponse($data, Response::HTTP_OK, ["full"]);
+        return $this->renderResponse($data, Response::HTTP_OK, ["minimalist"]);
     }
 
     /**

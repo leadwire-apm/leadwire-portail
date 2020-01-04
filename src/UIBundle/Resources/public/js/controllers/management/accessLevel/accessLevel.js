@@ -3,11 +3,13 @@
         .controller('AccessLevelController', [
             'EnvironmentService',
             'ApplicationService',
+            'AccessLevelService',
             'UserService',
             'toastr',
             'MESSAGES_CONSTANTS',
             '$state',
             '$scope',
+            'socket',
             AccessLevelControllerFN
         ]);
 
@@ -18,13 +20,39 @@
     function AccessLevelControllerFN (
         EnvironmentService,
         ApplicationService,
+        AccessLevelService,
         UserService,
         toastr,
         MESSAGES_CONSTANTS,
         $state,
-        $scope
+        $scope,
+        socket
     ) {
         var vm = this;
+
+        socket.on('heavy-operation', function(data) {
+
+            if (data.status == "in-progress") {
+                if ($('#toast-container').hasClass('toast-top-right') == false) {
+                    toastr.info(
+                        data.message + '...',
+                        "Operation in progress",
+                        {
+                            timeOut: 0,
+                            extendedTimeOut: 0,
+                            closeButton: true,
+                            onClick: null,
+                            preventDuplicates: true
+                        }
+                    );
+                } else {
+                    $('.toast-message').html(data.message + '...');
+                }
+            }
+            if (data.status == "done") {
+                toastr.clear();
+            }
+        });
 
         vm.flipActivityIndicator = function (key) {
             vm.ui[key] = !vm.ui[key];
@@ -61,7 +89,7 @@
                     vm.applications = applications;
                     vm.view.applications = true;
                     vm.selectedEnvironment = idEnvironment;
-                    EnvironmentService.find(idEnvironment).then(function(environment) {
+                    EnvironmentService.findMinimalist(idEnvironment).then(function(environment) {
                         vm.selectedEnvironmentName = environment.name;
                     }).catch(function(error) {
                         vm.flipActivityIndicator('isLoading');
@@ -73,18 +101,19 @@
         };
 
         vm.loadUsers = function (idEnvironment, idApplication) {
+            console.log(idApplication);
             vm.flipActivityIndicator('isLoading');
             vm.selectedApplication = null;
             vm.selectedApplicationName = null;
             vm.reset();
             // should send some criteria
-            UserService.list()
+            UserService.listACLManagement()
                 .then(function (users) {
                     vm.flipActivityIndicator('isLoading');
                     vm.users = users;
                     vm.view.users = true;
                     vm.selectedEnvironment = idEnvironment;
-                    EnvironmentService.find(idEnvironment).then(function(environment) {
+                    EnvironmentService.findMinimalist(idEnvironment).then(function(environment) {
                         vm.selectedEnvironmentName = environment.name;
                     }).catch(function(error) {
                         vm.flipActivityIndicator('isLoading');
@@ -105,15 +134,15 @@
                 });
         };
 
-        vm.grantAccess= function(idUser, idEnvironment, idApplication, access) {
-
-            var payload = {
-                'idUser': idUser,
-                'idEnvironment': idEnvironment,
-                'idApplication': idApplication,
-                'access': access
+        vm.setAccess = function(user, env, app, level, access) {
+            acl = {
+                "user": user,
+                "env": env,
+                "app": app,
+                "level": level,
+                "access": access
             };
-            UserService.grantAccess(payload)
+            AccessLevelService.setAccess(acl)
                 .then(function(response) {
                     var user = response.data;
                     var index = _.findIndex(vm.users, {id: user.id});
@@ -123,27 +152,9 @@
                     vm.flipActivityIndicator('isLoading');
                 })
             ;
-        };
 
-        vm.revokeAccess = function(idUser, idEnvironment, idApplication, access) {
-
-            var payload = {
-                'idUser': idUser,
-                'idEnvironment': idEnvironment,
-                'idApplication': idApplication,
-                'access': access
-            };
-            UserService.revokeAccess(payload)
-                .then(function(response) {
-                    var user = response.data;
-                    var index = _.findIndex(vm.users, {id: user.id});
-                    vm.users.splice(index, 1, user);
-                })
-                .catch(function (error) {
-                    vm.flipActivityIndicator('isLoading');
-                })
-            ;
-        };
+            console.log(acl);
+        }
 
         vm.reset = function() {
             vm.environments = [];
