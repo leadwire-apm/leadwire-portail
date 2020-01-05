@@ -7,6 +7,7 @@ use AppBundle\Document\Environment;
 use AppBundle\Exception\DuplicateApplicationNameException;
 use AppBundle\Manager\EnvironmentManager;
 use AppBundle\Manager\ApplicationManager;
+use AppBundle\Service\SearchGuardService;
 
 use JMS\Serializer\DeserializationContext;
 use JMS\Serializer\SerializerInterface;
@@ -14,6 +15,8 @@ use Psr\Log\LoggerInterface;
 use Ramsey\Uuid\Uuid;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+
+
 
 /**
  * Service class for Environment entities
@@ -41,6 +44,11 @@ class EnvironmentService
      */
     private $logger;
 
+    /**
+     * @var SearchGuardService
+     */
+    private $searchGuardService;
+
 
     /**
      * Constructor
@@ -49,17 +57,20 @@ class EnvironmentService
      * @param ApplicationManager $applicationManager
      * @param SerializerInterface $serializer
      * @param LoggerInterface $logger
+     * @param SearchGuardService $searchGuardService
      */
     public function __construct(
         EnvironmentManager $environmentManager,
         ApplicationManager $applicationManager,
         SerializerInterface $serializer,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        SearchGuardService $searchGuardService
     ) {
         $this->environmentManager = $environmentManager;
         $this->applicationManager = $applicationManager;
         $this->serializer = $serializer;
         $this->logger = $logger;
+        $this->searchGuardService = $searchGuardService;
     }
 
 
@@ -77,6 +88,7 @@ class EnvironmentService
             ->deserialize($json, Environment::class, 'json');
 
         $id = $this->environmentManager->update($environment);
+        $this->searchGuardService->updateSearchGuardConfig();
 
         return $id;
     }
@@ -88,7 +100,7 @@ class EnvironmentService
         $context->setGroups(['minimalist']);
         $environment = $this->serializer->deserialize($json, Environment::class, 'json', $context);
         $this->environmentManager->update($environment);
-
+        $this->searchGuardService->updateSearchGuardConfig();
     }
 
     /**
@@ -104,6 +116,7 @@ class EnvironmentService
                 $application->removeEnvironment($environment);
                 $this->applicationManager->update($application);
             }
+            $this->searchGuardService->updateSearchGuardConfig();
             return $this->environmentManager->delete($environment);
         }
 
