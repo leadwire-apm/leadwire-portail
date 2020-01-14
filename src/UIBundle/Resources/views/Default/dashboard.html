@@ -5,7 +5,7 @@
         <a ui-sref="app.applicationsAdd" class="btn btn-primary"><i class="fa fa-plus-circle"></i> Create your first
             application</a>
     </div>
-    <div ng-if="ctrl.dashboardLink">
+    <div>
         <div class="col-sm-12">
             <div class="col-sm-3 col-md-offset-1" style="padding:10px">
                 <div class="input-prepend input-group input-group-md">
@@ -28,7 +28,10 @@
                 </div>
             </div>
         </div>
-        <iframe scrolling="yes" ng-src="[[ctrl.dashboardLink]]" frameborder="0"
-            iframe-set-dimensions-onload></iframe>
+        <div ng-if="ctrl.dashboardLink">
+            <iframe scrolling="yes" ng-src="[[ctrl.dashboardLink]]" frameborder="0"
+                iframe-set-dimensions-onload></iframe>
+        </div>
+
     </div>
 </div>

@@ -17,9 +17,11 @@
             return $sce.trustAsResourceUrl(src);
         }
 
-        vm.refresh = 10;
+        vm.refresh = $localStorage.refresh || "0";
         vm.applications = $localStorage.applications;
-        vm.dashboardLink = trustSrc(DashboardService.getDashboard($state.params.tenant, $state.params.id) + `?_g=(refreshInterval:(pause:!t,value:${vm.refresh * 1000}),time:(from:now-15m,mode:quick,to:now))`);
+
+        $scope.startDate = $localStorage.date ? moment($localStorage.date.startDate) : moment();
+        $scope.endDate = $localStorage.date ? moment($localStorage.date.endDate) : moment();
 
         vm.onLoad = function () {
             vm.isLoading = true;
@@ -35,7 +37,78 @@
                     }
                 }
             );
+
+            if (vm.refresh !== "0") {
+                var startDate = $scope.startDate.toISOString();
+                var endDate = $scope.endDate.toISOString();
+                var mode = $localStorage.mode
+                var from = getInterval($localStorage.chosenLabel);
+                var to = "now";
+                var autoRefresh = "!f";
+                var ref = (parseInt(vm.refresh) * 1000).toString()
+                if (mode === "absolute") {
+                    from = startDate;
+                    to = endDate;
+                }
+                vm.dashboardLink = trustSrc(DashboardService.getDashboard($state.params.tenant, $state.params.id) + `?_g=(refreshInterval:(pause:${autoRefresh},value:${ref}),time:(from:'${from}',mode:${mode},to:'${to}'))`);
+                $scope.$apply()
+            } else {
+                vm.dashboardLink = trustSrc(DashboardService.getDashboard($state.params.tenant, $state.params.id) + `?_g=(refreshInterval:(pause:!t,value:${vm.refresh * 1000}),time:(from:now-15m,mode:quick,to:now))`);
+            }
+
         };
+
+        function getInterval(int) {
+            switch (int) {
+                case "Last 15 minutes":
+                    return "now-15m";
+                case "Last 30 minutes":
+                    return "now-30m";
+                case "Today":
+                    return "now/d";
+                case "Last 7 Days":
+                    return "now/w";
+                case "Last 30 Days":
+                    return "now-30d";
+                case "Last Year":
+                    return "now-1y";
+                default:
+                    return "now-15m";
+            }
+        }
+
+        $scope.sync = function () {
+
+            var startDate = $('#range').data('daterangepicker').startDate.toISOString();
+            var endDate = $('#range').data('daterangepicker').endDate.toISOString();
+            var mode = "absolute";//quick
+            var from = "now-15m";
+            var to = "now";
+            var autoRefresh = "!t";
+
+            $localStorage.date = $('#range').data('daterangepicker');
+            $localStorage.refresh = vm.refresh;
+            $localStorage.chosenLabel = $('#range').data('daterangepicker').chosenLabel;
+            $localStorage.mode = mode;
+
+            if ($('#range').data('daterangepicker').chosenLabel === null) {
+                mode = "absolute";
+                from = startDate;
+                to = endDate;
+            } else {
+                mode = "quick";
+                from = getInterval($('#range').data('daterangepicker').chosenLabel);
+                to = "now";
+                $localStorage.mode = mode;
+            }
+            if (vm.refresh !== "0") {
+                autoRefresh = "!f";
+            }
+
+            var ref = (parseInt(vm.refresh) * 1000).toString()
+
+            vm.dashboardLink = trustSrc(DashboardService.getDashboard($state.params.tenant, $state.params.id) + `?_g=(refreshInterval:(pause:${autoRefresh},value:${ref}),time:(from:'${from}',mode:${mode},to:'${to}'))`);
+        }
 
         $scope.options = {
             locale: { cancelLabel: 'Clear' },
@@ -59,49 +132,6 @@
 
             }
         };
-
-        $scope.startDate = moment();
-        $scope.endDate = moment();
-
-        function getInterval(int){
-            switch (int) {
-                case "Last 15 minutes":
-                    return "now-15m";
-                case "Last 30 minutes":
-                    return "now-30m";
-                case "Today":
-                    return "now/d";
-                case "Last 7 Days":
-                    return "now/w";
-                case "Last 30 Days":
-                    return "now-30d";
-                case "Last Year":
-                    return "now-1y";
-                default:
-                    return "now-15m";
-            }
-        }
-
-        $scope.sync = function () {
-
-            var startDate = $('#range').data('daterangepicker').startDate.toISOString();
-            var endDate = $('#range').data('daterangepicker').endDate.toISOString();      
-            var mode = "absolute";//quick
-            var from = "now-15m";
-            var to = "now";
-
-            if($('#range').data('daterangepicker').chosenLabel === null){
-                mode = "absolute";
-                from = startDate;
-                to = endDate;
-            } else {
-                mode = "quick";
-                from = getInterval($('#range').data('daterangepicker').chosenLabel);
-                to = "now";
-            }
-
-            vm.dashboardLink = trustSrc(DashboardService.getDashboard($state.params.tenant, $state.params.id) + `?_g=(refreshInterval:(pause:!t,value:${vm.refresh * 1000}),time:(from:'${from}',mode:${mode},to:'${to}'))`);
-        }
 
         vm.onLoad();
     }

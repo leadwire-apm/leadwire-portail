@@ -19,7 +19,7 @@
             AppCtrlFN,
         ]);
 
-    function AppCtrlFN (
+    function AppCtrlFN(
         $scope,
         $state,
         $rootScope,
@@ -38,7 +38,7 @@
         onLoad();
 
         $scope.COMPAGNE_ENABLED = CONFIG.COMPAGNE_ENABLED;
-        $scope.LOGIN_METHOD     = CONFIG.LOGIN_METHOD;
+        $scope.LOGIN_METHOD = CONFIG.LOGIN_METHOD;
 
         $scope.$on('user:updated', function (event, data) {
             $rootScope.user = data;
@@ -46,9 +46,9 @@
         $scope.$on('update:image', function (event, data) {
             $scope.$broadcast('reload:src', data);
         });
-        $scope.$on('new:app', function(event, data) {
+        $scope.$on('new:app', function (event, data) {
             UserService.get($localStorage.user.id)
-                .then(function(user){
+                .then(function (user) {
                     $rootScope.user = $localStorage.user = user;
                     $scope.$apply();
                 })
@@ -58,7 +58,7 @@
                     });
                     toastr.error(MESSAGES_CONSTANTS.ERROR);
                 })
-            ;
+                ;
         });
 
         $scope.$on('set:apps', function (event, apps) {
@@ -164,7 +164,7 @@
             }
         };
 
-        $scope.loadApplications = function() {
+        $scope.loadApplications = function () {
             ApplicationFactory.findMyApplications().then(function (response) {
                 $localStorage.applications = response.data;
                 $scope.$emit('set:apps', response.data);
@@ -182,17 +182,22 @@
             delete $localStorage.selectedEnvId;
             delete $localStorage.selectedEnv;
 
+            delete $localStorage.date;
+            delete $localStorage.refresh;
+            delete $localStorage.chosenLabel;
+            delete $localStorage.mode;
+
             $auth.logout()
                 .then(function () {
                     toastr.info(MESSAGES_CONSTANTS.LOGOUT_SUCCESS);
-                    if(CONFIG.LOGIN_METHOD === "proxy")
-                    window.location.href = 'https://auth.leadwire.io/?logout=1';
+                    if (CONFIG.LOGIN_METHOD === "proxy")
+                        window.location.href = 'https://auth.leadwire.io/?logout=1';
                     else
-                    $location.path('/login');
+                        $location.path('/login');
                 });
         };
 
-        function onLoad () {
+        function onLoad() {
             $scope.paginator = Paginator.create({
                 start: 0,
                 items: $scope.applications,
