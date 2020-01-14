@@ -209,6 +209,11 @@
             delete $localStorage.selectedEnvId;
             delete $localStorage.selectedEnv;
 
+            delete $localStorage.date;
+            delete $localStorage.refresh;
+            delete $localStorage.chosenLabel;
+            delete $localStorage.mode;
+
             $auth.logout()
                 .then(function () {
                     toastr.info(MESSAGES_CONSTANTS.LOGOUT_SUCCESS);
