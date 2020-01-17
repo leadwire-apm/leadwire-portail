@@ -21,6 +21,13 @@
                  *
                  * @returns {Promise}
                  */
+                findAllMinimalist: function () {
+                    return $http.get(CONFIG.BASE_URL + 'api/app/all/minimalist');
+                },
+                /**
+                 *
+                 * @returns {Promise}
+                 */
                 findMyDashboard: function (id) {
                     return $http.get(
                         CONFIG.BASE_URL + 'api/app/' + id + '/dashboards',

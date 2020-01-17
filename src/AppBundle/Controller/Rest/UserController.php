@@ -45,13 +45,23 @@ class UserController extends Controller
     }
 
     /**
-     * @Route("/list/acl/management", methods="GET")
+     * @Route("/acl/list/management", methods="GET")
      *
      * @return Response
      */
     public function listUsersACLManagementAction(Request $request, UserService $userService)
     {
         $users = $userService->listUsersByRole("all");
+
+        $users = array_map(function ($user) {
+            return [
+                "id" => $user->getId(),
+                "name" => $user->getName(),
+                "username" => $user->getUsername(),
+                "email" => $user->getEmail(),
+                "acls" => $user->acl(),
+            ];
+        }, $users);
 
         return $this->renderResponse($users, Response::HTTP_OK, []);
     }

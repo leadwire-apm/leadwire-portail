@@ -47,6 +47,17 @@
 
             };
 
+            service.findAllMinimalist = function () {
+                return EnvironementFactory.getAllMinimalist()
+                    .then(function (response) {
+                        return response.data;
+                    })
+                    .catch(function (error) {
+                        throw new Error(error);
+                    });
+
+            };
+
             service.update = function (environment) {
                 return EnvironementFactory.update(environment)
                     .then(function (response) {

@@ -61,6 +61,16 @@
                     });
             };
 
+            service.allMinimalist = function () {
+                return ApplicationFactory.findAllMinimalist()
+                    .then(function (response) {
+                        return response.data;
+                    })
+                    .catch(function (error) {
+                        throw new Error(error);
+                    });
+            };
+
             service.toggleEnabled = function (applicationId) {
                 return ApplicationFactory.toggleEnabled(applicationId)
                     .then(function (response) {
@@ -73,6 +83,17 @@
 
             service.find = function (id) {
                 return ApplicationFactory.get(id)
+                    .then(function (res) {
+                        return res.data;
+                    })
+                    .catch(function (err) {
+                        throw new Error(err);
+                    });
+
+            };
+
+            service.findMinimalist = function (id) {
+                return ApplicationFactory.get(id, 'minimalist')
                     .then(function (res) {
                         return res.data;
                     })

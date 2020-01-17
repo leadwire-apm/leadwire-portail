@@ -31,7 +31,15 @@ class AccessLevelController extends Controller
             $acl = $request->getContent();
             $user = $accessLevelService->update(json_decode($acl, true));
 
-            return $this->renderResponse($user, Response::HTTP_OK, ["acl"]);
+            $payload = [
+                "id" => $user->getId(),
+                "name" => $user->getName(),
+                "username" => $user->getUsername(),
+                "email" => $user->getEmail(),
+                "acls" => $user->acl(),
+            ];
+
+            return $this->renderResponse($payload, Response::HTTP_OK, []);
         } catch (\Exception $e) {
             return $this->exception($e->getMessage(), 400);
         }

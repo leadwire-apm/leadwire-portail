@@ -390,6 +390,23 @@ class ApplicationController extends Controller
     }
 
     /**
+     * @Route("/all/minimalist", methods="GET")
+     *
+     * @param Request $request
+     * @param ApplicationService $applicationService
+     *
+     * @return Response
+     */
+    public function getAllMinimalistApplicationsAction(Request $request, ApplicationService $applicationService)
+    {
+        $this->denyAccessUnlessGranted([User::ROLE_ADMIN, User::ROLE_SUPER_ADMIN]);
+
+        $applications = $applicationService->getApplications();
+
+        return $this->renderResponse($applications, Response::HTTP_OK, ['minimalist']);
+    }
+
+    /**
      * @Route("/{id}/activate-toggle", methods="PUT")
      *
      * @param Request $request

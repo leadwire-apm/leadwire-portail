@@ -129,12 +129,12 @@
     <div class="panel-body" ng-if="ctrl.view.users">
         <div class="row no-margin">
             <div class="col-lg-12 ">
-                <div class="row mb10" ng-if="!ctrl.selectedApplication">
+                <div class="row mb10" ng-if="ctrl.selectedApplication == 'all'">
                     <a prevent-default class="btn btn-primary pull-left" ng-click="ctrl.loadEnvironments()">
                         <i class="fa fa-arrow-left"></i> Back to environments list
                     </a>
                 </div>
-                <div class="row mb10" ng-if="ctrl.selectedApplication">
+                <div class="row mb10" ng-if="ctrl.selectedApplication != 'all'">
                     <a prevent-default class="btn btn-primary pull-left" ng-click="ctrl.loadApplications(ctrl.selectedEnvironment)">
                         <i class="fa fa-arrow-left"></i> Back to applications list
                     </a>
@@ -170,8 +170,8 @@
                                 </span>
                             </td>
                             <td data-title="Shared Dashboard" data-label="Shared Dashboard">
-                                <input
-                                    class="shared_dashboard"
+                                <label class="container">Read
+                                  <input
                                     type="radio"
                                     name="shared_dashboard_[[ $index ]]"
                                     value="READ"
@@ -182,9 +182,11 @@
                                         'SHARED_DASHBOARD_LEVEL',
                                         'READ'
                                     )"
-                                    ng-checked="user.normalizeAccessLevels[ctrl.selectedEnvironment][ctrl.selectedApplication]['SHARED_DASHBOARD_LEVEL'] == 'READ'" /> Read
-                                &nbsp;&nbsp;
-                                <input
+                                    ng-checked="user.acls[ctrl.selectedEnvironment][ctrl.selectedApplication]['SHARED_DASHBOARD_LEVEL'] == 'READ'" />
+                                  <span class="checkmark" ng-class="user.acls[ctrl.selectedEnvironment][ctrl.selectedApplication]['SHARED_DASHBOARD_LEVEL']"></span>
+                                </label>
+                                <label class="container">Write
+                                  <input
                                     class="shared_dashboard"
                                     type="radio"
                                     name="shared_dashboard_[[ $index ]]"
@@ -196,11 +198,13 @@
                                         'SHARED_DASHBOARD_LEVEL',
                                         'INDICES_ALL'
                                     )"
-                                    ng-checked="user.normalizeAccessLevels[ctrl.selectedEnvironment][ctrl.selectedApplication]['SHARED_DASHBOARD_LEVEL'] == 'INDICES_ALL'" /> Write
+                                    ng-checked="user.acls[ctrl.selectedEnvironment][ctrl.selectedApplication]['SHARED_DASHBOARD_LEVEL'] == 'INDICES_ALL'" />
+                                  <span class="checkmark" ng-class="user.acls[ctrl.selectedEnvironment][ctrl.selectedApplication]['SHARED_DASHBOARD_LEVEL']"></span>
+                                </label>
                             </td>
                             <td data-title="App Dashboard" data-label="App Dashboard">
-                                <input
-                                    class="app_dashboard"
+                                <label class="container">Read
+                                  <input
                                     type="radio"
                                     name="app_dashboard_[[ $index ]]"
                                     value="READ"
@@ -211,9 +215,11 @@
                                         'APP_DASHBOARD_LEVEL',
                                         'READ'
                                     )"
-                                    ng-checked="user.normalizeAccessLevels[ctrl.selectedEnvironment][ctrl.selectedApplication]['APP_DASHBOARD_LEVEL'] == 'READ'" /> Read
-                                &nbsp;&nbsp;
-                                <input
+                                    ng-checked="user.acls[ctrl.selectedEnvironment][ctrl.selectedApplication]['APP_DASHBOARD_LEVEL'] == 'READ'" />
+                                  <span class="checkmark" ng-class="user.acls[ctrl.selectedEnvironment][ctrl.selectedApplication]['APP_DASHBOARD_LEVEL']"></span>
+                                </label>
+                                <label class="container">Write
+                                  <input
                                     class="app_dashboard"
                                     type="radio"
                                     name="app_dashboard_[[ $index ]]"
@@ -225,11 +231,13 @@
                                         'APP_DASHBOARD_LEVEL',
                                         'INDICES_ALL'
                                     )"
-                                    ng-checked="user.normalizeAccessLevels[ctrl.selectedEnvironment][ctrl.selectedApplication]['APP_DASHBOARD_LEVEL'] == 'INDICES_ALL'" /> Write
+                                    ng-checked="user.acls[ctrl.selectedEnvironment][ctrl.selectedApplication]['APP_DASHBOARD_LEVEL'] == 'INDICES_ALL'" />
+                                  <span class="checkmark" ng-class="user.acls[ctrl.selectedEnvironment][ctrl.selectedApplication]['APP_DASHBOARD_LEVEL']"></span>
+                                </label>
                             </td>
                             <td data-title="App Data" data-label="App Data">
-                                <input
-                                    class="app_data"
+                                <label class="container">Read
+                                  <input
                                     type="radio"
                                     name="app_data_[[ $index ]]"
                                     value="READ"
@@ -240,9 +248,11 @@
                                         'APP_DATA_LEVEL',
                                         'READ'
                                     )"
-                                    ng-checked="user.normalizeAccessLevels[ctrl.selectedEnvironment][ctrl.selectedApplication]['APP_DATA_LEVEL'] == 'READ'" /> Read
-                                &nbsp;&nbsp;
-                                <input
+                                    ng-checked="user.acls[ctrl.selectedEnvironment][ctrl.selectedApplication]['APP_DATA_LEVEL'] == 'READ'" />
+                                  <span class="checkmark" ng-class="user.acls[ctrl.selectedEnvironment][ctrl.selectedApplication]['APP_DATA_LEVEL']"></span>
+                                </label>
+                                <label class="container">Write
+                                  <input
                                     class="app_data"
                                     type="radio"
                                     name="app_data_[[ $index ]]"
@@ -254,7 +264,9 @@
                                         'APP_DATA_LEVEL',
                                         'INDICES_ALL'
                                     )"
-                                    ng-checked="user.normalizeAccessLevels[ctrl.selectedEnvironment][ctrl.selectedApplication]['APP_DATA_LEVEL'] == 'INDICES_ALL'" /> Write
+                                    ng-checked="user.acls[ctrl.selectedEnvironment][ctrl.selectedApplication]['APP_DATA_LEVEL'] == 'INDICES_ALL'" />
+                                  <span class="checkmark" ng-class="user.acls[ctrl.selectedEnvironment][ctrl.selectedApplication]['APP_DATA_LEVEL']"></span>
+                                </label>
                             </td>
                         </tr>
                         </tbody>
