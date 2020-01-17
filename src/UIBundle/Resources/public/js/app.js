@@ -34,6 +34,9 @@ angular.module('leadwireApp', [
             ioSocket: io.connect('https://' + APP_DOMAIN + ':' + SOCKET_IO_PORT, {
                 secure: true,
                 reconnect: true,
+                reconnectionDelay: 1000,
+                reconnectionDelayMax: 4000,
+                reconnectionAttempts: 4,
                 requestCert: false,
                 rejectUnauthorized : false
             })

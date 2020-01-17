@@ -1055,15 +1055,51 @@ class User implements AdvancedUserInterface
      *
      * @return array
      */
-    public function normalizeAccessLevels()
+    public function acl()
+    {
+        return array_merge_recursive($this->normalizeAccessLevels(), $this->normalizeAccessLevelsEnv());
+    }
+
+    /**
+     * Normalize access levels
+     *
+     * @return array
+     */
+    private function normalizeAccessLevels()
     {
         $acls = [];
 
         foreach ($this->accessLevels as $acl) {
-            $acls
-                [$acl->getEnvironment()->getId()]
-                [$acl->getApplication()->getId()]
-                [$acl->getLevel()] = $acl->getAccess();
+            $env = $acl->getEnvironment();
+            $app = $acl->getApplication();
+            $acls[$env->getId()][$app->getId()][$acl->getLevel()] = $acl->getAccess();
+        }
+
+        return $acls;
+    }
+
+    /**
+     * Normalize access levels env
+     *
+     * @return array
+     */
+    private function normalizeAccessLevelsEnv()
+    {
+        $appAcls = $this->normalizeAccessLevels();
+        $acls = [];
+
+        foreach ($this->accessLevels as $acl) {
+            $env = $acl->getEnvironment();
+            $access = [];
+            foreach ($env->getApplications() as $app) {
+                if (empty($access)) {
+                    $access[$env->getId()][$acl->getLevel()] = $acl->getAccess();
+                    $acls[$env->getId()]["all"][$acl->getLevel()] = $acl->getAccess();
+                }
+                if ($access[$env->getId()][$acl->getLevel()] != $appAcls[$env->getId()][$app->getId()][$acl->getLevel()]) {
+                    $acls[$env->getId()]["all"][$acl->getLevel()] = "HYBRID";
+                }
+            }
         }
 
         return $acls;

@@ -62,11 +62,11 @@
             vm.flipActivityIndicator('isLoading');
             vm.selectedEnvironment = null;
             vm.selectedEnvironmentName = null;
-            vm.selectedApplication = null;
+            vm.selectedApplication = 'all';
             vm.selectedApplicationName = null;
             vm.reset();
             // should send some criteria
-            EnvironmentService.list()
+            EnvironmentService.findAllMinimalist()
                 .then(function (environments) {
                     vm.flipActivityIndicator('isLoading');
                     vm.environments = environments;
@@ -79,11 +79,11 @@
 
         vm.loadApplications = function (idEnvironment) {
             vm.flipActivityIndicator('isLoading');
-            vm.selectedApplication = null;
+            vm.selectedApplication = 'all';
             vm.selectedApplicationName = null;
             vm.reset();
             // should send some criteria
-            ApplicationService.all()
+            ApplicationService.allMinimalist()
                 .then(function (applications) {
                     vm.flipActivityIndicator('isLoading');
                     vm.applications = applications;
@@ -103,7 +103,7 @@
         vm.loadUsers = function (idEnvironment, idApplication) {
             console.log(idApplication);
             vm.flipActivityIndicator('isLoading');
-            vm.selectedApplication = null;
+            vm.selectedApplication = 'all';
             vm.selectedApplicationName = null;
             vm.reset();
             // should send some criteria
@@ -118,11 +118,11 @@
                     }).catch(function(error) {
                         vm.flipActivityIndicator('isLoading');
                     });
-                    vm.selectedApplication = idApplication;
+                    vm.selectedApplication = idApplication != null ? idApplication : 'all';
                     if (idApplication == null) {
                         vm.selectedApplicationName = 'all';
                     } else {
-                        ApplicationService.find(idApplication).then(function(application) {
+                        ApplicationService.findMinimalist(idApplication).then(function(application) {
                             vm.selectedApplicationName = application.name;
                         }).catch(function(error) {
                             vm.flipActivityIndicator('isLoading');
@@ -181,7 +181,7 @@
                 },
                 selectedEnvironment: null,
                 selectedEnvironmentName: null,
-                selectedApplication: null,
+                selectedApplication: 'all',
                 selectedApplicationName: null,
             });
             vm.loadEnvironments();

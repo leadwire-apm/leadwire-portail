@@ -109,50 +109,49 @@ class SearchGuardService
         $applications = $this->applicationManager->getBy(['removed' => false]);
 
         /** @var Application $application */
-        foreach ($applications as $application) {
-            foreach ($application->getEnvironments() as $environment) {
-                $serialized .= $this->serializer->serialize(
-                    [
-                        "sg_{$environment->getName()}_{$application->getName()}_index" => [
-                            'cluster' => ['CLUSTER_COMPOSITE_OPS'],
-                            'indices' => [
-                                "*-sentinl-*" => [
-                                    "*" => ["READ"],
-                                ],
-                                "*-{$environment->getName()}-{$application->getName()}-*" => [
-                                    "*" => ["READ"],
-                                ],
-                            ],
-                        ],
-                    ],
-                    'yml'
-                );
+        // foreach ($applications as $application) {
+        //     foreach ($application->getEnvironments() as $environment) {
+        //         $serialized .= $this->serializer->serialize(
+        //             [
+        //                 "sg_{$environment->getName()}_{$application->getName()}_index" => [
+        //                     'cluster' => ['CLUSTER_COMPOSITE_OPS'],
+        //                     'indices' => [
+        //                         "*-sentinl-*" => [
+        //                             "*" => ["READ"],
+        //                         ],
+        //                         "*-{$environment->getName()}-{$application->getName()}-*" => [
+        //                             "*" => ["READ"],
+        //                         ],
+        //                     ],
+        //                 ],
+        //             ],
+        //             'yml'
+        //         );
 
-                $serialized .= $this->serializer->serialize(
-                    [
-                        "sg_{$environment->getName()}_{$application->getName()}_kibana_index" => [
-                            'cluster' => ['CLUSTER_COMPOSITE_OPS'],
-                            'indices' => [
-                                "?kibana_{$environment->getName()}_{$application->getApplicationIndex()}" => [
-                                    "*" => [
-                                        "READ",
-                                        "indices:data/read/get",
-                                        "indices:data/read/search",
-                                    ],
-                                ],
-                                "?kibana_{$environment->getName()}_{$application->getSharedIndex()}" => ["*" => ["INDICES_ALL"]],
-                            ],
-                        ],
-                    ],
-                    'yml'
-                );
-            }
-        }
+        //         $serialized .= $this->serializer->serialize(
+        //             [
+        //                 "sg_{$environment->getName()}_{$application->getName()}_kibana_index" => [
+        //                     'cluster' => ['CLUSTER_COMPOSITE_OPS'],
+        //                     'indices' => [
+        //                         "?kibana_{$environment->getName()}_{$application->getApplicationIndex()}" => [
+        //                             "*" => [
+        //                                 "READ",
+        //                                 "indices:data/read/get",
+        //                                 "indices:data/read/search",
+        //                             ],
+        //                         ],
+        //                         "?kibana_{$environment->getName()}_{$application->getSharedIndex()}" => ["*" => ["INDICES_ALL"]],
+        //                     ],
+        //                 ],
+        //             ],
+        //             'yml'
+        //         );
+        //     }
+        // }
 
         $users = $this->userManager->getActiveUsers();
         /** @var User $user */
         foreach ($users as $user) {
-            $permissions = $this->permissionManager->getPermissionsForUser($user);
             $accessLevels = $user->getAccessLevels();
 
             $indices = [];
@@ -164,55 +163,39 @@ class SearchGuardService
                         "indices:data/read/field_caps",
                     ],
                 ];
-            }
-            /** @var ApplicationPermission $permission */
-            // foreach ($permissions as $permission) {
-            //     $indices["*-{$accessLevel->getEnvironment()->getName()}-{$permission->getApplication()->getUuid()}-*"] = [
-            //         "*" => [
-            //             "READ",
-            //             "indices:data/read/field_caps[index]",
-            //             "indices:data/read/field_caps",
-            //         ],
-            //     ];
-            // }
-            foreach ($accessLevels as $accessLevel) {
-                $env = $accessLevel->getEnvironment();
-                $app = $accessLevel->getApplication();
-                $acl = [
-                    "READ" => [
-                        "READ",
-                        "indices:data/read/field_caps[index]",
-                        "indices:data/read/field_caps",
-                    ],
-                    "INDICES_ALL" => [
-                        "INDICES_ALL",
-                    ]
-                ];
-                if ($accessLevel->getLevel() == AccessLevel::APP_DATA_LEVEL) {
-                    $indices["*-{$env->getName()}-{$app->getName()}-*"] = [
-                        "*" => $acl[$accessLevel->getAccess()],
+            } else {
+                foreach ($accessLevels as $accessLevel) {
+                    $env = $accessLevel->getEnvironment();
+                    $app = $accessLevel->getApplication();
+                    $acl = [
+                        "READ" => [
+                            "READ",
+                            "indices:data/read/field_caps[index]",
+                            "indices:data/read/field_caps",
+                        ],
+                        "INDICES_ALL" => [
+                            "INDICES_ALL",
+                        ]
                     ];
-                }
-                $kibanaAcl = [];
-                if ($accessLevel->getLevel() == AccessLevel::APP_DASHBOARD_LEVEL) {
-                    $kibanaAcl["?kibana_{$env->getName()}_{$app->getApplicationIndex()}"] = [
-                        "*" => $acl[$accessLevel->getAccess()]
-                    ];
-                }
-                if ($accessLevel->getLevel() == AccessLevel::SHARED_DASHBOARD_LEVEL) {
-                    $kibanaAcl["?kibana_{$env->getName()}_{$app->getSharedIndex()}"] = [
-                        "*" => $acl[$accessLevel->getAccess()]
-                    ];
-                }
-                // echo
-                //     $accessLevel->getApplication()->getName()
-                //     . ": " .
-                //     $accessLevel->getApplication()->getApplicationIndex()
-                //     .
-                //     PHP_EOL
-                // ;
+                    if ($accessLevel->getLevel() == AccessLevel::APP_DATA_LEVEL) {
+                        $indices["*-{$env->getName()}-{$app->getName()}-*"] = [
+                            "*" => $acl[$accessLevel->getAccess()],
+                        ];
+                    }
+                    $kibanaAcl = [];
+                    if ($accessLevel->getLevel() == AccessLevel::APP_DASHBOARD_LEVEL) {
+                        $kibanaAcl["?kibana_{$env->getName()}_{$app->getApplicationIndex()}"] = [
+                            "*" => $acl[$accessLevel->getAccess()]
+                        ];
+                    }
+                    if ($accessLevel->getLevel() == AccessLevel::SHARED_DASHBOARD_LEVEL) {
+                        $kibanaAcl["?kibana_{$env->getName()}_{$app->getSharedIndex()}"] = [
+                            "*" => $acl[$accessLevel->getAccess()]
+                        ];
+                    }
 
-                $indices = array_merge($indices, $kibanaAcl);
+                    $indices = array_merge($indices, $kibanaAcl);
+                }
             }
 
 

@@ -25,6 +25,7 @@ class Application
      * @ODM\Id("strategy=auto")
      * @JMS\Type("string")
      * @JMS\Expose
+     * @JMS\Groups({"Default", "minimalist"})
      */
     private $id;
 
@@ -35,7 +36,7 @@ class Application
      * @ODM\UniqueIndex()
      * @JMS\Type("string")
      * @JMS\Expose
-     * @JMS\Groups({"Default"})
+     * @JMS\Groups({"Default", "minimalist"})
      */
     private $uuid;
 
@@ -47,7 +48,7 @@ class Application
      * @Assert\Length(min=5, max=32)
      * @JMS\Type("string")
      * @JMS\Expose
-     * @JMS\Groups({"Default"})
+     * @JMS\Groups({"Default", "minimalist"})
      */
     private $name;
 

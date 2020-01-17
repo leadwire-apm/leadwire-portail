@@ -86,7 +86,7 @@ class AccessLevelService
         try {
             $this->processService->emit("heavy-operations-in-progress", "Updating SearchGuard Configuration");
             $user = $this->userManager->getOneBy(['id' => $payload['user']]);
-            if (isset($payload['app'])) {
+            if (isset($payload['app']) && $payload['app'] != 'all') {
                 $this->updateByApplication($user, $payload['env'], $payload['app'], $payload['level'], $payload['access']);
             } else {
                 $this->updateByEnvironment($user, $payload['env'], $payload['level'], $payload['access']);

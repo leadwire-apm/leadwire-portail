@@ -112,6 +112,17 @@ class EnvironmentController extends Controller
     }
 
     /**
+     * @Route("/list/minimalist", methods="GET")
+     * @param Request $request
+     * @param EnvironmentService $environmentService
+     * @return Response
+     */
+    public function getAllMinimalistEnvironments(Request $request, EnvironmentService $environmentService)
+    {
+        return $this->renderResponse($environmentService->list(), Response::HTTP_OK, ['minimalist']);
+    }
+
+    /**
      * @Route("/default", methods="GET")
      *
      * @param Request $request
