@@ -65,7 +65,7 @@
                  *
                  * @returns {Promise}
                  */
-                setDefault: function ($id) {
+                setDefault: function (id) {
                     return $http.put(
                         CONFIG.BASE_URL + 'api/environment/' + id + '/default',
                     );

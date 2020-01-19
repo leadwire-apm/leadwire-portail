@@ -332,12 +332,19 @@ class ApplicationController extends Controller
      *
      * @param Request $request
      * @param ApplicationService $applicationService
+     * @param ProcessService $processService
+     * @param SearchGuardService $sgService
      * @param string $id
      *
      * @return Response
      */
-    public function deleteApplicationAction(Request $request, ApplicationService $applicationService, $id)
-    {
+    public function deleteApplicationAction(
+        Request $request,
+        ApplicationService $applicationService,
+        ProcessService $processService,
+        SearchGuardService $sgService,
+        $id
+    ) {
         $application = $applicationService->getApplication($id);
 
         if ($application !== null) {
@@ -346,9 +353,13 @@ class ApplicationController extends Controller
 
             if ($accessGrantedByOwnership === true || $accessGrantedByRole === true) {
                 $applicationService->deleteApplication($id);
+                $processService->emit("heavy-operations-in-progress", "Configuring SearchGuard");
+                $sgService->updateSearchGuardConfig();
+                $processService->emit("heavy-operations-done", "Succeeded");
 
                 return $this->renderResponse(null, Response::HTTP_OK);
             } else {
+                $processService->emit("heavy-operations-done", "Failed");
                 throw new UnauthorizedHttpException('', "Unauthorized action");
             }
         } else {
@@ -361,13 +372,23 @@ class ApplicationController extends Controller
      *
      * @param Request $request
      * @param ApplicationService $applicationService
+     * @param ProcessService $processService
+     * @param SearchGuardService $sgService
      * @param string $id
      *
      * @return Response
      */
-    public function removeApplicationAction(Request $request, ApplicationService $applicationService, $id)
-    {
+    public function removeApplicationAction(
+        Request $request,
+        ApplicationService $applicationService,
+        ProcessService $processService,
+        SearchGuardService $sgService,
+        $id
+    ) {
         $applicationService->removeUserApplication($id, $this->getUser());
+        $processService->emit("heavy-operations-in-progress", "Configuring SearchGuard");
+        $sgService->updateSearchGuardConfig();
+        $processService->emit("heavy-operations-done", "Succeeded");
 
         return new JsonResponse(null, Response::HTTP_ACCEPTED);
     }
@@ -401,7 +422,9 @@ class ApplicationController extends Controller
     {
         $this->denyAccessUnlessGranted([User::ROLE_ADMIN, User::ROLE_SUPER_ADMIN]);
 
-        $applications = $applicationService->getApplications();
+        $applications = array_filter($applicationService->getApplications(), function($app) {
+            return !$app->isRemoved();
+        });
 
         return $this->renderResponse($applications, Response::HTTP_OK, ['minimalist']);
     }

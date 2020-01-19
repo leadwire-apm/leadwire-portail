@@ -8,6 +8,9 @@ use AppBundle\Exception\DuplicateApplicationNameException;
 use AppBundle\Manager\EnvironmentManager;
 use AppBundle\Manager\ApplicationManager;
 use AppBundle\Service\SearchGuardService;
+use AppBundle\Manager\UserManager;
+use AppBundle\Manager\AccessLevelManager;
+use AppBundle\Document\AccessLevel;
 
 use JMS\Serializer\DeserializationContext;
 use JMS\Serializer\SerializerInterface;
@@ -49,6 +52,16 @@ class EnvironmentService
      */
     private $searchGuardService;
 
+    /**
+     * @var UserManager
+     */
+    private $userManager;
+
+    /**
+     * @var AccessLevelManager
+     */
+    private $accessLevelManager;
+
 
     /**
      * Constructor
@@ -58,19 +71,25 @@ class EnvironmentService
      * @param SerializerInterface $serializer
      * @param LoggerInterface $logger
      * @param SearchGuardService $searchGuardService
+     * @param UserManager $userManager
+     * @param AccessLevelManager $accessLevelManager
      */
     public function __construct(
         EnvironmentManager $environmentManager,
         ApplicationManager $applicationManager,
         SerializerInterface $serializer,
         LoggerInterface $logger,
-        SearchGuardService $searchGuardService
+        SearchGuardService $searchGuardService,
+        UserManager $userManager,
+        AccessLevelManager $accessLevelManager
     ) {
         $this->environmentManager = $environmentManager;
         $this->applicationManager = $applicationManager;
         $this->serializer = $serializer;
         $this->logger = $logger;
         $this->searchGuardService = $searchGuardService;
+        $this->userManager = $userManager;
+        $this->accessLevelManager = $accessLevelManager;
     }
 
 
@@ -86,8 +105,39 @@ class EnvironmentService
         $environment = $this
             ->serializer
             ->deserialize($json, Environment::class, 'json');
+        if (count($this->getAll()) == 0) {
+            $environment->setDefault(true);
+        }
 
         $id = $this->environmentManager->update($environment);
+
+        $env = $this->getById($id);
+        /**
+         * Add applications
+         */
+        foreach ($this->applicationManager->getAll() as $application) {
+            $application->addEnvironment($env);
+            $this->applicationManager->update($application);
+        }
+
+        /**
+         * create  acls
+         */
+        foreach ($this->userManager->getAll() as $user) {
+            $acls = $user->getAccessLevels();
+            foreach ($acls as $acl) {
+                $user
+                    ->addAccessLevel((new AccessLevel())
+                        ->setEnvironment($env)
+                        ->setApplication($acl->getApplication())
+                        ->setLevel($acl->getLevel())
+                        ->setAccess($acl->getAccess())
+                    )
+                ;
+            }
+            $this->userManager->update($user);
+        }
+
         $this->searchGuardService->updateSearchGuardConfig();
 
         return $id;
@@ -95,7 +145,6 @@ class EnvironmentService
 
     public function update($json)
     {
-
         $context = new DeserializationContext();
         $context->setGroups(['minimalist']);
         $environment = $this->serializer->deserialize($json, Environment::class, 'json', $context);
@@ -116,6 +165,18 @@ class EnvironmentService
                 $application->removeEnvironment($environment);
                 $this->applicationManager->update($application);
             }
+
+            /**
+             * remove acls
+             */
+            foreach ($this->userManager->getAll() as $user) {
+                $acls = $user->removeAccessLevelsEnv($id);
+                $this->userManager->update($user);
+                foreach ($acls as $acl) {
+                    $this->accessLevelManager->delete($acl);
+                }
+            }
+
             $this->searchGuardService->updateSearchGuardConfig();
             return $this->environmentManager->delete($environment);
         }
@@ -144,12 +205,8 @@ class EnvironmentService
     public function getDefault()
     {
         $environment = $this->environmentManager->getOneBy(['default' => true]);
-        if ($environment === null) {
-            throw new HttpException(Response::HTTP_NOT_FOUND, "Environment not Found");
-        } else {
-            return $environment;
-        }
 
+        return $environment;
     }
 
     /**
@@ -167,6 +224,7 @@ class EnvironmentService
             if ((string)$environment->getId() == $id) {
                 $environment->setDefault(true);
             }
+            $this->environmentManager->update($environment);
         }
 
         $environment = $this->environmentManager->getOneBy(['default' => true]);

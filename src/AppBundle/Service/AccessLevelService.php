@@ -8,6 +8,8 @@ use AppBundle\Exception\DuplicateApplicationNameException;
 use AppBundle\Manager\UserManager;
 use AppBundle\Manager\AccessLevelManager;
 use AppBundle\Service\SearchGuardService;
+use AppBundle\Service\EnvironmentService;
+use AppBundle\Service\ApplicationService;
 use AppBundle\Service\ProcessService;
 
 use JMS\Serializer\DeserializationContext;
@@ -38,6 +40,16 @@ class AccessLevelService
     private $searchGuardService;
 
     /**
+     * @var EnvironmentService $environmentService
+     */
+    private $environmentService;
+
+    /**
+     * @var ApplicationService $applicationService
+     */
+    private $applicationService;
+
+    /**
      * @var SerializerInterface
      */
     private $serializer;
@@ -54,6 +66,8 @@ class AccessLevelService
      * @param UserManager         $userManager
      * @param AccessLevelManager  $accessLevelManager
      * @param SearchGuardService  $searchGuardService
+     * @param EnvironmentService  $environmentService
+     * @param ApplicationService  $applicationService
      * @param ProcessService      $processService
      * @param SerializerInterface $serializer
      * @param LoggerInterface     $logger
@@ -62,6 +76,8 @@ class AccessLevelService
         UserManager $userManager,
         AccessLevelManager $accessLevelManager,
         SearchGuardService $searchGuardService,
+        EnvironmentService $environmentService,
+        ApplicationService $applicationService,
         ProcessService $processService,
         SerializerInterface $serializer,
         LoggerInterface $logger
@@ -69,6 +85,8 @@ class AccessLevelService
         $this->userManager = $userManager;
         $this->accessLevelManager = $accessLevelManager;
         $this->searchGuardService = $searchGuardService;
+        $this->environmentService = $environmentService;
+        $this->applicationService = $applicationService;
         $this->processService = $processService;
         $this->serializer = $serializer;
         $this->logger = $logger;
@@ -102,32 +120,54 @@ class AccessLevelService
 
     private function updateByEnvironment(User $user, $env, $level, $access)
     {
-        foreach ($user->getAccessLevels() as $accessLevel) {
-            if (
-                $env == (string) $accessLevel->getEnvironment()->getId()
-                && $level == $accessLevel->getLevel()
-            ) {
-                $accessLevel->setAccess($access);
-                $this->accessLevelManager->update($accessLevel);
-                $this->searchGuardService->updateSearchGuardConfig();
+        $environment = $this->environmentService->getById($env);
+        $accessLevels = $user->getAccessLevelsEnv($env, $level);
+        foreach ($accessLevels as $accessLevel) {
+            $user->removeAccessLevel($accessLevel);
+            $accessLevel->setAccess($access);
+            $user->addAccessLevel($accessLevel);
+        }
+        if (empty($accessLevels)) {
+            foreach ($environment->getApplications() as $application) {
+                if ($application->isRemoved()) {
+                    continue;
+                }
+                $user
+                    ->addAccessLevel((new AccessLevel())
+                        ->setEnvironment($environment)
+                        ->setApplication($application)
+                        ->setLevel($level)
+                        ->setAccess($access)
+                    )
+                ;
             }
         }
+        $this->userManager->update($user);
+        $this->searchGuardService->updateSearchGuardConfig();
     }
 
     private function updateByApplication(User $user, $env, $app, $level, $access)
     {
-        $acl = null;
-        foreach ($user->getAccessLevels() as $accessLevel) {
-            if (
-                $env == (string) $accessLevel->getEnvironment()->getId()
-                && $app == (string) $accessLevel->getApplication()->getId()
-                && $level == $accessLevel->getLevel()
-            ) {
-                $accessLevel->setAccess($access);
-                $this->accessLevelManager->update($accessLevel);
-                $this->searchGuardService->updateSearchGuardConfig();
-            }
+        $environment = $this->environmentService->getById($env);
+        $application = $this->applicationService->getById($app);
+        $accessLevel = $user->getAccessLevelsApp($env, $app, $level);
+        if ($accessLevel == null) {
+            $user
+                ->addAccessLevel((new AccessLevel())
+                    ->setEnvironment($environment)
+                    ->setApplication($application)
+                    ->setLevel($level)
+                    ->setAccess($access)
+                )
+            ;
+        } else {
+            $user->removeAccessLevel($accessLevel);
+            $accessLevel->setAccess($access);
+            $user->addAccessLevel($accessLevel);
         }
+
+        $this->userManager->update($user);
+        $this->searchGuardService->updateSearchGuardConfig();
     }
 
     /**
@@ -138,6 +178,18 @@ class AccessLevelService
     public function getAll()
     {
         return $this->accessLevelManager->getAll();
+    }
+
+    /**
+     * bulk remove
+     *
+     * @param array $acls
+     */
+    public function removeBulk($acls)
+    {
+        foreach ($acls as $acl) {
+            $this->accessLevelManager->delete($acl);
+        }
     }
 
 }

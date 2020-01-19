@@ -62,6 +62,17 @@
                 });
         };
 
+        vm.setDefault = function(id) {
+            EnvironmentService.setDefault(id)
+                .then(function () {
+                    toastr.success(MESSAGES_CONSTANTS.SUCCESS);
+                })
+                .then(vm.loadEnvironments)
+                .catch(function () {
+                    toastr.success(MESSAGES_CONSTANTS.ERROR);
+                });
+        };
+
         vm.init = function () {
             vm = angular.extend(vm, {
                 ui: {

@@ -33,6 +33,7 @@
         socket.on('heavy-operation', function(data) {
 
             if (data.status == "in-progress") {
+                $('.panel').addClass('inactive');
                 if ($('#toast-container').hasClass('toast-top-right') == false) {
                     toastr.info(
                         data.message + '...',
@@ -51,6 +52,7 @@
             }
             if (data.status == "done") {
                 toastr.clear();
+                $('.panel').removeClass('inactive');
             }
         });
 
@@ -101,7 +103,6 @@
         };
 
         vm.loadUsers = function (idEnvironment, idApplication) {
-            console.log(idApplication);
             vm.flipActivityIndicator('isLoading');
             vm.selectedApplication = 'all';
             vm.selectedApplicationName = null;
@@ -153,8 +154,7 @@
                 })
             ;
 
-            console.log(acl);
-        }
+            }
 
         vm.reset = function() {
             vm.environments = [];

@@ -36,7 +36,7 @@ trait RestControllerTrait
         $context = SerializationContext::create()->enableMaxDepthChecks();
 
         if (count($contextGroups) > 0) {
-            $context->setGroups(array_merge($defaultGroup, $contextGroups));
+            $context->setGroups($contextGroups);
         } else {
             $context->setGroups($defaultGroup);
         }

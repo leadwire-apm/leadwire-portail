@@ -5,6 +5,7 @@
             'ApplicationFactory',
             'ApplicationService',
             'ApplicationTypeFactory',
+            'EnvironmentService',
             'toastr',
             'MESSAGES_CONSTANTS',
             '$state',
@@ -27,6 +28,7 @@
         ApplicationFactory,
         ApplicationService,
         ApplicationTypeFactory,
+        EnvironmentService,
         toastr,
         MESSAGES_CONSTANTS,
         $state,
@@ -85,6 +87,14 @@
                 },
             });
             vm.loadApplicationTypes();
+
+            EnvironmentService.getDefault()
+                .then(function(response) {
+                    if (response == null) {
+                        $('.panel').addClass('inactive');
+                        $('.create-env').css('display', 'block');
+                    }
+                });
         };
 
         function handleAfterSuccess (success) {
