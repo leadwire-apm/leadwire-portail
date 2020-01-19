@@ -296,62 +296,8 @@ class AuthService
         if ($user->getUsername() === $this->superAdminUsername) {
             $user->revoke(User::ROLE_SUPER_ADMIN);
             $user->promote(User::ROLE_SUPER_ADMIN);
-            foreach ($this->environmentService->getAll() as $environment) {
-                foreach ($environment->getApplications() as $application) {
-                    $user
-                        // set shared dashboard access level to write
-                        ->addAccessLevel((new AccessLevel())
-                            ->setEnvironment($environment)
-                            ->setApplication($application)
-                            ->setLevel(AccessLevel::SHARED_DASHBOARD_LEVEL)
-                            ->setAccess(AccessLevel::WRITE_ACCESS)
-                        )
-                        // set app dashboard access level to write
-                        ->addAccessLevel((new AccessLevel())
-                            ->setEnvironment($environment)
-                            ->setApplication($application)
-                            ->setLevel(AccessLevel::APP_DASHBOARD_LEVEL)
-                            ->setAccess(AccessLevel::WRITE_ACCESS)
-                        )
-                        // set app data access level to write
-                        ->addAccessLevel((new AccessLevel())
-                            ->setEnvironment($environment)
-                            ->setApplication($application)
-                            ->setLevel(AccessLevel::APP_DATA_LEVEL)
-                            ->setAccess(AccessLevel::WRITE_ACCESS)
-                        )
-                    ;
-                }
-            }
-        } else {
-            foreach ($this->environmentService->getAll() as $environment) {
-                foreach ($environment->getApplications() as $application) {
-                    $user
-                        // set shared dashboard access level to write
-                        ->addAccessLevel((new AccessLevel())
-                            ->setEnvironment($environment)
-                            ->setApplication($application)
-                            ->setLevel(AccessLevel::SHARED_DASHBOARD_LEVEL)
-                            ->setAccess(AccessLevel::WRITE_ACCESS)
-                        )
-                        // set app dashboard access level to write
-                        ->addAccessLevel((new AccessLevel())
-                            ->setEnvironment($environment)
-                            ->setApplication($application)
-                            ->setLevel(AccessLevel::APP_DASHBOARD_LEVEL)
-                            ->setAccess(AccessLevel::READ_ACCESS)
-                        )
-                        // set app data access level to write
-                        ->addAccessLevel((new AccessLevel())
-                            ->setEnvironment($environment)
-                            ->setApplication($application)
-                            ->setLevel(AccessLevel::APP_DATA_LEVEL)
-                            ->setAccess(AccessLevel::READ_ACCESS)
-                        )
-                    ;
-                }
-            }
         }
+
         $this->userManager->update($user);
     }
 

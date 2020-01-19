@@ -240,7 +240,7 @@ class User implements AdvancedUserInterface
     private $lockMessage;
 
     /**
-     * @ODM\ReferenceMany(targetDocument="AccessLevel", inversedBy="user", cascade={"persist", "remove"}, storeAs="dbRef")
+     * @ODM\ReferenceMany(targetDocument="AccessLevel", inversedBy="user", cascade={"persist", "delete"}, storeAs="dbRef")
      * @JMS\Type("array<AppBundle\Document\AccessLevel>")
      * @JMS\Expose
      */
@@ -1057,7 +1057,7 @@ class User implements AdvancedUserInterface
      */
     public function acl()
     {
-        return array_merge_recursive($this->normalizeAccessLevels(), $this->normalizeAccessLevelsEnv());
+        return array_merge_recursive($this->normalizeAccessLevelsEnv(),$this->normalizeAccessLevels());
     }
 
     /**
@@ -1072,6 +1072,9 @@ class User implements AdvancedUserInterface
         foreach ($this->accessLevels as $acl) {
             $env = $acl->getEnvironment();
             $app = $acl->getApplication();
+            if ($app->isRemoved()) {
+                continue;
+            }
             $acls[$env->getId()][$app->getId()][$acl->getLevel()] = $acl->getAccess();
         }
 
@@ -1092,16 +1095,128 @@ class User implements AdvancedUserInterface
             $env = $acl->getEnvironment();
             $access = [];
             foreach ($env->getApplications() as $app) {
+                if($app->isRemoved()) {
+                    continue;
+                }
                 if (empty($access)) {
                     $access[$env->getId()][$acl->getLevel()] = $acl->getAccess();
                     $acls[$env->getId()]["all"][$acl->getLevel()] = $acl->getAccess();
-                }
-                if ($access[$env->getId()][$acl->getLevel()] != $appAcls[$env->getId()][$app->getId()][$acl->getLevel()]) {
-                    $acls[$env->getId()]["all"][$acl->getLevel()] = "HYBRID";
+                } else if (
+                        !isset($appAcls[$env->getId()][$app->getId()][$acl->getLevel()])
+                        || $access[$env->getId()][$acl->getLevel()] != $appAcls[$env->getId()][$app->getId()][$acl->getLevel()]
+                    ) {
+                        $acls[$env->getId()]["all"][$acl->getLevel()] = "HYBRID";
+                } else {
+                    $acls[$env->getId()]["all"][$acl->getLevel()] = $access[$env->getId()][$acl->getLevel()];
                 }
             }
         }
 
         return $acls;
+    }
+
+    /**
+     * Get access levels
+     *
+     * @return mixed
+     */
+    public function getAccessLevelsEnv($env, $level)
+    {
+        if ($this->accessLevels == null) {
+            $this->accessLevels = new ArrayCollection();
+        }
+        $acls = $this->accessLevels->toArray();
+        $aclsEnv = [];
+
+        foreach ($acls as $acl) {
+            if (
+                $env == (string) $acl->getEnvironment()->getId()
+                && $level == $acl->getLevel()
+            ) {
+                $aclsEnv[] = $acl;
+            }
+        }
+
+        return $aclsEnv;
+    }
+
+    /**
+     * Get access levels
+     *
+     * @return mixed
+     */
+    public function getAccessLevelsApp($env, $app, $level)
+    {
+        if ($this->accessLevels == null) {
+            $this->accessLevels = new ArrayCollection();
+        }
+        $acls = $this->accessLevels->toArray();
+        $aclApp = null;
+
+        foreach ($acls as $acl) {
+            if (
+                $env == (string) $acl->getEnvironment()->getId()
+                && $app == (string) $acl->getApplication()->getId()
+                && $level == $acl->getLevel()
+            ) {
+                $aclApp = $acl;
+            }
+        }
+
+        return $aclApp;
+    }
+
+    /**
+     * remove access levels
+     *
+     * @param string $env
+     *
+     * @return array
+     */
+    public function removeAccessLevelsEnv($env)
+    {
+        if ($this->accessLevels == null) {
+            $this->accessLevels = new ArrayCollection();
+        }
+        $acls = $this->accessLevels->toArray();
+        $aclsEnv = [];
+
+        foreach ($acls as $acl) {
+            if (
+                $env == (string) $acl->getEnvironment()->getId()
+            ) {
+                $aclsEnv[] = $acl;
+                $this->removeAccessLevel($acl);
+            }
+        }
+
+        return $aclsEnv;
+    }
+
+    /**
+     * remove access levels
+     *
+     * @param string $app
+     *
+     * @return array
+     */
+    public function removeAccessLevelsApp($app)
+    {
+        if ($this->accessLevels == null) {
+            $this->accessLevels = new ArrayCollection();
+        }
+        $acls = $this->accessLevels->toArray();
+        $aclsApp = [];
+
+        foreach ($acls as $acl) {
+            if (
+                $app == (string) $acl->getApplication()->getId()
+            ) {
+                $aclsApp[] = $acl;
+                $this->removeAccessLevel($acl);
+            }
+        }
+
+        return $aclsApp;
     }
 }

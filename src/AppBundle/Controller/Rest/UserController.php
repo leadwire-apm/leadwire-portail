@@ -52,18 +52,21 @@ class UserController extends Controller
     public function listUsersACLManagementAction(Request $request, UserService $userService)
     {
         $users = $userService->listUsersByRole("all");
+        $data = [];
 
-        $users = array_map(function ($user) {
-            return [
-                "id" => $user->getId(),
-                "name" => $user->getName(),
-                "username" => $user->getUsername(),
-                "email" => $user->getEmail(),
-                "acls" => $user->acl(),
-            ];
+        array_map(function ($user) use (&$data) {
+            if (!$user->hasRole('ROLE_ADMIN') && !$user->hasRole('ROLE_SUPER_ADMIN')) {
+                $data[] = [
+                    "id" => $user->getId(),
+                    "name" => $user->getName(),
+                    "username" => $user->getUsername(),
+                    "email" => $user->getEmail(),
+                    "acls" => $user->acl(),
+                ];
+            }
         }, $users);
 
-        return $this->renderResponse($users, Response::HTTP_OK, []);
+        return $this->renderResponse($data, Response::HTTP_OK, []);
     }
 
     /**

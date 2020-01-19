@@ -25,6 +25,7 @@ use AppBundle\Manager\ApplicationTypeManager;
 use AppBundle\Service\EnvironmentService;
 use AppBundle\Document\AccessLevel;
 use AppBundle\Manager\UserManager;
+use AppBundle\Manager\AccessLevelManager;
 
 /**
  * Service class for App entities
@@ -36,6 +37,11 @@ class ApplicationService
      * @var ApplicationManager
      */
     private $applicationManager;
+
+    /**
+     * @var AccessLevelManager
+     */
+    private $accessLevelManager;
 
     /**
      * @var ApplicationTypeManager
@@ -95,6 +101,7 @@ class ApplicationService
     /**
      * Constructor
      *
+     * @param AccessLevelManager $accessLevelManager
      * @param ApplicationManager $applicationManager
      * @param ApplicationTypeManager $applicationTypeManager
      * @param ActivationCodeManager $activationCodeManager
@@ -109,6 +116,7 @@ class ApplicationService
      * @param UserManager $userManager
      */
     public function __construct(
+        AccessLevelManager $accessLevelManager,
         ApplicationManager $applicationManager,
         ApplicationTypeManager $applicationTypeManager,
         ActivationCodeManager $activationCodeManager,
@@ -122,6 +130,7 @@ class ApplicationService
         EnvironmentService $environmentService,
         UserManager $userManager
     ) {
+        $this->accessLevelManager = $accessLevelManager;
         $this->applicationManager = $applicationManager;
         $this->applicationTypeManager = $applicationTypeManager;
         $this->activationCodeManager = $activationCodeManager;
@@ -319,86 +328,34 @@ class ApplicationService
             ->setModifiedAt(new \DateTime());
 
         $this->apManager->update($applicationPermission);
-        // owner has full access level
-        foreach ($application->getEnvironments() as $environment) {
-            $user
-                // set shared dashboard access level to write
-                ->addAccessLevel((new AccessLevel())
-                    ->setEnvironment($environment)
-                    ->setApplication($application)
-                    ->setLevel(AccessLevel::SHARED_DASHBOARD_LEVEL)
-                    ->setAccess(AccessLevel::WRITE_ACCESS)
-                )
-                // set app dashboard access level to write
-                ->addAccessLevel((new AccessLevel())
-                    ->setEnvironment($environment)
-                    ->setApplication($application)
-                    ->setLevel(AccessLevel::APP_DASHBOARD_LEVEL)
-                    ->setAccess(AccessLevel::WRITE_ACCESS)
-                )
-                // set app data access level to write
-                ->addAccessLevel((new AccessLevel())
-                    ->setEnvironment($environment)
-                    ->setApplication($application)
-                    ->setLevel(AccessLevel::APP_DATA_LEVEL)
-                    ->setAccess(AccessLevel::WRITE_ACCESS)
-                )
-            ;
-        }
-        $this->userManager->update($user);
-
-        // all user has access read to the new application on all env
-        $users = $this->userManager->getAll();
-        foreach ($users as $usr) {
-            if ($usr->getId() == $user->getId()) {
-                continue; // owner already has access granted
-            }
+        // owner has full access level if not admin
+        if (!$user->hasRole("ROLE_ADMIN") && !$user->hasRole("ROLE_SUPER_ADMIN")) {
             foreach ($application->getEnvironments() as $environment) {
-                $usr
-                    // set shared dashboard access level
+                $user
+                    // set shared dashboard access level to write
                     ->addAccessLevel((new AccessLevel())
                         ->setEnvironment($environment)
                         ->setApplication($application)
                         ->setLevel(AccessLevel::SHARED_DASHBOARD_LEVEL)
                         ->setAccess(AccessLevel::WRITE_ACCESS)
-                    );
-                if ($usr->hasRole(User::ROLE_SUPER_ADMIN) === true) {
-                    $usr
-                        // set app dashboard access level
-                        ->addAccessLevel((new AccessLevel())
-                            ->setEnvironment($environment)
-                            ->setApplication($application)
-                            ->setLevel(AccessLevel::APP_DASHBOARD_LEVEL)
-                            ->setAccess(AccessLevel::WRITE_ACCESS)
-                        )
-                        // set app data access level
-                        ->addAccessLevel((new AccessLevel())
-                            ->setEnvironment($environment)
-                            ->setApplication($application)
-                            ->setLevel(AccessLevel::APP_DATA_LEVEL)
-                            ->setAccess(AccessLevel::WRITE_ACCESS)
-                        )
-                    ;
-                } else {
-                    $usr
-                        // set app dashboard access level
-                        ->addAccessLevel((new AccessLevel())
-                            ->setEnvironment($environment)
-                            ->setApplication($application)
-                            ->setLevel(AccessLevel::APP_DASHBOARD_LEVEL)
-                            ->setAccess(AccessLevel::READ_ACCESS)
-                        )
-                        // set app data access level
-                        ->addAccessLevel((new AccessLevel())
-                            ->setEnvironment($environment)
-                            ->setApplication($application)
-                            ->setLevel(AccessLevel::APP_DATA_LEVEL)
-                            ->setAccess(AccessLevel::READ_ACCESS)
-                        )
-                    ;
-                }
+                    )
+                    // set app dashboard access level to write
+                    ->addAccessLevel((new AccessLevel())
+                        ->setEnvironment($environment)
+                        ->setApplication($application)
+                        ->setLevel(AccessLevel::APP_DASHBOARD_LEVEL)
+                        ->setAccess(AccessLevel::WRITE_ACCESS)
+                    )
+                    // set app data access level to write
+                    ->addAccessLevel((new AccessLevel())
+                        ->setEnvironment($environment)
+                        ->setApplication($application)
+                        ->setLevel(AccessLevel::APP_DATA_LEVEL)
+                        ->setAccess(AccessLevel::WRITE_ACCESS)
+                    )
+                ;
             }
-            $this->userManager->update($usr);
+            $this->userManager->update($user);
         }
 
         return $application;
@@ -486,13 +443,24 @@ class ApplicationService
 
             $this->applicationManager->update($application);
 
-        /**
-         * clear dashboard table
-         */
-        $dashboards = $this->dashboardManager->getBy(['applicationId' => $id]);
-        foreach ($dashboards as $dashboard) {
-            $this->dashboardManager->delete($dashboard);
-        }
+            /**
+             * clear dashboard table
+             */
+            $dashboards = $this->dashboardManager->getBy(['applicationId' => $id]);
+            foreach ($dashboards as $dashboard) {
+                $this->dashboardManager->delete($dashboard);
+            }
+
+            /**
+             * remove acls
+             */
+            foreach ($this->userManager->getAll() as $user) {
+                $acls = $user->removeAccessLevelsApp($id);
+                $this->userManager->update($user);
+                foreach ($acls as $acl) {
+                    $this->accessLevelManager->delete($acl);
+                }
+            }
 
         }
     }
@@ -504,6 +472,11 @@ class ApplicationService
         if ($applicationPermission !== null) {
             $applicationPermission->setAccess(ApplicationPermission::ACCESS_DENIED);
             $this->apManager->update($applicationPermission);
+            $acls = $user->removeAccessLevelsApp($id);
+            $this->userManager->update($user);
+            foreach ($acls as $acl) {
+                $this->accessLevelManager->delete($acl);
+            }
         }
     }
 
@@ -626,5 +599,19 @@ class ApplicationService
         $this->applicationManager->update($application);
 
         return $application;
+    }
+
+     /**
+     * @param string $id
+     */
+    public function getById($id)
+    {
+        $application = $this->applicationManager->getOneBy(['id' => $id]);
+        if ($application === null) {
+            throw new HttpException(Response::HTTP_NOT_FOUND, "Application not Found");
+        } else {
+            return $application;
+        }
+
     }
 }
