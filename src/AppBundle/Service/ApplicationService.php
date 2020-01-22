@@ -27,6 +27,14 @@ use AppBundle\Document\AccessLevel;
 use AppBundle\Manager\UserManager;
 use AppBundle\Manager\AccessLevelManager;
 
+use AppBundle\Service\ProcessService;
+use AppBundle\Service\CuratorService;
+use AppBundle\Service\ElasticSearchService;
+use AppBundle\Service\KibanaService;
+use AppBundle\Service\LdapService;
+use AppBundle\Service\SearchGuardService;
+use AppBundle\Service\StatService;
+
 /**
  * Service class for App entities
  *
@@ -99,6 +107,41 @@ class ApplicationService
     private $userManager;
 
     /**
+     * @var ProcessService
+     */
+    private $processService;
+
+    /**
+     * @var CuratorService
+     */
+    private $curatorService;
+
+    /**
+     * @var ElasticSearchService
+     */
+    private $elasticSearchService;
+
+    /**
+     * @var KibanaService
+     */
+    private $kibanaService;
+
+    /**
+     * @var LdapService
+     */
+    private $ldapService;
+
+    /**
+     * @var SearchGuardService
+     */
+    private $searchGuardService;
+
+    /**
+     * @var StatService
+     */
+    private $statService;
+
+    /**
      * Constructor
      *
      * @param AccessLevelManager $accessLevelManager
@@ -128,7 +171,14 @@ class ApplicationService
         ActivationCodeService $activationCodeService,
         DashboardManager $dashboardManager,
         EnvironmentService $environmentService,
-        UserManager $userManager
+        UserManager $userManager,
+        ProcessService $processService,
+        CuratorService $curatorService,
+        ElasticSearchService $elasticSearchService,
+        KibanaService $kibanaService,
+        LdapService $ldapService,
+        SearchGuardService $searchGuardService,
+        StatService $statService
     ) {
         $this->accessLevelManager = $accessLevelManager;
         $this->applicationManager = $applicationManager;
@@ -143,6 +193,13 @@ class ApplicationService
         $this->dashboardManager = $dashboardManager;
         $this->environmentService = $environmentService;
         $this->userManager = $userManager;
+        $this->processService = $processService;
+        $this->curatorService = $curatorService;
+        $this->es = $elasticSearchService;
+        $this->kibanaService = $kibanaService;
+        $this->ldapService = $ldapService;
+        $this->sg = $searchGuardService;
+        $this->statService = $statService;
     }
 
     /**
@@ -351,12 +408,42 @@ class ApplicationService
                         ->setEnvironment($environment)
                         ->setApplication($application)
                         ->setLevel(AccessLevel::APP_DATA_LEVEL)
-                        ->setAccess(AccessLevel::WRITE_ACCESS)
-                    )
-                ;
+                        ->setAccess(AccessLevel::WRITE_ACCESS));     
             }
             $this->userManager->update($user);
         }
+        
+       /* $this->ldapService->createApplicationEntry($application);
+        $this->ldapService->registerApplication($this->getUser(), $application);
+
+        $this->es->deleteIndex($application->getApplicationIndex());
+        $this->es->createIndexTemplate($application, $applicationService->getActiveApplicationsNames());
+
+        $this->es->createAlias($application);
+
+        $this->kibanaService->loadIndexPatternForApplication(
+            $application,
+            $application->getApplicationIndex()
+        );
+
+        $this->kibanaService->loadDefaultIndex($application->getApplicationIndex(), 'default');
+        $this->kibanaService->makeDefaultIndex($application->getApplicationIndex(), 'default');
+
+        $this->kibanaService->createApplicationDashboards($application);
+
+        $this->es->deleteIndex($application->getSharedIndex());
+
+        $this->kibanaService->loadIndexPatternForApplication(
+            $application,
+            $application->getSharedIndex()
+        );
+
+        $this->kibanaService->loadDefaultIndex($application->getSharedIndex(), 'default');
+        $this->kibanaService->makeDefaultIndex($application->getSharedIndex(), 'default');
+
+        $this->sg->updateSearchGuardConfig();
+
+        $this->curatorService->updateCuratorConfig();*/
 
         return $application;
     }
