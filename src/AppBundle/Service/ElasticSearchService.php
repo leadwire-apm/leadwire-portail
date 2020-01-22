@@ -264,7 +264,7 @@ class ElasticSearchService
      *
      * @return array
      */
-    public function createAlias(Application $application): array
+    public function createAlias(Application $application, string $environmentName): array
     {
         $now = $application->getCreatedAt()->format('Y-m-d');
         $createdAliases = [];
@@ -313,8 +313,8 @@ class ElasticSearchService
             );
 
             $body = \json_decode($bodyString, false);
-            $aliasName = \strtolower($ms->getQualifier()) . "-$applicationName";
-            $indexName = \strtolower($ms->getQualifier()) . "-*-$applicationName-*";
+            $aliasName = \strtolower($ms->getQualifier()) . "-" . $environmentName . "-$applicationName";
+            $indexName = \strtolower($ms->getQualifier()) . "-*-". $environmentName ."-$applicationName-*";
             $createdAliases[] = $aliasName;
             $body->actions[0]->add->index = $indexName;
             $body->actions[0]->add->alias = $aliasName;

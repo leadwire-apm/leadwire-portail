@@ -157,6 +157,13 @@ class ApplicationService
      * @param DashboardManager $dashboardManager
      * @param EnvironmentService $environmentService
      * @param UserManager $userManager
+     * @param ProcessService $processService
+     * @param CuratorService $curatorService
+     * @param ElasticSearchService $elasticSearchService
+     * @param KibanaService $kibanaService
+     * @param LdapService $ldapService
+     * @param SearchGuardService $searchGuardService
+     * @param StatService $statService
      */
     public function __construct(
         AccessLevelManager $accessLevelManager,
@@ -412,19 +419,27 @@ class ApplicationService
             }
             $this->userManager->update($user);
         }
-        
-       /* $this->ldapService->createApplicationEntry($application);
-        $this->ldapService->registerApplication($this->getUser(), $application);
+
+        $this->ldapService->createApplicationEntry($application);
+        $this->ldapService->registerApplication($user, $application);
 
         $this->es->deleteIndex($application->getApplicationIndex());
-        $this->es->createIndexTemplate($application, $applicationService->getActiveApplicationsNames());
 
-        $this->es->createAlias($application);
+        $this->es->createIndexTemplate($application, $this->getActiveApplicationsNames());
 
-        $this->kibanaService->loadIndexPatternForApplication(
-            $application,
-            $application->getApplicationIndex()
-        );
+        foreach ($this->environmentService->getAll() as $environment) {
+
+            $this->es->createAlias($application, $environment->getName());
+
+            $this->kibanaService->loadIndexPatternForApplication(
+                $application,
+                $application->getApplicationIndex(),
+                $environment->getName()
+            );
+
+        }
+
+        $this->logger->error("########################################");
 
         $this->kibanaService->loadDefaultIndex($application->getApplicationIndex(), 'default');
         $this->kibanaService->makeDefaultIndex($application->getApplicationIndex(), 'default');
@@ -443,7 +458,8 @@ class ApplicationService
 
         $this->sg->updateSearchGuardConfig();
 
-        $this->curatorService->updateCuratorConfig();*/
+        $this->curatorService->updateCuratorConfig();
+
 
         return $application;
     }

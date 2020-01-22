@@ -199,8 +199,7 @@ class ApplicationController extends Controller
             $data = $request->getContent();
             $application = $applicationService->newApplication($data, $this->getUser());
 
-            if ($application !== null) {
-                // Application created in MongoDB. proceed with LDAP & ES entries
+            /*if ($application !== null) {
                 $processService->emit("heavy-operations-in-progress", "Creating LDAP Entries");
                 $ldapService->createApplicationEntry($application);
                 $ldapService->registerApplication($this->getUser(), $application);
@@ -239,7 +238,8 @@ class ApplicationController extends Controller
                 $curatorService->updateCuratorConfig();
 
                 $status = true;
-            }
+            }*/
+            $status = true;
             $processService->emit("heavy-operations-done", "Successeded");
         } catch (DuplicateApplicationNameException $e) {
             $processService->emit("heavy-operations-done", "Failed");
