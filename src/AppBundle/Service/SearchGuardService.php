@@ -146,15 +146,15 @@ class SearchGuardService
                     }
                     $kibanaAcl = [];
                     
-                    $ai = $env->getName() . '-' . $app->getApplicationIndex();
+                    $ai = $app->getApplicationIndex();
                     if ($accessLevel->getLevel() == AccessLevel::APP_DASHBOARD_LEVEL) {
-                        $kibanaAcl["?kibana_{$env->getName()}_{$ai}"] = [
+                        $kibanaAcl["?kibana-{$env->getName()}-{$ai}"] = [
                             "*" => $acl[$accessLevel->getAccess()]
                         ];
                     }
-                    $si = $env->getName() . '-' . $app->getSharedIndex();
+                    $si = $app->getSharedIndex();
                     if ($accessLevel->getLevel() == AccessLevel::SHARED_DASHBOARD_LEVEL) {
-                        $kibanaAcl["?kibana_{$env->getName()}_{$i}"] = [
+                        $kibanaAcl["?kibana-{$env->getName()}-{$si}"] = [
                             "*" => $acl[$accessLevel->getAccess()]
                         ];
                     }
