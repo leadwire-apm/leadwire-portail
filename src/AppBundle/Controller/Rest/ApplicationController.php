@@ -398,31 +398,41 @@ class ApplicationController extends Controller
         $application = $applicationService->getApplication($id);
         $processService->emit("heavy-operations-in-progress", "Updating Application Type");
         if ($application instanceof Application) {
+            
             $processService->emit("heavy-operations-in-progress", "Updating Index-patterns");
-            $esService->deleteIndex($application->getApplicationIndex());
-            $esService->createIndexTemplate($application, $applicationService->getActiveApplicationsNames());
-            $esService->createAlias($application);
-            $processService->emit("heavy-operations-in-progress", "Updating Kibana Dashboards");
-            $kibanaService->loadIndexPatternForApplication(
-                $application,
-                $application->getApplicationIndex()
-            );
 
-            $kibanaService->loadDefaultIndex($application->getApplicationIndex(), 'default');
-            $kibanaService->makeDefaultIndex($application->getApplicationIndex(), 'default');
+            foreach($application->getEnvironments as $environment){
+             
+                $envName = $environment->getName();
+                $sharedIndex =  $envName . "-" . $application->getSharedIndex();
+                $appIndex =  $envName . "-" . $application->getApplicationIndex();
 
-            $kibanaService->createApplicationDashboards($application);
-
-            $esService->deleteIndex($application->getSharedIndex());
-
-            $kibanaService->loadIndexPatternForApplication(
-                $application,
-                $application->getSharedIndex()
-            );
-
-            $kibanaService->loadDefaultIndex($application->getSharedIndex(), 'default');
-            $kibanaService->makeDefaultIndex($application->getSharedIndex(), 'default');
-
+                $esService->deleteIndex($appIndex);
+                $esService->createIndexTemplate($application, $applicationService->getActiveApplicationsNames());
+                $esService->createAlias($application, $envName);
+                $processService->emit("heavy-operations-in-progress", "Updating Kibana Dashboards");
+                $kibanaService->loadIndexPatternForApplication(
+                    $application,
+                    $appIndex,
+                    $envName
+                );
+    
+                $kibanaService->loadDefaultIndex($appIndex, 'default');
+                $kibanaService->makeDefaultIndex($appIndex, 'default');
+    
+                $kibanaService->createApplicationDashboards($application, $envName);
+    
+                $esService->deleteIndex($sharedIndex);
+    
+                $kibanaService->loadIndexPatternForApplication(
+                    $application,
+                    $sharedIndex,
+                    $envName
+                );
+    
+                $kibanaService->loadDefaultIndex($sharedIndex, 'default');
+                $kibanaService->makeDefaultIndex($sharedIndex, 'default');
+            }
             $application->setDeployedTypeVersion($application->getType()->getVersion());
             $applicationManager->update($application);
             $processService->emit("heavy-operations-done", "Succeeded");
