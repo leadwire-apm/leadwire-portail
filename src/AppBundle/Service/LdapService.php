@@ -210,7 +210,7 @@ class LdapService
 
     public function registerApplication(User $user, Application $application): bool
     {
-        foreach (['test-app_', 'test-shared_'] as $tenantPrefix) {
+        foreach (['test-app-', 'test-shared-'] as $tenantPrefix) {
             $result = $this->ldap->query('ou=Group,dc=leadwire,dc=io', "(cn={$tenantPrefix}{$application->getUuid()})")->execute();
             $entry = $result[0];
             if ($entry instanceof Entry) {
