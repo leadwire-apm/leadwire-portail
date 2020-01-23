@@ -87,10 +87,10 @@ class ElasticSearchService
      * @param Application $app
      * @param User $user
      */
-    public function getDashboads(Application $app, User $user)
+    public function getDashboads(Application $app, User $user, string $envName)
     {
         try {
-            $dashboards = $this->filter($app, $user, $this->getRawDashboards($app, $user));
+            $dashboards = $this->filter($app, $user, $this->getRawDashboards($app, $user, $envName));
             return $dashboards;
         } catch (\Exception $e) {
             $this->logger->error($e->getMessage());
@@ -102,10 +102,10 @@ class ElasticSearchService
      * @param Application $app
      * @param User $user
      */
-    public function getReports(Application $app, User $user)
+    public function getReports(Application $app, User $user, string $envName)
     {
         try {
-            $reports = $this->filter($this->getRawReports($app, $user));
+            $reports = $this->filter($this->getRawReports($app, $user, $envName));
             return $reports;
         } catch (\Exception $e) {
             $this->logger->error($e->getMessage());
@@ -436,7 +436,7 @@ class ElasticSearchService
      * @param Application $app
      * @param User $user
      */
-    protected function getRawDashboards(Application $app, User $user)
+    protected function getRawDashboards(Application $app, User $user, string $envName)
     {
         $res = [
             "Default" => [],
@@ -444,8 +444,8 @@ class ElasticSearchService
         ];
 
         $tenants = [
-            "Default" => $this->hasAllUserTenant === true ? [$user->getAllUserIndex(), $app->getApplicationIndex()] : [$app->getApplicationIndex()],
-            "Custom" => [$user->getUserIndex(), $app->getSharedIndex()],
+            "Default" => $this->hasAllUserTenant === true ? [$user->getAllUserIndex(), $envName . "-" . $app->getApplicationIndex()] : [$envName . "-" . $app->getApplicationIndex()],
+            "Custom" => [$user->getUserIndex(), $envName . "-" . $app->getSharedIndex()],
         ];
 
         foreach ($tenants as $groupName => $tenantGroup) {
@@ -499,7 +499,7 @@ class ElasticSearchService
      * @param Application $app
      * @param User $user
      */
-    protected function getRawReports(Application $app, User $user)
+    protected function getRawReports(Application $app, User $user, string $envName)
     {
         $res = [
             "Default" => [],
@@ -507,8 +507,8 @@ class ElasticSearchService
         ];
 
         $tenants = [
-            "Default" => $this->hasAllUserTenant === true ? [$user->getAllUserIndex(), $app->getApplicationIndex()] : [$app->getApplicationIndex()],
-            "Custom" => [$user->getUserIndex(), $app->getSharedIndex()],
+            "Default" => $this->hasAllUserTenant === true ? [$user->getAllUserIndex(), $envName . "-" . $app->getApplicationIndex()] : [$envName . "-" . $app->getApplicationIndex()],
+            "Custom" => [$user->getUserIndex(), $envName . "-" . $app->getSharedIndex()],
         ];
 
         foreach ($tenants as $groupName => $tenantGroup) {

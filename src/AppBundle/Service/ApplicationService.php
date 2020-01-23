@@ -420,41 +420,49 @@ class ApplicationService
             $this->userManager->update($user);
         }
 
-        $this->ldapService->createApplicationEntry($application);
-        $this->ldapService->registerApplication($user, $application);
-
-        $this->es->deleteIndex($application->getApplicationIndex());
-
-        $this->es->createIndexTemplate($application, $this->getActiveApplicationsNames());
 
         foreach ($this->environmentService->getAll() as $environment) {
 
-            $this->es->createAlias($application, $environment->getName());
+            $envName = $environment->getName();
+            $sharedIndex =  $envName . "-" . $application->getSharedIndex();
+            $appIndex =  $envName . "-" . $application->getApplicationIndex();
+
+            $this->ldapService->createApplicationEntry($application);
+
+            $this->ldapService->registerApplication($user, $application);
+    
+            $this->es->deleteIndex($appIndex);
+            
+            // ---> not sure
+            $this->es->createIndexTemplate($application, $this->getActiveApplicationsNames());
+
+            $this->es->createAlias($application, $envName);
 
             $this->kibanaService->loadIndexPatternForApplication(
                 $application,
-                $application->getApplicationIndex(),
-                $environment->getName()
+                $appIndex,
+                $envName 
             );
+
+            $this->kibanaService->loadDefaultIndex($appIndex, 'default');
+            $this->kibanaService->makeDefaultIndex($appIndex, 'default');
+    
+            $this->kibanaService->createApplicationDashboards($application, $envName );
+    
+            $this->es->deleteIndex($sharedIndex);
+    
+            $this->kibanaService->loadIndexPatternForApplication(
+                $application,
+                $sharedIndex,
+                $envName
+            );
+    
+            $this->kibanaService->loadDefaultIndex($sharedIndex, 'default');
+            $this->kibanaService->makeDefaultIndex($sharedIndex, 'default');
 
         }
 
         $this->logger->error("########################################");
-
-        $this->kibanaService->loadDefaultIndex($application->getApplicationIndex(), 'default');
-        $this->kibanaService->makeDefaultIndex($application->getApplicationIndex(), 'default');
-
-        $this->kibanaService->createApplicationDashboards($application);
-
-        $this->es->deleteIndex($application->getSharedIndex());
-
-        $this->kibanaService->loadIndexPatternForApplication(
-            $application,
-            $application->getSharedIndex()
-        );
-
-        $this->kibanaService->loadDefaultIndex($application->getSharedIndex(), 'default');
-        $this->kibanaService->makeDefaultIndex($application->getSharedIndex(), 'default');
 
         $this->sg->updateSearchGuardConfig();
 

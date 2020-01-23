@@ -47,11 +47,12 @@ class ApplicationController extends Controller
     }
 
     /**
-     * @Route("/{id}/dashboards", methods="GET")
+     * @Route("/{id}/dashboards/{envName}", methods="GET")
      *
      * @param Request $request
      * @param ApplicationService $applicationService
      * @param string  $id
+     * @param string  $envName
      *
      * @return Response
      */
@@ -59,37 +60,39 @@ class ApplicationController extends Controller
         Request $request,
         ApplicationService $applicationService,
         ElasticSearchService $esService,
-        $id
+        $id,
+        $envName
     ) {
         $app = $applicationService->getApplication($id);
         if ($app === null) {
             throw new HttpException(Response::HTTP_NOT_FOUND, "App not Found");
         } else {
-            $dashboards = $esService->getDashboads($app, $this->getUser());
+            $dashboards = $esService->getDashboads($app, $this->getUser(), $envName);
             return $this->renderResponse($dashboards);
         }
     }
 
     /**
-     * @Route("/{id}/reports", methods="GET")
+     * @Route("/{id}/reports/{envName}", methods="GET")
      *
      * @param Request $request
      * @param ApplicationService $applicationService
      * @param string  $id
-     *
+     * @param sring $envName
      * @return Response
      */
     public function getApplicationReportsAction(
         Request $request,
         ApplicationService $applicationService,
         ElasticSearchService $esService,
-        $id
+        $id,
+        $envName
     ) {
         $app = $applicationService->getApplication($id);
         if ($app === null) {
             throw new HttpException(Response::HTTP_NOT_FOUND, "App not Found");
         } else {
-            $reports = $esService->getReports($app, $this->getUser());
+            $reports = $esService->getReports($app, $this->getUser(),  $envName);
             return $this->renderResponse($reports);
         }
     }
@@ -198,47 +201,6 @@ class ApplicationController extends Controller
         try {
             $data = $request->getContent();
             $application = $applicationService->newApplication($data, $this->getUser());
-
-            /*if ($application !== null) {
-                $processService->emit("heavy-operations-in-progress", "Creating LDAP Entries");
-                $ldapService->createApplicationEntry($application);
-                $ldapService->registerApplication($this->getUser(), $application);
-
-                $processService->emit("heavy-operations-in-progress", "Creating Index-patterns");
-                $esService->deleteIndex($application->getApplicationIndex());
-                $esService->createIndexTemplate($application, $applicationService->getActiveApplicationsNames());
-
-                $esService->createAlias($application);
-
-                $processService->emit("heavy-operations-in-progress", "Creating Kibana Dashboards");
-                $kibanaService->loadIndexPatternForApplication(
-                    $application,
-                    $application->getApplicationIndex()
-                );
-
-                $kibanaService->loadDefaultIndex($application->getApplicationIndex(), 'default');
-                $kibanaService->makeDefaultIndex($application->getApplicationIndex(), 'default');
-
-                $kibanaService->createApplicationDashboards($application);
-
-                $esService->deleteIndex($application->getSharedIndex());
-
-                $kibanaService->loadIndexPatternForApplication(
-                    $application,
-                    $application->getSharedIndex()
-                );
-
-                $kibanaService->loadDefaultIndex($application->getSharedIndex(), 'default');
-                $kibanaService->makeDefaultIndex($application->getSharedIndex(), 'default');
-
-                $processService->emit("heavy-operations-in-progress", "Configuring SearchGuard");
-                $sgService->updateSearchGuardConfig();
-
-                $processService->emit("heavy-operations-in-progress", "Updating Curator Configurations");
-                $curatorService->updateCuratorConfig();
-
-                $status = true;
-            }*/
             $status = true;
             $processService->emit("heavy-operations-done", "Successeded");
         } catch (DuplicateApplicationNameException $e) {

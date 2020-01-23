@@ -28,18 +28,18 @@
                  *
                  * @returns {Promise}
                  */
-                findMyDashboard: function (id) {
+                findMyDashboard: function (id, envName) {
                     return $http.get(
-                        CONFIG.BASE_URL + 'api/app/' + id + '/dashboards',
+                        CONFIG.BASE_URL + 'api/app/' + id + '/dashboards/' + envName,
                     );
                 },
                 /**
                  *
                  * @returns {Promise}
                  */
-                findMyReports: function (id) {
+                findMyReports: function (id, envName) {
                     return $http.get(
-                        CONFIG.BASE_URL + 'api/app/' + id + '/reports',
+                        CONFIG.BASE_URL + 'api/app/' + id + '/reports/' + envName,
                     );
                 },
                 /**
@@ -60,7 +60,7 @@
                  *
                  * @returns {Promise}
                  */
-                get: function (id, scope="Default") {
+                get: function (id, scope = "Default") {
                     return $http.get(
                         CONFIG.BASE_URL + 'api/app/' + id + '/get/' + scope,
                     );
@@ -75,13 +75,13 @@
                         body,
                     );
                 },
-                 /**
-                 *
-                 * @returns {Promise}
-                 */
+                /**
+                *
+                * @returns {Promise}
+                */
                 updateDashbaords: function (id, body) {
                     return $http.put(
-                        CONFIG.BASE_URL + 'api/app/'+ id +'/update-dashboards',
+                        CONFIG.BASE_URL + 'api/app/' + id + '/update-dashboards',
                         body,
                     );
                 },
@@ -143,9 +143,9 @@
                 /**
                  * 
                  */
-                getApplicationDocumentsCount : function(appName, envName){
+                getApplicationDocumentsCount: function (appName, envName) {
                     return $http.get(
-                        CONFIG.BASE_URL + 'api/app/' + appName + '/'+ envName +'/documents',
+                        CONFIG.BASE_URL + 'api/app/' + appName + '/' + envName + '/documents',
                     );
                 }
             };

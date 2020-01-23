@@ -253,7 +253,7 @@ class MonitoringSet
 
     public function getFormattedVersion()
     {
-        return strtolower($this->getQualifier()) . "-" . $this->getVersion();
+        return strtolower($this->getQualifier()) . "-test-" . $this->getVersion();
     }
 
     /**

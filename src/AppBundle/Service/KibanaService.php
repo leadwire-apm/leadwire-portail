@@ -126,9 +126,9 @@ class KibanaService
             }
 
             if ($shared === true) {
-                $tenant = $application->getSharedIndex();
+                $tenant = $environmentName ."-". $application->getSharedIndex();
             } else {
-                $tenant = $application->getApplicationIndex();
+                $tenant = $environmentName ."-". $application->getApplicationIndex();
             }
 
             $authorization = $this->jwtHelper->encode($this->kibanaAdminUsername, $this->kibanaAdminUuid);

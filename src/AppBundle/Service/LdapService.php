@@ -102,30 +102,37 @@ class LdapService
     public function createInvitationEntry(Invitation $invitation): bool
     {
         $application = $invitation->getApplication();
+        $environments = $application->getEnvironments();
         $user = $invitation->getUser();
 
-        $appRecord = $this->ldap->query('ou=Group,dc=leadwire,dc=io', "(cn={$application->getApplicationIndex()})")->execute();
-        $entry = $appRecord[0];
+        foreach($environments as $environment){
 
-        if ($entry instanceof Entry) {
-            $oldValue = $entry->getAttribute('member') !== null ? $entry->getAttribute('member') : [];
-            $entry->setAttribute('member', array_merge($oldValue, ["cn={$user->getUserIndex()},ou=People,dc=leadwire,dc=io"]));
-            $this->entryManager->update($entry);
-        } else {
-            throw new \Exception("Unable to find LDAP records for applications app tenant");
+            $cn = $environment->getName() . '-' . $application->getApplicationIndex();
+            $appRecord = $this->ldap->query('ou=Group,dc=leadwire,dc=io', "(cn={$cn})")->execute();
+            $entry = $appRecord[0];
+    
+            if ($entry instanceof Entry) {
+                $oldValue = $entry->getAttribute('member') !== null ? $entry->getAttribute('member') : [];
+                $entry->setAttribute('member', array_merge($oldValue, ["cn={$user->getUserIndex()},ou=People,dc=leadwire,dc=io"]));
+                $this->entryManager->update($entry);
+            } else {
+                throw new \Exception("Unable to find LDAP records for applications app tenant");
+            }
+            $sh = $environment->getName() . '-' . $application->getSharedIndex();
+            $sharedRecord = $this->ldap->query('ou=Group,dc=leadwire,dc=io', "(cn={$sh})")->execute();
+    
+            $entry = $sharedRecord[0];
+    
+            if ($entry instanceof Entry) {
+                $oldValue = $entry->getAttribute('member') !== null ? $entry->getAttribute('member') : [];
+                $entry->setAttribute('member', array_merge($oldValue, ["cn={$user->getUserIndex()},ou=People,dc=leadwire,dc=io"]));
+                $this->entryManager->update($entry);
+            } else {
+                throw new \Exception("Unable to find LDAP records for applications shared tenant");
+            }
         }
 
-        $sharedRecord = $this->ldap->query('ou=Group,dc=leadwire,dc=io', "(cn={$application->getSharedIndex()})")->execute();
 
-        $entry = $sharedRecord[0];
-
-        if ($entry instanceof Entry) {
-            $oldValue = $entry->getAttribute('member') !== null ? $entry->getAttribute('member') : [];
-            $entry->setAttribute('member', array_merge($oldValue, ["cn={$user->getUserIndex()},ou=People,dc=leadwire,dc=io"]));
-            $this->entryManager->update($entry);
-        } else {
-            throw new \Exception("Unable to find LDAP records for applications shared tenant");
-        }
 
         return true;
     }
@@ -203,7 +210,7 @@ class LdapService
 
     public function registerApplication(User $user, Application $application): bool
     {
-        foreach (['app_', 'shared_'] as $tenantPrefix) {
+        foreach (['test-app_', 'test-shared_'] as $tenantPrefix) {
             $result = $this->ldap->query('ou=Group,dc=leadwire,dc=io', "(cn={$tenantPrefix}{$application->getUuid()})")->execute();
             $entry = $result[0];
             if ($entry instanceof Entry) {
@@ -212,7 +219,10 @@ class LdapService
                     $entry->setAttribute('member', array_merge($oldValue, ["cn={$user->getUserIndex()},ou=People,dc=leadwire,dc=io"]));
                     $this->entryManager->update($entry);
                 } else {
-                    $this->logger->notice("Entry already up to date [cn={$user->getUserIndex()},ou=People,dc=leadwire,dc=io] in [cn={$application->getApplicationIndex()}]");
+                    foreach($application->getEnvironments() as $env){
+                        $ai = $env->getName() . '-' . $application->getApplicationIndex();
+                        $this->logger->notice("Entry already up to date [cn={$user->getUserIndex()},ou=People,dc=leadwire,dc=io] in [cn={$ai}]");
+                    }
                 }
             } else {
                 $this->logger->critical("Unable to find LDAP records for demo application {$application->getName()}");
@@ -256,30 +266,39 @@ class LdapService
     public function createApplicationEntry(Application $application): bool
     {
         // app_ tenant
-        $entry = new Entry(
-            "cn={$application->getApplicationIndex()},ou=Group,dc=leadwire,dc=io",
-            [
-                "objectClass" => "groupofnames",
-                "cn" => $application->getApplicationIndex(),
-                "member" => "cn={$this->kibanaAdminUsername},ou=People,dc=leadwire,dc=io",
-                "description" => $application->getName(),
-            ]
-        );
 
-        $status = $this->saveEntry($entry);
-
-        // shared_ tenant
-        $entry = new Entry(
-            "cn={$application->getSharedIndex()},ou=Group,dc=leadwire,dc=io",
-            [
-                "objectClass" => "groupofnames",
-                "cn" => $application->getSharedIndex(),
-                "member" => "cn={$this->kibanaAdminUsername},ou=People,dc=leadwire,dc=io",
-                "description" => $application->getName(),
-            ]
-        );
-
-        $status = $status && $this->saveEntry($entry);
+        foreach($application->getEnvironments() as $env){
+           
+            $ai = $env->getName() . '-' . $application->getApplicationIndex();
+            $cn = $env->getName() . '-' . $application->getApplicationIndex();
+           
+            $entry = new Entry(
+                "cn={$ai},ou=Group,dc=leadwire,dc=io",
+                [
+                    "objectClass" => "groupofnames",
+                    "cn" => $cn,
+                    "member" => "cn={$this->kibanaAdminUsername},ou=People,dc=leadwire,dc=io",
+                    "description" => $application->getName(),
+                ]
+            );
+    
+            $status = $this->saveEntry($entry);
+    
+            // shared_ tenant
+            $sh = $env->getName() . '-' . $application->getSharedIndex();
+            $cn = $env->getName() . '-' . $application->getSharedIndex();
+            $entry = new Entry(
+                "cn={$sh},ou=Group,dc=leadwire,dc=io",
+                [
+                    "objectClass" => "groupofnames",
+                    "cn" => $cn,
+                    "member" => "cn={$this->kibanaAdminUsername},ou=People,dc=leadwire,dc=io",
+                    "description" => $application->getName(),
+                ]
+            );
+    
+            $status = $status && $this->saveEntry($entry);
+        }
 
         return $status;
     }
