@@ -277,7 +277,7 @@ class ElasticSearchService
 
         foreach ($application->getType()->getMonitoringSets() as $ms) {
             $qualifier = \strtolower($ms->getQualifier());
-            $indexName = "{$qualifier}-enabled-$applicationName-$now";
+            $indexName = "{$qualifier}-enabled-$environmentName-$applicationName-$now";
             $response = $this->httpClient->delete($this->url . $indexName, ['auth' => $this->getAuth()]);
             $this->logger->notice(
                 "leadwire.es.createAlias",
@@ -313,8 +313,8 @@ class ElasticSearchService
             );
 
             $body = \json_decode($bodyString, false);
-            $aliasName = \strtolower($ms->getQualifier()) . "-" . $environmentName . "-$applicationName";
-            $indexName = \strtolower($ms->getQualifier()) . "-*-". $environmentName ."-$applicationName-*";
+            $aliasName = \strtolower($ms->getQualifier()) . "-" . $environmentName . "-" . $applicationName;
+            $indexName = \strtolower($ms->getQualifier()) . "-*-". $environmentName . "-" . $applicationName . "-*";
             $createdAliases[] = $aliasName;
             $body->actions[0]->add->index = $indexName;
             $body->actions[0]->add->alias = $aliasName;
@@ -329,13 +329,14 @@ class ElasticSearchService
             );
 
             $this->logger->notice(
-                "leadwire.es.createAlias",
+                "----------leadwire.es.createAlias",
                 [
                     'status_code' => $response->getStatusCode(),
                     'phrase' => $response->getReasonPhrase(),
                     'url' => $this->url . "_aliases",
                     'verb' => 'POST',
                     'headers' => $headers,
+                    'index' => $indexName
                 ]
             );
         }
