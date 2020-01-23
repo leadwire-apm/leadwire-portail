@@ -419,57 +419,61 @@ class ApplicationService
             }
             $this->userManager->update($user);
         }
-
-
-        foreach ($this->environmentService->getAll() as $environment) {
-
-            $envName = $environment->getName();
-            $sharedIndex =  $envName . "-" . $application->getSharedIndex();
-            $appIndex =  $envName . "-" . $application->getApplicationIndex();
-
-            $this->ldapService->createApplicationEntry($application);
-
-            $this->ldapService->registerApplication($user, $application);
-    
-            $this->es->deleteIndex($appIndex);
-            
-            // ---> not sure
-            $this->es->createIndexTemplate($application, $this->getActiveApplicationsNames());
-
-            $this->es->createAlias($application, $envName);
-
-            $this->kibanaService->loadIndexPatternForApplication(
-                $application,
-                $appIndex,
-                $envName 
-            );
-
-            $this->kibanaService->loadDefaultIndex($appIndex, 'default');
-            $this->kibanaService->makeDefaultIndex($appIndex, 'default');
-    
-            $this->kibanaService->createApplicationDashboards($application, $envName );
-    
-            $this->es->deleteIndex($sharedIndex);
-    
-            $this->kibanaService->loadIndexPatternForApplication(
-                $application,
-                $sharedIndex,
-                $envName
-            );
-    
-            $this->kibanaService->loadDefaultIndex($sharedIndex, 'default');
-            $this->kibanaService->makeDefaultIndex($sharedIndex, 'default');
-
-        }
-
-        $this->logger->error("########################################");
-
-        $this->sg->updateSearchGuardConfig();
-
-        $this->curatorService->updateCuratorConfig();
-
-
+        $this->createOrUpdateIndexApp($application, $user);
         return $application;
+    }
+
+    /**
+     * create or update application index and shared index
+     * 
+     */
+    function createOrUpdateIndexApp(Application $application, User $user){
+        if($application !== null){
+
+            foreach ($this->environmentService->getAll() as $environment) {
+                $envName = $environment->getName();
+                $sharedIndex =  $envName . "-" . $application->getSharedIndex();
+                $appIndex =  $envName . "-" . $application->getApplicationIndex();
+    
+                $this->ldapService->createApplicationEntry($application);
+    
+                $this->ldapService->registerApplication($user, $application);
+        
+                $this->es->deleteIndex($appIndex);
+                
+                // ---> not sure
+                $this->es->createIndexTemplate($application, $this->getActiveApplicationsNames());
+    
+                $this->es->createAlias($application, $envName);
+    
+                $this->kibanaService->loadIndexPatternForApplication(
+                    $application,
+                    $appIndex,
+                    $envName 
+                );
+    
+                $this->kibanaService->loadDefaultIndex($appIndex, 'default');
+                $this->kibanaService->makeDefaultIndex($appIndex, 'default');
+        
+                $this->kibanaService->createApplicationDashboards($application, $envName );
+        
+                $this->es->deleteIndex($sharedIndex);
+        
+                $this->kibanaService->loadIndexPatternForApplication(
+                    $application,
+                    $sharedIndex,
+                    $envName
+                );
+        
+                $this->kibanaService->loadDefaultIndex($sharedIndex, 'default');
+                $this->kibanaService->makeDefaultIndex($sharedIndex, 'default');
+    
+            }
+        
+            $this->sg->updateSearchGuardConfig();
+    
+            $this->curatorService->updateCuratorConfig();
+        }
     }
 
     /**

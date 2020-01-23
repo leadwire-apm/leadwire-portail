@@ -254,7 +254,7 @@ class ApplicationController extends Controller
                 $esService->deleteIndex($application->getApplicationIndex());
                 $esService->createIndexTemplate($application, $applicationService->getActiveApplicationsNames());
 
-                //$aliases = $esService->createAlias($application);
+                $esService->createAlias($application);
 
                 $kibanaService->loadIndexPatternForApplication(
                     $application,
@@ -435,7 +435,7 @@ class ApplicationController extends Controller
             $processService->emit("heavy-operations-in-progress", "Updating Index-patterns");
             $esService->deleteIndex($application->getApplicationIndex());
             $esService->createIndexTemplate($application, $applicationService->getActiveApplicationsNames());
-           // $aliases = $esService->createAlias($application);
+            $esService->createAlias($application);
             $processService->emit("heavy-operations-in-progress", "Updating Kibana Dashboards");
             $kibanaService->loadIndexPatternForApplication(
                 $application,
