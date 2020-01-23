@@ -419,15 +419,15 @@ class ApplicationService
             }
             $this->userManager->update($user);
         }
-        $this->createOrUpdateIndexApp($application, $user);
+        $this->createIndexApp($application, $user);
         return $application;
     }
 
     /**
-     * create or update application index and shared index
+     * create application index and shared index
      * 
      */
-    function createOrUpdateIndexApp(Application $application, User $user){
+    function createIndexApp(Application $application, User $user){
         if($application !== null){
 
             foreach ($this->environmentService->getAll() as $environment) {
@@ -514,6 +514,8 @@ class ApplicationService
             $state['successful'] = true;
 
             $state['application'] = $realApp;
+            $this->updateIndexApp($realAp);
+
         } catch (\Exception $e) {
             $this->logger->error($e->getMessage());
             $state['successful'] = false;
@@ -522,6 +524,46 @@ class ApplicationService
         }
 
         return $state;
+    }
+
+    function updateIndexApp(Application $application){
+        foreach ($this->environmentService->getAll() as $environment) {
+            $envName = $environment->getName();
+            $sharedIndex =  $envName . "-" . $application->getSharedIndex();
+            $appIndex =  $envName . "-" . $application->getApplicationIndex();
+            $this->es->getAlias($application, $envName);
+            $this->processService->emit("heavy-operations-in-progress", "Updating Index-patterns");
+            $this->es->deleteIndex($appIndex);
+            $this->es->createIndexTemplate($application, $applicationService->getActiveApplicationsNames());
+
+            $this->es->createAlias($application, $envName);
+
+            $this->kibanaService->loadIndexPatternForApplication(
+                $application,
+                $appIndex,
+                $envName
+            );
+
+            $this->processService->emit("heavy-operations-in-progress", "Updating Kibana Dashboards");
+            $this->kibanaService->loadDefaultIndex($appIndex, 'default');
+            $this->kibanaService->makeDefaultIndex($appIndex, 'default');
+
+            $this->kibanaService->createApplicationDashboards($application, $envName);
+
+            $this->es->deleteIndex($sharedIndex);
+
+            $this->kibanaService->loadIndexPatternForApplication(
+                $application,
+                $sharedIndex,
+                $envName
+            );
+
+            $this->kibanaService->loadDefaultIndex($sharedIndex, 'default');
+            $this->kibanaService->makeDefaultIndex($sharedIndex, 'default');
+
+            $this->processService->emit("heavy-operations-in-progress", "Updating Curator Configurations");
+            $this->curatorService->updateCuratorConfig();
+        }
     }
 
     /**

@@ -247,41 +247,7 @@ class ApplicationController extends Controller
         try {
             $data = $request->getContent();
             $state = $applicationService->updateApplication($data, $id);
-            $esService->getAlias($application);
-            if ($state['esUpdateRequired'] === true) {
-                $application = $state['application'];
-                $processService->emit("heavy-operations-in-progress", "Updating Index-patterns");
-                $esService->deleteIndex($application->getApplicationIndex());
-                $esService->createIndexTemplate($application, $applicationService->getActiveApplicationsNames());
-
-                $esService->createAlias($application);
-
-                $kibanaService->loadIndexPatternForApplication(
-                    $application,
-                    $application->getApplicationIndex()
-                );
-
-                $processService->emit("heavy-operations-in-progress", "Updating Kibana Dashboards");
-                $kibanaService->loadDefaultIndex($application->getApplicationIndex(), 'default');
-                $kibanaService->makeDefaultIndex($application->getApplicationIndex(), 'default');
-
-                $kibanaService->createApplicationDashboards($application);
-
-                $esService->deleteIndex($application->getSharedIndex());
-
-                $kibanaService->loadIndexPatternForApplication(
-                    $application,
-                    $application->getSharedIndex()
-                );
-
-                $kibanaService->loadDefaultIndex($application->getSharedIndex(), 'default');
-                $kibanaService->makeDefaultIndex($application->getSharedIndex(), 'default');
-
-                $processService->emit("heavy-operations-in-progress", "Updating Curator Configurations");
-                $curatorService->updateCuratorConfig();
-            }
             $processService->emit("heavy-operations-done", "Succeeded");
-
             return $this->renderResponse($state['successful']);
         } catch (MongoDuplicateKeyException $e) {
             $processService->emit("heavy-operations-done", "Failed");
