@@ -210,23 +210,24 @@ class LdapService
 
     public function registerApplication(User $user, Application $application): bool
     {
-        foreach (['test-app-', 'test-shared-'] as $tenantPrefix) {
-            $result = $this->ldap->query('ou=Group,dc=leadwire,dc=io', "(cn={$tenantPrefix}{$application->getUuid()})")->execute();
-            $entry = $result[0];
-            if ($entry instanceof Entry) {
-                $oldValue = $entry->getAttribute('member') !== null ? $entry->getAttribute('member') : [];
-                if (in_array("cn={$user->getUserIndex()},ou=People,dc=leadwire,dc=io", $oldValue) === false) {
-                    $entry->setAttribute('member', array_merge($oldValue, ["cn={$user->getUserIndex()},ou=People,dc=leadwire,dc=io"]));
-                    $this->entryManager->update($entry);
-                } else {
-                    foreach($application->getEnvironments() as $env){
-                        $ai = $env->getName() . '-' . $application->getApplicationIndex();
+        foreach($application->getEnvironments() as $environment){
+            $envName =  $environment->getName();
+            foreach ([$envName . '-app-', $envName . '-shared-'] as $tenantPrefix) {
+                $result = $this->ldap->query('ou=Group,dc=leadwire,dc=io', "(cn={$tenantPrefix}{$application->getUuid()})")->execute();
+                $entry = $result[0];
+                if ($entry instanceof Entry) {
+                    $oldValue = $entry->getAttribute('member') !== null ? $entry->getAttribute('member') : [];
+                    if (in_array("cn={$user->getUserIndex()},ou=People,dc=leadwire,dc=io", $oldValue) === false) {
+                        $entry->setAttribute('member', array_merge($oldValue, ["cn={$user->getUserIndex()},ou=People,dc=leadwire,dc=io"]));
+                        $this->entryManager->update($entry);
+                    } else {
+                        $ai = $envName . '-' . $application->getApplicationIndex();
                         $this->logger->notice("Entry already up to date [cn={$user->getUserIndex()},ou=People,dc=leadwire,dc=io] in [cn={$ai}]");
                     }
+                } else {
+                    $this->logger->critical("Unable to find LDAP records for demo application {$application->getName()}");
+                    throw new \Exception("Unable to find LDAP records for demo application {$application->getName()}");
                 }
-            } else {
-                $this->logger->critical("Unable to find LDAP records for demo application {$application->getName()}");
-                throw new \Exception("Unable to find LDAP records for demo application {$application->getName()}");
             }
         }
 
