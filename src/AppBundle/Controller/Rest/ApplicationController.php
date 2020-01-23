@@ -43,7 +43,7 @@ class ApplicationController extends Controller
     {
         $data = $applicationService->getApplication($id);
 
-        return $this->renderResponse($data, Response::HTTP_OK, [$group]);
+        return $this->renderResponse($data);
     }
 
     /**

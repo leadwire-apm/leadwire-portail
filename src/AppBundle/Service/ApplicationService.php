@@ -455,7 +455,7 @@ class ApplicationService
                 $this->kibanaService->loadDefaultIndex($appIndex, 'default');
                 $this->kibanaService->makeDefaultIndex($appIndex, 'default');
         
-                $this->kibanaService->createApplicationDashboards($application, $envName );
+                $this->kibanaService->createApplicationDashboards($application, $envName);
         
                 $this->es->deleteIndex($sharedIndex);
         
@@ -492,6 +492,7 @@ class ApplicationService
         ];
 
         try {
+
             $realApp = $this->applicationManager->getOneBy(['id' => $id]);
 
             if ($realApp === null) {
@@ -514,7 +515,8 @@ class ApplicationService
             $state['successful'] = true;
 
             $state['application'] = $realApp;
-            $this->updateIndexApp($realAp);
+
+            $this->updateIndexApp($realApp);
 
         } catch (\Exception $e) {
             $this->logger->error($e->getMessage());
@@ -526,15 +528,22 @@ class ApplicationService
         return $state;
     }
 
+    /**
+     * update application index
+     */
     function updateIndexApp(Application $application){
-        foreach ($this->environmentService->getAll() as $environment) {
+
+        foreach ($application->getEnvironments() as $environment){
             $envName = $environment->getName();
             $sharedIndex =  $envName . "-" . $application->getSharedIndex();
             $appIndex =  $envName . "-" . $application->getApplicationIndex();
-            $this->es->getAlias($application, $envName);
-            $this->processService->emit("heavy-operations-in-progress", "Updating Index-patterns");
+
+            $this->logger->error($envName);
+            $this->logger->error($sharedIndex);
+            $this->logger->error($appIndex);
+
             $this->es->deleteIndex($appIndex);
-            $this->es->createIndexTemplate($application, $applicationService->getActiveApplicationsNames());
+            $this->es->createIndexTemplate($application, $this->getActiveApplicationsNames());
 
             $this->es->createAlias($application, $envName);
 
@@ -544,7 +553,6 @@ class ApplicationService
                 $envName
             );
 
-            $this->processService->emit("heavy-operations-in-progress", "Updating Kibana Dashboards");
             $this->kibanaService->loadDefaultIndex($appIndex, 'default');
             $this->kibanaService->makeDefaultIndex($appIndex, 'default');
 
@@ -560,10 +568,9 @@ class ApplicationService
 
             $this->kibanaService->loadDefaultIndex($sharedIndex, 'default');
             $this->kibanaService->makeDefaultIndex($sharedIndex, 'default');
-
-            $this->processService->emit("heavy-operations-in-progress", "Updating Curator Configurations");
-            $this->curatorService->updateCuratorConfig();
         }
+        $this->curatorService->updateCuratorConfig();
+
     }
 
     /**

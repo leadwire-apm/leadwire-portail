@@ -450,7 +450,6 @@ class ElasticSearchService
 
         foreach ($tenants as $groupName => $tenantGroup) {
             foreach ($tenantGroup as $tenant) {
-
                 $response = $this->httpClient->get(
                     $this->url . ".kibana_$tenant" . "/_search?pretty&from=0&size=10000",
                     [
@@ -472,7 +471,7 @@ class ElasticSearchService
                             $res[$groupName][] = [
                                 "id" => $this->transformeId($element->_id),
                                 "name" => $title,
-                                "private" => $groupName === "Custom" && (new AString($tenant))->startsWith("shared_") === false,
+                                "private" => $groupName === "Custom" && (new AString($tenant))->startsWith($envName . "-" ."shared_") === false,
                                 "tenant" => $tenant,
                                 "visible" => true,
                             ];
