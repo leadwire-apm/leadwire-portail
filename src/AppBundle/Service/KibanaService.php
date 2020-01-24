@@ -96,7 +96,7 @@ class KibanaService
      *
      * @return boolean
      */
-    public function createApplicationDashboards(Application $application, bool $shared = false): bool
+    public function createApplicationDashboards(Application $application, string $environmentName,bool $shared = false): bool
     {
         /** @var MonitoringSet $monitoringSet */
         foreach ($application->getType()->getMonitoringSets() as $monitoringSet) {
@@ -110,7 +110,7 @@ class KibanaService
                 );
                 continue;
             }
-            $replaceService = strtolower($monitoringSet->getQualifier()) . "-" . $application->getName();
+            $replaceService = strtolower($monitoringSet->getQualifier()) . "-" . $environmentName . "-" . $application->getName();
 
             /** @var ?Template $template */
             $template = $monitoringSet->getTemplateByType(Template::DASHBOARDS);
@@ -126,9 +126,9 @@ class KibanaService
             }
 
             if ($shared === true) {
-                $tenant = $application->getSharedIndex();
+                $tenant = $environmentName ."-". $application->getSharedIndex();
             } else {
-                $tenant = $application->getApplicationIndex();
+                $tenant = $environmentName ."-". $application->getApplicationIndex();
             }
 
             $authorization = $this->jwtHelper->encode($this->kibanaAdminUsername, $this->kibanaAdminUuid);
@@ -175,7 +175,7 @@ class KibanaService
      *
      * @return bool
      */
-    public function loadIndexPatternForApplication(Application $application, string $tenant): bool
+    public function loadIndexPatternForApplication(Application $application, string $tenant, string $environmentName): bool
     {
         foreach ($application->getType()->getMonitoringSets() as $monitoringSet) {
             if ($monitoringSet->isValid() === false) {
@@ -201,7 +201,7 @@ class KibanaService
                 throw new \Exception(sprintf("Template (%s) not found for type (%s)", Template::INDEX_PATTERN, $application->getType()->getName()));
             }
 
-            $indexPattern = strtolower($monitoringSet->getQualifier()) . "-" . $application->getName();
+            $indexPattern = strtolower($monitoringSet->getQualifier()) . "-" . $environmentName . "-" . $application->getName();
 
             $content = str_replace("__replace_token__", $indexPattern, $template->getContent());
 

@@ -109,45 +109,6 @@ class SearchGuardService
         $applications = $this->applicationManager->getBy(['removed' => false]);
 
         /** @var Application $application */
-        // foreach ($applications as $application) {
-        //     foreach ($application->getEnvironments() as $environment) {
-        //         $serialized .= $this->serializer->serialize(
-        //             [
-        //                 "sg_{$environment->getName()}_{$application->getName()}_index" => [
-        //                     'cluster' => ['CLUSTER_COMPOSITE_OPS'],
-        //                     'indices' => [
-        //                         "*-sentinl-*" => [
-        //                             "*" => ["READ"],
-        //                         ],
-        //                         "*-{$environment->getName()}-{$application->getName()}-*" => [
-        //                             "*" => ["READ"],
-        //                         ],
-        //                     ],
-        //                 ],
-        //             ],
-        //             'yml'
-        //         );
-
-        //         $serialized .= $this->serializer->serialize(
-        //             [
-        //                 "sg_{$environment->getName()}_{$application->getName()}_kibana_index" => [
-        //                     'cluster' => ['CLUSTER_COMPOSITE_OPS'],
-        //                     'indices' => [
-        //                         "?kibana_{$environment->getName()}_{$application->getApplicationIndex()}" => [
-        //                             "*" => [
-        //                                 "READ",
-        //                                 "indices:data/read/get",
-        //                                 "indices:data/read/search",
-        //                             ],
-        //                         ],
-        //                         "?kibana_{$environment->getName()}_{$application->getSharedIndex()}" => ["*" => ["INDICES_ALL"]],
-        //                     ],
-        //                 ],
-        //             ],
-        //             'yml'
-        //         );
-        //     }
-        // }
 
         $users = $this->userManager->getActiveUsers();
         /** @var User $user */
@@ -167,6 +128,7 @@ class SearchGuardService
                 foreach ($accessLevels as $accessLevel) {
                     $env = $accessLevel->getEnvironment();
                     $app = $accessLevel->getApplication();
+
                     $acl = [
                         "READ" => [
                             "READ",
@@ -183,13 +145,16 @@ class SearchGuardService
                         ];
                     }
                     $kibanaAcl = [];
+                    
+                    $ai = $app->getApplicationIndex();
                     if ($accessLevel->getLevel() == AccessLevel::APP_DASHBOARD_LEVEL) {
-                        $kibanaAcl["?kibana_{$env->getName()}_{$app->getApplicationIndex()}"] = [
+                        $kibanaAcl["?kibana-{$env->getName()}-{$ai}"] = [
                             "*" => $acl[$accessLevel->getAccess()]
                         ];
                     }
+                    $si = $app->getSharedIndex();
                     if ($accessLevel->getLevel() == AccessLevel::SHARED_DASHBOARD_LEVEL) {
-                        $kibanaAcl["?kibana_{$env->getName()}_{$app->getSharedIndex()}"] = [
+                        $kibanaAcl["?kibana-{$env->getName()}-{$si}"] = [
                             "*" => $acl[$accessLevel->getAccess()]
                         ];
                     }

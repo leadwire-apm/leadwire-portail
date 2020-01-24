@@ -57,7 +57,7 @@ class CuratorService
                     'action' => 'alias',
                     'description' => "Add selected indices to or from the specified alias",
                     'options' => [
-                        'name' => "{$qualifier}-{$application->getName()}",
+                        'name' => "{$qualifier}-test-{$application->getName()}",
                         'warn_if_no_indices' => true,
                         'continue_if_exception' => true,
                         'ignore_empty_list' => true,
@@ -67,7 +67,7 @@ class CuratorService
                             [
                                 'filtertype' => 'pattern',
                                 'kind' => 'regex',
-                                'value' => "^{$qualifier}-.*-{$platformName}-{$application->getName()}-.*$",
+                                'value' => "^{$qualifier}-.*-{$platformName}-test-{$application->getName()}-.*$",
                             ],
                         ],
                     ],

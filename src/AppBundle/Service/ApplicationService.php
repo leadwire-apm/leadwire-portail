@@ -27,6 +27,14 @@ use AppBundle\Document\AccessLevel;
 use AppBundle\Manager\UserManager;
 use AppBundle\Manager\AccessLevelManager;
 
+use AppBundle\Service\ProcessService;
+use AppBundle\Service\CuratorService;
+use AppBundle\Service\ElasticSearchService;
+use AppBundle\Service\KibanaService;
+use AppBundle\Service\LdapService;
+use AppBundle\Service\SearchGuardService;
+use AppBundle\Service\StatService;
+
 /**
  * Service class for App entities
  *
@@ -99,6 +107,41 @@ class ApplicationService
     private $userManager;
 
     /**
+     * @var ProcessService
+     */
+    private $processService;
+
+    /**
+     * @var CuratorService
+     */
+    private $curatorService;
+
+    /**
+     * @var ElasticSearchService
+     */
+    private $elasticSearchService;
+
+    /**
+     * @var KibanaService
+     */
+    private $kibanaService;
+
+    /**
+     * @var LdapService
+     */
+    private $ldapService;
+
+    /**
+     * @var SearchGuardService
+     */
+    private $searchGuardService;
+
+    /**
+     * @var StatService
+     */
+    private $statService;
+
+    /**
      * Constructor
      *
      * @param AccessLevelManager $accessLevelManager
@@ -114,6 +157,13 @@ class ApplicationService
      * @param DashboardManager $dashboardManager
      * @param EnvironmentService $environmentService
      * @param UserManager $userManager
+     * @param ProcessService $processService
+     * @param CuratorService $curatorService
+     * @param ElasticSearchService $elasticSearchService
+     * @param KibanaService $kibanaService
+     * @param LdapService $ldapService
+     * @param SearchGuardService $searchGuardService
+     * @param StatService $statService
      */
     public function __construct(
         AccessLevelManager $accessLevelManager,
@@ -128,7 +178,14 @@ class ApplicationService
         ActivationCodeService $activationCodeService,
         DashboardManager $dashboardManager,
         EnvironmentService $environmentService,
-        UserManager $userManager
+        UserManager $userManager,
+        ProcessService $processService,
+        CuratorService $curatorService,
+        ElasticSearchService $elasticSearchService,
+        KibanaService $kibanaService,
+        LdapService $ldapService,
+        SearchGuardService $searchGuardService,
+        StatService $statService
     ) {
         $this->accessLevelManager = $accessLevelManager;
         $this->applicationManager = $applicationManager;
@@ -143,6 +200,13 @@ class ApplicationService
         $this->dashboardManager = $dashboardManager;
         $this->environmentService = $environmentService;
         $this->userManager = $userManager;
+        $this->processService = $processService;
+        $this->curatorService = $curatorService;
+        $this->es = $elasticSearchService;
+        $this->kibanaService = $kibanaService;
+        $this->ldapService = $ldapService;
+        $this->sg = $searchGuardService;
+        $this->statService = $statService;
     }
 
     /**
@@ -351,14 +415,65 @@ class ApplicationService
                         ->setEnvironment($environment)
                         ->setApplication($application)
                         ->setLevel(AccessLevel::APP_DATA_LEVEL)
-                        ->setAccess(AccessLevel::WRITE_ACCESS)
-                    )
-                ;
+                        ->setAccess(AccessLevel::WRITE_ACCESS));     
             }
             $this->userManager->update($user);
         }
-
+        $this->createIndexApp($application, $user);
         return $application;
+    }
+
+    /**
+     * create application index and shared index
+     * 
+     */
+    function createIndexApp(Application $application, User $user){
+        if($application !== null){
+
+            foreach ($this->environmentService->getAll() as $environment) {
+                $envName = $environment->getName();
+                $sharedIndex =  $envName . "-" . $application->getSharedIndex();
+                $appIndex =  $envName . "-" . $application->getApplicationIndex();
+    
+                $this->ldapService->createApplicationEntry($application);
+    
+                $this->ldapService->registerApplication($user, $application);
+        
+                $this->es->deleteIndex($appIndex);
+                
+                // ---> not sure
+                $this->es->createIndexTemplate($application, $this->getActiveApplicationsNames());
+    
+                $this->es->createAlias($application, $envName);
+    
+                $this->kibanaService->loadIndexPatternForApplication(
+                    $application,
+                    $appIndex,
+                    $envName 
+                );
+    
+                $this->kibanaService->loadDefaultIndex($appIndex, 'default');
+                $this->kibanaService->makeDefaultIndex($appIndex, 'default');
+        
+                $this->kibanaService->createApplicationDashboards($application, $envName);
+        
+                $this->es->deleteIndex($sharedIndex);
+        
+                $this->kibanaService->loadIndexPatternForApplication(
+                    $application,
+                    $sharedIndex,
+                    $envName
+                );
+        
+                $this->kibanaService->loadDefaultIndex($sharedIndex, 'default');
+                $this->kibanaService->makeDefaultIndex($sharedIndex, 'default');
+    
+            }
+        
+            $this->sg->updateSearchGuardConfig();
+    
+            $this->curatorService->updateCuratorConfig();
+        }
     }
 
     /**
@@ -377,6 +492,7 @@ class ApplicationService
         ];
 
         try {
+
             $realApp = $this->applicationManager->getOneBy(['id' => $id]);
 
             if ($realApp === null) {
@@ -399,6 +515,9 @@ class ApplicationService
             $state['successful'] = true;
 
             $state['application'] = $realApp;
+
+            $this->updateIndexApp($realApp);
+
         } catch (\Exception $e) {
             $this->logger->error($e->getMessage());
             $state['successful'] = false;
@@ -407,6 +526,51 @@ class ApplicationService
         }
 
         return $state;
+    }
+
+    /**
+     * update application index
+     */
+    function updateIndexApp(Application $application){
+
+        foreach ($application->getEnvironments() as $environment){
+            $envName = $environment->getName();
+            $sharedIndex =  $envName . "-" . $application->getSharedIndex();
+            $appIndex =  $envName . "-" . $application->getApplicationIndex();
+
+            $this->logger->error($envName);
+            $this->logger->error($sharedIndex);
+            $this->logger->error($appIndex);
+
+            $this->es->deleteIndex($appIndex);
+            $this->es->createIndexTemplate($application, $this->getActiveApplicationsNames());
+
+            $this->es->createAlias($application, $envName);
+
+            $this->kibanaService->loadIndexPatternForApplication(
+                $application,
+                $appIndex,
+                $envName
+            );
+
+            $this->kibanaService->loadDefaultIndex($appIndex, 'default');
+            $this->kibanaService->makeDefaultIndex($appIndex, 'default');
+
+            $this->kibanaService->createApplicationDashboards($application, $envName);
+
+            $this->es->deleteIndex($sharedIndex);
+
+            $this->kibanaService->loadIndexPatternForApplication(
+                $application,
+                $sharedIndex,
+                $envName
+            );
+
+            $this->kibanaService->loadDefaultIndex($sharedIndex, 'default');
+            $this->kibanaService->makeDefaultIndex($sharedIndex, 'default');
+        }
+        $this->curatorService->updateCuratorConfig();
+
     }
 
     /**

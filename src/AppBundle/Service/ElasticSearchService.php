@@ -87,10 +87,10 @@ class ElasticSearchService
      * @param Application $app
      * @param User $user
      */
-    public function getDashboads(Application $app, User $user)
+    public function getDashboads(Application $app, User $user, string $envName)
     {
         try {
-            $dashboards = $this->filter($app, $user, $this->getRawDashboards($app, $user));
+            $dashboards = $this->filter($app, $user, $this->getRawDashboards($app, $user, $envName));
             return $dashboards;
         } catch (\Exception $e) {
             $this->logger->error($e->getMessage());
@@ -102,10 +102,10 @@ class ElasticSearchService
      * @param Application $app
      * @param User $user
      */
-    public function getReports(Application $app, User $user)
+    public function getReports(Application $app, User $user, string $envName)
     {
         try {
-            $reports = $this->filter($this->getRawReports($app, $user));
+            $reports = $this->filter($this->getRawReports($app, $user, $envName));
             return $reports;
         } catch (\Exception $e) {
             $this->logger->error($e->getMessage());
@@ -264,7 +264,7 @@ class ElasticSearchService
      *
      * @return array
      */
-    public function createAlias(Application $application): array
+    public function createAlias(Application $application, string $environmentName): array
     {
         $now = $application->getCreatedAt()->format('Y-m-d');
         $createdAliases = [];
@@ -277,7 +277,7 @@ class ElasticSearchService
 
         foreach ($application->getType()->getMonitoringSets() as $ms) {
             $qualifier = \strtolower($ms->getQualifier());
-            $indexName = "{$qualifier}-enabled-$applicationName-$now";
+            $indexName = "{$qualifier}-enabled-$environmentName-$applicationName-$now";
             $response = $this->httpClient->delete($this->url . $indexName, ['auth' => $this->getAuth()]);
             $this->logger->notice(
                 "leadwire.es.createAlias",
@@ -313,8 +313,8 @@ class ElasticSearchService
             );
 
             $body = \json_decode($bodyString, false);
-            $aliasName = \strtolower($ms->getQualifier()) . "-$applicationName";
-            $indexName = \strtolower($ms->getQualifier()) . "-*-$applicationName-*";
+            $aliasName = \strtolower($ms->getQualifier()) . "-" . $environmentName . "-" . $applicationName;
+            $indexName = \strtolower($ms->getQualifier()) . "-*-". $environmentName . "-" . $applicationName . "-*";
             $createdAliases[] = $aliasName;
             $body->actions[0]->add->index = $indexName;
             $body->actions[0]->add->alias = $aliasName;
@@ -329,13 +329,14 @@ class ElasticSearchService
             );
 
             $this->logger->notice(
-                "leadwire.es.createAlias",
+                "----------leadwire.es.createAlias",
                 [
                     'status_code' => $response->getStatusCode(),
                     'phrase' => $response->getReasonPhrase(),
                     'url' => $this->url . "_aliases",
                     'verb' => 'POST',
                     'headers' => $headers,
+                    'index' => $indexName
                 ]
             );
         }
@@ -436,7 +437,7 @@ class ElasticSearchService
      * @param Application $app
      * @param User $user
      */
-    protected function getRawDashboards(Application $app, User $user)
+    protected function getRawDashboards(Application $app, User $user, string $envName)
     {
         $res = [
             "Default" => [],
@@ -444,13 +445,12 @@ class ElasticSearchService
         ];
 
         $tenants = [
-            "Default" => $this->hasAllUserTenant === true ? [$user->getAllUserIndex(), $app->getApplicationIndex()] : [$app->getApplicationIndex()],
-            "Custom" => [$user->getUserIndex(), $app->getSharedIndex()],
+            "Default" => $this->hasAllUserTenant === true ? [$user->getAllUserIndex(), $envName . "-" . $app->getApplicationIndex()] : [$envName . "-" . $app->getApplicationIndex()],
+            "Custom" => [$user->getUserIndex(), $envName . "-" . $app->getSharedIndex()],
         ];
 
         foreach ($tenants as $groupName => $tenantGroup) {
             foreach ($tenantGroup as $tenant) {
-
                 $response = $this->httpClient->get(
                     $this->url . ".kibana_$tenant" . "/_search?pretty&from=0&size=10000",
                     [
@@ -472,7 +472,7 @@ class ElasticSearchService
                             $res[$groupName][] = [
                                 "id" => $this->transformeId($element->_id),
                                 "name" => $title,
-                                "private" => $groupName === "Custom" && (new AString($tenant))->startsWith("shared_") === false,
+                                "private" => $groupName === "Custom" && (new AString($tenant))->startsWith($envName . "-" ."shared_") === false,
                                 "tenant" => $tenant,
                                 "visible" => true,
                             ];
@@ -499,7 +499,7 @@ class ElasticSearchService
      * @param Application $app
      * @param User $user
      */
-    protected function getRawReports(Application $app, User $user)
+    protected function getRawReports(Application $app, User $user, string $envName)
     {
         $res = [
             "Default" => [],
@@ -507,8 +507,8 @@ class ElasticSearchService
         ];
 
         $tenants = [
-            "Default" => $this->hasAllUserTenant === true ? [$user->getAllUserIndex(), $app->getApplicationIndex()] : [$app->getApplicationIndex()],
-            "Custom" => [$user->getUserIndex(), $app->getSharedIndex()],
+            "Default" => $this->hasAllUserTenant === true ? [$user->getAllUserIndex(), $envName . "-" . $app->getApplicationIndex()] : [$envName . "-" . $app->getApplicationIndex()],
+            "Custom" => [$user->getUserIndex(), $envName . "-" . $app->getSharedIndex()],
         ];
 
         foreach ($tenants as $groupName => $tenantGroup) {

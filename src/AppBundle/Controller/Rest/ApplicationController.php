@@ -43,15 +43,16 @@ class ApplicationController extends Controller
     {
         $data = $applicationService->getApplication($id);
 
-        return $this->renderResponse($data, Response::HTTP_OK, [$group]);
+        return $this->renderResponse($data);
     }
 
     /**
-     * @Route("/{id}/dashboards", methods="GET")
+     * @Route("/{id}/dashboards/{envName}", methods="GET")
      *
      * @param Request $request
      * @param ApplicationService $applicationService
      * @param string  $id
+     * @param string  $envName
      *
      * @return Response
      */
@@ -59,37 +60,39 @@ class ApplicationController extends Controller
         Request $request,
         ApplicationService $applicationService,
         ElasticSearchService $esService,
-        $id
+        $id,
+        $envName
     ) {
         $app = $applicationService->getApplication($id);
         if ($app === null) {
             throw new HttpException(Response::HTTP_NOT_FOUND, "App not Found");
         } else {
-            $dashboards = $esService->getDashboads($app, $this->getUser());
+            $dashboards = $esService->getDashboads($app, $this->getUser(), $envName);
             return $this->renderResponse($dashboards);
         }
     }
 
     /**
-     * @Route("/{id}/reports", methods="GET")
+     * @Route("/{id}/reports/{envName}", methods="GET")
      *
      * @param Request $request
      * @param ApplicationService $applicationService
      * @param string  $id
-     *
+     * @param sring $envName
      * @return Response
      */
     public function getApplicationReportsAction(
         Request $request,
         ApplicationService $applicationService,
         ElasticSearchService $esService,
-        $id
+        $id,
+        $envName
     ) {
         $app = $applicationService->getApplication($id);
         if ($app === null) {
             throw new HttpException(Response::HTTP_NOT_FOUND, "App not Found");
         } else {
-            $reports = $esService->getReports($app, $this->getUser());
+            $reports = $esService->getReports($app, $this->getUser(),  $envName);
             return $this->renderResponse($reports);
         }
     }
@@ -198,48 +201,7 @@ class ApplicationController extends Controller
         try {
             $data = $request->getContent();
             $application = $applicationService->newApplication($data, $this->getUser());
-
-            if ($application !== null) {
-                // Application created in MongoDB. proceed with LDAP & ES entries
-                $processService->emit("heavy-operations-in-progress", "Creating LDAP Entries");
-                $ldapService->createApplicationEntry($application);
-                $ldapService->registerApplication($this->getUser(), $application);
-
-                $processService->emit("heavy-operations-in-progress", "Creating Index-patterns");
-                $esService->deleteIndex($application->getApplicationIndex());
-                $esService->createIndexTemplate($application, $applicationService->getActiveApplicationsNames());
-
-                $esService->createAlias($application);
-
-                $processService->emit("heavy-operations-in-progress", "Creating Kibana Dashboards");
-                $kibanaService->loadIndexPatternForApplication(
-                    $application,
-                    $application->getApplicationIndex()
-                );
-
-                $kibanaService->loadDefaultIndex($application->getApplicationIndex(), 'default');
-                $kibanaService->makeDefaultIndex($application->getApplicationIndex(), 'default');
-
-                $kibanaService->createApplicationDashboards($application);
-
-                $esService->deleteIndex($application->getSharedIndex());
-
-                $kibanaService->loadIndexPatternForApplication(
-                    $application,
-                    $application->getSharedIndex()
-                );
-
-                $kibanaService->loadDefaultIndex($application->getSharedIndex(), 'default');
-                $kibanaService->makeDefaultIndex($application->getSharedIndex(), 'default');
-
-                $processService->emit("heavy-operations-in-progress", "Configuring SearchGuard");
-                $sgService->updateSearchGuardConfig();
-
-                $processService->emit("heavy-operations-in-progress", "Updating Curator Configurations");
-                $curatorService->updateCuratorConfig();
-
-                $status = true;
-            }
+            $status = true;
             $processService->emit("heavy-operations-done", "Successeded");
         } catch (DuplicateApplicationNameException $e) {
             $processService->emit("heavy-operations-done", "Failed");
@@ -285,41 +247,7 @@ class ApplicationController extends Controller
         try {
             $data = $request->getContent();
             $state = $applicationService->updateApplication($data, $id);
-            $esService->getAlias($application);
-            if ($state['esUpdateRequired'] === true) {
-                $application = $state['application'];
-                $processService->emit("heavy-operations-in-progress", "Updating Index-patterns");
-                $esService->deleteIndex($application->getApplicationIndex());
-                $esService->createIndexTemplate($application, $applicationService->getActiveApplicationsNames());
-
-                //$aliases = $esService->createAlias($application);
-
-                $kibanaService->loadIndexPatternForApplication(
-                    $application,
-                    $application->getApplicationIndex()
-                );
-
-                $processService->emit("heavy-operations-in-progress", "Updating Kibana Dashboards");
-                $kibanaService->loadDefaultIndex($application->getApplicationIndex(), 'default');
-                $kibanaService->makeDefaultIndex($application->getApplicationIndex(), 'default');
-
-                $kibanaService->createApplicationDashboards($application);
-
-                $esService->deleteIndex($application->getSharedIndex());
-
-                $kibanaService->loadIndexPatternForApplication(
-                    $application,
-                    $application->getSharedIndex()
-                );
-
-                $kibanaService->loadDefaultIndex($application->getSharedIndex(), 'default');
-                $kibanaService->makeDefaultIndex($application->getSharedIndex(), 'default');
-
-                $processService->emit("heavy-operations-in-progress", "Updating Curator Configurations");
-                $curatorService->updateCuratorConfig();
-            }
             $processService->emit("heavy-operations-done", "Succeeded");
-
             return $this->renderResponse($state['successful']);
         } catch (MongoDuplicateKeyException $e) {
             $processService->emit("heavy-operations-done", "Failed");
@@ -470,31 +398,41 @@ class ApplicationController extends Controller
         $application = $applicationService->getApplication($id);
         $processService->emit("heavy-operations-in-progress", "Updating Application Type");
         if ($application instanceof Application) {
+            
             $processService->emit("heavy-operations-in-progress", "Updating Index-patterns");
-            $esService->deleteIndex($application->getApplicationIndex());
-            $esService->createIndexTemplate($application, $applicationService->getActiveApplicationsNames());
-           // $aliases = $esService->createAlias($application);
-            $processService->emit("heavy-operations-in-progress", "Updating Kibana Dashboards");
-            $kibanaService->loadIndexPatternForApplication(
-                $application,
-                $application->getApplicationIndex()
-            );
 
-            $kibanaService->loadDefaultIndex($application->getApplicationIndex(), 'default');
-            $kibanaService->makeDefaultIndex($application->getApplicationIndex(), 'default');
+            foreach($application->getEnvironments as $environment){
+             
+                $envName = $environment->getName();
+                $sharedIndex =  $envName . "-" . $application->getSharedIndex();
+                $appIndex =  $envName . "-" . $application->getApplicationIndex();
 
-            $kibanaService->createApplicationDashboards($application);
-
-            $esService->deleteIndex($application->getSharedIndex());
-
-            $kibanaService->loadIndexPatternForApplication(
-                $application,
-                $application->getSharedIndex()
-            );
-
-            $kibanaService->loadDefaultIndex($application->getSharedIndex(), 'default');
-            $kibanaService->makeDefaultIndex($application->getSharedIndex(), 'default');
-
+                $esService->deleteIndex($appIndex);
+                $esService->createIndexTemplate($application, $applicationService->getActiveApplicationsNames());
+                $esService->createAlias($application, $envName);
+                $processService->emit("heavy-operations-in-progress", "Updating Kibana Dashboards");
+                $kibanaService->loadIndexPatternForApplication(
+                    $application,
+                    $appIndex,
+                    $envName
+                );
+    
+                $kibanaService->loadDefaultIndex($appIndex, 'default');
+                $kibanaService->makeDefaultIndex($appIndex, 'default');
+    
+                $kibanaService->createApplicationDashboards($application, $envName);
+    
+                $esService->deleteIndex($sharedIndex);
+    
+                $kibanaService->loadIndexPatternForApplication(
+                    $application,
+                    $sharedIndex,
+                    $envName
+                );
+    
+                $kibanaService->loadDefaultIndex($sharedIndex, 'default');
+                $kibanaService->makeDefaultIndex($sharedIndex, 'default');
+            }
             $application->setDeployedTypeVersion($application->getType()->getVersion());
             $applicationManager->update($application);
             $processService->emit("heavy-operations-done", "Succeeded");

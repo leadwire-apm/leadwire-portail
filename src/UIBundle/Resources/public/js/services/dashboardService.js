@@ -22,7 +22,7 @@
      * @param $state
      * @constructor
      */
-    function DashboardServiceFN (
+    function DashboardServiceFN(
         ApplicationFactory,
         MenuFactory,
         $rootScope,
@@ -73,7 +73,7 @@
             $localStorage.currentApplicationMenus = $localStorage.currentMenu;
         };
 
-        service.getDashboard = function(tenant, dashboardId) {
+        service.getDashboard = function (tenant, dashboardId) {
             return CONFIG.KIBANA_BASE_URL + tenant + '?token=' + $auth.getToken() + '#/dashboard/' + dashboardId;
         };
         /**
@@ -83,7 +83,7 @@
          */
         service.fetchDashboardsByAppId = function (appId) {
             return new Promise(function (resolve, reject) {
-                ApplicationFactory.findMyDashboard(appId)
+                ApplicationFactory.findMyDashboard(appId, $localStorage.selectedEnv.name)
                     .then(function (response) {
                         $localStorage.dashboards = response.data.Default;
                         //inform other controller that we changed context
@@ -116,7 +116,7 @@
          */
         service.fetchDashboardsListByAppId = function (appId) {
             return new Promise(function (resolve, reject) {
-                ApplicationFactory.findMyDashboard(appId)
+                ApplicationFactory.findMyDashboard(appId, $localStorage.selectedEnv.name)
                     .then(function (response) {
                         resolve(response.data.Default);
                     })

@@ -76,28 +76,30 @@ Load default Application Type. Insert template for Kibana and more..'
         $this->display($output, "Initializing ES & Kibana");
         /** @var Application $application */
         foreach ($demoApplications as $application) {
-            $es->deleteIndex($application->getApplicationIndex());
+            $es->deleteIndex("test-" . $application->getApplicationIndex());
             $es->createIndexTemplate($application, $applicationService->getActiveApplicationsNames());
-            $es->createAlias($application);
+            $es->createAlias($application, "test");
             $kibana->loadIndexPatternForApplication(
                 $application,
-                $application->getApplicationIndex()
+                "test-" . $application->getApplicationIndex(),
+                "test"
             );
 
-            $kibana->createApplicationDashboards($application);
+            $kibana->createApplicationDashboards($application, "test");
 
-            $es->deleteIndex($application->getSharedIndex());
+            $es->deleteIndex("test-" . $application->getSharedIndex());
 
             $kibana->loadIndexPatternForApplication(
                 $application,
-                $application->getSharedIndex()
+                "test-" . $application->getSharedIndex(),
+                "test"
             );
 
-            $kibana->loadDefaultIndex($application->getApplicationIndex(), 'default');
-            $kibana->makeDefaultIndex($application->getApplicationIndex(), 'default');
+            $kibana->loadDefaultIndex("test-" . $application->getApplicationIndex(), 'default');
+            $kibana->makeDefaultIndex("test-" . $application->getApplicationIndex(), 'default');
 
-            $kibana->loadDefaultIndex($application->getSharedIndex(), 'default');
-            $kibana->makeDefaultIndex($application->getSharedIndex(), 'default');
+            $kibana->loadDefaultIndex("test-" . $application->getSharedIndex(), 'default');
+            $kibana->makeDefaultIndex("test-" . $application->getSharedIndex(), 'default');
         }
 
         if ($stripeEnabled === true) {
