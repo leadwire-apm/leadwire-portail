@@ -820,6 +820,7 @@ class ElasticSearchService
                     'headers' => [
                         "Content-Type" => "application/json"
                     ],
+                    'body' => \json_encode(["description" => "'"]),
                 ]
 
             );
@@ -829,7 +830,8 @@ class ElasticSearchService
                 [
                     'url' => $this->url . "_opendistro/_security/api/tenants/" . $tenantName,
                     'verb' => 'PUT',
-                    'status_code' => $response->getStatusCode()
+                    'status_code' => $response->getStatusCode(),
+                    'status' => $response->getBody()
                 ]
             );
             
@@ -851,7 +853,7 @@ class ElasticSearchService
             $status = false;
             $response = $this->httpClient->delete(
 
-                $this->url . "_opendistro/_security/api/tenants/.kibana_$tenantName",
+                $this->url . "_opendistro/_security/api/tenants/.$tenantName",
                 [
                     'auth' => $this->getAuth(),
                     'headers' => [
