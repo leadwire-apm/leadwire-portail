@@ -831,7 +831,7 @@ class ElasticSearchService
                     'url' => $this->url . "_opendistro/_security/api/tenants/" . $tenantName,
                     'verb' => 'PUT',
                     'status_code' => $response->getStatusCode(),
-                    'status' => $response->getBody()
+                    'status' => $response->getBody()->status
                 ]
             );
             
@@ -884,24 +884,27 @@ class ElasticSearchService
         }
     }
 
-    function createRole(string $tenant, string $acl): bool{
+    function createRole(string $roleName): bool{
         try {
 
             $status = false;
 
             $role = [
+                "cluster_permissions" => array("cluster_composite_ops", "indices_monitor"),
+                "index_permissions" => array("index_patterns" => array()),
+                "dls" => "",
+                "fls" => array(),
+                "masked_fields" => array(),
+                "allowed_actions" => array("read"),
                 "tenant_permissions" => [
                     "tenant_patterns" => array(),
-                    "allowed_actions" => array(),
+                    "allowed_actions" => array("kibana_all_read"),
                 ]
             ];
 
-            array_push($role["tenant_permissions"]["tenant_patterns"], $tenant);
-            array_push($role["tenant_permissions"]["allowed_actions"], $acl);
-
             $response = $this->httpClient->put(
 
-                $this->url . "_opendistro/_security/api/roles/" . $tenant,
+                $this->url . "_opendistro/_security/api/roles/" . $roleName,
                 [
                     'auth' => $this->getAuth(),
                     'headers' => [
@@ -915,7 +918,7 @@ class ElasticSearchService
             $this->logger->notice(
                 "leadwire.opendistro.createRole",
                 [
-                    'url' => $this->url . "_opendistro/_security/api/roles/" . $tenant,
+                    'url' => $this->url . "_opendistro/_security/api/roles/" . $roleName,
                     'verb' => 'PUT',
                     'status_code' => $response->getStatusCode()
                 ]
@@ -933,14 +936,59 @@ class ElasticSearchService
         }
     }
 
-    function deleteRole(string $tenant): bool{
+    function patchRole(string $path, string $action, array $value): bool{
+        try {
+
+            $status = false;
+            
+            $body = [
+                "op" => $action,
+                "path" => $path,
+                "value" => $value,
+            ];
+
+            $response = $this->httpClient->patch(
+
+                $this->url . "_opendistro/_security/api/roles",
+                [
+                    'auth' => $this->getAuth(),
+                    'headers' => [
+                        "Content-Type" => "application/json",
+                    ],
+                    'body' => \json_encode($body),
+                ]
+
+            );
+
+            $this->logger->notice(
+                "leadwire.opendistro.createRole",
+                [
+                    'url' => $this->url . "_opendistro/_security/api/roles",
+                    'verb' => 'PATCH',
+                    'status_code' => $response->getStatusCode()
+                ]
+            );
+            
+            if($response->getBody()->status == "OK"){
+                $status= true;
+            }
+
+            return $status;
+
+        } catch (\Exception $e) {
+            $this->logger->error($e->getMessage());
+            throw new HttpException("An error has occurred while executing your request.",400);
+        }
+    }
+
+    function deleteRole(string $roleName): bool{
         try {
 
             $status = false;
 
             $response = $this->httpClient->patch(
 
-                $this->url . "_opendistro/_security/api/roles/" . $tenant,
+                $this->url . "_opendistro/_security/api/roles/" . $roleName,
                 [
                     'auth' => $this->getAuth(),
                     'headers' => [
@@ -953,7 +1001,7 @@ class ElasticSearchService
             $this->logger->notice(
                 "leadwire.opendistro.deleteRole",
                 [
-                    'url' => $this->url . "_opendistro/_security/api/roles/" . $tenant,
+                    'url' => $this->url . "_opendistro/_security/api/roles/" . $roleName,
                     'verb' => 'PATCH',
                     'status_code' => $response->getStatusCode()
                 ]
