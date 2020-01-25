@@ -767,4 +767,293 @@ class ElasticSearchService
         }
       
     }
+    
+    /*****************************opendistro*************************************/
+
+
+    function createUser(User $user): bool{
+        try {
+            $status = false;
+            $response = $this->httpClient->put(
+
+                $this->url . "_opendistro/_security/api/internalusers/" . $user->getUsername(),
+                [
+                    'auth' => $this->getAuth(),
+                    'headers' => [
+                        "Content-Type" => "application/json",
+                    ],
+                    'body' => \json_encode(["password" => $user->getUsername()]),
+                ]
+
+            );
+
+            $this->logger->notice(
+                "leadwire.opendistro.createUser",
+                [
+                    'url' => $this->url . "_opendistro/_security/api/internalusers/" . $user->getUsername(),
+                    'verb' => 'PUT',
+                    'status_code' => $response->getStatusCode()
+                ]
+            );
+            
+            if($response->getBody()->status == "CREATED"){
+                $status= true;
+            }
+
+            return $status;
+
+        } catch (\Exception $e) {
+            $this->logger->error($e->getMessage());
+            throw new HttpException("An error has occurred while executing your request.",400);
+        }
+    }
+
+    function createTenant(string $tenantName): bool{
+        try {
+
+            $status = false;
+            $response = $this->httpClient->put(
+
+                $this->url . "_opendistro/_security/api/tenants/" . $tenantName,
+                [
+                    'auth' => $this->getAuth(),
+                    'headers' => [
+                        "Content-Type" => "application/json"
+                    ],
+                ]
+
+            );
+
+            $this->logger->notice(
+                "leadwire.opendistro.createTenant",
+                [
+                    'url' => $this->url . "_opendistro/_security/api/tenants/" . $tenantName,
+                    'verb' => 'PUT',
+                    'status_code' => $response->getStatusCode()
+                ]
+            );
+            
+            if($response->getBody()->status == "CREATED"){
+                $status= true;
+            }
+
+            return $status;
+
+        } catch (\Exception $e) {
+            $this->logger->error($e->getMessage());
+            throw new HttpException("An error has occurred while executing your request.",400);
+        }
+    }
+
+    function deleteTenant(string $tenantName): bool{
+        try {
+
+            $status = false;
+            $response = $this->httpClient->delete(
+
+                $this->url . "_opendistro/_security/api/tenants/.kibana_$tenantName",
+                [
+                    'auth' => $this->getAuth(),
+                    'headers' => [
+                        "Content-Type" => "application/json"
+                    ],
+                ]
+
+            );
+
+            $this->logger->notice(
+                "leadwire.opendistro.deleteTenant",
+                [
+                    'url' => $this->url . "_opendistro/_security/api/tenants/.kibana_$tenantName",
+                    'verb' => 'DELETE',
+                    'status_code' => $response->getStatusCode()
+                ]
+            );
+            
+            if($response->getBody()->status == "OK"){
+                $status= true;
+            }
+
+            return $status;
+
+        } catch (\Exception $e) {
+            $this->logger->error($e->getMessage());
+            throw new HttpException("An error has occurred while executing your request.",400);
+        }
+    }
+
+    function createRole(string $tenant, string $acl): bool{
+        try {
+
+            $status = false;
+
+            $role = [
+                "tenant_permissions" => [
+                    "tenant_patterns" => array(),
+                    "allowed_actions" => array(),
+                ]
+            ];
+
+            array_push($role["tenant_permissions"]["tenant_patterns"], $tenant);
+            array_push($role["tenant_permissions"]["allowed_actions"], $acl);
+
+            $response = $this->httpClient->put(
+
+                $this->url . "_opendistro/_security/api/roles/" . $tenant,
+                [
+                    'auth' => $this->getAuth(),
+                    'headers' => [
+                        "Content-Type" => "application/json",
+                    ],
+                    'body' => \json_encode($role),
+                ]
+
+            );
+
+            $this->logger->notice(
+                "leadwire.opendistro.createRole",
+                [
+                    'url' => $this->url . "_opendistro/_security/api/roles/" . $tenant,
+                    'verb' => 'PUT',
+                    'status_code' => $response->getStatusCode()
+                ]
+            );
+            
+            if($response->getBody()->status == "CREATED"){
+                $status= true;
+            }
+
+            return $status;
+
+        } catch (\Exception $e) {
+            $this->logger->error($e->getMessage());
+            throw new HttpException("An error has occurred while executing your request.",400);
+        }
+    }
+
+    function deleteRole(string $tenant): bool{
+        try {
+
+            $status = false;
+
+            $response = $this->httpClient->patch(
+
+                $this->url . "_opendistro/_security/api/roles/" . $tenant,
+                [
+                    'auth' => $this->getAuth(),
+                    'headers' => [
+                        "Content-Type" => "application/json",
+                    ]
+                ]
+
+            );
+
+            $this->logger->notice(
+                "leadwire.opendistro.deleteRole",
+                [
+                    'url' => $this->url . "_opendistro/_security/api/roles/" . $tenant,
+                    'verb' => 'PATCH',
+                    'status_code' => $response->getStatusCode()
+                ]
+            );
+            
+            if($response->getBody()->status == "OK"){
+                $status= true;
+            }
+
+            return $status;
+
+        } catch (\Exception $e) {
+            $this->logger->error($e->getMessage());
+            throw new HttpException("An error has occurred while executing your request.",400);
+        }
+    }
+
+    function createRoleMapping(string $tenant, string $userName): bool{
+        try {
+
+            $status = false;
+
+            $role = [
+                "backend_roles" => array(),
+                "users" => array()
+            ];
+
+            array_push($role["backend_roles"], $tenant);
+            array_push($role["users"], $userName);
+
+
+            $response = $this->httpClient->put(
+
+                $this->url . "_opendistro/_security/api/rolesmapping/" . $tenant,
+                [
+                    'auth' => $this->getAuth(),
+                    'headers' => [
+                        "Content-Type" => "application/json",
+                    ],
+                    'body' => \json_encode($role),
+                ]
+
+            );
+
+            $this->logger->notice(
+                "leadwire.opendistro.createRoleMapping",
+                [
+                    'url' => $this->url . "_opendistro/_security/api/rolesmapping/" . $tenant,
+                    'verb' => 'PUT',
+                    'status_code' => $response->getStatusCode()
+                ]
+            );
+            
+            if($response->getBody()->status == "CREATED"){
+                $status= true;
+            }
+
+            return $status;
+
+        } catch (\Exception $e) {
+            $this->logger->error($e->getMessage());
+            throw new HttpException("An error has occurred while executing your request.",400);
+        }
+    }
+
+    function deleteRoleMapping(string $tenant): bool{
+        try {
+
+            $status = false;
+
+            $response = $this->httpClient->delete(
+
+                $this->url . "_opendistro/_security/api/rolesmapping/" . $tenant,
+                [
+                    'auth' => $this->getAuth(),
+                    'headers' => [
+                        "Content-Type" => "application/json",
+                    ],
+                ]
+
+            );
+
+            $this->logger->notice(
+                "leadwire.opendistro.createRoleMapping",
+                [
+                    'url' => $this->url . "_opendistro/_security/api/rolesmapping/" . $tenant,
+                    'verb' => 'DELETE',
+                    'status_code' => $response->getStatusCode()
+                ]
+            );
+            
+            if($response->getBody()->status == "OK"){
+                $status= true;
+            }
+
+            return $status;
+
+        } catch (\Exception $e) {
+            $this->logger->error($e->getMessage());
+            throw new HttpException("An error has occurred while executing your request.",400);
+        }
+    }
+
+    /****************************************************************************/
 }
