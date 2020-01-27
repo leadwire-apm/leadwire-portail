@@ -1212,7 +1212,7 @@ class ElasticSearchService
             $status = false;
             $response = $this->httpClient->delete(
 
-                $this->url . "*" ,
+                $this->url . "apm-*,metricbeat-*,.kibana*" ,
                 [
                     'auth' => $this->getAuth(),
                     'headers' => [
@@ -1225,7 +1225,7 @@ class ElasticSearchService
             $this->logger->notice(
                 "leadwire.es.purge.indices",
                 [
-                    'url' => $this->url . "*" ,
+                    'url' => $this->url . "apm-*,metricbeat-*,.kibana*" ,
                     'verb' => 'DELETE',
                     'status_code' => $response->getStatusCode(),
                     'status_text' => $response->getReasonPhrase()
