@@ -317,7 +317,7 @@ class AuthService
         if ($user !== null) {
             // User creation in DB is successful
             // Should create LDAP & ElasticSearch entries
-            $this->processService->emit("heavy-operations-in-progress", "Creating LDAP Entries");
+            //$this->processService->emit("heavy-operations-in-progress", "Creating LDAP Entries");
             //$this->ldapService->createNewUserEntries($user);
             //$this->ldapService->registerDemoApplications($user);
             $this->processService->emit("heavy-operations-in-progress", "Register Applications");
@@ -331,7 +331,7 @@ class AuthService
             $this->kibanaService->loadDefaultIndex($user->getUserIndex(), 'default');
             $this->kibanaService->makeDefaultIndex($user->getUserIndex(), 'default');
 
-            $this->processService->emit("heavy-operations-in-progress", "Configuring SearchGuard");
+            //$this->processService->emit("heavy-operations-in-progress", "Configuring SearchGuard");
             //$this->sgService->updateSearchGuardConfig();
             $this->processService->emit("heavy-operations-done", "Succeded");
         }
