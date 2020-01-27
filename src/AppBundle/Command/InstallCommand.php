@@ -66,11 +66,11 @@ Load default Application Type. Insert template for Kibana and more..'
 
         $this->loadFixtures($output, $purge);
 
-        $this->display($output, "Creating LDAP entries for demo applications");
+        //$this->display($output, "Creating LDAP entries for demo applications");
         //$ldap->createDemoApplicationsEntries();
         $demoApplications = $applicationService->listDemoApplications();
 
-        $this->display($output, "Initializing SearchGuard configuration");
+        //$this->display($output, "Initializing SearchGuard configuration");
         //$sgService->updateSearchGuardConfig();
 
         $this->display($output, "Initializing ES & Kibana");
