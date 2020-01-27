@@ -436,9 +436,9 @@ class ApplicationService
                 $appIndex =  $envName . "-" . $application->getApplicationIndex();
                 $patternIndex = "*-" . $envName . "-" . $application->getName() . "-*";
     
-                $this->ldapService->createApplicationEntry($application);
+                //$this->ldapService->createApplicationEntry($application);
     
-                $this->ldapService->registerApplication($user, $application);
+                //$this->ldapService->registerApplication($user, $application);
         
                 $this->es->deleteIndex($appIndex);
 
@@ -485,7 +485,7 @@ class ApplicationService
     
             }
         
-            $this->sg->updateSearchGuardConfig();
+            //$this->sg->updateSearchGuardConfig();
     
             $this->curatorService->updateCuratorConfig();
         }
