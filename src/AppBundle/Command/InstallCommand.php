@@ -65,6 +65,9 @@ Load default Application Type. Insert template for Kibana and more..'
         }
 
         $this->loadFixtures($output, $purge);
+        
+        //Purge Elasticsearch
+        $this->purgeES($output, $purge);
 
         //$this->display($output, "Creating LDAP entries for demo applications");
         //$ldap->createDemoApplicationsEntries();
@@ -116,6 +119,23 @@ Load default Application Type. Insert template for Kibana and more..'
         return 0;
     }
 
+    
+    
+     private function purgeES($output, $purge)
+    {
+        if ($purge === false) {
+            return;
+        }
+         
+       $es->purgeIndices();
+       $es->purgeAliases();
+       $es->purgeTemplates();
+       $es->purgeRoles();
+       $es->purgeRolesMapping();
+         
+    }
+         
+         
     private function loadFixtures($output, $purge)
     {
         if ($purge === false) {
