@@ -418,7 +418,7 @@ class Application
      */
     public function getApplicationIndex(): string
     {
-        return "app-" . $this->uuid;
+        return "app-" . $this->getName;
     }
 
     /**
@@ -428,7 +428,7 @@ class Application
      */
     public function getSharedIndex(): string
     {
-        return "shared-" . $this->uuid;
+        return "shared-" . $this->getName;
     }
 
     /**
