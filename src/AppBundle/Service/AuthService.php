@@ -141,7 +141,7 @@ class AuthService
 
         $this->checkSuperAdminRoles($user);
         $this->processService->emit("heavy-operations-in-progress", "Configuring SearchGuard");
-        $this->sgService->updateSearchGuardConfig();
+        //$this->sgService->updateSearchGuardConfig();
         $this->processService->emit("heavy-operations-done", "Succeded");
 
         return $user;
@@ -163,7 +163,7 @@ class AuthService
 
             $this->checkSuperAdminRoles($user);
             $this->processService->emit("heavy-operations-in-progress", "Configuring SearchGuard");
-            $this->sgService->updateSearchGuardConfig();
+            //$this->sgService->updateSearchGuardConfig();
             $this->processService->emit("heavy-operations-done", "Succeded");
         }
         return $user;
@@ -182,7 +182,7 @@ class AuthService
 
         $this->checkSuperAdminRoles($user);
         $this->processService->emit("heavy-operations-in-progress", "Configuring SearchGuard");
-        $this->sgService->updateSearchGuardConfig();
+        //$this->sgService->updateSearchGuardConfig();
         $this->processService->emit("heavy-operations-done", "Succeded");
 
         return $user;
@@ -311,13 +311,15 @@ class AuthService
         } else {
             $user = $this->addUser($parameters);
         }
-
+        //create user in opendistro
+        $this->esService->createUser($user);
+        $this->esService->createRoleMapping($user);
         if ($user !== null) {
             // User creation in DB is successful
             // Should create LDAP & ElasticSearch entries
             $this->processService->emit("heavy-operations-in-progress", "Creating LDAP Entries");
-            $this->ldapService->createNewUserEntries($user);
-            $this->ldapService->registerDemoApplications($user);
+            //$this->ldapService->createNewUserEntries($user);
+            //$this->ldapService->registerDemoApplications($user);
             $this->processService->emit("heavy-operations-in-progress", "Register Applications");
             $this->applicationService->registerDemoApplications($user);
 
@@ -330,12 +332,8 @@ class AuthService
             $this->kibanaService->makeDefaultIndex($user->getUserIndex(), 'default');
 
             $this->processService->emit("heavy-operations-in-progress", "Configuring SearchGuard");
-            $this->sgService->updateSearchGuardConfig();
+            //$this->sgService->updateSearchGuardConfig();
             $this->processService->emit("heavy-operations-done", "Succeded");
-
-            //create user in opendistro
-            $this->esService->createUser($user);
-            $this->esService->createRoleMapping($user);
         }
 
         return $user;
