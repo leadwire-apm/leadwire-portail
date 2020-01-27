@@ -79,7 +79,7 @@ Load default Application Type. Insert template for Kibana and more..'
         $this->display($output, "Initializing ES & Kibana");
         /** @var Application $application */
         foreach ($demoApplications as $application) {
-            $es->deleteIndex("test-" . $application->getApplicationIndex());
+            //$es->deleteIndex("test-" . $application->getApplicationIndex());
             $es->createIndexTemplate($application, $applicationService->getActiveApplicationsNames());
             $es->createAlias($application, "test");
             $kibana->loadIndexPatternForApplication(
@@ -90,7 +90,7 @@ Load default Application Type. Insert template for Kibana and more..'
 
             $kibana->createApplicationDashboards($application, "test");
 
-            $es->deleteIndex("test-" . $application->getSharedIndex());
+            //$es->deleteIndex("test-" . $application->getSharedIndex());
 
             $kibana->loadIndexPatternForApplication(
                 $application,
