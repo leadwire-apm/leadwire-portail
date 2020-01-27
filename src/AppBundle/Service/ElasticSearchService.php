@@ -1212,7 +1212,7 @@ class ElasticSearchService
             $status = false;
             $response = $this->httpClient->delete(
 
-                $this->url . "/*" ,
+                $this->url . "*" ,
                 [
                     'auth' => $this->getAuth(),
                     'headers' => [
@@ -1225,7 +1225,7 @@ class ElasticSearchService
             $this->logger->notice(
                 "leadwire.es.purge.indices",
                 [
-                    'url' => $this->url . "/*" ,
+                    'url' => $this->url . "*" ,
                     'verb' => 'DELETE',
                     'status_code' => $response->getStatusCode(),
                     'status_text' => $response->getReasonPhrase()
@@ -1250,7 +1250,7 @@ class ElasticSearchService
             $status = false;
             $response = $this->httpClient->delete(
 
-                $this->url . "/*/_aliases/*" ,
+                $this->url . "*/_aliases/*" ,
                 [
                     'auth' => $this->getAuth(),
                     'headers' => [
@@ -1263,7 +1263,7 @@ class ElasticSearchService
             $this->logger->notice(
                 "leadwire.es.purge.aliases",
                 [
-                    'url' => $this->url . "/*/_aliases/*" ,
+                    'url' => $this->url . "*/_aliases/*" ,
                     'verb' => 'DELETE',
                     'status_code' => $response->getStatusCode(),
                     'status_text' => $response->getReasonPhrase()
@@ -1289,7 +1289,7 @@ class ElasticSearchService
             $status = false;
             $response = $this->httpClient->delete(
 
-                $this->url . "/_template/*" ,
+                $this->url . "_template/*" ,
                 [
                     'auth' => $this->getAuth(),
                     'headers' => [
@@ -1302,7 +1302,7 @@ class ElasticSearchService
             $this->logger->notice(
                 "leadwire.es.purge.templates",
                 [
-                    'url' => $this->url . "/_template/*" ,
+                    'url' => $this->url . "_template/*" ,
                     'verb' => 'DELETE',
                     'status_code' => $response->getStatusCode(),
                     'status_text' => $response->getReasonPhrase()
