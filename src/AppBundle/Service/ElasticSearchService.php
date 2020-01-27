@@ -1194,6 +1194,134 @@ class ElasticSearchService
             throw new HttpException("An error has occurred while executing your request.",400);
         }
     }
+    
+    
+    
+    ///
 
     /****************************************************************************/
+    
+    
+    
+    ///Purges
+    
+    
+        function purgeIndices(): bool{
+        try {
+
+            $status = false;
+            $response = $this->httpClient->delete(
+
+                $this->url . "/*" ,
+                [
+                    'auth' => $this->getAuth(),
+                    'headers' => [
+                        "Content-Type" => "application/json"
+                    ],
+                ]
+
+            );
+
+            $this->logger->notice(
+                "leadwire.es.purge.indices",
+                [
+                    'url' => $this->url . "/*" ,
+                    'verb' => 'DELETE',
+                    'status_code' => $response->getStatusCode(),
+                    'status_text' => $response->getReasonPhrase()
+                ]
+            );
+            
+            if($response->getBody()->status == "OK"){
+                $status= true;
+            }
+
+            return $status;
+
+        } catch (\Exception $e) {
+            $this->logger->error($e->getMessage());
+            throw new HttpException("An error has occurred while executing your request.",400);
+        }
+    }
+    
+     function purgeAliases(): bool{
+        try {
+
+            $status = false;
+            $response = $this->httpClient->delete(
+
+                $this->url . "/*/_aliases/*" ,
+                [
+                    'auth' => $this->getAuth(),
+                    'headers' => [
+                        "Content-Type" => "application/json"
+                    ],
+                ]
+
+            );
+
+            $this->logger->notice(
+                "leadwire.es.purge.aliases",
+                [
+                    'url' => $this->url . "/*/_aliases/*" ,
+                    'verb' => 'DELETE',
+                    'status_code' => $response->getStatusCode(),
+                    'status_text' => $response->getReasonPhrase()
+                ]
+            );
+            
+            if($response->getBody()->status == "OK"){
+                $status= true;
+            }
+
+            return $status;
+
+        } catch (\Exception $e) {
+            $this->logger->error($e->getMessage());
+            throw new HttpException("An error has occurred while executing your request.",400);
+        }
+    }
+    
+    
+     function purgeTemplates(): bool{
+        try {
+
+            $status = false;
+            $response = $this->httpClient->delete(
+
+                $this->url . "/_template/*" ,
+                [
+                    'auth' => $this->getAuth(),
+                    'headers' => [
+                        "Content-Type" => "application/json"
+                    ],
+                ]
+
+            );
+
+            $this->logger->notice(
+                "leadwire.es.purge.templates",
+                [
+                    'url' => $this->url . "/_template/*" ,
+                    'verb' => 'DELETE',
+                    'status_code' => $response->getStatusCode(),
+                    'status_text' => $response->getReasonPhrase()
+                ]
+            );
+            
+            if($response->getBody()->status == "OK"){
+                $status= true;
+            }
+
+            return $status;
+
+        } catch (\Exception $e) {
+            $this->logger->error($e->getMessage());
+            throw new HttpException("An error has occurred while executing your request.",400);
+        }
+    }
+    
+    
+    
+    
 }
