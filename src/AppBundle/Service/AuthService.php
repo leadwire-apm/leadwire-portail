@@ -323,9 +323,9 @@ class AuthService
             $this->processService->emit("heavy-operations-in-progress", "Register Applications");
             $this->applicationService->registerDemoApplications($user);
 
-            $this->processService->emit("heavy-operations-in-progress", "Creating ES Indexe-patterns");
-            $this->esService->deleteIndex($user->getUserIndex());
-            $this->processService->emit("heavy-operations-in-progress", "Creating Kibana Dashboards");
+            //$this->processService->emit("heavy-operations-in-progress", "Creating ES Indexe-patterns");
+            //$this->esService->deleteIndex($user->getUserIndex());
+            $this->processService->emit("heavy-operations-in-progress", "Creating Kibana Index-patterns");
             $this->kibanaService->loadIndexPatternForUserTenant($user);
 
             $this->kibanaService->loadDefaultIndex($user->getUserIndex(), 'default');
