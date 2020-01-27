@@ -816,7 +816,7 @@ class ElasticSearchService
             $status = false;
             $response = $this->httpClient->put(
 
-                $this->url . "_opendistro/_security/api/tenants/.kibana_" . $tenantName,
+                $this->url . "_opendistro/_security/api/tenants/" . $tenantName,
                 [
                     'auth' => $this->getAuth(),
                     'headers' => [
@@ -830,7 +830,7 @@ class ElasticSearchService
             $this->logger->notice(
                 "leadwire.opendistro.createTenant",
                 [
-                    'url' => $this->url . "_opendistro/_security/api/tenants/.kibana_" . $tenantName,
+                    'url' => $this->url . "_opendistro/_security/api/tenants/" . $tenantName,
                     'verb' => 'PUT',
                     'status_code' => $response->getStatusCode(),
                     'status_code' => $response->getBody()->status,
@@ -857,7 +857,7 @@ class ElasticSearchService
             $status = false;
             $response = $this->httpClient->delete(
 
-                $this->url . "_opendistro/_security/api/tenants/.kibana_$tenantName",
+                $this->url . "_opendistro/_security/api/tenants/" . $tenantName,
                 [
                     'auth' => $this->getAuth(),
                     'headers' => [
@@ -870,7 +870,7 @@ class ElasticSearchService
             $this->logger->notice(
                 "leadwire.opendistro.deleteTenant",
                 [
-                    'url' => $this->url . "_opendistro/_security/api/tenants/.kibana_$tenantName",
+                    'url' => $this->url . "_opendistro/_security/api/tenants/" . $tenantName,
                     'verb' => 'DELETE',
                     'status_code' => $response->getStatusCode(),
                     'status_text' => $response->getReasonPhrase()

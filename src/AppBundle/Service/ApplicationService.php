@@ -474,7 +474,7 @@ class ApplicationService
                 $this->kibanaService->loadDefaultIndex($sharedIndex, 'default');
                 $this->kibanaService->makeDefaultIndex($sharedIndex, 'default');
                
-                $this->es->createRole($user, $application->getName(), array($patternIndex), array(".kibana_".$sharedIndex, ".kibana_".$appIndex), array("read"));
+                $this->es->createRole($user, $application->getName(), array($patternIndex), array($sharedIndex, $appIndex), array("read"));
                 
                 $mappingRole = $this->es->getRoleMapping($user);
 
