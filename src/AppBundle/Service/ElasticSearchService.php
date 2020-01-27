@@ -833,7 +833,6 @@ class ElasticSearchService
                     'url' => $this->url . "_opendistro/_security/api/tenants/" . $tenantName,
                     'verb' => 'PUT',
                     'status_code' => $response->getStatusCode(),
-                    'status_code' => $response->getBody()->status,
                     'status_text' => $response->getReasonPhrase()
 
                 ]
