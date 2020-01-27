@@ -130,9 +130,7 @@ Load default Application Type. Insert template for Kibana and more..'
        $es->purgeIndices();
        $es->purgeAliases();
        $es->purgeTemplates();
-       $es->purgeRoles();
-       $es->purgeRolesMapping();
-         
+        
     }
          
          
