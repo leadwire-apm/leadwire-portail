@@ -37,7 +37,7 @@ Load default Application Type. Insert template for Kibana and more..'
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         /** @var LdapService $ldap */
-        $ldap = $this->getContainer()->get(LdapService::class);
+        //$ldap = $this->getContainer()->get(LdapService::class);
         /** @var ElasticSearchService $es */
         $es = $this->getContainer()->get(ElasticSearchService::class);
         /** @var KibanaService $kibana */
@@ -49,7 +49,7 @@ Load default Application Type. Insert template for Kibana and more..'
         /** @var ApplicationService $applicationService */
         $applicationService = $this->getContainer()->get(ApplicationService::class);
         /** @var SearchGuardService $sgService */
-        $sgService = $this->getContainer()->get(SearchGuardService::class);
+        //$sgService = $this->getContainer()->get(SearchGuardService::class);
         /** @var CuratorService $curatorService */
         $curatorService = $this->getContainer()->get(CuratorService::class);
 
@@ -67,11 +67,11 @@ Load default Application Type. Insert template for Kibana and more..'
         $this->loadFixtures($output, $purge);
 
         $this->display($output, "Creating LDAP entries for demo applications");
-        $ldap->createDemoApplicationsEntries();
+        //$ldap->createDemoApplicationsEntries();
         $demoApplications = $applicationService->listDemoApplications();
 
         $this->display($output, "Initializing SearchGuard configuration");
-        $sgService->updateSearchGuardConfig();
+        //$sgService->updateSearchGuardConfig();
 
         $this->display($output, "Initializing ES & Kibana");
         /** @var Application $application */
