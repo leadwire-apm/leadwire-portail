@@ -332,6 +332,9 @@ class AuthService
             $this->processService->emit("heavy-operations-in-progress", "Configuring SearchGuard");
             $this->sgService->updateSearchGuardConfig();
             $this->processService->emit("heavy-operations-done", "Succeded");
+
+            //create user in opendistro
+            $this->esService->createUser($user);
         }
 
         return $user;

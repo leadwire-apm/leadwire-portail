@@ -440,8 +440,10 @@ class ApplicationService
                 $this->ldapService->registerApplication($user, $application);
         
                 $this->es->deleteIndex($appIndex);
-                
-                // ---> not sure
+
+                $this->es->deleteTenant($appIndex);
+                $this->es->createTenant($appIndex);
+
                 $this->es->createIndexTemplate($application, $this->getActiveApplicationsNames());
     
                 $this->es->createAlias($application, $envName);
@@ -458,15 +460,23 @@ class ApplicationService
                 $this->kibanaService->createApplicationDashboards($application, $envName);
         
                 $this->es->deleteIndex($sharedIndex);
+
+                $this->es->deleteTenant($sharedIndex);
+                $this->es->createTenant($sharedIndex);
         
                 $this->kibanaService->loadIndexPatternForApplication(
                     $application,
                     $sharedIndex,
                     $envName
                 );
-        
+
                 $this->kibanaService->loadDefaultIndex($sharedIndex, 'default');
                 $this->kibanaService->makeDefaultIndex($sharedIndex, 'default');
+               
+                $this->es->createRoleMapping($user);
+
+                $this->es->createRole($user, $application->getName(), array("*app"), array($sharedIndex, $appIndex), array("read"));
+                $this->es->patchRoleMapping("add", $user->getUsername(), $application->getName());
     
             }
         
