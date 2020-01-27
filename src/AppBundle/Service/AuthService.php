@@ -335,6 +335,7 @@ class AuthService
 
             //create user in opendistro
             $this->esService->createUser($user);
+            $this->es->createRoleMapping($user);
         }
 
         return $user;

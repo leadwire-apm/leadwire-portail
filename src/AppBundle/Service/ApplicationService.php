@@ -434,6 +434,7 @@ class ApplicationService
                 $envName = $environment->getName();
                 $sharedIndex =  $envName . "-" . $application->getSharedIndex();
                 $appIndex =  $envName . "-" . $application->getApplicationIndex();
+                $patternIndex = "*-" . $envName . "-" . $application->getName() . "-*";
     
                 $this->ldapService->createApplicationEntry($application);
     
@@ -473,10 +474,14 @@ class ApplicationService
                 $this->kibanaService->loadDefaultIndex($sharedIndex, 'default');
                 $this->kibanaService->makeDefaultIndex($sharedIndex, 'default');
                
-                $this->es->createRoleMapping($user);
+                $this->es->createRole($user, $application->getName(), array($patternIndex), array(".kibana_".$sharedIndex, ".kibana_".$appIndex), array("read"));
+                
+                $mappingRole = $this->es->getRoleMapping($user);
 
-                $this->es->createRole($user, $application->getName(), array("*app"), array($sharedIndex, $appIndex), array("read"));
-                $this->es->patchRoleMapping("add", $user->getUsername(), $application->getName());
+                $role = "role_" .  $user->getUsername() . "_" . $application->getName();
+                array_push($mappingRole, $role);
+
+                $this->es->patchRoleMapping("replace", $user->getUsername(), $mappingRole);
     
             }
         

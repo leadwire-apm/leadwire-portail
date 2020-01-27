@@ -1072,18 +1072,16 @@ class ElasticSearchService
         }
     }
 
-    function patchRoleMapping(string $action, string $userName, string $applicationName): bool{
+    function patchRoleMapping(string $action, string $userName, array $mappingRole): bool{
         try {
 
             $status = false;
-            $role = "role_" .  $userName . "_" . $applicationName;
-
             $body = array(
                 ["op" => $action,
                 "path" => "/roleMapping_" . $userName,
                 "value" => [
                     "users" => array($userName),
-                    "backend_roles" => array($role)
+                    "backend_roles" => $mappingRole
                 ]]
             );
 
@@ -1154,6 +1152,42 @@ class ElasticSearchService
             }
 
             return $status;
+
+        } catch (\Exception $e) {
+            $this->logger->error($e->getMessage());
+            throw new HttpException("An error has occurred while executing your request.",400);
+        }
+    }
+
+    function getRoleMapping(User $user): array{
+        try {
+
+            $status = false;
+
+            $response = $this->httpClient->get(
+
+                $this->url . "_opendistro/_security/api/rolesmapping/roleMapping_" . $user->getUsername(),
+                [
+                    'auth' => $this->getAuth(),
+                    'headers' => [
+                        "Content-Type" => "application/json",
+                    ],
+                ]
+
+            );
+
+            $this->logger->notice(
+                "leadwire.opendistro.getRoleMapping",
+                [
+                    'url' => $this->url . "_opendistro/_security/api/rolesmapping/roleMapping_" . $user->getUsername(),
+                    'verb' => 'GET',
+                    'status_code' => $response->getStatusCode(),
+                ]
+            );
+            $role = "roleMapping_" . $user->getUsername();
+            $res = \json_decode($response->getBody());
+            $res = (array)$res->$role;
+            return $res["backend_roles"];
 
         } catch (\Exception $e) {
             $this->logger->error($e->getMessage());
