@@ -399,15 +399,18 @@ class ApplicationController extends Controller
         $processService->emit("heavy-operations-in-progress", "Updating Application Type");
         if ($application instanceof Application) {
             
-            //$processService->emit("heavy-operations-in-progress", "Updating Index-patterns");
+            $processService->emit("heavy-operations-in-progress", "Updating Index-patterns");
 
-           /* foreach($application->getEnvironments as $environment){
+            foreach($application->getEnvironments as $environment){
              
                 $envName = $environment->getName();
                 $sharedIndex =  $envName . "-" . $application->getSharedIndex();
                 $appIndex =  $envName . "-" . $application->getApplicationIndex();
 
-                $esService->deleteIndex($appIndex);
+                //$esService->deleteIndex($appIndex);
+                $esService->deleteTenant($appIndex);
+                $esService->createTenant($sharedIndex);
+                
                 $esService->createIndexTemplate($application, $applicationService->getActiveApplicationsNames());
                 $esService->createAlias($application, $envName);
                 $processService->emit("heavy-operations-in-progress", "Updating Kibana Dashboards");
@@ -423,6 +426,8 @@ class ApplicationController extends Controller
                 $kibanaService->createApplicationDashboards($application, $envName);
     
                 $esService->deleteIndex($sharedIndex);
+                $esService->deleteTenant($sharedIndex);
+                $esService->createTenant($sharedIndex);
     
                 $kibanaService->loadIndexPatternForApplication(
                     $application,
@@ -432,7 +437,7 @@ class ApplicationController extends Controller
     
                 $kibanaService->loadDefaultIndex($sharedIndex, 'default');
                 $kibanaService->makeDefaultIndex($sharedIndex, 'default');
-            }*/
+            }
             $application->setDeployedTypeVersion($application->getType()->getVersion());
             $applicationManager->update($application);
             $processService->emit("heavy-operations-done", "Succeeded");
