@@ -278,7 +278,7 @@ class ElasticSearchService
         foreach ($application->getType()->getMonitoringSets() as $ms) {
             $qualifier = \strtolower($ms->getQualifier());
             $indexName = "{$qualifier}-enabled-$environmentName-$applicationName-$now";
-            $response = $this->httpClient->delete($this->url . $indexName, ['auth' => $this->getAuth()]);
+            /*$response = $this->httpClient->delete($this->url . $indexName, ['auth' => $this->getAuth()]);
             $this->logger->notice(
                 "leadwire.es.createAlias",
                 [
@@ -290,6 +290,7 @@ class ElasticSearchService
                     'monitoring_set' => $ms->getQualifier(),
                 ]
             );
+	   */
 
             $response = $this->httpClient->put(
                 $this->url . $indexName . "/_doc/1",
