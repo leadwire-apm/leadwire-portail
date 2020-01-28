@@ -487,7 +487,7 @@ class ElasticSearchService
                         [
                             'error' => $response->getReasonPhrase(),
                             'status_code' => $response->getStatusCode(),
-                            'url' => $this->url . ".kibana_$tenant" . "/_search?pretty&from=0&size=10000",
+                            'url' => $this->url . ".kibana/_search?pretty&from=0&size=10000",
                         ]
                     );
                 }
