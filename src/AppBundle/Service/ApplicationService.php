@@ -545,7 +545,7 @@ class ApplicationService
 
             $state['application'] = $realApp;
 
-            $this->updateIndexApp($realApp);
+            //$this->updateIndexApp($realApp);
 
         } catch (\Exception $e) {
             $this->logger->error($e->getMessage());
@@ -567,7 +567,7 @@ class ApplicationService
             $sharedIndex =  $envName . "-" . $application->getSharedIndex();
             $appIndex =  $envName . "-" . $application->getApplicationIndex();
 
-            $this->es->deleteIndex($appIndex);
+            //$this->es->deleteIndex($appIndex);
             $this->es->createIndexTemplate($application, $this->getActiveApplicationsNames());
 
             $this->es->createAlias($application, $envName);
