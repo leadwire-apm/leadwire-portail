@@ -140,9 +140,10 @@ class KibanaService
                 'kbn-xsrf' => true,
                 'Content-Type' => 'application/json',
                 'security_tenant' => $tenant,
-                'x-proxy-roles' => 'admin',
+                'x-proxy-roles' => $this->kibanaAdminUsername,
                 'X-Proxy-User' => $this->kibanaAdminUsername,
                 'Authorization' => "Bearer $authorization",
+                'x-forwarded-for' => '127.0.0.1'
             ];
 
             $response = $this->httpClient->post(
@@ -161,6 +162,7 @@ class KibanaService
                     'headers' => $headers,
                     'status_code' => $response->getStatusCode(),
                     'monitoring_set' => $monitoringSet->getName(),
+                    'status_text' => $response->getReasonPhrase(),
                 ]
             );
         }
@@ -210,8 +212,9 @@ class KibanaService
                 'kbn-xsrf' => true,
                 'Content-Type' => 'application/json',
                 'security_tenant' => $tenant,
-                'x-proxy-roles' => 'admin',
+                'x-proxy-roles' => $this->kibanaAdminUsername,
                 'X-Proxy-User' => $this->kibanaAdminUsername,
+                'x-forwarded-for' => '127.0.0.1',
             ];
 
             $authorization = $this->jwtHelper->encode($this->kibanaAdminUsername, $this->kibanaAdminUuid);
@@ -234,6 +237,7 @@ class KibanaService
                     'headers' => $headers,
                     'status_code' => $response->getStatusCode(),
                     'monitoring_set' => $monitoringSet->getName(),
+                    'status_text' => $response->getReasonPhrase(),
                 ]
             );
         }
@@ -259,8 +263,9 @@ class KibanaService
             'kbn-xsrf' => true,
             'Content-Type' => 'application/json',
             'security_tenant' => $tenant,
-            'x-proxy-roles' => 'admin',
+            'x-proxy-roles' => $this->kibanaAdminUsername,
             'X-Proxy-User' => $this->kibanaAdminUsername,
+            'x-forwarded-for' => '127.0.0.1',
         ];
 
         $authorization = $this->jwtHelper->encode($this->kibanaAdminUsername, $this->kibanaAdminUuid);
@@ -282,6 +287,7 @@ class KibanaService
                 'verb' => 'POST',
                 'headers' => $headers,
                 'status_code' => $response->getStatusCode(),
+                'status_text' => $response->getReasonPhrase(),
             ]
         );
 
@@ -330,6 +336,7 @@ class KibanaService
                 'verb' => 'GET',
                 'headers' => $headers,
                 'status_code' => $response->getStatusCode(),
+                'status_text' => $response->getReasonPhrase(),
             ]
         );
 
@@ -353,8 +360,9 @@ class KibanaService
             'Content-Type' => 'application/json',
             'Authorization' => "Bearer $authorization",
             'security_tenant' => $tenant,
-            'x-proxy-roles' => 'admin',
+            'x-proxy-roles' => $this->kibanaAdminUsername,
             'X-Proxy-User' => $this->kibanaAdminUsername,
+            'x-forwarded-for' => '127.0.0.1',
         ];
 
         $content = json_encode(['value' => $value]);
@@ -375,6 +383,7 @@ class KibanaService
                 'headers' => $headers,
                 'content' => $content,
                 'status_code' => $response->getStatusCode(),
+                'status_text' => $response->getReasonPhrase(),
             ]
         );
     }
