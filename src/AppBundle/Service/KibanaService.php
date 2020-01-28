@@ -140,6 +140,7 @@ class KibanaService
                 'kbn-xsrf' => true,
                 'Content-Type' => 'application/json',
                 'security_tenant' => $tenant,
+                'x-proxy-roles' => 'admin',
                 'X-Proxy-User' => $this->kibanaAdminUsername,
                 'Authorization' => "Bearer $authorization",
             ];
@@ -209,6 +210,7 @@ class KibanaService
                 'kbn-xsrf' => true,
                 'Content-Type' => 'application/json',
                 'security_tenant' => $tenant,
+                'x-proxy-roles' => 'admin',
                 'X-Proxy-User' => $this->kibanaAdminUsername,
             ];
 
@@ -257,6 +259,7 @@ class KibanaService
             'kbn-xsrf' => true,
             'Content-Type' => 'application/json',
             'security_tenant' => $tenant,
+            'x-proxy-roles' => 'admin',
             'X-Proxy-User' => $this->kibanaAdminUsername,
         ];
 
@@ -350,6 +353,7 @@ class KibanaService
             'Content-Type' => 'application/json',
             'Authorization' => "Bearer $authorization",
             'security_tenant' => $tenant,
+            'x-proxy-roles' => 'admin',
             'X-Proxy-User' => $this->kibanaAdminUsername,
         ];
 

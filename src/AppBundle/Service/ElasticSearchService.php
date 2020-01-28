@@ -453,10 +453,11 @@ class ElasticSearchService
         foreach ($tenants as $groupName => $tenantGroup) {
             foreach ($tenantGroup as $tenant) {
                 $response = $this->httpClient->get(
-                    $this->url . ".kibana_$tenant" . "/_search?pretty&from=0&size=10000",
+                    $this->url . ".kibana/_search?pretty&from=0&size=10000",
                     [
                         'headers' => [
                             'Content-type' => 'application/json',
+                            'security_tenant' => $tenant
                         ],
                         'auth' => [
                             $this->settings['username'],
@@ -799,7 +800,7 @@ class ElasticSearchService
                 ]
             );
             
-            if($response->getBody()->status == "CREATED"){
+            if($response->getStatusCode() == 200){
                 $status= true;
             }
 
@@ -839,7 +840,7 @@ class ElasticSearchService
                 ]
             );
             
-            if($response->getBody()->status == "CREATED"){
+            if($response->getStatusCode() == 200){
                 $status= true;
             }
 
@@ -877,7 +878,7 @@ class ElasticSearchService
                 ]
             );
             
-            if($response->getBody()->status == "OK"){
+            if($response->getStatusCode() == 200){
                 $status= true;
             }
 
@@ -930,7 +931,7 @@ class ElasticSearchService
                 ]
             );
             
-            if($response->getBody()->status == "CREATED"){
+            if($response->getStatusCode() == 200){
                 $status= true;
             }
 
@@ -976,7 +977,7 @@ class ElasticSearchService
                 ]
             );
             
-            if($response->getBody()->status == "OK"){
+            if($response->getStatusCode() == 200){
                 $status= true;
             }
 
@@ -1015,7 +1016,7 @@ class ElasticSearchService
                 ]
             );
             
-            if($response->getBody()->status == "OK"){
+            if($response->getStatusCode() == 200){
                 $status= true;
             }
 
@@ -1060,7 +1061,7 @@ class ElasticSearchService
                 ]
             );
             
-            if($response->getBody()->status == "CREATED"){
+            if($response->getStatusCode() == 200){
                 $status= true;
             }
 
@@ -1108,7 +1109,7 @@ class ElasticSearchService
                 ]
             );
             
-            if($response->getBody()->status == "OK"){
+            if($response->getStatusCode() == 200){
                 $status= true;
             }
 
@@ -1147,7 +1148,7 @@ class ElasticSearchService
                 ]
             );
             
-            if($response->getBody()->status == "OK"){
+            if($response->getStatusCode() == 200){
                 $status= true;
             }
 
@@ -1237,7 +1238,7 @@ class ElasticSearchService
                 ]
             );
             
-            if($response->getBody()->status == "OK"){
+            if($response->getStatusCode() == 200){
                 $status= true;
             }
 
@@ -1275,7 +1276,7 @@ class ElasticSearchService
                 ]
             );
             
-            if($response->getBody()->status == "OK"){
+            if($response->getStatusCode() == 200){
                 $status= true;
             }
 
@@ -1314,7 +1315,7 @@ class ElasticSearchService
                 ]
             );
             
-            if($response->getBody()->status == "OK"){
+            if($response->getStatusCode() == 200){
                 $status= true;
             }
 
