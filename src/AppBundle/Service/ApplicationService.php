@@ -469,13 +469,8 @@ class ApplicationService
                 $this->kibanaService->makeDefaultIndex($sharedIndex, 'default');
                
                 $this->es->createRole($envName, $application->getName(), array($patternIndex), array($sharedIndex, $appIndex), array("read"));
-                
-                $mappingRole = $this->es->getRoleMapping($user);
+                $this->updateRoleMapping("add", $envName, $user, $application);
 
-                $role = "role_" .  $envName . "_" . $application->getName();
-                array_push($mappingRole, $role);
-
-                $this->es->patchRoleMapping("replace", $user->getUsername(), $mappingRole);
     
             }
         
@@ -483,6 +478,27 @@ class ApplicationService
     
             $this->curatorService->updateCuratorConfig();
         }
+    }
+
+    
+    public function updateRoleMapping(string $action, string $envName, User $user, Application $application){
+
+        $mappingRole = $this->es->getRoleMapping($user);
+        $role = "role_" .  $envName . "_" . $application->getName();
+
+        switch ($action) {
+            case "add":
+                array_push($mappingRole, $role);
+                break;
+            case "delete":
+                $key = array_search($role, $mappingRole);
+                if($key == false) {
+                    unset($mappingRole[$key]);
+                }
+                break;
+        }
+        
+        $this->es->patchRoleMapping("replace", $user->getUsername(), $mappingRole);
     }
 
     /**
