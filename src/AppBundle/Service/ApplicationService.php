@@ -468,11 +468,11 @@ class ApplicationService
                 $this->kibanaService->loadDefaultIndex($sharedIndex, 'default');
                 $this->kibanaService->makeDefaultIndex($sharedIndex, 'default');
                
-                $this->es->createRole($user, $application->getName(), array($patternIndex), array($sharedIndex, $appIndex), array("read"));
+                $this->es->createRole($envName, $application->getName(), array($patternIndex), array($sharedIndex, $appIndex), array("read"));
                 
                 $mappingRole = $this->es->getRoleMapping($user);
 
-                $role = "role_" .  $user->getUsername() . "_" . $application->getName();
+                $role = "role_" .  $envName . "_" . $application->getName();
                 array_push($mappingRole, $role);
 
                 $this->es->patchRoleMapping("replace", $user->getUsername(), $mappingRole);

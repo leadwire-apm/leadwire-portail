@@ -822,7 +822,7 @@ class ElasticSearchService
                     'headers' => [
                         "Content-Type" => "application/json"
                     ],
-                    'body' => \json_encode(["description" => "'"]),
+                    'body' => \json_encode(["description" => ""]),
                 ]
 
             );
@@ -888,7 +888,7 @@ class ElasticSearchService
         }
     }
 
-    function createRole(User $user, string $applicationName, array $index_patterns, array $tenant_patterns,  array $allowed_actions): bool{
+    function createRole(string $envName, string $applicationName, array $index_patterns, array $tenant_patterns,  array $allowed_actions): bool{
         try {
 
             $status = false;
@@ -908,7 +908,7 @@ class ElasticSearchService
 
             $response = $this->httpClient->put(
 
-                $this->url . "_opendistro/_security/api/roles/role_" .  $user->getUsername() . "_" . $applicationName,
+                $this->url . "_opendistro/_security/api/roles/role_" .  $envName . "_" . $applicationName,
                 [
                     'auth' => $this->getAuth(),
                     'headers' => [
@@ -922,7 +922,7 @@ class ElasticSearchService
             $this->logger->notice(
                 "leadwire.opendistro.createRole",
                 [
-                    'url' => $this->url . "_opendistro/_security/api/roles/role_" .  $user->getUsername(),
+                    'url' => $this->url . "_opendistro/_security/api/roles/role_" .  $envName . "_" . $applicationName,
                     'verb' => 'PUT',
                     'status_code' => $response->getStatusCode(),
                     'status_text' => $response->getReasonPhrase()
@@ -941,7 +941,7 @@ class ElasticSearchService
         }
     }
 
-    function patchRole(string $path, string $action, array $value, User $user): bool{
+    function patchRole(string $envName, string $applicationName, string $path, string $action, array $value): bool{
         try {
 
             $status = false;
@@ -954,7 +954,7 @@ class ElasticSearchService
 
             $response = $this->httpClient->patch(
 
-                $this->url . "_opendistro/_security/api/roles/role_" . $user->getUsername(),
+                $this->url . "_opendistro/_security/api/roles/role_" . $envName . "_" . $applicationName,
                 [
                     'auth' => $this->getAuth(),
                     'headers' => [
@@ -968,7 +968,7 @@ class ElasticSearchService
             $this->logger->notice(
                 "leadwire.opendistro.patchRole",
                 [
-                    'url' => $this->url . "_opendistro/_security/api/roles/role_" . $user->getUsername(),
+                    'url' => url . "_opendistro/_security/api/roles/role_" . $envName . "_" . $applicationName,
                     'verb' => 'PATCH',
                     'status_code' => $response->getStatusCode(),
                     'status_text' => $response->getReasonPhrase()
