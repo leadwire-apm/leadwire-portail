@@ -439,7 +439,9 @@ class ApplicationService
                 //$this->ldapService->createApplicationEntry($application);
     
                 //$this->ldapService->registerApplication($user, $application);
-        
+                
+                //$this->es->deleteIndex($appIndex);
+
                 $this->es->createTenant($appIndex);
 
                 $this->es->createIndexTemplate($application, $this->getActiveApplicationsNames());
@@ -456,7 +458,9 @@ class ApplicationService
                 $this->kibanaService->makeDefaultIndex($appIndex, 'default');
         
                 $this->kibanaService->createApplicationDashboards($application, $envName);
-        
+                
+                //$this->es->deleteIndex($sharedIndex);
+
                 $this->es->createTenant($sharedIndex);
         
                 $this->kibanaService->loadIndexPatternForApplication(
