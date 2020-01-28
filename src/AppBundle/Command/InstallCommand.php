@@ -79,30 +79,38 @@ Load default Application Type. Insert template for Kibana and more..'
         $this->display($output, "Initializing ES & Kibana");
         /** @var Application $application */
         foreach ($demoApplications as $application) {
-            //$es->deleteIndex("test-" . $application->getApplicationIndex());
+            //$es->deleteIndex($appIndex);
+            $sharedIndex = "test-" . $application->getSharedIndex();
+            $appIndex = "test-" . $application->getApplicationIndex();
+            $patternIndex = "*-test-" . $application->getName() . "-*";
+
             $es->createIndexTemplate($application, $applicationService->getActiveApplicationsNames());
             $es->createAlias($application, "test");
             $kibana->loadIndexPatternForApplication(
                 $application,
-                "test-" . $application->getApplicationIndex(),
+                $appIndex,
                 "test"
             );
 
             $kibana->createApplicationDashboards($application, "test");
 
-            //$es->deleteIndex("test-" . $application->getSharedIndex());
+            //$es->deleteIndex($sharedIndex);
 
             $kibana->loadIndexPatternForApplication(
                 $application,
-                "test-" . $application->getSharedIndex(),
+                $sharedIndex,
                 "test"
             );
 
-            $kibana->loadDefaultIndex("test-" . $application->getApplicationIndex(), 'default');
-            $kibana->makeDefaultIndex("test-" . $application->getApplicationIndex(), 'default');
+            $kibana->loadDefaultIndex($appIndex, 'default');
+            $kibana->makeDefaultIndex($appIndex, 'default');
 
-            $kibana->loadDefaultIndex("test-" . $application->getSharedIndex(), 'default');
-            $kibana->makeDefaultIndex("test-" . $application->getSharedIndex(), 'default');
+            $kibana->loadDefaultIndex($sharedIndex, 'default');
+            $kibana->makeDefaultIndex($sharedIndex, 'default');
+
+            $es->createTenant($appIndex);
+            $es->createTenant($sharedIndex);
+            $es->createRole("test", $application->getName(), array($patternIndex), array($sharedIndex, $appIndex), array("read"));
         }
 
         if ($stripeEnabled === true) {

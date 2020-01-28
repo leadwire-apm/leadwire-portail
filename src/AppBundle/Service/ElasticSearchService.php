@@ -1026,13 +1026,13 @@ class ElasticSearchService
         }
     }
 
-    function createRoleMapping(User $user): bool{
+    function createRoleMapping(User $user, string $defaultApp): bool{
         try {
 
             $status = false;
 
             $role = [
-                "backend_roles" => array(),
+                "backend_roles" => array($defaultApp),
                 "users" => array($user->getUsername())
             ];
 

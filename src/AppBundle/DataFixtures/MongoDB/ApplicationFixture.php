@@ -29,22 +29,22 @@ class ApplicationFixture extends AbstractFixture implements OrderedFixtureInterf
 
         $user = new User();
         $user
-            ->setUsername("user_jpetstore")
+            ->setUsername("user_demo")
             ->setActive(true)
             ->setRoles([User::DEFAULT_ROLE])
-            ->setUuid("jpetstore")
+            ->setUuid("demo")
             ->setAvatar('')
-            ->setName("user_jpetstore")
+            ->setName("user_demo")
             ->setEmailValid(true)
             ->setLocked(false)
             ->setCompany("LeadWire")
             ->setContact("")
             ->setContactPreference("Email")
-            ->setEmail("user_jpetstore@leadwire.io");
+            ->setEmail("user_demo@leadwire.io");
 
         $jpetstore = new Application();
-        $jpetstore->setUuid("jpetstore") // * UUID has to be hardcoded since it will be used on Kibana and stuff
-            ->setName("jpetstore")
+        $jpetstore->setUuid("demo") // * UUID has to be hardcoded since it will be used on Kibana and stuff
+            ->setName("demo")
             ->setDescription("A web application built on top of MyBatis 3, Spring 3 and Stripes")
             ->setDeployedTypeVersion($applicationType->getVersion())
             ->setEmail("wassim.dhib@leadwire.io")

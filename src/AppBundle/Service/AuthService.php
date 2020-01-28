@@ -313,7 +313,7 @@ class AuthService
         }
         //create user in opendistro
         $this->esService->createUser($user);
-        $this->esService->createRoleMapping($user);
+        $this->esService->createRoleMapping($user, "role_test_demo");
         if ($user !== null) {
             // User creation in DB is successful
             // Should create LDAP & ElasticSearch entries
