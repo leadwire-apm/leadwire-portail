@@ -674,12 +674,20 @@ class ApplicationService
         $applicationPermission = $this->apManager->getOneBy(['application.id' => $id, 'user.id' => $user->getId()]);
 
         if ($applicationPermission !== null) {
+            $application = $applicationPermission<-getApplication();
             $applicationPermission->setAccess(ApplicationPermission::ACCESS_DENIED);
             $this->apManager->update($applicationPermission);
             $acls = $user->removeAccessLevelsApp($id);
             $this->userManager->update($user);
             foreach ($acls as $acl) {
                 $this->accessLevelManager->delete($acl);
+            }
+
+            /**
+             * remove role mapping
+             */
+            foreach($this->environmentService->getAll() as $environment){
+                $this->updateRoleMapping("delete", $environment->getName(), $user, $application);
             }
         }
     }

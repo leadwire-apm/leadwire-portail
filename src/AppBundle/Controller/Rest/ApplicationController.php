@@ -281,7 +281,7 @@ class ApplicationController extends Controller
 
             if ($accessGrantedByOwnership === true || $accessGrantedByRole === true) {
                 $applicationService->deleteApplication($id);
-                $processService->emit("heavy-operations-in-progress", "Configuring SearchGuard");
+                //$processService->emit("heavy-operations-in-progress", "Configuring SearchGuard");
                 //$sgService->updateSearchGuardConfig();
                 $processService->emit("heavy-operations-done", "Succeeded");
 
@@ -314,7 +314,7 @@ class ApplicationController extends Controller
         $id
     ) {
         $applicationService->removeUserApplication($id, $this->getUser());
-        $processService->emit("heavy-operations-in-progress", "Configuring SearchGuard");
+        //$processService->emit("heavy-operations-in-progress", "Configuring SearchGuard");
         //$sgService->updateSearchGuardConfig();
         $processService->emit("heavy-operations-done", "Succeeded");
 
