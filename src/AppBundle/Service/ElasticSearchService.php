@@ -129,8 +129,11 @@ class ElasticSearchService
     protected function getIndex(string $tenantName)
     {
         try {
+
+            $tenant = str_replace("-", "", $tenantName);
+
             $response = $this->httpClient->get(
-                $this->url . ".kibana_$tenantName",
+                $this->url . ".kibana_*" . $tenant,
                 [
                     'auth' => $this->getAuth(),
                 ]
@@ -141,7 +144,7 @@ class ElasticSearchService
                 [
                     'status_code' => $response->getStatusCode(),
                     'phrase' => $response->getReasonPhrase(),
-                    'url' => $this->url . ".kibana_$tenantName",
+                    'url' =>  $this->url . ".kibana_*" . $tenant,
                     'verb' => 'GET',
                 ]
             );
@@ -153,7 +156,7 @@ class ElasticSearchService
                     [
                         'status_code' => $response->getStatusCode(),
                         'phrase' => $response->getReasonPhrase(),
-                        'url' => $this->url . ".kibana_$tenantName",
+                        'url' =>  $this->url . ".kibana_*" . $tenant,
                     ]
                 );
 
@@ -191,8 +194,9 @@ class ElasticSearchService
     public function deleteIndex(string $tenantName): bool
     {
         try {
+            $tenant = str_replace("-", "", $tenant);
             $response = $this->httpClient->delete(
-                $this->url . ".kibana_$tenantName",
+                $this->url . ".kibana_*" . $tenant,
                 [
                     'auth' => $this->getAuth(),
                 ]
@@ -202,7 +206,7 @@ class ElasticSearchService
                 [
                     'status_code' => $response->getStatusCode(),
                     'phrase' => $response->getReasonPhrase(),
-                    'url' => $this->url . ".kibana_$tenantName",
+                    'url' =>  $this->url . ".kibana_*" . $tenant,
                     'verb' => 'DELETE',
                 ]
             );
@@ -452,6 +456,7 @@ class ElasticSearchService
 
         foreach ($tenants as $groupName => $tenantGroup) {
             foreach ($tenantGroup as $tenant) {
+                
                 $tenant = str_replace("-", "", $tenant);
 
                 $response = $this->httpClient->get(
@@ -473,7 +478,7 @@ class ElasticSearchService
                     [
                         'status_text' => $response->getReasonPhrase(),
                         'status_code' => $response->getStatusCode(),
-                        'url' =>  $this->url . ".kibana_*" . $tenant . "/_search",
+                        'url' =>  $this->url . ".kibana_*" . $tenant . "/_search?pretty&from=0&size=10000",
                     ]
                 );
 
@@ -517,8 +522,11 @@ class ElasticSearchService
 
         foreach ($tenants as $groupName => $tenantGroup) {
             foreach ($tenantGroup as $tenant) {
+
+                $tenant = str_replace("-", "", $tenant);
+
                 $response = $this->httpClient->get(
-                    $this->url . ".kibana_$tenant" . "/_search?pretty&from=0&size=10000",
+                    $this->url . ".kibana_*$tenant" . "/_search?pretty&from=0&size=10000",
                     [
                         'headers' => [
                             'Content-type' => 'application/json',
@@ -527,6 +535,15 @@ class ElasticSearchService
                             $this->settings['username'],
                             $this->settings['password'],
                         ],
+                    ]
+                );
+
+                $this->logger->notice(
+                    'leadwire.es.getRawReports',
+                    [
+                        'error' => $response->getReasonPhrase(),
+                        'status_code' => $response->getStatusCode(),
+                        $this->url . ".kibana_*$tenant" . "/_search?pretty&from=0&size=10000",
                     ]
                 );
 
@@ -544,15 +561,6 @@ class ElasticSearchService
                             ];
                         }
                     }
-                } else {
-                    $this->logger->error(
-                        'leadwire.es.getRawReports',
-                        [
-                            'error' => $response->getReasonPhrase(),
-                            'status_code' => $response->getStatusCode(),
-                            'url' => $this->url . ".kibana_$tenant" . "/_search?pretty&from=0&size=10000",
-                        ]
-                    );
                 }
             }
         }
