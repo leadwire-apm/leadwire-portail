@@ -452,17 +452,28 @@ class ElasticSearchService
 
         foreach ($tenants as $groupName => $tenantGroup) {
             foreach ($tenantGroup as $tenant) {
+                $tenant = str_replace("-", "", $tenant);
+
                 $response = $this->httpClient->get(
-                    $this->url . ".kibana/_search?pretty&from=0&size=10000",
+                    $this->url . ".kibana_*" . $tenant . "/_search",
                     [
                         'headers' => [
                             'Content-type' => 'application/json',
-                            'security_tenant' => $tenant
+                            'tenant' => $tenant
                         ],
                         'auth' => [
                             $this->settings['username'],
                             $this->settings['password'],
                         ],
+                    ]
+                );
+
+                $this->logger->notice(
+                    'leadwire.es.getRawDashboards',
+                    [
+                        'status_text' => $response->getReasonPhrase(),
+                        'status_code' => $response->getStatusCode(),
+                        'url' =>  $this->url . ".kibana_*" . $tenant . "/_search",
                     ]
                 );
 
@@ -481,15 +492,6 @@ class ElasticSearchService
 
                         }
                     }
-                } else {
-                    $this->logger->error(
-                        'leadwire.es.getRawDashboards',
-                        [
-                            'error' => $response->getReasonPhrase(),
-                            'status_code' => $response->getStatusCode(),
-                            'url' => $this->url . ".kibana/_search?pretty&from=0&size=10000",
-                        ]
-                    );
                 }
             }
         }
