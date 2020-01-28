@@ -480,25 +480,25 @@ class ApplicationService
         }
     }
 
-    
+
     public function updateRoleMapping(string $action, string $envName, User $user, Application $application){
 
         $mappingRole = $this->es->getRoleMapping($user);
         $role = "role_" .  $envName . "_" . $application->getName();
-
-        switch ($action) {
-            case "add":
-                array_push($mappingRole, $role);
-                break;
-            case "delete":
-                $key = array_search($role, $mappingRole);
-                if($key == false) {
-                    unset($mappingRole[$key]);
+        if (!empty($mappingRole)) {
+            switch ($action) {
+                case "add":
+                    array_push($mappingRole, $role);
+                    break;
+                case "delete":
+                    $key = array_search($role, $mappingRole);
+                    if($key != false) {
+                        unset($mappingRole[$key]);
+                    }
+                    break;
                 }
-                break;
+            $this->es->patchRoleMapping("replace", $user->getUsername(), $mappingRole);
         }
-        
-        $this->es->patchRoleMapping("replace", $user->getUsername(), $mappingRole);
     }
 
     /**
@@ -562,10 +562,6 @@ class ApplicationService
             $envName = $environment->getName();
             $sharedIndex =  $envName . "-" . $application->getSharedIndex();
             $appIndex =  $envName . "-" . $application->getApplicationIndex();
-
-            $this->logger->error($envName);
-            $this->logger->error($sharedIndex);
-            $this->logger->error($appIndex);
 
             $this->es->deleteIndex($appIndex);
             $this->es->createIndexTemplate($application, $this->getActiveApplicationsNames());
@@ -651,6 +647,25 @@ class ApplicationService
                 }
             }
 
+            /**
+             * delete roles & tenants
+             */
+            foreach($this->environmentService->getAll() as $environment){
+                $sharedIndex =  $environment->getName() . "-" . $application->getSharedIndex();
+                $appIndex =  $environment->getName() . "-" . $application->getApplicationIndex();
+                $this->es->deleteRole($environment->getName(), $application->getName());
+                $this->es->deleteTenant($sharedIndex);
+                $this->es->deleteTenant($appIndex);
+            }
+
+            /**
+             * remove role mapping
+             */
+            foreach ($this->userManager->getAll() as $user) {
+                foreach($this->environmentService->getAll() as $environment){
+                    $this->updateRoleMapping("delete", $environment->getName(), $user, $application);
+                }
+            }
         }
     }
 

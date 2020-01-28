@@ -329,7 +329,7 @@ class ElasticSearchService
             );
 
             $this->logger->notice(
-                "----------leadwire.es.createAlias",
+                "leadwire.es.createAlias",
                 [
                     'status_code' => $response->getStatusCode(),
                     'phrase' => $response->getReasonPhrase(),
@@ -987,14 +987,14 @@ class ElasticSearchService
         }
     }
 
-    function deleteRole(User $user): bool{
+    function deleteRole(string $envName, string $applicationName): bool{
         try {
 
             $status = false;
 
-            $response = $this->httpClient->patch(
+            $response = $this->httpClient->delete(
 
-                $this->url . "_opendistro/_security/api/roles/role_" . $user->getUsername(),
+                $this->url . "_opendistro/_security/api/roles/role_" . $envName . "_" . $applicationName,
                 [
                     'auth' => $this->getAuth(),
                     'headers' => [
@@ -1007,7 +1007,7 @@ class ElasticSearchService
             $this->logger->notice(
                 "leadwire.opendistro.deleteRole",
                 [
-                    'url' => $this->url . "_opendistro/_security/api/roles/role_" . $user->getUsername(),
+                    'url' => $this->url . "_opendistro/_security/api/roles/role_" . $envName . "_" . $applicationName,
                     'verb' => 'PATCH',
                     'status_code' => $response->getStatusCode(),
                     'status_text' => $response->getReasonPhrase()
@@ -1181,12 +1181,17 @@ class ElasticSearchService
                     'url' => $this->url . "_opendistro/_security/api/rolesmapping/roleMapping_" . $user->getUsername(),
                     'verb' => 'GET',
                     'status_code' => $response->getStatusCode(),
+                    'status_text' => $response->getReasonPhrase()
                 ]
             );
-            $role = "roleMapping_" . $user->getUsername();
-            $res = \json_decode($response->getBody());
-            $res = (array)$res->$role;
-            return $res["backend_roles"];
+            if($response->getStatusCode() == 200){
+                $role = "roleMapping_" . $user->getUsername();
+                $res = \json_decode($response->getBody());
+                $res = (array)$res->$role;
+                return $res["backend_roles"];
+            } else {
+                return array();
+            }
 
         } catch (\Exception $e) {
             $this->logger->error($e->getMessage());
