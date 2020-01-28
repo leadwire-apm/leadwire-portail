@@ -1,7 +1,7 @@
 {
     "order" : 1,
     "index_patterns" : [
-      "apm-7.3.2-*"
+      "apm-7.2.1-*"
     ],
     "settings" : {
       "index" : {
@@ -343,7 +343,7 @@
     "mappings" : {
       "_meta" : {
         "beat" : "apm",
-        "version" : "7.3.2"
+        "version" : "7.2.1"
       },
       "_source" : {
         "enabled" : true

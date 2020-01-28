@@ -15,7 +15,7 @@ use JMS\Serializer\Annotation as JMS;
  */
 class Template
 {
-    const DEFAULT_VERSION = "7.3.2";
+    const DEFAULT_VERSION = "7.2.1";
     const DASHBOARDS = "Dashboards";
     const INDEX_TEMPLATE = "Index-Template";
     const INDEX_PATTERN = "Index-Pattern";
