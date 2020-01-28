@@ -547,6 +547,9 @@ class ApplicationService
 
             //$this->updateIndexApp($realApp);
 
+            $this->curatorService->updateCuratorConfig();
+
+
         } catch (\Exception $e) {
             $this->logger->error($e->getMessage());
             $state['successful'] = false;
@@ -594,7 +597,6 @@ class ApplicationService
             $this->kibanaService->loadDefaultIndex($sharedIndex, 'default');
             $this->kibanaService->makeDefaultIndex($sharedIndex, 'default');
         }
-        $this->curatorService->updateCuratorConfig();
 
     }
 
