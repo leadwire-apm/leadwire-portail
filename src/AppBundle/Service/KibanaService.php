@@ -302,8 +302,11 @@ class KibanaService
     public function loadIndexPatternForUserTenant(User $user)
     {
         $userAccessibleApplications = $this->permissionManager->getAccessibleApplications($user);
+
         foreach ($userAccessibleApplications as $application) {
-            $this->loadIndexPatternForApplication($application, $user->getUserIndex());
+            foreach($application->getEnvironments as $environment){
+                $this->loadIndexPatternForApplication($application, $user->getUserIndex(), $environment->getName());
+            }
         }
     }
     /**
