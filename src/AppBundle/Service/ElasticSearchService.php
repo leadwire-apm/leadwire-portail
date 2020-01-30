@@ -133,7 +133,7 @@ class ElasticSearchService
             $tenant = str_replace("-", "", $tenantName);
 
             $response = $this->httpClient->get(
-                $this->url . ".kibana_*" . $tenant,
+                $this->url . ".kibana_*_" . $tenant,
                 [
                     'auth' => $this->getAuth(),
                 ]
@@ -144,7 +144,7 @@ class ElasticSearchService
                 [
                     'status_code' => $response->getStatusCode(),
                     'phrase' => $response->getReasonPhrase(),
-                    'url' =>  $this->url . ".kibana_*" . $tenant,
+                    'url' =>  $this->url . ".kibana_*_" . $tenant,
                     'verb' => 'GET',
                 ]
             );
@@ -156,7 +156,7 @@ class ElasticSearchService
                     [
                         'status_code' => $response->getStatusCode(),
                         'phrase' => $response->getReasonPhrase(),
-                        'url' =>  $this->url . ".kibana_*" . $tenant,
+                        'url' =>  $this->url . ".kibana_*_" . $tenant,
                     ]
                 );
 
@@ -196,7 +196,7 @@ class ElasticSearchService
         try {
             $tenant = str_replace("-", "", $tenant);
             $response = $this->httpClient->delete(
-                $this->url . ".kibana_*" . $tenant,
+                $this->url . ".kibana_*_" . $tenant,
                 [
                     'auth' => $this->getAuth(),
                 ]
@@ -206,14 +206,14 @@ class ElasticSearchService
                 [
                     'status_code' => $response->getStatusCode(),
                     'phrase' => $response->getReasonPhrase(),
-                    'url' =>  $this->url . ".kibana_*" . $tenant,
+                    'url' =>  $this->url . ".kibana_*_" . $tenant,
                     'verb' => 'DELETE',
                 ]
             );
         } catch (ClientException $e) {
             $response = $e->getResponse();
             if ($response !== null && $response->getStatusCode() === Response::HTTP_NOT_FOUND) {
-                $this->logger->warning("leadwire.es.deleteIndex", ['url' => $this->url . ".kibana_$tenantName", 'status_code' => $response->getStatusCode()]);
+                $this->logger->warning("leadwire.es.deleteIndex", ['url' => $this->url . ".kibana_*_$tenant", 'status_code' => $response->getStatusCode()]);
 
                 return false;
             }
@@ -460,7 +460,7 @@ class ElasticSearchService
                 $tenant = str_replace("-", "", $tenant);
 
                 $response = $this->httpClient->get(
-                    $this->url . ".kibana_*" . $tenant . "/_search",
+                    $this->url . ".kibana_*_" . $tenant . "/_search",
                     [
                         'headers' => [
                             'Content-type' => 'application/json',
@@ -478,13 +478,14 @@ class ElasticSearchService
                     [
                         'status_text' => $response->getReasonPhrase(),
                         'status_code' => $response->getStatusCode(),
-                        'url' =>  $this->url . ".kibana_*" . $tenant . "/_search?pretty&from=0&size=10000",
+                        'url' =>  $this->url . ".kibana_*_" . $tenant . "/_search?pretty&from=0&size=10000",
                     ]
                 );
 
                 if ($response->getStatusCode() === Response::HTTP_OK) {
                     $body = \json_decode($response->getBody())->hits->hits;
                     foreach ($body as $element) {
+                        
                         if ($element->_source->type === "dashboard") {
                             $title = $element->_source->{$element->_source->type}->title;
                             $res[$groupName][] = [
@@ -526,7 +527,7 @@ class ElasticSearchService
                 $tenant = str_replace("-", "", $tenant);
 
                 $response = $this->httpClient->get(
-                    $this->url . ".kibana_*$tenant" . "/_search?pretty&from=0&size=10000",
+                    $this->url . ".kibana_*_$tenant" . "/_search?pretty&from=0&size=10000",
                     [
                         'headers' => [
                             'Content-type' => 'application/json',
@@ -543,7 +544,7 @@ class ElasticSearchService
                     [
                         'error' => $response->getReasonPhrase(),
                         'status_code' => $response->getStatusCode(),
-                        $this->url . ".kibana_*$tenant" . "/_search?pretty&from=0&size=10000",
+                        $this->url . ".kibana_*_$tenant" . "/_search?pretty&from=0&size=10000",
                     ]
                 );
 
@@ -757,7 +758,7 @@ class ElasticSearchService
         try {
 
             $stats = $this->httpClient->get(
-                $this->url ."*-". $env . "-". $app ."-transaction-*/_count",
+                $this->url ."*-". $env . $app ."app-transaction-*/_count",
     
                 [
                     'headers' => [
@@ -767,6 +768,15 @@ class ElasticSearchService
                         $this->settings['username'],
                         $this->settings['password'],
                     ],
+                ]
+            );
+
+            $this->logger->notice(
+                'leadwire.es.getApplicationTransactions',
+                [
+                    'status_text' => $stats->getReasonPhrase(),
+                    'status_code' => $stats->getStatusCode(),
+                    'url' => $this->url ."*-". $env . $app ."app-transaction-*/_count"
                 ]
             );
     
