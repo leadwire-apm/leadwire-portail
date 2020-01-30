@@ -73,8 +73,9 @@
             $localStorage.currentApplicationMenus = $localStorage.currentMenu;
         };
 
-        service.getDashboard = function (tenant, dashboardId) {
-            return CONFIG.KIBANA_BASE_URL + tenant + '?token=' + $auth.getToken() + '#/dashboard/' + dashboardId;
+        service.getDashboard = function (dashboardId) {
+            var tenant = $localStorage.selectedEnv.name + "-" + $localStorage.selectedApp.applicationIndex
+            return CONFIG.KIBANA_BASE_URL + "app/kibana?security_tenant=" + tenant + '#/dashboard/' + dashboardId;
         };
         /**
          *
