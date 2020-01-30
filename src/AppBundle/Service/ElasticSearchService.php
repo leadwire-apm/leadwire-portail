@@ -460,7 +460,7 @@ class ElasticSearchService
                 $tenant = str_replace("-", "", $tenant);
 
                 $response = $this->httpClient->get(
-                    $this->url . ".kibana_*_" . $tenant . "/_search",
+                    $this->url . ".kibana_*_" . $tenant . "/_search?pretty&from=0&size=10000",
                     [
                         'headers' => [
                             'Content-type' => 'application/json',
