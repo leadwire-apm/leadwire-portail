@@ -1276,7 +1276,7 @@ class ElasticSearchService
             $status = false;
             $response = $this->httpClient->delete(
 
-                $this->url . "*/_aliases/*" ,
+                $this->url . "*test*/_aliases/*" ,
                 [
                     'auth' => $this->getAuth(),
                     'headers' => [
@@ -1315,7 +1315,7 @@ class ElasticSearchService
             $status = false;
             $response = $this->httpClient->delete(
 
-                $this->url . "_template/*" ,
+                $this->url . "_template/*7.2.1*" ,
                 [
                     'auth' => $this->getAuth(),
                     'headers' => [
