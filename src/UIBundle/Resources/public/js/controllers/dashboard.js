@@ -50,10 +50,10 @@
                     from = startDate;
                     to = endDate;
                 }
-                vm.dashboardLink = trustSrc(DashboardService.getDashboard($state.params.id) + `?_g=(refreshInterval:(pause:${autoRefresh},value:${ref}),time:(from:'${from}',mode:${mode},to:'${to}'))`);
+                vm.dashboardLink = trustSrc(DashboardService.getDashboard($state.params.id) + `?embed=true&_g=(refreshInterval:(pause:${autoRefresh},value:${ref}),time:(from:'${from}',mode:${mode},to:'${to}'))`);
                 $scope.$apply()
             } else {
-                vm.dashboardLink = trustSrc(DashboardService.getDashboard($state.params.id) + `?_g=(refreshInterval:(pause:!t,value:${vm.refresh * 1000}),time:(from:now-15m,mode:quick,to:now))`);
+                vm.dashboardLink = trustSrc(DashboardService.getDashboard($state.params.id) + `?embed=true&_g=(refreshInterval:(pause:!t,value:${vm.refresh * 1000}),time:(from:now-15m,mode:quick,to:now))`);
             }
 
         };
