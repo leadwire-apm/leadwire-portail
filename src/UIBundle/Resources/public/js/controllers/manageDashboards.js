@@ -1,4 +1,4 @@
-(function(angular) {
+(function (angular) {
     angular
         .module('leadwireApp')
         .controller('manageDashboardsCtrl', [

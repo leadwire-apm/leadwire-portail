@@ -1,9 +1,7 @@
 <div class="">
-    <a ui-sref="app.dashboard.manageDashboard({tenant:ctrl.currentUser.userIndex})"
-       class="btn btn-primary pull-right ml10 ">
+    <a ui-sref="app.dashboard.manageDashboard({tenant:'private'})" class="btn btn-primary pull-right ml10 ">
         Add private dashboard </a>
-    <a ui-sref="app.dashboard.manageDashboard({tenant:ctrl.selectedApp.sharedIndex})"
-       class="btn btn-primary pull-right ml10 ">
+    <a ui-sref="app.dashboard.manageDashboard({tenant:'shared'})" class="btn btn-primary pull-right ml10 ">
         Add shared dashboard</a>
     <h4>Custom Dashboard</h4>
     <hr>
@@ -23,10 +21,9 @@
         <h3>[[theme.name]]</h3>
         <ul class="list-group">
             <a class="list-group-item" ng-repeat="dashboard in theme.dashboards"
-               ui-sref="app.dashboard.home({id:dashboard.id,tenant:dashboard.tenant})">
-                <i class="pull-right"
-                   style="font-size: medium;padding: .2em 10px .3em"
-                   ng-class="{'fa fa-lock label label-danger':dashboard.private,'fa fa-unlock label label-info':!dashboard.private}">
+                ui-sref="app.dashboard.home({id:dashboard.id,tenant:dashboard.tenant})">
+                <i class="pull-right" style="font-size: medium;padding: .2em 10px .3em"
+                    ng-class="{'fa fa-lock label label-danger':dashboard.private,'fa fa-unlock label label-info':!dashboard.private}">
                 </i>
                 <span class="btn btn-link ">[[dashboard.name]]</span>
             </a>

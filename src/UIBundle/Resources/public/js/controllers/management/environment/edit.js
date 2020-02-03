@@ -12,7 +12,7 @@
      * Handle add new application logic
      *
      */
-    function EditEnvironmentControllerCtrlFN (
+    function EditEnvironmentControllerCtrlFN(
         EnvironmentService,
         MESSAGES_CONSTANTS,
         $state,
@@ -25,17 +25,17 @@
         };
 
         EnvironmentService.find($state.params.id)
-                .then(function (environment) {
-                    if (environment === null) {
-                        throw new Error();
-                    }
-                    vm.flipActivityIndicator('isLoading');
-                    vm.environment = environment;
-                })
-                .catch(function () {
-                    vm.flipActivityIndicator('isLoading');
-                    $state.go('app.management.templates');
-                });
+            .then(function (environment) {
+                if (environment === null) {
+                    throw new Error();
+                }
+                vm.flipActivityIndicator('isLoading');
+                vm.environment = environment;
+            })
+            .catch(function () {
+                vm.flipActivityIndicator('isLoading');
+                $state.go('app.management.templates');
+            });
 
         vm.editEnvironment = function () {
             vm.flipActivityIndicator('isSaving')
@@ -56,6 +56,7 @@
                 ui: {
                     isSaving: false,
                     isLoading: false,
+                    isEdit: "disabled"
                 },
                 environment: {
                     name: '',
