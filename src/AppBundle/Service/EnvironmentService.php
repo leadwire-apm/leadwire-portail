@@ -157,7 +157,7 @@ class EnvironmentService
         }
 
         /**
-         * Add applications
+         * Add applications tenants
          */
         foreach ($this->applicationManager->getAll() as $application) {
             foreach ($this->userManager->getAll() as $user) {
@@ -201,8 +201,6 @@ class EnvironmentService
                 $this->es->patchRoleMapping("replace", $user->getUsername(), $mappingRole);
             }
         }
-
-        //$this->searchGuardService->updateSearchGuardConfig();
 
         return $id;
     }
