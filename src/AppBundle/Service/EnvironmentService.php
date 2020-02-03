@@ -11,6 +11,8 @@ use AppBundle\Service\SearchGuardService;
 use AppBundle\Manager\UserManager;
 use AppBundle\Manager\AccessLevelManager;
 use AppBundle\Document\AccessLevel;
+use AppBundle\Service\ElasticSearchService;
+use AppBundle\Service\KibanaService;
 
 use JMS\Serializer\DeserializationContext;
 use JMS\Serializer\SerializerInterface;
@@ -62,6 +64,15 @@ class EnvironmentService
      */
     private $accessLevelManager;
 
+    /**
+     * @var ElasticSearchService
+     */
+    private $elasticSearchService;
+
+    /**
+     * @var KibanaService
+     */
+
 
     /**
      * Constructor
@@ -73,6 +84,8 @@ class EnvironmentService
      * @param SearchGuardService $searchGuardService
      * @param UserManager $userManager
      * @param AccessLevelManager $accessLevelManager
+     * @param ElasticSearchService $elasticSearchService
+     * @param KibanaService $kibanaService
      */
     public function __construct(
         EnvironmentManager $environmentManager,
@@ -81,8 +94,10 @@ class EnvironmentService
         LoggerInterface $logger,
         SearchGuardService $searchGuardService,
         UserManager $userManager,
-        AccessLevelManager $accessLevelManager
-    ) {
+        AccessLevelManager $accessLevelManager,
+        ElasticSearchService $elasticSearchService,
+        KibanaService $kibanaService
+        ) {
         $this->environmentManager = $environmentManager;
         $this->applicationManager = $applicationManager;
         $this->serializer = $serializer;
@@ -90,6 +105,8 @@ class EnvironmentService
         $this->searchGuardService = $searchGuardService;
         $this->userManager = $userManager;
         $this->accessLevelManager = $accessLevelManager;
+        $this->es = $elasticSearchService;
+        $this->kibanaService = $kibanaService;
     }
 
 
@@ -112,6 +129,7 @@ class EnvironmentService
         $id = $this->environmentManager->update($environment);
 
         $env = $this->getById($id);
+
         /**
          * Add applications
          */
@@ -138,9 +156,75 @@ class EnvironmentService
             $this->userManager->update($user);
         }
 
-        $this->searchGuardService->updateSearchGuardConfig();
+        /**
+         * Add applications
+         */
+        foreach ($this->applicationManager->getAll() as $application) {
+            foreach ($this->userManager->getAll() as $user) {
+                $envName = $env->getName();
+                $sharedIndex =  $envName . "-" . $application->getSharedIndex();
+                $appIndex =  $envName . "-" . $application->getApplicationIndex();
+                $patternIndex = "*-" . $envName . "-" . $application->getName() . "-*";
+
+                $this->es->createTenant($appIndex);
+
+                $this->es->createIndexTemplate($application, $this->applicationManager->getActiveApplicationsNames());
+    
+                $this->es->createAlias($application, $envName);
+    
+                $this->kibanaService->loadIndexPatternForApplication(
+                    $application,
+                    $appIndex,
+                    $envName 
+                );
+    
+                $this->kibanaService->loadDefaultIndex($appIndex, 'default');
+                $this->kibanaService->makeDefaultIndex($appIndex, 'default');
+        
+                $this->kibanaService->createApplicationDashboards($application, $envName);
+
+                $this->es->createTenant($sharedIndex);
+        
+                $this->kibanaService->loadIndexPatternForApplication(
+                    $application,
+                    $sharedIndex,
+                    $envName
+                );
+
+                $this->kibanaService->loadDefaultIndex($sharedIndex, 'default');
+                $this->kibanaService->makeDefaultIndex($sharedIndex, 'default');
+               
+                $this->es->createRole($envName, $application->getName(), array($patternIndex), array($sharedIndex, $appIndex), array("read"));
+                $mappingRole = $this->es->getRoleMapping($user);
+                $role = "role_" .  $envName . "_" . $application->getName();
+                array_push($mappingRole, $role);          
+                $this->es->patchRoleMapping("replace", $user->getUsername(), $mappingRole);
+            }
+        }
+
+        //$this->searchGuardService->updateSearchGuardConfig();
 
         return $id;
+    }
+
+    public function updateRoleMapping(string $action, string $envName, User $user, Application $application){
+
+        $mappingRole = $this->es->getRoleMapping($user);
+        $role = "role_" .  $envName . "_" . $application->getName();
+        if (!empty($mappingRole)) {
+            switch ($action) {
+                case "add":
+                    array_push($mappingRole, $role);
+                    break;
+                case "delete":
+                    $key = array_search($role, $mappingRole);
+                    if($key != false) {
+                        unset($mappingRole[$key]);
+                    }
+                    break;
+                }
+            $this->es->patchRoleMapping("replace", $user->getUsername(), $mappingRole);
+        }
     }
 
     public function update($json)
