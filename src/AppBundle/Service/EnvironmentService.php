@@ -261,7 +261,16 @@ class EnvironmentService
                 }
             }
 
-            $this->searchGuardService->updateSearchGuardConfig();
+            /**
+             * delete tenant
+             */
+            foreach ($environment->getApplications() as $application) {
+                $sharedIndex =  $environment->getName() . "-" . $application->getSharedIndex();
+                $appIndex =  $environment->getName() . "-" . $application->getApplicationIndex();
+                $this->es->deleteRole($environment->getName(), $application->getName());
+                $this->es->deleteTenant($sharedIndex);
+                $this->es->deleteTenant($appIndex);
+            }
             return $this->environmentManager->delete($environment);
         }
 
