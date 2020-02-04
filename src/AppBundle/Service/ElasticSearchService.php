@@ -491,7 +491,7 @@ class ElasticSearchService
                             $res[$groupName][] = [
                                 "id" => $this->transformeId($element->_id),
                                 "name" => $title,
-                                "private" => $groupName === "Custom" && (new AString($tenant))->startsWith($envName . "-" ."shared_") === false,
+                                "private" => $groupName === "Custom" && (new AString($tenant))->startsWith($envName . "shared") === false,
                                 "tenant" => $tenant,
                                 "visible" => true,
                             ];
