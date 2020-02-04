@@ -397,11 +397,13 @@ class ApplicationController extends Controller
     ) {
         $application = $applicationService->getApplication($id);
         $processService->emit("heavy-operations-in-progress", "Updating Application Type");
+        $application->setDeployedTypeVersion($application->getType()->getVersion());
+        $applicationManager->update($application);
         if ($application instanceof Application) {
             
             $processService->emit("heavy-operations-in-progress", "Updating Index-patterns");
 
-            foreach($application->getEnvironments as $environment){
+            foreach($application->getEnvironments() as $environment){
              
                 $envName = $environment->getName();
                 $sharedIndex =  $envName . "-" . $application->getSharedIndex();
@@ -425,7 +427,7 @@ class ApplicationController extends Controller
     
                 $kibanaService->createApplicationDashboards($application, $envName);
     
-                $esService->deleteIndex($sharedIndex);
+                //$esService->deleteIndex($sharedIndex);
                 $esService->deleteTenant($sharedIndex);
                 $esService->createTenant($sharedIndex);
     
@@ -438,8 +440,7 @@ class ApplicationController extends Controller
                 $kibanaService->loadDefaultIndex($sharedIndex, 'default');
                 $kibanaService->makeDefaultIndex($sharedIndex, 'default');
             }
-            $application->setDeployedTypeVersion($application->getType()->getVersion());
-            $applicationManager->update($application);
+
             $processService->emit("heavy-operations-done", "Succeeded");
         } else {
             $processService->emit("heavy-operations-done", "Failed");
