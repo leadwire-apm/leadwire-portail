@@ -110,7 +110,7 @@ class KibanaService
                 );
                 continue;
             }
-            $replaceService = strtolower($monitoringSet->getQualifier()) . "-" . $environmentName . "-" . $application->getName();
+            $replaceService = strtolower($monitoringSet->getQualifier()) . "-*-" . $environmentName . "-" . $application->getName(). "-*";
 
             /** @var ?Template $template */
             $template = $monitoringSet->getTemplateByType(Template::DASHBOARDS);
@@ -134,7 +134,7 @@ class KibanaService
             $authorization = $this->jwtHelper->encode($this->kibanaAdminUsername, $this->kibanaAdminUuid);
 
             $content = str_replace("__replace_token__", $replaceService, $template->getContent());
-            $content = str_replace("__replace_service__", $replaceService, $content);
+            $content = str_replace("__replace_service__", $application->getName(), $content);
 
             $headers = [
                 'kbn-xsrf' => true,
@@ -204,7 +204,7 @@ class KibanaService
                 throw new \Exception(sprintf("Template (%s) not found for type (%s)", Template::INDEX_PATTERN, $application->getType()->getName()));
             }
 
-            $indexPattern = strtolower($monitoringSet->getQualifier()) . "-" . $environmentName . "-" . $application->getName();
+            $indexPattern = strtolower($monitoringSet->getQualifier()) . "-*-" . $environmentName . "-" . $application->getName(). "-*";
 
             $content = str_replace("__replace_token__", $indexPattern, $template->getContent());
 
