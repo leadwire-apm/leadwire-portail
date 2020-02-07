@@ -399,7 +399,8 @@ class ElasticSearchService
 
             $content = $template->getContentObject();
 
-            foreach ($activeApplications as $app) {
+     /*
+     foreach ($activeApplications as $app) {
                 // Applicable only APM templates
                 if ($monitoringSet->getQualifier() === "APM") {
                     $content->aliases->{$app->getName()} = [
@@ -408,7 +409,8 @@ class ElasticSearchService
                         ],
                     ];
                 }
-            }
+            } 
+	*/
 
             $response = $this->httpClient->put(
                 $this->url . "_template/{$monitoringSet->getFormattedVersion()}",
