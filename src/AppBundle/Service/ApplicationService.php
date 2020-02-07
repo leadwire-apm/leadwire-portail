@@ -446,7 +446,7 @@ class ApplicationService
 
                 $this->es->createIndexTemplate($application, $this->getActiveApplicationsNames());
     
-                $this->es->createAlias($application, $envName);
+          //      $this->es->createAlias($application, $envName);
     
                 $this->kibanaService->loadIndexPatternForApplication(
                     $application,
@@ -573,7 +573,7 @@ class ApplicationService
             //$this->es->deleteIndex($appIndex);
             $this->es->createIndexTemplate($application, $this->getActiveApplicationsNames());
 
-            $this->es->createAlias($application, $envName);
+          //  $this->es->createAlias($application, $envName);
 
             $this->kibanaService->loadIndexPatternForApplication(
                 $application,
