@@ -13,15 +13,15 @@ class StatFixture extends AbstractFixture implements OrderedFixtureInterface
 {
     public function load(ObjectManager $manager)
     {
-        /** @var Application $jpetstore */
-        $jpetstore = $this->getReference(ApplicationFixture::JPETSTORE_APPLICATION);
+        /** @var Application $demo */
+        $demo = $this->getReference(ApplicationFixture::DEMO_APPLICATION);
 
         $date = new \DateTime();
         $date = $date->sub(new \DateInterval("P365D"));
         $currentDate = clone $date;
         for ($i = 0; $i < 365; $i++) {
             $stat = new Stat();
-            $stat->setApplication($jpetstore)->setNbr(random_int(0, 10000))->setDay($currentDate);
+            $stat->setApplication($demo)->setNbr(random_int(0, 10000))->setDay($currentDate);
             $manager->persist($stat);
             $currentDate = clone($date->add(new \DateInterval("P1D")));
         }
