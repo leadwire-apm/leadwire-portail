@@ -411,10 +411,10 @@ class ApplicationController extends Controller
 
                 //$esService->deleteIndex($appIndex);
                 $esService->deleteTenant($appIndex);
-                $esService->createTenant($sharedIndex);
+                $esService->createTenant($appIndex);
                 
                 $esService->createIndexTemplate($application, $applicationService->getActiveApplicationsNames());
-                $esService->createAlias($application, $envName);
+                //$esService->createAlias($application, $envName);
                 $processService->emit("heavy-operations-in-progress", "Updating Kibana Dashboards");
                 $kibanaService->loadIndexPatternForApplication(
                     $application,
