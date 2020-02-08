@@ -15,7 +15,7 @@ use Doctrine\Common\Persistence\ObjectManager;
 
 class ApplicationFixture extends AbstractFixture implements OrderedFixtureInterface
 {
-    const JPETSTORE_APPLICATION = 'jpetstore';
+    const DEMO_APPLICATION = 'demo';
 
     public function load(ObjectManager $manager)
     {
@@ -29,25 +29,25 @@ class ApplicationFixture extends AbstractFixture implements OrderedFixtureInterf
 
         $user = new User();
         $user
-            ->setUsername("user_demo")
+            ->setUsername("admin")
             ->setActive(true)
-            ->setRoles([User::DEFAULT_ROLE])
-            ->setUuid("demo")
+            ->setRoles([User::ROLE_SUPER_ADMIN])
+            ->setUuid("admin")
             ->setAvatar('')
-            ->setName("user_demo")
+            ->setName("admin")
             ->setEmailValid(true)
             ->setLocked(false)
-            ->setCompany("LeadWire")
+            ->setCompany("LEAD WIRE")
             ->setContact("")
             ->setContactPreference("Email")
-            ->setEmail("user_demo@leadwire.io");
+            ->setEmail("contact@leadwire.io");
 
-        $jpetstore = new Application();
-        $jpetstore->setUuid("demo") // * UUID has to be hardcoded since it will be used on Kibana and stuff
+        $demo = new Application();
+        $demo->setUuid("demo") // * UUID has to be hardcoded since it will be used on Kibana and stuff
             ->setName("demo")
             ->setDescription("A web application built on top of MyBatis 3, Spring 3 and Stripes")
             ->setDeployedTypeVersion($applicationType->getVersion())
-            ->setEmail("wassim.dhib@leadwire.io")
+            ->setEmail("contact@leadwire.io")
             ->setEnabled(true)
             ->setCreatedAt($now)
             ->setDemo(true)
@@ -55,7 +55,7 @@ class ApplicationFixture extends AbstractFixture implements OrderedFixtureInterf
             ->setOwner($user)
             ->setType($applicationType)
             ->addEnvironment($environment);
-        $manager->persist($jpetstore);
+        $manager->persist($demo);
         $manager->flush();
 
         // set shared dashboard access level to write
@@ -63,7 +63,7 @@ class ApplicationFixture extends AbstractFixture implements OrderedFixtureInterf
         $accessLevelSharedDashboard
             ->setUser($user)
             ->setEnvironment($environment)
-            ->setApplication($jpetstore)
+            ->setApplication($demo)
             ->setLevel(AccessLevel::SHARED_DASHBOARD_LEVEL)
             ->setAccess(AccessLevel::WRITE_ACCESS)
         ;
@@ -74,7 +74,7 @@ class ApplicationFixture extends AbstractFixture implements OrderedFixtureInterf
         $accessLevelAppDashboard
             ->setUser($user)
             ->setEnvironment($environment)
-            ->setApplication($jpetstore)
+            ->setApplication($demo)
             ->setLevel(AccessLevel::APP_DASHBOARD_LEVEL)
             ->setAccess(AccessLevel::WRITE_ACCESS)
         ;
@@ -85,7 +85,7 @@ class ApplicationFixture extends AbstractFixture implements OrderedFixtureInterf
         $accessLevelAppData
             ->setUser($user)
             ->setEnvironment($environment)
-            ->setApplication($jpetstore)
+            ->setApplication($demo)
             ->setLevel(AccessLevel::APP_DATA_LEVEL)
             ->setAccess(AccessLevel::WRITE_ACCESS)
         ;
@@ -95,7 +95,7 @@ class ApplicationFixture extends AbstractFixture implements OrderedFixtureInterf
         $manager->flush();
 
 
-        $this->addReference(self::JPETSTORE_APPLICATION, $jpetstore);
+        $this->addReference(self::DEMO_APPLICATION, $demo);
     }
 
     public function getOrder()
