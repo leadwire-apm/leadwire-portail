@@ -80,26 +80,29 @@ Load default Application Type. Insert template for Kibana and more..'
         /** @var Application $application */
         foreach ($demoApplications as $application) {
             //$es->deleteIndex($appIndex);
-            $sharedIndex = "test-" . $application->getSharedIndex();
-            $appIndex = "test-" . $application->getApplicationIndex();
-            $patternIndex = "*-test-" . $application->getName() . "-*";
+            $sharedIndex = "staging-" . $application->getSharedIndex();
+            $appIndex = "staging-" . $application->getApplicationIndex();
+            $patternIndex = "*-staging-" . $application->getName() . "-*";
+           
+            $es->createTenant($appIndex);
+            $es->createTenant($sharedIndex);
 
             $es->createIndexTemplate($application, $applicationService->getActiveApplicationsNames());
-            $es->createAlias($application, "test");
+        //    $es->createAlias($application, "staging");
             $kibana->loadIndexPatternForApplication(
                 $application,
                 $appIndex,
-                "test"
+                "staging"
             );
 
-            $kibana->createApplicationDashboards($application, "test");
+            $kibana->createApplicationDashboards($application, "staging");
 
             //$es->deleteIndex($sharedIndex);
 
             $kibana->loadIndexPatternForApplication(
                 $application,
                 $sharedIndex,
-                "test"
+                "staging"
             );
 
             $kibana->loadDefaultIndex($appIndex, 'default');
@@ -108,9 +111,8 @@ Load default Application Type. Insert template for Kibana and more..'
             $kibana->loadDefaultIndex($sharedIndex, 'default');
             $kibana->makeDefaultIndex($sharedIndex, 'default');
 
-            $es->createTenant($appIndex);
-            $es->createTenant($sharedIndex);
-            $es->createRole("test", $application->getName(), array($patternIndex), array($sharedIndex, $appIndex), array("read"));
+   
+            $es->createRole("staging", $application->getName(), array($patternIndex), array($sharedIndex, $appIndex), array("read"));
         }
 
         if ($stripeEnabled === true) {
@@ -118,7 +120,7 @@ Load default Application Type. Insert template for Kibana and more..'
             $planService->createDefaultPlans();
         }
 
-        $curatorService->updateCuratorConfig();
+        //$curatorService->updateCuratorConfig();
 
         exec('npm stop');
         exec('npm install');
