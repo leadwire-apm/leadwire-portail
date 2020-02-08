@@ -170,7 +170,7 @@ class EnvironmentService
 
                 $this->es->createIndexTemplate($application, $this->applicationManager->getActiveApplicationsNames());
     
-                $this->es->createAlias($application, $envName);
+                //$this->es->createAlias($application, $envName);
     
                 $this->kibanaService->loadIndexPatternForApplication(
                     $application,
