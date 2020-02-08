@@ -29,12 +29,12 @@ class ApplicationFixture extends AbstractFixture implements OrderedFixtureInterf
 
         $user = new User();
         $user
-            ->setUsername("admin")
+            ->setUsername("demo")
             ->setActive(true)
-            ->setRoles([User::ROLE_SUPER_ADMIN])
-            ->setUuid("admin")
+            ->setRoles([User::DEFAULT_ROLE])
+            ->setUuid("demo")
             ->setAvatar('')
-            ->setName("admin")
+            ->setName("demo")
             ->setEmailValid(true)
             ->setLocked(false)
             ->setCompany("LEAD WIRE")
