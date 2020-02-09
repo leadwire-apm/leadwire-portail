@@ -414,8 +414,9 @@ class ApplicationController extends Controller
 
                 $esService->createTenant($appIndex);
                 $esService->createIndexTemplate($application, $applicationService->getActiveApplicationsNames());
-                //$esService->createAlias($application, $envName);
+
                 $processService->emit("heavy-operations-in-progress", "Updating Kibana Dashboards");
+              
                 $kibanaService->loadIndexPatternForApplication(
                     $application,
                     $appIndex,
@@ -424,7 +425,7 @@ class ApplicationController extends Controller
     
                 $kibanaService->loadDefaultIndex($appIndex, 'default');
                 $kibanaService->makeDefaultIndex($appIndex, 'default');
-    
+
                 $kibanaService->createApplicationDashboards($application, $envName);
     
                 $esService->deleteIndex($sharedIndex);

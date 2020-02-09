@@ -480,7 +480,7 @@ class ApplicationService
         
             //$this->sg->updateSearchGuardConfig();
     
-            $this->curatorService->updateCuratorConfig();
+            //$this->curatorService->updateCuratorConfig();
         }
     }
 
@@ -545,9 +545,9 @@ class ApplicationService
 
             $state['application'] = $realApp;
 
-            //$this->updateIndexApp($realApp);
+            $this->updateIndexApp($realApp);
 
-            $this->curatorService->updateCuratorConfig();
+            //$this->curatorService->updateCuratorConfig();
 
 
         } catch (\Exception $e) {
@@ -566,15 +566,17 @@ class ApplicationService
     function updateIndexApp(Application $application){
 
         foreach ($application->getEnvironments() as $environment){
+           
             $envName = $environment->getName();
             $sharedIndex =  $envName . "-" . $application->getSharedIndex();
             $appIndex =  $envName . "-" . $application->getApplicationIndex();
+            
+            $this->es->deleteTenant($appIndex);
+            $this->es->deleteIndex($appIndex);
 
-            //$this->es->deleteIndex($appIndex);
+            $this->es->createTenant($appIndex);
             $this->es->createIndexTemplate($application, $this->getActiveApplicationsNames());
-
-          //  $this->es->createAlias($application, $envName);
-
+            
             $this->kibanaService->loadIndexPatternForApplication(
                 $application,
                 $appIndex,
@@ -587,7 +589,9 @@ class ApplicationService
             $this->kibanaService->createApplicationDashboards($application, $envName);
 
             $this->es->deleteIndex($sharedIndex);
+            $this->es->deleteTenant($sharedIndex);
 
+            $this->es->createTenant($sharedIndex);
             $this->kibanaService->loadIndexPatternForApplication(
                 $application,
                 $sharedIndex,
