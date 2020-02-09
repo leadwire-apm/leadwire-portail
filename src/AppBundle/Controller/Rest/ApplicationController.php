@@ -409,10 +409,10 @@ class ApplicationController extends Controller
                 $sharedIndex =  $envName . "-" . $application->getSharedIndex();
                 $appIndex =  $envName . "-" . $application->getApplicationIndex();
 
-                //$esService->deleteIndex($appIndex);
+                $esService->deleteIndex($appIndex);
                 $esService->deleteTenant($appIndex);
+
                 $esService->createTenant($appIndex);
-                
                 $esService->createIndexTemplate($application, $applicationService->getActiveApplicationsNames());
                 //$esService->createAlias($application, $envName);
                 $processService->emit("heavy-operations-in-progress", "Updating Kibana Dashboards");
@@ -427,10 +427,10 @@ class ApplicationController extends Controller
     
                 $kibanaService->createApplicationDashboards($application, $envName);
     
-                //$esService->deleteIndex($sharedIndex);
+                $esService->deleteIndex($sharedIndex);
                 $esService->deleteTenant($sharedIndex);
+
                 $esService->createTenant($sharedIndex);
-    
                 $kibanaService->loadIndexPatternForApplication(
                     $application,
                     $sharedIndex,

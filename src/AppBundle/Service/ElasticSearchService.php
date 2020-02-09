@@ -194,7 +194,7 @@ class ElasticSearchService
     public function deleteIndex(string $tenantName): bool
     {
         try {
-            $tenant = str_replace("-", "", $tenant);
+            $tenant = str_replace("-", "", $tenantName);
             $response = $this->httpClient->delete(
                 $this->url . ".kibana_*_" . $tenant,
                 [
