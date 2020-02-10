@@ -588,10 +588,10 @@ class ApplicationService
 
             $this->kibanaService->createApplicationDashboards($application, $envName);
 
-            $this->es->deleteIndex($sharedIndex);
-            $this->es->deleteTenant($sharedIndex);
-
-            $this->es->createTenant($sharedIndex);
+            //$this->es->deleteIndex($sharedIndex);
+            //$this->es->deleteTenant($sharedIndex);
+            //$this->es->createTenant($sharedIndex);
+            
             $this->kibanaService->loadIndexPatternForApplication(
                 $application,
                 $sharedIndex,
