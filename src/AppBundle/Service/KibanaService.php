@@ -222,7 +222,7 @@ class KibanaService
             $headers['Authorization'] = "Bearer $authorization";
 
             $response = $this->httpClient->post(
-                $this->url . "api/saved_objects/index-pattern/$indexPattern",
+                $this->url . "api/saved_objects/index-pattern/$indexPattern?overwrite=true",
                 [
                     'headers' => $headers,
                     'body' => $content,
@@ -232,7 +232,7 @@ class KibanaService
             $this->logger->notice(
                 "leadwire.kibana.loadIndexPatternForApplication",
                 [
-                    'url' => $this->url . "api/saved_objects/index-pattern/$indexPattern",
+                    'url' => $this->url . "api/saved_objects/index-pattern/$indexPattern?overwrite=true",
                     'verb' => 'POST',
                     'headers' => $headers,
                     'status_code' => $response->getStatusCode(),
@@ -273,7 +273,7 @@ class KibanaService
         $headers['Authorization'] = "Bearer $authorization";
 
         $response = $this->httpClient->post(
-            $this->url . "api/saved_objects/index-pattern/$indexPattern",
+            $this->url . "api/saved_objects/index-pattern/$indexPattern?overwrite=true",
             [
                 'headers' => $headers,
                 'body' => $content,
@@ -283,7 +283,7 @@ class KibanaService
         $this->logger->notice(
             "leadwire.kibana.loadDefaultIndex",
             [
-                'url' => $this->url . "api/saved_objects/index-pattern/$indexPattern",
+                'url' => $this->url . "api/saved_objects/index-pattern/$indexPattern?overwrite=true",
                 'verb' => 'POST',
                 'headers' => $headers,
                 'status_code' => $response->getStatusCode(),
