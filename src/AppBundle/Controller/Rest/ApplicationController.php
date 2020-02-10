@@ -428,10 +428,10 @@ class ApplicationController extends Controller
 
                 $kibanaService->createApplicationDashboards($application, $envName);
     
-                $esService->deleteIndex($sharedIndex);
-                $esService->deleteTenant($sharedIndex);
-
-                $esService->createTenant($sharedIndex);
+               // $esService->deleteIndex($sharedIndex);
+               // $esService->deleteTenant($sharedIndex);
+               // $esService->createTenant($sharedIndex);
+                
                 $kibanaService->loadIndexPatternForApplication(
                     $application,
                     $sharedIndex,
