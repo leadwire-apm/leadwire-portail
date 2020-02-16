@@ -7,62 +7,58 @@
         <div class="row no-margin">
             <div class="col-lg-12 ">
                 <div class="row mb30">
-                    <a ui-sref="app.management.addMonitoringSet"
-                       class="btn btn-success pull-right">
+                    <a ui-sref="app.management.addMonitoringSet" class="btn btn-success pull-right">
                         <i class="fa fa-plus"></i> Add new monitoring set</a>
                 </div>
                 <div class="no-more-tables">
                     <table class="table table-striped mb0">
                         <thead>
-                        <tr>
-                            <th class="text-center">Name</th>
-                            <th class="text-center">Version</th>
-                            <th class="text-center">Templates</th>
-                            <th class="text-center" colspan="3" style="text-align: center">Actions</th>
-                        </tr>
+                            <tr>
+                                <th class="text-center">Name</th>
+                                <th class="text-center">Version</th>
+                                <th class="text-center">Templates</th>
+                                <th class="text-center" colspan="3" style="text-align: center">Actions</th>
+                            </tr>
                         </thead>
                         <tbody>
-                        <tr ng-if="ctrl.ui.isLoading" class="text-center">
-                            <td colspan="6">
-                                <spinner is-loading="ctrl.ui.isLoading" size="24"></spinner>
-                            </td>
-                        </tr>
-                        <tr ng-repeat="monitoringSet in ctrl.monitoringSets" class="text-center">
-                            <td data-title="Name" data-label="Name">
-                                [[monitoringSet.name]]
-                            </td>
-                            <td data-title="Version" data-label="Version">
-                                [[monitoringSet.version]]
-                            </td>
-                            <td data-title="Templates" data-label="Templates" class="text-left">
-                                <ul>
-                                    <li style="list-style: none;"><i style="padding-right:5px;" ng-class="ctrl.templateStatus(monitoringSet, 'Dashboards') ? 'fas fa-check-circle text-success' : 'fas fa-times-circle text-danger'"></i>Dashboards</li>
-                                    <li style="list-style: none;"><i style="padding-right:5px;" ng-class="ctrl.templateStatus(monitoringSet, 'Index-Pattern') ? 'fas fa-check-circle text-success' : 'fas fa-times-circle text-danger'"></i>Index-Pattern</li>
-                                    <li style="list-style: none;"><i style="padding-right:5px;" ng-class="ctrl.templateStatus(monitoringSet, 'Index-Template') ? 'fas fa-check-circle text-success' : 'fas fa-times-circle text-danger'"></i>Index-Template</li>
-                                </ul>
-                            </td>
-                            <td data-title="Actions" data-label="Actions"
-                                class="text-left">
-                                <a
-                                    class="btn btn-warning"
-                                    title="Edit"
-                                    data-placement="top"
-                                    data-toggle="tooltip"
-                                    ui-sref="app.management.editMonitoringSets({id:monitoringSet.id})">
-                                    <i class="fas fa-pencil-alt"></i>
-                                </a>
-                                <button
-                                    class="btn bg-red"
-                                    title="Delete"
-                                    data-placement="top"
-                                    data-toggle="tooltip"
-                                    ng-disabled="monitoringSet.applicationTypes.length > 0"
-                                    ng-click="ctrl.handleOnDelete(monitoringSet.id)">
-                                    <i class="fa fa-trash"></i>
-                                    <spinner is-loading="ctrl.ui['isDeleting'+monitoringSet.id]"></spinner>
-                                </button>
-                            </td>
-                        </tr>
+                            <tr ng-if="ctrl.ui.isLoading" class="text-center">
+                                <td colspan="6">
+                                    <spinner is-loading="ctrl.ui.isLoading" size="24"></spinner>
+                                </td>
+                            </tr>
+                            <tr ng-repeat="monitoringSet in ctrl.monitoringSets" class="text-center">
+                                <td data-title="Name" data-label="Name">
+                                    [[monitoringSet.name]]
+                                </td>
+                                <td data-title="Version" data-label="Version">
+                                    [[monitoringSet.version]]
+                                </td>
+                                <td data-title="Templates" data-label="Templates" class="text-left">
+                                    <ul>
+                                        <li style="list-style: none;"><i style="padding-right:5px;"
+                                                ng-class="ctrl.templateStatus(monitoringSet, 'Dashboards') ? 'fas fa-check-circle text-success' : 'fas fa-times-circle text-danger'"></i>Dashboards
+                                        </li>
+                                        <li style="list-style: none;"><i style="padding-right:5px;"
+                                                ng-class="ctrl.templateStatus(monitoringSet, 'Index-Pattern') ? 'fas fa-check-circle text-success' : 'fas fa-times-circle text-danger'"></i>Index-Pattern
+                                        </li>
+                                        <li style="list-style: none;"><i style="padding-right:5px;"
+                                                ng-class="ctrl.templateStatus(monitoringSet, 'Index-Template') ? 'fas fa-check-circle text-success' : 'fas fa-times-circle text-danger'"></i>Index-Template
+                                        </li>
+                                    </ul>
+                                </td>
+                                <td data-title="Actions" data-label="Actions" class="text-left">
+                                    <a class="btn btn-warning" title="Edit" data-placement="top" data-toggle="tooltip"
+                                        ui-sref="app.management.editMonitoringSets({id:monitoringSet.id})">
+                                        <i class="fas fa-pencil-alt"></i>
+                                    </a>
+                                    <button class="btn bg-red" title="Delete" data-placement="top" data-toggle="tooltip"
+                                        ng-disabled="monitoringSet.applicationTypes.length > 0"
+                                        ng-click="ctrl.handleOnDelete(monitoringSet.id)">
+                                        <i class="fa fa-trash"></i>
+                                        <spinner is-loading="ctrl.ui['isDeleting'+monitoringSet.id]"></spinner>
+                                    </button>
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>

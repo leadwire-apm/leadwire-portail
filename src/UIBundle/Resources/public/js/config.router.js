@@ -656,7 +656,7 @@ angular.module('leadwireApp')
                     controllerAs: 'ctrl',
                 })
 
-            function updateMenuItems (key) {
+            function updateMenuItems(key) {
                 return function (MenuFactory, $rootScope) {
                     if (key != "DASHBOARD") {
                         $rootScope.menus = MenuFactory.get(key);
@@ -665,14 +665,14 @@ angular.module('leadwireApp')
                 };
             }
 
-            function getMenuItems () {
+            function getMenuItems() {
                 return function (MenuFactory, $rootScope, $localStorage, UserService) {
 
                     const isAdmin = UserService.isAdmin($localStorage.user);
                     const isSuperAdmin = $localStorage.user.roles.indexOf(UserService.getRoles().SUPER_ADMIN) !== -1;
                     if (isAdmin || isSuperAdmin) {
                         $rootScope.menus = MenuFactory.get("MANAGEMENT");
-                    }else{
+                    } else {
                         $rootScope.menus = MenuFactory.get("SETTINGS");
                     }
                     return Promise.resolve();

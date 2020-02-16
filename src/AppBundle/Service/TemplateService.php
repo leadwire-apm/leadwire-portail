@@ -10,6 +10,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use JMS\Serializer\SerializerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Psr\Log\LoggerInterface;
 
 class TemplateService
 {
@@ -28,14 +29,21 @@ class TemplateService
      */
     private $msManager;
 
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
     public function __construct(
         TemplateManager $templateManager,
         MonitoringSetManager $msManager,
-        SerializerInterface $serializer
+        SerializerInterface $serializer,
+        LoggerInterface $logger
     ) {
         $this->templateManager = $templateManager;
         $this->serializer = $serializer;
         $this->msManager = $msManager;
+        $this->logger = $logger;
     }
 
     public function newTemplate($json)
@@ -66,8 +74,9 @@ class TemplateService
         $templates = $this->templateManager->getAll();
 
         /** @var Template $template */
-        foreach ($templates as &$template) {
-            $template->setAttachedMonitoringSets(new ArrayCollection($this->msManager->getAssosiated($template)));
+        foreach ($templates as $template) {
+            $list = $this->msManager->getAssosiated($template);
+            $template->setAttachedMonitoringSets(new ArrayCollection($list));
         }
         return $templates;
     }
