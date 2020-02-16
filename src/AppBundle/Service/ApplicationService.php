@@ -436,17 +436,10 @@ class ApplicationService
                 $appIndex =  $envName . "-" . $application->getApplicationIndex();
                 $patternIndex = "*-" . $envName . "-" . $application->getName() . "-*";
     
-                //$this->ldapService->createApplicationEntry($application);
-    
-                //$this->ldapService->registerApplication($user, $application);
-                
-                //$this->es->deleteIndex($appIndex);
 
                 $this->es->createTenant($appIndex);
-
                 $this->es->createIndexTemplate($application, $this->getActiveApplicationsNames());
     
-          //      $this->es->createAlias($application, $envName);
     
                 $this->kibanaService->loadIndexPatternForApplication(
                     $application,
@@ -459,8 +452,6 @@ class ApplicationService
         
                 $this->kibanaService->createApplicationDashboards($application, $envName);
                 
-                //$this->es->deleteIndex($sharedIndex);
-
                 $this->es->createTenant($sharedIndex);
         
                 $this->kibanaService->loadIndexPatternForApplication(
@@ -473,14 +464,8 @@ class ApplicationService
                 $this->kibanaService->makeDefaultIndex($sharedIndex, 'default');
                
                 $this->es->createRole($envName, $application->getName(), array($patternIndex), array($sharedIndex, $appIndex), array("read"));
-                $this->updateRoleMapping("add", $envName, $user, $application);
-
-    
+                $this->updateRoleMapping("add", $envName, $user, $application);   
             }
-        
-            //$this->sg->updateSearchGuardConfig();
-    
-            //$this->curatorService->updateCuratorConfig();
         }
     }
 
