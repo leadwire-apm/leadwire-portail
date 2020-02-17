@@ -214,17 +214,6 @@ angular.module('leadwireApp')
                         menu: updateMenuItems(MenuEnum.DASHBOARD),
                     },
                 })
-                .state('app.dashboard.manageDashboard', {
-                    url: '/dashboard/manage/{tenant}',
-                    templateUrl: 'manageDashboards.html',
-                    controller: 'manageDashboardsCtrl',
-                    controllerAs: 'ctrl',
-                    resolve: {
-                        permissions: function (RouteGuard) {
-                            return RouteGuard.loginRequired();
-                        },
-                    },
-                })
                 .state('app.management', {
                     abstract: true,
                     url: '/management',

@@ -5,10 +5,12 @@
             '$scope',
             'DashboardService',
             '$localStorage',
+            'ConfigService',
+            '$state',
             controller
         ]);
 
-    function controller($scope, DashboardService, $localStorage) {
+    function controller($scope, DashboardService, $localStorage, ConfigService, $state) {
         var vm = this;
 
         vm.onLoad = function() {
@@ -43,6 +45,10 @@
                 []);
             });
         };
+
+        vm.openShredDashboars = function(type){
+            window.open(ConfigService.setDashboard(type),'_blank');
+        }
 
         vm.onLoad();
     }
