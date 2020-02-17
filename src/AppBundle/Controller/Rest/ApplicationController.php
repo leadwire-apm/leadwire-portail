@@ -314,10 +314,7 @@ class ApplicationController extends Controller
         $id
     ) {
         $applicationService->removeUserApplication($id, $this->getUser());
-        //$processService->emit("heavy-operations-in-progress", "Configuring SearchGuard");
-        //$sgService->updateSearchGuardConfig();
         $processService->emit("heavy-operations-done", "Succeeded");
-
         return new JsonResponse(null, Response::HTTP_ACCEPTED);
     }
 
