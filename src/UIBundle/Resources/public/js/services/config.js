@@ -36,8 +36,7 @@
             return service.baseUrl + tenant + '?token=' + $auth.getToken() + '#/dashboard/' + dashboardId;
         };
 
-        service.getDashboard = function (
-            tenantPrefix, dashboardId, hasParameter) {
+        service.getDashboard = function (tenantPrefix, dashboardId, hasParameter) {
             var url = this.getUrl(tenantPrefix, '#/dashboard/' + dashboardId,
                 hasParameter);
             return url;

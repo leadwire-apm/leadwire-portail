@@ -719,7 +719,7 @@ class ElasticSearchService
             $nodeOs = (array)$nodeOs->nodes;
             $nodeOs = json_decode(json_encode($nodeOs),true);
                
-            $os = ["cpu" => $nodesStats[key]["os"]["cpu"]["percent"],
+            $os = ["cpu" => $nodesStats[$key]["os"]["cpu"]["percent"],
             "memory_used_byte" => $nodesStats[$key]["os"]["mem"]["used_in_bytes"],
             "memory_Total_byte" => $nodesStats[$key]["os"]["mem"]["total_in_bytes"],
             "os_name" => $nodeOs[$key]["os"]["name"],
