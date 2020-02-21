@@ -760,7 +760,7 @@ class ElasticSearchService
         try {
 
             $stats = $this->httpClient->get(
-                $this->url ."*-". $env . $app ."app-transaction-*/_count",
+                $this->url ."*-". $env . $app ."-app-transaction-*/_count",
     
                 [
                     'headers' => [
@@ -1050,19 +1050,19 @@ class ElasticSearchService
         }
     }
 
-    function createRoleMapping(User $user, string $defaultApp): bool{
+    function createRoleMapping(string $envName, string $applicationName, string $userName=''): bool{
         try {
 
             $status = false;
 
             $role = [
-                "backend_roles" => array($defaultApp),
-                "users" => array($user->getUsername())
+                "backend_roles" => array('readall'),
+                "users" => array($userName)
             ];
 
             $response = $this->httpClient->put(
 
-                $this->url . "_opendistro/_security/api/rolesmapping/roleMapping_" . $user->getUsername(),
+                $this->url . "_opendistro/_security/api/rolesmapping/roleMapping_" . $envName ."_".$applicationName,
                 [
                     'auth' => $this->getAuth(),
                     'headers' => [
@@ -1076,7 +1076,7 @@ class ElasticSearchService
             $this->logger->notice(
                 "leadwire.opendistro.createRoleMapping",
                 [
-                    'url' => $this->url . "_opendistro/_security/api/rolesmapping/roleMapping_" . $user->getUsername(),
+                    'url' => $this->url . "_opendistro/_security/api/rolesmapping/roleMapping_" . $envName ."_".$applicationName,
                     'verb' => 'PUT',
                     'status_code' => $response->getStatusCode(),
                     'status_text' => $response->getReasonPhrase()
@@ -1095,16 +1095,15 @@ class ElasticSearchService
         }
     }
 
-    function patchRoleMapping(string $action, string $userName, array $mappingRole): bool{
+    private function patchRoleMapping(string $action, string $envName, string $applicationName, array $users): bool{
         try {
 
             $status = false;
             $body = array(
                 ["op" => $action,
-                "path" => "/roleMapping_" . $userName,
+                "path" => "/roleMapping_" . $envName . "_" . $applicationName,
                 "value" => [
-                    "users" => array($userName),
-                    "backend_roles" => $mappingRole
+                    "users" => $users,
                 ]]
             );
 
@@ -1143,14 +1142,14 @@ class ElasticSearchService
         }
     }
 
-    function deleteRoleMapping(User $user): bool{
+    function deleteRoleMapping(string $envName, string $applicationName): bool{
         try {
 
             $status = false;
 
             $response = $this->httpClient->delete(
 
-                $this->url . "_opendistro/_security/api/rolesmapping/roleMapping_" . $user->getUsername(),
+                $this->url . "_opendistro/_security/api/rolesmapping/roleMapping_" . $envName . "_" .$applicationName ,
                 [
                     'auth' => $this->getAuth(),
                     'headers' => [
@@ -1163,7 +1162,7 @@ class ElasticSearchService
             $this->logger->notice(
                 "leadwire.opendistro.createRoleMapping",
                 [
-                    'url' => $this->url . "_opendistro/_security/api/rolesmapping/roleMapping_" . $user->getUsername(),
+                    'url' => $this->url . "_opendistro/_security/api/rolesmapping/roleMapping_" . $envName . "_" .$applicationName,
                     'verb' => 'DELETE',
                     'status_code' => $response->getStatusCode(),
                     'status_text' => $response->getReasonPhrase()
@@ -1182,14 +1181,14 @@ class ElasticSearchService
         }
     }
 
-    function getRoleMapping(User $user): array{
+    private function getRoleMapping(String $envName, string $applicationName): array{
         try {
 
             $status = false;
 
             $response = $this->httpClient->get(
 
-                $this->url . "_opendistro/_security/api/rolesmapping/roleMapping_" . $user->getUsername(),
+                $this->url . "_opendistro/_security/api/rolesmapping/roleMapping_" . $envName . "_" . $applicationName,
                 [
                     'auth' => $this->getAuth(),
                     'headers' => [
@@ -1202,17 +1201,17 @@ class ElasticSearchService
             $this->logger->notice(
                 "leadwire.opendistro.getRoleMapping",
                 [
-                    'url' => $this->url . "_opendistro/_security/api/rolesmapping/roleMapping_" . $user->getUsername(),
+                    'url' => $this->url . "_opendistro/_security/api/rolesmapping/roleMapping_" . $envName . "_" . $applicationName,
                     'verb' => 'GET',
                     'status_code' => $response->getStatusCode(),
                     'status_text' => $response->getReasonPhrase()
                 ]
             );
             if($response->getStatusCode() == 200){
-                $role = "roleMapping_" . $user->getUsername();
+                $role = "roleMapping_" . $envName . "_" . $applicationName;
                 $res = \json_decode($response->getBody());
                 $res = (array)$res->$role;
-                return $res["backend_roles"];
+                return $res["users"];
             } else {
                 return array();
             }
@@ -1221,6 +1220,22 @@ class ElasticSearchService
             $this->logger->error($e->getMessage());
             throw new HttpException("An error has occurred while executing your request.",400);
         }
+    }
+
+    public function updateRoleMapping(string $action, string $envName, User $user, string $applicationName){
+
+        $users = $this->getRoleMapping($envName, $applicationName);
+
+        switch ($action) {
+            case "add":
+                array_push($users, $user->getName());
+                break;
+            case "delete":
+                $key = array_search($user->getName(), $users);
+                unset($users[$key]);
+                break;
+            }
+        return $this->patchRoleMapping("replace", $envName, $applicationName, $users);
     }
     
     

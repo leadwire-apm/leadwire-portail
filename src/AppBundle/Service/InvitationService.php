@@ -304,7 +304,7 @@ class InvitationService
             foreach ($application->getEnvironments() as $environment) {
                 $envName = $environment->getName();
                 $this->logger->error("*************");
-                $this->updateRoleMapping("add", $envName, $invitedUser, $application);
+                $this->es->updateRoleMapping("add", $envName, $invitedUser, $application->getName());
                 $invitedUser
                     // set shared dashboard access level to write
                     ->addAccessLevel((new AccessLevel())
@@ -330,25 +330,5 @@ class InvitationService
             }
             //$this->ldap->registerApplication($invitedUser, $application);
         } 
-    }
-
-    public function updateRoleMapping(string $action, string $envName, User $user, Application $application){
-        $this->logger->error("-----------------------");
-        $mappingRole = $this->es->getRoleMapping($user);
-        $role = "role_" .  $envName . "_" . $application->getName();
-        if (!empty($mappingRole)) {
-            switch ($action) {
-                case "add":
-                    array_push($mappingRole, $role);
-                    break;
-                case "delete":
-                    $key = array_search($role, $mappingRole);
-                    if($key != false) {
-                        unset($mappingRole[$key]);
-                    }
-                    break;
-                }
-            $this->es->patchRoleMapping("replace", $user->getUsername(), $mappingRole);
-        }
     }
 }

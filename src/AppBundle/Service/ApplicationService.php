@@ -464,27 +464,8 @@ class ApplicationService
                 $this->kibanaService->makeDefaultIndex($sharedIndex, 'default');
                
                 $this->es->createRole($envName, $application->getName(), array($patternIndex), array($sharedIndex, $appIndex), array("read"));
-                $this->updateRoleMapping("add", $envName, $user, $application);   
+                $this->es->createRoleMapping($envName, $application->getName() , $user->getName());   
             }
-        }
-    }
-
-
-    public function updateRoleMapping(string $action, string $envName, User $user, Application $application){
-
-        $mappingRole = $this->es->getRoleMapping($user);
-        $role = "role_" .  $envName . "_" . $application->getName();
-        if (!empty($mappingRole)) {
-            switch ($action) {
-                case "add":
-                    array_push($mappingRole, $role);
-                    break;
-                case "delete":
-                    $key = array_search($role, $mappingRole);
-                    unset($mappingRole[$key]);
-                    break;
-                }
-            $this->es->patchRoleMapping("replace", $user->getUsername(), $mappingRole);
         }
     }
 
@@ -570,10 +551,6 @@ class ApplicationService
             $this->kibanaService->makeDefaultIndex($appIndex, 'default');
 
             $this->kibanaService->createApplicationDashboards($application, $envName);
-
-            //$this->es->deleteIndex($sharedIndex);
-            //$this->es->deleteTenant($sharedIndex);
-            //$this->es->createTenant($sharedIndex);
             
             $this->kibanaService->loadIndexPatternForApplication(
                 $application,
@@ -654,10 +631,8 @@ class ApplicationService
             /**
              * remove role mapping
              */
-            foreach ($this->userManager->getAll() as $user) {
-                foreach($this->environmentService->getAll() as $environment){
-                    $this->updateRoleMapping("delete", $environment->getName(), $user, $application);
-                }
+            foreach($this->environmentService->getAll() as $environment){
+                $this->es->deleteRoleMapping($environment->getName(), $application->getName());
             }
         }
     }
@@ -680,7 +655,7 @@ class ApplicationService
                  * remove role mapping
                  */
                 foreach($this->environmentService->getAll() as $environment){
-                    $this->updateRoleMapping("delete", $environment->getName(), $user, $application);
+                    $this->es->updateRoleMapping("delete", $environment->getName(), $user, $application->getName());
                 }
             }
         } catch (\Exception $e) {

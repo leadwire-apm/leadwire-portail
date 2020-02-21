@@ -88,7 +88,7 @@ Load default Application Type. Insert template for Kibana and more..'
             $es->createTenant($sharedIndex);
 
             $es->createIndexTemplate($application, $applicationService->getActiveApplicationsNames());
-        //    $es->createAlias($application, "staging");
+           //$es->createAlias($application, "staging");
             $kibana->loadIndexPatternForApplication(
                 $application,
                 $appIndex,
@@ -113,6 +113,7 @@ Load default Application Type. Insert template for Kibana and more..'
 
    
             $es->createRole("staging", $application->getName(), array($patternIndex), array($sharedIndex, $appIndex), array("read"));
+            $es->createRoleMapping("staging", $application->getName());
         }
 
         if ($stripeEnabled === true) {

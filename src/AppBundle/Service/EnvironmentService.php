@@ -160,69 +160,46 @@ class EnvironmentService
          * Add applications tenants
          */
         foreach ($this->applicationManager->getAll() as $application) {
+            $envName = $env->getName();
+            $sharedIndex =  $envName . "-" . $application->getSharedIndex();
+            $appIndex =  $envName . "-" . $application->getApplicationIndex();
+            $patternIndex = "*-" . $envName . "-" . $application->getName() . "-*";
+
+            $this->es->createTenant($appIndex);
+
+            $this->es->createIndexTemplate($application, $this->applicationManager->getActiveApplicationsNames());
+    
+            $this->kibanaService->loadIndexPatternForApplication(
+                $application,
+                $appIndex,
+                $envName 
+            );
+
+            $this->kibanaService->loadDefaultIndex($appIndex, 'default');
+            $this->kibanaService->makeDefaultIndex($appIndex, 'default');
+    
+            $this->kibanaService->createApplicationDashboards($application, $envName);
+
+            $this->es->createTenant($sharedIndex);
+    
+            $this->kibanaService->loadIndexPatternForApplication(
+                $application,
+                $sharedIndex,
+                $envName
+            );
+
+            $this->kibanaService->loadDefaultIndex($sharedIndex, 'default');
+            $this->kibanaService->makeDefaultIndex($sharedIndex, 'default');
+            
+            $this->es->createRole($envName, $application->getName(), array($patternIndex), array($sharedIndex, $appIndex), array("read"));
+            $this->createRoleMapping($envName, $application->getName());
+
             foreach ($this->userManager->getAll() as $user) {
-                $envName = $env->getName();
-                $sharedIndex =  $envName . "-" . $application->getSharedIndex();
-                $appIndex =  $envName . "-" . $application->getApplicationIndex();
-                $patternIndex = "*-" . $envName . "-" . $application->getName() . "-*";
-
-                $this->es->createTenant($appIndex);
-
-                $this->es->createIndexTemplate($application, $this->applicationManager->getActiveApplicationsNames());
-    
-                //$this->es->createAlias($application, $envName);
-    
-                $this->kibanaService->loadIndexPatternForApplication(
-                    $application,
-                    $appIndex,
-                    $envName 
-                );
-    
-                $this->kibanaService->loadDefaultIndex($appIndex, 'default');
-                $this->kibanaService->makeDefaultIndex($appIndex, 'default');
-        
-                $this->kibanaService->createApplicationDashboards($application, $envName);
-
-                $this->es->createTenant($sharedIndex);
-        
-                $this->kibanaService->loadIndexPatternForApplication(
-                    $application,
-                    $sharedIndex,
-                    $envName
-                );
-
-                $this->kibanaService->loadDefaultIndex($sharedIndex, 'default');
-                $this->kibanaService->makeDefaultIndex($sharedIndex, 'default');
-               
-                $this->es->createRole($envName, $application->getName(), array($patternIndex), array($sharedIndex, $appIndex), array("read"));
-                $mappingRole = $this->es->getRoleMapping($user);
-                $role = "role_" .  $envName . "_" . $application->getName();
-                array_push($mappingRole, $role);          
-                $this->es->patchRoleMapping("replace", $user->getUsername(), $mappingRole);
+                $this->es->updateRoleMapping("add", $envName, $user, $application->getName());
             }
         }
 
         return $id;
-    }
-
-    public function updateRoleMapping(string $action, string $envName, User $user, Application $application){
-
-        $mappingRole = $this->es->getRoleMapping($user);
-        $role = "role_" .  $envName . "_" . $application->getName();
-        if (!empty($mappingRole)) {
-            switch ($action) {
-                case "add":
-                    array_push($mappingRole, $role);
-                    break;
-                case "delete":
-                    $key = array_search($role, $mappingRole);
-                    if($key != false) {
-                        unset($mappingRole[$key]);
-                    }
-                    break;
-                }
-            $this->es->patchRoleMapping("replace", $user->getUsername(), $mappingRole);
-        }
     }
 
     public function update($json)
