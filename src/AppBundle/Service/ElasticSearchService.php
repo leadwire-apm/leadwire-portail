@@ -1062,7 +1062,7 @@ class ElasticSearchService
 
             $response = $this->httpClient->put(
 
-                $this->url . "_opendistro/_security/api/rolesmapping/roleMapping_" . $envName ."_".$applicationName,
+                $this->url . "_opendistro/_security/api/rolesmapping/role_" . $envName ."_".$applicationName,
                 [
                     'auth' => $this->getAuth(),
                     'headers' => [
@@ -1076,7 +1076,7 @@ class ElasticSearchService
             $this->logger->notice(
                 "leadwire.opendistro.createRoleMapping",
                 [
-                    'url' => $this->url . "_opendistro/_security/api/rolesmapping/roleMapping_" . $envName ."_".$applicationName,
+                    'url' => $this->url . "_opendistro/_security/api/rolesmapping/role_" . $envName ."_".$applicationName,
                     'verb' => 'PUT',
                     'status_code' => $response->getStatusCode(),
                     'status_text' => $response->getReasonPhrase()
@@ -1101,7 +1101,7 @@ class ElasticSearchService
             $status = false;
             $body = array(
                 ["op" => $action,
-                "path" => "/roleMapping_" . $envName . "_" . $applicationName,
+                "path" => "/role_" . $envName . "_" . $applicationName,
                 "value" => [
                     "users" => $users,
                 ]]
@@ -1149,7 +1149,7 @@ class ElasticSearchService
 
             $response = $this->httpClient->delete(
 
-                $this->url . "_opendistro/_security/api/rolesmapping/roleMapping_" . $envName . "_" .$applicationName ,
+                $this->url . "_opendistro/_security/api/rolesmapping/role_" . $envName . "_" .$applicationName ,
                 [
                     'auth' => $this->getAuth(),
                     'headers' => [
@@ -1162,7 +1162,7 @@ class ElasticSearchService
             $this->logger->notice(
                 "leadwire.opendistro.createRoleMapping",
                 [
-                    'url' => $this->url . "_opendistro/_security/api/rolesmapping/roleMapping_" . $envName . "_" .$applicationName,
+                    'url' => $this->url . "_opendistro/_security/api/rolesmapping/role_" . $envName . "_" .$applicationName,
                     'verb' => 'DELETE',
                     'status_code' => $response->getStatusCode(),
                     'status_text' => $response->getReasonPhrase()
@@ -1188,7 +1188,7 @@ class ElasticSearchService
 
             $response = $this->httpClient->get(
 
-                $this->url . "_opendistro/_security/api/rolesmapping/roleMapping_" . $envName . "_" . $applicationName,
+                $this->url . "_opendistro/_security/api/rolesmapping/role_" . $envName . "_" . $applicationName,
                 [
                     'auth' => $this->getAuth(),
                     'headers' => [
@@ -1201,14 +1201,14 @@ class ElasticSearchService
             $this->logger->notice(
                 "leadwire.opendistro.getRoleMapping",
                 [
-                    'url' => $this->url . "_opendistro/_security/api/rolesmapping/roleMapping_" . $envName . "_" . $applicationName,
+                    'url' => $this->url . "_opendistro/_security/api/rolesmapping/role_" . $envName . "_" . $applicationName,
                     'verb' => 'GET',
                     'status_code' => $response->getStatusCode(),
                     'status_text' => $response->getReasonPhrase()
                 ]
             );
             if($response->getStatusCode() == 200){
-                $role = "roleMapping_" . $envName . "_" . $applicationName;
+                $role = "role_" . $envName . "_" . $applicationName;
                 $res = \json_decode($response->getBody());
                 $res = (array)$res->$role;
                 return $res["users"];
@@ -1238,10 +1238,6 @@ class ElasticSearchService
         return $this->patchRoleMapping("replace", $envName, $applicationName, $users);
     }
     
-    
-    
-    ///
-
     /****************************************************************************/
     
     

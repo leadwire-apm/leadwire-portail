@@ -127,7 +127,7 @@ class InvitationService
         $this->applicationService = $applicationService;
         $this->permissionService = $permissionService;
         $this->userManager = $userManager;
-        $this->es = $lasticSearchService;
+        $this->es = $elasticSearchService;
         $this->environmentService = $environmentService;
     }
 
@@ -296,14 +296,12 @@ class InvitationService
             $invitation->setPending(false);
             $invitation->setUser($invitedUser);
             $application = $invitation->getApplication();
-            $this->logger->error("######");
             $this->permissionService->grantPermission($application, $invitedUser, ApplicationPermission::ACCESS_GUEST);
             $this->invitationManager->update($invitation);
-            $userManager->update($invitedUser);
-            
+            $this->userManager->update($invitedUser);
+
             foreach ($application->getEnvironments() as $environment) {
                 $envName = $environment->getName();
-                $this->logger->error("*************");
                 $this->es->updateRoleMapping("add", $envName, $invitedUser, $application->getName());
                 $invitedUser
                     // set shared dashboard access level to write
