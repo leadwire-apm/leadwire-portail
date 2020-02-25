@@ -192,7 +192,7 @@ class EnvironmentService
             $this->kibanaService->makeDefaultIndex($sharedIndex, 'default');
             
             $this->es->createRole($envName, $application->getName(), array($patternIndex), array($sharedIndex, $appIndex), array("read"));
-            $this->createRoleMapping($envName, $application->getName());
+            $this->es->createRoleMapping($envName, $application->getName());
 
             foreach ($this->userManager->getAll() as $user) {
                 $this->es->updateRoleMapping("add", $envName, $user, $application->getName());
