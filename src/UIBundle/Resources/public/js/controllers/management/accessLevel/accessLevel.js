@@ -9,6 +9,7 @@
             'MESSAGES_CONSTANTS',
             '$state',
             '$scope',
+            '$rootScope',
             'socket',
             AccessLevelControllerFN
         ]);
@@ -26,11 +27,17 @@
         MESSAGES_CONSTANTS,
         $state,
         $scope,
+        $rootScope,
         socket
     ) {
         var vm = this;
 
         socket.on('heavy-operation', function(data) {
+            console.log(data.user);
+            console.log($rootScope.user.id);
+            if (data.user != $rootScope.user.id) {
+                return;
+            }
 
             if (data.status == "in-progress") {
                 $('.panel').addClass('inactive');
@@ -141,7 +148,8 @@
                 "env": env,
                 "app": app,
                 "level": level,
-                "access": access
+                "access": access,
+                "currentUser": $rootScope.user.id
             };
             AccessLevelService.setAccess(acl)
                 .then(function(response) {

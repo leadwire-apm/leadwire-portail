@@ -7,6 +7,7 @@
             'MESSAGES_CONSTANTS',
             '$state',
             'socket',
+            '$rootScope',
             AddApplicationTypeCtrlFN,
         ]);
 
@@ -20,11 +21,15 @@
         toastr,
         MESSAGES_CONSTANTS,
         $state,
-        socket
+        socket,
+        $rootScope
     ) {
         var vm = this;
 
         socket.on('heavy-operation', function(data) {
+            if (data.user != $rootScope.user.id) {
+                return;
+            }
 
             if (data.status == "in-progress") {
                 if ($('#toast-container').hasClass('toast-message') == false) {

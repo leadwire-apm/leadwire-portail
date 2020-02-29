@@ -197,17 +197,17 @@ class ApplicationController extends Controller
     ) {
         $status = false;
         $application = null;
-        $processService->emit("heavy-operations-in-progress", "Creating application settings");
+        $processService->emit($this->getUser(), "heavy-operations-in-progress", "Creating application settings");
         try {
             $data = $request->getContent();
             $application = $applicationService->newApplication($data, $this->getUser());
             $status = true;
-            $processService->emit("heavy-operations-done", "Successeded");
+            $processService->emit($this->getUser(), "heavy-operations-done", "Successeded");
         } catch (DuplicateApplicationNameException $e) {
-            $processService->emit("heavy-operations-done", "Failed");
+            $processService->emit($this->getUser(), "heavy-operations-done", "Failed");
             return $this->renderResponse(['message' => $e->getMessage()], Response::HTTP_NOT_ACCEPTABLE);
         } catch (\Exception $e) {
-            $processService->emit("heavy-operations-done", "Failed");
+            $processService->emit($this->getUser(), "heavy-operations-done", "Failed");
             if ($application instanceof Application) {
                 $applicationService->obliterateApplication($application);
 
@@ -243,14 +243,14 @@ class ApplicationController extends Controller
         ProcessService $processService,
         string $id
     ) {
-        $processService->emit("heavy-operations-in-progress", "Updating application settings");
+        $processService->emit($this->getUser(), "heavy-operations-in-progress", "Updating application settings");
         try {
             $data = $request->getContent();
             $state = $applicationService->updateApplication($data, $id);
-            $processService->emit("heavy-operations-done", "Succeeded");
+            $processService->emit($this->getUser(), "heavy-operations-done", "Succeeded");
             return $this->renderResponse($state['successful']);
         } catch (MongoDuplicateKeyException $e) {
-            $processService->emit("heavy-operations-done", "Failed");
+            $processService->emit($this->getUser(), "heavy-operations-done", "Failed");
             return $this->renderResponse(['message' => "Application's name must be unique"], Response::HTTP_UNAUTHORIZED);
         }
     }
@@ -281,13 +281,13 @@ class ApplicationController extends Controller
 
             if ($accessGrantedByOwnership === true || $accessGrantedByRole === true) {
                 $applicationService->deleteApplication($id);
-                $processService->emit("heavy-operations-in-progress", "Configuring SearchGuard");
+                $processService->emit($this->getUser(), "heavy-operations-in-progress", "Configuring SearchGuard");
                 $sgService->updateSearchGuardConfig();
-                $processService->emit("heavy-operations-done", "Succeeded");
+                $processService->emit($this->getUser(), "heavy-operations-done", "Succeeded");
 
                 return $this->renderResponse(null, Response::HTTP_OK);
             } else {
-                $processService->emit("heavy-operations-done", "Failed");
+                $processService->emit($this->getUser(), "heavy-operations-done", "Failed");
                 throw new UnauthorizedHttpException('', "Unauthorized action");
             }
         } else {
@@ -314,9 +314,9 @@ class ApplicationController extends Controller
         $id
     ) {
         $applicationService->removeUserApplication($id, $this->getUser());
-        $processService->emit("heavy-operations-in-progress", "Configuring SearchGuard");
+        $processService->emit($this->getUser(), "heavy-operations-in-progress", "Configuring SearchGuard");
         $sgService->updateSearchGuardConfig();
-        $processService->emit("heavy-operations-done", "Succeeded");
+        $processService->emit($this->getUser(), "heavy-operations-done", "Succeeded");
 
         return new JsonResponse(null, Response::HTTP_ACCEPTED);
     }
@@ -396,10 +396,10 @@ class ApplicationController extends Controller
         string $id
     ) {
         $application = $applicationService->getApplication($id);
-        $processService->emit("heavy-operations-in-progress", "Updating Application Type");
+        $processService->emit($this->getUser(), "heavy-operations-in-progress", "Updating Application Type");
         if ($application instanceof Application) {
             
-            $processService->emit("heavy-operations-in-progress", "Updating Index-patterns");
+            $processService->emit($this->getUser(), "heavy-operations-in-progress", "Updating Index-patterns");
 
             foreach($application->getEnvironments as $environment){
              
@@ -410,7 +410,7 @@ class ApplicationController extends Controller
                 $esService->deleteIndex($appIndex);
                 $esService->createIndexTemplate($application, $applicationService->getActiveApplicationsNames());
                 $esService->createAlias($application, $envName);
-                $processService->emit("heavy-operations-in-progress", "Updating Kibana Dashboards");
+                $processService->emit($this->getUser(), "heavy-operations-in-progress", "Updating Kibana Dashboards");
                 $kibanaService->loadIndexPatternForApplication(
                     $application,
                     $appIndex,
@@ -435,9 +435,9 @@ class ApplicationController extends Controller
             }
             $application->setDeployedTypeVersion($application->getType()->getVersion());
             $applicationManager->update($application);
-            $processService->emit("heavy-operations-done", "Succeeded");
+            $processService->emit($this->getUser(), "heavy-operations-done", "Succeeded");
         } else {
-            $processService->emit("heavy-operations-done", "Failed");
+            $processService->emit($this->getUser(), "heavy-operations-done", "Failed");
             throw new NotFoundHttpException("Application with ID {$id} not found.");
         }
 

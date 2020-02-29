@@ -18,13 +18,15 @@ io.on('connection', function (socket) {
         if (data.event == 'heavy-operations-in-progress') {
             io.sockets.emit('heavy-operation', {
                 'status': 'in-progress',
-                'message': data.message
+                'message': data.message,
+                'user': data.user
             });
         }
         if (data.event == 'heavy-operations-done') {
             io.sockets.emit('heavy-operation', {
                 'status': 'done',
-                'message': data.message
+                'message': data.message,
+                'user': data.user
             });
         }
     });
