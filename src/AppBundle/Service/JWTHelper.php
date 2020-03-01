@@ -43,7 +43,7 @@ class JWTHelper
             'user' => $userIndex,
             'name' => $username,
             'iat' => time(),
-            'exp' => time() +36000, 
+            'exp' => time() +36000,
             'nbf' => time(),
         ];
 

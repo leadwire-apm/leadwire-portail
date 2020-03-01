@@ -5,6 +5,7 @@ namespace AppBundle\Service;
 use ElephantIO\Client as Elephant;
 use ElephantIO\Engine\SocketIO\Version2X;
 use ElephantIO\Exception\ServerConnectionFailureException;
+use AppBundle\Document\User;
 
 class ProcessService
 {
@@ -16,8 +17,8 @@ class ProcessService
     /**
      * Constructor
      *
-     * @param string $appDomain
-     * @param string $port
+     * @param string       $appDomain
+     * @param string       $port
      */
     public function __construct($appDomain, $port)
     {
@@ -41,10 +42,11 @@ class ProcessService
     /**
      * Emit event message
      *
+     * @param User   $user
      * @param string $event
      * @param string $message
      */
-    public function emit($event = null, $message = null)
+    public function emit(User $user, $event = null, $message = null)
     {
         if ($this->elephant == null || $event == null || $message == null) {
             return;
@@ -54,7 +56,8 @@ class ProcessService
             $this->elephant->initialize();
             $this->elephant->emit('broadcast', [
                 'event' => $event,
-                'message' => $message
+                'message' => $message,
+                'user' => $user != null ? $user->getId() : null
             ]);
             $this->elephant->close();
         } catch (ServerConnectionFailureException $e) {
