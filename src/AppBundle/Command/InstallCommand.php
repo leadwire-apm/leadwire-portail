@@ -110,10 +110,9 @@ Load default Application Type. Insert template for Kibana and more..'
 
             $kibana->loadDefaultIndex($sharedIndex, 'default');
             $kibana->makeDefaultIndex($sharedIndex, 'default');
-
-   
-            $es->createRole("staging", $application->getName(), array($patternIndex), array($sharedIndex, $appIndex), array("read"));
-            $es->createRoleMapping("staging", $application->getName());
+            
+            $es->createRoleMapping("staging", $application->getName(), 'demo', array('read'),  false);
+            $es->createRole("staging", $application->getName(), array($patternIndex), array($sharedIndex, $appIndex), array("read"), false);
         }
 
         if ($stripeEnabled === true) {

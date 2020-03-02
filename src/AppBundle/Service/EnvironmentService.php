@@ -159,43 +159,51 @@ class EnvironmentService
         /**
          * Add applications tenants
          */
-        foreach ($this->applicationManager->getAll() as $application) {
+        foreach ($this->applicationManager->getActiveApplicationsNames() as $application) {
             $envName = $env->getName();
             $sharedIndex =  $envName . "-" . $application->getSharedIndex();
             $appIndex =  $envName . "-" . $application->getApplicationIndex();
             $patternIndex = "*-" . $envName . "-" . $application->getName() . "-*";
 
-            $this->es->createTenant($appIndex);
+            if($application->isRemoved() === false){
+                $this->es->createTenant($appIndex);
 
-            $this->es->createIndexTemplate($application, $this->applicationManager->getActiveApplicationsNames());
+                $this->es->createIndexTemplate($application, $this->applicationManager->getActiveApplicationsNames());
+        
+                $this->kibanaService->loadIndexPatternForApplication(
+                    $application,
+                    $appIndex,
+                    $envName 
+                );
     
-            $this->kibanaService->loadIndexPatternForApplication(
-                $application,
-                $appIndex,
-                $envName 
-            );
-
-            $this->kibanaService->loadDefaultIndex($appIndex, 'default');
-            $this->kibanaService->makeDefaultIndex($appIndex, 'default');
+                $this->kibanaService->loadDefaultIndex($appIndex, 'default');
+                $this->kibanaService->makeDefaultIndex($appIndex, 'default');
+        
+                $this->kibanaService->createApplicationDashboards($application, $envName);
     
-            $this->kibanaService->createApplicationDashboards($application, $envName);
-
-            $this->es->createTenant($sharedIndex);
+                $this->es->createTenant($sharedIndex);
+        
+                $this->kibanaService->loadIndexPatternForApplication(
+                    $application,
+                    $sharedIndex,
+                    $envName
+                );
     
-            $this->kibanaService->loadIndexPatternForApplication(
-                $application,
-                $sharedIndex,
-                $envName
-            );
-
-            $this->kibanaService->loadDefaultIndex($sharedIndex, 'default');
-            $this->kibanaService->makeDefaultIndex($sharedIndex, 'default');
-            
-            $this->es->createRole($envName, $application->getName(), array($patternIndex), array($sharedIndex, $appIndex), array("read"));
-            $this->es->createRoleMapping($envName, $application->getName());
-
-            foreach ($this->userManager->getAll() as $user) {
-                $this->es->updateRoleMapping("add", $envName, $user, $application->getName());
+                $this->kibanaService->loadDefaultIndex($sharedIndex, 'default');
+                $this->kibanaService->makeDefaultIndex($sharedIndex, 'default');
+    
+                $this->es->createRoleMapping($envName, $application->getName(), '', array('read'), false);
+                $this->es->createRoleMapping($envName, $application->getName(), '', array('write'), true);
+                $this->es->createRole($envName, $application->getName(), array($patternIndex), array($sharedIndex, $appIndex), array("read"), false);
+                $this->es->createRole($envName, $application->getName(), array($patternIndex), array($sharedIndex, $appIndex), array("write"), true);
+    
+    
+                foreach ($this->userManager->getAll() as $user) {
+                    if($application->getOwner()->getId() === $user->getId()){
+                        $this->es->updateRoleMapping("add", $envName, $user, $application->getName(), true);
+                    }
+                    $this->es->updateRoleMapping("add", $envName, $user, $application->getName(), false);
+                }
             }
         }
 

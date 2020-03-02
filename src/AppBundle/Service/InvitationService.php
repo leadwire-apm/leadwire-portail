@@ -302,7 +302,7 @@ class InvitationService
 
             foreach ($application->getEnvironments() as $environment) {
                 $envName = $environment->getName();
-                $this->es->updateRoleMapping("add", $envName, $invitedUser, $application->getName());
+                $this->es->updateRoleMapping("add", $envName, $invitedUser, $application->getName(), false);
                 $invitedUser
                     // set shared dashboard access level to write
                     ->addAccessLevel((new AccessLevel())
@@ -326,7 +326,6 @@ class InvitationService
                         ->setAccess(AccessLevel::READ_ACCESS)
                     );
             }
-            //$this->ldap->registerApplication($invitedUser, $application);
         } 
     }
 }
