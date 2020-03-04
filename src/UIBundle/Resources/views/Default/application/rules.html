@@ -27,7 +27,7 @@
                     <spinner is-loading="ctrl.ui.isLoading" size="24"></spinner>
                 </td>
             </tr>
-            <tr ng-repeat="invitation in ctrl.application.invitations | filter:{ user: '!true' }">
+            <tr ng-repeat="invitation in ctrl.application.invitations | filter:ctrl.filter">
                 <td data-title="Name" data-label="Name">
                     [[invitation.user.email]]
                 </td>

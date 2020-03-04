@@ -45,13 +45,28 @@
                 "level": "APP_DASHBOARD_LEVEL",
                 "access": access
             };
+
             AccessLevelService.setAccess(acl)
                 .then(function (response) {
+                    var __app = { ...vm.application };
+                    __app.invitations.forEach((element, id) => {
+                        if (element.user && element.user.id === user) {
+                            vm.application.invitations[id].user.acl = response.data.acls;
+                        }
+                    });
 
                 })
                 .catch(function (error) {
                     vm.flipActivityIndicator('isLoading');
                 });
+        }
+
+        vm.filter = function (invitation) {
+            if (angular.isDefined(invitation.user)) {
+                return true;
+            } else {
+                return false;
+            }
         }
 
         vm.getApp = function () {
