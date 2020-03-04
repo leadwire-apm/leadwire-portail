@@ -8,7 +8,7 @@ use JMS\Serializer\Annotation as JMS;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * @ODM\Document(repositoryClass="AppBundle\Repository\StatRepository")
+ * @ODM\Document(repositoryClass="AppBundle\Repository\EnvironmentRepository")
  * @ODM\HasLifecycleCallbacks
  * @ODM\ChangeTrackingPolicy("DEFERRED_EXPLICIT")
  * @JMS\ExclusionPolicy("all")

@@ -7,7 +7,7 @@ use AppBundle\Document\AccessLevel;
 use AppBundle\Exception\DuplicateApplicationNameException;
 use AppBundle\Manager\UserManager;
 use AppBundle\Manager\AccessLevelManager;
-use AppBundle\Service\SearchGuardService;
+use AppBundle\Service\ElasticSearchService;
 use AppBundle\Service\EnvironmentService;
 use AppBundle\Service\ApplicationService;
 use AppBundle\Service\ProcessService;
@@ -35,9 +35,9 @@ class AccessLevelService
     private $accessLevelManager;
 
     /**
-     * @var SearchGuardService
+     * @var ElasticSearchService
      */
-    private $searchGuardService;
+    private $es;
 
     /**
      * @var EnvironmentService $environmentService
@@ -65,7 +65,7 @@ class AccessLevelService
      *
      * @param UserManager         $userManager
      * @param AccessLevelManager  $accessLevelManager
-     * @param SearchGuardService  $searchGuardService
+     * @param ElasticSearchService  $es
      * @param EnvironmentService  $environmentService
      * @param ApplicationService  $applicationService
      * @param ProcessService      $processService
@@ -75,7 +75,7 @@ class AccessLevelService
     public function __construct(
         UserManager $userManager,
         AccessLevelManager $accessLevelManager,
-        SearchGuardService $searchGuardService,
+        ElasticSearchService $es,
         EnvironmentService $environmentService,
         ApplicationService $applicationService,
         ProcessService $processService,
@@ -84,7 +84,7 @@ class AccessLevelService
     ) {
         $this->userManager = $userManager;
         $this->accessLevelManager = $accessLevelManager;
-        $this->searchGuardService = $searchGuardService;
+        $this->es = $es;
         $this->environmentService = $environmentService;
         $this->applicationService = $applicationService;
         $this->processService = $processService;
@@ -132,8 +132,7 @@ class AccessLevelService
                 if ($application->isRemoved()) {
                     continue;
                 }
-                $user
-                    ->addAccessLevel((new AccessLevel())
+                $user->addAccessLevel((new AccessLevel())
                         ->setEnvironment($environment)
                         ->setApplication($application)
                         ->setLevel($level)
@@ -143,7 +142,6 @@ class AccessLevelService
             }
         }
         $this->userManager->update($user);
-        $this->searchGuardService->updateSearchGuardConfig();
     }
 
     private function updateByApplication(User $user, $env, $app, $level, $access)
@@ -152,22 +150,25 @@ class AccessLevelService
         $application = $this->applicationService->getById($app);
         $accessLevel = $user->getAccessLevelsApp($env, $app, $level);
         if ($accessLevel == null) {
-            $user
-                ->addAccessLevel((new AccessLevel())
+            $user->addAccessLevel((new AccessLevel())
                     ->setEnvironment($environment)
                     ->setApplication($application)
                     ->setLevel($level)
                     ->setAccess($access)
-                )
-            ;
+                );
         } else {
             $user->removeAccessLevel($accessLevel);
             $accessLevel->setAccess($access);
             $user->addAccessLevel($accessLevel);
         }
 
+        if($access === AccessLevel::WRITE_ACCESS){
+            $this->es->updateRoleMapping("add", $environment->getName(), $user, $application->getName(), true);
+        } else {
+            $this->es->updateRoleMapping("delete", $environment->getName(), $user, $application->getName(), true);
+        }  
+
         $this->userManager->update($user);
-        $this->searchGuardService->updateSearchGuardConfig();
     }
 
     /**

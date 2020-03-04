@@ -17,7 +17,7 @@
      * Handle Access Level logic
      *
      */
-    function AccessLevelControllerFN (
+    function AccessLevelControllerFN(
         EnvironmentService,
         ApplicationService,
         AccessLevelService,
@@ -30,7 +30,7 @@
     ) {
         var vm = this;
 
-        socket.on('heavy-operation', function(data) {
+        socket.on('heavy-operation', function (data) {
 
             if (data.status == "in-progress") {
                 $('.panel').addClass('inactive');
@@ -91,9 +91,9 @@
                     vm.applications = applications;
                     vm.view.applications = true;
                     vm.selectedEnvironment = idEnvironment;
-                    EnvironmentService.findMinimalist(idEnvironment).then(function(environment) {
+                    EnvironmentService.findMinimalist(idEnvironment).then(function (environment) {
                         vm.selectedEnvironmentName = environment.name;
-                    }).catch(function(error) {
+                    }).catch(function (error) {
                         vm.flipActivityIndicator('isLoading');
                     });
                 })
@@ -114,18 +114,18 @@
                     vm.users = users;
                     vm.view.users = true;
                     vm.selectedEnvironment = idEnvironment;
-                    EnvironmentService.findMinimalist(idEnvironment).then(function(environment) {
+                    EnvironmentService.findMinimalist(idEnvironment).then(function (environment) {
                         vm.selectedEnvironmentName = environment.name;
-                    }).catch(function(error) {
+                    }).catch(function (error) {
                         vm.flipActivityIndicator('isLoading');
                     });
                     vm.selectedApplication = idApplication != null ? idApplication : 'all';
                     if (idApplication == null) {
                         vm.selectedApplicationName = 'all';
                     } else {
-                        ApplicationService.findMinimalist(idApplication).then(function(application) {
+                        ApplicationService.findMinimalist(idApplication).then(function (application) {
                             vm.selectedApplicationName = application.name;
-                        }).catch(function(error) {
+                        }).catch(function (error) {
                             vm.flipActivityIndicator('isLoading');
                         });
                     }
@@ -135,7 +135,7 @@
                 });
         };
 
-        vm.setAccess = function(user, env, app, level, access) {
+        vm.setAccess = function (user, env, app, level, access) {
             acl = {
                 "user": user,
                 "env": env,
@@ -144,19 +144,17 @@
                 "access": access
             };
             AccessLevelService.setAccess(acl)
-                .then(function(response) {
+                .then(function (response) {
                     var user = response.data;
-                    var index = _.findIndex(vm.users, {id: user.id});
+                    var index = _.findIndex(vm.users, { id: user.id });
                     vm.users.splice(index, 1, user);
                 })
                 .catch(function (error) {
                     vm.flipActivityIndicator('isLoading');
-                })
-            ;
+                });
+        }
 
-            }
-
-        vm.reset = function() {
+        vm.reset = function () {
             vm.environments = [];
             vm.applications = [];
             vm.users = [];

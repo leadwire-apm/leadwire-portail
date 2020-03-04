@@ -9,10 +9,13 @@
             'CONFIG',
             'toastr',
             'MESSAGES_CONSTANTS',
+            '$localStorage',
+            'AccessLevelService',
+            'EnvironmentService',
             applicationDetailCtrlFN,
         ]);
 
-    function applicationDetailCtrlFN (
+    function applicationDetailCtrlFN(
         ApplicationFactory,
         InvitationFactory,
         $stateParams,
@@ -20,16 +23,35 @@
         CONFIG,
         toastr,
         MESSAGES_CONSTANTS,
+        $localStorage,
+        AccessLevelService,
+        EnvironmentService
     ) {
         var vm = this;
 
         vm.LOGIN_METHOD = CONFIG.LOGIN_METHOD;
-
-        console.log(MESSAGES_CONSTANTS);
+        vm.selectedEnvironment = $localStorage.selectedEnvId;
 
         vm.ownerTitle = "Owner Github :"
-        if(vm.LOGIN_METHOD === 'proxy' || vm.LOGIN_METHOD === 'login'){
+        if (vm.LOGIN_METHOD === 'proxy' || vm.LOGIN_METHOD === 'login') {
             vm.ownerTitle = "Owner Login Id :"
+        }
+
+        vm.setAccess = function (user, access) {
+            acl = {
+                "user": user,
+                "env": vm.selectedEnvironment,
+                "app": vm.application.id,
+                "level": "APP_DASHBOARD_LEVEL",
+                "access": access
+            };
+            AccessLevelService.setAccess(acl)
+                .then(function (response) {
+
+                })
+                .catch(function (error) {
+                    vm.flipActivityIndicator('isLoading');
+                });
         }
 
         vm.getApp = function () {
@@ -123,6 +145,15 @@
             vm.ui['isSaving' + suffix] = !vm.ui['isSaving' + suffix];
         };
 
+        vm.getEnvList = function () {
+            EnvironmentService.list()
+                .then(function (environments) {
+                    vm.environments = environments;
+                })
+                .catch(function (error) {
+                });
+        }
+
         vm.onLoad = function () {
             $rootScope.currentNav = 'settings';
             vm = angular.extend(vm, {
@@ -133,11 +164,13 @@
                 invitedUser: {
                     email: '',
                 },
+                environments: [],
                 CONSTANTS: CONFIG,
                 moment: moment,
                 retention: CONFIG.STRIPE_ENABLED == true ? $rootScope.user.plan.retention : null,
                 DOWNLOAD_URL: CONFIG.DOWNLOAD_URL,
             });
+            vm.getEnvList();
             vm.getApp();
             vm.loadStats();
         };

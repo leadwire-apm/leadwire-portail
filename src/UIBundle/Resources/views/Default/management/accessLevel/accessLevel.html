@@ -2,8 +2,10 @@
     <div class="panel-heading">
         <h4>
             Manage Access Levels
-            <span ng-if="ctrl.selectedEnvironmentName"><br /><br />Environment: [[ ctrl.selectedEnvironmentName ]]</span>
-            <span ng-if="ctrl.selectedApplicationName"><br /><br />Application: [[ ctrl.selectedApplicationName ]]</span>
+            <span ng-if="ctrl.selectedEnvironmentName"><br /><br />Environment: [[ ctrl.selectedEnvironmentName
+                ]]</span>
+            <span ng-if="ctrl.selectedApplicationName"><br /><br />Application: [[ ctrl.selectedApplicationName
+                ]]</span>
         </h4>
         <hr>
     </div>
@@ -14,52 +16,41 @@
                 <div class="no-more-tables">
                     <table class="table table-striped mb0">
                         <thead>
-                        <tr>
-                            <th class="text-left">Environment Name</th>
-                            <th class="text-left">Ip</th>
-                            <th class="text-left">Action
-                            </th>
-                        </tr>
+                            <tr>
+                                <th class="text-left">Environment Name</th>
+                                <th class="text-left">Ip</th>
+                                <th class="text-left">Action
+                                </th>
+                            </tr>
                         </thead>
                         <tbody>
-                        <tr ng-if="ctrl.ui.isLoading" class="text-center">
-                            <td colspan="6">
-                                <spinner is-loading="ctrl.ui.isLoading"
-                                         size="24"></spinner>
-                            </td>
-                        </tr>
-                        <tr ng-repeat="environment in ctrl.environments"
-                            class="text-left"
-                        >
-                            <td data-title="Name" data-label="Name">
-                                <span>
-                                    [[environment.name]]
-                                </span>
-                            </td>
-                            <td data-title="Name" data-label="Name">
-                                <span>
-                                    [[environment.ip]]
-                                </span>
-                            </td>
-                            <td data-title="Actions" data-label="Actions" class="text-left">
-                                <button
-                                    title="User Access"
-                                    data-placement="top"
-                                    data-toggle="tooltip"
-                                    class="btn bg-blue"
-                                    ng-click="ctrl.loadUsers(environment.id, null)">
-                                    <i class="fa fa-user-shield"></i>
-                                </button>
-                                <button
-                                    title="Application Access"
-                                    data-placement="top"
-                                    data-toggle="tooltip"
-                                    class="btn bg-blue"
-                                    ng-click="ctrl.loadApplications(environment.id)">
-                                    <i class="fa fa-desktop"></i>
-                                </button>
-                            </td>
-                        </tr>
+                            <tr ng-if="ctrl.ui.isLoading" class="text-center">
+                                <td colspan="6">
+                                    <spinner is-loading="ctrl.ui.isLoading" size="24"></spinner>
+                                </td>
+                            </tr>
+                            <tr ng-repeat="environment in ctrl.environments" class="text-left">
+                                <td data-title="Name" data-label="Name">
+                                    <span>
+                                        [[environment.name]]
+                                    </span>
+                                </td>
+                                <td data-title="Name" data-label="Name">
+                                    <span>
+                                        [[environment.ip]]
+                                    </span>
+                                </td>
+                                <td data-title="Actions" data-label="Actions" class="text-left">
+                                    <button title="User Access" data-placement="top" data-toggle="tooltip"
+                                        class="btn bg-blue" ng-click="ctrl.loadUsers(environment.id, null)">
+                                        <i class="fa fa-user-shield"></i>
+                                    </button>
+                                    <button title="Application Access" data-placement="top" data-toggle="tooltip"
+                                        class="btn bg-blue" ng-click="ctrl.loadApplications(environment.id)">
+                                        <i class="fa fa-desktop"></i>
+                                    </button>
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -79,44 +70,38 @@
                 <div class="no-more-tables">
                     <table class="table table-striped mb0">
                         <thead>
-                        <tr>
-                            <th class="text-left">Application Name</th>
-                            <th class="text-left">Uuid</th>
-                            <th class="text-left">Action
-                            </th>
-                        </tr>
+                            <tr>
+                                <th class="text-left">Application Name</th>
+                                <th class="text-left">Uuid</th>
+                                <th class="text-left">Action
+                                </th>
+                            </tr>
                         </thead>
                         <tbody>
-                        <tr ng-if="ctrl.ui.isLoading" class="text-center">
-                            <td colspan="6">
-                                <spinner is-loading="ctrl.ui.isLoading"
-                                         size="24"></spinner>
-                            </td>
-                        </tr>
-                        <tr ng-repeat="application in ctrl.applications"
-                            class="text-left"
-                        >
-                            <td data-title="Name" data-label="Name">
-                                <span>
-                                    [[application.name]]
-                                </span>
-                            </td>
-                            <td data-title="Name" data-label="Name">
-                                <span>
-                                    [[application.uuid]]
-                                </span>
-                            </td>
-                            <td data-title="Actions" data-label="Actions" class="text-left">
-                                <button
-                                    title="User Access"
-                                    data-placement="top"
-                                    data-toggle="tooltip"
-                                    class="btn bg-blue"
-                                    ng-click="ctrl.loadUsers(ctrl.selectedEnvironment, application.id)">
-                                    <i class="fa fa-user-shield"></i>
-                                </button>
-                            </td>
-                        </tr>
+                            <tr ng-if="ctrl.ui.isLoading" class="text-center">
+                                <td colspan="6">
+                                    <spinner is-loading="ctrl.ui.isLoading" size="24"></spinner>
+                                </td>
+                            </tr>
+                            <tr ng-repeat="application in ctrl.applications" class="text-left">
+                                <td data-title="Name" data-label="Name">
+                                    <span>
+                                        [[application.name]]
+                                    </span>
+                                </td>
+                                <td data-title="Name" data-label="Name">
+                                    <span>
+                                        [[application.uuid]]
+                                    </span>
+                                </td>
+                                <td data-title="Actions" data-label="Actions" class="text-left">
+                                    <button title="User Access" data-placement="top" data-toggle="tooltip"
+                                        class="btn bg-blue"
+                                        ng-click="ctrl.loadUsers(ctrl.selectedEnvironment, application.id)">
+                                        <i class="fa fa-user-shield"></i>
+                                    </button>
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -135,140 +120,115 @@
                     </a>
                 </div>
                 <div class="row mb10" ng-if="ctrl.selectedApplication != 'all'">
-                    <a prevent-default class="btn btn-primary pull-left" ng-click="ctrl.loadApplications(ctrl.selectedEnvironment)">
+                    <a prevent-default class="btn btn-primary pull-left"
+                        ng-click="ctrl.loadApplications(ctrl.selectedEnvironment)">
                         <i class="fa fa-arrow-left"></i> Back to applications list
                     </a>
                 </div>
                 <div class="no-more-tables">
                     <table class="table table-striped mb0">
                         <thead>
-                        <tr>
-                            <th class="text-left">Name</th>
-                            <th class="text-left">Email</th>
-                            <th class="text-left">Shared Dashboard</th>
-                            <th class="text-left">App Dashboard</th>
-                            <th class="text-left">App Data</th>
-                        </tr>
+                            <tr>
+                                <th class="text-left">Name</th>
+                                <th class="text-left">Email</th>
+                                <th class="text-left">Shared Dashboard</th>
+                                <th class="text-left">App Dashboard</th>
+                                <th class="text-left">App Data</th>
+                            </tr>
                         </thead>
                         <tbody>
-                        <tr ng-if="ctrl.ui.isLoading" class="text-center">
-                            <td colspan="6">
-                                <spinner is-loading="ctrl.ui.isLoading"
-                                         size="24"></spinner>
-                            </td>
-                        </tr>
-                        <tr ng-repeat="user in ctrl.users"
-                            class="text-left">
-                            <td data-title="Name" data-label="Name">
-                                <span>
-                                    [[user.name]]
-                                </span>
-                            </td>
-                            <td data-title="Email" data-label="Email">
-                                <span>
-                                    [[user.email]]
-                                </span>
-                            </td>
-                            <td data-title="Shared Dashboard" data-label="Shared Dashboard">
-                                <label class="container">Read
-                                  <input
-                                    type="radio"
-                                    name="shared_dashboard_[[ $index ]]"
-                                    value="READ"
-                                    ng-click="ctrl.setAccess(
-                                        user.id,
-                                        ctrl.selectedEnvironment,
-                                        ctrl.selectedApplication,
-                                        'SHARED_DASHBOARD_LEVEL',
-                                        'READ'
-                                    )"
-                                    ng-checked="user.acls[ctrl.selectedEnvironment][ctrl.selectedApplication]['SHARED_DASHBOARD_LEVEL'] == 'READ'" />
-                                  <span class="checkmark" ng-class="user.acls[ctrl.selectedEnvironment][ctrl.selectedApplication]['SHARED_DASHBOARD_LEVEL']"></span>
-                                </label>
-                                <label class="container">Write
-                                  <input
-                                    class="shared_dashboard"
-                                    type="radio"
-                                    name="shared_dashboard_[[ $index ]]"
-                                    value="INDICES_ALL"
-                                    ng-click="ctrl.setAccess(
-                                        user.id,
-                                        ctrl.selectedEnvironment,
-                                        ctrl.selectedApplication,
-                                        'SHARED_DASHBOARD_LEVEL',
-                                        'INDICES_ALL'
-                                    )"
-                                    ng-checked="user.acls[ctrl.selectedEnvironment][ctrl.selectedApplication]['SHARED_DASHBOARD_LEVEL'] == 'INDICES_ALL'" />
-                                  <span class="checkmark" ng-class="user.acls[ctrl.selectedEnvironment][ctrl.selectedApplication]['SHARED_DASHBOARD_LEVEL']"></span>
-                                </label>
-                            </td>
-                            <td data-title="App Dashboard" data-label="App Dashboard">
-                                <label class="container">Read
-                                  <input
-                                    type="radio"
-                                    name="app_dashboard_[[ $index ]]"
-                                    value="READ"
-                                    ng-click="ctrl.setAccess(
+                            <tr ng-if="ctrl.ui.isLoading" class="text-center">
+                                <td colspan="6">
+                                    <spinner is-loading="ctrl.ui.isLoading" size="24"></spinner>
+                                </td>
+                            </tr>
+                            <tr ng-repeat="user in ctrl.users" class="text-left">
+                                <td data-title="Name" data-label="Name">
+                                    <span>
+                                        [[user.name]]
+                                    </span>
+                                </td>
+                                <td data-title="Email" data-label="Email">
+                                    <span>
+                                        [[user.email]]
+                                    </span>
+                                </td>
+                                <td data-title="Shared Dashboard" data-label="Shared Dashboard">
+                                    <label class="container">Read
+                                        <input type="radio" name="shared_dashboard_[[ $index ]]" value="READ" ng-click="ctrl.setAccess(
                                         user.id,
                                         ctrl.selectedEnvironment,
                                         ctrl.selectedApplication,
                                         'APP_DASHBOARD_LEVEL',
                                         'READ'
-                                    )"
-                                    ng-checked="user.acls[ctrl.selectedEnvironment][ctrl.selectedApplication]['APP_DASHBOARD_LEVEL'] == 'READ'" />
-                                  <span class="checkmark" ng-class="user.acls[ctrl.selectedEnvironment][ctrl.selectedApplication]['APP_DASHBOARD_LEVEL']"></span>
-                                </label>
-                                <label class="container">Write
-                                  <input
-                                    class="app_dashboard"
-                                    type="radio"
-                                    name="app_dashboard_[[ $index ]]"
-                                    value="INDICES_ALL"
-                                    ng-click="ctrl.setAccess(
+                                    )" ng-checked="user.acls[ctrl.selectedEnvironment][ctrl.selectedApplication]['APP_DASHBOARD_LEVEL'] == 'READ'" />
+                                        <span class="checkmark"
+                                            ng-class="user.acls[ctrl.selectedEnvironment][ctrl.selectedApplication]['APP_DASHBOARD_LEVEL']"></span>
+                                    </label>
+                                    <label class="container">Write
+                                        <input class="shared_dashboard" type="radio"
+                                            name="shared_dashboard_[[ $index ]]" value="INDICES_ALL" ng-click="ctrl.setAccess(
                                         user.id,
                                         ctrl.selectedEnvironment,
                                         ctrl.selectedApplication,
                                         'APP_DASHBOARD_LEVEL',
                                         'INDICES_ALL'
-                                    )"
-                                    ng-checked="user.acls[ctrl.selectedEnvironment][ctrl.selectedApplication]['APP_DASHBOARD_LEVEL'] == 'INDICES_ALL'" />
-                                  <span class="checkmark" ng-class="user.acls[ctrl.selectedEnvironment][ctrl.selectedApplication]['APP_DASHBOARD_LEVEL']"></span>
-                                </label>
-                            </td>
-                            <td data-title="App Data" data-label="App Data">
-                                <label class="container">Read
-                                  <input
-                                    type="radio"
-                                    name="app_data_[[ $index ]]"
-                                    value="READ"
-                                    ng-click="ctrl.setAccess(
+                                    )" ng-checked="user.acls[ctrl.selectedEnvironment][ctrl.selectedApplication]['APP_DASHBOARD_LEVEL'] == 'INDICES_ALL'" />
+                                        <span class="checkmark"
+                                            ng-class="user.acls[ctrl.selectedEnvironment][ctrl.selectedApplication]['APP_DASHBOARD_LEVEL']"></span>
+                                    </label>
+                                </td>
+                                <td data-title="App Dashboard" data-label="App Dashboard">
+                                    <label class="container">Read
+                                        <input type="radio" name="app_dashboard_[[ $index ]]" value="READ" ng-click="ctrl.setAccess(
+                                        user.id,
+                                        ctrl.selectedEnvironment,
+                                        ctrl.selectedApplication,
+                                        'APP_DASHBOARD_LEVEL',
+                                        'READ'
+                                    )" ng-checked="user.acls[ctrl.selectedEnvironment][ctrl.selectedApplication]['APP_DASHBOARD_LEVEL'] == 'READ'" />
+                                        <span class="checkmark"
+                                            ng-class="user.acls[ctrl.selectedEnvironment][ctrl.selectedApplication]['APP_DASHBOARD_LEVEL']"></span>
+                                    </label>
+                                    <label class="container">Write
+                                        <input class="app_dashboard" type="radio" name="app_dashboard_[[ $index ]]"
+                                            value="INDICES_ALL" ng-click="ctrl.setAccess(
+                                        user.id,
+                                        ctrl.selectedEnvironment,
+                                        ctrl.selectedApplication,
+                                        'APP_DASHBOARD_LEVEL',
+                                        'INDICES_ALL'
+                                    )" ng-checked="user.acls[ctrl.selectedEnvironment][ctrl.selectedApplication]['APP_DASHBOARD_LEVEL'] == 'INDICES_ALL'" />
+                                        <span class="checkmark"
+                                            ng-class="user.acls[ctrl.selectedEnvironment][ctrl.selectedApplication]['APP_DASHBOARD_LEVEL']"></span>
+                                    </label>
+                                </td>
+                                <td data-title="App Data" data-label="App Data">
+                                    <label class="container">Read
+                                        <input type="radio" name="app_data_[[ $index ]]" value="READ" ng-click="ctrl.setAccess(
                                         user.id,
                                         ctrl.selectedEnvironment,
                                         ctrl.selectedApplication,
                                         'APP_DATA_LEVEL',
                                         'READ'
-                                    )"
-                                    ng-checked="user.acls[ctrl.selectedEnvironment][ctrl.selectedApplication]['APP_DATA_LEVEL'] == 'READ'" />
-                                  <span class="checkmark" ng-class="user.acls[ctrl.selectedEnvironment][ctrl.selectedApplication]['APP_DATA_LEVEL']"></span>
-                                </label>
-                                <label class="container">Write
-                                  <input
-                                    class="app_data"
-                                    type="radio"
-                                    name="app_data_[[ $index ]]"
-                                    value="INDICES_ALL"
-                                    ng-click="ctrl.setAccess(
+                                    )" ng-checked="user.acls[ctrl.selectedEnvironment][ctrl.selectedApplication]['APP_DATA_LEVEL'] == 'READ'" />
+                                        <span class="checkmark"
+                                            ng-class="user.acls[ctrl.selectedEnvironment][ctrl.selectedApplication]['APP_DATA_LEVEL']"></span>
+                                    </label>
+                                    <label class="container">Write
+                                        <input class="app_data" type="radio" name="app_data_[[ $index ]]"
+                                            value="INDICES_ALL" ng-click="ctrl.setAccess(
                                         user.id,
                                         ctrl.selectedEnvironment,
                                         ctrl.selectedApplication,
                                         'APP_DATA_LEVEL',
                                         'INDICES_ALL'
-                                    )"
-                                    ng-checked="user.acls[ctrl.selectedEnvironment][ctrl.selectedApplication]['APP_DATA_LEVEL'] == 'INDICES_ALL'" />
-                                  <span class="checkmark" ng-class="user.acls[ctrl.selectedEnvironment][ctrl.selectedApplication]['APP_DATA_LEVEL']"></span>
-                                </label>
-                            </td>
-                        </tr>
+                                    )" ng-checked="user.acls[ctrl.selectedEnvironment][ctrl.selectedApplication]['APP_DATA_LEVEL'] == 'INDICES_ALL'" />
+                                        <span class="checkmark"
+                                            ng-class="user.acls[ctrl.selectedEnvironment][ctrl.selectedApplication]['APP_DATA_LEVEL']"></span>
+                                    </label>
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>

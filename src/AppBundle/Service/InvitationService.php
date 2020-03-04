@@ -292,7 +292,7 @@ class InvitationService
         $invitation = $this->invitationManager->getOneBy(['id' => $id, 'isPending' => true]);
         $invitedUser = $this->userManager->getOneBy(['id' => $userId]);
 
-        if ($invitation instanceof Invitation && $invitedUser instanceof User) {
+        if ($invitation instanceof Invitation && $invitedUser instanceof User)  {
             $invitation->setPending(false);
             $invitation->setUser($invitedUser);
             $application = $invitation->getApplication();
@@ -303,28 +303,15 @@ class InvitationService
             foreach ($application->getEnvironments() as $environment) {
                 $envName = $environment->getName();
                 $this->es->updateRoleMapping("add", $envName, $invitedUser, $application->getName(), false);
-                $invitedUser
-                    // set shared dashboard access level to write
-                    ->addAccessLevel((new AccessLevel())
-                        ->setEnvironment($environment)
-                        ->setApplication($application)
-                        ->setLevel(AccessLevel::SHARED_DASHBOARD_LEVEL)
-                        ->setAccess(AccessLevel::WRITE_ACCESS)
-                    )
-                    // set app dashboard access level to write
-                    ->addAccessLevel((new AccessLevel())
+               
+                // set app data access level to read for invited user
+                $invitedUser->addAccessLevel((new AccessLevel())
                         ->setEnvironment($environment)
                         ->setApplication($application)
                         ->setLevel(AccessLevel::APP_DASHBOARD_LEVEL)
-                        ->setAccess(AccessLevel::READ_ACCESS)
-                    )
-                    // set app data access level to write
-                    ->addAccessLevel((new AccessLevel())
-                        ->setEnvironment($environment)
-                        ->setApplication($application)
-                        ->setLevel(AccessLevel::APP_DATA_LEVEL)
-                        ->setAccess(AccessLevel::READ_ACCESS)
-                    );
+                        ->setAccess(AccessLevel::READ_ACCESS));
+
+                $this->userManager->update($invitedUser);
             }
         } 
     }

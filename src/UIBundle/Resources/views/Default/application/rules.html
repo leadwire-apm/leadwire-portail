@@ -1,4 +1,17 @@
-<div class="no-more-tables">
+<div class="no-more-tables row">
+    <div class="col-sm-6"></div>
+    <div class="col-sm-3">
+        <h6>Environment select</h6>
+    </div>
+    <div class="col-sm-3">
+        <select data-ng-model="ctrl.selectedEnvironment" class="form-control">
+            <option ng-selected="ctrl.selectedEnvironment == environment.id"
+                ng-repeat="environment in ctrl.environments" value="[[environment.id]]">
+                [[environment.name]]
+            </option>
+        </select>
+
+    </div>
     <table class="table table-striped mb0">
         <thead>
             <tr>
@@ -6,7 +19,6 @@
                 <th class="col-md-3">User Name</th>
                 <th class="col-md-2">Read</th>
                 <th class="col-md-2">Write</th>
-                <th class="col-md-2">All</th>
             </tr>
         </thead>
         <tbody>
@@ -23,13 +35,14 @@
                     [[invitation.user.username]]
                 </td>
                 <td data-title="Read" data-label="Read">
-                    <i><input type="checkbox" name="default-checkbox-name" value="default-checkbox-val"></i>
+                    <input type="radio" value="READ" name="app_dashboard_[[ $index ]]"
+                        ng-checked="invitation.user.acl[ctrl.selectedEnvironment][ctrl.application.id]['APP_DASHBOARD_LEVEL'] == 'READ'"
+                        ng-click="ctrl.setAccess(invitation.user.id, 'READ')" />
                 </td>
                 <td data-title="Write" data-label="Write">
-                    <i><input type="checkbox" name="default-checkbox-name" value="default-checkbox-val"></i>
-                </td>
-                <td data-title="All" data-label="All">
-                    <i><input type="checkbox" name="default-checkbox-name" value="default-checkbox-val"></i>
+                    <input type="radio" name="app_dashboard_[[ $index ]]" value="INDICES_ALL"
+                        ng-checked="invitation.user.acl[ctrl.selectedEnvironment][ctrl.application.id]['APP_DASHBOARD_LEVEL'] == 'INDICES_ALL'"
+                        ng-click="ctrl.setAccess(invitation.user.id, 'INDICES_ALL')" />
                 </td>
             </tr>
         </tbody>
