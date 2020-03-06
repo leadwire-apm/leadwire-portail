@@ -692,6 +692,7 @@ class ApplicationService
     public function registerDemoApplications(User $user): void
     {
         $demoApplications = $this->applicationManager->getBy(['demo' => true]);
+        $env = $this->environmentService->getByName("staging");
         $now = new \DateTime();
 
         foreach ($demoApplications as $demoApplication) {
@@ -712,6 +713,15 @@ class ApplicationService
                 ->setAccess(ApplicationPermission::ACCESS_DEMO)
                 ->setModifiedAt($now);
             $this->apManager->update($permission);
+
+            $user->addAccessLevel((new AccessLevel())
+                ->setEnvironment($env)
+                ->setApplication($demoApplication)
+                ->setLevel("APP_DASHBOARD_LEVEL")
+                ->setAccess("READ"));
+
+            $this->userManager->update($user);
+
         }
     }
 
@@ -782,6 +792,20 @@ class ApplicationService
     public function getById($id)
     {
         $application = $this->applicationManager->getOneBy(['id' => $id]);
+        if ($application === null) {
+            throw new HttpException(Response::HTTP_NOT_FOUND, "Application not Found");
+        } else {
+            return $application;
+        }
+
+    }
+
+    /**
+     * @param string $name
+     */
+    public function getByName($name)
+    {
+        $application = $this->applicationManager->getOneBy(['name' => $name]);
         if ($application === null) {
             throw new HttpException(Response::HTTP_NOT_FOUND, "Application not Found");
         } else {

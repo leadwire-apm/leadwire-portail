@@ -311,28 +311,21 @@ class AuthService
         } else {
             $user = $this->addUser($parameters);
         }
-        //create user in opendistro
-        $this->esService->createUser($user);
-        $this->esService->updateRoleMapping("add", "staging", $user, "demo", false);
+
         if ($user !== null) {
-            // User creation in DB is successful
-            // Should create LDAP & ElasticSearch entries
-            //$this->processService->emit("heavy-operations-in-progress", "Creating LDAP Entries");
-            //$this->ldapService->createNewUserEntries($user);
-            //$this->ldapService->registerDemoApplications($user);
+            //create user in opendistro
+            $this->esService->createUser($user);
+            $this->esService->updateRoleMapping("add", "staging", $user, "demo", false);
+            
             $this->processService->emit("heavy-operations-in-progress", "Register Applications");
             $this->applicationService->registerDemoApplications($user);
 
-            //$this->processService->emit("heavy-operations-in-progress", "Creating ES Indexe-patterns");
-            //$this->esService->deleteIndex($user->getUserIndex());
             $this->processService->emit("heavy-operations-in-progress", "Creating Kibana Index-patterns");
             $this->kibanaService->loadIndexPatternForUserTenant($user);
 
             $this->kibanaService->loadDefaultIndex($user->getUserIndex(), 'default');
             $this->kibanaService->makeDefaultIndex($user->getUserIndex(), 'default');
 
-            //$this->processService->emit("heavy-operations-in-progress", "Configuring SearchGuard");
-            //$this->sgService->updateSearchGuardConfig();
             $this->processService->emit("heavy-operations-done", "Succeded");
         }
 

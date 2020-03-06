@@ -136,35 +136,13 @@ class EnvironmentService
         foreach ($this->applicationManager->getAll() as $application) {
             $application->addEnvironment($env);
             $this->applicationManager->update($application);
-        }
 
-        /**
-         * create  acls
-         */
-        foreach ($this->userManager->getAll() as $user) {
-            $acls = $user->getAccessLevels();
-            foreach ($acls as $acl) {
-                $user
-                    ->addAccessLevel((new AccessLevel())
-                        ->setEnvironment($env)
-                        ->setApplication($acl->getApplication())
-                        ->setLevel($acl->getLevel())
-                        ->setAccess($acl->getAccess())
-                    )
-                ;
-            }
-            $this->userManager->update($user);
-        }
-
-        /**
-         * Add applications tenants
-         */
-        foreach ($this->applicationManager->getActiveApplicationsNames() as $application) {
+            //Add applications tenants
             $envName = $env->getName();
             $sharedIndex =  $envName . "-" . $application->getSharedIndex();
             $appIndex =  $envName . "-" . $application->getApplicationIndex();
             $patternIndex = "*-" . $envName . "-" . $application->getName() . "-*";
-
+            
             if($application->isRemoved() === false){
                 $this->es->createTenant($appIndex);
 
@@ -197,16 +175,30 @@ class EnvironmentService
 
                 $this->es->createRoleMapping($envName, $application->getName(), '', array('read'), false);
                 $this->es->createRoleMapping($envName, $application->getName(), '', array('write'), true);
-    
-                foreach ($this->userManager->getAll() as $user) {
-                    if($application->getOwner()->getId() === $user->getId()){
-                        $this->es->updateRoleMapping("add", $envName, $user, $application->getName(), true);
-                    }
-                    $this->es->updateRoleMapping("add", $envName, $user, $application->getName(), false);
-                }
             }
         }
 
+        /**
+         * create  acls
+         */
+        foreach ($this->userManager->getAll() as $user) {
+            $acls = $user->getAccessLevels();
+            foreach ($acls as $acl) {
+                $user->addAccessLevel((new AccessLevel())
+                        ->setEnvironment($env)
+                        ->setApplication($acl->getApplication())
+                        ->setLevel($acl->getLevel())
+                        ->setAccess($acl->getAccess())
+                    );
+
+                $this->es->updateRoleMapping("add", $env->getName(), $user, $acl->getApplication()->getName(), false);
+
+                if($acl->getAccess() === AccessLevel::WRITE_ACCESS){
+                    $this->es->updateRoleMapping("add", $env->getName(), $user, $acl->getApplication()->getName(), true);
+                }
+            }
+            $this->userManager->update($user);
+        }
         return $id;
     }
 
@@ -250,7 +242,12 @@ class EnvironmentService
             foreach ($environment->getApplications() as $application) {
                 $sharedIndex =  $environment->getName() . "-" . $application->getSharedIndex();
                 $appIndex =  $environment->getName() . "-" . $application->getApplicationIndex();
-                $this->es->deleteRole($environment->getName(), $application->getName());
+                $this->es->deleteRole($environment->getName(), $application->getName(), true);
+                $this->es->deleteRole($environment->getName(), $application->getName(), false);
+
+                $this->es->deleteRoleMapping($environment->getName(), $application->getName(), true);
+                $this->es->deleteRoleMapping($environment->getName(), $application->getName(), false);
+
                 $this->es->deleteTenant($sharedIndex);
                 $this->es->deleteTenant($appIndex);
             }
@@ -265,6 +262,21 @@ class EnvironmentService
     public function getById($id)
     {
         $environment = $this->environmentManager->getOneBy(['id' => $id]);
+        if ($environment === null) {
+            throw new HttpException(Response::HTTP_NOT_FOUND, "Environment not Found");
+        } else {
+            return $environment;
+        }
+
+    }
+
+    /**
+     * @param string $name
+     */
+    public function getByName($name)
+    {
+
+        $environment = $this->environmentManager->getOneBy(['name' => $name]);
         if ($environment === null) {
             throw new HttpException(Response::HTTP_NOT_FOUND, "Environment not Found");
         } else {
