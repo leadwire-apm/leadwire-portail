@@ -133,7 +133,7 @@ class EnvironmentService
         /**
          * Add applications
          */
-        foreach ($this->applicationManager->getAll() as $application) {
+        foreach ($this->applicationManager->getActiveApplicationsNames() as $application) {
             $application->addEnvironment($env);
             $this->applicationManager->update($application);
 
