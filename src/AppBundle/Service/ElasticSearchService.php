@@ -1283,6 +1283,62 @@ class ElasticSearchService
             }
         return $this->patchRoleMapping("replace", $envName, $applicationName, $users, $isWrite);
     }
+
+    function createAlert(string $appName, string $envName, string $type ): bool{
+        try {
+
+            $status = false;
+
+            $role = [
+                "name" => $envName . "-" . $appName . "-webhook",
+                "type" => $type,
+                "custom_webhook" => [
+                    "scheme" => "HTTPS",
+                    "url" => "",
+                    "host" => "apm.leadwire.io",
+                    "port" => 443,
+                    "path" => "/api/webhooks/". $envName . "/" . $appName . "/",
+                    "header_params" => ["Content-Type" => "application/json"],
+                    "query_params" => ["token" => "generer_un_jwt_token"]
+                ]
+            ];
+            
+            $url = $this->url . "_opendistro/_alerting/destinations";
+           
+            $response = $this->httpClient->post(
+
+                $url,
+                [
+                    'auth' => $this->getAuth(),
+                    'headers' => [
+                        "Content-Type" => "application/json",
+                    ],
+                    'body' => \json_encode($role),
+                ]
+
+            );
+
+            $this->logger->notice(
+                "leadwire.opendistro.createDestination",
+                [
+                    'url' => $url,
+                    'verb' => 'POST',
+                    'status_code' => $response->getStatusCode(),
+                    'status_text' => $response->getReasonPhrase()
+                ]
+            );
+            
+            if($response->getStatusCode() == 200){
+                $status= true;
+            }
+
+            return $status;
+
+        } catch (\Exception $e) {
+            $this->logger->error($e->getMessage());
+            throw new HttpException("An error has occurred while executing your request.",400);
+        }
+    }
     
     /****************************************************************************/
     
