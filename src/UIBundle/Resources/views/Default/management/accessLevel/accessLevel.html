@@ -155,75 +155,76 @@
                                 </td>
                                 <td data-title="Shared Dashboard" data-label="Shared Dashboard">
                                     <label class="container">Read
-                                        <input type="radio" name="shared_dashboard_[[ $index ]]" value="READ" ng-click="ctrl.setAccess(
+                                        <input type="radio" name="shared_dashboard_[[ $index ]]" value="CONSULT"
+                                            ng-click="ctrl.setAccess(
                                         user.id,
                                         ctrl.selectedEnvironment,
                                         ctrl.selectedApplication,
-                                        'APP_DASHBOARD_LEVEL',
-                                        'READ'
-                                    )" ng-checked="user.acls[ctrl.selectedEnvironment][ctrl.selectedApplication]['APP_DASHBOARD_LEVEL'] == 'READ'" />
+                                        'ACCESS',
+                                        'CONSULT'
+                                    )" ng-checked="user.acls[ctrl.selectedEnvironment][ctrl.selectedApplication]['ACCESS'] == 'CONSULT'" />
                                         <span class="checkmark"
-                                            ng-class="user.acls[ctrl.selectedEnvironment][ctrl.selectedApplication]['APP_DASHBOARD_LEVEL']"></span>
+                                            ng-class="user.acls[ctrl.selectedEnvironment][ctrl.selectedApplication]['ACCESS']"></span>
                                     </label>
                                     <label class="container">Write
                                         <input class="shared_dashboard" type="radio"
-                                            name="shared_dashboard_[[ $index ]]" value="INDICES_ALL" ng-click="ctrl.setAccess(
+                                            name="shared_dashboard_[[ $index ]]" value="EDIT" ng-click="ctrl.setAccess(
                                         user.id,
                                         ctrl.selectedEnvironment,
                                         ctrl.selectedApplication,
-                                        'APP_DASHBOARD_LEVEL',
-                                        'INDICES_ALL'
-                                    )" ng-checked="user.acls[ctrl.selectedEnvironment][ctrl.selectedApplication]['APP_DASHBOARD_LEVEL'] == 'INDICES_ALL'" />
+                                        'ACCESS',
+                                        'EDIT'
+                                    )" ng-checked="user.acls[ctrl.selectedEnvironment][ctrl.selectedApplication]['ACCESS'] == 'EDIT'" />
                                         <span class="checkmark"
-                                            ng-class="user.acls[ctrl.selectedEnvironment][ctrl.selectedApplication]['APP_DASHBOARD_LEVEL']"></span>
+                                            ng-class="user.acls[ctrl.selectedEnvironment][ctrl.selectedApplication]['ACCESS']"></span>
                                     </label>
                                 </td>
                                 <td data-title="App Dashboard" data-label="App Dashboard">
                                     <label class="container">Read
-                                        <input type="radio" name="app_dashboard_[[ $index ]]" value="READ" ng-click="ctrl.setAccess(
+                                        <input type="radio" name="app_dashboard_[[ $index ]]" value="CONSULT" ng-click="ctrl.setAccess(
                                         user.id,
                                         ctrl.selectedEnvironment,
                                         ctrl.selectedApplication,
-                                        'APP_DASHBOARD_LEVEL',
-                                        'READ'
-                                    )" ng-checked="user.acls[ctrl.selectedEnvironment][ctrl.selectedApplication]['APP_DASHBOARD_LEVEL'] == 'READ'" />
+                                        'ACCESS',
+                                        'CONSULT'
+                                    )" ng-checked="user.acls[ctrl.selectedEnvironment][ctrl.selectedApplication]['ACCESS'] == 'CONSULT'" />
                                         <span class="checkmark"
-                                            ng-class="user.acls[ctrl.selectedEnvironment][ctrl.selectedApplication]['APP_DASHBOARD_LEVEL']"></span>
+                                            ng-class="user.acls[ctrl.selectedEnvironment][ctrl.selectedApplication]['ACCESS']"></span>
                                     </label>
                                     <label class="container">Write
                                         <input class="app_dashboard" type="radio" name="app_dashboard_[[ $index ]]"
-                                            value="INDICES_ALL" ng-click="ctrl.setAccess(
+                                            value="EDIT" ng-click="ctrl.setAccess(
                                         user.id,
                                         ctrl.selectedEnvironment,
                                         ctrl.selectedApplication,
-                                        'APP_DASHBOARD_LEVEL',
-                                        'INDICES_ALL'
-                                    )" ng-checked="user.acls[ctrl.selectedEnvironment][ctrl.selectedApplication]['APP_DASHBOARD_LEVEL'] == 'INDICES_ALL'" />
+                                        'ACCESS',
+                                        'EDIT'
+                                    )" ng-checked="user.acls[ctrl.selectedEnvironment][ctrl.selectedApplication]['ACCESS'] == 'EDIT'" />
                                         <span class="checkmark"
-                                            ng-class="user.acls[ctrl.selectedEnvironment][ctrl.selectedApplication]['APP_DASHBOARD_LEVEL']"></span>
+                                            ng-class="user.acls[ctrl.selectedEnvironment][ctrl.selectedApplication]['ACCESS']"></span>
                                     </label>
                                 </td>
                                 <td data-title="App Data" data-label="App Data">
                                     <label class="container">Read
-                                        <input type="radio" name="app_data_[[ $index ]]" value="READ" ng-click="ctrl.setAccess(
+                                        <input type="radio" name="app_data_[[ $index ]]" value="CONSULT" ng-click="ctrl.setAccess(
                                         user.id,
                                         ctrl.selectedEnvironment,
                                         ctrl.selectedApplication,
                                         'APP_DATA_LEVEL',
-                                        'READ'
-                                    )" ng-checked="user.acls[ctrl.selectedEnvironment][ctrl.selectedApplication]['APP_DATA_LEVEL'] == 'READ'" />
+                                        'CONSULT'
+                                    )" ng-checked="user.acls[ctrl.selectedEnvironment][ctrl.selectedApplication]['APP_DATA_LEVEL'] == 'CONSULT'" />
                                         <span class="checkmark"
                                             ng-class="user.acls[ctrl.selectedEnvironment][ctrl.selectedApplication]['APP_DATA_LEVEL']"></span>
                                     </label>
                                     <label class="container">Write
-                                        <input class="app_data" type="radio" name="app_data_[[ $index ]]"
-                                            value="INDICES_ALL" ng-click="ctrl.setAccess(
+                                        <input class="app_data" type="radio" name="app_data_[[ $index ]]" value="EDIT"
+                                            ng-click="ctrl.setAccess(
                                         user.id,
                                         ctrl.selectedEnvironment,
                                         ctrl.selectedApplication,
                                         'APP_DATA_LEVEL',
-                                        'INDICES_ALL'
-                                    )" ng-checked="user.acls[ctrl.selectedEnvironment][ctrl.selectedApplication]['APP_DATA_LEVEL'] == 'INDICES_ALL'" />
+                                        'EDIT'
+                                    )" ng-checked="user.acls[ctrl.selectedEnvironment][ctrl.selectedApplication]['APP_DATA_LEVEL'] == 'EDIT'" />
                                         <span class="checkmark"
                                             ng-class="user.acls[ctrl.selectedEnvironment][ctrl.selectedApplication]['APP_DATA_LEVEL']"></span>
                                     </label>

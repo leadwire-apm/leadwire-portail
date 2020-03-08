@@ -42,7 +42,7 @@
                 "user": user,
                 "env": vm.selectedEnvironment,
                 "app": vm.application.id,
-                "level": "APP_DASHBOARD_LEVEL",
+                "level": "ACCESS",
                 "access": access
             };
 

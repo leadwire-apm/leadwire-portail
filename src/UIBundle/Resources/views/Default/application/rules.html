@@ -37,14 +37,14 @@
                     [[invitation.user.username]]
                 </td>
                 <td data-title="Read" data-label="Read">
-                    <input type="radio" value="READ" name="app_dashboard_[[ $index ]]"
-                        ng-checked="invitation.user.acl[ctrl.selectedEnvironment][ctrl.application.id]['APP_DASHBOARD_LEVEL'] == 'READ'"
-                        ng-click="ctrl.setAccess(invitation.user.id, 'READ')" />
+                    <input type="radio" value="CONSULT" name="app_dashboard_[[ $index ]]"
+                        ng-checked="invitation.user.acl[ctrl.selectedEnvironment][ctrl.application.id]['ACCESS'] == 'CONSULT'"
+                        ng-click="ctrl.setAccess(invitation.user.id, 'CONSULT')" />
                 </td>
                 <td data-title="Write" data-label="Write">
-                    <input type="radio" name="app_dashboard_[[ $index ]]" value="INDICES_ALL"
-                        ng-checked="invitation.user.acl[ctrl.selectedEnvironment][ctrl.application.id]['APP_DASHBOARD_LEVEL'] == 'INDICES_ALL'"
-                        ng-click="ctrl.setAccess(invitation.user.id, 'INDICES_ALL')" />
+                    <input type="radio" name="app_dashboard_[[ $index ]]" value="EDIT"
+                        ng-checked="invitation.user.acl[ctrl.selectedEnvironment][ctrl.application.id]['ACCESS'] == 'EDIT'"
+                        ng-click="ctrl.setAccess(invitation.user.id, 'EDIT')" />
                 </td>
                 <td data-title="Write" data-label="Write">
                     <input type="checkbox" />

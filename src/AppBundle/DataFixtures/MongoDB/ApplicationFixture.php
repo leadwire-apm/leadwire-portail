@@ -58,38 +58,15 @@ class ApplicationFixture extends AbstractFixture implements OrderedFixtureInterf
         $manager->persist($demo);
         $manager->flush();
 
-        // set shared dashboard access level to write
-        $accessLevelSharedDashboard = new AccessLevel();
-        $accessLevelSharedDashboard
-            ->setUser($user)
-            ->setEnvironment($environment)
-            ->setApplication($demo)
-            ->setLevel(AccessLevel::SHARED_DASHBOARD_LEVEL)
-            ->setAccess(AccessLevel::WRITE_ACCESS)
-        ;
-        $user->addAccessLevel($accessLevelSharedDashboard);
-
         // set app dashboard access level to write
         $accessLevelAppDashboard = new AccessLevel();
         $accessLevelAppDashboard
             ->setUser($user)
             ->setEnvironment($environment)
             ->setApplication($demo)
-            ->setLevel(AccessLevel::APP_DASHBOARD_LEVEL)
-            ->setAccess(AccessLevel::WRITE_ACCESS)
-        ;
+            ->setLevel(AccessLevel::ACCESS)
+            ->setAccess(AccessLevel::EDIT);
         $user->addAccessLevel($accessLevelAppDashboard);
-
-        // set app data access level to write
-        $accessLevelAppData = new AccessLevel();
-        $accessLevelAppData
-            ->setUser($user)
-            ->setEnvironment($environment)
-            ->setApplication($demo)
-            ->setLevel(AccessLevel::APP_DATA_LEVEL)
-            ->setAccess(AccessLevel::WRITE_ACCESS)
-        ;
-        $user->addAccessLevel($accessLevelAppData);
 
         $manager->persist($user);
         $manager->flush();

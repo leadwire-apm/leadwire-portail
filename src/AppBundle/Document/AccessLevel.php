@@ -19,12 +19,12 @@ use AppBundle\Document\Application;
  */
 class AccessLevel
 {
-    const SHARED_DASHBOARD_LEVEL = "SHARED_DASHBOARD_LEVEL";
-    const APP_DASHBOARD_LEVEL = "APP_DASHBOARD_LEVEL";
-    const APP_DATA_LEVEL = "APP_DATA_LEVEL";
+    const REPORT = "REPORT";
+    const ACCESS = "ACCESS";
+    const ALERT  = "ALERT";
 
-    const READ_ACCESS = "READ";
-    const WRITE_ACCESS = "INDICES_ALL";
+    const CONSULT = "CONSULT";
+    const EDIT = "EDIT";
 
     /**
      * @var \MongoId

@@ -308,8 +308,8 @@ class InvitationService
                 $invitedUser->addAccessLevel((new AccessLevel())
                         ->setEnvironment($environment)
                         ->setApplication($application)
-                        ->setLevel(AccessLevel::APP_DASHBOARD_LEVEL)
-                        ->setAccess(AccessLevel::READ_ACCESS));
+                        ->setLevel(AccessLevel::ACCESS)
+                        ->setAccess(AccessLevel::CONSULT));
 
                 $this->userManager->update($invitedUser);
             }

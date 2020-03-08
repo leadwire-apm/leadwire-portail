@@ -162,7 +162,7 @@ class AccessLevelService
             $user->addAccessLevel($accessLevel);
         }
 
-        if($access === AccessLevel::WRITE_ACCESS){
+        if($access === AccessLevel::EDIT){
             $this->es->updateRoleMapping("add", $environment->getName(), $user, $application->getName(), true);
         } else {
             $this->es->updateRoleMapping("delete", $environment->getName(), $user, $application->getName(), true);

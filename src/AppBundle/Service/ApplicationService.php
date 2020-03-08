@@ -398,8 +398,8 @@ class ApplicationService
             $user->addAccessLevel((new AccessLevel())
                     ->setEnvironment($environment)
                     ->setApplication($application)
-                    ->setLevel(AccessLevel::APP_DASHBOARD_LEVEL)
-                    ->setAccess(AccessLevel::WRITE_ACCESS)
+                    ->setLevel(AccessLevel::ACCESS)
+                    ->setAccess(AccessLevel::EDIT)
                 );     
         }
         $this->userManager->update($user);
@@ -716,8 +716,8 @@ class ApplicationService
             $user->addAccessLevel((new AccessLevel())
                 ->setEnvironment($env)
                 ->setApplication($demoApplication)
-                ->setLevel("APP_DASHBOARD_LEVEL")
-                ->setAccess("READ"));
+                ->setLevel("ACCESS")
+                ->setAccess("CONSULT"));
 
             $this->userManager->update($user);
 
