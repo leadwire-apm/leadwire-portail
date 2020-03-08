@@ -15,10 +15,12 @@
     <table class="table table-striped mb0">
         <thead>
             <tr>
-                <th class="col-md-5">User Email</th>
+                <th class="col-md-3">User Email</th>
                 <th class="col-md-3">User Name</th>
-                <th class="col-md-2">Read</th>
-                <th class="col-md-2">Write</th>
+                <th class="col-md-2">Cosult</th>
+                <th class="col-md-2">Edit</th>
+                <th class="col-md-1">Alert</th>
+                <th class="col-md-1">Report</th>
             </tr>
         </thead>
         <tbody>
@@ -43,6 +45,12 @@
                     <input type="radio" name="app_dashboard_[[ $index ]]" value="INDICES_ALL"
                         ng-checked="invitation.user.acl[ctrl.selectedEnvironment][ctrl.application.id]['APP_DASHBOARD_LEVEL'] == 'INDICES_ALL'"
                         ng-click="ctrl.setAccess(invitation.user.id, 'INDICES_ALL')" />
+                </td>
+                <td data-title="Write" data-label="Write">
+                    <input type="checkbox" />
+                </td>
+                <td data-title="Write" data-label="Write">
+                    <input type="checkbox" />
                 </td>
             </tr>
         </tbody>
