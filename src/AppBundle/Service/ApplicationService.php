@@ -384,6 +384,7 @@ class ApplicationService
         $ap = $this->appTypeService->getApplicationType($applicationTypeId);
         $application->setType($ap);
         $this->applicationManager->update($application);
+        
         $applicationPermission = new ApplicationPermission();
         $applicationPermission
             ->setUser($user)
@@ -392,18 +393,16 @@ class ApplicationService
             ->setModifiedAt(new \DateTime());
 
         $this->apManager->update($applicationPermission);
-        // owner has full access level if not admin
-        if (!$user->hasRole("ROLE_ADMIN") && !$user->hasRole("ROLE_SUPER_ADMIN")) {
-            foreach ($application->getEnvironments() as $environment) {
-                $user->addAccessLevel((new AccessLevel())
-                        ->setEnvironment($environment)
-                        ->setApplication($application)
-                        ->setLevel(AccessLevel::APP_DASHBOARD_LEVEL)
-                        ->setAccess(AccessLevel::WRITE_ACCESS)
-                    );     
-            }
-            $this->userManager->update($user);
+        
+        foreach ($application->getEnvironments() as $environment) {
+            $user->addAccessLevel((new AccessLevel())
+                    ->setEnvironment($environment)
+                    ->setApplication($application)
+                    ->setLevel(AccessLevel::APP_DASHBOARD_LEVEL)
+                    ->setAccess(AccessLevel::WRITE_ACCESS)
+                );     
         }
+        $this->userManager->update($user);
         $this->createIndexApp($application, $user);
         return $application;
     }

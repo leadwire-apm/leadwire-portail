@@ -184,20 +184,28 @@ class EnvironmentService
         foreach ($this->userManager->getAll() as $user) {
             $acls = $user->getAccessLevels();
             foreach ($acls as $acl) {
-                $user->addAccessLevel((new AccessLevel())
+                //owner case
+                if($user->getId() === $acl->getApplication()->getOwner()->getId()) {
+                    $this->es->updateRoleMapping("add", $env->getName(), $user, $acl->getApplication()->getName(), true);
+                    $user->addAccessLevel((new AccessLevel())
                         ->setEnvironment($env)
                         ->setApplication($acl->getApplication())
                         ->setLevel($acl->getLevel())
-                        ->setAccess($acl->getAccess())
+                        ->setAccess(AccessLevel::WRITE_ACCESS)
                     );
-
-                $this->es->updateRoleMapping("add", $env->getName(), $user, $acl->getApplication()->getName(), false);
-
-                if($acl->getAccess() === AccessLevel::WRITE_ACCESS){
-                    $this->es->updateRoleMapping("add", $env->getName(), $user, $acl->getApplication()->getName(), true);
+                    $this->userManager->update($user);
                 }
+                
+                //invited case
+                $this->es->updateRoleMapping("add", $env->getName(), $user, $acl->getApplication()->getName(), false);
+                $user->addAccessLevel((new AccessLevel())
+                    ->setEnvironment($env)
+                    ->setApplication($acl->getApplication())
+                    ->setLevel($acl->getLevel())
+                    ->setAccess(AccessLevel::READ_ACCESS)
+                );                
+                $this->userManager->update($user);
             }
-            $this->userManager->update($user);
         }
         return $id;
     }
@@ -208,7 +216,6 @@ class EnvironmentService
         $context->setGroups(['minimalist']);
         $environment = $this->serializer->deserialize($json, Environment::class, 'json', $context);
         $this->environmentManager->update($environment);
-        $this->searchGuardService->updateSearchGuardConfig();
     }
 
     /**

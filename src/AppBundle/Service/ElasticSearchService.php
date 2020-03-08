@@ -1270,11 +1270,15 @@ class ElasticSearchService
 
         switch ($action) {
             case "add":
-                array_push($users, $user->getName());
+                if (!in_array($user->getName(), $users)) {
+                    array_push($users, $user->getName());
+                }
                 break;
             case "delete":
-                $key = array_search($user->getName(), $users);
-                unset($users[$key]);
+               if (in_array($user->getName(), $users)) {
+                    $key = array_search($user->getName(), $users);
+                    unset($users[$key]);
+                }
                 break;
             }
         return $this->patchRoleMapping("replace", $envName, $applicationName, $users, $isWrite);
