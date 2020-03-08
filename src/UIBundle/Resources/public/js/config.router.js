@@ -494,10 +494,10 @@ angular.module('leadwireApp')
                         menu: updateMenuItems(MenuEnum.MANAGEMENT),
                     },
                 })
-                .state('app.management.accessLevel', {
-                    url: '/accesslevel',
-                    templateUrl: 'management/accessLevel/accessLevel.html',
-                    controller: 'AccessLevelController',
+                .state('app.management.alerts', {
+                    url: '/alerts',
+                    templateUrl: 'management/alerts/manageAlerts.html',
+                    controller: 'ManageAlertsController',
                     controllerAs: 'ctrl',
                     resolve: {
                         permissions: function (RouteGuard) {

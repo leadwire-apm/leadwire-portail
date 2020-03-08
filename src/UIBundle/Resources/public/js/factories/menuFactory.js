@@ -9,7 +9,7 @@
             '$localStorage',
             function (Menus, $state, CONFIG, UserService, $localStorage) {
 
-                if(CONFIG.STRIPE_ENABLED === true){
+                if (CONFIG.STRIPE_ENABLED === true) {
                     Menus.SETTINGS.push({
                         route: 'app.billingList',
                         icon: 'fa fa-money-bill-alt',
@@ -24,7 +24,7 @@
                     });
                 }
 
-                if(CONFIG.LOGIN_METHOD === 'github'){
+                if (CONFIG.LOGIN_METHOD === 'github') {
                     Menus.MANAGEMENT.push(
                         {
                             route: 'app.management.codes',
@@ -36,18 +36,18 @@
                 }
 
                 function normalizeRouteParams(params) {
-                    if(!_.has(params,'ls')) return params;
-                    var result = Object.keys(params.ls).reduce(function(acc, current) {
-                        acc[current] = _.get($localStorage,params.ls[current]);
+                    if (!_.has(params, 'ls')) return params;
+                    var result = Object.keys(params.ls).reduce(function (acc, current) {
+                        acc[current] = _.get($localStorage, params.ls[current]);
                         return acc;
-                    },params);
+                    }, params);
                     delete result.ls;
 
                     return result;
                 }
 
                 return {
-                    update : function(){
+                    update: function () {
 
                     },
                     get: function (menuKey) {
@@ -61,13 +61,13 @@
                                 });
                             });
                         }
-                        if(menuKey === "CAMPAGNE"){
+                        if (menuKey === "CAMPAGNE") {
 
-                            if(CONFIG.COMPAGNE_ENABLED === true){
+                            if (CONFIG.COMPAGNE_ENABLED === true) {
                                 if (UserService.isAdmin($localStorage.user)) {
                                     menus.push(
                                         {
-                                            route:  $state.href('app.management.tmecs'),
+                                            route: $state.href('app.management.tmecs'),
                                             abstractRoute: 'app.management',
                                             icon: 'fa fa-table',
                                             label: 'Manage Campaigns',
@@ -76,7 +76,7 @@
                                 } else {
                                     menus.push(
                                         {
-                                            route:  $state.href('app.tmecs'),
+                                            route: $state.href('app.tmecs'),
                                             icon: 'fa fa-table',
                                             label: 'Campaigns',
                                         }
@@ -86,7 +86,7 @@
                                     url: CONFIG.JENKINS_URL,
                                     icon: 'fa fa-play-circle',
                                     label: 'Launch',
-                                    external:true
+                                    external: true
                                 })
                             }
                         }
@@ -105,7 +105,7 @@
                         try {
                             newMenus = {};
 
-                            Object.keys(menus).forEach(function(theme) {
+                            Object.keys(menus).forEach(function (theme) {
                                 sub = menus[theme].map(function (menu) {
                                     return {
                                         label: labelCallback(menu),
@@ -149,7 +149,7 @@
             CAMPAGNE: 'CAMPAGNE',
         })
         .constant('Menus', {
-               CAMPAGNE:  [
+            CAMPAGNE: [
                 {
                     route: 'app.overview',
                     icon: 'fa fa-paper-plane',
@@ -218,10 +218,10 @@
                     }
                 },
                 {
-                    route: 'app.management.accessLevel',
+                    route: 'app.management.alerts',
                     abstractRoute: 'app.management',
-                    icon: 'fa fa-shield-alt',
-                    label: 'Access Levels'
+                    icon: 'fa fa-cogs',
+                    label: 'Manage alerts'
                 }
             ],
         });
