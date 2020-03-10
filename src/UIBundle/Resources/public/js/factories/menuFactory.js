@@ -222,6 +222,12 @@
                     abstractRoute: 'app.management',
                     icon: 'fa fa-cogs',
                     label: 'Manage alerts'
+                },
+                {
+                    route: 'app.management.index',
+                    abstractRoute: 'app.management',
+                    icon: 'fa fa-cogs',
+                    label: 'Index management'
                 }
             ],
         });
