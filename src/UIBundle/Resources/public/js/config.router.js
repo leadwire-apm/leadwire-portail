@@ -518,6 +518,18 @@ angular.module('leadwireApp')
                         menu: updateMenuItems(MenuEnum.MANAGEMENT),
                     },
                 })
+                .state('app.management.security', {
+                    url: '/security',
+                    templateUrl: 'management/security/manageSecurity.html',
+                    controller: 'ManageSecurityController',
+                    controllerAs: 'ctrl',
+                    resolve: {
+                        permissions: function (RouteGuard) {
+                            return RouteGuard.adminRequired();
+                        },
+                        menu: updateMenuItems(MenuEnum.MANAGEMENT),
+                    },
+                })
                 .state('app.management.codes', {
                     url: '/codes/list',
                     templateUrl: 'management/codes/list.html',

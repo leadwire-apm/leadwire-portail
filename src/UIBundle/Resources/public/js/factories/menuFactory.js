@@ -228,6 +228,12 @@
                     abstractRoute: 'app.management',
                     icon: 'fa fa-cogs',
                     label: 'Index management'
+                },
+                {
+                    route: 'app.management.security',
+                    abstractRoute: 'app.management',
+                    icon: 'fa fa-cogs',
+                    label: 'Security ',
                 }
             ],
         });
