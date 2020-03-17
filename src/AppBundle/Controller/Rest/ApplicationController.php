@@ -436,7 +436,6 @@ class ApplicationController extends Controller
                 $kibanaService->loadDefaultIndex($sharedIndex, 'default');
                 $kibanaService->makeDefaultIndex($sharedIndex, 'default');
             }
-
             $processService->emit($this->getUser(), "heavy-operations-done", "Succeeded");
         } else {
             $processService->emit($this->getUser(), "heavy-operations-done", "Failed");
