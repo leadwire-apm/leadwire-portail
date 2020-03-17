@@ -102,18 +102,19 @@ class AccessLevelService
     public function update($payload)
     {
         try {
-            $this->processService->emit("heavy-operations-in-progress", "Updating SearchGuard Configuration");
             $user = $this->userManager->getOneBy(['id' => $payload['user']]);
+            $currentUser = $this->userManager->getOneBy(['id' => $payload['currentUser']]);
+            $this->processService->emit($currentUser, "heavy-operations-in-progress", "Updating SearchGuard Configuration");
             if (isset($payload['app']) && $payload['app'] != 'all') {
                 $this->updateByApplication($user, $payload['env'], $payload['app'], $payload['level'], $payload['access']);
             } else {
                 $this->updateByEnvironment($user, $payload['env'], $payload['level'], $payload['access']);
             }
         } catch (\Exception $e) {
-            $this->processService->emit("heavy-operations-done", "Failed");
+            $this->processService->emit($currentUser, "heavy-operations-done", "Failed");
             throw $e;
         }
-        $this->processService->emit("heavy-operations-done", "Successeded");
+        $this->processService->emit($currentUser, "heavy-operations-done", "Successeded");
 
         return $user;
     }

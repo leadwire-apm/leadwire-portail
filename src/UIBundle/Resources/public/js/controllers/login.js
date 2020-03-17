@@ -36,6 +36,10 @@ function LoginControllerFN(
 
     socket.on('heavy-operation', function (data) {
 
+        if (data.user != null) {
+            return;
+        }
+
         if (data.status == "in-progress") {
             if ($('#toast-container').hasClass('toast-top-right') == false) {
                 toastr.info(
@@ -51,6 +55,7 @@ function LoginControllerFN(
                 );
             } else {
                 $('.toast-message').html(data.message + '...');
+
             }
         }
         if (data.status == "done") {
