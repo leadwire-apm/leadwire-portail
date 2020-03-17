@@ -314,10 +314,7 @@ class ApplicationController extends Controller
         $id
     ) {
         $applicationService->removeUserApplication($id, $this->getUser());
-        $processService->emit($this->getUser(), "heavy-operations-in-progress", "Configuring SearchGuard");
-        $sgService->updateSearchGuardConfig();
         $processService->emit($this->getUser(), "heavy-operations-done", "Succeeded");
-
         return new JsonResponse(null, Response::HTTP_ACCEPTED);
     }
 
@@ -401,16 +398,20 @@ class ApplicationController extends Controller
             
             $processService->emit($this->getUser(), "heavy-operations-in-progress", "Updating Index-patterns");
 
-            foreach($application->getEnvironments as $environment){
+            foreach($application->getEnvironments() as $environment){
              
                 $envName = $environment->getName();
                 $sharedIndex =  $envName . "-" . $application->getSharedIndex();
                 $appIndex =  $envName . "-" . $application->getApplicationIndex();
 
                 $esService->deleteIndex($appIndex);
+                $esService->deleteTenant($appIndex);
+
+                $esService->createTenant($appIndex);
                 $esService->createIndexTemplate($application, $applicationService->getActiveApplicationsNames());
-                $esService->createAlias($application, $envName);
+
                 $processService->emit($this->getUser(), "heavy-operations-in-progress", "Updating Kibana Dashboards");
+                              
                 $kibanaService->loadIndexPatternForApplication(
                     $application,
                     $appIndex,
@@ -419,11 +420,13 @@ class ApplicationController extends Controller
     
                 $kibanaService->loadDefaultIndex($appIndex, 'default');
                 $kibanaService->makeDefaultIndex($appIndex, 'default');
-    
+
                 $kibanaService->createApplicationDashboards($application, $envName);
     
-                $esService->deleteIndex($sharedIndex);
-    
+               // $esService->deleteIndex($sharedIndex);
+               // $esService->deleteTenant($sharedIndex);
+               // $esService->createTenant($sharedIndex);
+                
                 $kibanaService->loadIndexPatternForApplication(
                     $application,
                     $sharedIndex,
@@ -433,8 +436,6 @@ class ApplicationController extends Controller
                 $kibanaService->loadDefaultIndex($sharedIndex, 'default');
                 $kibanaService->makeDefaultIndex($sharedIndex, 'default');
             }
-            $application->setDeployedTypeVersion($application->getType()->getVersion());
-            $applicationManager->update($application);
             $processService->emit($this->getUser(), "heavy-operations-done", "Succeeded");
         } else {
             $processService->emit($this->getUser(), "heavy-operations-done", "Failed");

@@ -402,23 +402,13 @@ class Application
     }
 
     /**
-     * Get elastic index
-     * @deprecated 1.1
-     * @return string
-     */
-    public function getIndex()
-    {
-        return 'app_' . $this->uuid;
-    }
-
-    /**
      * @JMS\VirtualProperty
      *
      * @return string
      */
     public function getApplicationIndex(): string
     {
-        return "app-" . $this->uuid;
+        return "app-" . $this->name;
     }
 
     /**
@@ -428,7 +418,7 @@ class Application
      */
     public function getSharedIndex(): string
     {
-        return "shared-" . $this->uuid;
+        return "shared-" . $this->name;
     }
 
     /**

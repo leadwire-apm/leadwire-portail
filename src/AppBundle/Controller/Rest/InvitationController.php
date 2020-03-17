@@ -112,7 +112,7 @@ class InvitationController extends Controller
     ) {
         $user = json_decode($request->getContent());
         $invitationService->acceptInvitation($id, $user->userId);
-        $sgService->updateSearchGuardConfig();
+        //$sgService->updateSearchGuardConfig();
 
         return $this->renderResponse(null);
     }

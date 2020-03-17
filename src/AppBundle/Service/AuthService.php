@@ -140,8 +140,6 @@ class AuthService
         }
 
         $this->checkSuperAdminRoles($user);
-        $this->processService->emit($user, "heavy-operations-in-progress", "Configuring SearchGuard");
-        $this->sgService->updateSearchGuardConfig();
         $this->processService->emit($user, "heavy-operations-done", "Succeded");
 
         return $user;
@@ -160,11 +158,7 @@ class AuthService
         } else {
             $this->processService->emit($user, "heavy-operations-done", "Succeded");
             $this->validateActiveStatus($user);
-
             $this->checkSuperAdminRoles($user);
-            $this->processService->emit($user, "heavy-operations-in-progress", "Configuring SearchGuard");
-            $this->sgService->updateSearchGuardConfig();
-            $this->processService->emit($user, "heavy-operations-done", "Succeded");
         }
         return $user;
     }
@@ -181,10 +175,6 @@ class AuthService
         }
 
         $this->checkSuperAdminRoles($user);
-        $this->processService->emit($user, "heavy-operations-in-progress", "Configuring SearchGuard");
-        $this->sgService->updateSearchGuardConfig();
-        $this->processService->emit($user, "heavy-operations-done", "Succeded");
-
         return $user;
     }
 
@@ -313,24 +303,19 @@ class AuthService
         }
 
         if ($user !== null) {
-            // User creation in DB is successful
-            // Should create LDAP & ElasticSearch entries
-            $this->processService->emit($user, "heavy-operations-in-progress", "Creating LDAP Entries");
-            $this->ldapService->createNewUserEntries($user);
-            $this->ldapService->registerDemoApplications($user);
+            //create user in opendistro
+            $this->esService->createUser($user);
+            $this->esService->updateRoleMapping("add", "staging", $user, "demo", false);
+            
             $this->processService->emit($user, "heavy-operations-in-progress", "Register Applications");
             $this->applicationService->registerDemoApplications($user);
 
-            $this->processService->emit($user, "heavy-operations-in-progress", "Creating ES Indexe-patterns");
-            $this->esService->deleteIndex($user->getUserIndex());
             $this->processService->emit($user, "heavy-operations-in-progress", "Creating Kibana Dashboards");
             $this->kibanaService->loadIndexPatternForUserTenant($user);
 
             $this->kibanaService->loadDefaultIndex($user->getUserIndex(), 'default');
             $this->kibanaService->makeDefaultIndex($user->getUserIndex(), 'default');
 
-            $this->processService->emit($user, "heavy-operations-in-progress", "Configuring SearchGuard");
-            $this->sgService->updateSearchGuardConfig();
             $this->processService->emit($user, "heavy-operations-done", "Succeded");
         }
 

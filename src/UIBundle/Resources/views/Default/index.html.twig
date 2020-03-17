@@ -156,6 +156,9 @@
 <script type="text/ng-template" id="application/applicationInfo.html">
     {% include 'application/applicationInfo.html' %}
 </script>
+<script type="text/ng-template" id="application/rules.html">
+    {% include 'application/rules.html' %}
+</script>
 <script type="text/ng-template" id="application/edit.html">
     {% include 'application/edit.html' %}
 </script>
@@ -167,9 +170,6 @@
 </script>
 <script type="text/ng-template" id="application/enable.html">
     {% include 'application/enable.html' %}
-</script>
-<script type="text/ng-template" id="manageDashboards.html">
-    {% include 'manageDashboards.html' %}
 </script>
 <script type="text/ng-template" id="management/users/users.html">
     {% include 'management/users/users.html' %}
@@ -263,9 +263,18 @@
     {% include 'management/reports/manageReports.html' %}
 </script>
 
-<script type="text/ng-template" id="management/accessLevel/accessLevel.html">
-    {% include 'management/accessLevel/accessLevel.html' %}
+<script type="text/ng-template" id="management/alerts/manageAlerts.html">
+    {% include 'management/alerts/manageAlerts.html' %}
 </script>
+
+<script type="text/ng-template" id="management/index/manageIndex.html">
+    {% include 'management/index/manageIndex.html' %}
+</script>
+
+<script type="text/ng-template" id="management/security/manageSecurity.html">
+    {% include 'management/security/manageSecurity.html' %}
+</script>
+
 
 <script type="text/ng-template" id="management/codes/list.html">
     {% include 'management/codes/list.html' %}
@@ -510,7 +519,9 @@
         'bundles/ui/js/controllers/management/templates/add.js'
         'bundles/ui/js/controllers/management/templates/edit.js'
         'bundles/ui/js/controllers/management/reports/manageReport.js'
-        'bundles/ui/js/controllers/management/accessLevel/accessLevel.js'
+        'bundles/ui/js/controllers/management/alerts/manageAlerts.js'
+        'bundles/ui/js/controllers/management/index/manageIndex.js'
+        'bundles/ui/js/controllers/management/security/manageSecurity.js'
         'bundles/ui/js/controllers/management/codes/list.js'
 
         'bundles/ui/js/controllers/management/environment/edit.js'
@@ -531,7 +542,6 @@
         'bundles/ui/js/controllers/billingList.js'
         'bundles/ui/js/controllers/dashboard.js'
         'bundles/ui/js/controllers/editPaymentMethod.js'
-        'bundles/ui/js/controllers/manageDashboards.js'
         'bundles/ui/js/config.router.js'
         'bundles/ui/js/lib/custom.js'
         'bundles/ui/js/lib/jspdf.min.js'

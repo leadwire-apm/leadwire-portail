@@ -11,6 +11,8 @@ use AppBundle\Service\SearchGuardService;
 use AppBundle\Manager\UserManager;
 use AppBundle\Manager\AccessLevelManager;
 use AppBundle\Document\AccessLevel;
+use AppBundle\Service\ElasticSearchService;
+use AppBundle\Service\KibanaService;
 
 use JMS\Serializer\DeserializationContext;
 use JMS\Serializer\SerializerInterface;
@@ -62,6 +64,15 @@ class EnvironmentService
      */
     private $accessLevelManager;
 
+    /**
+     * @var ElasticSearchService
+     */
+    private $elasticSearchService;
+
+    /**
+     * @var KibanaService
+     */
+
 
     /**
      * Constructor
@@ -73,6 +84,8 @@ class EnvironmentService
      * @param SearchGuardService $searchGuardService
      * @param UserManager $userManager
      * @param AccessLevelManager $accessLevelManager
+     * @param ElasticSearchService $elasticSearchService
+     * @param KibanaService $kibanaService
      */
     public function __construct(
         EnvironmentManager $environmentManager,
@@ -81,8 +94,10 @@ class EnvironmentService
         LoggerInterface $logger,
         SearchGuardService $searchGuardService,
         UserManager $userManager,
-        AccessLevelManager $accessLevelManager
-    ) {
+        AccessLevelManager $accessLevelManager,
+        ElasticSearchService $elasticSearchService,
+        KibanaService $kibanaService
+        ) {
         $this->environmentManager = $environmentManager;
         $this->applicationManager = $applicationManager;
         $this->serializer = $serializer;
@@ -90,6 +105,8 @@ class EnvironmentService
         $this->searchGuardService = $searchGuardService;
         $this->userManager = $userManager;
         $this->accessLevelManager = $accessLevelManager;
+        $this->es = $elasticSearchService;
+        $this->kibanaService = $kibanaService;
     }
 
 
@@ -112,12 +129,53 @@ class EnvironmentService
         $id = $this->environmentManager->update($environment);
 
         $env = $this->getById($id);
+
         /**
          * Add applications
          */
-        foreach ($this->applicationManager->getAll() as $application) {
+        foreach ($this->applicationManager->getActiveApplicationsNames() as $application) {
             $application->addEnvironment($env);
             $this->applicationManager->update($application);
+
+            //Add applications tenants
+            $envName = $env->getName();
+            $sharedIndex =  $envName . "-" . $application->getSharedIndex();
+            $appIndex =  $envName . "-" . $application->getApplicationIndex();
+            $patternIndex = "*-" . $envName . "-" . $application->getName() . "-*";
+            
+            if($application->isRemoved() === false){
+                $this->es->createTenant($appIndex);
+
+                $this->es->createIndexTemplate($application, $this->applicationManager->getActiveApplicationsNames());
+        
+                $this->kibanaService->loadIndexPatternForApplication(
+                    $application,
+                    $appIndex,
+                    $envName 
+                );
+    
+                $this->kibanaService->loadDefaultIndex($appIndex, 'default');
+                $this->kibanaService->makeDefaultIndex($appIndex, 'default');
+        
+                $this->kibanaService->createApplicationDashboards($application, $envName);
+    
+                $this->es->createTenant($sharedIndex);
+        
+                $this->kibanaService->loadIndexPatternForApplication(
+                    $application,
+                    $sharedIndex,
+                    $envName
+                );
+    
+                $this->kibanaService->loadDefaultIndex($sharedIndex, 'default');
+                $this->kibanaService->makeDefaultIndex($sharedIndex, 'default');
+
+                $this->es->createRole($envName, $application->getName(), array($patternIndex), array($sharedIndex, $appIndex), array("kibana_all_read"), false);
+                $this->es->createRole($envName, $application->getName(), array($patternIndex), array($sharedIndex, $appIndex), array("kibana_all_write"), true);
+
+                $this->es->createRoleMapping($envName, $application->getName(), '', array('read'), false);
+                $this->es->createRoleMapping($envName, $application->getName(), '', array('write'), true);
+            }
         }
 
         /**
@@ -126,20 +184,29 @@ class EnvironmentService
         foreach ($this->userManager->getAll() as $user) {
             $acls = $user->getAccessLevels();
             foreach ($acls as $acl) {
-                $user
-                    ->addAccessLevel((new AccessLevel())
+                //owner case
+                if($user->getId() === $acl->getApplication()->getOwner()->getId()) {
+                    $this->es->updateRoleMapping("add", $env->getName(), $user, $acl->getApplication()->getName(), true);
+                    $user->addAccessLevel((new AccessLevel())
                         ->setEnvironment($env)
                         ->setApplication($acl->getApplication())
                         ->setLevel($acl->getLevel())
-                        ->setAccess($acl->getAccess())
-                    )
-                ;
+                        ->setAccess(AccessLevel::EDIT)
+                    );
+                    $this->userManager->update($user);
+                }
+                
+                //invited case
+                $this->es->updateRoleMapping("add", $env->getName(), $user, $acl->getApplication()->getName(), false);
+                $user->addAccessLevel((new AccessLevel())
+                    ->setEnvironment($env)
+                    ->setApplication($acl->getApplication())
+                    ->setLevel($acl->getLevel())
+                    ->setAccess(AccessLevel::CONSULT)
+                );                
+                $this->userManager->update($user);
             }
-            $this->userManager->update($user);
         }
-
-        $this->searchGuardService->updateSearchGuardConfig();
-
         return $id;
     }
 
@@ -149,7 +216,6 @@ class EnvironmentService
         $context->setGroups(['minimalist']);
         $environment = $this->serializer->deserialize($json, Environment::class, 'json', $context);
         $this->environmentManager->update($environment);
-        $this->searchGuardService->updateSearchGuardConfig();
     }
 
     /**
@@ -177,7 +243,21 @@ class EnvironmentService
                 }
             }
 
-            $this->searchGuardService->updateSearchGuardConfig();
+            /**
+             * delete tenant
+             */
+            foreach ($environment->getApplications() as $application) {
+                $sharedIndex =  $environment->getName() . "-" . $application->getSharedIndex();
+                $appIndex =  $environment->getName() . "-" . $application->getApplicationIndex();
+                $this->es->deleteRole($environment->getName(), $application->getName(), true);
+                $this->es->deleteRole($environment->getName(), $application->getName(), false);
+
+                $this->es->deleteRoleMapping($environment->getName(), $application->getName(), true);
+                $this->es->deleteRoleMapping($environment->getName(), $application->getName(), false);
+
+                $this->es->deleteTenant($sharedIndex);
+                $this->es->deleteTenant($appIndex);
+            }
             return $this->environmentManager->delete($environment);
         }
 
@@ -189,6 +269,21 @@ class EnvironmentService
     public function getById($id)
     {
         $environment = $this->environmentManager->getOneBy(['id' => $id]);
+        if ($environment === null) {
+            throw new HttpException(Response::HTTP_NOT_FOUND, "Environment not Found");
+        } else {
+            return $environment;
+        }
+
+    }
+
+    /**
+     * @param string $name
+     */
+    public function getByName($name)
+    {
+
+        $environment = $this->environmentManager->getOneBy(['name' => $name]);
         if ($environment === null) {
             throw new HttpException(Response::HTTP_NOT_FOUND, "Environment not Found");
         } else {

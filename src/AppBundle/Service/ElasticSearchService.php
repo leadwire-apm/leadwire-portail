@@ -129,8 +129,11 @@ class ElasticSearchService
     protected function getIndex(string $tenantName)
     {
         try {
+
+            $tenant = str_replace("-", "", $tenantName);
+
             $response = $this->httpClient->get(
-                $this->url . ".kibana_$tenantName",
+                $this->url . ".kibana_*_" . $tenant,
                 [
                     'auth' => $this->getAuth(),
                 ]
@@ -141,7 +144,7 @@ class ElasticSearchService
                 [
                     'status_code' => $response->getStatusCode(),
                     'phrase' => $response->getReasonPhrase(),
-                    'url' => $this->url . ".kibana_$tenantName",
+                    'url' =>  $this->url . ".kibana_*_" . $tenant,
                     'verb' => 'GET',
                 ]
             );
@@ -153,7 +156,7 @@ class ElasticSearchService
                     [
                         'status_code' => $response->getStatusCode(),
                         'phrase' => $response->getReasonPhrase(),
-                        'url' => $this->url . ".kibana_$tenantName",
+                        'url' =>  $this->url . ".kibana_*_" . $tenant,
                     ]
                 );
 
@@ -191,8 +194,9 @@ class ElasticSearchService
     public function deleteIndex(string $tenantName): bool
     {
         try {
+            $tenant = str_replace("-", "", $tenantName);
             $response = $this->httpClient->delete(
-                $this->url . ".kibana_$tenantName",
+                $this->url . ".kibana_*_" . $tenant,
                 [
                     'auth' => $this->getAuth(),
                 ]
@@ -202,14 +206,14 @@ class ElasticSearchService
                 [
                     'status_code' => $response->getStatusCode(),
                     'phrase' => $response->getReasonPhrase(),
-                    'url' => $this->url . ".kibana_$tenantName",
+                    'url' =>  $this->url . ".kibana_*_" . $tenant,
                     'verb' => 'DELETE',
                 ]
             );
         } catch (ClientException $e) {
             $response = $e->getResponse();
             if ($response !== null && $response->getStatusCode() === Response::HTTP_NOT_FOUND) {
-                $this->logger->warning("leadwire.es.deleteIndex", ['url' => $this->url . ".kibana_$tenantName", 'status_code' => $response->getStatusCode()]);
+                $this->logger->warning("leadwire.es.deleteIndex", ['url' => $this->url . ".kibana_*_$tenant", 'status_code' => $response->getStatusCode()]);
 
                 return false;
             }
@@ -278,7 +282,7 @@ class ElasticSearchService
         foreach ($application->getType()->getMonitoringSets() as $ms) {
             $qualifier = \strtolower($ms->getQualifier());
             $indexName = "{$qualifier}-enabled-$environmentName-$applicationName-$now";
-            $response = $this->httpClient->delete($this->url . $indexName, ['auth' => $this->getAuth()]);
+            /*$response = $this->httpClient->delete($this->url . $indexName, ['auth' => $this->getAuth()]);
             $this->logger->notice(
                 "leadwire.es.createAlias",
                 [
@@ -290,6 +294,7 @@ class ElasticSearchService
                     'monitoring_set' => $ms->getQualifier(),
                 ]
             );
+	   */
 
             $response = $this->httpClient->put(
                 $this->url . $indexName . "/_doc/1",
@@ -329,7 +334,7 @@ class ElasticSearchService
             );
 
             $this->logger->notice(
-                "----------leadwire.es.createAlias",
+                "leadwire.es.createAlias",
                 [
                     'status_code' => $response->getStatusCode(),
                     'phrase' => $response->getReasonPhrase(),
@@ -394,7 +399,8 @@ class ElasticSearchService
 
             $content = $template->getContentObject();
 
-            foreach ($activeApplications as $app) {
+     /*
+     foreach ($activeApplications as $app) {
                 // Applicable only APM templates
                 if ($monitoringSet->getQualifier() === "APM") {
                     $content->aliases->{$app->getName()} = [
@@ -403,7 +409,8 @@ class ElasticSearchService
                         ],
                     ];
                 }
-            }
+            } 
+	*/
 
             $response = $this->httpClient->put(
                 $this->url . "_template/{$monitoringSet->getFormattedVersion()}",
@@ -451,11 +458,15 @@ class ElasticSearchService
 
         foreach ($tenants as $groupName => $tenantGroup) {
             foreach ($tenantGroup as $tenant) {
+                
+                $tenant = str_replace("-", "", $tenant);
+
                 $response = $this->httpClient->get(
-                    $this->url . ".kibana_$tenant" . "/_search?pretty&from=0&size=10000",
+                    $this->url . ".kibana_*_" . $tenant . "/_search?pretty&from=0&size=10000",
                     [
                         'headers' => [
                             'Content-type' => 'application/json',
+                            'tenant' => $tenant
                         ],
                         'auth' => [
                             $this->settings['username'],
@@ -464,30 +475,31 @@ class ElasticSearchService
                     ]
                 );
 
+                $this->logger->notice(
+                    'leadwire.es.getRawDashboards',
+                    [
+                        'status_text' => $response->getReasonPhrase(),
+                        'status_code' => $response->getStatusCode(),
+                        'url' =>  $this->url . ".kibana_*_" . $tenant . "/_search?pretty&from=0&size=10000",
+                    ]
+                );
+
                 if ($response->getStatusCode() === Response::HTTP_OK) {
                     $body = \json_decode($response->getBody())->hits->hits;
                     foreach ($body as $element) {
+                        
                         if ($element->_source->type === "dashboard") {
                             $title = $element->_source->{$element->_source->type}->title;
                             $res[$groupName][] = [
                                 "id" => $this->transformeId($element->_id),
                                 "name" => $title,
-                                "private" => $groupName === "Custom" && (new AString($tenant))->startsWith($envName . "-" ."shared_") === false,
+                                "private" => $groupName === "Custom" && (new AString($tenant))->startsWith($envName . "shared") === false,
                                 "tenant" => $tenant,
                                 "visible" => true,
                             ];
 
                         }
                     }
-                } else {
-                    $this->logger->error(
-                        'leadwire.es.getRawDashboards',
-                        [
-                            'error' => $response->getReasonPhrase(),
-                            'status_code' => $response->getStatusCode(),
-                            'url' => $this->url . ".kibana_$tenant" . "/_search?pretty&from=0&size=10000",
-                        ]
-                    );
                 }
             }
         }
@@ -513,8 +525,11 @@ class ElasticSearchService
 
         foreach ($tenants as $groupName => $tenantGroup) {
             foreach ($tenantGroup as $tenant) {
+
+                $tenant = str_replace("-", "", $tenant);
+
                 $response = $this->httpClient->get(
-                    $this->url . ".kibana_$tenant" . "/_search?pretty&from=0&size=10000",
+                    $this->url . ".kibana_*_$tenant" . "/_search?pretty&from=0&size=10000",
                     [
                         'headers' => [
                             'Content-type' => 'application/json',
@@ -523,6 +538,15 @@ class ElasticSearchService
                             $this->settings['username'],
                             $this->settings['password'],
                         ],
+                    ]
+                );
+
+                $this->logger->notice(
+                    'leadwire.es.getRawReports',
+                    [
+                        'error' => $response->getReasonPhrase(),
+                        'status_code' => $response->getStatusCode(),
+                        $this->url . ".kibana_*_$tenant" . "/_search?pretty&from=0&size=10000",
                     ]
                 );
 
@@ -540,15 +564,6 @@ class ElasticSearchService
                             ];
                         }
                     }
-                } else {
-                    $this->logger->error(
-                        'leadwire.es.getRawReports',
-                        [
-                            'error' => $response->getReasonPhrase(),
-                            'status_code' => $response->getStatusCode(),
-                            'url' => $this->url . ".kibana_$tenant" . "/_search?pretty&from=0&size=10000",
-                        ]
-                    );
                 }
             }
         }
@@ -704,7 +719,7 @@ class ElasticSearchService
             $nodeOs = (array)$nodeOs->nodes;
             $nodeOs = json_decode(json_encode($nodeOs),true);
                
-            $os = ["cpu" => $nodesStats[key]["os"]["cpu"]["percent"],
+            $os = ["cpu" => $nodesStats[$key]["os"]["cpu"]["percent"],
             "memory_used_byte" => $nodesStats[$key]["os"]["mem"]["used_in_bytes"],
             "memory_Total_byte" => $nodesStats[$key]["os"]["mem"]["total_in_bytes"],
             "os_name" => $nodeOs[$key]["os"]["name"],
@@ -745,7 +760,7 @@ class ElasticSearchService
         try {
 
             $stats = $this->httpClient->get(
-                $this->url ."*-". $env . "-". $app ."-transaction-*/_count",
+                $this->url ."*-". $env . $app ."-app-transaction-*/_count",
     
                 [
                     'headers' => [
@@ -755,6 +770,15 @@ class ElasticSearchService
                         $this->settings['username'],
                         $this->settings['password'],
                     ],
+                ]
+            );
+
+            $this->logger->notice(
+                'leadwire.es.getApplicationTransactions',
+                [
+                    'status_text' => $stats->getReasonPhrase(),
+                    'status_code' => $stats->getStatusCode(),
+                    'url' => $this->url ."*-". $env . $app ."app-transaction-*/_count"
                 ]
             );
     
@@ -767,4 +791,678 @@ class ElasticSearchService
         }
       
     }
+    
+    /*****************************opendistro*************************************/
+
+
+    function createUser(User $user): bool{
+        try {
+            $status = false;
+            $response = $this->httpClient->put(
+
+                $this->url . "_opendistro/_security/api/internalusers/" . $user->getUsername(),
+                [
+                    'auth' => $this->getAuth(),
+                    'headers' => [
+                        "Content-Type" => "application/json",
+                    ],
+                    'body' => \json_encode(["password" => $user->getUsername()]),
+                ]
+
+            );
+
+            $this->logger->notice(
+                "leadwire.opendistro.createUser",
+                [
+                    'url' => $this->url . "_opendistro/_security/api/internalusers/" . $user->getUsername(),
+                    'verb' => 'PUT',
+                    'status_code' => $response->getStatusCode(),
+                    'status_text' => $response->getReasonPhrase()
+
+                ]
+            );
+            
+            if($response->getStatusCode() == 200){
+                $status= true;
+            }
+
+            return $status;
+
+        } catch (\Exception $e) {
+            $this->logger->error($e->getMessage());
+            throw new HttpException("An error has occurred while executing your request.",400);
+        }
+    }
+
+    function createTenant(string $tenantName): bool{
+        try {
+
+            $status = false;
+            $response = $this->httpClient->put(
+
+                $this->url . "_opendistro/_security/api/tenants/" . $tenantName,
+                [
+                    'auth' => $this->getAuth(),
+                    'headers' => [
+                        "Content-Type" => "application/json"
+                    ],
+                    'body' => \json_encode(["description" => ""]),
+                ]
+
+            );
+
+            $this->logger->notice(
+                "leadwire.opendistro.createTenant",
+                [
+                    'url' => $this->url . "_opendistro/_security/api/tenants/" . $tenantName,
+                    'verb' => 'PUT',
+                    'status_code' => $response->getStatusCode(),
+                    'status_text' => $response->getReasonPhrase()
+
+                ]
+            );
+            
+            if($response->getStatusCode() == 200){
+                $status= true;
+            }
+
+            return $status;
+
+        } catch (\Exception $e) {
+            $this->logger->error($e->getMessage());
+            throw new HttpException("An error has occurred while executing your request.",400);
+        }
+    }
+
+    function deleteTenant(string $tenantName): bool{
+        try {
+
+            $status = false;
+            $response = $this->httpClient->delete(
+
+                $this->url . "_opendistro/_security/api/tenants/" . $tenantName,
+                [
+                    'auth' => $this->getAuth(),
+                    'headers' => [
+                        "Content-Type" => "application/json"
+                    ],
+                ]
+
+            );
+
+            $this->logger->notice(
+                "leadwire.opendistro.deleteTenant",
+                [
+                    'url' => $this->url . "_opendistro/_security/api/tenants/" . $tenantName,
+                    'verb' => 'DELETE',
+                    'status_code' => $response->getStatusCode(),
+                    'status_text' => $response->getReasonPhrase()
+                ]
+            );
+            
+            if($response->getStatusCode() == 200){
+                $status= true;
+            }
+
+            return $status;
+
+        } catch (\Exception $e) {
+            $this->logger->error($e->getMessage());
+            throw new HttpException("An error has occurred while executing your request.",400);
+        }
+    }
+
+    function createRole(string $envName, string $applicationName, array $index_patterns, array $tenant_patterns,  array $allowed_actions, bool $isWrite): bool{
+        try {
+
+            $status = false;
+
+            $role = [
+                "cluster_permissions" => array("cluster_composite_ops", "indices_monitor"),
+                "index_permissions" => array(["index_patterns" => $index_patterns,
+                "dls" => "",
+                "fls" => array(),
+                "masked_fields" => array(),
+                "allowed_actions" => array("read")]),
+                "tenant_permissions" => array([
+                    "tenant_patterns" => $tenant_patterns,
+                    "allowed_actions" => $allowed_actions,
+                ])
+            ];
+            if($isWrite === true){
+                $url = $this->url . "_opendistro/_security/api/roles/role_" .  $envName . "_" . $applicationName . "_write";
+            } else {
+                $url = $this->url . "_opendistro/_security/api/roles/role_" .  $envName . "_" . $applicationName . "_read";
+            }
+
+            $response = $this->httpClient->put(
+
+                $url,
+                [
+                    'auth' => $this->getAuth(),
+                    'headers' => [
+                        "Content-Type" => "application/json",
+                    ],
+                    'body' => \json_encode($role),
+                ]
+
+            );
+
+            $this->logger->notice(
+                "leadwire.opendistro.createRole",
+                [
+                    'url' => $url,
+                    'verb' => 'PUT',
+                    'status_code' => $response->getStatusCode(),
+                    'status_text' => $response->getReasonPhrase()
+                ]
+            );
+            
+            if($response->getStatusCode() == 200){
+                $status= true;
+            }
+
+            return $status;
+
+        } catch (\Exception $e) {
+            $this->logger->error($e->getMessage());
+            throw new HttpException("An error has occurred while executing your request.",400);
+        }
+    }
+
+    function patchRole(string $envName, string $applicationName, string $path, string $action, array $value): bool{
+        try {
+
+            $status = false;
+            
+            $body = array(
+                ["op" => $action,
+                "path" => $path,
+                "value" => $value]
+            );
+
+            $response = $this->httpClient->patch(
+
+                $this->url . "_opendistro/_security/api/roles/role_" . $envName . "_" . $applicationName,
+                [
+                    'auth' => $this->getAuth(),
+                    'headers' => [
+                        "Content-Type" => "application/json",
+                    ],
+                    'body' => \json_encode($body),
+                ]
+
+            );
+
+            $this->logger->notice(
+                "leadwire.opendistro.patchRole",
+                [
+                    'url' => url . "_opendistro/_security/api/roles/role_" . $envName . "_" . $applicationName,
+                    'verb' => 'PATCH',
+                    'status_code' => $response->getStatusCode(),
+                    'status_text' => $response->getReasonPhrase()
+                ]
+            );
+            
+            if($response->getStatusCode() == 200){
+                $status= true;
+            }
+
+            return $status;
+
+        } catch (\Exception $e) {
+            $this->logger->error($e->getMessage());
+            throw new HttpException("An error has occurred while executing your request.",400);
+        }
+    }
+
+    function deleteRole(string $envName, string $applicationName, bool $isWrite): bool{
+        try {
+
+            $status = false;
+
+            if($isWrite === true){
+                $url = $this->url . "_opendistro/_security/api/roles/role_" . $envName . "_" . $applicationName . "_write";
+            } else {
+                $url = $this->url . "_opendistro/_security/api/roles/role_" . $envName . "_" . $applicationName . "_read";
+            }
+
+            $response = $this->httpClient->delete(
+
+                $url,
+                [
+                    'auth' => $this->getAuth(),
+                    'headers' => [
+                        "Content-Type" => "application/json",
+                    ]
+                ]
+
+            );
+
+            $this->logger->notice(
+                "leadwire.opendistro.deleteRole",
+                [
+                    'url' => $url,
+                    'verb' => 'PATCH',
+                    'status_code' => $response->getStatusCode(),
+                    'status_text' => $response->getReasonPhrase()
+                ]
+            );
+            
+            if($response->getStatusCode() == 200){
+                $status= true;
+            }
+
+            return $status;
+
+        } catch (\Exception $e) {
+            $this->logger->error($e->getMessage());
+            throw new HttpException("An error has occurred while executing your request.",400);
+        }
+    }
+
+    function createRoleMapping(string $envName, string $applicationName, string $userName='', array $backendRole ,bool $isWrite): bool{
+        try {
+
+            $status = false;
+
+            $role = [
+                "backend_roles" => $backendRole,
+                "users" => array($userName)
+            ];
+
+            if($isWrite){
+                $url = $this->url . "_opendistro/_security/api/rolesmapping/role_" . $envName . "_" . $applicationName . "_write";
+            }else{
+                $url = $this->url . "_opendistro/_security/api/rolesmapping/role_" . $envName . "_" . $applicationName . "_read";
+            }
+
+            $response = $this->httpClient->put(
+                $url,
+                [
+                    'auth' => $this->getAuth(),
+                    'headers' => [
+                        "Content-Type" => "application/json",
+                    ],
+                    'body' => \json_encode($role),
+                ]
+
+            );
+
+            $this->logger->notice(
+                "leadwire.opendistro.createRoleMapping",
+                [
+                    'url' => $url,
+                    'verb' => 'PUT',
+                    'status_code' => $response->getStatusCode(),
+                    'status_text' => $response->getReasonPhrase()
+                ]
+            );
+            
+            if($response->getStatusCode() == 200){
+                $status= true;
+            }
+
+            return $status;
+
+        } catch (\Exception $e) {
+            $this->logger->error($e->getMessage());
+            throw new HttpException("An error has occurred while executing your request.",400);
+        }
+    }
+
+    private function patchRoleMapping(string $action, string $envName, string $applicationName, array $users, bool $isWrite): bool{
+        try {
+
+            $status = false;
+
+            if($isWrite === true){
+                $path = "/role_" . $envName . "_" . $applicationName . "_write";
+                $backend_roles = array("write");
+            } else {
+                $path = "/role_" . $envName . "_" . $applicationName . "_read";
+                $backend_roles = array("read");
+            }
+
+            $body = array(
+                ["op" => $action,
+                "path" => $path,
+                "value" => [
+                    "users" => $users,
+                    "backend_roles" => $backend_roles
+                ]]
+            );
+
+            $response = $this->httpClient->patch(
+
+                $this->url . "_opendistro/_security/api/rolesmapping",
+                [
+                    'auth' => $this->getAuth(),
+                    'headers' => [
+                        "Content-Type" => "application/json",
+                    ],
+                    'body' => \json_encode($body),
+                ]
+
+            );
+
+            $this->logger->notice(
+                "leadwire.opendistro.patchRoleMapping",
+                [
+                    'url' => $this->url . "_opendistro/_security/api/rolesmapping",
+                    'verb' => 'PATCH',
+                    'status_code' => $response->getStatusCode(),
+                    'status_text' => $response->getReasonPhrase()
+                ]
+            );
+            
+            if($response->getStatusCode() == 200){
+                $status= true;
+            }
+
+            return $status;
+
+        } catch (\Exception $e) {
+            $this->logger->error($e->getMessage());
+            throw new HttpException("An error has occurred while executing your request.",400);
+        }
+    }
+
+    function deleteRoleMapping(string $envName, string $applicationName, bool $isWrite): bool{
+        try {
+
+            $status = false;
+
+            if($isWrite === true){
+                $url = $this->url . "_opendistro/_security/api/rolesmapping/role_" . $envName . "_" .$applicationName . "_write";
+            } else {
+                $url = $this->url . "_opendistro/_security/api/rolesmapping/role_" . $envName . "_" .$applicationName . "_read";
+            }
+
+            $response = $this->httpClient->delete(
+
+                $url,
+                [
+                    'auth' => $this->getAuth(),
+                    'headers' => [
+                        "Content-Type" => "application/json",
+                    ],
+                ]
+
+            );
+
+            $this->logger->notice(
+                "leadwire.opendistro.createRoleMapping",
+                [
+                    'url' => $url,
+                    'verb' => 'DELETE',
+                    'status_code' => $response->getStatusCode(),
+                    'status_text' => $response->getReasonPhrase()
+                ]
+            );
+            
+            if($response->getStatusCode() == 200){
+                $status= true;
+            }
+
+            return $status;
+
+        } catch (\Exception $e) {
+            $this->logger->error($e->getMessage());
+            throw new HttpException("An error has occurred while executing your request.",400);
+        }
+    }
+
+    private function getRoleMapping(String $envName, string $applicationName, bool $isWrite): array{
+        try {
+
+            $status = false;
+
+            if($isWrite === true){
+                $url = $this->url . "_opendistro/_security/api/rolesmapping/role_" . $envName . "_" . $applicationName . "_write";
+            } else {
+                $url = $this->url . "_opendistro/_security/api/rolesmapping/role_" . $envName . "_" . $applicationName . "_read";            
+            }
+
+            $response = $this->httpClient->get(
+
+                $url,
+                [
+                    'auth' => $this->getAuth(),
+                    'headers' => [
+                        "Content-Type" => "application/json",
+                    ],
+                ]
+
+            );
+
+            $this->logger->notice(
+                "leadwire.opendistro.getRoleMapping",
+                [
+                    'url' => $url,
+                    'verb' => 'GET',
+                    'status_code' => $response->getStatusCode(),
+                    'status_text' => $response->getReasonPhrase()
+                ]
+            );
+            if($response->getStatusCode() == 200){
+                if($isWrite === true){
+                    $role = "role_" . $envName . "_" . $applicationName . "_write";
+                } else {
+                    $role = "role_" . $envName . "_" . $applicationName . "_read";
+                }
+                $res = \json_decode($response->getBody());
+                $res = (array)$res->$role;
+                return $res["users"];
+            } else {
+                return array();
+            }
+
+        } catch (\Exception $e) {
+            $this->logger->error($e->getMessage());
+            throw new HttpException("An error has occurred while executing your request.",400);
+        }
+    }
+
+    public function updateRoleMapping(string $action, string $envName, User $user, string $applicationName, bool $isWrite){
+
+        $users = $this->getRoleMapping($envName, $applicationName, $isWrite);
+
+        switch ($action) {
+            case "add":
+                if (!in_array($user->getName(), $users)) {
+                    array_push($users, $user->getName());
+                }
+                break;
+            case "delete":
+               if (in_array($user->getName(), $users)) {
+                    $key = array_search($user->getName(), $users);
+                    unset($users[$key]);
+                }
+                break;
+            }
+        return $this->patchRoleMapping("replace", $envName, $applicationName, $users, $isWrite);
+    }
+
+    function createAlert(string $appName, string $envName, string $type ): bool{
+        try {
+
+            $status = false;
+
+            $role = [
+                "name" => $envName . "-" . $appName . "-webhook",
+                "type" => $type,
+                "custom_webhook" => [
+                    "scheme" => "HTTPS",
+                    "url" => "",
+                    "host" => "apm.leadwire.io",
+                    "port" => 443,
+                    "path" => "/api/webhooks/". $envName . "/" . $appName . "/",
+                    "header_params" => ["Content-Type" => "application/json"],
+                    "query_params" => ["token" => "generer_un_jwt_token"]
+                ]
+            ];
+            
+            $url = $this->url . "_opendistro/_alerting/destinations";
+           
+            $response = $this->httpClient->post(
+
+                $url,
+                [
+                    'auth' => $this->getAuth(),
+                    'headers' => [
+                        "Content-Type" => "application/json",
+                    ],
+                    'body' => \json_encode($role),
+                ]
+
+            );
+
+            $this->logger->notice(
+                "leadwire.opendistro.createDestination",
+                [
+                    'url' => $url,
+                    'verb' => 'POST',
+                    'status_code' => $response->getStatusCode(),
+                    'status_text' => $response->getReasonPhrase()
+                ]
+            );
+            
+            if($response->getStatusCode() == 200){
+                $status= true;
+            }
+
+            return $status;
+
+        } catch (\Exception $e) {
+            $this->logger->error($e->getMessage());
+            throw new HttpException("An error has occurred while executing your request.",400);
+        }
+    }
+    
+    /****************************************************************************/
+    
+    
+    
+    ///Purges
+    
+    
+        function purgeIndices(): bool{
+        try {
+
+            $status = false;
+            $response = $this->httpClient->delete(
+
+                $this->url . "apm-*,metricbeat-*,.kibana*" ,
+                [
+                    'auth' => $this->getAuth(),
+                    'headers' => [
+                        "Content-Type" => "application/json"
+                    ],
+                ]
+
+            );
+
+            $this->logger->notice(
+                "leadwire.es.purge.indices",
+                [
+                    'url' => $this->url . "apm-*,metricbeat-*,.kibana*" ,
+                    'verb' => 'DELETE',
+                    'status_code' => $response->getStatusCode(),
+                    'status_text' => $response->getReasonPhrase()
+                ]
+            );
+            
+            if($response->getStatusCode() == 200){
+                $status= true;
+            }
+
+            return $status;
+
+        } catch (\Exception $e) {
+            $this->logger->error($e->getMessage());
+            throw new HttpException("An error has occurred while executing your request.",400);
+        }
+    }
+    
+     function purgeAliases(): bool{
+        try {
+
+            $status = false;
+            $response = $this->httpClient->delete(
+
+                $this->url . "*test*/_aliases/*" ,
+                [
+                    'auth' => $this->getAuth(),
+                    'headers' => [
+                        "Content-Type" => "application/json"
+                    ],
+                ]
+
+            );
+
+            $this->logger->notice(
+                "leadwire.es.purge.aliases",
+                [
+                    'url' => $this->url . "*/_aliases/*" ,
+                    'verb' => 'DELETE',
+                    'status_code' => $response->getStatusCode(),
+                    'status_text' => $response->getReasonPhrase()
+                ]
+            );
+            
+            if($response->getStatusCode() == 200){
+                $status= true;
+            }
+
+            return $status;
+
+        } catch (\Exception $e) {
+            $this->logger->error($e->getMessage());
+            throw new HttpException("An error has occurred while executing your request.",400);
+        }
+    }
+    
+    
+     function purgeTemplates(): bool{
+        try {
+
+            $status = false;
+            $response = $this->httpClient->delete(
+
+                $this->url . "_template/*7.2.1*" ,
+                [
+                    'auth' => $this->getAuth(),
+                    'headers' => [
+                        "Content-Type" => "application/json"
+                    ],
+                ]
+
+            );
+
+            $this->logger->notice(
+                "leadwire.es.purge.templates",
+                [
+                    'url' => $this->url . "_template/*" ,
+                    'verb' => 'DELETE',
+                    'status_code' => $response->getStatusCode(),
+                    'status_text' => $response->getReasonPhrase()
+                ]
+            );
+            
+            if($response->getStatusCode() == 200){
+                $status= true;
+            }
+
+            return $status;
+
+        } catch (\Exception $e) {
+            $this->logger->error($e->getMessage());
+            throw new HttpException("An error has occurred while executing your request.",400);
+        }
+    }
+    
+    
+    
+    
 }

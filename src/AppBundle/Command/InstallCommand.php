@@ -37,7 +37,7 @@ Load default Application Type. Insert template for Kibana and more..'
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         /** @var LdapService $ldap */
-        $ldap = $this->getContainer()->get(LdapService::class);
+        //$ldap = $this->getContainer()->get(LdapService::class);
         /** @var ElasticSearchService $es */
         $es = $this->getContainer()->get(ElasticSearchService::class);
         /** @var KibanaService $kibana */
@@ -49,7 +49,7 @@ Load default Application Type. Insert template for Kibana and more..'
         /** @var ApplicationService $applicationService */
         $applicationService = $this->getContainer()->get(ApplicationService::class);
         /** @var SearchGuardService $sgService */
-        $sgService = $this->getContainer()->get(SearchGuardService::class);
+        //$sgService = $this->getContainer()->get(SearchGuardService::class);
         /** @var CuratorService $curatorService */
         $curatorService = $this->getContainer()->get(CuratorService::class);
 
@@ -65,41 +65,55 @@ Load default Application Type. Insert template for Kibana and more..'
         }
 
         $this->loadFixtures($output, $purge);
+        
+        //Purge Elasticsearch
+        $this->purgeES($output, $purge, $es);
 
-        $this->display($output, "Creating LDAP entries for demo applications");
-        $ldap->createDemoApplicationsEntries();
+        //$this->display($output, "Creating LDAP entries for demo applications");
+        //$ldap->createDemoApplicationsEntries();
         $demoApplications = $applicationService->listDemoApplications();
 
-        $this->display($output, "Initializing SearchGuard configuration");
-        $sgService->updateSearchGuardConfig();
+        //$this->display($output, "Initializing SearchGuard configuration");
+        //$sgService->updateSearchGuardConfig();
 
         $this->display($output, "Initializing ES & Kibana");
         /** @var Application $application */
         foreach ($demoApplications as $application) {
-            $es->deleteIndex("test-" . $application->getApplicationIndex());
+            //$es->deleteIndex($appIndex);
+            $sharedIndex = "staging-" . $application->getSharedIndex();
+            $appIndex = "staging-" . $application->getApplicationIndex();
+            $patternIndex = "*-staging-" . $application->getName() . "-*";
+           
+            $es->createTenant($appIndex);
+            $es->createTenant($sharedIndex);
+
             $es->createIndexTemplate($application, $applicationService->getActiveApplicationsNames());
-            $es->createAlias($application, "test");
+           //$es->createAlias($application, "staging");
             $kibana->loadIndexPatternForApplication(
                 $application,
-                "test-" . $application->getApplicationIndex(),
-                "test"
+                $appIndex,
+                "staging"
             );
 
-            $kibana->createApplicationDashboards($application, "test");
+            $kibana->createApplicationDashboards($application, "staging");
 
-            $es->deleteIndex("test-" . $application->getSharedIndex());
+            //$es->deleteIndex($sharedIndex);
 
             $kibana->loadIndexPatternForApplication(
                 $application,
-                "test-" . $application->getSharedIndex(),
-                "test"
+                $sharedIndex,
+                "staging"
             );
 
-            $kibana->loadDefaultIndex("test-" . $application->getApplicationIndex(), 'default');
-            $kibana->makeDefaultIndex("test-" . $application->getApplicationIndex(), 'default');
+            $kibana->loadDefaultIndex($appIndex, 'default');
+            $kibana->makeDefaultIndex($appIndex, 'default');
 
-            $kibana->loadDefaultIndex("test-" . $application->getSharedIndex(), 'default');
-            $kibana->makeDefaultIndex("test-" . $application->getSharedIndex(), 'default');
+            $kibana->loadDefaultIndex($sharedIndex, 'default');
+            $kibana->makeDefaultIndex($sharedIndex, 'default');
+            
+            $es->createRole("staging", $application->getName(), array($patternIndex), array($sharedIndex, $appIndex), array("read"), false);
+            $es->createRoleMapping("staging", $application->getName(), 'demo', array('read'),  false);
+
         }
 
         if ($stripeEnabled === true) {
@@ -107,7 +121,7 @@ Load default Application Type. Insert template for Kibana and more..'
             $planService->createDefaultPlans();
         }
 
-        $curatorService->updateCuratorConfig();
+        //$curatorService->updateCuratorConfig();
 
         exec('npm stop');
         exec('npm install');
@@ -116,6 +130,21 @@ Load default Application Type. Insert template for Kibana and more..'
         return 0;
     }
 
+    
+    
+     private function purgeES($output, $purge, $es)
+    {
+        if ($purge === false) {
+            return;
+        }
+         
+       $es->purgeIndices();
+       $es->purgeAliases();
+       $es->purgeTemplates();
+        
+    }
+         
+         
     private function loadFixtures($output, $purge)
     {
         if ($purge === false) {

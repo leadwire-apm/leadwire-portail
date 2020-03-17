@@ -15,7 +15,7 @@ use Doctrine\Common\Persistence\ObjectManager;
 
 class ApplicationFixture extends AbstractFixture implements OrderedFixtureInterface
 {
-    const JPETSTORE_APPLICATION = 'jpetstore';
+    const DEMO_APPLICATION = 'demo';
 
     public function load(ObjectManager $manager)
     {
@@ -29,25 +29,25 @@ class ApplicationFixture extends AbstractFixture implements OrderedFixtureInterf
 
         $user = new User();
         $user
-            ->setUsername("user_jpetstore")
+            ->setUsername("demo")
             ->setActive(true)
             ->setRoles([User::DEFAULT_ROLE])
-            ->setUuid("jpetstore")
+            ->setUuid("demo")
             ->setAvatar('')
-            ->setName("user_jpetstore")
+            ->setName("demo")
             ->setEmailValid(true)
             ->setLocked(false)
-            ->setCompany("LeadWire")
+            ->setCompany("LEAD WIRE")
             ->setContact("")
             ->setContactPreference("Email")
-            ->setEmail("user_jpetstore@leadwire.io");
+            ->setEmail("contact@leadwire.io");
 
-        $jpetstore = new Application();
-        $jpetstore->setUuid("jpetstore") // * UUID has to be hardcoded since it will be used on Kibana and stuff
-            ->setName("jpetstore")
+        $demo = new Application();
+        $demo->setUuid("demo") // * UUID has to be hardcoded since it will be used on Kibana and stuff
+            ->setName("demo")
             ->setDescription("A web application built on top of MyBatis 3, Spring 3 and Stripes")
             ->setDeployedTypeVersion($applicationType->getVersion())
-            ->setEmail("wassim.dhib@leadwire.io")
+            ->setEmail("contact@leadwire.io")
             ->setEnabled(true)
             ->setCreatedAt($now)
             ->setDemo(true)
@@ -55,47 +55,24 @@ class ApplicationFixture extends AbstractFixture implements OrderedFixtureInterf
             ->setOwner($user)
             ->setType($applicationType)
             ->addEnvironment($environment);
-        $manager->persist($jpetstore);
+        $manager->persist($demo);
         $manager->flush();
-
-        // set shared dashboard access level to write
-        $accessLevelSharedDashboard = new AccessLevel();
-        $accessLevelSharedDashboard
-            ->setUser($user)
-            ->setEnvironment($environment)
-            ->setApplication($jpetstore)
-            ->setLevel(AccessLevel::SHARED_DASHBOARD_LEVEL)
-            ->setAccess(AccessLevel::WRITE_ACCESS)
-        ;
-        $user->addAccessLevel($accessLevelSharedDashboard);
 
         // set app dashboard access level to write
         $accessLevelAppDashboard = new AccessLevel();
         $accessLevelAppDashboard
             ->setUser($user)
             ->setEnvironment($environment)
-            ->setApplication($jpetstore)
-            ->setLevel(AccessLevel::APP_DASHBOARD_LEVEL)
-            ->setAccess(AccessLevel::WRITE_ACCESS)
-        ;
+            ->setApplication($demo)
+            ->setLevel(AccessLevel::ACCESS)
+            ->setAccess(AccessLevel::EDIT);
         $user->addAccessLevel($accessLevelAppDashboard);
-
-        // set app data access level to write
-        $accessLevelAppData = new AccessLevel();
-        $accessLevelAppData
-            ->setUser($user)
-            ->setEnvironment($environment)
-            ->setApplication($jpetstore)
-            ->setLevel(AccessLevel::APP_DATA_LEVEL)
-            ->setAccess(AccessLevel::WRITE_ACCESS)
-        ;
-        $user->addAccessLevel($accessLevelAppData);
 
         $manager->persist($user);
         $manager->flush();
 
 
-        $this->addReference(self::JPETSTORE_APPLICATION, $jpetstore);
+        $this->addReference(self::DEMO_APPLICATION, $demo);
     }
 
     public function getOrder()

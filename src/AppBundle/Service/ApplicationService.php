@@ -384,6 +384,7 @@ class ApplicationService
         $ap = $this->appTypeService->getApplicationType($applicationTypeId);
         $application->setType($ap);
         $this->applicationManager->update($application);
+        
         $applicationPermission = new ApplicationPermission();
         $applicationPermission
             ->setUser($user)
@@ -392,33 +393,16 @@ class ApplicationService
             ->setModifiedAt(new \DateTime());
 
         $this->apManager->update($applicationPermission);
-        // owner has full access level if not admin
-        if (!$user->hasRole("ROLE_ADMIN") && !$user->hasRole("ROLE_SUPER_ADMIN")) {
-            foreach ($application->getEnvironments() as $environment) {
-                $user
-                    // set shared dashboard access level to write
-                    ->addAccessLevel((new AccessLevel())
-                        ->setEnvironment($environment)
-                        ->setApplication($application)
-                        ->setLevel(AccessLevel::SHARED_DASHBOARD_LEVEL)
-                        ->setAccess(AccessLevel::WRITE_ACCESS)
-                    )
-                    // set app dashboard access level to write
-                    ->addAccessLevel((new AccessLevel())
-                        ->setEnvironment($environment)
-                        ->setApplication($application)
-                        ->setLevel(AccessLevel::APP_DASHBOARD_LEVEL)
-                        ->setAccess(AccessLevel::WRITE_ACCESS)
-                    )
-                    // set app data access level to write
-                    ->addAccessLevel((new AccessLevel())
-                        ->setEnvironment($environment)
-                        ->setApplication($application)
-                        ->setLevel(AccessLevel::APP_DATA_LEVEL)
-                        ->setAccess(AccessLevel::WRITE_ACCESS));     
-            }
-            $this->userManager->update($user);
+        
+        foreach ($application->getEnvironments() as $environment) {
+            $user->addAccessLevel((new AccessLevel())
+                    ->setEnvironment($environment)
+                    ->setApplication($application)
+                    ->setLevel(AccessLevel::ACCESS)
+                    ->setAccess(AccessLevel::EDIT)
+                );     
         }
+        $this->userManager->update($user);
         $this->createIndexApp($application, $user);
         return $application;
     }
@@ -434,17 +418,12 @@ class ApplicationService
                 $envName = $environment->getName();
                 $sharedIndex =  $envName . "-" . $application->getSharedIndex();
                 $appIndex =  $envName . "-" . $application->getApplicationIndex();
+                $patternIndex = "*-" . $envName . "-" . $application->getName() . "-*";
     
-                $this->ldapService->createApplicationEntry($application);
-    
-                $this->ldapService->registerApplication($user, $application);
-        
-                $this->es->deleteIndex($appIndex);
-                
-                // ---> not sure
+
+                $this->es->createTenant($appIndex);
                 $this->es->createIndexTemplate($application, $this->getActiveApplicationsNames());
     
-                $this->es->createAlias($application, $envName);
     
                 $this->kibanaService->loadIndexPatternForApplication(
                     $application,
@@ -456,23 +435,25 @@ class ApplicationService
                 $this->kibanaService->makeDefaultIndex($appIndex, 'default');
         
                 $this->kibanaService->createApplicationDashboards($application, $envName);
-        
-                $this->es->deleteIndex($sharedIndex);
+                
+                $this->es->createTenant($sharedIndex);
         
                 $this->kibanaService->loadIndexPatternForApplication(
                     $application,
                     $sharedIndex,
                     $envName
                 );
-        
+
                 $this->kibanaService->loadDefaultIndex($sharedIndex, 'default');
                 $this->kibanaService->makeDefaultIndex($sharedIndex, 'default');
-    
+
+                $this->es->createRole($envName, $application->getName(), array($patternIndex), array($sharedIndex, $appIndex), array("kibana_all_read"), false);
+                $this->es->createRole($envName, $application->getName(), array($patternIndex), array($sharedIndex, $appIndex), array("kibana_all_write"), true);
+
+                $this->es->createRoleMapping($envName, $application->getName(), $user->getName(), array('read'), false);
+                $this->es->createRoleMapping($envName, $application->getName(), $user->getName(), array('write'), true); 
+  
             }
-        
-            $this->sg->updateSearchGuardConfig();
-    
-            $this->curatorService->updateCuratorConfig();
         }
     }
 
@@ -518,6 +499,9 @@ class ApplicationService
 
             $this->updateIndexApp($realApp);
 
+            //$this->curatorService->updateCuratorConfig();
+
+
         } catch (\Exception $e) {
             $this->logger->error($e->getMessage());
             $state['successful'] = false;
@@ -534,19 +518,17 @@ class ApplicationService
     function updateIndexApp(Application $application){
 
         foreach ($application->getEnvironments() as $environment){
+           
             $envName = $environment->getName();
             $sharedIndex =  $envName . "-" . $application->getSharedIndex();
             $appIndex =  $envName . "-" . $application->getApplicationIndex();
-
-            $this->logger->error($envName);
-            $this->logger->error($sharedIndex);
-            $this->logger->error($appIndex);
-
+            
+            $this->es->deleteTenant($appIndex);
             $this->es->deleteIndex($appIndex);
+
+            $this->es->createTenant($appIndex);
             $this->es->createIndexTemplate($application, $this->getActiveApplicationsNames());
-
-            $this->es->createAlias($application, $envName);
-
+            
             $this->kibanaService->loadIndexPatternForApplication(
                 $application,
                 $appIndex,
@@ -557,9 +539,7 @@ class ApplicationService
             $this->kibanaService->makeDefaultIndex($appIndex, 'default');
 
             $this->kibanaService->createApplicationDashboards($application, $envName);
-
-            $this->es->deleteIndex($sharedIndex);
-
+            
             $this->kibanaService->loadIndexPatternForApplication(
                 $application,
                 $sharedIndex,
@@ -569,7 +549,6 @@ class ApplicationService
             $this->kibanaService->loadDefaultIndex($sharedIndex, 'default');
             $this->kibanaService->makeDefaultIndex($sharedIndex, 'default');
         }
-        $this->curatorService->updateCuratorConfig();
 
     }
 
@@ -626,21 +605,52 @@ class ApplicationService
                 }
             }
 
+            /**
+             * delete roles & tenants
+             */
+            foreach($this->environmentService->getAll() as $environment){
+                $sharedIndex =  $environment->getName() . "-" . $application->getSharedIndex();
+                $appIndex =  $environment->getName() . "-" . $application->getApplicationIndex();
+                $this->es->deleteRole($environment->getName(), $application->getName(), true);
+                $this->es->deleteRole($environment->getName(), $application->getName(), false);
+                $this->es->deleteTenant($sharedIndex);
+                $this->es->deleteTenant($appIndex);
+            }
+
+            /**
+             * remove role mapping
+             */
+            foreach($this->environmentService->getAll() as $environment){
+                $this->es->deleteRoleMapping($environment->getName(), $application->getName(), true);
+                $this->es->deleteRoleMapping($environment->getName(), $application->getName(), false);
+            }
         }
     }
 
     public function removeUserApplication(string $id, User $user)
-    {
-        $applicationPermission = $this->apManager->getOneBy(['application.id' => $id, 'user.id' => $user->getId()]);
+    {  
+        try {
 
-        if ($applicationPermission !== null) {
-            $applicationPermission->setAccess(ApplicationPermission::ACCESS_DENIED);
-            $this->apManager->update($applicationPermission);
-            $acls = $user->removeAccessLevelsApp($id);
-            $this->userManager->update($user);
-            foreach ($acls as $acl) {
-                $this->accessLevelManager->delete($acl);
+            $applicationPermission = $this->apManager->getOneBy(['application.id' => $id, 'user.id' => $user->getId()]);
+            if ($applicationPermission !== null) {
+                $application = $applicationPermission->getApplication();
+                $applicationPermission->setAccess(ApplicationPermission::ACCESS_DENIED);
+                $this->apManager->update($applicationPermission);
+                $acls = $user->removeAccessLevelsApp($id);
+                $this->userManager->update($user);
+                foreach ($acls as $acl) {
+                    $this->accessLevelManager->delete($acl);
+                }
+                /**
+                 * remove role mapping
+                 */
+                foreach($this->environmentService->getAll() as $environment){
+                    $this->es->updateRoleMapping("delete", $environment->getName(), $user, $application->getName(), true);
+                    $this->es->updateRoleMapping("delete", $environment->getName(), $user, $application->getName(), false);
+                }
             }
+        } catch (\Exception $e) {
+            $this->logger->error($e->getMessage());
         }
     }
 
@@ -681,6 +691,7 @@ class ApplicationService
     public function registerDemoApplications(User $user): void
     {
         $demoApplications = $this->applicationManager->getBy(['demo' => true]);
+        $env = $this->environmentService->getByName("staging");
         $now = new \DateTime();
 
         foreach ($demoApplications as $demoApplication) {
@@ -701,6 +712,15 @@ class ApplicationService
                 ->setAccess(ApplicationPermission::ACCESS_DEMO)
                 ->setModifiedAt($now);
             $this->apManager->update($permission);
+
+            $user->addAccessLevel((new AccessLevel())
+                ->setEnvironment($env)
+                ->setApplication($demoApplication)
+                ->setLevel("ACCESS")
+                ->setAccess("CONSULT"));
+
+            $this->userManager->update($user);
+
         }
     }
 
@@ -771,6 +791,20 @@ class ApplicationService
     public function getById($id)
     {
         $application = $this->applicationManager->getOneBy(['id' => $id]);
+        if ($application === null) {
+            throw new HttpException(Response::HTTP_NOT_FOUND, "Application not Found");
+        } else {
+            return $application;
+        }
+
+    }
+
+    /**
+     * @param string $name
+     */
+    public function getByName($name)
+    {
+        $application = $this->applicationManager->getOneBy(['name' => $name]);
         if ($application === null) {
             throw new HttpException(Response::HTTP_NOT_FOUND, "Application not Found");
         } else {

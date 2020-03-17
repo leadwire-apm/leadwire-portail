@@ -214,17 +214,6 @@ angular.module('leadwireApp')
                         menu: updateMenuItems(MenuEnum.DASHBOARD),
                     },
                 })
-                .state('app.dashboard.manageDashboard', {
-                    url: '/dashboard/manage/{tenant}',
-                    templateUrl: 'manageDashboards.html',
-                    controller: 'manageDashboardsCtrl',
-                    controllerAs: 'ctrl',
-                    resolve: {
-                        permissions: function (RouteGuard) {
-                            return RouteGuard.loginRequired();
-                        },
-                    },
-                })
                 .state('app.management', {
                     abstract: true,
                     url: '/management',
@@ -505,10 +494,34 @@ angular.module('leadwireApp')
                         menu: updateMenuItems(MenuEnum.MANAGEMENT),
                     },
                 })
-                .state('app.management.accessLevel', {
-                    url: '/accesslevel',
-                    templateUrl: 'management/accessLevel/accessLevel.html',
-                    controller: 'AccessLevelController',
+                .state('app.management.alerts', {
+                    url: '/alerts',
+                    templateUrl: 'management/alerts/manageAlerts.html',
+                    controller: 'ManageAlertsController',
+                    controllerAs: 'ctrl',
+                    resolve: {
+                        permissions: function (RouteGuard) {
+                            return RouteGuard.adminRequired();
+                        },
+                        menu: updateMenuItems(MenuEnum.MANAGEMENT),
+                    },
+                })
+                .state('app.management.index', {
+                    url: '/index',
+                    templateUrl: 'management/index/manageIndex.html',
+                    controller: 'ManageIndexController',
+                    controllerAs: 'ctrl',
+                    resolve: {
+                        permissions: function (RouteGuard) {
+                            return RouteGuard.adminRequired();
+                        },
+                        menu: updateMenuItems(MenuEnum.MANAGEMENT),
+                    },
+                })
+                .state('app.management.security', {
+                    url: '/security',
+                    templateUrl: 'management/security/manageSecurity.html',
+                    controller: 'ManageSecurityController',
                     controllerAs: 'ctrl',
                     resolve: {
                         permissions: function (RouteGuard) {
@@ -656,7 +669,7 @@ angular.module('leadwireApp')
                     controllerAs: 'ctrl',
                 })
 
-            function updateMenuItems (key) {
+            function updateMenuItems(key) {
                 return function (MenuFactory, $rootScope) {
                     if (key != "DASHBOARD") {
                         $rootScope.menus = MenuFactory.get(key);
@@ -665,14 +678,14 @@ angular.module('leadwireApp')
                 };
             }
 
-            function getMenuItems () {
+            function getMenuItems() {
                 return function (MenuFactory, $rootScope, $localStorage, UserService) {
 
                     const isAdmin = UserService.isAdmin($localStorage.user);
                     const isSuperAdmin = $localStorage.user.roles.indexOf(UserService.getRoles().SUPER_ADMIN) !== -1;
                     if (isAdmin || isSuperAdmin) {
                         $rootScope.menus = MenuFactory.get("MANAGEMENT");
-                    }else{
+                    } else {
                         $rootScope.menus = MenuFactory.get("SETTINGS");
                     }
                     return Promise.resolve();

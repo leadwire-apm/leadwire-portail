@@ -62,7 +62,7 @@ sg_readall:
   indices:
     '*':
       '*':
-        - READ
+        - CONSULT
 
 # Read all and monitor, but no write permissions 
 sg_readall_and_monitor:
@@ -72,7 +72,7 @@ sg_readall_and_monitor:
   indices:
     '*':
       '*':
-        - READ
+        - CONSULT
 
 # For users which use kibana, access to indices must be granted separately
 sg_kibana_user:
@@ -85,7 +85,7 @@ sg_kibana_user:
       '*':
         - MANAGE
         - INDEX
-        - READ
+        - CONSULT
         - DELETE
     '*':
       '*':
@@ -135,10 +135,10 @@ sg_own_index:
   indices:
     '?kibana_${user_name}':
       '*':
-        - INDICES_ALL 
+        - EDIT 
     '?kibana_all_${user_name}':
       '*':
-        - READ 
+        - CONSULT 
         - "indices:data/write/index" 
     '*':
       '*':
@@ -165,7 +165,7 @@ sg_squash_index:
   indices:
     '*-squash-*':
       '*':
-        - READ 
+        - CONSULT 
 
 sg_squash_kibana_index:
   cluster:
@@ -173,13 +173,13 @@ sg_squash_kibana_index:
   indices:
     '?kibana_app_f007bb9a-dbd2-11e8-87b3-fa163e30b6da':
       '*':
-        - READ
+        - CONSULT
         - "indices:data/write/index"
         - "indices:data/write/update"
         - "indices:data/write/bulk[s]"
     '?kibana_shared_f007bb9a-dbd2-11e8-87b3-fa163e30b6da':
       '*':
-        - INDICES_ALL
+        - EDIT
 
 
 # Allows each user to access jpetstore
@@ -189,7 +189,7 @@ sg_jpetstore_index:
   indices:
     '*-jpetstore-*':
       '*':
-        - READ 
+        - CONSULT 
 
 sg_jpetstore_kibana_index:
   cluster:
@@ -197,13 +197,13 @@ sg_jpetstore_kibana_index:
   indices:
     '?kibana_app_a16274f8-dbd2-11e8-b444-fa163e30b6da':
       '*':
-        - READ
+        - CONSULT
         - "indices:data/write/index"
         - "indices:data/write/update"
         - "indices:data/write/bulk[s]"
     '?kibana_shared_a16274f8-dbd2-11e8-b444-fa163e30b6da':
       '*':
-        - INDICES_ALL
+        - EDIT
 
 sg_user_c3988d38-c754-11e8-9f50-fa163e30b6da:
   cluster:
@@ -211,12 +211,12 @@ sg_user_c3988d38-c754-11e8-9f50-fa163e30b6da:
   indices:
     '*-jpetstore-*':
       '*':
-        - READ
+        - CONSULT
         - indices:data/read/field_caps[index]
         - indices:data/read/field_caps
     '*-squash-*':
       '*':
-        - READ
+        - CONSULT
         - indices:data/read/field_caps[index]
         - indices:data/read/field_caps
 
@@ -228,7 +228,7 @@ sg_xp_monitoring:
   indices:
     '?monitor*':
       '*':
-        - INDICES_ALL
+        - EDIT
 
 sg_xp_alerting:
   readonly: true
@@ -239,16 +239,16 @@ sg_xp_alerting:
   indices:
     '?watches*':
       '*':
-        - INDICES_ALL
+        - EDIT
     '?watcher-history-*':
       '*':
-        - INDICES_ALL
+        - EDIT
     '?triggered_watches':
       '*':
-        - INDICES_ALL
+        - EDIT
     '*':
       '*':
-        - READ
+        - CONSULT
         - indices:admin/aliases/get
 
 sg_xp_machine_learning:
@@ -262,7 +262,7 @@ sg_xp_machine_learning:
   indices:
     '*':
       '*':
-        - READ
+        - CONSULT
         - indices:admin/get*
     '?ml-*':
       '*':
@@ -279,7 +279,7 @@ sg_readonly_and_monitor:
   indices:
     '*':
       '*':
-        - READ
+        - CONSULT
 
 # Make xpack monitoring work
 sg_monitor:
@@ -294,13 +294,13 @@ sg_monitor:
   indices:
     '?monitor*':
       '*':
-        - INDICES_ALL
+        - EDIT
     '?marvel*':
       '*':
-        - INDICES_ALL
+        - EDIT
     '?kibana*':
       '*':
-        - READ
+        - CONSULT
     '*':
       '*':
         - indices:data/read/field_caps[index]
@@ -317,16 +317,16 @@ sg_alerting:
   indices:
     '?kibana*':
       '*':
-        - READ
+        - CONSULT
     '?watches*':
       '*':
-        - INDICES_ALL
+        - EDIT
     '?watcher-history-*':
       '*':
-        - INDICES_ALL
+        - EDIT
     '?triggered_watches':
       '*':
-        - INDICES_ALL
+        - EDIT
     '*':
       '*':
-        - READ
+        - CONSULT

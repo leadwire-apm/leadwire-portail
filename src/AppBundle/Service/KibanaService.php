@@ -110,7 +110,7 @@ class KibanaService
                 );
                 continue;
             }
-            $replaceService = strtolower($monitoringSet->getQualifier()) . "-" . $environmentName . "-" . $application->getName();
+            $replaceService = strtolower($monitoringSet->getQualifier()) . "-*-" . $environmentName . "-" . $application->getName(). "-*";
 
             /** @var ?Template $template */
             $template = $monitoringSet->getTemplateByType(Template::DASHBOARDS);
@@ -134,14 +134,16 @@ class KibanaService
             $authorization = $this->jwtHelper->encode($this->kibanaAdminUsername, $this->kibanaAdminUuid);
 
             $content = str_replace("__replace_token__", $replaceService, $template->getContent());
-            $content = str_replace("__replace_service__", $replaceService, $content);
+            $content = str_replace("__replace_service__", $application->getName(), $content);
 
             $headers = [
                 'kbn-xsrf' => true,
                 'Content-Type' => 'application/json',
-                'tenant' => $tenant,
+                'security_tenant' => $tenant,
+                'x-proxy-roles' => $this->kibanaAdminUsername,
                 'X-Proxy-User' => $this->kibanaAdminUsername,
                 'Authorization' => "Bearer $authorization",
+                'x-forwarded-for' => '127.0.0.1'
             ];
 
             $response = $this->httpClient->post(
@@ -160,6 +162,7 @@ class KibanaService
                     'headers' => $headers,
                     'status_code' => $response->getStatusCode(),
                     'monitoring_set' => $monitoringSet->getName(),
+                    'status_text' => $response->getReasonPhrase(),
                 ]
             );
         }
@@ -201,15 +204,17 @@ class KibanaService
                 throw new \Exception(sprintf("Template (%s) not found for type (%s)", Template::INDEX_PATTERN, $application->getType()->getName()));
             }
 
-            $indexPattern = strtolower($monitoringSet->getQualifier()) . "-" . $environmentName . "-" . $application->getName();
+            $indexPattern = strtolower($monitoringSet->getQualifier()) . "-*-" . $environmentName . "-" . $application->getName(). "-*";
 
             $content = str_replace("__replace_token__", $indexPattern, $template->getContent());
 
             $headers = [
                 'kbn-xsrf' => true,
                 'Content-Type' => 'application/json',
-                'tenant' => $tenant,
+                'security_tenant' => $tenant,
+                'x-proxy-roles' => $this->kibanaAdminUsername,
                 'X-Proxy-User' => $this->kibanaAdminUsername,
+                'x-forwarded-for' => '127.0.0.1',
             ];
 
             $authorization = $this->jwtHelper->encode($this->kibanaAdminUsername, $this->kibanaAdminUuid);
@@ -217,7 +222,7 @@ class KibanaService
             $headers['Authorization'] = "Bearer $authorization";
 
             $response = $this->httpClient->post(
-                $this->url . "api/saved_objects/index-pattern/$indexPattern",
+                $this->url . "api/saved_objects/index-pattern/$indexPattern?overwrite=true",
                 [
                     'headers' => $headers,
                     'body' => $content,
@@ -227,11 +232,12 @@ class KibanaService
             $this->logger->notice(
                 "leadwire.kibana.loadIndexPatternForApplication",
                 [
-                    'url' => $this->url . "api/saved_objects/index-pattern/$indexPattern",
+                    'url' => $this->url . "api/saved_objects/index-pattern/$indexPattern?overwrite=true",
                     'verb' => 'POST',
                     'headers' => $headers,
                     'status_code' => $response->getStatusCode(),
                     'monitoring_set' => $monitoringSet->getName(),
+                    'status_text' => $response->getReasonPhrase(),
                 ]
             );
         }
@@ -256,8 +262,10 @@ class KibanaService
         $headers = [
             'kbn-xsrf' => true,
             'Content-Type' => 'application/json',
-            'tenant' => $tenant,
+            'security_tenant' => $tenant,
+            'x-proxy-roles' => $this->kibanaAdminUsername,
             'X-Proxy-User' => $this->kibanaAdminUsername,
+            'x-forwarded-for' => '127.0.0.1',
         ];
 
         $authorization = $this->jwtHelper->encode($this->kibanaAdminUsername, $this->kibanaAdminUuid);
@@ -265,7 +273,7 @@ class KibanaService
         $headers['Authorization'] = "Bearer $authorization";
 
         $response = $this->httpClient->post(
-            $this->url . "api/saved_objects/index-pattern/$indexPattern",
+            $this->url . "api/saved_objects/index-pattern/$indexPattern?overwrite=true",
             [
                 'headers' => $headers,
                 'body' => $content,
@@ -275,10 +283,11 @@ class KibanaService
         $this->logger->notice(
             "leadwire.kibana.loadDefaultIndex",
             [
-                'url' => $this->url . "api/saved_objects/index-pattern/$indexPattern",
+                'url' => $this->url . "api/saved_objects/index-pattern/$indexPattern?overwrite=true",
                 'verb' => 'POST',
                 'headers' => $headers,
                 'status_code' => $response->getStatusCode(),
+                'status_text' => $response->getReasonPhrase(),
             ]
         );
 
@@ -293,8 +302,11 @@ class KibanaService
     public function loadIndexPatternForUserTenant(User $user)
     {
         $userAccessibleApplications = $this->permissionManager->getAccessibleApplications($user);
+
         foreach ($userAccessibleApplications as $application) {
-            $this->loadIndexPatternForApplication($application, $user->getUserIndex());
+            foreach($application->getEnvironments as $environment){
+                $this->loadIndexPatternForApplication($application, $user->getUserIndex(), $environment->getName());
+            }
         }
     }
     /**
@@ -327,6 +339,7 @@ class KibanaService
                 'verb' => 'GET',
                 'headers' => $headers,
                 'status_code' => $response->getStatusCode(),
+                'status_text' => $response->getReasonPhrase(),
             ]
         );
 
@@ -349,8 +362,10 @@ class KibanaService
             'kbn-xsrf' => true,
             'Content-Type' => 'application/json',
             'Authorization' => "Bearer $authorization",
-            'tenant' => $tenant,
+            'security_tenant' => $tenant,
+            'x-proxy-roles' => $this->kibanaAdminUsername,
             'X-Proxy-User' => $this->kibanaAdminUsername,
+            'x-forwarded-for' => '127.0.0.1',
         ];
 
         $content = json_encode(['value' => $value]);
@@ -371,6 +386,7 @@ class KibanaService
                 'headers' => $headers,
                 'content' => $content,
                 'status_code' => $response->getStatusCode(),
+                'status_text' => $response->getReasonPhrase(),
             ]
         );
     }

@@ -16,66 +16,68 @@
  * @param CONFIG
  * @constructor
  */
- function LoginControllerFN(
-        $location,
-        $auth,
-        InvitationService,
-        UserService,
-        MenuFactory,
-        $localStorage,
-        toastr,
-        MESSAGES_CONSTANTS,
-        DashboardService,
-        ApplicationFactory,
-        $rootScope,
-        $state,
-        CONFIG,
-        socket
-    ) {
-        var vm = this;
+function LoginControllerFN(
+    $location,
+    $auth,
+    InvitationService,
+    UserService,
+    MenuFactory,
+    $localStorage,
+    toastr,
+    MESSAGES_CONSTANTS,
+    DashboardService,
+    ApplicationFactory,
+    $rootScope,
+    $state,
+    CONFIG,
+    socket
+) {
+    var vm = this;
 
-        socket.on('heavy-operation', function(data) {
+    socket.on('heavy-operation', function (data) {
 
-            if (data.user != null) {
-                return;
-            }
-            if (data.status == "in-progress") {
-                if ($('#toast-container').hasClass('toast-top-right') == false) {
-                    toastr.info(
-                        data.message + '...',
-                        "Operation in progress",
-                        {
-                            timeOut: 0,
-                            extendedTimeOut: 0,
-                            closeButton: true,
-                            onClick: null,
-                            preventDuplicates: true
-                        }
-                    );
-                } else {
-                    $('.toast-message').html(data.message + '...');
-                }
-            }
-            if (data.status == "done") {
-                toastr.clear();
-            }
-        });
+        if (data.user != null) {
+            return;
+        }
 
-        vm.invitationId =
-            $location.$$search && $location.$$search.invitation
+        if (data.status == "in-progress") {
+            if ($('#toast-container').hasClass('toast-top-right') == false) {
+                toastr.info(
+                    data.message + '...',
+                    "Operation in progress",
+                    {
+                        timeOut: 0,
+                        extendedTimeOut: 0,
+                        closeButton: true,
+                        onClick: null,
+                        preventDuplicates: true
+                    }
+                );
+            } else {
+                $('.toast-message').html(data.message + '...');
+
+            }
+        }
+        if (data.status == "done") {
+            toastr.clear();
+        }
+    });
+
+    vm.invitationId =
+        $location.$$search && $location.$$search.invitation
             ? $location.$$search.invitation
             : undefined
         ;
 
-        onLoad();
+    onLoad();
 
-        vm.authenticate = authenticate;
+    vm.authenticate = authenticate;
 
-        vm.loginMethod = CONFIG.LOGIN_METHOD;
-        vm.COMPAGNE_ENABLED = CONFIG.COMPAGNE_ENABLED;
+    vm.loginMethod = CONFIG.LOGIN_METHOD;
+    vm.COMPAGNE_ENABLED = CONFIG.COMPAGNE_ENABLED;
 
-        if (vm.loginMethod === "proxy") {
-            proxyAuthenticate(vm.loginMethod);
+    if (vm.loginMethod === "proxy") {
+        proxyAuthenticate(vm.loginMethod);
     }
 
     function authenticate() {
@@ -96,7 +98,7 @@
             .then(handleAfterRedirect) // fetch application and dashboard
             .then(handleLoginSuccess(provider)) // redirect
             .catch(handleLoginFailure)
-        ;
+            ;
     }
 
     function loginAuthenticate(provider) {
@@ -106,26 +108,26 @@
         }
         vm.isChecking = true;
         $auth
-          .login({ username: vm.login })
-          .then(getMe) // accept invitation and update Localstorage
-          .then(handleAfterRedirect) // fetch application and dashboard
-          .then(handleLoginSuccess(provider)) // redirect
-          .catch(handleLoginFailure)
-        ;
+            .login({ username: vm.login })
+            .then(getMe) // accept invitation and update Localstorage
+            .then(handleAfterRedirect) // fetch application and dashboard
+            .then(handleLoginSuccess(provider)) // redirect
+            .catch(handleLoginFailure)
+            ;
     }
 
     function proxyAuthenticate(provider) {
 
-        UserService.getProxyHeaders(function(headers) {
+        UserService.getProxyHeaders(function (headers) {
             vm.isChecking = true;
 
             $auth
-              .login()
-              .then(getMe) // accept invitation and update Localstorage
-              .then(handleAfterRedirect) // fetch application and dashboard
-              .then(handleLoginSuccess(provider)) // redirect
-              .catch(handleLoginFailure)
-            ;
+                .login()
+                .then(getMe) // accept invitation and update Localstorage
+                .then(handleAfterRedirect) // fetch application and dashboard
+                .then(handleLoginSuccess(provider)) // redirect
+                .catch(handleLoginFailure)
+                ;
         });
     }
 
@@ -138,7 +140,7 @@
     }
 
     function handleLoginSuccess(provider) {
-        return function(response) {
+        return function (response) {
             toastr.success(MESSAGES_CONSTANTS.LOGIN_SUCCESS(provider));
             // clear query string (?invitationId=***)
             $location.search({});
@@ -178,26 +180,26 @@
     }
 
     function handleAfterRedirect(user) {
-      /*  const isAdmin = UserService.isAdmin(user);
-        const isSuperAdmin =
-        user.roles.indexOf(UserService.getRoles().SUPER_ADMIN) !== -1;
-        if (isAdmin || isSuperAdmin) {
-            $localStorage.currentMenu = MenuFactory.get("MANAGEMENT");
-            return { path: "app.management.applications" };
-        } else {
-            // Simple user
-            return ApplicationFactory.findMyApplications().then(function(response) {
-                if (response.data && response.data.length) {
-                    $rootScope.$broadcast("set:apps", response.data);
-                }
-                if (user.defaultApp && user.defaultApp.id && user.defaultApp.enabled) {
-                    //take the default app
-                    return DashboardService.fetchDashboardsByAppId(user.defaultApp.id);
-                } else {
-                    return { path: "app.applicationsList" };
-                }
-            });
-        }*/
+        /*  const isAdmin = UserService.isAdmin(user);
+          const isSuperAdmin =
+          user.roles.indexOf(UserService.getRoles().SUPER_ADMIN) !== -1;
+          if (isAdmin || isSuperAdmin) {
+              $localStorage.currentMenu = MenuFactory.get("MANAGEMENT");
+              return { path: "app.management.applications" };
+          } else {
+              // Simple user
+              return ApplicationFactory.findMyApplications().then(function(response) {
+                  if (response.data && response.data.length) {
+                      $rootScope.$broadcast("set:apps", response.data);
+                  }
+                  if (user.defaultApp && user.defaultApp.id && user.defaultApp.enabled) {
+                      //take the default app
+                      return DashboardService.fetchDashboardsByAppId(user.defaultApp.id);
+                  } else {
+                      return { path: "app.applicationsList" };
+                  }
+              });
+          }*/
         return { path: "app.clusterOverview" };
     }
 
@@ -210,20 +212,20 @@
                     InvitationService.acceptInvitation(
                         vm.invitationId,
                         $localStorage.user.id
-                        )
-                    .then(function(app) {
-                        toastr.remove();
-                        toastr.success(MESSAGES_CONSTANTS.INVITATION_ACCEPTED);
-                        (
-                            $localStorage.applications || ($localStorage.applications = [])
+                    )
+                        .then(function (app) {
+                            toastr.remove();
+                            toastr.success(MESSAGES_CONSTANTS.INVITATION_ACCEPTED);
+                            (
+                                $localStorage.applications || ($localStorage.applications = [])
                             ).push(app);
-                        $state.go("app.applicationsList");
-                    })
-                    .catch(function(error) {
-                        toastr.remove();
-                        toastr.error(MESSAGES_CONSTANTS.ERROR);
-                        console.log("onLoad Login", error);
-                    });
+                            $state.go("app.applicationsList");
+                        })
+                        .catch(function (error) {
+                            toastr.remove();
+                            toastr.error(MESSAGES_CONSTANTS.ERROR);
+                            console.log("onLoad Login", error);
+                        });
                 } else {
                     $state.go("app.applicationsList");
                 }
@@ -234,24 +236,24 @@
     }
 }
 
-(function(angular) {
+(function (angular) {
     angular
-    .module("leadwireApp")
-    .controller("LoginCtrl", [
-        "$location",
-        "$auth",
-        "InvitationService",
-        "UserService",
-        "MenuFactory",
-        "$localStorage",
-        "toastr",
-        "MESSAGES_CONSTANTS",
-        "DashboardService",
-        "ApplicationFactory",
-        "$rootScope",
-        "$state",
-        "CONFIG",
-        "socket",
-        LoginControllerFN
+        .module("leadwireApp")
+        .controller("LoginCtrl", [
+            "$location",
+            "$auth",
+            "InvitationService",
+            "UserService",
+            "MenuFactory",
+            "$localStorage",
+            "toastr",
+            "MESSAGES_CONSTANTS",
+            "DashboardService",
+            "ApplicationFactory",
+            "$rootScope",
+            "$state",
+            "CONFIG",
+            "socket",
+            LoginControllerFN
         ]);
 })(window.angular);

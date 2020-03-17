@@ -3,7 +3,7 @@
         <div class="comment col-sm-12">
             <div class="col-sm-8 col-xs-12 text-center">
                 <a href="javascript:;"><strong>[[invitation.user ? invitation.user.email
-                    :invitation.email]]</strong></a>
+                        :invitation.email]]</strong></a>
                 <span ng-if="invitation.pending" class="label label-default">
                     Pending <i class="fa fa-clock-o"></i>
                 </span>
@@ -12,9 +12,8 @@
                 </span>
             </div>
             <div class="col-sm-4 col-xs-12 text-center">
-                <button class="btn btn-danger"
-                        ng-disabled="ctrl.ui.isDeleting"
-                        ng-click="ctrl.deleteInvitation(invitation.id)">
+                <button class="btn btn-danger" ng-disabled="ctrl.ui.isDeleting"
+                    ng-click="ctrl.deleteInvitation(invitation.id)">
                     <i ng-if="!ctrl.ui.isDeleting" class="fa fa-trash"></i>
                     <spinner is-loading="ctrl.ui.isDeleting"></spinner>
                 </button>
@@ -29,23 +28,19 @@
 </div>
 
 <div class="media mt30">
-    <form name="inviteUserForm" class="form-horizontal bordered-group"
-          ng-submit="ctrl.handleInviteUser()" role="form">
+    <form name="inviteUserForm" class="form-horizontal bordered-group" ng-submit="ctrl.handleInviteUser()" role="form">
         <div class="input-group mb15">
             <div class="col-sm-12">
-                <input id="email"
-                       name="inviteUserForm"
-                       type="email" class="form-control br0" placeholder="user email"
-                       ng-model="ctrl.invitedUser.email" required/>
+                <input id="email" name="inviteUserForm" type="email" class="form-control br0" placeholder="user email"
+                    ng-model="ctrl.invitedUser.email" required />
             </div>
 
             <span class="input-group-btn">
-                 <button class="btn btn-primary" type="submit"
-                         ng-disabled="inviteUserForm.$invalid || ctrl.ui.isSaving">
-                        <spinner is-loading="ctrl.ui.isSaving"></spinner>
-                        <i ng-if="!ctrl.ui.isSaving" class="fa fa-user-plus">
-                        </i> Invite user
-                 </button>
+                <button class="btn btn-primary" type="submit" ng-disabled="inviteUserForm.$invalid || ctrl.ui.isSaving">
+                    <spinner is-loading="ctrl.ui.isSaving"></spinner>
+                    <i ng-if="!ctrl.ui.isSaving" class="fa fa-user-plus">
+                    </i> Invite user
+                </button>
             </span>
         </div>
     </form>

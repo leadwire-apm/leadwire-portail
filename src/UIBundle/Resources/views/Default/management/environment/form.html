@@ -1,11 +1,9 @@
 <div class="form-group">
     <label class="col-sm-2 control-label">Name *</label>
     <div class="col-sm-10">
-        <input type="text" name="name" class="form-control"
-               data-ng-model="ctrl.environment.name"
-               required>
-        <span class="text-red"
-              ng-show="environmetForm.name.$error.required && !environmetForm.name.$pristine">
+        <input type="text" name="name" class="form-control" ng-disabled="ctrl.ui.isEdit"
+            data-ng-model="ctrl.environment.name" required>
+        <span class="text-red" ng-show="environmetForm.name.$error.required && !environmetForm.name.$pristine">
             This field is required</span>
 
     </div>
@@ -14,11 +12,8 @@
 <div class="form-group">
     <label class="col-sm-2 control-label">Ip *</label>
     <div class="col-sm-10">
-        <input type="text" name="ip" class="form-control"
-               data-ng-model="ctrl.environment.ip"
-               required>
-        <span class="text-red"
-              ng-show="environmetForm.name.$error.required && !environmetForm.ip.$pristine">
+        <input type="text" name="ip" class="form-control" data-ng-model="ctrl.environment.ip" required>
+        <span class="text-red" ng-show="environmetForm.name.$error.required && !environmetForm.ip.$pristine">
             This field is required</span>
 
     </div>

@@ -135,30 +135,19 @@ class SearchGuardService
                             "indices:data/read/field_caps[index]",
                             "indices:data/read/field_caps",
                         ],
-                        "INDICES_ALL" => [
-                            "INDICES_ALL",
+                        "EDIT" => [
+                            "EDIT",
                         ]
                     ];
-                    if ($accessLevel->getLevel() == AccessLevel::APP_DATA_LEVEL) {
-                        $indices["*-{$env->getName()}-{$app->getName()}-*"] = [
-                            "*" => $acl[$accessLevel->getAccess()],
-                        ];
-                    }
                     $kibanaAcl = [];
                     
                     $ai = $app->getApplicationIndex();
-                    if ($accessLevel->getLevel() == AccessLevel::APP_DASHBOARD_LEVEL) {
+                    if ($accessLevel->getLevel() == AccessLevel::ACCESS) {
                         $kibanaAcl["?kibana-{$env->getName()}-{$ai}"] = [
                             "*" => $acl[$accessLevel->getAccess()]
                         ];
                     }
                     $si = $app->getSharedIndex();
-                    if ($accessLevel->getLevel() == AccessLevel::SHARED_DASHBOARD_LEVEL) {
-                        $kibanaAcl["?kibana-{$env->getName()}-{$si}"] = [
-                            "*" => $acl[$accessLevel->getAccess()]
-                        ];
-                    }
-
                     $indices = array_merge($indices, $kibanaAcl);
                 }
             }

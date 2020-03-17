@@ -17,7 +17,7 @@ use ATS\EmailBundle\Service\SimpleMailerService;
 use AppBundle\Manager\ApplicationPermissionManager;
 use AppBundle\Service\ApplicationPermissionService;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use AppBundle\Service\SearchGuardService;
+use AppBundle\Service\ElasticSearchService;
 use AppBundle\Service\EnvironmentService;
 use AppBundle\Document\AccessLevel;
 
@@ -78,9 +78,9 @@ class InvitationService
     private $userManager;
 
     /**
-     * @var SearchGuardService
+     * @var ElasticSearchService
      */
-    private $searchGuardService;
+    private $elasticSearchService;
 
     /**
      * @var EnvironmentService
@@ -99,7 +99,7 @@ class InvitationService
      * @param ApplicationService $applicationService
      * @param ApplicationPermissionService $permissionService
      * @param UserManager $userManager
-     * @param SearchGuardService $searchGuardService
+     * @param ElasticSearchService $elasticSearchService
      * @param EnvironmentService $environmentService
      */
     public function __construct(
@@ -112,7 +112,7 @@ class InvitationService
         ApplicationService $applicationService,
         ApplicationPermissionService $permissionService,
         UserManager $userManager,
-        SearchGuardService $searchGuardService,
+        ElasticSearchService $elasticSearchService,
         EnvironmentService $environmentService,
         string $sender
     ) {
@@ -127,7 +127,7 @@ class InvitationService
         $this->applicationService = $applicationService;
         $this->permissionService = $permissionService;
         $this->userManager = $userManager;
-        $this->searchGuardService = $searchGuardService;
+        $this->es = $elasticSearchService;
         $this->environmentService = $environmentService;
     }
 
@@ -292,39 +292,27 @@ class InvitationService
         $invitation = $this->invitationManager->getOneBy(['id' => $id, 'isPending' => true]);
         $invitedUser = $this->userManager->getOneBy(['id' => $userId]);
 
-        if ($invitation instanceof Invitation && $invitedUser instanceof User) {
+        if ($invitation instanceof Invitation && $invitedUser instanceof User)  {
             $invitation->setPending(false);
             $invitation->setUser($invitedUser);
             $application = $invitation->getApplication();
             $this->permissionService->grantPermission($application, $invitedUser, ApplicationPermission::ACCESS_GUEST);
-            foreach ($application->getEnvironments() as $environment) {
-                $invitedUser
-                    // set shared dashboard access level to write
-                    ->addAccessLevel((new AccessLevel())
-                        ->setEnvironment($environment)
-                        ->setApplication($application)
-                        ->setLevel(AccessLevel::SHARED_DASHBOARD_LEVEL)
-                        ->setAccess(AccessLevel::WRITE_ACCESS)
-                    )
-                    // set app dashboard access level to write
-                    ->addAccessLevel((new AccessLevel())
-                        ->setEnvironment($environment)
-                        ->setApplication($application)
-                        ->setLevel(AccessLevel::APP_DASHBOARD_LEVEL)
-                        ->setAccess(AccessLevel::READ_ACCESS)
-                    )
-                    // set app data access level to write
-                    ->addAccessLevel((new AccessLevel())
-                        ->setEnvironment($environment)
-                        ->setApplication($application)
-                        ->setLevel(AccessLevel::APP_DATA_LEVEL)
-                        ->setAccess(AccessLevel::READ_ACCESS)
-                    )
-                ;
-            }
-            $this->ldap->registerApplication($invitedUser, $application);
             $this->invitationManager->update($invitation);
-            $userManager->update($invitedUser);
-        }
+            $this->userManager->update($invitedUser);
+
+            foreach ($application->getEnvironments() as $environment) {
+                $envName = $environment->getName();
+                $this->es->updateRoleMapping("add", $envName, $invitedUser, $application->getName(), false);
+               
+                // set app data access level to read for invited user
+                $invitedUser->addAccessLevel((new AccessLevel())
+                        ->setEnvironment($environment)
+                        ->setApplication($application)
+                        ->setLevel(AccessLevel::ACCESS)
+                        ->setAccess(AccessLevel::CONSULT));
+
+                $this->userManager->update($invitedUser);
+            }
+        } 
     }
 }
