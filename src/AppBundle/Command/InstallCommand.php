@@ -76,6 +76,10 @@ Load default Application Type. Insert template for Kibana and more..'
         //$this->display($output, "Initializing SearchGuard configuration");
         //$sgService->updateSearchGuardConfig();
 
+        //ism policy => delete before create
+        $es->deletePolicy("hot-warm-delete-policy");
+        $es->createPolicy();
+
         $this->display($output, "Initializing ES & Kibana");
         /** @var Application $application */
         foreach ($demoApplications as $application) {

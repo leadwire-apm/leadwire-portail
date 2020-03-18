@@ -822,7 +822,7 @@ class ElasticSearchService
                 ]
             );
             
-            if($response->getStatusCode() == 200){
+            if($response->getStatusCode() == 201){
                 $status= true;
             }
 
@@ -862,7 +862,7 @@ class ElasticSearchService
                 ]
             );
             
-            if($response->getStatusCode() == 200){
+            if($response->getStatusCode() == 201){
                 $status= true;
             }
 
@@ -958,7 +958,7 @@ class ElasticSearchService
                 ]
             );
             
-            if($response->getStatusCode() == 200){
+            if($response->getStatusCode() == 201){
                 $status= true;
             }
 
@@ -1099,7 +1099,7 @@ class ElasticSearchService
                 ]
             );
             
-            if($response->getStatusCode() == 200){
+            if($response->getStatusCode() == 201){
                 $status= true;
             }
 
@@ -1201,7 +1201,7 @@ class ElasticSearchService
                 ]
             );
             
-            if($response->getStatusCode() == 200){
+            if($response->getStatusCode() == 201){
                 $status= true;
             }
 
@@ -1328,7 +1328,7 @@ class ElasticSearchService
                 ]
             );
             
-            if($response->getStatusCode() == 200){
+            if($response->getStatusCode() == 201){
                 $status= true;
             }
 
@@ -1339,6 +1339,113 @@ class ElasticSearchService
             throw new HttpException("An error has occurred while executing your request.",400);
         }
     }
+
+    function createPolicy(){
+        try {
+
+            $status = false;
+
+            $policy = [
+                "policy"=>[
+                    "description"=>"hot warm delete workflow",
+                    "default_state"=>"hot",
+                    "schema_version"=>1,
+                    "states"=>array(
+                        [
+                            "name"=>"hot",
+                            "transitions"=>array(["state_name"=>"warm"])
+                        ],
+                        [
+                            "name"=>"warm",
+                            "actions"=>array(["replica_count"=>["number_of_replicas"=>5]]),
+                            "transitions"=>array([
+                                "state_name"=>"delete",
+                                "conditions"=>["min_index_age"=>"30d"]]
+                            )
+                        ],
+                        [
+                            "name"=>"delete",
+                            "actions"=>array(
+                                ["notification"=> [
+                                    "destination"=>[
+                                        "chime"=>[
+                                            "url"=>"<URL>"
+                                        ]
+                                    ],
+                                    "message_template"=>[
+                                        "source"=>"The index is being deleted"
+                                        ]
+                                    ]
+                                ]
+                            )
+                        ]
+                    )
+                ]
+            ];
+
+            $url = $this->url . "_opendistro/_ism/policies/hot-warm-delete-policy";
+
+            $response = $this->httpClient->put(
+
+                $url,
+                [
+                    'auth' => $this->getAuth(),
+                    'headers' => [
+                        "Content-Type" => "application/json",
+                    ],
+                    'body' => \json_encode($policy),
+                ]
+
+            );
+
+            $this->logger->notice(
+                "leadwire.opendistro.createPolicy",
+                [
+                    'url' => $url,
+                    'verb' => 'PUT',
+                    'status_code' => $response->getStatusCode(),
+                    'status_text' => $response->getReasonPhrase()
+                ]
+            );
+
+            if($response->getStatusCode() == 201){
+                $status= true;
+            }
+
+            return $status;
+
+        } catch (\Exception $e) {
+            $this->logger->error($e->getMessage());
+            throw new HttpException("An error has occurred while executing your request.",400);
+        }
+    }
+
+    function deletePolicy(string $policyName){
+        try {
+
+            $status= false;
+
+            $url = $this->url . "_opendistro/_ism/policies/" . $policyName;
+
+            $response = $this->httpClient->delete(
+
+                $url,
+                [
+                    'auth' => $this->getAuth(),
+                ]
+
+            );
+
+            $this->logger->notice(
+                "leadwire.opendistro.deletePolicy",
+                [
+                    'url' => $url,
+                    'verb' => 'DELETE',
+                    'status_code' => $response->getStatusCode(),
+                    'status_text' => $response->getReasonPhrase()
+                ]
+            );
+
     
     /****************************************************************************/
     
