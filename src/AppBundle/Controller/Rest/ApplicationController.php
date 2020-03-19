@@ -408,7 +408,7 @@ class ApplicationController extends Controller
                 $esService->deleteTenant($appIndex);
 
                 $esService->createTenant($appIndex);
-                $esService->createIndexTemplate($application, $applicationService->getActiveApplicationsNames());
+                $esService->createIndexTemplate($application, $applicationService->getActiveApplicationsNames(), $envName);
 
                 $processService->emit($this->getUser(), "heavy-operations-in-progress", "Updating Kibana Dashboards");
                               

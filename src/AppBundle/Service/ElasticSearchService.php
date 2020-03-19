@@ -369,7 +369,7 @@ class ElasticSearchService
      *
      * @return void
      */
-    public function createIndexTemplate(Application $application, array $activeApplications)
+    public function createIndexTemplate(Application $application, array $activeApplications, string $envName)
     {
         $monitoringSets = $application->getType()->getMonitoringSets();
 
@@ -399,21 +399,16 @@ class ElasticSearchService
 
             $content = $template->getContentObject();
 
-     /*
-     foreach ($activeApplications as $app) {
-                // Applicable only APM templates
-                if ($monitoringSet->getQualifier() === "APM") {
-                    $content->aliases->{$app->getName()} = [
-                        "filter" => [
-                            "term" => ["context.service.name" => $app->getName()],
-                        ],
-                    ];
-                }
-            } 
-	*/
 
+            $content->aliases->{strtolower($monitoringSet->getName()). "apm-" . $envName . "-" . $application->getName()} = [
+                "is_write_index" => true
+            ];
+
+            $content->settings->{"opendistro.index_state_management.policy_id"} = "hot-warm-delete-policy";
+            $content->settings->{"opendistro.index_state_management.rollover_alias"} = strtolower($monitoringSet->getName()). "apm-" . $envName . "-" . $application->getName();
+            
             $response = $this->httpClient->put(
-                $this->url . "_template/{$monitoringSet->getFormattedVersion()}",
+                $this->url . "_template/{$monitoringSet->getFormattedVersion($envName, $application->getName())}",
                 [
                     'auth' => $this->getAuth(),
                     'headers' => [
@@ -428,7 +423,7 @@ class ElasticSearchService
                 [
                     'status_code' => $response->getStatusCode(),
                     'phrase' => $response->getReasonPhrase(),
-                    'url' => $this->url . "_template/{$monitoringSet->getFormattedVersion()}",
+                    'url' => $this->url . "_template/{$monitoringSet->getFormattedVersion($envName, $application->getName())}",
                     'verb' => 'PUT',
                     'monitoring_set' => $monitoringSet->getName(),
                 ]
@@ -1382,9 +1377,9 @@ class ElasticSearchService
                     )
                 ]
             ];
-
+            
             $url = $this->url . "_opendistro/_ism/policies/hot-warm-delete-policy";
-
+           
             $response = $this->httpClient->put(
 
                 $url,
@@ -1407,7 +1402,7 @@ class ElasticSearchService
                     'status_text' => $response->getReasonPhrase()
                 ]
             );
-
+            
             if($response->getStatusCode() == 201){
                 $status= true;
             }
@@ -1426,7 +1421,7 @@ class ElasticSearchService
             $status= false;
 
             $url = $this->url . "_opendistro/_ism/policies/" . $policyName;
-
+           
             $response = $this->httpClient->delete(
 
                 $url,
@@ -1445,7 +1440,18 @@ class ElasticSearchService
                     'status_text' => $response->getReasonPhrase()
                 ]
             );
+            
+            if($response->getStatusCode() == 200){
+                $status= true;
+            }
 
+            return $status;
+
+        } catch (\Exception $e) {
+            $this->logger->error($e->getMessage());
+            throw new HttpException("An error has occurred while executing your request.",400);
+        }
+    }
     
     /****************************************************************************/
     
