@@ -91,7 +91,7 @@ Load default Application Type. Insert template for Kibana and more..'
             $es->createTenant($appIndex);
             $es->createTenant($sharedIndex);
 
-            $es->createIndexTemplate($application, $applicationService->getActiveApplicationsNames());
+            $es->createIndexTemplate($application, $applicationService->getActiveApplicationsNames(), "staging");
            //$es->createAlias($application, "staging");
             $kibana->loadIndexPatternForApplication(
                 $application,
