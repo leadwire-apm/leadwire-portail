@@ -146,7 +146,7 @@ class EnvironmentService
             if($application->isRemoved() === false){
                 $this->es->createTenant($appIndex);
 
-                $this->es->createIndexTemplate($application, $this->applicationManager->getActiveApplicationsNames());
+                $this->es->createIndexTemplate($application, $this->applicationManager->getActiveApplicationsNames(), $envName);
         
                 $this->kibanaService->loadIndexPatternForApplication(
                     $application,
