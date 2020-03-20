@@ -40,14 +40,14 @@ class ApplicationFixture extends AbstractFixture implements OrderedFixtureInterf
             ->setCompany("LEAD WIRE")
             ->setContact("")
             ->setContactPreference("Email")
-            ->setEmail("contact@leadwire.io");
+            ->setEmail("demo@leadwire.io");
 
         $demo = new Application();
         $demo->setUuid("demo") // * UUID has to be hardcoded since it will be used on Kibana and stuff
             ->setName("demo")
             ->setDescription("A web application built on top of MyBatis 3, Spring 3 and Stripes")
             ->setDeployedTypeVersion($applicationType->getVersion())
-            ->setEmail("contact@leadwire.io")
+            ->setEmail("demo@leadwire.io")
             ->setEnabled(true)
             ->setCreatedAt($now)
             ->setDemo(true)
