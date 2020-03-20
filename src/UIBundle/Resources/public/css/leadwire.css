@@ -589,8 +589,20 @@ blockquote p {
   font-size: 12px;
   text-align: center;
 }
+.sidebar-panel > nav ul > li > a .fas {
+  padding-right: 15px;
+  width: 30px;
+  font-size: 12px;
+  text-align: center;
+}
 .sidebar-panel > nav ul > li > a > span,
 .sidebar-panel > nav ul > li > a .fa {
+  -webkit-transition: text-indent 100ms;
+  -moz-transition: text-indent 100ms;
+  -o-transition: text-indent 100ms;
+  transition: text-indent 100ms;
+}
+.sidebar-panel > nav ul > li > a .fas {
   -webkit-transition: text-indent 100ms;
   -moz-transition: text-indent 100ms;
   -o-transition: text-indent 100ms;
