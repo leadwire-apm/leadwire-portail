@@ -530,6 +530,18 @@ angular.module('leadwireApp')
                         menu: updateMenuItems(MenuEnum.MANAGEMENT),
                     },
                 })
+                .state('app.management.anomaly', {
+                    url: '/anomalyDetector',
+                    templateUrl: 'management/anomaly/anomalyDetector.html',
+                    controller: 'anomalyController',
+                    controllerAs: 'ctrl',
+                    resolve: {
+                        permissions: function (RouteGuard) {
+                            return RouteGuard.adminRequired();
+                        },
+                        menu: updateMenuItems(MenuEnum.MANAGEMENT),
+                    },
+                })
                 .state('app.management.codes', {
                     url: '/codes/list',
                     templateUrl: 'management/codes/list.html',

@@ -173,7 +173,7 @@
                 {
                     route: 'app.management.users',
                     abstractRoute: 'app.management',
-                    icon: 'fa fa-user',
+                    icon: 'fas fa-user-cog',
                     label: 'Manage Users',
                 },
                 {
@@ -197,19 +197,19 @@
                 {
                     route: 'app.management.templates',
                     abstractRoute: 'app.management',
-                    icon: 'fa fa-file-alt',
+                    icon: 'fas fa-file-code',
                     label: 'Manage templates',
                 },
                 {
                     route: 'app.management.environmentList',
                     abstractRoute: 'app.management',
-                    icon: 'fa fa-file-alt',
+                    icon: 'fas fa-sitemap',
                     label: 'Manage Environment',
                 },
                 {
                     route: 'app.management.reports',
                     abstractRoute: 'app.management',
-                    icon: 'fa fa-cogs',
+                    icon: 'fa fa-th-list',
                     label: 'Manage reports',
                     params: {
                         ls: {
@@ -220,7 +220,7 @@
                 {
                     route: 'app.management.alerts',
                     abstractRoute: 'app.management',
-                    icon: 'fa fa-cogs',
+                    icon: 'fas fa-exclamation-triangle',
                     label: 'Manage alerts'
                 },
                 {
@@ -232,8 +232,14 @@
                 {
                     route: 'app.management.security',
                     abstractRoute: 'app.management',
-                    icon: 'fa fa-cogs',
+                    icon: 'fas fa-shield-alt',
                     label: 'Security ',
+                },
+                {
+                    route: 'app.management.anomaly',
+                    abstractRoute: 'app.management',
+                    icon: 'fas fa-thermometer-half',
+                    label: 'Anomaly Detectors ',
                 }
             ],
         });
