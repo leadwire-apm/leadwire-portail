@@ -400,12 +400,12 @@ class ElasticSearchService
             $content = $template->getContentObject();
 
 
-            $content->aliases->{strtolower($monitoringSet->getName()). "apm-" . $envName . "-" . $application->getName()} = [
+            $content->aliases->{strtolower($monitoringSet->getName()). "-" . $envName . "-" . $application->getName()} = [
                 "is_write_index" => true
             ];
 
             $content->settings->{"opendistro.index_state_management.policy_id"} = "hot-warm-delete-policy";
-            $content->settings->{"opendistro.index_state_management.rollover_alias"} = strtolower($monitoringSet->getName()). "apm-" . $envName . "-" . $application->getName();
+            $content->settings->{"opendistro.index_state_management.rollover_alias"} = strtolower($monitoringSet->getName()). "-" . $envName . "-" . $application->getName();
             
             $response = $this->httpClient->put(
                 $this->url . "_template/{$monitoringSet->getFormattedVersion($envName, $application->getName())}",
