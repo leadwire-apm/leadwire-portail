@@ -399,6 +399,7 @@ class ElasticSearchService
 
             $content = $template->getContentObject();
 
+            $content->index_patterns->{strtolower($monitoringSet->getName()). "-" .$monitoringSet->getVersion(). "-*-" $envName . "-" . $application->getName() . "-*" } ;
 
             $content->aliases->{strtolower($monitoringSet->getName()). "-" . $envName . "-" . $application->getName()} = [
                 "is_write_index" => true
