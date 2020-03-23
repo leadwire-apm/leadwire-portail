@@ -67,7 +67,7 @@ Load default Application Type. Insert template for Kibana and more..'
         $this->loadFixtures($output, $purge);
         
         //Purge Elasticsearch
-        $this->purgeES($output, $purge, $es);
+        //$this->purgeES($output, $purge, $es);
 
         //$this->display($output, "Creating LDAP entries for demo applications");
         //$ldap->createDemoApplicationsEntries();
