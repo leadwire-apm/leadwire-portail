@@ -1287,11 +1287,18 @@ class ElasticSearchService
                 ]
             );
             if($response->getStatusCode() == 200){
-                if($isWrite === true){
-                    $role = "role_" . $envName . "_" . $applicationName . "_write";
-                } else {
-                    $role = "role_" . $envName . "_" . $applicationName . "_read";
+                $role = "role_" . $envName . "_" . $applicationName;
+                
+                if($isWatcher){
+                    $role = "role_" . $envName . "_watcher_" . $applicationName;
                 }
+
+                if($isWrite){
+                    $role = $role . "_write";
+                } else {
+                    $role = $role . "_read";
+                }
+
                 $res = \json_decode($response->getBody());
                 $res = (array)$res->$role;
                 return $res["users"];

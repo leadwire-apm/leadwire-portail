@@ -101,13 +101,16 @@ class AccessLevelService
      */
     private function delete($payload)
     {
+        $env = $payload['env'];
+        $app = $payload['app'];
+        $level = $payload['level'];
         $user = $this->userManager->getOneBy(['id' => $payload['user']]);
-        $environment = $this->environmentService->getById($payload['env']);
-        $application = $this->applicationService->getById($payload['app']);
-        $accessLevel = $user->getAccessLevelsApp($env, $app, $payload['level']);
+        $environment = $this->environmentService->getById($env);
+        $application = $this->applicationService->getById($app);
+        $accessLevel = $user->getAccessLevelsApp($env, $app, $level);
         $user->removeAccessLevel($accessLevel);
 
-        if($payload['level'] === AccessLevel::REPORT){
+        if($level === AccessLevel::REPORT){
             $this->es->updateRoleMapping("delete", $environment->getName(), $user, $application->getName(), true, true);
         } else {
             $this->es->updateRoleMapping("delete", $environment->getName(), $user, $application->getName(), true, false);
@@ -128,7 +131,6 @@ class AccessLevelService
         try {
             $user = $this->userManager->getOneBy(['id' => $payload['user']]);
             $this->processService->emit($user, "heavy-operations-in-progress", "Updating SearchGuard Configuration");
-            $this->logger->error($payload['app']);
             if (!empty($payload['app']) && $payload['app'] != 'all') {
                 $this->updateByApplication($user, $payload['env'], $payload['app'], $payload['level'], $payload['access']);
             } else {
