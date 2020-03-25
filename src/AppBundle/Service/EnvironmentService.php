@@ -142,7 +142,8 @@ class EnvironmentService
             $sharedIndex =  $envName . "-" . $application->getSharedIndex();
             $appIndex =  $envName . "-" . $application->getApplicationIndex();
             $patternIndex = "*-" . $envName . "-" . $application->getName() . "-*";
-            
+            $watechrIndex = $envName ."-watcher-" . $application->getApplicationIndex();
+
             if($application->isRemoved() === false){
                 $this->es->createTenant($appIndex);
 
@@ -166,15 +167,19 @@ class EnvironmentService
                     $sharedIndex,
                     $envName
                 );
+
+                $this->es->createTenant($watechrIndex);
     
                 $this->kibanaService->loadDefaultIndex($sharedIndex, 'default');
                 $this->kibanaService->makeDefaultIndex($sharedIndex, 'default');
 
-                $this->es->createRole($envName, $application->getName(), array($patternIndex), array($sharedIndex, $appIndex), array("kibana_all_read"), false);
-                $this->es->createRole($envName, $application->getName(), array($patternIndex), array($sharedIndex, $appIndex), array("kibana_all_write"), true);
+                $this->es->createRole($envName, $application->getName(), array($patternIndex), array($sharedIndex, $appIndex), array("read"), false, false);
+                $this->es->createRole($envName, $application->getName(), array($patternIndex), array($sharedIndex, $appIndex), array("write"), true, false);
+                $this->es->createRole($envName, $application->getName(), array(), array($watechrIndex), array("write"), true, true);
 
-                $this->es->createRoleMapping($envName, $application->getName(), '', array('read'), false);
-                $this->es->createRoleMapping($envName, $application->getName(), '', array('write'), true);
+                $this->es->createRoleMapping($envName, $application->getName(), '', array('read'), false, false);
+                $this->es->createRoleMapping($envName, $application->getName(), '', array('write'), true, false);
+                $this->es->createRoleMapping($envName, $application->getName(), '', array('write'), true, true);
             }
         }
 
@@ -249,14 +254,19 @@ class EnvironmentService
             foreach ($environment->getApplications() as $application) {
                 $sharedIndex =  $environment->getName() . "-" . $application->getSharedIndex();
                 $appIndex =  $environment->getName() . "-" . $application->getApplicationIndex();
-                $this->es->deleteRole($environment->getName(), $application->getName(), true);
-                $this->es->deleteRole($environment->getName(), $application->getName(), false);
+                $watechrIndex = $environment->getName() ."-watcher-" . $application->getApplicationIndex();
 
-                $this->es->deleteRoleMapping($environment->getName(), $application->getName(), true);
-                $this->es->deleteRoleMapping($environment->getName(), $application->getName(), false);
+                $this->es->deleteRole($environment->getName(), $application->getName(), true, false);
+                $this->es->deleteRole($environment->getName(), $application->getName(), false, false);
+                $this->es->deleteRole($environment->getName(), $application->getName(), true, true);
+
+                $this->es->deleteRoleMapping($environment->getName(), $application->getName(), true, false);
+                $this->es->deleteRoleMapping($environment->getName(), $application->getName(), false, false);
+                $this->es->deleteRoleMapping($environment->getName(), $application->getName(), true, true);
 
                 $this->es->deleteTenant($sharedIndex);
                 $this->es->deleteTenant($appIndex);
+                $this->es->deleteTenant($watechrIndex);
             }
             return $this->environmentManager->delete($environment);
         }

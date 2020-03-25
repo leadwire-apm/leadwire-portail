@@ -403,7 +403,7 @@ class ApplicationController extends Controller
                 $envName = $environment->getName();
                 $sharedIndex =  $envName . "-" . $application->getSharedIndex();
                 $appIndex =  $envName . "-" . $application->getApplicationIndex();
-
+                $watechrIndex = $envName ."-watcher-" . $application->getApplicationIndex();
                 $esService->deleteIndex($appIndex);
                 $esService->deleteTenant($appIndex);
 
@@ -432,6 +432,9 @@ class ApplicationController extends Controller
                     $sharedIndex,
                     $envName
                 );
+
+                $esService->deleteTenant($watechrIndex);
+                $esService->createTenant($watechrIndex);
     
                 $kibanaService->loadDefaultIndex($sharedIndex, 'default');
                 $kibanaService->makeDefaultIndex($sharedIndex, 'default');

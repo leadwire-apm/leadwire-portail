@@ -908,7 +908,13 @@ class ElasticSearchService
         }
     }
 
-    function createRole(string $envName, string $applicationName, array $index_patterns, array $tenant_patterns,  array $allowed_actions, bool $isWrite): bool{
+    function createRole(string $envName, 
+                        string $applicationName, 
+                        array $index_patterns, 
+                        array $tenant_patterns,  
+                        array $allowed_actions,
+                        bool $isWrite,
+                        bool $isWatcher): bool{
         try {
 
             $status = false;
@@ -925,11 +931,20 @@ class ElasticSearchService
                     "allowed_actions" => $allowed_actions,
                 ])
             ];
-            if($isWrite === true){
-                $url = $this->url . "_opendistro/_security/api/roles/role_" .  $envName . "_" . $applicationName . "_write";
+
+            if($isWatcher) {
+                $url = $this->url . "_opendistro/_security/api/roles/role_" .  $envName . "_watcher_" . $applicationName;
             } else {
-                $url = $this->url . "_opendistro/_security/api/roles/role_" .  $envName . "_" . $applicationName . "_read";
+                $url = $this->url . "_opendistro/_security/api/roles/role_" .  $envName . "_" . $applicationName;
             }
+
+            if($isWrite){
+                $url = $url . "_write";
+            } else {
+                $url = $url . "_read";
+            }
+
+
 
             $response = $this->httpClient->put(
 
@@ -1012,15 +1027,21 @@ class ElasticSearchService
         }
     }
 
-    function deleteRole(string $envName, string $applicationName, bool $isWrite): bool{
+    function deleteRole(string $envName, string $applicationName, bool $isWrite, bool $isWatcher): bool{
         try {
 
             $status = false;
 
-            if($isWrite === true){
-                $url = $this->url . "_opendistro/_security/api/roles/role_" . $envName . "_" . $applicationName . "_write";
+            if($isWatcher){
+                $url = $this->url . "_opendistro/_security/api/roles/role_" . $envName . "_watcher_" . $applicationName;
             } else {
-                $url = $this->url . "_opendistro/_security/api/roles/role_" . $envName . "_" . $applicationName . "_read";
+                $url = $this->url . "_opendistro/_security/api/roles/role_" . $envName . "_" . $applicationName;
+            }
+
+            if($isWrite === true){
+                $url = $url . "_write";
+            } else {
+                $url = $url . "_read";
             }
 
             $response = $this->httpClient->delete(
@@ -1057,7 +1078,12 @@ class ElasticSearchService
         }
     }
 
-    function createRoleMapping(string $envName, string $applicationName, string $userName='', array $backendRole ,bool $isWrite): bool{
+    function createRoleMapping(string $envName,
+                               string $applicationName,
+                               string $userName='',
+                               array $backendRole ,
+                               bool $isWrite,
+                               bool $isWatcher): bool{
         try {
 
             $status = false;
@@ -1067,10 +1093,16 @@ class ElasticSearchService
                 "users" => array($userName)
             ];
 
+            if($isWatcher) {
+                $url = $this->url . "_opendistro/_security/api/rolesmapping/role_" . $envName . "_watcher_" . $applicationName;
+            } else {
+                $url = $this->url . "_opendistro/_security/api/rolesmapping/role_" . $envName . "_" . $applicationName;
+            }
+
             if($isWrite){
-                $url = $this->url . "_opendistro/_security/api/rolesmapping/role_" . $envName . "_" . $applicationName . "_write";
+                $url = $url . "_write";
             }else{
-                $url = $this->url . "_opendistro/_security/api/rolesmapping/role_" . $envName . "_" . $applicationName . "_read";
+                $url = $url . "_read";
             }
 
             $response = $this->httpClient->put(
@@ -1164,15 +1196,21 @@ class ElasticSearchService
         }
     }
 
-    function deleteRoleMapping(string $envName, string $applicationName, bool $isWrite): bool{
+    function deleteRoleMapping(string $envName, string $applicationName, bool $isWrite, bool $isWatcher): bool{
         try {
 
             $status = false;
 
-            if($isWrite === true){
-                $url = $this->url . "_opendistro/_security/api/rolesmapping/role_" . $envName . "_" .$applicationName . "_write";
+            if($isWatcher){
+                $url = $this->url . "_opendistro/_security/api/rolesmapping/role_" . $envName . "_watcher_" .$applicationName; 
             } else {
-                $url = $this->url . "_opendistro/_security/api/rolesmapping/role_" . $envName . "_" .$applicationName . "_read";
+                $url = $this->url . "_opendistro/_security/api/rolesmapping/role_" . $envName . "_" .$applicationName; 
+            }
+
+            if($isWrite === true){
+                $url = $url . "_write";
+            } else {
+                $url = $url . "_read";
             }
 
             $response = $this->httpClient->delete(
@@ -1209,15 +1247,21 @@ class ElasticSearchService
         }
     }
 
-    private function getRoleMapping(String $envName, string $applicationName, bool $isWrite): array{
+    private function getRoleMapping(String $envName, string $applicationName, bool $isWrite, bool $isWatcher): array{
         try {
 
             $status = false;
 
-            if($isWrite === true){
-                $url = $this->url . "_opendistro/_security/api/rolesmapping/role_" . $envName . "_" . $applicationName . "_write";
+            if($isWatcher) {
+                $url = $this->url . "_opendistro/_security/api/rolesmapping/role_" . $envName . "_watcher_" . $applicationName;
             } else {
-                $url = $this->url . "_opendistro/_security/api/rolesmapping/role_" . $envName . "_" . $applicationName . "_read";            
+                $url = $this->url . "_opendistro/_security/api/rolesmapping/role_" . $envName . "_" . $applicationName;
+            }
+
+            if($isWrite === true){
+                $url = $url . "_write";
+            } else {
+                $url = $url . "_read";            
             }
 
             $response = $this->httpClient->get(
@@ -1260,9 +1304,14 @@ class ElasticSearchService
         }
     }
 
-    public function updateRoleMapping(string $action, string $envName, User $user, string $applicationName, bool $isWrite){
+    public function updateRoleMapping(string $action,
+                                      string $envName, 
+                                      User $user, 
+                                      string $applicationName,
+                                      bool $isWrite,
+                                      bool $isWatcher){
 
-        $users = $this->getRoleMapping($envName, $applicationName, $isWrite);
+        $users = $this->getRoleMapping($envName, $applicationName, $isWrite, $isWatcher);
 
         switch ($action) {
             case "add":
