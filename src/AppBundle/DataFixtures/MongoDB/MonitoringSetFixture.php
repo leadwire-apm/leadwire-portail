@@ -13,6 +13,7 @@ class MonitoringSetFixture extends AbstractFixture implements OrderedFixtureInte
 {
     const METRICBEAT_MONITORING_SET = "METRICBEAT";
     const APM_MONITORING_SET = "APM";
+    const FILEBEAT_MONITORING_SET = "FILEBEAT";
 
     public function load(ObjectManager $manager)
     {
