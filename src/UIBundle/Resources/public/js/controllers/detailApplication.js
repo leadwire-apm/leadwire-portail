@@ -37,12 +37,12 @@
             vm.ownerTitle = "Owner Login Id :"
         }
 
-        vm.setAccess = function (user, access) {
+        vm.setAccess = function (user, access, level) {
             acl = {
                 "user": user,
                 "env": vm.selectedEnvironment,
                 "app": vm.application.id,
-                "level": "ACCESS",
+                "level": level,
                 "access": access
             };
 

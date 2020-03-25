@@ -39,18 +39,20 @@
                 <td data-title="Read" data-label="Read">
                     <input type="radio" value="CONSULT" name="app_dashboard_[[ $index ]]"
                         ng-checked="invitation.user.acl[ctrl.selectedEnvironment][ctrl.application.id]['ACCESS'] == 'CONSULT'"
-                        ng-click="ctrl.setAccess(invitation.user.id, 'CONSULT')" />
+                        ng-click="ctrl.setAccess(invitation.user.id, 'CONSULT', 'ACCESS')" />
                 </td>
                 <td data-title="Write" data-label="Write">
                     <input type="radio" name="app_dashboard_[[ $index ]]" value="EDIT"
                         ng-checked="invitation.user.acl[ctrl.selectedEnvironment][ctrl.application.id]['ACCESS'] == 'EDIT'"
-                        ng-click="ctrl.setAccess(invitation.user.id, 'EDIT')" />
+                        ng-click="ctrl.setAccess(invitation.user.id, 'EDIT', 'ACCESS')" />
                 </td>
                 <td data-title="Write" data-label="Write">
                     <input type="checkbox" />
                 </td>
                 <td data-title="Write" data-label="Write">
-                    <input type="checkbox" />
+                    <input type="checkbox"
+                        ng-checked="invitation.user.acl[ctrl.selectedEnvironment][ctrl.application.id]['REPORT'] == 'EDIT'"
+                        ng-click="ctrl.setAccess(invitation.user.id, 'EDIT', 'REPORT')" />
                 </td>
             </tr>
         </tbody>
