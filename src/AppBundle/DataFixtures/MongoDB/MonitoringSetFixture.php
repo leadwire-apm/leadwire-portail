@@ -18,15 +18,26 @@ class MonitoringSetFixture extends AbstractFixture implements OrderedFixtureInte
     {
         /** @var ApplicationType $applicationType */
         $applicationType = $this->getReference(ApplicationTypeFixture::DEFAULT_TYPE_REFERENCE);
+
+	/** APM */
         $ms = new MonitoringSet();
         $ms->setName("APM")->setQualifier("APM")->setVersion("7.2.1")->addToApplicationType($applicationType);
         $manager->persist($ms);
         $this->addReference(self::APM_MONITORING_SET, $ms);
+
+	/** METRICBEAT */
         $ms = new MonitoringSet();
         $ms->setName("Metricbeat")->setQualifier("METRICBEAT")->setVersion("7.2.1")->addToApplicationType($applicationType);
         $manager->persist($ms);
         $manager->persist($applicationType);
         $this->addReference(self::METRICBEAT_MONITORING_SET, $ms);
+	
+	/** FILEBEAT */
+	$ms = new MonitoringSet();
+        $ms->setName("Filebeat")->setQualifier("FILEBEAT")->setVersion("7.2.1")->addToApplicationType($applicationType);
+        $manager->persist($ms);
+        $manager->persist($applicationType);
+        $this->addReference(self::FILEBEAT_MONITORING_SET, $ms);
 
         $manager->flush();
     }
