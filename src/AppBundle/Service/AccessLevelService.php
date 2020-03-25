@@ -93,6 +93,30 @@ class AccessLevelService
     }
 
     /**
+     * delete
+     *
+     * @param array $json
+     *
+     * @return User
+     */
+    private function delete($payload)
+    {
+        $user = $this->userManager->getOneBy(['id' => $payload['user']]);
+        $environment = $this->environmentService->getById($payload['env']);
+        $application = $this->applicationService->getById($payload['app']);
+        $accessLevel = $user->getAccessLevelsApp($env, $app, $payload['level']);
+        $user->removeAccessLevel($accessLevel);
+
+        if($payload['level'] === AccessLevel::REPORT){
+            $this->es->updateRoleMapping("delete", $environment->getName(), $user, $application->getName(), true, true);
+        } else {
+            $this->es->updateRoleMapping("delete", $environment->getName(), $user, $application->getName(), true, false);
+        }  
+
+        $this->userManager->update($user);
+    }
+
+    /**
      * Update
      *
      * @param array $json
@@ -103,19 +127,18 @@ class AccessLevelService
     {
         try {
             $user = $this->userManager->getOneBy(['id' => $payload['user']]);
-            $currentUser = $this->userManager->getOneBy(['id' => $payload['currentUser']]);
-            $this->processService->emit($currentUser, "heavy-operations-in-progress", "Updating SearchGuard Configuration");
-            if (isset($payload['app']) && $payload['app'] != 'all') {
+            $this->processService->emit($user, "heavy-operations-in-progress", "Updating SearchGuard Configuration");
+            $this->logger->error($payload['app']);
+            if (!empty($payload['app']) && $payload['app'] != 'all') {
                 $this->updateByApplication($user, $payload['env'], $payload['app'], $payload['level'], $payload['access']);
             } else {
                 $this->updateByEnvironment($user, $payload['env'], $payload['level'], $payload['access']);
             }
         } catch (\Exception $e) {
-            $this->processService->emit($currentUser, "heavy-operations-done", "Failed");
+            $this->processService->emit($user, "heavy-operations-done", "Failed");
             throw $e;
         }
-        $this->processService->emit($currentUser, "heavy-operations-done", "Successeded");
-
+        $this->processService->emit($user, "heavy-operations-done", "Successeded");
         return $user;
     }
 
@@ -162,12 +185,20 @@ class AccessLevelService
             $accessLevel->setAccess($access);
             $user->addAccessLevel($accessLevel);
         }
-
-        if($access === AccessLevel::EDIT){
-            $this->es->updateRoleMapping("add", $environment->getName(), $user, $application->getName(), true, false);
+        if($level === AccessLevel::REPORT){
+            if($access === AccessLevel::EDIT){
+                $this->es->updateRoleMapping("add", $environment->getName(), $user, $application->getName(), true, true);
+            } else {
+                $this->es->updateRoleMapping("delete", $environment->getName(), $user, $application->getName(), true, true);
+            } 
         } else {
-            $this->es->updateRoleMapping("delete", $environment->getName(), $user, $application->getName(), true, false);
-        }  
+            if($access === AccessLevel::EDIT){
+                $this->es->updateRoleMapping("add", $environment->getName(), $user, $application->getName(), true, false);
+            } else {
+                $this->es->updateRoleMapping("delete", $environment->getName(), $user, $application->getName(), true, false);
+            } 
+        }
+         
 
         $this->userManager->update($user);
     }

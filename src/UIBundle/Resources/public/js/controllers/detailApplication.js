@@ -37,7 +37,7 @@
             vm.ownerTitle = "Owner Login Id :"
         }
 
-        vm.setAccess = function (user, access, level) {
+        vm.setAccess = function (user, access, level, report) {
             acl = {
                 "user": user,
                 "env": vm.selectedEnvironment,
@@ -46,19 +46,37 @@
                 "access": access
             };
 
-            AccessLevelService.setAccess(acl)
-                .then(function (response) {
-                    var __app = { ...vm.application };
-                    __app.invitations.forEach((element, id) => {
-                        if (element.user && element.user.id === user) {
-                            vm.application.invitations[id].user.acl = response.data.acls;
-                        }
-                    });
+            if (angular.isDefined(report) && !report) {
+                AccessLevelService.deleteAccess(acl)
+                    .then(function (response) {
+                        var __app = { ...vm.application };
+                        __app.invitations.forEach((element, id) => {
+                            if (element.user && element.user.id === user) {
+                                vm.application.invitations[id].user.acl = response.data.acls;
+                            }
+                        });
 
-                })
-                .catch(function (error) {
-                    vm.flipActivityIndicator('isLoading');
-                });
+                    })
+                    .catch(function (error) {
+                        vm.flipActivityIndicator('isLoading');
+                    });
+            } else {
+                AccessLevelService.setAccess(acl)
+                    .then(function (response) {
+                        var __app = { ...vm.application };
+                        __app.invitations.forEach((element, id) => {
+                            if (element.user && element.user.id === user) {
+                                vm.application.invitations[id].user.acl = response.data.acls;
+                            }
+                        });
+
+                    })
+                    .catch(function (error) {
+                        vm.flipActivityIndicator('isLoading');
+                    });
+            }
+
+
         }
 
         vm.filter = function (invitation) {

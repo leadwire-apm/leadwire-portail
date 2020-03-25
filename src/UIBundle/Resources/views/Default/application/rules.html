@@ -50,9 +50,9 @@
                     <input type="checkbox" />
                 </td>
                 <td data-title="Write" data-label="Write">
-                    <input type="checkbox"
+                    <input type="checkbox" ng-model="report"
                         ng-checked="invitation.user.acl[ctrl.selectedEnvironment][ctrl.application.id]['REPORT'] == 'EDIT'"
-                        ng-click="ctrl.setAccess(invitation.user.id, 'EDIT', 'REPORT')" />
+                        ng-click="ctrl.setAccess(invitation.user.id, 'EDIT', 'REPORT', report )" />
                 </td>
             </tr>
         </tbody>
