@@ -1140,16 +1140,22 @@ class ElasticSearchService
         }
     }
 
-    private function patchRoleMapping(string $action, string $envName, string $applicationName, array $users, bool $isWrite): bool{
+    private function patchRoleMapping(string $action, string $envName, string $applicationName, array $users, bool $isWrite, bool $isWatcher): bool{
         try {
 
             $status = false;
+            $path = "/role_" . $envName . "_" . $applicationName;
 
-            if($isWrite === true){
-                $path = "/role_" . $envName . "_" . $applicationName . "_write";
+            if($isWatcher) {
+                $path = "/role_" . $envName . "_watcher_" . $applicationName;
+            }
+
+
+            if($isWrite === true) {
+                $path = $path . "_write";
                 $backend_roles = array("write");
             } else {
-                $path = "/role_" . $envName . "_" . $applicationName . "_read";
+                $path = $path . "_read";
                 $backend_roles = array("read");
             }
 
@@ -1287,6 +1293,7 @@ class ElasticSearchService
                 ]
             );
             if($response->getStatusCode() == 200){
+               
                 $role = "role_" . $envName . "_" . $applicationName;
                 
                 if($isWatcher){
@@ -1334,7 +1341,7 @@ class ElasticSearchService
                 }
                 break;
             }
-        return $this->patchRoleMapping("replace", $envName, $applicationName, $users, $isWrite);
+        return $this->patchRoleMapping("replace", $envName, $applicationName, $users, $isWrite, $isWatcher);
     }
 
     function createAlert(string $appName, string $envName, string $type ): bool{

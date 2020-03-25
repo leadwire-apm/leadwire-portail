@@ -203,13 +203,15 @@ class EnvironmentService
                 }
                 
                 //invited case
-                $this->es->updateRoleMapping("add", $env->getName(), $user, $acl->getApplication()->getName(), false, false);
-                $user->addAccessLevel((new AccessLevel())
-                    ->setEnvironment($env)
-                    ->setApplication($acl->getApplication())
-                    ->setLevel($acl->getLevel())
-                    ->setAccess(AccessLevel::CONSULT)
-                );                
+                if($acl->getLevel() === "ACCESS"){
+                    $this->es->updateRoleMapping("add", $env->getName(), $user, $acl->getApplication()->getName(), false, false);
+                    $user->addAccessLevel((new AccessLevel())
+                        ->setEnvironment($env)
+                        ->setApplication($acl->getApplication())
+                        ->setLevel($acl->getLevel())
+                        ->setAccess(AccessLevel::CONSULT)
+                    );                
+                }
                 $this->userManager->update($user);
             }
         }
