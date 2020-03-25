@@ -305,7 +305,7 @@ class AuthService
         if ($user !== null) {
             //create user in opendistro
             $this->esService->createUser($user);
-            $this->esService->updateRoleMapping("add", "staging", $user, "demo", false);
+            $this->esService->updateRoleMapping("add", "staging", $user, "demo", false, false);
             
             $this->processService->emit($user, "heavy-operations-in-progress", "Register Applications");
             $this->applicationService->registerDemoApplications($user);

@@ -191,7 +191,8 @@ class EnvironmentService
             foreach ($acls as $acl) {
                 //owner case
                 if($user->getId() === $acl->getApplication()->getOwner()->getId()) {
-                    $this->es->updateRoleMapping("add", $env->getName(), $user, $acl->getApplication()->getName(), true);
+                    $this->es->updateRoleMapping("add", $env->getName(), $user, $acl->getApplication()->getName(), true, false);
+                    $this->es->updateRoleMapping("add", $env->getName(), $user, $acl->getApplication()->getName(), true, true);
                     $user->addAccessLevel((new AccessLevel())
                         ->setEnvironment($env)
                         ->setApplication($acl->getApplication())
@@ -202,7 +203,7 @@ class EnvironmentService
                 }
                 
                 //invited case
-                $this->es->updateRoleMapping("add", $env->getName(), $user, $acl->getApplication()->getName(), false);
+                $this->es->updateRoleMapping("add", $env->getName(), $user, $acl->getApplication()->getName(), false, false);
                 $user->addAccessLevel((new AccessLevel())
                     ->setEnvironment($env)
                     ->setApplication($acl->getApplication())

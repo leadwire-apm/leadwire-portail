@@ -400,6 +400,12 @@ class ApplicationService
                     ->setApplication($application)
                     ->setLevel(AccessLevel::ACCESS)
                     ->setAccess(AccessLevel::EDIT)
+                );   
+            $user->addAccessLevel((new AccessLevel())
+                    ->setEnvironment($environment)
+                    ->setApplication($application)
+                    ->setLevel(AccessLevel::REPORT)
+                    ->setAccess(AccessLevel::EDIT)
                 );     
         }
         $this->userManager->update($user);
@@ -656,8 +662,8 @@ class ApplicationService
                  * remove role mapping
                  */
                 foreach($this->environmentService->getAll() as $environment){
-                    $this->es->updateRoleMapping("delete", $environment->getName(), $user, $application->getName(), true);
-                    $this->es->updateRoleMapping("delete", $environment->getName(), $user, $application->getName(), false);
+                    $this->es->updateRoleMapping("delete", $environment->getName(), $user, $application->getName(), true, false);
+                    $this->es->updateRoleMapping("delete", $environment->getName(), $user, $application->getName(), false, false);
                 }
             }
         } catch (\Exception $e) {

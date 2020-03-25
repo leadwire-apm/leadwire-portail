@@ -1038,7 +1038,7 @@ class ElasticSearchService
                 $url = $this->url . "_opendistro/_security/api/roles/role_" . $envName . "_" . $applicationName;
             }
 
-            if($isWrite === true){
+            if($isWrite){
                 $url = $url . "_write";
             } else {
                 $url = $url . "_read";
@@ -1077,6 +1077,7 @@ class ElasticSearchService
             throw new HttpException("An error has occurred while executing your request.",400);
         }
     }
+    
 
     function createRoleMapping(string $envName,
                                string $applicationName,
