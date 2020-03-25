@@ -55,10 +55,12 @@
                                 vm.application.invitations[id].user.acl = response.data.acls;
                             }
                         });
-
+                        toastr.success(MESSAGES_CONSTANTS.SUCCESS);
                     })
                     .catch(function (error) {
+                        toastr.success(MESSAGES_CONSTANTS.ERROR);
                         vm.flipActivityIndicator('isLoading');
+                        vm.getApp();
                     });
             } else {
                 AccessLevelService.setAccess(acl)
@@ -69,10 +71,12 @@
                                 vm.application.invitations[id].user.acl = response.data.acls;
                             }
                         });
-
+                        toastr.success(MESSAGES_CONSTANTS.SUCCESS);
                     })
                     .catch(function (error) {
+                        toastr.success(MESSAGES_CONSTANTS.ERROR);
                         vm.flipActivityIndicator('isLoading');
+                        vm.getApp();
                     });
             }
 
