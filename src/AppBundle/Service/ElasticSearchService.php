@@ -402,7 +402,7 @@ class ElasticSearchService
          
             $content = $template->getContentObject();
 
-            $content->index_patterns = [ strtolower($monitoringSet->getName()). "-" . $monitoringSet->getVersion() . "-*-" . $envName . "-" . $application->getName() . "-*" ] ;
+            $content->index_patterns = [ strtolower($monitoringSet->getName()). "-" . $monitoringSet->getVersion() . "-" . $envName . "-" . $application->getName() . "-*" ] ;
 
             $content->aliases->{ $index_rollover_alias } = [
                 "is_write_index" => true
