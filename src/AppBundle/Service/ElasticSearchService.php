@@ -397,19 +397,23 @@ class ElasticSearchService
                 );
             }
 
+	    $index_template = strtolower($monitoringSet->getName()). "-" . $monitoringSet->getVersion() . "-" . $envName . "-" . $application->getName()" ;
+	    $index_rollover_alias = strtolower($monitoringSet->getName()). "-" . $monitoringSet->getVersion() . "-" . $envName . "-" . $application->getName()" ;  
+         
             $content = $template->getContentObject();
 
             $content->index_patterns = [ strtolower($monitoringSet->getName()). "-" . $monitoringSet->getVersion() . "-*-" . $envName . "-" . $application->getName() . "-*" ] ;
 
-            $content->aliases->{strtolower($monitoringSet->getName()). "-" . $envName . "-" . $application->getName()} = [
+            $content->aliases->{ $index_rollover_alias } = [
                 "is_write_index" => true
             ];
 
             $content->settings->{"opendistro.index_state_management.policy_id"} = "hot-warm-delete-policy";
-            $content->settings->{"opendistro.index_state_management.rollover_alias"} = strtolower($monitoringSet->getName()). "-" . $envName . "-" . $application->getName();
-            
-            $response = $this->httpClient->put(
-                $this->url . "_template/{$monitoringSet->getFormattedVersion($envName, $application->getName())}",
+		
+	    $content->settings->{"opendistro.index_state_management.rollover_alias"} = $index_rollover_alias ;
+                  
+      	    $response = $this->httpClient->put(
+                $this->url . "_template/".$index_template,
                 [
                     'auth' => $this->getAuth(),
                     'headers' => [
@@ -424,7 +428,7 @@ class ElasticSearchService
                 [
                     'status_code' => $response->getStatusCode(),
                     'phrase' => $response->getReasonPhrase(),
-                    'url' => $this->url . "_template/{$monitoringSet->getFormattedVersion($envName, $application->getName())}",
+                    'url' => $this->url . "_template/".$index_template,
                     'verb' => 'PUT',
                     'monitoring_set' => $monitoringSet->getName(),
                 ]
