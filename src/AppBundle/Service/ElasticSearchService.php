@@ -397,8 +397,8 @@ class ElasticSearchService
                 );
             }
 
-	    $index_template = strtolower($monitoringSet->getName()). "-" . $monitoringSet->getVersion() . "-" . $envName . "-" . $application->getName()" ;
-	    $index_rollover_alias = strtolower($monitoringSet->getName()). "-" . $monitoringSet->getVersion() . "-" . $envName . "-" . $application->getName()" ;  
+	    $index_template = strtolower($monitoringSet->getName()). "-" . $monitoringSet->getVersion() . "-" . $envName . "-" . $application->getName()") ;
+	    $index_rollover_alias = strtolower($monitoringSet->getName()). "-" . $monitoringSet->getVersion() . "-" . $envName . "-" . $application->getName()") ;  
          
             $content = $template->getContentObject();
 
