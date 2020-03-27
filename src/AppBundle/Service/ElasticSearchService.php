@@ -506,7 +506,7 @@ class ElasticSearchService
                 ]
             );
 		
-	$alias_created = initIndexStateManagement( $application->getName(), $envName, $monitoringSet->getName(), $monitoringSet->getVersion()) ;
+	$alias_created = $this->initIndexStateManagement( $application->getName(), $envName, $monitoringSet->getName(), $monitoringSet->getVersion()) ;
 		
         }
     }
