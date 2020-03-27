@@ -1427,7 +1427,7 @@ class ElasticSearchService
                     "states"=>array(
                         [
                             "name"=>"hot",
-			    "actions"=>array(["rollover"=>["min_doc_count"=>100, "min_size"=>100000]]),
+			    "actions"=>array(["rollover"=>["min_doc_count"=>100]]),
                             "transitions"=>array(["state_name"=>"warm"])
                         ],
                         [
