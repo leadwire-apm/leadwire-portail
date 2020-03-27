@@ -285,7 +285,6 @@ class ElasticSearchService
                 [
                     'auth' => $this->getAuth(),
                     'headers' => $headers,
-                    'body' => \json_encode(""),
                 ]
             );
 
