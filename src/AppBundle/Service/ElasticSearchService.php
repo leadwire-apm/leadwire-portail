@@ -260,6 +260,76 @@ class ElasticSearchService
             throw new \Exception("Got {$response->getStatusCode()} from Guzzle", Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
+	
+    /**
+     *
+     * @param Application $application, string $environmentName, string $qualifier, string $version
+     *
+     * @return array
+     */
+    public function initIndexStateManagement(string $applicationName, string $environmentName, string $qualifier, string $version): array
+    {
+        $ilm_template = "000001";
+        $createdAliases = [];
+        $bodyString = '{"actions":[{"add":{"index":"$index_pattern_name","alias":"$appname"}}]}';
+        $headers = [
+            'Content-Type' => 'application/json',
+        ];
+
+            $indexName = \strtolower($qualifier) . "-" . $version . "-" . $environmentName. "-" . $applicationName . "-" . 	$ilm_template ;
+			
+			$aliasName = \strtolower($qualifier) . "-" . $version . "-" . $environmentName. "-" . $applicationName;		
+           
+            $response = $this->httpClient->put(
+                $this->url . $indexName . "/",
+                [
+                    'auth' => $this->getAuth(),
+                    'headers' => $headers,
+                    'body' => \json_encode(""),
+                ]
+            );
+
+            $this->logger->notice(
+                "leadwire.es.initIndexStateManagement",
+                [
+                    'status_code' => $response->getStatusCode(),
+                    'phrase' => $response->getReasonPhrase(),
+                    'url' => $this->url . $indexName . "/",
+                    'verb' => 'PUT',
+                    'headers' => $headers,
+                    'monitoring_set' => $qualifier,
+                ]
+            );
+
+            $body = \json_decode($bodyString, false);
+            
+            $createdAliases[] = $aliasName;
+            $body->actions[0]->add->index = $indexName;
+            $body->actions[0]->add->alias = $aliasName;
+            $content = \json_encode($body);
+            $response = $this->httpClient->post(
+                $this->url . "_aliases",
+                [
+                    'headers' => $headers,
+                    'auth' => $this->getAuth(),
+                    'body' => $content,
+                ]
+            );
+
+            $this->logger->notice(
+                "leadwire.es.createAlias",
+                [
+                    'status_code' => $response->getStatusCode(),
+                    'phrase' => $response->getReasonPhrase(),
+                    'url' => $this->url . "_aliases",
+                    'verb' => 'POST',
+                    'headers' => $headers,
+                    'index' => $indexName
+                ]
+            );
+
+        return $createdAliases;
+    }
 
     /**
      * * curl --insecure -u $es_admin_user:$es_admin_password -H 'Content-Type: application/json' -XPOST https://es.leadwire.io/_aliases -d"{\"actions\":[{\"add\":{\"index\":\"$index_pattern_name\",\"alias\":\"$appname\"}}]}"
@@ -404,9 +474,11 @@ class ElasticSearchService
 
             $content->index_patterns = [ strtolower($monitoringSet->getName()). "-" . $monitoringSet->getVersion() . "-" . $envName . "-" . $application->getName() . "-*" ] ;
 
-            $content->aliases->{ $index_rollover_alias } = [
+           /*
+	   $content->aliases->{ $index_rollover_alias } = [
                 "is_write_index" => true
             ];
+	   */
 
             $content->settings->{"opendistro.index_state_management.policy_id"} = "hot-warm-delete-policy";
 		
@@ -433,6 +505,9 @@ class ElasticSearchService
                     'monitoring_set' => $monitoringSet->getName(),
                 ]
             );
+		
+	$alias_created = initIndexStateManagement( $application->getName(), $envName, $monitoringSet->getName(), $monitoringSet->getVersion()) ;
+		
         }
     }
 
