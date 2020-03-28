@@ -37,6 +37,23 @@
             vm.ownerTitle = "Owner Login Id :"
         }
 
+        vm.hasReportsRule = function (currentUser) {
+
+            var access = false;
+
+            if (currentUser.id == vm.application.owner.id) {
+                access = true;
+            }
+
+            vm.application.invitations.forEach(invitation => {
+                if (invitation.user && user.id === currentUser.id) {
+                    access = angular.isDefined(invitation.user.acl[vm.selectedEnvironment][vm.application.id].REPORT)
+                }
+            });
+
+            return access;
+        }
+
         vm.setAccess = function (user, access, level, report) {
             acl = {
                 "user": user,

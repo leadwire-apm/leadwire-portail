@@ -13,6 +13,10 @@
             <section class="widget bg-white post-comments" ng-include="'application/rules.html'">
             </section>
         </tab>
+        <tab heading="Access Rules" ng-if="ctrl.hasReportsRule(user)">
+            <section class="widget bg-white post-comments" ng-include="'application/reports.html'">
+            </section>
+        </tab>
         <tab heading="Installation" ng-if="user.id == ctrl.application.owner.id  && ctrl.LOGIN_METHOD === 'github'">
             <section ng-include="'application/installation.html'">
             </section>

@@ -1,0 +1,60 @@
+<div class="no-more-tables row">
+    <div class="col-sm-6"></div>
+    <div class="col-sm-3">
+        <h6>Environment select</h6>
+    </div>
+    <div class="col-sm-3">
+        <select data-ng-model="ctrl.selectedEnvironment" class="form-control">
+            <option ng-selected="ctrl.selectedEnvironment == environment.id"
+                ng-repeat="environment in ctrl.environments" value="[[environment.id]]">
+                [[environment.name]]
+            </option>
+        </select>
+
+    </div>
+    <table class="table table-striped mb0">
+        <thead>
+            <tr>
+                <th class="col-md-3">User Email</th>
+                <th class="col-md-3">User Name</th>
+                <th class="col-md-2">Cosult</th>
+                <th class="col-md-2">Edit</th>
+                <th class="col-md-1">Alert</th>
+                <th class="col-md-1">Report</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-if="ctrl.ui.isLoading" class="text-center">
+                <td colspan="7">
+                    <spinner is-loading="ctrl.ui.isLoading" size="24"></spinner>
+                </td>
+            </tr>
+            <tr ng-repeat="invitation in ctrl.application.invitations | filter:ctrl.filter">
+                <td data-title="Name" data-label="Name">
+                    [[invitation.user.email]]
+                </td>
+                <td data-title="Email" data-label="Email">
+                    [[invitation.user.username]]
+                </td>
+                <td data-title="Read" data-label="Read">
+                    <input type="radio" value="CONSULT" name="app_dashboard_[[ $index ]]"
+                        ng-checked="invitation.user.acl[ctrl.selectedEnvironment][ctrl.application.id]['ACCESS'] == 'CONSULT'"
+                        ng-click="ctrl.setAccess(invitation.user.id, 'CONSULT', 'ACCESS')" />
+                </td>
+                <td data-title="Write" data-label="Write">
+                    <input type="radio" name="app_dashboard_[[ $index ]]" value="EDIT"
+                        ng-checked="invitation.user.acl[ctrl.selectedEnvironment][ctrl.application.id]['ACCESS'] == 'EDIT'"
+                        ng-click="ctrl.setAccess(invitation.user.id, 'EDIT', 'ACCESS')" />
+                </td>
+                <td data-title="Write" data-label="Write">
+                    <input type="checkbox" />
+                </td>
+                <td data-title="Write" data-label="Write">
+                    <input type="checkbox" ng-model="report"
+                        ng-checked="invitation.user.acl[ctrl.selectedEnvironment][ctrl.application.id]['REPORT'] == 'EDIT'"
+                        ng-click="ctrl.setAccess(invitation.user.id, 'EDIT', 'REPORT', report )" />
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
