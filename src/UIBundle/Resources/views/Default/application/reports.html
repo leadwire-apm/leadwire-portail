@@ -6,7 +6,7 @@
     <div class="col-sm-3">
         <select data-ng-model="ctrl.selectedEnvironment" class="form-control">
             <option ng-selected="ctrl.selectedEnvironment == environment.id"
-                ng-repeat="environment in ctrl.environments" value="[[environment.id]]">
+                ng-repeat="environment in ctrl.getEnvironmentsForReport()" value="[[environment.id]]">
                 [[environment.name]]
             </option>
         </select>

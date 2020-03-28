@@ -30,23 +30,17 @@
         var vm = this;
 
         vm.LOGIN_METHOD = CONFIG.LOGIN_METHOD;
-        vm.selectedEnvironment = $localStorage.selectedEnvId;
+        vm.selectedEnvironment = $localStorage.selectedEnvId.slice(0);
 
-        vm.ownerTitle = "Owner Github :"
+        vm.ownerTitle = "Owner Github :";
+
         if (vm.LOGIN_METHOD === 'proxy' || vm.LOGIN_METHOD === 'login') {
             vm.ownerTitle = "Owner Login Id :"
         }
 
-        vm.hasReportsRule = function (currentUser) {
-
-            if (vm.application) {
-
-                vm.application.invitations.forEach(invitation => {
-                    if (invitation.user && user.id === currentUser.id) {
-                        return angular.isDefined(invitation.user.acl[vm.selectedEnvironment][vm.application.id].REPORT);
-                    }
-                });
-            }
+        vm.hasReportsRule = function () {
+            if (vm.currentUser)
+                return angular.isDefined(vm.currentUser.acl[vm.selectedEnvironment][vm.application.id].REPORT);
         }
 
         vm.setAccess = function (user, access, level, report) {
@@ -95,6 +89,23 @@
 
         }
 
+        vm.getEnvironmentsForReport = function () {
+
+            if ($rootScope.user.id === vm.application.owner.id) {
+                return vm.environments;
+            }
+
+            var list = [];
+
+            vm.environments.forEach(environment => {
+                if (angular.isDefined(vm.currentUser.acl[environment.id][vm.application.id].REPORT)) {
+                    list.push(environment);
+                }
+            });
+
+            return list;
+        }
+
         vm.filter = function (invitation) {
             if (angular.isDefined(invitation.user)) {
                 return true;
@@ -107,6 +118,11 @@
             ApplicationFactory.get($stateParams.id)
                 .then(function (res) {
                     vm.application = res.data;
+                    vm.application.invitations.forEach(invitation => {
+                        if (invitation.user && invitation.user.id === $rootScope.user.id) {
+                            vm.currentUser = invitation.user;
+                        }
+                    });
                 });
         };
         vm.loadStats = function () {
@@ -218,6 +234,7 @@
                 moment: moment,
                 retention: CONFIG.STRIPE_ENABLED == true ? $rootScope.user.plan.retention : null,
                 DOWNLOAD_URL: CONFIG.DOWNLOAD_URL,
+                currentUser: null
             });
             vm.getEnvList();
             vm.getApp();

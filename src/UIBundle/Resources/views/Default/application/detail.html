@@ -13,7 +13,7 @@
             <section class="widget bg-white post-comments" ng-include="'application/rules.html'">
             </section>
         </tab>
-        <tab heading="Report" ng-if="user.id == ctrl.application.owner.id ||ctrl.hasReportsRule(user)">
+        <tab heading="Report" ng-if="user.id == ctrl.application.owner.id || ctrl.hasReportsRule()">
             <section class="widget bg-white post-comments" ng-include="'application/reports.html'">
             </section>
         </tab>
