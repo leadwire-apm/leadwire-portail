@@ -39,19 +39,17 @@
 
         vm.hasReportsRule = function (currentUser) {
 
-            var access = false;
-
-            if (currentUser.id == vm.application.owner.id) {
-                access = true;
-            }
-
-            vm.application.invitations.forEach(invitation => {
-                if (invitation.user && user.id === currentUser.id) {
-                    access = angular.isDefined(invitation.user.acl[vm.selectedEnvironment][vm.application.id].REPORT)
+            if (vm.application) {
+                if (vm.application && currentUser.id == vm.application.owner.id) {
+                    return true;
                 }
-            });
 
-            return access;
+                vm.application.invitations.forEach(invitation => {
+                    if (invitation.user && user.id === currentUser.id) {
+                        return angular.isDefined(invitation.user.acl[vm.selectedEnvironment][vm.application.id].REPORT)
+                    }
+                });
+            }
         }
 
         vm.setAccess = function (user, access, level, report) {
