@@ -11,7 +11,7 @@
      * Handle add new template logic
      *
      */
-    function ManageReportCtrlFN ($sce, ConfigService, $state) {
+    function ManageReportCtrlFN($sce, ConfigService, $state) {
         var vm = this;
 
         vm = angular.extend(vm, {
@@ -21,9 +21,7 @@
         });
 
         if (!!$state.params.tenant) {
-            vm.setReportLink = $sce.trustAsResourceUrl(
-                ConfigService.setReport($state.params.tenant)
-            );
+            vm.setReportLink = $sce.trustAsResourceUrl("https://kibana.leadwire.io/app/sentinl#/reports?embed=true");
         }
 
     }

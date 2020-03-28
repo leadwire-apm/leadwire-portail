@@ -57,22 +57,6 @@
                 '#/dashboard?_g=()&_a=( description:\'\',filters:!(), fullScreenMode:!f,options:( darkTheme:!f,hidePanelTitles:! f,useMargins:!t),panels:!(), query:(language:lucene,query:\' \'),timeRestore:!f,title:\'New% 20Dashboard\',viewMode:edit)';
             return url;
         };
-
-        service.getReport = function (tenantPrefix, hasParameter) {
-            var url = this.getUrl(tenantPrefix, '#/app/sentinl', hasParameter);
-            return url;
-        };
-
-        service.setReport = function (tenant) {
-            var url =
-                service.baseUrl +
-                tenant +
-                '/app/sentinl' +
-                '?token=' +
-                $auth.getToken();
-            return url;
-        };
-
         return service;
     }
 })();
