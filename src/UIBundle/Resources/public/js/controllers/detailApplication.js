@@ -40,13 +40,10 @@
         vm.hasReportsRule = function (currentUser) {
 
             if (vm.application) {
-                if (vm.application && currentUser.id == vm.application.owner.id) {
-                    return true;
-                }
 
                 vm.application.invitations.forEach(invitation => {
                     if (invitation.user && user.id === currentUser.id) {
-                        return angular.isDefined(invitation.user.acl[vm.selectedEnvironment][vm.application.id].REPORT)
+                        return angular.isDefined(invitation.user.acl[vm.selectedEnvironment][vm.application.id].REPORT);
                     }
                 });
             }
