@@ -403,7 +403,7 @@ class ApplicationController extends Controller
                 $envName = $environment->getName();
                 $sharedIndex =  $envName . "-" . $application->getSharedIndex();
                 $appIndex =  $envName . "-" . $application->getApplicationIndex();
-                $watechrIndex = $envName ."-watcher-" . $application->getApplicationIndex();
+                $watechrIndex = $envName ."-" . $application->getApplicationWatcherIndex();
                 $esService->deleteIndex($appIndex);
                 $esService->deleteTenant($appIndex);
 

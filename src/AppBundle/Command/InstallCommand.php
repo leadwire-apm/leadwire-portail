@@ -86,7 +86,7 @@ Load default Application Type. Insert template for Kibana and more..'
             $sharedIndex = "staging-" . $application->getSharedIndex();
             $appIndex = "staging-" . $application->getApplicationIndex();
             $patternIndex = "*-staging-" . $application->getName() . "-*";
-            $watechrIndex = "staging-watcher-" . $application->getApplicationIndex();
+            $watechrIndex = "staging-" . $application->getApplicationWatcherIndex();
            
             $es->createTenant($appIndex);
             $es->createTenant($sharedIndex);

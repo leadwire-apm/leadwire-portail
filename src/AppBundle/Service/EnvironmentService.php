@@ -142,7 +142,7 @@ class EnvironmentService
             $sharedIndex =  $envName . "-" . $application->getSharedIndex();
             $appIndex =  $envName . "-" . $application->getApplicationIndex();
             $patternIndex = "*-" . $envName . "-" . $application->getName() . "-*";
-            $watechrIndex = $envName ."-watcher-" . $application->getApplicationIndex();
+            $watechrIndex = $envName ."-" . $application->getApplicationWatcherIndex();
 
             if($application->isRemoved() === false){
                 $this->es->createTenant($appIndex);
@@ -257,7 +257,7 @@ class EnvironmentService
             foreach ($environment->getApplications() as $application) {
                 $sharedIndex =  $environment->getName() . "-" . $application->getSharedIndex();
                 $appIndex =  $environment->getName() . "-" . $application->getApplicationIndex();
-                $watechrIndex = $environment->getName() ."-watcher-" . $application->getApplicationIndex();
+                $watechrIndex = $environment->getName() ."-" . $application->getApplicationWatcherIndex();
 
                 $this->es->deleteRole($environment->getName(), $application->getName(), true, false);
                 $this->es->deleteRole($environment->getName(), $application->getName(), false, false);
