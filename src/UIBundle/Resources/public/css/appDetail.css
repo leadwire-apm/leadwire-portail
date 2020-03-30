@@ -1,0 +1,35 @@
+.tab-accordion-header,
+.tab-accordion-header.active {
+    display: none;
+}
+
+@media (max-width: 400px) {
+    ul.nav-tabs {
+        display: none;
+    }
+
+    .tab-accordion-header {
+        background-color: #666666;
+        color: #ffffff;
+        padding: 10px;
+        width: 100%;
+        margin: 1px 0;
+        display: block;
+    }
+
+    .tab-accordion-header.active {
+        display: block;
+        background-color: #dd3333;
+    }
+
+    .tab-content {
+        border-top: 0px transparent none;
+    }
+
+    /**
+    Add this to make them always open
+    .tab-content > .tab-pane {
+        display:block;
+    }
+    */
+}

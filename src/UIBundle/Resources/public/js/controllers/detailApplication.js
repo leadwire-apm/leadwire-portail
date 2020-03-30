@@ -12,6 +12,7 @@
             '$localStorage',
             'AccessLevelService',
             'EnvironmentService',
+            'ApplicationService',
             applicationDetailCtrlFN,
         ]);
 
@@ -25,7 +26,8 @@
         MESSAGES_CONSTANTS,
         $localStorage,
         AccessLevelService,
-        EnvironmentService
+        EnvironmentService,
+        ApplicationService
     ) {
         var vm = this;
 
@@ -38,9 +40,46 @@
             vm.ownerTitle = "Owner Login Id :"
         }
 
+        vm.getBlob = function (data) {
+            var a = document.createElement("a");
+            a.href = "data:image/png;base64," + data;
+            a.download = "Image.jpg";
+            a.click();
+            a.remove();
+        }
+
+        vm.getDate = function (data) {
+            return data['@timestamp'];
+        }
+
+        vm.getWatchers = function () {
+
+            var envName = "staging";
+
+            vm.environments.forEach(element => {
+                if (element.id === vm.selectedEnvironment) {
+                    envName = element.name;
+                }
+            });
+
+            ApplicationService.getApplicationWatchers(vm.application.name, envName)
+                .then(function (response) {
+                    vm.watchers = response;
+                }).catch(function (error) {
+                    toastr.success(MESSAGES_CONSTANTS.ERROR);
+                });
+        }
+
         vm.hasReportsRule = function () {
-            if (vm.currentUser)
-                return angular.isDefined(vm.currentUser.acl[vm.selectedEnvironment][vm.application.id].REPORT);
+            var access = false;
+            if (vm.currentUser) {
+                Object.keys(vm.currentUser.acl).forEach(element => {
+                    if (vm.currentUser.acl[element][vm.application.id].REPORT) {
+                        access = true;
+                    }
+                });
+            }
+            return access;
         }
 
         vm.setAccess = function (user, access, level, report) {
@@ -91,7 +130,7 @@
 
         vm.getEnvironmentsForReport = function () {
 
-            if ($rootScope.user.id === vm.application.owner.id) {
+            if (vm.application && $rootScope.user.id === vm.application.owner.id) {
                 return vm.environments;
             }
 
@@ -100,6 +139,7 @@
             vm.environments.forEach(environment => {
                 if (angular.isDefined(vm.currentUser.acl[environment.id][vm.application.id].REPORT)) {
                     list.push(environment);
+                    vm.selectedEnvironment = environment.id;
                 }
             });
 

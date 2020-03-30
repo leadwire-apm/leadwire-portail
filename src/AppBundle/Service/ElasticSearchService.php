@@ -756,7 +756,7 @@ class ElasticSearchService
         try {
 
             $stats = $this->httpClient->get(
-                $this->url ."*-". $env . $app ."-app-transaction-*/_count",
+                $this->url ."*-". $env ."-". $app ."-app-transaction-*/_count",
     
                 [
                     'headers' => [
@@ -774,7 +774,7 @@ class ElasticSearchService
                 [
                     'status_text' => $stats->getReasonPhrase(),
                     'status_code' => $stats->getStatusCode(),
-                    'url' => $this->url ."*-". $env . $app ."app-transaction-*/_count"
+                    'url' => $this->url ."*-". $env . $app ."-app-transaction-*/_count"
                 ]
             );
     
@@ -786,6 +786,56 @@ class ElasticSearchService
             throw new HttpException("An error has occurred while executing your request.",400);
         }
       
+    }
+    
+    function getWatchers($appName, $envName){
+        try {
+            
+            $body = [
+                "query" => [
+                    "bool" => [
+                        "must" => [
+                            array(
+                                [
+                                    "match" => ["watcher" => $envName . "-" . $appName . "-*"]
+                                ]
+                            )
+                        ]
+                    ]
+                ]
+            ];
+
+            $response = $this->httpClient->get(
+
+                $this->url . "watcher_alarms-*/_search",
+                [
+                    'auth' => $this->getAuth(),
+                    'headers' => [
+                        "Content-Type" => "application/json",
+                    ],
+                    'body' => \json_encode($body),
+                ]
+
+            );
+
+            $this->logger->notice(
+                "leadwire.es.getWatchers",
+                [
+                    'url' => $this->url . "watcher_alarms-*/_search",
+                    'verb' => 'GET',
+                    'status_code' => $response->getStatusCode(),
+                    'status_text' => $response->getReasonPhrase()
+                ]
+            );
+
+            $res =  \json_decode($response->getBody(),true);
+            $this->logger->error("",$res['hits']['hits']);
+            return $res['hits']['hits'];
+
+        } catch (\Exception $e) {
+            $this->logger->error($e->getMessage());
+            throw new HttpException("An error has occurred while executing your request.",400);
+        }
     }
     
     /*****************************opendistro*************************************/

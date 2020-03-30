@@ -481,4 +481,21 @@ class ApplicationController extends Controller
             return $this->renderResponse(['message' => $e->getMessage()], Response::HTTP_NOT_ACCEPTABLE);
         }
     }
+
+        /**
+     * @Route("/{app}/{env}/watchers", methods="GET")
+     *
+     * @param Request $request
+     * @param ElasticSearchService $esService
+     * @param string $app
+     * @param string $env
+     */
+    public function getApplicationWatchers( Request $request, ElasticSearchService $esService, string $app, string $env){
+        try{
+            $data = $esService->getWatchers($app, $env);
+            return $this->renderResponse($data);
+        } catch (MongoDuplicateKeyException $e) {
+            return $this->renderResponse(['message' => $e->getMessage()], Response::HTTP_NOT_ACCEPTABLE);
+        }
+    }
 }
