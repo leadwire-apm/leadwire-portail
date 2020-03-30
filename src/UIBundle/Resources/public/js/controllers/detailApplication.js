@@ -12,6 +12,8 @@
             '$localStorage',
             'AccessLevelService',
             'EnvironmentService',
+            'ApplicationService',
+            '$sce',
             applicationDetailCtrlFN,
         ]);
 
@@ -25,40 +27,156 @@
         MESSAGES_CONSTANTS,
         $localStorage,
         AccessLevelService,
-        EnvironmentService
+        EnvironmentService,
+        ApplicationService,
+        $sce
     ) {
         var vm = this;
 
         vm.LOGIN_METHOD = CONFIG.LOGIN_METHOD;
-        vm.selectedEnvironment = $localStorage.selectedEnvId;
+        vm.selectedEnvironment = $localStorage.selectedEnvId.slice(0);
+        vm.ownerTitle = "Owner Github :";
 
-        vm.ownerTitle = "Owner Github :"
         if (vm.LOGIN_METHOD === 'proxy' || vm.LOGIN_METHOD === 'login') {
             vm.ownerTitle = "Owner Login Id :"
         }
 
-        vm.setAccess = function (user, access) {
+        vm.setWatcherLink = function () {
+            var envName = "staging";
+
+            vm.environments.forEach(element => {
+                if (element.id === vm.selectedEnvironment) {
+                    envName = element.name;
+                }
+            });
+            if (vm.selectedEnvironment && vm.application && vm.application.name)
+                vm.watcherLink = $sce.trustAsResourceUrl("https://kibana.leadwire.io/app/sentinl?securitytenant=" + envName + "-watcher-" + vm.application.name + "#/?embed=true");
+        };
+
+
+        vm.getBlob = function (data) {
+            var a = document.createElement("a");
+            a.href = "data:image/png;base64," + data;
+            a.download = "Image.jpg";
+            a.click();
+            a.remove();
+        }
+
+        vm.getDate = function (data) {
+            return data['@timestamp'];
+        }
+
+        vm.getWatchers = function () {
+
+            var envName = "staging";
+
+            vm.environments.forEach(element => {
+                if (element.id === vm.selectedEnvironment) {
+                    envName = element.name;
+                }
+            });
+
+            ApplicationService.getApplicationWatchers(vm.application.name, envName)
+                .then(function (response) {
+                    vm.watchers = response;
+                }).catch(function (error) {
+                    toastr.success(MESSAGES_CONSTANTS.ERROR);
+                });
+        }
+
+        vm.deleteWatcher = function (id, ind) {
+
+            swal(MESSAGES_CONSTANTS.SWEET_ALERT_VALIDATION())
+                .then(function (willDelete) {
+                    if (willDelete) {
+                        ApplicationService.deleteApplicationWatcher(id)
+                            .then(function (response) {
+                                vm.watchers = vm.watchers.filter((_, index) => index !== ind)
+                                toastr.success(MESSAGES_CONSTANTS.SUCCESS);
+                            }).catch(function (error) {
+                                toastr.success(MESSAGES_CONSTANTS.ERROR);
+                            });
+                    } else {
+                        swal.close();
+                    }
+                });
+        }
+
+
+        vm.hasReportsRule = function () {
+            var access = false;
+            if (vm.currentUser) {
+                Object.keys(vm.currentUser.acl).forEach(element => {
+                    if (vm.currentUser.acl[element][vm.application.id].REPORT) {
+                        access = true;
+                    }
+                });
+            }
+            return access;
+        }
+
+        vm.setAccess = function (user, access, level, report) {
             acl = {
                 "user": user,
                 "env": vm.selectedEnvironment,
                 "app": vm.application.id,
-                "level": "ACCESS",
+                "level": level,
                 "access": access
             };
 
-            AccessLevelService.setAccess(acl)
-                .then(function (response) {
-                    var __app = { ...vm.application };
-                    __app.invitations.forEach((element, id) => {
-                        if (element.user && element.user.id === user) {
-                            vm.application.invitations[id].user.acl = response.data.acls;
-                        }
+            if (angular.isDefined(report) && !report) {
+                AccessLevelService.deleteAccess(acl)
+                    .then(function (response) {
+                        var __app = { ...vm.application };
+                        __app.invitations.forEach((element, id) => {
+                            if (element.user && element.user.id === user) {
+                                vm.application.invitations[id].user.acl = response.data.acls;
+                            }
+                        });
+                        toastr.success(MESSAGES_CONSTANTS.SUCCESS);
+                    })
+                    .catch(function (error) {
+                        toastr.success(MESSAGES_CONSTANTS.ERROR);
+                        vm.flipActivityIndicator('isLoading');
+                        vm.getApp();
                     });
+            } else {
+                AccessLevelService.setAccess(acl)
+                    .then(function (response) {
+                        var __app = { ...vm.application };
+                        __app.invitations.forEach((element, id) => {
+                            if (element.user && element.user.id === user) {
+                                vm.application.invitations[id].user.acl = response.data.acls;
+                            }
+                        });
+                        toastr.success(MESSAGES_CONSTANTS.SUCCESS);
+                    })
+                    .catch(function (error) {
+                        toastr.success(MESSAGES_CONSTANTS.ERROR);
+                        vm.flipActivityIndicator('isLoading');
+                        vm.getApp();
+                    });
+            }
 
-                })
-                .catch(function (error) {
-                    vm.flipActivityIndicator('isLoading');
-                });
+
+        }
+
+        vm.getEnvironmentsForReport = function () {
+
+            if (vm.application && $rootScope.user.id === vm.application.owner.id) {
+                return vm.environments;
+            }
+
+            var list = [];
+
+            vm.environments.forEach(environment => {
+                if (angular.isDefined(vm.currentUser.acl[environment.id][vm.application.id].REPORT)) {
+                    list.push(environment);
+                    vm.selectedEnvironment = environment.id;
+                }
+            });
+
+            return list;
         }
 
         vm.filter = function (invitation) {
@@ -73,6 +191,11 @@
             ApplicationFactory.get($stateParams.id)
                 .then(function (res) {
                     vm.application = res.data;
+                    vm.application.invitations.forEach(invitation => {
+                        if (invitation.user && invitation.user.id === $rootScope.user.id) {
+                            vm.currentUser = invitation.user;
+                        }
+                    });
                 });
         };
         vm.loadStats = function () {
@@ -184,6 +307,7 @@
                 moment: moment,
                 retention: CONFIG.STRIPE_ENABLED == true ? $rootScope.user.plan.retention : null,
                 DOWNLOAD_URL: CONFIG.DOWNLOAD_URL,
+                currentUser: null
             });
             vm.getEnvList();
             vm.getApp();

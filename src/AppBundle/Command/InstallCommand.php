@@ -83,16 +83,16 @@ Load default Application Type. Insert template for Kibana and more..'
         $this->display($output, "Initializing ES & Kibana");
         /** @var Application $application */
         foreach ($demoApplications as $application) {
-            //$es->deleteIndex($appIndex);
             $sharedIndex = "staging-" . $application->getSharedIndex();
             $appIndex = "staging-" . $application->getApplicationIndex();
             $patternIndex = "*-staging-" . $application->getName() . "-*";
+            $watechrIndex = "staging-" . $application->getApplicationWatcherIndex();
            
             $es->createTenant($appIndex);
             $es->createTenant($sharedIndex);
+            $es->createTenant($watechrIndex);
 
             $es->createIndexTemplate($application, $applicationService->getActiveApplicationsNames(), "staging");
-           //$es->createAlias($application, "staging");
             $kibana->loadIndexPatternForApplication(
                 $application,
                 $appIndex,
@@ -100,8 +100,6 @@ Load default Application Type. Insert template for Kibana and more..'
             );
 
             $kibana->createApplicationDashboards($application, "staging");
-
-            //$es->deleteIndex($sharedIndex);
 
             $kibana->loadIndexPatternForApplication(
                 $application,
@@ -115,9 +113,13 @@ Load default Application Type. Insert template for Kibana and more..'
             $kibana->loadDefaultIndex($sharedIndex, 'default');
             $kibana->makeDefaultIndex($sharedIndex, 'default');
             
-            $es->createRole("staging", $application->getName(), array($patternIndex), array($sharedIndex, $appIndex), array("read"), false);
-            $es->createRoleMapping("staging", $application->getName(), 'demo', array('read'),  false);
+            //create role for application
+            $es->createRole("staging", $application->getName(), array($patternIndex), array($sharedIndex, $appIndex), array("read"), false, false);
+            $es->createRoleMapping("staging", $application->getName(), 'demo', array('read'),  false, false);
 
+            //create role for watcher
+            $es->createRole("staging", $application->getName(), array(), array($watechrIndex), array("write"), true, true);
+            $es->createRoleMapping("staging", $application->getName(), 'demo', array('write'),  true, true);
         }
 
         if ($stripeEnabled === true) {

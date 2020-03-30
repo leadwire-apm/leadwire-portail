@@ -302,7 +302,7 @@ class InvitationService
 
             foreach ($application->getEnvironments() as $environment) {
                 $envName = $environment->getName();
-                $this->es->updateRoleMapping("add", $envName, $invitedUser, $application->getName(), false);
+                $this->es->updateRoleMapping("add", $envName, $invitedUser, $application->getName(), false, false);
                
                 // set app data access level to read for invited user
                 $invitedUser->addAccessLevel((new AccessLevel())

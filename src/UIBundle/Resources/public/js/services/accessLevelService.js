@@ -12,7 +12,7 @@
             AccessLevelServiceFN,
         ]);
 
-    function AccessLevelServiceFN (
+    function AccessLevelServiceFN(
         AccessLevelFactory,
         $rootScope,
         $localStorage,
@@ -32,8 +32,12 @@
          *
          * @return obj
          */
-        service.setAccess = function(acl) {
+        service.setAccess = function (acl) {
             return AccessLevelFactory.setAccess(acl);
+        }
+
+        service.deleteAccess = function (acl) {
+            return AccessLevelFactory.deleteAccess(acl);
         }
     }
 })(window.angular);

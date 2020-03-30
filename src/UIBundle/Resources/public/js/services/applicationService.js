@@ -134,7 +134,7 @@
 
             service.applyChanges = function (applicationId) {
                 return ApplicationFactory.applyChanges(applicationId)
-                    .then(function(response) {
+                    .then(function (response) {
                         return response.data;
                     })
                     .catch(function (err) {
@@ -143,8 +143,28 @@
             }
 
             service.getApplicationDocumentsCount = function (appName) {
-                return ApplicationFactory.getApplicationDocumentsCount(appName,$localStorage.selectedEnv.name)
-                    .then(function(response) {
+                return ApplicationFactory.getApplicationDocumentsCount(appName, $localStorage.selectedEnv.name)
+                    .then(function (response) {
+                        return response.data;
+                    })
+                    .catch(function (err) {
+                        throw new Error(err);
+                    });
+            }
+
+            service.getApplicationWatchers = function (appName, envName) {
+                return ApplicationFactory.getApplicationWatchers(appName, envName)
+                    .then(function (response) {
+                        return response.data;
+                    })
+                    .catch(function (err) {
+                        throw new Error(err);
+                    });
+            }
+
+            service.deleteApplicationWatcher = function (id) {
+                return ApplicationFactory.deleteApplicationWatcher(id)
+                    .then(function (response) {
                         return response.data;
                     })
                     .catch(function (err) {

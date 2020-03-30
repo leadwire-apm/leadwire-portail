@@ -403,7 +403,7 @@ class ApplicationController extends Controller
                 $envName = $environment->getName();
                 $sharedIndex =  $envName . "-" . $application->getSharedIndex();
                 $appIndex =  $envName . "-" . $application->getApplicationIndex();
-
+                $watechrIndex = $envName ."-" . $application->getApplicationWatcherIndex();
                 $esService->deleteIndex($appIndex);
                 $esService->deleteTenant($appIndex);
 
@@ -432,6 +432,9 @@ class ApplicationController extends Controller
                     $sharedIndex,
                     $envName
                 );
+
+                $esService->deleteTenant($watechrIndex);
+                $esService->createTenant($watechrIndex);
     
                 $kibanaService->loadDefaultIndex($sharedIndex, 'default');
                 $kibanaService->makeDefaultIndex($sharedIndex, 'default');
@@ -478,4 +481,38 @@ class ApplicationController extends Controller
             return $this->renderResponse(['message' => $e->getMessage()], Response::HTTP_NOT_ACCEPTABLE);
         }
     }
+
+    /**
+     * @Route("/{app}/{env}/watchers", methods="GET")
+     *
+     * @param Request $request
+     * @param ElasticSearchService $esService
+     * @param string $app
+     * @param string $env
+     */
+    public function getApplicationWatchers( Request $request, ElasticSearchService $esService, string $app, string $env){
+        try{
+            $data = $esService->getWatchers($app, $env);
+            return $this->renderResponse($data);
+        } catch (MongoDuplicateKeyException $e) {
+            return $this->renderResponse(['message' => $e->getMessage()], Response::HTTP_NOT_ACCEPTABLE);
+        }
+    }
+
+    /**
+     * @Route("/{id}/watcher", methods="GET")
+     *
+     * @param Request $request
+     * @param ElasticSearchService $esService
+     * @param string $id
+     */
+    public function deleteApplicationWatcher( Request $request, ElasticSearchService $esService, string $id){
+        try{
+            $data = $esService->deleteWatcher($id);
+            return $this->renderResponse($data);
+        } catch (MongoDuplicateKeyException $e) {
+            return $this->renderResponse(['message' => $e->getMessage()], Response::HTTP_NOT_ACCEPTABLE);
+        }
+    }
 }
+

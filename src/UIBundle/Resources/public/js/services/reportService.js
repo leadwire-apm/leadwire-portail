@@ -22,7 +22,7 @@
      * @param $state
      * @constructor
      */
-    function ReportServiceFN (
+    function ReportServiceFN(
         ApplicationFactory,
         MenuFactory,
         $rootScope,
@@ -58,9 +58,6 @@
             $localStorage.currentApplicationMenus = $localStorage.currentMenu;
         };
 
-        service.getReport = function(tenant, reportId) {
-            return CONFIG.KIBANA_BASE_URL + tenant + '?token=' + $auth.getToken() + '#/app/sentinl/' + reportId;
-        };
         /**
          *
          * @param appId

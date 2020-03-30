@@ -834,7 +834,7 @@ class ElasticSearchService
         try {
 
             $stats = $this->httpClient->get(
-                $this->url ."*-". $env . $app ."-app-transaction-*/_count",
+                $this->url ."*-". $env ."-". $app ."-app-transaction-*/_count",
     
                 [
                     'headers' => [
@@ -852,7 +852,7 @@ class ElasticSearchService
                 [
                     'status_text' => $stats->getReasonPhrase(),
                     'status_code' => $stats->getStatusCode(),
-                    'url' => $this->url ."*-". $env . $app ."app-transaction-*/_count"
+                    'url' => $this->url ."*-". $env . $app ."-app-transaction-*/_count"
                 ]
             );
     
@@ -864,6 +864,89 @@ class ElasticSearchService
             throw new HttpException("An error has occurred while executing your request.",400);
         }
       
+    }
+    
+    function getWatchers($appName, $envName){
+        try {
+            
+            $body = [
+                "query" => [
+                    "bool" => [
+                        "must" => [
+                            array( [ "match" => ["watcher" => $envName . "-" . $appName . "-*"]] )
+                        ]
+                    ]
+                ]
+            ];
+
+            $response = $this->httpClient->get(
+
+                $this->url . "watcher_alarms-*/_search",
+                [
+                    'auth' => $this->getAuth(),
+                    'headers' => [
+                        "Content-Type" => "application/json",
+                    ],
+                    'body' => \json_encode($body),
+                ]
+
+            );
+
+            $this->logger->notice(
+                "leadwire.es.getWatchers",
+                [
+                    'url' => $this->url . "watcher_alarms-*/_search",
+                    'verb' => 'GET',
+                    'status_code' => $response->getStatusCode(),
+                    'status_text' => $response->getReasonPhrase()
+                ]
+            );
+
+            $res =  \json_decode($response->getBody(),true);
+            return $res['hits']['hits'];
+
+        } catch (\Exception $e) {
+            $this->logger->error($e->getMessage());
+            throw new HttpException("An error has occurred while executing your request.",400);
+        }
+    }
+
+    function deleteWatcher($id){
+        try {
+            
+            $body = [
+                "query" => ["match" => ["_id" => $id] ]
+            ];
+
+            $response = $this->httpClient->post(
+
+                $this->url . "watcher_alarms-*/_delete_by_query",
+                [
+                    'auth' => $this->getAuth(),
+                    'headers' => [
+                        "Content-Type" => "application/json",
+                    ],
+                    'body' => \json_encode($body),
+                ]
+
+            );
+
+            $this->logger->notice(
+                "leadwire.es.deleteWatchers",
+                [
+                    'url' => $this->url . "watcher_alarms-*/_delete_by_query",
+                    'verb' => 'POST',
+                    'status_code' => $response->getStatusCode(),
+                    'status_text' => $response->getReasonPhrase()
+                ]
+            );
+
+            return $response->getStatusCode();
+
+        } catch (\Exception $e) {
+            $this->logger->error($e->getMessage());
+            throw new HttpException("An error has occurred while executing your request.",400);
+        }
     }
     
     /*****************************opendistro*************************************/
@@ -986,7 +1069,13 @@ class ElasticSearchService
         }
     }
 
-    function createRole(string $envName, string $applicationName, array $index_patterns, array $tenant_patterns,  array $allowed_actions, bool $isWrite): bool{
+    function createRole(string $envName, 
+                        string $applicationName, 
+                        array $index_patterns, 
+                        array $tenant_patterns,  
+                        array $allowed_actions,
+                        bool $isWrite,
+                        bool $isWatcher): bool{
         try {
 
             $status = false;
@@ -1003,11 +1092,20 @@ class ElasticSearchService
                     "allowed_actions" => $allowed_actions,
                 ])
             ];
-            if($isWrite === true){
-                $url = $this->url . "_opendistro/_security/api/roles/role_" .  $envName . "_" . $applicationName . "_write";
+
+            if($isWatcher) {
+                $url = $this->url . "_opendistro/_security/api/roles/role_" .  $envName . "_watcher_" . $applicationName;
             } else {
-                $url = $this->url . "_opendistro/_security/api/roles/role_" .  $envName . "_" . $applicationName . "_read";
+                $url = $this->url . "_opendistro/_security/api/roles/role_" .  $envName . "_" . $applicationName;
             }
+
+            if($isWrite){
+                $url = $url . "_write";
+            } else {
+                $url = $url . "_read";
+            }
+
+
 
             $response = $this->httpClient->put(
 
@@ -1090,15 +1188,21 @@ class ElasticSearchService
         }
     }
 
-    function deleteRole(string $envName, string $applicationName, bool $isWrite): bool{
+    function deleteRole(string $envName, string $applicationName, bool $isWrite, bool $isWatcher): bool{
         try {
 
             $status = false;
 
-            if($isWrite === true){
-                $url = $this->url . "_opendistro/_security/api/roles/role_" . $envName . "_" . $applicationName . "_write";
+            if($isWatcher){
+                $url = $this->url . "_opendistro/_security/api/roles/role_" . $envName . "_watcher_" . $applicationName;
             } else {
-                $url = $this->url . "_opendistro/_security/api/roles/role_" . $envName . "_" . $applicationName . "_read";
+                $url = $this->url . "_opendistro/_security/api/roles/role_" . $envName . "_" . $applicationName;
+            }
+
+            if($isWrite){
+                $url = $url . "_write";
+            } else {
+                $url = $url . "_read";
             }
 
             $response = $this->httpClient->delete(
@@ -1134,8 +1238,14 @@ class ElasticSearchService
             throw new HttpException("An error has occurred while executing your request.",400);
         }
     }
+    
 
-    function createRoleMapping(string $envName, string $applicationName, string $userName='', array $backendRole ,bool $isWrite): bool{
+    function createRoleMapping(string $envName,
+                               string $applicationName,
+                               string $userName='',
+                               array $backendRole ,
+                               bool $isWrite,
+                               bool $isWatcher): bool{
         try {
 
             $status = false;
@@ -1145,10 +1255,16 @@ class ElasticSearchService
                 "users" => array($userName)
             ];
 
+            if($isWatcher) {
+                $url = $this->url . "_opendistro/_security/api/rolesmapping/role_" . $envName . "_watcher_" . $applicationName;
+            } else {
+                $url = $this->url . "_opendistro/_security/api/rolesmapping/role_" . $envName . "_" . $applicationName;
+            }
+
             if($isWrite){
-                $url = $this->url . "_opendistro/_security/api/rolesmapping/role_" . $envName . "_" . $applicationName . "_write";
+                $url = $url . "_write";
             }else{
-                $url = $this->url . "_opendistro/_security/api/rolesmapping/role_" . $envName . "_" . $applicationName . "_read";
+                $url = $url . "_read";
             }
 
             $response = $this->httpClient->put(
@@ -1185,16 +1301,22 @@ class ElasticSearchService
         }
     }
 
-    private function patchRoleMapping(string $action, string $envName, string $applicationName, array $users, bool $isWrite): bool{
+    private function patchRoleMapping(string $action, string $envName, string $applicationName, array $users, bool $isWrite, bool $isWatcher): bool{
         try {
 
             $status = false;
+            $path = "/role_" . $envName . "_" . $applicationName;
 
-            if($isWrite === true){
-                $path = "/role_" . $envName . "_" . $applicationName . "_write";
+            if($isWatcher) {
+                $path = "/role_" . $envName . "_watcher_" . $applicationName;
+            }
+
+
+            if($isWrite === true) {
+                $path = $path . "_write";
                 $backend_roles = array("write");
             } else {
-                $path = "/role_" . $envName . "_" . $applicationName . "_read";
+                $path = $path . "_read";
                 $backend_roles = array("read");
             }
 
@@ -1242,15 +1364,21 @@ class ElasticSearchService
         }
     }
 
-    function deleteRoleMapping(string $envName, string $applicationName, bool $isWrite): bool{
+    function deleteRoleMapping(string $envName, string $applicationName, bool $isWrite, bool $isWatcher): bool{
         try {
 
             $status = false;
 
-            if($isWrite === true){
-                $url = $this->url . "_opendistro/_security/api/rolesmapping/role_" . $envName . "_" .$applicationName . "_write";
+            if($isWatcher){
+                $url = $this->url . "_opendistro/_security/api/rolesmapping/role_" . $envName . "_watcher_" .$applicationName; 
             } else {
-                $url = $this->url . "_opendistro/_security/api/rolesmapping/role_" . $envName . "_" .$applicationName . "_read";
+                $url = $this->url . "_opendistro/_security/api/rolesmapping/role_" . $envName . "_" .$applicationName; 
+            }
+
+            if($isWrite === true){
+                $url = $url . "_write";
+            } else {
+                $url = $url . "_read";
             }
 
             $response = $this->httpClient->delete(
@@ -1287,15 +1415,21 @@ class ElasticSearchService
         }
     }
 
-    private function getRoleMapping(String $envName, string $applicationName, bool $isWrite): array{
+    private function getRoleMapping(String $envName, string $applicationName, bool $isWrite, bool $isWatcher): array{
         try {
 
             $status = false;
 
-            if($isWrite === true){
-                $url = $this->url . "_opendistro/_security/api/rolesmapping/role_" . $envName . "_" . $applicationName . "_write";
+            if($isWatcher) {
+                $url = $this->url . "_opendistro/_security/api/rolesmapping/role_" . $envName . "_watcher_" . $applicationName;
             } else {
-                $url = $this->url . "_opendistro/_security/api/rolesmapping/role_" . $envName . "_" . $applicationName . "_read";            
+                $url = $this->url . "_opendistro/_security/api/rolesmapping/role_" . $envName . "_" . $applicationName;
+            }
+
+            if($isWrite === true){
+                $url = $url . "_write";
+            } else {
+                $url = $url . "_read";            
             }
 
             $response = $this->httpClient->get(
@@ -1320,11 +1454,19 @@ class ElasticSearchService
                 ]
             );
             if($response->getStatusCode() == 200){
-                if($isWrite === true){
-                    $role = "role_" . $envName . "_" . $applicationName . "_write";
-                } else {
-                    $role = "role_" . $envName . "_" . $applicationName . "_read";
+               
+                $role = "role_" . $envName . "_" . $applicationName;
+                
+                if($isWatcher){
+                    $role = "role_" . $envName . "_watcher_" . $applicationName;
                 }
+
+                if($isWrite){
+                    $role = $role . "_write";
+                } else {
+                    $role = $role . "_read";
+                }
+
                 $res = \json_decode($response->getBody());
                 $res = (array)$res->$role;
                 return $res["users"];
@@ -1338,9 +1480,14 @@ class ElasticSearchService
         }
     }
 
-    public function updateRoleMapping(string $action, string $envName, User $user, string $applicationName, bool $isWrite){
+    public function updateRoleMapping(string $action,
+                                      string $envName, 
+                                      User $user, 
+                                      string $applicationName,
+                                      bool $isWrite,
+                                      bool $isWatcher){
 
-        $users = $this->getRoleMapping($envName, $applicationName, $isWrite);
+        $users = $this->getRoleMapping($envName, $applicationName, $isWrite, $isWatcher);
 
         switch ($action) {
             case "add":
@@ -1355,7 +1502,7 @@ class ElasticSearchService
                 }
                 break;
             }
-        return $this->patchRoleMapping("replace", $envName, $applicationName, $users, $isWrite);
+        return $this->patchRoleMapping("replace", $envName, $applicationName, $users, $isWrite, $isWatcher);
     }
 
     function createAlert(string $appName, string $envName, string $type ): bool{

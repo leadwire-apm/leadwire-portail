@@ -147,6 +147,22 @@
                     return $http.get(
                         CONFIG.BASE_URL + 'api/app/' + appName + '/' + envName + '/documents',
                     );
+                },
+                /**
+                * 
+                */
+                getApplicationWatchers: function (appName, envName) {
+                    return $http.get(
+                        CONFIG.BASE_URL + 'api/app/' + appName + '/' + envName + '/watchers',
+                    );
+                },
+                /**
+               * 
+               */
+                deleteApplicationWatcher: function (id) {
+                    return $http.get(
+                        CONFIG.BASE_URL + 'api/app/' + id + '/watcher',
+                    );
                 }
             };
         });

@@ -45,6 +45,35 @@ class AccessLevelController extends Controller
         }
     }
 
+
+    /**
+     * @Route("/delete", methods="DELETE")
+     *
+     * @param Request            $request
+     * @param AccessLevelService $accessLevelService
+     *
+     * @return Response
+     */
+    public function deleteAction(Request $request, AccessLevelService $accessLevelService)
+    {
+        try {
+            $acl = $request->getContent();
+            $user = $accessLevelService->delete(json_decode($acl, true));
+
+            $payload = [
+                "id" => $user->getId(),
+                "name" => $user->getName(),
+                "username" => $user->getUsername(),
+                "email" => $user->getEmail(),
+                "acls" => $user->acl(),
+            ];
+
+            return $this->renderResponse($payload, Response::HTTP_OK, []);
+        } catch (\Exception $e) {
+            return $this->exception($e->getMessage(), 400);
+        }
+    }
+
     /**
      * exception
      *
