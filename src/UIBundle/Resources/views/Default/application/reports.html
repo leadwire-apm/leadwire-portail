@@ -47,7 +47,8 @@
                         ng-click="ctrl.getBlob(watcher._source.attachment)" class="btn btn-info">
                         <i class="fa fa-eye"></i>
                     </a>
-                    <a title="Delete" data-placement="top" data-toggle="tooltip" ng-click="" class="btn btn-danger">
+                    <a title="Delete" data-placement="top" data-toggle="tooltip"
+                        ng-click="ctrl.deleteWatcher(watcher._source._id, $index)" class="btn btn-danger">
                         <i class="fa fa-trash"></i>
                     </a>
                 </td>

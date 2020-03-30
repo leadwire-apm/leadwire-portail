@@ -1,0 +1,21 @@
+<div class="no-more-tables row">
+    <div class="col-sm-6"></div>
+    <div class="col-sm-3">
+        <h6>Environment select</h6>
+    </div>
+    <div class="col-sm-3">
+        <select data-ng-model="ctrl.selectedEnvironment" class="form-control" ng-change="ctrl.setWatcherLink()">
+            <option ng-selected="ctrl.selectedEnvironment == environment.id"
+                ng-repeat="environment in ctrl.getEnvironmentsForReport()" value="[[environment.id]]">
+                [[environment.name]]
+            </option>
+        </select>
+
+    </div>
+
+    <div ng-if="ctrl.watcherLink">
+        <iframe scrolling="yes" ng-src="[[ctrl.watcherLink]]" frameborder="0" iframe-set-dimensions-onload></iframe>
+    </div>
+
+
+</div>

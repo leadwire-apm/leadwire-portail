@@ -482,7 +482,7 @@ class ApplicationController extends Controller
         }
     }
 
-        /**
+    /**
      * @Route("/{app}/{env}/watchers", methods="GET")
      *
      * @param Request $request
@@ -498,4 +498,21 @@ class ApplicationController extends Controller
             return $this->renderResponse(['message' => $e->getMessage()], Response::HTTP_NOT_ACCEPTABLE);
         }
     }
+
+    /**
+     * @Route("/{id}/watcher", methods="GET")
+     *
+     * @param Request $request
+     * @param ElasticSearchService $esService
+     * @param string $id
+     */
+    public function deleteApplicationWatcher( Request $request, ElasticSearchService $esService, string $id){
+        try{
+            $data = $esService->deleteWatcher($id);
+            return $this->renderResponse($data);
+        } catch (MongoDuplicateKeyException $e) {
+            return $this->renderResponse(['message' => $e->getMessage()], Response::HTTP_NOT_ACCEPTABLE);
+        }
+    }
 }
+

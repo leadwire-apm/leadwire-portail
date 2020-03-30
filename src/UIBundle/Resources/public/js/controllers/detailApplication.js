@@ -13,6 +13,7 @@
             'AccessLevelService',
             'EnvironmentService',
             'ApplicationService',
+            '$sce',
             applicationDetailCtrlFN,
         ]);
 
@@ -27,18 +28,31 @@
         $localStorage,
         AccessLevelService,
         EnvironmentService,
-        ApplicationService
+        ApplicationService,
+        $sce
     ) {
         var vm = this;
 
         vm.LOGIN_METHOD = CONFIG.LOGIN_METHOD;
         vm.selectedEnvironment = $localStorage.selectedEnvId.slice(0);
-
         vm.ownerTitle = "Owner Github :";
 
         if (vm.LOGIN_METHOD === 'proxy' || vm.LOGIN_METHOD === 'login') {
             vm.ownerTitle = "Owner Login Id :"
         }
+
+        vm.setWatcherLink = function () {
+            var envName = "staging";
+
+            vm.environments.forEach(element => {
+                if (element.id === vm.selectedEnvironment) {
+                    envName = element.name;
+                }
+            });
+            if (vm.selectedEnvironment && vm.application && vm.application.name)
+                vm.watcherLink = $sce.trustAsResourceUrl("https://kibana.leadwire.io/app/sentinl?securitytenant=" + envName + "-watcher-" + vm.application.name + "#/?embed=true");
+        };
+
 
         vm.getBlob = function (data) {
             var a = document.createElement("a");
@@ -69,6 +83,25 @@
                     toastr.success(MESSAGES_CONSTANTS.ERROR);
                 });
         }
+
+        vm.deleteWatcher = function (id, ind) {
+
+            swal(MESSAGES_CONSTANTS.SWEET_ALERT_VALIDATION())
+                .then(function (willDelete) {
+                    if (willDelete) {
+                        ApplicationService.deleteApplicationWatcher(id)
+                            .then(function (response) {
+                                vm.watchers = vm.watchers.filter((_, index) => index !== ind)
+                                toastr.success(MESSAGES_CONSTANTS.SUCCESS);
+                            }).catch(function (error) {
+                                toastr.success(MESSAGES_CONSTANTS.ERROR);
+                            });
+                    } else {
+                        swal.close();
+                    }
+                });
+        }
+
 
         vm.hasReportsRule = function () {
             var access = false;

@@ -795,11 +795,7 @@ class ElasticSearchService
                 "query" => [
                     "bool" => [
                         "must" => [
-                            array(
-                                [
-                                    "match" => ["watcher" => $envName . "-" . $appName . "-*"]
-                                ]
-                            )
+                            array( [ "match" => ["watcher" => $envName . "-" . $appName . "-*"]] )
                         ]
                     ]
                 ]
@@ -829,8 +825,45 @@ class ElasticSearchService
             );
 
             $res =  \json_decode($response->getBody(),true);
-            $this->logger->error("",$res['hits']['hits']);
             return $res['hits']['hits'];
+
+        } catch (\Exception $e) {
+            $this->logger->error($e->getMessage());
+            throw new HttpException("An error has occurred while executing your request.",400);
+        }
+    }
+
+    function deleteWatcher($id){
+        try {
+            
+            $body = [
+                "query" => ["match" => ["_id" => $id] ]
+            ];
+
+            $response = $this->httpClient->post(
+
+                $this->url . "watcher_alarms-*/_delete_by_query",
+                [
+                    'auth' => $this->getAuth(),
+                    'headers' => [
+                        "Content-Type" => "application/json",
+                    ],
+                    'body' => \json_encode($body),
+                ]
+
+            );
+
+            $this->logger->notice(
+                "leadwire.es.deleteWatchers",
+                [
+                    'url' => $this->url . "watcher_alarms-*/_delete_by_query",
+                    'verb' => 'POST',
+                    'status_code' => $response->getStatusCode(),
+                    'status_text' => $response->getReasonPhrase()
+                ]
+            );
+
+            return $response->getStatusCode();
 
         } catch (\Exception $e) {
             $this->logger->error($e->getMessage());
