@@ -159,58 +159,53 @@
             DASHBOARD: [],
             SETTINGS: [
                 {
-                    route: 'app.user',
-                    icon: 'fa fa-user',
-                    label: 'Profile',
+                    route: 'app.applicationsList',
+                    icon: 'fas fa-window-restore',
+                    label: 'Applications',
                 },
                 {
-                    route: 'app.applicationsList',
-                    icon: 'fa fa-desktop',
-                    label: 'Applications',
+                    route: 'app.user',
+                    icon: 'fas fa-user-tie',
+                    label: 'Profile',
                 },
             ],
             MANAGEMENT: [
+
+                {
+                    route: 'app.management.applications',
+                    abstractRoute: 'app.management',
+                    icon: 'fas fa-window-restore',
+                    label: 'Applications',
+                },
                 {
                     route: 'app.management.users',
                     abstractRoute: 'app.management',
                     icon: 'fas fa-user-cog',
-                    label: 'Manage Users',
-                },
-                {
-                    route: 'app.management.applications',
-                    abstractRoute: 'app.management',
-                    icon: 'fa fa-desktop',
-                    label: 'Manage applications',
-                },
-                {
-                    route: 'app.management.applicationTypes',
-                    abstractRoute: 'app.management',
-                    icon: 'fa fa-desktop',
-                    label: 'Manage application types',
-                },
-                {
-                    route: 'app.management.monitoringSets',
-                    abstractRoute: 'app.management',
-                    icon: 'fa fa-desktop',
-                    label: 'Manage monitoring sets',
-                },
-                {
-                    route: 'app.management.templates',
-                    abstractRoute: 'app.management',
-                    icon: 'fas fa-file-code',
-                    label: 'Manage templates',
+                    label: 'Users',
                 },
                 {
                     route: 'app.management.environmentList',
                     abstractRoute: 'app.management',
                     icon: 'fas fa-sitemap',
-                    label: 'Manage Environment',
+                    label: 'Environment',
+                },
+                {
+                    route: 'app.management.alerts',
+                    abstractRoute: 'app.management',
+                    icon: 'fas fa-exclamation-triangle',
+                    label: 'Alerts'
+                },
+                {
+                    route: 'app.management.anomaly',
+                    abstractRoute: 'app.management',
+                    icon: 'fas fa-heartbeat',
+                    label: 'Anomaly Detectors ',
                 },
                 {
                     route: 'app.management.reports',
                     abstractRoute: 'app.management',
                     icon: 'fa fa-th-list',
-                    label: 'Manage reports',
+                    label: 'Reports',
                     params: {
                         ls: {
                             tenant: 'user.userIndex'
@@ -218,28 +213,35 @@
                     }
                 },
                 {
-                    route: 'app.management.alerts',
+                    route: 'app.management.applicationTypes',
                     abstractRoute: 'app.management',
-                    icon: 'fas fa-exclamation-triangle',
-                    label: 'Manage alerts'
+                    icon: 'fas fa-tools',
+                    label: 'Application types',
                 },
+                {
+                    route: 'app.management.monitoringSets',
+                    abstractRoute: 'app.management',
+                    icon: 'fa fa-desktop',
+                    label: 'Monitoring sets',
+                },
+                {
+                    route: 'app.management.templates',
+                    abstractRoute: 'app.management',
+                    icon: 'fas fa-file-code',
+                    label: 'Templates',
+                },
+
                 {
                     route: 'app.management.index',
                     abstractRoute: 'app.management',
                     icon: 'fa fa-cogs',
-                    label: 'Index management'
+                    label: 'Index state management'
                 },
                 {
                     route: 'app.management.security',
                     abstractRoute: 'app.management',
                     icon: 'fas fa-shield-alt',
                     label: 'Security ',
-                },
-                {
-                    route: 'app.management.anomaly',
-                    abstractRoute: 'app.management',
-                    icon: 'fas fa-thermometer-half',
-                    label: 'Anomaly Detectors ',
                 }
             ],
         });
