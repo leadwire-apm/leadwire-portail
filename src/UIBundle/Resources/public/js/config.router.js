@@ -435,7 +435,7 @@ angular.module('leadwireApp')
                     controllerAs: 'ctrl',
                 })
                 .state('app.management.editTemplate', {
-                    url: '/templates/:id/edit',
+                    url: '/templates/:id/:name/:type/edit',
                     templateUrl: 'management/templates/edit.html',
                     resolve: {
                         permissions: function (RouteGuard) {
