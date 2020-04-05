@@ -41,7 +41,8 @@
                                     </ul>
                                 </td>
                                 <td data-title="Actions" data-label="Actions" class="text-center">
-                                    <a class="btn btn-warning" ui-sref="app.management.editTemplate({id:template.id})">
+                                    <a class="btn btn-warning"
+                                        ui-sref="app.management.editTemplate({id:template.id,name:template.name,type:template.type})">
                                         <i class="fas fa-pencil-alt"></i>
                                     </a>
                                     <button class="btn bg-red" ng-disabled="template.attachedMonitoringSets.length > 0"

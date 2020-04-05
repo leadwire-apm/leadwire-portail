@@ -15,7 +15,7 @@
      * Handle add new template logic
      *
      */
-    function EditTemplateCtrlFN (
+    function EditTemplateCtrlFN(
         TemplateService,
         ApplicationTypeFactory,
         MonitoringSetFactory,
@@ -34,19 +34,19 @@
             vm.ui[key] = !vm.ui[key];
         };
 
-        vm.getTemplateTypes = function() {
-            TemplateService.getTypes().then(function(types){vm.types = types;});
+        vm.getTemplateTypes = function () {
+            TemplateService.getTypes().then(function (types) { vm.types = types; });
         };
 
         vm.getTemplate = function (id) {
             vm.flipActivityIndicator('isLoading');
             TemplateService.find(id)
-                .then(function (template) {
-                    if (template === null) {
+                .then(function (content) {
+                    if (content === null) {
                         throw new Error();
                     }
                     vm.flipActivityIndicator('isLoading');
-                    vm.template = template;
+                    vm.template.content = content;
                 })
                 .catch(function () {
                     vm.flipActivityIndicator('isLoading');
@@ -69,7 +69,6 @@
         };
 
         vm.init = function () {
-            var templateId = $state.params.id;
             vm = angular.extend(vm, {
                 ui: {
                     isLoading: false,
@@ -80,8 +79,11 @@
                         },
                     },
                 },
-                templateId: templateId,
-                template: null,
+                template: {
+                    id: $state.params.id,
+                    name: $state.params.name,
+                    type: $state.params.type
+                },
                 applicationTypes: [],
                 monitoringSets: [],
                 types: [],
@@ -94,7 +96,7 @@
             MonitoringSetFactory.findAll().then(function (response) {
                 vm.monitoringSets = response.data;
             });
-            vm.getTemplate(templateId);
+            vm.getTemplate(vm.template.id);
         };
 
     }
