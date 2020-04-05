@@ -41,12 +41,12 @@
         vm.getTemplate = function (id) {
             vm.flipActivityIndicator('isLoading');
             TemplateService.find(id)
-                .then(function (content) {
-                    if (content === null) {
+                .then(function (data) {
+                    if (data === null) {
                         throw new Error();
                     }
                     vm.flipActivityIndicator('isLoading');
-                    vm.template.content = content;
+                    vm.template.content = data.content;
                 })
                 .catch(function () {
                     vm.flipActivityIndicator('isLoading');
