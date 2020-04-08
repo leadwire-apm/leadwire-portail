@@ -390,4 +390,42 @@ class KibanaService
             ]
         );
     }
+
+    /**
+    *
+     * @param string $id
+     * @param string $index
+     *
+     * @return bool
+     */
+    public function deleteReport(string $id, string $ind)
+    {
+        $authorization = $this->jwtHelper->encode($this->kibanaAdminUsername, $this->kibanaAdminUuid);
+        $headers = [
+            'kbn-xsrf' => true,
+            'Content-Type' => 'application/json',
+            'Authorization' => "Bearer $authorization",
+        ];
+
+        $response = $this->httpClient->delete(
+            $this->url . "api/sentinl/report/$id/$ind",
+            [
+                'headers' => $headers,
+            ]
+        );
+
+        $this->logger->notice(
+            "leadwire.kibana.deleteReport",
+            [
+                'url' => $this->url . "api/sentinl/report/$id/$index",
+                'verb' => 'DELETE',
+                'headers' => $headers,
+                'status_code' => $response->getStatusCode(),
+                'status_text' => $response->getReasonPhrase(),
+            ]
+        );
+
+        return $response->getStatusCode() === Response::HTTP_OK;
+    }
+
 }
