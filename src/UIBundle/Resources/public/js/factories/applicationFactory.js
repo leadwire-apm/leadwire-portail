@@ -157,11 +157,11 @@
                     );
                 },
                 /**
-               * 
-               */
-                deleteApplicationWatcher: function (id) {
+                * 
+                */
+                deleteApplicationWatcher: function (id, index) {
                     return $http.get(
-                        CONFIG.BASE_URL + 'api/app/' + id + '/watcher',
+                        CONFIG.BASE_URL + 'api/app/' + id + '/' + index + '/watcher',
                     );
                 }
             };

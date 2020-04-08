@@ -500,15 +500,16 @@ class ApplicationController extends Controller
     }
 
     /**
-     * @Route("/{id}/watcher", methods="GET")
+     * @Route("/{id}/{ind}/watcher", methods="GET")
      *
      * @param Request $request
-     * @param ElasticSearchService $esService
+     * @param KibanaService $KibanaService
      * @param string $id
+     * @param string $ind
      */
-    public function deleteApplicationWatcher( Request $request, ElasticSearchService $esService, string $id){
+    public function deleteApplicationWatcher( Request $request, KibanaService $KibanaService, string $id, string $ind){
         try{
-            $data = $esService->deleteWatcher($id);
+            $data = $KibanaService->deleteReport($id, $ind);
             return $this->renderResponse($data);
         } catch (MongoDuplicateKeyException $e) {
             return $this->renderResponse(['message' => $e->getMessage()], Response::HTTP_NOT_ACCEPTABLE);

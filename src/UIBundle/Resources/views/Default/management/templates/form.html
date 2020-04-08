@@ -15,7 +15,7 @@
 
         <select name="type" placeholder="Template Type" class="form-control" data-ng-model="ctrl.template.type"
             autocomplete="false" required>
-            <option ng-selected="ctrl.template.type === [[type]]" ng-repeat="type in ctrl.types" value="[[type]]">
+            <option ng-selected="ctrl.template.type === type" ng-repeat="type in ctrl.types" value="[[type]]">
                 [[type]]
             </option>
         </select>

@@ -84,12 +84,12 @@
                 });
         }
 
-        vm.deleteWatcher = function (id, ind) {
+        vm.deleteWatcher = function (_id, _index, ind) {
 
             swal(MESSAGES_CONSTANTS.SWEET_ALERT_VALIDATION())
                 .then(function (willDelete) {
                     if (willDelete) {
-                        ApplicationService.deleteApplicationWatcher(id)
+                        ApplicationService.deleteApplicationWatcher(_id, _index)
                             .then(function (response) {
                                 vm.watchers = vm.watchers.filter((_, index) => index !== ind)
                                 toastr.success(MESSAGES_CONSTANTS.SUCCESS);

@@ -162,8 +162,8 @@
                     });
             }
 
-            service.deleteApplicationWatcher = function (id) {
-                return ApplicationFactory.deleteApplicationWatcher(id)
+            service.deleteApplicationWatcher = function (id, _index) {
+                return ApplicationFactory.deleteApplicationWatcher(id, _index)
                     .then(function (response) {
                         return response.data;
                     })
