@@ -42,7 +42,8 @@
                 vm.applications = response.data;
                 vm.applications.forEach(application => {
                     ApplicationService.getApplicationDocumentsCount(application.name).then(function (response) {
-                        application.count = vm.abbreviateNumber(response.count);
+                        if(response)
+                            application.count = vm.abbreviateNumber(response.count);
                     })
                 });
 

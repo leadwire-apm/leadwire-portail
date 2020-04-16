@@ -11,7 +11,7 @@
                 );
             },
             deleteAccess: function (acl) {
-                return $http.delete(
+                return $http.post(
                     CONFIG.BASE_URL + 'api/access-level/delete',
                     acl
                 );

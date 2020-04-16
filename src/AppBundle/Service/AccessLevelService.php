@@ -99,7 +99,7 @@ class AccessLevelService
      *
      * @return User
      */
-    private function delete($payload)
+    public function delete($payload)
     {
         $env = $payload['env'];
         $app = $payload['app'];
@@ -117,6 +117,7 @@ class AccessLevelService
         }  
 
         $this->userManager->update($user);
+        return $user;
     }
 
     /**

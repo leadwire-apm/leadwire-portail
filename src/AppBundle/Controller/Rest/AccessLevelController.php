@@ -47,7 +47,7 @@ class AccessLevelController extends Controller
 
 
     /**
-     * @Route("/delete", methods="DELETE")
+     * @Route("/delete", methods="POST")
      *
      * @param Request            $request
      * @param AccessLevelService $accessLevelService
