@@ -1049,7 +1049,7 @@ class ElasticSearchService
                 "dls" => "",
                 "fls" => array(),
                 "masked_fields" => array(),
-                "allowed_actions" => array("read")]),
+                "allowed_actions" => array("kibana_all_read")]),
                 "tenant_permissions" => array([
                     "tenant_patterns" => $tenant_patterns,
                     "allowed_actions" => $allowed_actions,
@@ -1277,10 +1277,10 @@ class ElasticSearchService
 
             if($isWrite === true) {
                 $path = $path . "_write";
-                $backend_roles = array("write");
+                $backend_roles = array("kibana_all_write");
             } else {
                 $path = $path . "_read";
-                $backend_roles = array("read");
+                $backend_roles = array("kibana_all_read");
             }
 
             $body = array(

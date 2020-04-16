@@ -114,12 +114,12 @@ Load default Application Type. Insert template for Kibana and more..'
             $kibana->makeDefaultIndex($sharedIndex, 'default');
             
             //create role for application
-            $es->createRole("staging", $application->getName(), array($patternIndex), array($sharedIndex, $appIndex), array("read"), false, false);
-            $es->createRoleMapping("staging", $application->getName(), 'demo', array('read'),  false, false);
+            $es->createRole("staging", $application->getName(), array($patternIndex), array($sharedIndex, $appIndex), array("kibana_all_read"), false, false);
+            $es->createRoleMapping("staging", $application->getName(), 'demo', array('kibana_all_read'),  false, false);
 
             //create role for watcher
-            $es->createRole("staging", $application->getName(), array(), array($watechrIndex), array("write"), true, true);
-            $es->createRoleMapping("staging", $application->getName(), 'demo', array('write'),  true, true);
+            $es->createRole("staging", $application->getName(), array(), array($watechrIndex), array("kibana_all_write"), true, true);
+            $es->createRoleMapping("staging", $application->getName(), 'demo', array('kibana_all_write'),  true, true);
         }
 
         if ($stripeEnabled === true) {

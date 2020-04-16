@@ -455,14 +455,14 @@ class ApplicationService
                 $this->kibanaService->loadDefaultIndex($sharedIndex, 'default');
                 $this->kibanaService->makeDefaultIndex($sharedIndex, 'default');
 
-                $this->es->createRole($envName, $application->getName(), array($patternIndex), array($sharedIndex, $appIndex), array("read"), false, false);
-                $this->es->createRole($envName, $application->getName(), array($patternIndex), array($sharedIndex, $appIndex), array("write"), true, false);
-                $this->es->createRole($envName, $application->getName(), array(), array($watechrIndex), array("write"), true, true);
+                $this->es->createRole($envName, $application->getName(), array($patternIndex), array($sharedIndex, $appIndex), array("kibana_all_read"), false, false);
+                $this->es->createRole($envName, $application->getName(), array($patternIndex), array($sharedIndex, $appIndex), array("kibana_all_write"), true, false);
+                $this->es->createRole($envName, $application->getName(), array(), array($watechrIndex), array("kibana_all_write"), true, true);
 
 
-                $this->es->createRoleMapping($envName, $application->getName(), $user->getName(), array('read'), false, false);
-                $this->es->createRoleMapping($envName, $application->getName(), $user->getName(), array('write'), true, false); 
-                $this->es->createRoleMapping($envName, $application->getName(), $user->getName(), array('write'), true, true); 
+                $this->es->createRoleMapping($envName, $application->getName(), $user->getName(), array('kibana_all_read'), false, false);
+                $this->es->createRoleMapping($envName, $application->getName(), $user->getName(), array('kibana_all_write'), true, false); 
+                $this->es->createRoleMapping($envName, $application->getName(), $user->getName(), array('kibana_all_write'), true, true); 
   
             }
         }
