@@ -460,9 +460,9 @@ class ApplicationService
                 $this->es->createRole($envName, $application->getName(), array(), array($watechrIndex), array("kibana_all_write"), true, true);
 
 
-                $this->es->createRoleMapping($envName, $application->getName(), $user->getName(), array('kibana_all_read'), false, false);
-                $this->es->createRoleMapping($envName, $application->getName(), $user->getName(), array('kibana_all_write'), true, false); 
-                $this->es->createRoleMapping($envName, $application->getName(), $user->getName(), array('kibana_all_write'), true, true); 
+                $this->es->createRoleMapping($envName, $application->getName(), $user->getName(), false, false);
+                $this->es->createRoleMapping($envName, $application->getName(), $user->getName(), true, false); 
+                $this->es->createRoleMapping($envName, $application->getName(), $user->getName(), true, true); 
   
             }
         }

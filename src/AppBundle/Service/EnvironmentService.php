@@ -177,9 +177,9 @@ class EnvironmentService
                 $this->es->createRole($envName, $application->getName(), array($patternIndex), array($sharedIndex, $appIndex), array("kibana_all_write"), true, false);
                 $this->es->createRole($envName, $application->getName(), array(), array($watechrIndex), array("kibana_all_write"), true, true);
 
-                $this->es->createRoleMapping($envName, $application->getName(), '', array('kibana_all_read'), false, false);
-                $this->es->createRoleMapping($envName, $application->getName(), '', array('kibana_all_write'), true, false);
-                $this->es->createRoleMapping($envName, $application->getName(), '', array('kibana_all_write'), true, true);
+                $this->es->createRoleMapping($envName, $application->getName(), '', false, false);
+                $this->es->createRoleMapping($envName, $application->getName(), '', true, false);
+                $this->es->createRoleMapping($envName, $application->getName(), '', true, true);
             }
         }
 

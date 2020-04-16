@@ -1206,7 +1206,6 @@ class ElasticSearchService
     function createRoleMapping(string $envName,
                                string $applicationName,
                                string $userName='',
-                               array $backendRole ,
                                bool $isWrite,
                                bool $isWatcher): bool{
         try {
@@ -1214,7 +1213,6 @@ class ElasticSearchService
             $status = false;
 
             $role = [
-                "backend_roles" => $backendRole,
                 "users" => array($userName)
             ];
 
@@ -1277,10 +1275,8 @@ class ElasticSearchService
 
             if($isWrite === true) {
                 $path = $path . "_write";
-                $backend_roles = array("kibana_all_write");
             } else {
                 $path = $path . "_read";
-                $backend_roles = array("kibana_all_read");
             }
 
             $body = array(
@@ -1288,7 +1284,6 @@ class ElasticSearchService
                 "path" => $path,
                 "value" => [
                     "users" => $users,
-                    "backend_roles" => $backend_roles
                 ]]
             );
 
