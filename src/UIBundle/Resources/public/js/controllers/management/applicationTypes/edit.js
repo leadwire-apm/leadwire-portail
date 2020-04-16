@@ -9,7 +9,7 @@
             'toastr',
             'socket',
             '$timeout',
-            '$rootScopre',
+            '$rootScope',
             EditApplicationTypeControllerCtrlFN,
         ]);
 
