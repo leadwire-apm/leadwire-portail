@@ -1,0 +1,120 @@
+<form class="form-horizontal bordered-group" name="watcherForm" ng-submit="ctrl.ok()" role="form">
+    <div class="modal-body">
+        <div class="main">
+            <div class="container">
+                <div class="form-group">
+                    <label class="col-sm-2 control-label" for="titre">Titre *</label>
+                    <div class="col-sm-10">
+
+                        <input id="titre" name="titre" placeholder="Watcher titre" type="text" class="form-control"
+                            data-ng-model="ctrl.watcher.titre" ng-maxlength="32" autocomplete="false" lowercase-only
+                            required>
+                        <span class="text-red"
+                            ng-show="watcherForm.titre.$error.required && !watcherForm.titre.$pristine">
+                            This field is required</span>
+                        <span class="text-red"
+                            ng-show="watcherForm.titre.$error.maxlength && !watcherForm.titre.$pristine">
+                            The text entered exceeds the maximum length</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label" for="schedule">Schedule *</label>
+                    <div class="col-sm-10">
+
+                        <input id="schedule" name="schedule" placeholder="Watcher schedule" type="text" class="form-control"
+                            data-ng-model="ctrl.watcher.schedule" ng-maxlength="32" autocomplete="false" lowercase-only
+                            required>
+                        <span class="text-red"
+                            ng-show="watcherForm.schedule.$error.required && !watcherForm.schedule.$pristine">
+                            This field is required</span>
+                        <span class="text-red"
+                            ng-show="watcherForm.schedule.$error.maxlength && !watcherForm.schedule.$pristine">
+                            The text entered exceeds the maximum length</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label" for="schedule">Subject *</label>
+                    <div class="col-sm-10">
+
+                        <input id="subject" name="subject" placeholder="Watcher subject" type="text" class="form-control"
+                            data-ng-model="ctrl.watcher.subject" ng-maxlength="32" autocomplete="false" lowercase-only
+                            required>
+                        <span class="text-red"
+                            ng-show="watcherForm.subject.$error.required && !watcherForm.subject.$pristine">
+                            This field is required</span>
+                        <span class="text-red"
+                            ng-show="watcherForm.subject.$error.maxlength && !watcherForm.subject.$pristine">
+                            The text entered exceeds the maximum length</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label" for="schedule">to *</label>
+                    <div class="col-sm-10">
+
+                        <input id="to" name="to" placeholder="email@host.fr, email@host.fr" type="text" class="form-control"
+                            data-ng-model="ctrl.watcher.to" ng-maxlength="32"
+                            required>
+                        <span class="text-red"
+                            ng-show="watcherForm.to.$error.required && !watcherForm.to.$pristine">
+                            This field is required</span>
+                        <span class="text-red"
+                            ng-show="watcherForm.to.$error.maxlength && !watcherForm.to.$pristine">
+                            The text entered exceeds the maximum length</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label" for="schedule">Body *</label>
+                    <div class="col-sm-10">
+
+                        <input id="body" name="body" placeholder="Watcher body" type="text" class="form-control"
+                            data-ng-model="ctrl.watcher.body" ng-maxlength="32" autocomplete="false" lowercase-only
+                            required>
+                        <span class="text-red"
+                            ng-show="watcherForm.body.$error.required && !watcherForm.body.$pristine">
+                            This field is required</span>
+                        <span class="text-red"
+                            ng-show="watcherForm.body.$error.maxlength && !watcherForm.body.$pristine">
+                            The text entered exceeds the maximum length</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label" for="schedule">Resolution *</label>
+                    <div class="col-sm-10">
+
+                        <input id="res" name="res" placeholder="Watcher res" type="text" class="form-control"
+                            data-ng-model="ctrl.watcher.res" ng-maxlength="32" autocomplete="false" lowercase-only
+                            required>
+                        <span class="text-red"
+                            ng-show="watcherForm.res.$error.required && !watcherForm.res.$pristine">
+                            This field is required</span>
+                        <span class="text-red"
+                            ng-show="watcherForm.res.$error.maxlength && !watcherForm.res.$pristine">
+                            The text entered exceeds the maximum length</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label" for="schedule">Delay *</label>
+                    <div class="col-sm-10">
+
+                        <input id="delay" name="delay" placeholder="10000" type="number" class="form-control"
+                            data-ng-model="ctrl.watcher.delay" ng-maxlength="9999999" ng-minlength="1"
+                            required>
+                        <span class="text-red"
+                            ng-show="watcherForm.delay.$error.required && !watcherForm.delay.$pristine">
+                            This field is required</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary" type="submit" ng-disabled="watcherForm.$invalid">OK</button>
+        <button class="btn btn-warning" ng-click="ctrl.cancel()">Cancel</button>
+    </div>
+</form>

@@ -20,7 +20,7 @@
         </tab>
         <tab heading="Watcher" ng-if="user.id == ctrl.application.owner.id || ctrl.hasReportsRule()"
             ng-click="ctrl.setWatcherLink()">
-            <section class="widget bg-white post-comments" ng-include="'application/watchers.html'">
+            <section class="widget bg-white post-comments" ng-include="'application/watcher/list.html'">
             </section>
         </tab>
         <tab heading="Installation" ng-if="user.id == ctrl.application.owner.id  && ctrl.LOGIN_METHOD === 'github'">

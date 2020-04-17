@@ -14,6 +14,7 @@
             'EnvironmentService',
             'ApplicationService',
             '$sce',
+            '$modal',
             applicationDetailCtrlFN,
         ]);
 
@@ -29,7 +30,8 @@
         AccessLevelService,
         EnvironmentService,
         ApplicationService,
-        $sce
+        $sce,
+        $modal
     ) {
         var vm = this;
 
@@ -290,6 +292,16 @@
                 })
                 .catch(function (error) {
                 });
+        }
+
+        vm.addWatcher = function(){
+            $modal.open({
+                size: 'lg',
+                templateUrl: 'application/watcher/add.html',
+                controller: 'AddWatcherCtrl',
+                controllerAs: 'ctrl'
+            });
+
         }
 
         vm.onLoad = function () {

@@ -162,8 +162,11 @@
 <script type="text/ng-template" id="application/reports.html">
     {% include 'application/reports.html' %}
 </script>
-<script type="text/ng-template" id="application/watchers.html">
-    {% include 'application/watchers.html' %}
+<script type="text/ng-template" id="application/watcher/list.html">
+    {% include 'application/watcher/list.html' %}
+</script>
+<script type="text/ng-template" id="application/watcher/add.html">
+    {% include 'application/watcher/add.html' %}
 </script>
 <script type="text/ng-template" id="application/edit.html">
     {% include 'application/edit.html' %}
@@ -553,6 +556,10 @@
         'bundles/ui/js/controllers/billingList.js'
         'bundles/ui/js/controllers/dashboard.js'
         'bundles/ui/js/controllers/editPaymentMethod.js'
+
+        'bundles/ui/js/controllers/watcher/add.js'
+
+
         'bundles/ui/js/config.router.js'
         'bundles/ui/js/lib/custom.js'
         'bundles/ui/js/lib/jspdf.min.js'
