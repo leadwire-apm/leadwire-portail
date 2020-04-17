@@ -3,11 +3,9 @@
         <a class="btn btn-primary pull-right mb10" ng-click="ctrl.addWatcher()"><i class="fa fa-plus-circle"></i>
             Watcher</a>
     </div>
-    <div class="col-sm-3"></div>
-    <div class="col-sm-3">
-        <h6>Environment select</h6>
-    </div>
-    <div class="col-sm-3">
+    <div class="col-sm-5"></div>
+    <div class="col-sm-4">
+        <label class="control-label" for="titre">Environment select</label>
         <select data-ng-model="ctrl.selectedEnvironment" class="form-control" ng-change="ctrl.setWatcherLink()">
             <option ng-selected="ctrl.selectedEnvironment == environment.id"
                 ng-repeat="environment in ctrl.getEnvironmentsForReport()" value="[[environment.id]]">
