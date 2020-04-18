@@ -295,12 +295,14 @@
         }
 
         vm.addWatcher = function(){
-            $modal.open({
+            var modal = $modal.open({
                 size: 'lg',
                 templateUrl: 'application/watcher/add.html',
                 controller: 'AddWatcherCtrl',
                 controllerAs: 'ctrl'
             });
+
+            modal.appId = vm.application.id;
 
         }
 

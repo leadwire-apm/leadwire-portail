@@ -1,17 +1,55 @@
 (function (angular) {
     angular.module('leadwireApp')
-        .controller('AddWatcherCtrl', ['$modalInstance', AddWatcherCtrl]);
+        .directive('emailValidator', emailValidator)
+        .controller('AddWatcherCtrl', ['$modalInstance', 'DashboardService', '$scope', AddWatcherCtrl]);
 
     /**
      * Handle clustyer stats
      *
      */
-    function AddWatcherCtrl($modalInstance) {
+    function AddWatcherCtrl($modalInstance, DashboardService, $scope) {
+
         var vm = this;
-    
-        vm.watcher = {'subject': 'Lead Wire Website Report'};
+        var _url = "";
+
+        vm.ui = {
+            isSaving: false,
+            isLoading: false,
+        };
+        vm.dashboardsList = [];
+        vm.ui.isLoading = true;
+        vm.watcher = { 
+            'subject': 'Lead Wire Website Report',
+            'delay': 10000,
+            "res": "1280x900",
+            "body" : "LEADWIRE Screenshot Report"
+        };
+
+        /**
+         * get dashboards list
+         */
+        DashboardService.fetchDashboardsListByAppId($modalInstance.appId).then(function (dashboardsList) {
+            Object.keys(dashboardsList).forEach(function (key) {
+                dashboardsList[key].forEach(function (element) {
+                    vm.dashboardsList.push({ ...element, key })
+                })
+            })
+            vm.ui.isLoading = false;
+            $scope.$apply();
+        })
+
+        getDashboardById = function(){
+            var el = null;
+            vm.dashboardsList.forEach(function(element){
+                if( element.id === vm.dashboard)
+                    el =  element;
+            });
+
+            return el;
+        }
 
         vm.ok = function () {
+            vm.watcher.url = `http://localhost:8008/app/kibana?security_tenant=${getDashboardById().tenant}#/dashboard/${getDashboardById().id}?embed=true${_url}`;
             $modalInstance.close("Ok");
         }
 
@@ -21,8 +59,6 @@
 
         vm.startDate;
         vm.endDate;
-
-        vm.dashboardsList = [{"title": "test 1"}, {"title": "test 2"}]
 
         vm.options = {
             locale: { cancelLabel: 'Clear' },
@@ -71,7 +107,7 @@
             var from = "now-15m";
             var to = "now"
 
-          if ($('#range').data('daterangepicker').chosenLabel === null) {
+            if ($('#range').data('daterangepicker').chosenLabel === null) {
                 from = startDate;
                 to = endDate;
             } else {
@@ -79,7 +115,26 @@
                 to = "now";
             }
 
-            console.log("#########", from, to);
+            _url = `&_g=(time:(from:${from},to:${to}))`
         }
     }
+
+    function emailValidator() {
+        return {
+            require: 'ngModel',
+            link: function (scope, element, attrs, ctrl) {
+                var emailsRegex = /^[\W]*([\w+\-.%]+@[\w\-.]+\.[A-Za-z]{2,4}[\W]*,{1}[\W]*)*([\w+\-.%]+@[\w\-.]+\.[A-Za-z]{2,4})[\W]*$/;
+                ctrl.$parsers.unshift(function (viewValue) {
+                    if (emailsRegex.test(viewValue)) {
+                        ctrl.$setValidity('emailValidator', true);
+                        return viewValue;
+                    } else {
+                        ctrl.$setValidity('emailValidator', false);
+                        return undefined;
+                    }
+                });
+            }
+        }
+    }
+
 })(window.angular);

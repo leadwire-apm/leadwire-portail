@@ -1,4 +1,15 @@
-<form class="form-horizontal bordered-group" name="watcherForm" ng-submit="ctrl.ok()" role="form">
+<div class="container">
+    <div class="row">
+        <div class="col-sm-5"></div>
+        <div class="col-sm-2">
+            <spinner ng-if="ctrl.ui.isLoading" is-loading="ctrl.ui.isLoading" size="50"></spinner>
+        </div>
+        <div class="col-sm-5"></div>
+    </div>
+</div>
+
+<form ng-if="!ctrl.ui.isLoading" class="form-horizontal bordered-group" name="watcherForm" ng-submit="ctrl.ok()"
+    role="form">
     <div class="modal-body">
         <div class="main">
             <div class="container">
@@ -23,10 +34,10 @@
                     <label class="col-sm-2 control-label" for="dashboard">Dashboard *</label>
                     <div class="col-sm-10">
 
-                        <select data-ng-model="ctrl.dashboard" class="form-control" id="dashboard" name="dashboard" required>
-                            <option ng-repeat="dashboard in ctrl.dashboardsList"
-                                value="[[dashboard.title]]">
-                                [[dashboard.title]]
+                        <select data-ng-model="ctrl.dashboard" class="form-control" id="dashboard" name="dashboard"
+                            required>
+                            <option ng-repeat="dashboard in ctrl.dashboardsList" value="[[dashboard.id]]">
+                                [[dashboard.key]] : [[dashboard.name]]
                             </option>
                         </select>
 
@@ -52,11 +63,11 @@
                 </div>
 
                 <div class="form-group">
-                    <label class="col-sm-2 control-label" for="range">Time Range</label>
+                    <label class="col-sm-2 control-label" for="range">TimeRange</label>
                     <div class="col-sm-10">
                         <input id="range" date-range-picker="t4" start-date="ctrl.startDate" end-date="ctrl.endDate"
-                            placeholder="select" date-range-picker-options="ctrl.options"
-                            clear-on-cancel="true" class="form-control" on-change="ctrl.sync()">
+                            placeholder="select" date-range-picker-options="ctrl.options" clear-on-cancel="true"
+                            class="form-control" on-change="ctrl.sync()">
                     </div>
                 </div>
 
@@ -80,12 +91,12 @@
                     <label class="col-sm-2 control-label" for="schedule">to *</label>
                     <div class="col-sm-10">
 
-                        <input id="to" name="to" placeholder="email@host.fr, email@host.fr" type="text"
-                            class="form-control" data-ng-model="ctrl.watcher.to" ng-maxlength="32" required>
+                        <input id="to" name="to" placeholder="email@host.fr, email@host.fr" type="text" email-validator
+                            class="form-control" data-ng-model="ctrl.watcher.to" required>
                         <span class="text-red" ng-show="watcherForm.to.$error.required && !watcherForm.to.$pristine">
                             This field is required</span>
-                        <span class="text-red" ng-show="watcherForm.to.$error.maxlength && !watcherForm.to.$pristine">
-                            The text entered exceeds the maximum length</span>
+                        <span class="text-red" ng-show="watcherForm.to.$error.emailValidator && !watcherForm.to.$pristine">
+                            Emails must be valid and separedted with ,</span>
                     </div>
                 </div>
 
