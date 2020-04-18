@@ -38,13 +38,14 @@
         vm.LOGIN_METHOD = CONFIG.LOGIN_METHOD;
         vm.selectedEnvironment = $localStorage.selectedEnvId.slice(0);
         vm.ownerTitle = "Owner Github :";
+        var envName = "staging";
 
         if (vm.LOGIN_METHOD === 'proxy' || vm.LOGIN_METHOD === 'login') {
             vm.ownerTitle = "Owner Login Id :"
         }
 
         vm.setWatcherLink = function () {
-            var envName = "staging";
+             envName = "staging";
 
             vm.environments.forEach(element => {
                 if (element.id === vm.selectedEnvironment) {
@@ -70,7 +71,7 @@
 
         vm.getWatchers = function () {
 
-            var envName = "staging";
+            envName = "staging";
 
             vm.environments.forEach(element => {
                 if (element.id === vm.selectedEnvironment) {
@@ -303,6 +304,8 @@
             });
 
             modal.appId = vm.application.id;
+            modal.envName = envName;
+            modal.appName = vm.application.name;
 
         }
 

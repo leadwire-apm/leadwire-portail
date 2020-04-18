@@ -38,18 +38,9 @@
             $scope.$apply();
         })
 
-        getDashboardById = function(){
-            var el = null;
-            vm.dashboardsList.forEach(function(element){
-                if( element.id === vm.dashboard)
-                    el =  element;
-            });
-
-            return el;
-        }
-
         vm.ok = function () {
-            vm.watcher.url = `http://localhost:8008/app/kibana?security_tenant=${getDashboardById().tenant}#/dashboard/${getDashboardById().id}?embed=true${_url}`;
+            vm.watcher.url = `http://localhost:8008/app/kibana?security_tenant=${$modalInstance.envName + $modalInstance.appName}#/dashboard/${vm.dashboard}?embed=true${_url}`;
+            console.log("####", vm.watcher);
             $modalInstance.close("Ok");
         }
 
