@@ -69,7 +69,7 @@ class WatcherService
      *
      * @return Watcher
      */
-    public function add($json) {
+    public function saveOrUpdate($json) {
         $context = new DeserializationContext();
         $context->setGroups(['Default']);
         /** @var Watcher $watcher */
@@ -82,7 +82,7 @@ class WatcherService
              'appId' => $watcher->getAppId(),
              'envId' => $watcher->getEnvId() ]);
         
-        if ($db !== null) {
+        if ($db !== null && !$watcher->getId()) {
             throw new DuplicateApplicationNameException("An watcher with the same title already exists");
         }else {
             $id = $this->watcherManager->update($watcher);
@@ -98,6 +98,20 @@ class WatcherService
      */
     public function list($payload) {
         return $this->watcherManager->getByEnvDash( $payload['appId'], $payload['envId']);
+    }
+
+    /**
+     * delete watcher
+     *
+     * @return array
+     */
+    public function delete($id) {
+        $watcher = $this->watcherManager->getOneBy(['id' => $id]);
+        if ($watcher === null) {
+            throw new HttpException(Response::HTTP_NOT_FOUND, "Watcher not Found");
+        } else {
+            return $this->watcherManager->delete($watcher);
+        }
     }
 
 }

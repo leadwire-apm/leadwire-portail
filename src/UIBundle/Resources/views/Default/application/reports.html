@@ -4,7 +4,7 @@
         <h6>Environment select</h6>
     </div>
     <div class="col-sm-3">
-        <select data-ng-model="ctrl.selectedEnvironment" class="form-control" ng-change="ctrl.getWatchers()">
+        <select data-ng-model="ctrl.selectedEnvironment" class="form-control" ng-change="ctrl.getReports()">
             <option ng-selected="ctrl.selectedEnvironment == environment.id"
                 ng-repeat="environment in ctrl.getEnvironmentsForReport()" value="[[environment.id]]">
                 [[environment.name]]
@@ -29,7 +29,7 @@
                     <spinner is-loading="ctrl.ui.isLoading" size="24"></spinner>
                 </td>
             </tr>
-            <tr ng-repeat="watcher in ctrl.watchers">
+            <tr ng-repeat="watcher in ctrl.reportsList">
                 <td data-title="TimeStamp" data-label="TimeStamp">
                     [[ctrl.getDate(watcher._source)| date:"MM/dd/yyyy 'at' h:mma"]]
                 </td>
@@ -48,7 +48,7 @@
                         <i class="fa fa-eye"></i>
                     </a>
                     <a title="Delete" data-placement="top" data-toggle="tooltip"
-                        ng-click="ctrl.deleteWatcher(watcher._id,watcher._index, $index)" class="btn btn-danger">
+                        ng-click="ctrl.deleteReport(watcher._id,watcher._index, $index)" class="btn btn-danger">
                         <i class="fa fa-trash"></i>
                     </a>
                 </td>

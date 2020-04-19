@@ -24,11 +24,11 @@ class WatcherController extends Controller
      *
      * @return Response
      */
-    public function addAction(Request $request, WatcherService $watcherService)
+    public function saveOrUpdateAction(Request $request, WatcherService $watcherService)
     {
         try {
             $data = $request->getContent();
-            $watcher = $watcherService->add($data);
+            $watcher = $watcherService->saveOrUpdate($data);
             return $this->renderResponse($watcher, Response::HTTP_OK, []);
         }
         catch (DuplicateApplicationNameException $e) {
@@ -59,6 +59,26 @@ class WatcherController extends Controller
         }
     }
 
+    /**
+     * @Route("/{id}/delete", methods="DELETE")
+     *
+     * @param Request        $request
+     * @param WatcherService $watcherService
+     * @param string $id
+     *
+     * @return Response
+     */
+    public function deleteAction(Request $request, WatcherService $watcherService, $id)
+    {
+        try {
+            $watcher = $watcherService->delete($id);
+            return $this->renderResponse($watcher, Response::HTTP_OK, []);
+        }
+         catch (\Exception $e) {
+            return $this->exception($e->getMessage(), 400);
+        }
+    }
+
 
     /**
      * exception
@@ -72,4 +92,5 @@ class WatcherController extends Controller
     {
         return $this->renderResponse(array('message' => $message), $status);
     }
+    
 }

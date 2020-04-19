@@ -11,13 +11,17 @@
 
         var service = this;
 
-        service.add = function (data) {
+        service.saveOrUpdate = function (data) {
             data.delay = String(data.delay);
-            return WatcherFactory.add(data);
+            return WatcherFactory.saveOrUpdate(data);
         }
 
         service.list = function (appId, envId) {
             return WatcherFactory.list(appId, envId);
+        }
+
+        service.delete = function (id) {
+            return WatcherFactory.delete(id);
         }
     }
 })(window.angular);

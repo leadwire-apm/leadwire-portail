@@ -38,7 +38,7 @@
                     <td data-title="Body" data-label="Body">[[watcher.body]]</td>
 
                     <td data-title="Actions" data-label="Actions" class="actionsCell">
-                        
+
                         <div class="apm-checkbox">
                             <label class="switch switch-sm">
                                 <input type="checkbox" ng-model="watcher.enabled">
@@ -52,11 +52,13 @@
                             <i class="fas fa-play"></i>
                         </a>
 
-                        <a class="btn btn-danger" title="Delete" data-placement="left" data-toggle="tooltip">
+                        <a class="btn btn-danger" title="Delete" data-placement="left" data-toggle="tooltip"
+                            ng-click="ctrl.deleteWatcher(watcher.id, $index)">
                             <i class="fa fa-trash"></i>
                         </a>
 
-                        <a class="btn btn-info" title="Edit" data-placement="left" data-toggle="tooltip">
+                        <a class="btn btn-info" title="Edit" data-placement="left" data-toggle="tooltip"
+                            ng-click="ctrl.editWatcher(watcher)">
                             <i class="fa fa-pen"></i>
                         </a>
                     </td>

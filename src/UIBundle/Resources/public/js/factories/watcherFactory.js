@@ -4,7 +4,7 @@
 
     function WatcherFactoryFN($http, CONFIG) {
         return {
-            add: function (data) {
+            saveOrUpdate: function (data) {
                 return $http.post(
                     CONFIG.BASE_URL + 'api/watcher/add',
                     data
@@ -14,6 +14,11 @@
                 return $http.post(
                     CONFIG.BASE_URL + 'api/watcher/list',
                     {appId, envId}
+                );
+            },
+            delete: function (id) {
+                return $http.delete(
+                    CONFIG.BASE_URL + `api/watcher/${id}/delete`
                 );
             },
         };

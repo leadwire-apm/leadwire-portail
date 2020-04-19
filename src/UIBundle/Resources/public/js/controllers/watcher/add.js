@@ -2,9 +2,11 @@
     angular.module('leadwireApp')
         .directive('emailValidator', emailValidator)
         .controller('AddWatcherCtrl', [
-            '$modalInstance', 
-            'DashboardService', 
+            '$modalInstance',
+            'DashboardService',
             'WatcherService',
+            'toastr',
+            'MESSAGES_CONSTANTS',
             '$scope', AddWatcherCtrl]);
 
     /**
@@ -12,9 +14,11 @@
      *
      */
     function AddWatcherCtrl(
-        $modalInstance, 
-        DashboardService, 
+        $modalInstance,
+        DashboardService,
         WatcherService,
+        toastr,
+        MESSAGES_CONSTANTS,
         $scope) {
 
         var vm = this;
@@ -26,17 +30,30 @@
         };
         vm.dashboardsList = [];
         vm.ui.isLoading = true;
-        vm.watcher = { 
+        vm.startDate;
+        vm.endDate;
+
+        vm.watcher = {
             'subject': 'Lead Wire Website Report',
             'delay': 10000,
             "res": "1280x900",
-            "body" : "LEADWIRE Screenshot Report",
+            "body": "LEADWIRE Screenshot Report",
             "fromDate": "",
             "toDate": "",
-            "envId" : $modalInstance.envId,
-            "appId" : $modalInstance.appId,
+            "envId": $modalInstance.envId,
+            "appId": $modalInstance.appId,
             "enabled": false
         };
+
+        if ($modalInstance.watcher) {
+            $modalInstance.watcher.delay = parseInt($modalInstance.watcher.delay);
+            vm.watcher = $modalInstance.watcher;
+
+            if ($modalInstance.watcher.fromDate && $modalInstance.watcher.toDate) {
+                vm.startDate = moment($modalInstance.watcher.fromDate);
+                vm.endDate = moment($modalInstance.watcher.toDate);
+            }
+        }
 
         /**
          * get dashboards list
@@ -53,21 +70,19 @@
 
         vm.ok = function () {
             vm.watcher.url = `http://localhost:8008/app/kibana?security_tenant=${$modalInstance.envName + $modalInstance.appName}#/dashboard/${vm.watcher.dashboard}?embed=true${_url}`;
-            WatcherService.add( vm.watcher) 
+            WatcherService.saveOrUpdate(vm.watcher)
                 .then(function (response) {
+                    toastr.success(MESSAGES_CONSTANTS.SUCCESS);
                     $modalInstance.close("Ok");
                 })
                 .catch(function (err) {
-                    console.log("#####", err)
+                    toastr.error(err.message);
                 })
         }
 
         vm.cancel = function () {
             $modalInstance.dismiss();
         }
-
-        vm.startDate;
-        vm.endDate;
 
         vm.options = {
             locale: { cancelLabel: 'Clear' },
@@ -125,8 +140,8 @@
             }
 
             _url = `&_g=(time:(from:${from},to:${to}))`;
-            vm.watcher.toDate = to;
-            vm.watcher.fromDate = from;
+            vm.watcher.toDate = startDate;
+            vm.watcher.fromDate = endDate;
         }
     }
 

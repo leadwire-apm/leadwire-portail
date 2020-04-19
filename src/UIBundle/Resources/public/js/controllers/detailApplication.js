@@ -47,14 +47,34 @@
         }
 
         vm.setWatcherLink = function () {
-           
             WatcherService.list(vm.application.id, vm.selectedEnvironment)
-            .then(function(res){
-                vm.watchersList = res.data;
-            }).catch(function(err){
+                .then(function (res) {
+                    vm.watchersList = res.data;
+                }).catch(function (err) {
 
-            });
+                });
         };
+
+        vm.editWatcher = function (watcher) {
+            vm.addWatcher(watcher);
+        }
+
+        vm.deleteWatcher = function (id, index) {
+            swal(MESSAGES_CONSTANTS.SWEET_ALERT_VALIDATION())
+            .then(function (willDelete) {
+                if (willDelete) {
+                    WatcherService.delete(id)
+                    .then(function(){
+                        vm.watchersList.splice(index, 1);
+                        toastr.success(MESSAGES_CONSTANTS.SUCCESS);
+                    }).catch(function(err){
+                        toastr.success(MESSAGES_CONSTANTS.ERROR);
+                    })
+                } else {
+                    swal.close();
+                }
+            });
+        }
 
 
         vm.getBlob = function (data) {
@@ -69,7 +89,7 @@
             return data['@timestamp'];
         }
 
-        vm.getWatchers = function () {
+        vm.getReports = function () {
 
             envName = "staging";
 
@@ -81,13 +101,13 @@
 
             ApplicationService.getApplicationWatchers(vm.application.name, envName)
                 .then(function (response) {
-                    vm.watchers = response;
+                    vm.reportsList = response;
                 }).catch(function (error) {
                     toastr.success(MESSAGES_CONSTANTS.ERROR);
                 });
         }
 
-        vm.deleteWatcher = function (_id, _index, ind) {
+        vm.deleteReport = function (_id, _index, ind) {
 
             swal(MESSAGES_CONSTANTS.SWEET_ALERT_VALIDATION())
                 .then(function (willDelete) {
@@ -295,7 +315,7 @@
                 });
         }
 
-        vm.addWatcher = function(){
+        vm.addWatcher = function (watcher) {
             vm.modal = $modal.open({
                 size: 'lg',
                 templateUrl: 'application/watcher/add.html',
@@ -307,6 +327,7 @@
             vm.modal.envName = envName;
             vm.modal.appName = vm.application.name;
             vm.modal.envId = vm.selectedEnvironment;
+            vm.modal.watcher = watcher;
 
             vm.modal.result.then(function () {
                 vm.setWatcherLink();
