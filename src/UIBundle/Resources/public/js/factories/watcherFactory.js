@@ -10,6 +10,12 @@
                     data
                 );
             },
+            list: function (appId, envId) {
+                return $http.post(
+                    CONFIG.BASE_URL + 'api/watcher/list',
+                    {appId, envId}
+                );
+            },
         };
     }
 })(window.angular);

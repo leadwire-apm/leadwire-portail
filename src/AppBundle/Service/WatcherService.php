@@ -77,24 +77,27 @@ class WatcherService
             ->serializer
             ->deserialize($json, Watcher::class, 'json', $context);
         
-        $db = $this->watcherManager->getOneBy(['titre' => $watcher->getTitre()]);
+        $db = $this->watcherManager->getOneBy(
+            ['titre' => $watcher->getTitre(),
+             'appId' => $watcher->getAppId(),
+             'envId' => $watcher->getEnvId() ]);
         
         if ($db !== null) {
             throw new DuplicateApplicationNameException("An watcher with the same title already exists");
+        }else {
+            $id = $this->watcherManager->update($watcher);
         }
 
-        return $watcher;
+        return $id;
     }
-
-
 
     /**
      * Get all watchers
      *
      * @return array
      */
-    public function getByAppId( $dashboard, $envId ) {
-        return $this->watcherManager->getByEnvDash($dashboard, $envId);
+    public function list($payload) {
+        return $this->watcherManager->getByEnvDash( $payload['appId'], $payload['envId']);
     }
 
 }

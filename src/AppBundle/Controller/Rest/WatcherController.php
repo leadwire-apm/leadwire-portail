@@ -39,6 +39,26 @@ class WatcherController extends Controller
         }
     }
 
+    /**
+     * @Route("/list", methods="POST")
+     *
+     * @param Request        $request
+     * @param WatcherService $watcherService
+     *
+     * @return Response
+     */
+    public function listAction(Request $request, WatcherService $watcherService)
+    {
+        try {
+            $data = $request->getContent();
+            $watcher = $watcherService->list(json_decode($data, true));
+            return $this->renderResponse($watcher, Response::HTTP_OK, []);
+        }
+         catch (\Exception $e) {
+            return $this->exception($e->getMessage(), 400);
+        }
+    }
+
 
     /**
      * exception

@@ -34,12 +34,12 @@ class Watcher
     private $subject;
 
     /**
-     * @ODM\Field(type="int")
-     * @JMS\Type("int")
+     * @ODM\Field(type="string")
+     * @JMS\Type("string")
      * @JMS\Expose
-     * @JMS\Groups({"minimalist"})
+     * @JMS\Groups({"Default", "minimalist"})
      *
-     * @var int
+     * @var string
      */
     private $delay;
 
@@ -143,6 +143,24 @@ class Watcher
      */
     private $url;
 
+    /**
+     * @ODM\Field(type="string")
+     * @JMS\Type("string")
+     * @JMS\Expose
+     * @JMS\Groups({"Default", "minimalist"})
+     *
+     * @var string
+     */
+    private $appId;
+
+     /**
+     * @JMS\Expose
+     * @JMS\Type("boolean")
+     * @ODM\Field(type="boolean", name="enabled")
+     *
+     * @var string
+     */
+    private $enabled;
 
 
     /**
@@ -181,13 +199,13 @@ class Watcher
     }
 
     /*
-     * Set the value of delay
+     * Set the value of string
      *
-     * @param  int  $delay
+     * @param  int  $string
      *
      * @return  self
      */
-    public function setDelay(int $delay)
+    public function setDelay(string $delay)
     {
         $this->delay = $delay;
 
@@ -197,9 +215,9 @@ class Watcher
     /**
      * Get the value of delay
      *
-     * @return int
+     * @return string
      */
-    public function getDelay(): int
+    public function getDelay()
     {
         return $this->delay;
     }
@@ -443,5 +461,29 @@ class Watcher
     public function getEnvId()
     {
         return $this->envId;
+    }
+
+     /*
+     * Set the value of appId
+     *
+     * @param  string  $appId
+     *
+     * @return  self
+     */
+    public function setAppId(string $appId)
+    {
+        $this->appId = $appId;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of appId
+     *
+     * @return string
+     */
+    public function getAppId()
+    {
+        return $this->appId;
     }
 }

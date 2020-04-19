@@ -33,7 +33,9 @@
             "body" : "LEADWIRE Screenshot Report",
             "fromDate": "",
             "toDate": "",
-            "envId" : $modalInstance.envId
+            "envId" : $modalInstance.envId,
+            "appId" : $modalInstance.appId,
+            "enabled": false
         };
 
         /**

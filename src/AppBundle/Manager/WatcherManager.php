@@ -20,18 +20,18 @@ class WatcherManager extends AbstractManager
 
      /**
      *
-     * @param string $dashboard
+     * @param string $appId
      * @param string $envId
      *
      * @return Watcher
      */
-    public function getByEnvDash($dashboard, $envId)
+    public function getByEnvDash($appId, $envId)
     {
         /** @var Watcher $watcherList */
         $watcherList =  $this->getDocumentRepository()->
             createQueryBuilder()
             ->find()
-            ->field('dashboard')->equals($dashboard)
+            ->field('appId')->equals($appId)
             ->field('envId')->equals($envId)
             ->getQuery()
             ->execute()

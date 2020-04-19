@@ -15,6 +15,7 @@
             'ApplicationService',
             '$sce',
             '$modal',
+            'WatcherService',
             applicationDetailCtrlFN,
         ]);
 
@@ -31,7 +32,8 @@
         EnvironmentService,
         ApplicationService,
         $sce,
-        $modal
+        $modal,
+        WatcherService
     ) {
         var vm = this;
 
@@ -45,15 +47,13 @@
         }
 
         vm.setWatcherLink = function () {
-             envName = "staging";
+           
+            WatcherService.list(vm.application.id, vm.selectedEnvironment)
+            .then(function(res){
+                vm.watchersList = res.data;
+            }).catch(function(err){
 
-            vm.environments.forEach(element => {
-                if (element.id === vm.selectedEnvironment) {
-                    envName = element.name;
-                }
             });
-            if (vm.selectedEnvironment && vm.application && vm.application.name)
-                vm.watcherLink = $sce.trustAsResourceUrl("https://kibana.leadwire.io/app/sentinl?securitytenant=" + envName + "-watcher-" + vm.application.name + "#/?embed=true");
         };
 
 
@@ -296,17 +296,21 @@
         }
 
         vm.addWatcher = function(){
-            var modal = $modal.open({
+            vm.modal = $modal.open({
                 size: 'lg',
                 templateUrl: 'application/watcher/add.html',
                 controller: 'AddWatcherCtrl',
                 controllerAs: 'ctrl'
             });
 
-            modal.appId = vm.application.id;
-            modal.envName = envName;
-            modal.appName = vm.application.name;
-            modal.envId = vm.selectedEnvironment;
+            vm.modal.appId = vm.application.id;
+            vm.modal.envName = envName;
+            vm.modal.appName = vm.application.name;
+            vm.modal.envId = vm.selectedEnvironment;
+
+            vm.modal.result.then(function () {
+                vm.setWatcherLink();
+            });
 
         }
 
@@ -325,7 +329,8 @@
                 moment: moment,
                 retention: CONFIG.STRIPE_ENABLED == true ? $rootScope.user.plan.retention : null,
                 DOWNLOAD_URL: CONFIG.DOWNLOAD_URL,
-                currentUser: null
+                currentUser: null,
+                watchersList: []
             });
             vm.getEnvList();
             vm.getApp();

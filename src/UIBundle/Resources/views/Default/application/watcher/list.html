@@ -15,8 +15,54 @@
 
     </div>
 
-    <div ng-if="ctrl.watcherLink">
-        <iframe scrolling="yes" ng-src="[[ctrl.watcherLink]]" frameborder="0" iframe-set-dimensions-onload></iframe>
+    <div ng-if="ctrl.watchersList">
+        <table class="table table-striped mb2">
+            <thead>
+                <tr>
+                    <th class="col-md-2">Titre</th>
+                    <th class="col-md-2">Dashboard</th>
+                    <th class="col-md-2">Subject</th>
+                    <th class="col-md-2">Delay</th>
+                    <th class="col-md-2">Body</th>
+                    <th colspan="2" style="text-align: center">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="watcher in ctrl.watchersList">
+                    <td data-title="Titre" data-label="Titre">
+                        <span></span>[[watcher.titre]]
+                    </td>
+                    <td data-title="Dashboard" data-label="Dashboard">[[watcher.dashboard]]</td>
+                    <td data-title="Subject" data-label="Subject">[[watcher.subject]]</td>
+                    <td data-title="Delay" data-label="Delay">[[watcher.delay]]</td>
+                    <td data-title="Body" data-label="Body">[[watcher.body]]</td>
+
+                    <td data-title="Actions" data-label="Actions" class="actionsCell">
+                        
+                        <div class="apm-checkbox">
+                            <label class="switch switch-sm">
+                                <input type="checkbox" ng-model="watcher.enabled">
+                                <span>
+                                    <i class="handle"></i>
+                                </span>
+                            </label>
+                        </div>
+
+                        <a class="btn btn-success" title="Execute" data-placement="left" data-toggle="tooltip">
+                            <i class="fas fa-play"></i>
+                        </a>
+
+                        <a class="btn btn-danger" title="Delete" data-placement="left" data-toggle="tooltip">
+                            <i class="fa fa-trash"></i>
+                        </a>
+
+                        <a class="btn btn-info" title="Edit" data-placement="left" data-toggle="tooltip">
+                            <i class="fa fa-pen"></i>
+                        </a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
     </div>
 
 
