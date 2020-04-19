@@ -67,3 +67,8 @@ app_rest_access_level:
     resource: "@AppBundle/Controller/Rest/AccessLevelController.php"
     type: "annotation"
     prefix: "/%internal_api_prefix%/access-level"
+
+app_rest_watcher:
+    resource: "@AppBundle/Controller/Rest/WatcherController.php"
+    type: "annotation"
+    prefix: "/%internal_api_prefix%/watcher"

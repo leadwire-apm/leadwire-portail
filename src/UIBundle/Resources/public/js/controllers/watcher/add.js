@@ -22,7 +22,10 @@
             'subject': 'Lead Wire Website Report',
             'delay': 10000,
             "res": "1280x900",
-            "body" : "LEADWIRE Screenshot Report"
+            "body" : "LEADWIRE Screenshot Report",
+            "fromDate": "",
+            "toDate": "",
+            "envId" : $modalInstance.envId
         };
 
         /**
@@ -39,7 +42,7 @@
         })
 
         vm.ok = function () {
-            vm.watcher.url = `http://localhost:8008/app/kibana?security_tenant=${$modalInstance.envName + $modalInstance.appName}#/dashboard/${vm.dashboard}?embed=true${_url}`;
+            vm.watcher.url = `http://localhost:8008/app/kibana?security_tenant=${$modalInstance.envName + $modalInstance.appName}#/dashboard/${vm.watcher.dashboard}?embed=true${_url}`;
             console.log("####", vm.watcher);
             $modalInstance.close("Ok");
         }
@@ -96,7 +99,7 @@
             var startDate = $('#range').data('daterangepicker').startDate.toISOString();
             var endDate = $('#range').data('daterangepicker').endDate.toISOString();
             var from = "now-15m";
-            var to = "now"
+            var to = "now";
 
             if ($('#range').data('daterangepicker').chosenLabel === null) {
                 from = startDate;
@@ -106,7 +109,9 @@
                 to = "now";
             }
 
-            _url = `&_g=(time:(from:${from},to:${to}))`
+            _url = `&_g=(time:(from:${from},to:${to}))`;
+            vm.watcher.toDate = to;
+            vm.watcher.fromDate = from;
         }
     }
 

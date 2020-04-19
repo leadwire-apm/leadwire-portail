@@ -306,6 +306,7 @@
             modal.appId = vm.application.id;
             modal.envName = envName;
             modal.appName = vm.application.name;
+            modal.envId = vm.selectedEnvironment;
 
         }
 
