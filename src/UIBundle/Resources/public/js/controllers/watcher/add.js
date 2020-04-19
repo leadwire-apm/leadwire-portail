@@ -1,13 +1,21 @@
 (function (angular) {
     angular.module('leadwireApp')
         .directive('emailValidator', emailValidator)
-        .controller('AddWatcherCtrl', ['$modalInstance', 'DashboardService', '$scope', AddWatcherCtrl]);
+        .controller('AddWatcherCtrl', [
+            '$modalInstance', 
+            'DashboardService', 
+            'WatcherService',
+            '$scope', AddWatcherCtrl]);
 
     /**
      * Handle clustyer stats
      *
      */
-    function AddWatcherCtrl($modalInstance, DashboardService, $scope) {
+    function AddWatcherCtrl(
+        $modalInstance, 
+        DashboardService, 
+        WatcherService,
+        $scope) {
 
         var vm = this;
         var _url = "";
@@ -43,8 +51,13 @@
 
         vm.ok = function () {
             vm.watcher.url = `http://localhost:8008/app/kibana?security_tenant=${$modalInstance.envName + $modalInstance.appName}#/dashboard/${vm.watcher.dashboard}?embed=true${_url}`;
-            console.log("####", vm.watcher);
-            $modalInstance.close("Ok");
+            WatcherService.add( vm.watcher) 
+                .then(function (response) {
+                    $modalInstance.close("Ok");
+                })
+                .catch(function (err) {
+                    console.log("#####", err)
+                })
         }
 
         vm.cancel = function () {

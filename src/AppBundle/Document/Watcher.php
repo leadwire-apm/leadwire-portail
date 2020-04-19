@@ -19,7 +19,7 @@ class Watcher
      * @ODM\Id("strategy=auto")
      * @JMS\Type("string")
      * @JMS\Expose
-     * @JMS\Groups({"full", "minimalist"})
+     * @JMS\Groups({"Default", "minimalist"})
      */
     private $id;
 
@@ -27,7 +27,7 @@ class Watcher
      * @ODM\Field(type="string")
      * @JMS\Type("string")
      * @JMS\Expose
-     * @JMS\Groups({"full", "minimalist"})
+     * @JMS\Groups({"Default", "minimalist"})
      *
      * @var string
      */
@@ -37,7 +37,7 @@ class Watcher
      * @ODM\Field(type="int")
      * @JMS\Type("int")
      * @JMS\Expose
-     * @JMS\Groups({"full", "minimalist"})
+     * @JMS\Groups({"minimalist"})
      *
      * @var int
      */
@@ -47,7 +47,7 @@ class Watcher
      * @ODM\Field(type="string")
      * @JMS\Type("string")
      * @JMS\Expose
-     * @JMS\Groups({"full", "minimalist"})
+     * @JMS\Groups({"Default", "minimalist"})
      *
      * @var string
      */
@@ -57,7 +57,7 @@ class Watcher
      * @ODM\Field(type="string")
      * @JMS\Type("string")
      * @JMS\Expose
-     * @JMS\Groups({"full", "minimalist"})
+    * @JMS\Groups({"Default", "minimalist"})
      *
      * @var string
      */
@@ -67,7 +67,7 @@ class Watcher
      * @ODM\Field(type="string")
      * @JMS\Type("string")
      * @JMS\Expose
-     * @JMS\Groups({"full", "minimalist"})
+    * @JMS\Groups({"Default", "minimalist"})
      *
      * @var string
      */
@@ -77,7 +77,7 @@ class Watcher
      * @ODM\Field(type="string")
      * @JMS\Type("string")
      * @JMS\Expose
-     * @JMS\Groups({"full", "minimalist"})
+     * @JMS\Groups({"Default", "minimalist"})
      *
      * @var string
      */
@@ -87,7 +87,7 @@ class Watcher
      * @ODM\Field(type="string")
      * @JMS\Type("string")
      * @JMS\Expose
-     * @JMS\Groups({"full", "minimalist"})
+     * @JMS\Groups({"Default", "minimalist"})
      *
      * @var string
      */
@@ -97,7 +97,7 @@ class Watcher
      * @ODM\Field(type="string")
      * @JMS\Type("string")
      * @JMS\Expose
-     * @JMS\Groups({"full", "minimalist"})
+     * @JMS\Groups({"Default", "minimalist"})
      *
      * @var string
      */
@@ -107,7 +107,7 @@ class Watcher
      * @ODM\Field(type="string")
      * @JMS\Type("string")
      * @JMS\Expose
-     * @JMS\Groups({"full", "minimalist"})
+     * @JMS\Groups({"Default", "minimalist"})
      *
      * @var string
      */
@@ -117,7 +117,7 @@ class Watcher
      * @ODM\Field(type="string")
      * @JMS\Type("string")
      * @JMS\Expose
-     * @JMS\Groups({"full", "minimalist"})
+     * @JMS\Groups({"Default", "minimalist"})
      *
      * @var string
      */
@@ -127,7 +127,7 @@ class Watcher
      * @ODM\Field(type="string")
      * @JMS\Type("string")
      * @JMS\Expose
-     * @JMS\Groups({"full", "minimalist"})
+     * @JMS\Groups({"Default", "minimalist"})
      *
      * @var string
      */
@@ -137,7 +137,7 @@ class Watcher
      * @ODM\Field(type="string")
      * @JMS\Type("string")
      * @JMS\Expose
-     * @JMS\Groups({"full", "minimalist"})
+     * @JMS\Groups({"Default", "minimalist"})
      *
      * @var string
      */
@@ -343,7 +343,7 @@ class Watcher
      *
      * @return string
      */
-    public function getDitre()
+    public function getDashboard()
     {
         return $this->dashboard;
     }

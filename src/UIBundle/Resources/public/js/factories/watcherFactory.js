@@ -5,8 +5,8 @@
     function WatcherFactoryFN($http, CONFIG) {
         return {
             add: function (data) {
-                return $http.put(
-                    CONFIG.BASE_URL + 'api/watcher/update',
+                return $http.post(
+                    CONFIG.BASE_URL + 'api/watcher/add',
                     data
                 );
             },

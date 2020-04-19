@@ -10,13 +10,14 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use AppBundle\Exception\DuplicateApplicationNameException;
 
 class WatcherController extends Controller
 {
     use RestControllerTrait;
 
     /**
-     * @Route("/add", methods="PUT")
+     * @Route("/add", methods="POST")
      *
      * @param Request        $request
      * @param WatcherService $watcherService
@@ -27,9 +28,13 @@ class WatcherController extends Controller
     {
         try {
             $data = $request->getContent();
-            $watcher = $watcherService->add(json_decode($data, true));
+            $watcher = $watcherService->add($data);
             return $this->renderResponse($watcher, Response::HTTP_OK, []);
-        } catch (\Exception $e) {
+        }
+        catch (DuplicateApplicationNameException $e) {
+            return $this->renderResponse(['message' => $e->getMessage()], Response::HTTP_NOT_ACCEPTABLE);
+        }
+         catch (\Exception $e) {
             return $this->exception($e->getMessage(), 400);
         }
     }
