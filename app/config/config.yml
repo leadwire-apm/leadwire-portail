@@ -130,8 +130,8 @@ doctrine_mongodb:
         default:
             server: 'mongodb://%env(DATABASE_HOST)%:%env(DATABASE_PORT)%'
             options:
-                username: ~
-                password: ~
+                username: '%env(DATABASE_USER)%'
+                password: '%env(DATABASE_PASSWORD)%'
                 connect: true
                 db: '%env(DATABASE_NAME)%'
     document_managers:
