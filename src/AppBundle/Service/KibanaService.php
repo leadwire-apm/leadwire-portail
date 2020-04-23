@@ -428,4 +428,83 @@ class KibanaService
         return $response->getStatusCode() === Response::HTTP_OK;
     }
 
+    public function createWatcher(json $payload)
+    {
+        $authorization = $this->jwtHelper->encode($this->kibanaAdminUsername, $this->kibanaAdminUuid);
+       
+        $content = json_encode([
+            "title" => $payload["titre"],
+            "disable" => false,
+            "report" => true,
+            "save_payload" => false,
+            "impersonate" => false,
+            "spy" =>false,
+            "trigger" => [
+                "schedule" => [
+                    "later" => $payload["schedule"]
+                ]
+            ],
+            "input" => [
+                "search" => [
+                    "request" => [
+                        "index" => array(),
+                        "body" => []
+                    ]
+                ]
+            ],
+            "condition" => [],
+            "actions" => [
+                "report_admin" => [
+                    "report" => [
+                        "to" => $payload["to"],
+                        "from" => "wassim.dhib@leadwire.io",
+                        "subject" => $payload["subject"],
+                        "priority" =>"high",
+                        "body" => $payload["body"],
+                        "auth" => [
+                            "active" => true,
+                            "mode" => "basic",
+                            "username" =>"admin",
+                            "password" =>"admin"
+                        ],
+                        "snapshot" => [
+                            "res" => $payload["res"],
+                            "url" => $payload["url"],
+                            "params" => [
+                                "delay" => intval($payload["delay"])
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+        ]);
+
+        $headers = [
+            'kbn-xsrf' => true,
+            'Content-Type' => 'application/json',
+            'Authorization' => "Bearer $authorization",
+        ];
+
+        $response = $this->httpClient->put(
+            $this->url . "api/sentinl/watcher",
+            [
+                'headers' => $headers,
+                'body' => $content,
+            ]
+        );
+
+        $this->logger->notice(
+            "leadwire.kibana.createWatcher",
+            [
+                'url' => $this->url . "api/sentinl/report/$id/$index",
+                'verb' => 'DELETE',
+                'headers' => $headers,
+                'status_code' => $response->getStatusCode(),
+                'status_text' => $response->getReasonPhrase(),
+            ]
+        );
+
+        return $response->getStatusCode() === Response::HTTP_OK;
+    }
+
 }
