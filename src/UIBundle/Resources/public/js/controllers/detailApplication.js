@@ -33,7 +33,7 @@
         ApplicationService,
         $sce,
         $modal,
-        WatcherService
+        WatcherService,
     ) {
         var vm = this;
 

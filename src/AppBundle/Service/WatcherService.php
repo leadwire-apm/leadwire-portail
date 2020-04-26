@@ -5,8 +5,9 @@ namespace AppBundle\Service;
 use AppBundle\Document\Watcher;
 use AppBundle\Exception\DuplicateApplicationNameException;
 use AppBundle\Manager\WatcherManager;
-use AppBundle\Service\ElasticSearchService;
-
+use AppBundle\Service\KibanaService;
+use AppBundle\Service\EnvironmentService;
+use AppBundle\Service\ApplicationService;
 use JMS\Serializer\DeserializationContext;
 use JMS\Serializer\SerializerInterface;
 use Psr\Log\LoggerInterface;
@@ -26,9 +27,9 @@ class WatcherService
     private $watcherManager;
 
     /**
-     * @var ElasticSearchService
+     * @var KibanaService
      */
-    private $es;
+    private $KibanaService;
 
     /**
      * @var SerializerInterface
@@ -40,25 +41,41 @@ class WatcherService
      */
     private $logger;
 
+    /**
+     * @var EnvironmentService $environmentService
+     */
+    private $environmentService;
+
+    /**
+     * @var ApplicationService $applicationService
+     */
+    private $applicationService;
+
 
     /**
      * Constructor
      *
      * @param WatcherManager        $watcherManager
-     * @param ElasticSearchService  $es
+     * @param KibanaService         $KibanaService
      * @param SerializerInterface   $serializer
      * @param LoggerInterface       $logger
+     * @param EnvironmentService  $environmentService
+     * @param ApplicationService  $applicationService
      */
     public function __construct(
         WatcherManager $watcherManager,
-        ElasticSearchService $es,
+        KibanaService $KibanaService,
         SerializerInterface $serializer,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        EnvironmentService $environmentService,
+        ApplicationService $applicationService
     ) {
         $this->watcherManager = $watcherManager;
-        $this->es = $es;
+        $this->KibanaService = $KibanaService;
         $this->serializer = $serializer;
         $this->logger = $logger;
+        $this->environmentService = $environmentService;
+        $this->applicationService = $applicationService;
     }
 
 
@@ -86,6 +103,10 @@ class WatcherService
             throw new DuplicateApplicationNameException("An watcher with the same title already exists");
         }else {
             $id = $this->watcherManager->update($watcher);
+            $environment = $this->environmentService->getById($watcher->getEnvId());
+            $application = $this->applicationService->getById($watcher->getAppId());
+            $watechrIndex = $environment->getName() . "-" . $application->getApplicationWatcherIndex();
+            $this->KibanaService->createWatcher($watcher, $watechrIndex);
         }
 
         return $id;

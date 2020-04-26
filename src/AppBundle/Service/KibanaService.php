@@ -2,6 +2,7 @@
 namespace AppBundle\Service;
 
 use AppBundle\Document\Application;
+use AppBundle\Document\Watcher;
 use AppBundle\Document\MonitoringSet;
 use AppBundle\Document\Template;
 use AppBundle\Document\User;
@@ -428,50 +429,52 @@ class KibanaService
         return $response->getStatusCode() === Response::HTTP_OK;
     }
 
-    public function createWatcher(json $payload)
+    public function createWatcher(Watcher $wathcer, string $tenant)
     {
         $authorization = $this->jwtHelper->encode($this->kibanaAdminUsername, $this->kibanaAdminUuid);
        
         $content = json_encode([
-            "title" => $payload["titre"],
-            "disable" => false,
-            "report" => true,
-            "save_payload" => false,
-            "impersonate" => false,
-            "spy" =>false,
-            "trigger" => [
-                "schedule" => [
-                    "later" => $payload["schedule"]
-                ]
-            ],
-            "input" => [
-                "search" => [
-                    "request" => [
-                        "index" => array(),
-                        "body" => []
+            "attributes" => [
+                "title" => $wathcer->getTitre(),
+                "disable" => false,
+                "report" => true,
+                "save_payload" => false,
+                "impersonate" => false,
+                "spy" =>false,
+                "trigger" => [
+                    "schedule" => [
+                        "later" => $wathcer->getShedule()
                     ]
-                ]
-            ],
-            "condition" => [],
-            "actions" => [
-                "report_admin" => [
-                    "report" => [
-                        "to" => $payload["to"],
-                        "from" => "wassim.dhib@leadwire.io",
-                        "subject" => $payload["subject"],
-                        "priority" =>"high",
-                        "body" => $payload["body"],
-                        "auth" => [
-                            "active" => true,
-                            "mode" => "basic",
-                            "username" =>"admin",
-                            "password" =>"admin"
-                        ],
-                        "snapshot" => [
-                            "res" => $payload["res"],
-                            "url" => $payload["url"],
-                            "params" => [
-                                "delay" => intval($payload["delay"])
+                ],
+                "input" => [
+                    "search" => [
+                        "request" => [
+                            "index" => array(),
+                            "body" => []
+                        ]
+                    ]
+                ],
+                "condition" => [],
+                "actions" => [
+                    "report_admin" => [
+                        "report" => [
+                            "to" => $wathcer->getTo(),
+                            "from" => "wassim.dhib@leadwire.io",
+                            "subject" => $wathcer->getSubject(),
+                            "priority" =>"high",
+                            "body" => $wathcer->getBody(),
+                            "auth" => [
+                                "active" => true,
+                                "mode" => "basic",
+                                "username" =>"admin",
+                                "password" =>"admin"
+                            ],
+                            "snapshot" => [
+                                "res" => $wathcer->getRes(),
+                                "url" => $wathcer->getUrl(),
+                                "params" => [
+                                    "delay" => intval($wathcer->getDelay())
+                                ]
                             ]
                         ]
                     ]
@@ -482,7 +485,11 @@ class KibanaService
         $headers = [
             'kbn-xsrf' => true,
             'Content-Type' => 'application/json',
+            'x-proxy-roles' => $this->kibanaAdminUsername,
+            'X-Proxy-User' => $this->kibanaAdminUsername,
             'Authorization' => "Bearer $authorization",
+            'x-forwarded-for' => '127.0.0.1',
+            'security_tenant' => $tenant
         ];
 
         $response = $this->httpClient->put(
@@ -496,8 +503,8 @@ class KibanaService
         $this->logger->notice(
             "leadwire.kibana.createWatcher",
             [
-                'url' => $this->url . "api/sentinl/report/$id/$index",
-                'verb' => 'DELETE',
+                'url' => $this->url . "api/sentinl/watcher",
+                'verb' => 'PUT',
                 'headers' => $headers,
                 'status_code' => $response->getStatusCode(),
                 'status_text' => $response->getReasonPhrase(),
