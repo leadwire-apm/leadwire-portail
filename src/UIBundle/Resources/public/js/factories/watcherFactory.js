@@ -21,6 +21,11 @@
                     CONFIG.BASE_URL + `api/watcher/${id}/delete`
                 );
             },
+            execute: function (id) {
+                return $http.post(
+                    CONFIG.BASE_URL + `api/watcher/${id}/execute`
+                );
+            },
         };
     }
 })(window.angular);

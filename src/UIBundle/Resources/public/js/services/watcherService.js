@@ -23,5 +23,9 @@
         service.delete = function (id) {
             return WatcherFactory.delete(id);
         }
+
+        service.execute = function (id) {
+            return WatcherFactory.execute(id);
+        }
     }
 })(window.angular);

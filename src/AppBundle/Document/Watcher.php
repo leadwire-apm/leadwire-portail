@@ -486,4 +486,28 @@ class Watcher
     {
         return $this->appId;
     }
+
+    /*
+     * Set the value of appId
+     *
+     * @param  boolean  $appId
+     *
+     * @return  self
+     */
+    public function setEnbled(bool $enabled): self
+    {
+        $this->enabled = $enabled;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of enabled
+     *
+     * @return boolean
+     */
+    public function isEnabled()
+    {
+        return $this->enabled;
+    }
 }

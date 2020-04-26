@@ -41,14 +41,15 @@
 
                         <div class="apm-checkbox">
                             <label class="switch switch-sm">
-                                <input type="checkbox" ng-model="watcher.enabled">
+                                <input type="checkbox" ng-model="watcher.enabled" ng-change="ctrl.handle(watcher)">
                                 <span>
                                     <i class="handle"></i>
                                 </span>
                             </label>
                         </div>
 
-                        <a class="btn btn-success" title="Execute" data-placement="left" data-toggle="tooltip">
+                        <a class="btn btn-success" title="Execute" data-placement="left" data-toggle="tooltip"
+                            ng-click="ctrl.executeWatcher(watcher.id)">
                             <i class="fas fa-play"></i>
                         </a>
 

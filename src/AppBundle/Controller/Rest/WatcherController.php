@@ -24,8 +24,7 @@ class WatcherController extends Controller
      *
      * @return Response
      */
-    public function saveOrUpdateAction(Request $request, WatcherService $watcherService)
-    {
+    public function saveOrUpdateAction(Request $request, WatcherService $watcherService) {
         try {
             $data = $request->getContent();
             $watcher = $watcherService->saveOrUpdate($data);
@@ -47,8 +46,7 @@ class WatcherController extends Controller
      *
      * @return Response
      */
-    public function listAction(Request $request, WatcherService $watcherService)
-    {
+    public function listAction(Request $request, WatcherService $watcherService) {
         try {
             $data = $request->getContent();
             $watcher = $watcherService->list(json_decode($data, true));
@@ -68,10 +66,28 @@ class WatcherController extends Controller
      *
      * @return Response
      */
-    public function deleteAction(Request $request, WatcherService $watcherService, $id)
-    {
+    public function deleteAction(Request $request, WatcherService $watcherService, $id) {
         try {
             $watcher = $watcherService->delete($id);
+            return $this->renderResponse($watcher, Response::HTTP_OK, []);
+        }
+         catch (\Exception $e) {
+            return $this->exception($e->getMessage(), 400);
+        }
+    }
+
+    /**
+     * @Route("/{id}/execute", methods="POST")
+     *
+     * @param Request        $request
+     * @param WatcherService $watcherService
+     * @param string $id
+     *
+     * @return Response
+     */
+    public function executeAction(Request $request, WatcherService $watcherService, $id) {
+        try {
+            $watcher = $watcherService->execute($id);
             return $this->renderResponse($watcher, Response::HTTP_OK, []);
         }
          catch (\Exception $e) {
@@ -88,8 +104,7 @@ class WatcherController extends Controller
      *
      * @return Response
      */
-    private function exception($message, $status = 400)
-    {
+    private function exception($message, $status = 400) {
         return $this->renderResponse(array('message' => $message), $status);
     }
     

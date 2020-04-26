@@ -61,19 +61,28 @@
 
         vm.deleteWatcher = function (id, index) {
             swal(MESSAGES_CONSTANTS.SWEET_ALERT_VALIDATION())
-            .then(function (willDelete) {
-                if (willDelete) {
-                    WatcherService.delete(id)
-                    .then(function(){
-                        vm.watchersList.splice(index, 1);
-                        toastr.success(MESSAGES_CONSTANTS.SUCCESS);
-                    }).catch(function(err){
-                        toastr.success(MESSAGES_CONSTANTS.ERROR);
-                    })
-                } else {
-                    swal.close();
-                }
-            });
+                .then(function (willDelete) {
+                    if (willDelete) {
+                        WatcherService.delete(id)
+                            .then(function () {
+                                vm.watchersList.splice(index, 1);
+                                toastr.success(MESSAGES_CONSTANTS.SUCCESS);
+                            }).catch(function (err) {
+                                toastr.success(MESSAGES_CONSTANTS.ERROR);
+                            })
+                    } else {
+                        swal.close();
+                    }
+                });
+        }
+
+        vm.executeWatcher = function (id) {
+            WatcherService.execute(id)
+                .then(function () {
+                    toastr.success(MESSAGES_CONSTANTS.SUCCESS);
+                }).catch(function (err) {
+                    toastr.success(MESSAGES_CONSTANTS.ERROR);
+                })
         }
 
 

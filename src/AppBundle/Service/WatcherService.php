@@ -101,7 +101,14 @@ class WatcherService
         
         if ($db !== null && !$watcher->getId()) {
             throw new DuplicateApplicationNameException("An watcher with the same title already exists");
-        }else {
+        } elseif ($watcher->getId()){
+            $this->watcherManager->update($watcher);
+            $environment = $this->environmentService->getById($watcher->getEnvId());
+            $application = $this->applicationService->getById($watcher->getAppId());
+            $watechrIndex = $environment->getName() . "-" . $application->getApplicationWatcherIndex();
+            $this->KibanaService->handelWatcher($watcher, $watechrIndex);
+
+        } else {
             $id = $this->watcherManager->update($watcher);
             $environment = $this->environmentService->getById($watcher->getEnvId());
             $application = $this->applicationService->getById($watcher->getAppId());
@@ -131,7 +138,28 @@ class WatcherService
         if ($watcher === null) {
             throw new HttpException(Response::HTTP_NOT_FOUND, "Watcher not Found");
         } else {
-            return $this->watcherManager->delete($watcher);
+            $this->watcherManager->delete($watcher);
+            $environment = $this->environmentService->getById($watcher->getEnvId());
+            $application = $this->applicationService->getById($watcher->getAppId());
+            $watechrIndex = $environment->getName() . "-" . $application->getApplicationWatcherIndex();
+            return $this->KibanaService->deleteWatcher($watcher);
+        }
+    }
+
+    /**
+     * execute watcher
+     *
+     * @return array
+     */
+    public function execute($id) {
+        $watcher = $this->watcherManager->getOneBy(['id' => $id]);
+        if ($watcher === null) {
+            throw new HttpException(Response::HTTP_NOT_FOUND, "Watcher not Found");
+        } else {
+            $environment = $this->environmentService->getById($watcher->getEnvId());
+            $application = $this->applicationService->getById($watcher->getAppId());
+            $watechrIndex = $environment->getName() . "-" . $application->getApplicationWatcherIndex();
+            return $this->KibanaService->executeWatcher($watcher, $watechrIndex);
         }
     }
 

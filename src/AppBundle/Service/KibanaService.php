@@ -429,13 +429,13 @@ class KibanaService
         return $response->getStatusCode() === Response::HTTP_OK;
     }
 
-    public function createWatcher(Watcher $wathcer, string $tenant)
+    public function createWatcher(Watcher $watcher, string $tenant)
     {
         $authorization = $this->jwtHelper->encode($this->kibanaAdminUsername, $this->kibanaAdminUuid);
        
         $content = json_encode([
             "attributes" => [
-                "title" => $wathcer->getTitre(),
+                "title" => $watcher->getTitre(),
                 "disable" => false,
                 "report" => true,
                 "save_payload" => false,
@@ -443,7 +443,7 @@ class KibanaService
                 "spy" =>false,
                 "trigger" => [
                     "schedule" => [
-                        "later" => $wathcer->getShedule()
+                        "later" => $watcher->getShedule()
                     ]
                 ],
                 "input" => [
@@ -458,11 +458,11 @@ class KibanaService
                 "actions" => [
                     "report_admin" => [
                         "report" => [
-                            "to" => $wathcer->getTo(),
+                            "to" => $watcher->getTo(),
                             "from" => "wassim.dhib@leadwire.io",
-                            "subject" => $wathcer->getSubject(),
+                            "subject" => $watcher->getSubject(),
                             "priority" =>"high",
-                            "body" => $wathcer->getBody(),
+                            "body" => $watcher->getBody(),
                             "auth" => [
                                 "active" => true,
                                 "mode" => "basic",
@@ -470,10 +470,10 @@ class KibanaService
                                 "password" =>"admin"
                             ],
                             "snapshot" => [
-                                "res" => $wathcer->getRes(),
-                                "url" => $wathcer->getUrl(),
+                                "res" => $watcher->getRes(),
+                                "url" => $watcher->getUrl(),
                                 "params" => [
-                                    "delay" => intval($wathcer->getDelay())
+                                    "delay" => intval($watcher->getDelay())
                                 ]
                             ]
                         ]
@@ -504,6 +504,126 @@ class KibanaService
             "leadwire.kibana.createWatcher",
             [
                 'url' => $this->url . "api/sentinl/watcher",
+                'verb' => 'PUT',
+                'headers' => $headers,
+                'status_code' => $response->getStatusCode(),
+                'status_text' => $response->getReasonPhrase(),
+            ]
+        );
+
+        return $response->getStatusCode() === Response::HTTP_OK;
+    }
+
+    public function executeWatcher(Watcher $watcher, string $tenant)
+    {
+        $authorization = $this->jwtHelper->encode($this->kibanaAdminUsername, $this->kibanaAdminUuid);
+       
+        $content = json_encode([
+            "attributes" => [ 
+                "id" => $watcher->getId()
+            ]
+        ]);
+
+        $headers = [
+            'kbn-xsrf' => true,
+            'Content-Type' => 'application/json',
+            'x-proxy-roles' => $this->kibanaAdminUsername,
+            'X-Proxy-User' => $this->kibanaAdminUsername,
+            'Authorization' => "Bearer $authorization",
+            'x-forwarded-for' => '127.0.0.1',
+            'security_tenant' => $tenant
+        ];
+
+        $response = $this->httpClient->post(
+            $this->url . "api/sentinl/watcher/_execute",
+            [
+                'headers' => $headers,
+                'body' => $content,
+            ]
+        );
+
+        $this->logger->notice(
+            "leadwire.kibana.executeWatcher",
+            [
+                'url' => $this->url . "api/sentinl/watcher/_execute",
+                'verb' => 'POST',
+                'headers' => $headers,
+                'status_code' => $response->getStatusCode(),
+                'status_text' => $response->getReasonPhrase(),
+            ]
+        );
+
+        return $response->getStatusCode() === Response::HTTP_OK;
+    }
+
+    public function deleteWatcher(Watcher $watcher, string $tenant)
+    {
+        $authorization = $this->jwtHelper->encode($this->kibanaAdminUsername, $this->kibanaAdminUuid);
+       
+
+        $headers = [
+            'kbn-xsrf' => true,
+            'Content-Type' => 'application/json',
+            'x-proxy-roles' => $this->kibanaAdminUsername,
+            'X-Proxy-User' => $this->kibanaAdminUsername,
+            'Authorization' => "Bearer $authorization",
+            'x-forwarded-for' => '127.0.0.1',
+            'security_tenant' => $tenant
+        ];
+
+        $response = $this->httpClient->delete(
+            $this->url . "api/sentinl/watcher/" . $watcher->getId(),
+            [
+                'headers' => $headers
+            ]
+        );
+
+        $this->logger->notice(
+            "leadwire.kibana.deleteWatcher",
+            [
+                'url' => $this->url . "api/sentinl/watcher/" . $watcher->getId(),
+                'verb' => 'DELETE',
+                'headers' => $headers,
+                'status_code' => $response->getStatusCode(),
+                'status_text' => $response->getBody(),
+            ]
+        );
+
+        return $response->getStatusCode() === Response::HTTP_OK;
+    }
+
+
+    public function handelWatcher(Watcher $watcher, string $tenant) {
+        $authorization = $this->jwtHelper->encode($this->kibanaAdminUsername, $this->kibanaAdminUuid);
+       
+        $content = json_encode([
+            "attributes" => [ 
+                "disable" => $watcher->isEnabled()
+            ]
+        ]);
+
+        $headers = [
+            'kbn-xsrf' => true,
+            'Content-Type' => 'application/json',
+            'x-proxy-roles' => $this->kibanaAdminUsername,
+            'X-Proxy-User' => $this->kibanaAdminUsername,
+            'Authorization' => "Bearer $authorization",
+            'x-forwarded-for' => '127.0.0.1',
+            'security_tenant' => $tenant
+        ];
+
+        $response = $this->httpClient->put(
+            $this->url . "api/sentinl/watcher" . $watcher->getId(),
+            [
+                'headers' => $headers,
+                'body' => $content,
+            ]
+        );
+
+        $this->logger->notice(
+            "leadwire.kibana.handelWatcher",
+            [
+                'url' => $this->url . "api/sentinl/watcher" . $watcher->getId(),
                 'verb' => 'PUT',
                 'headers' => $headers,
                 'status_code' => $response->getStatusCode(),
