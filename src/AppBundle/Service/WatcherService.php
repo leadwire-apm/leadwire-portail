@@ -102,18 +102,28 @@ class WatcherService
         if ($db !== null && !$watcher->getId()) {
             throw new DuplicateApplicationNameException("An watcher with the same title already exists");
         } elseif ($watcher->getId()){
-            $this->watcherManager->update($watcher);
             $environment = $this->environmentService->getById($watcher->getEnvId());
             $application = $this->applicationService->getById($watcher->getAppId());
             $watechrIndex = $environment->getName() . "-" . $application->getApplicationWatcherIndex();
             $this->KibanaService->handelWatcher($watcher, $watechrIndex);
-
+            $res = $this->watcherManager->update($watcher);
+            if(!$res){
+                throw new HttpException(Response::HTTP_NOT_FOUND, "Watcher update error");
+            }
         } else {
-            $id = $this->watcherManager->update($watcher);
             $environment = $this->environmentService->getById($watcher->getEnvId());
             $application = $this->applicationService->getById($watcher->getAppId());
             $watechrIndex = $environment->getName() . "-" . $application->getApplicationWatcherIndex();
-            $this->KibanaService->createWatcher($watcher, $watechrIndex);
+            $kbnId = $this->KibanaService->createWatcher($watcher, $watechrIndex);
+            if($kbnId){
+                $watcher->setKibanaId($kbnId);
+                $id = $this->watcherManager->update($watcher);
+                if(!$id){
+                    throw new HttpException(Response::HTTP_NOT_FOUND, "Watcher create error");
+                }
+            } else {
+                throw new HttpException(Response::HTTP_NOT_FOUND, "Watcher create error");
+            }
         }
 
         return $id;
@@ -125,7 +135,13 @@ class WatcherService
      * @return array
      */
     public function list($payload) {
-        return $this->watcherManager->getByEnvDash( $payload['appId'], $payload['envId']);
+        $res =  $this->watcherManager->getByEnvDash( $payload['appId'], $payload['envId']);
+
+        if(!$res){
+            throw new HttpException(Response::HTTP_NOT_FOUND, "Watcher get list error");
+        }
+
+        return $res;
     }
 
     /**
@@ -138,11 +154,16 @@ class WatcherService
         if ($watcher === null) {
             throw new HttpException(Response::HTTP_NOT_FOUND, "Watcher not Found");
         } else {
-            $this->watcherManager->delete($watcher);
             $environment = $this->environmentService->getById($watcher->getEnvId());
             $application = $this->applicationService->getById($watcher->getAppId());
             $watechrIndex = $environment->getName() . "-" . $application->getApplicationWatcherIndex();
-            return $this->KibanaService->deleteWatcher($watcher);
+            $res = $this->KibanaService->deleteWatcher($watcher, $watechrIndex);
+            $this->watcherManager->delete($watcher);
+
+            if(!$res){
+                throw new HttpException(Response::HTTP_NOT_FOUND, "Watcher delete error");
+            }
+            return $res;
         }
     }
 
@@ -159,7 +180,12 @@ class WatcherService
             $environment = $this->environmentService->getById($watcher->getEnvId());
             $application = $this->applicationService->getById($watcher->getAppId());
             $watechrIndex = $environment->getName() . "-" . $application->getApplicationWatcherIndex();
-            return $this->KibanaService->executeWatcher($watcher, $watechrIndex);
+            $res = $this->KibanaService->executeWatcher($watcher, $watechrIndex);
+            if($res === false){
+                throw new HttpException(Response::HTTP_NOT_FOUND, "Watcher execute error");
+            }
+            return $watechrIndex;
+
         }
     }
 
