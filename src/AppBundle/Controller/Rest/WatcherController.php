@@ -105,7 +105,12 @@ class WatcherController extends Controller
      * @return Response
      */
     private function exception($message, $status = 400) {
-        return $this->renderResponse(array('message' => $message), $status);
+        try {
+            return $this->renderResponse(array('message' => $message), $status);
+        }
+         catch (\Exception $e) {
+            return $this->exception($e->getMessage(), 400);
+        }
     }
     
 }
