@@ -162,6 +162,42 @@ class Watcher
      */
     private $enabled;
 
+    /**
+     * @ODM\Field(type="string")
+     * @JMS\Type("string")
+     * @JMS\Expose
+     * @JMS\Groups({"Default", "minimalist"})
+     *
+     * @var string
+     */
+    private $kibanaId;
+
+
+    /*
+     * Set the value of kibanaId
+     *
+     * @param  int  $string
+     *
+     * @return  self
+     */
+    public function setKibanaId(string $kibanaId)
+    {
+        $this->kibanaId = $kibanaId;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of kibanaId
+     *
+     * @return string
+     */
+    public function getKibanaId()
+    {
+        return $this->kibanaId;
+    }
+    
+
 
     /**
      * Get id
@@ -181,7 +217,7 @@ class Watcher
      *
      * @return  self
      */
-    public function setIp(string $subject)
+    public function setSubject(string $subject)
     {
         $this->subject = $subject;
 
