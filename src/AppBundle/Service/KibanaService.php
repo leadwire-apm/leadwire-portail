@@ -399,8 +399,7 @@ class KibanaService
      *
      * @return bool
      */
-    public function deleteReport(string $id, string $ind)
-    {
+    public function deleteReport(string $id, string $ind) {
         $authorization = $this->jwtHelper->encode($this->kibanaAdminUsername, $this->kibanaAdminUuid);
         $headers = [
             'kbn-xsrf' => true,
@@ -429,8 +428,7 @@ class KibanaService
         return $response->getStatusCode() === Response::HTTP_OK;
     }
 
-    public function createWatcher(Watcher $watcher, string $tenant)
-    {
+    public function createWatcher(Watcher $watcher, string $tenant) {
         $authorization = $this->jwtHelper->encode($this->kibanaAdminUsername, $this->kibanaAdminUuid);
        
         $content = json_encode([
@@ -500,6 +498,8 @@ class KibanaService
             ]
         );
 
+        $res = \json_decode($response->getBody());
+
         $this->logger->notice(
             "leadwire.kibana.createWatcher",
             [
@@ -511,18 +511,15 @@ class KibanaService
             ]
         );
 
-        return $response->getStatusCode() === Response::HTTP_OK;
+        if($response->getStatusCode() === Response::HTTP_OK){
+            return $res->id;
+        } else {
+            return null;
+        }
     }
 
-    public function executeWatcher(Watcher $watcher, string $tenant)
-    {
+    public function executeWatcher(Watcher $watcher, string $tenant) {
         $authorization = $this->jwtHelper->encode($this->kibanaAdminUsername, $this->kibanaAdminUuid);
-       
-        $content = json_encode([
-            "attributes" => [ 
-                "id" => $watcher->getId()
-            ]
-        ]);
 
         $headers = [
             'kbn-xsrf' => true,
@@ -531,21 +528,20 @@ class KibanaService
             'X-Proxy-User' => $this->kibanaAdminUsername,
             'Authorization' => "Bearer $authorization",
             'x-forwarded-for' => '127.0.0.1',
-            'security_tenant' => $tenant
+            'security_tenant' => $tenant,
         ];
 
         $response = $this->httpClient->post(
-            $this->url . "api/sentinl/watcher/_execute",
+            $this->url . "api/sentinl/watcher/_execute/" . $watcher->getKibanaId(),
             [
                 'headers' => $headers,
-                'body' => $content,
             ]
         );
 
         $this->logger->notice(
             "leadwire.kibana.executeWatcher",
             [
-                'url' => $this->url . "api/sentinl/watcher/_execute",
+                'url' => $this->url . "api/sentinl/watcher/_execute/" . $watcher->getKibanaId(),
                 'verb' => 'POST',
                 'headers' => $headers,
                 'status_code' => $response->getStatusCode(),
@@ -556,8 +552,7 @@ class KibanaService
         return $response->getStatusCode() === Response::HTTP_OK;
     }
 
-    public function deleteWatcher(Watcher $watcher, string $tenant)
-    {
+    public function deleteWatcher(Watcher $watcher, string $tenant) {
         $authorization = $this->jwtHelper->encode($this->kibanaAdminUsername, $this->kibanaAdminUuid);
        
 
@@ -572,7 +567,7 @@ class KibanaService
         ];
 
         $response = $this->httpClient->delete(
-            $this->url . "api/sentinl/watcher/" . $watcher->getId(),
+            $this->url . "api/sentinl/watcher/" . $watcher->getKibanaId(),
             [
                 'headers' => $headers
             ]
@@ -585,20 +580,63 @@ class KibanaService
                 'verb' => 'DELETE',
                 'headers' => $headers,
                 'status_code' => $response->getStatusCode(),
-                'status_text' => $response->getBody(),
+                'status_text' => $response->getReasonPhrase(),
             ]
         );
 
         return $response->getStatusCode() === Response::HTTP_OK;
     }
 
-
     public function handelWatcher(Watcher $watcher, string $tenant) {
         $authorization = $this->jwtHelper->encode($this->kibanaAdminUsername, $this->kibanaAdminUuid);
        
         $content = json_encode([
-            "attributes" => [ 
-                "disable" => $watcher->isEnabled()
+            "attributes" => [
+                "id" => $watcher->getKibanaId(),
+                "title" => $watcher->getTitre(),
+                "disable" => $watcher->isEnabled(),
+                "report" => true,
+                "save_payload" => false,
+                "impersonate" => false,
+                "spy" =>false,
+                "trigger" => [
+                    "schedule" => [
+                        "later" => $watcher->getShedule()
+                    ]
+                ],
+                "input" => [
+                    "search" => [
+                        "request" => [
+                            "index" => array(),
+                            "body" => []
+                        ]
+                    ]
+                ],
+                "condition" => [],
+                "actions" => [
+                    "report_admin" => [
+                        "report" => [
+                            "to" => $watcher->getTo(),
+                            "from" => "wassim.dhib@leadwire.io",
+                            "subject" => $watcher->getSubject(),
+                            "priority" =>"high",
+                            "body" => $watcher->getBody(),
+                            "auth" => [
+                                "active" => true,
+                                "mode" => "basic",
+                                "username" =>"admin",
+                                "password" =>"admin"
+                            ],
+                            "snapshot" => [
+                                "res" => $watcher->getRes(),
+                                "url" => $watcher->getUrl(),
+                                "params" => [
+                                    "delay" => intval($watcher->getDelay())
+                                ]
+                            ]
+                        ]
+                    ]
+                ]
             ]
         ]);
 
