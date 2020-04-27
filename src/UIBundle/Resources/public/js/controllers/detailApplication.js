@@ -84,6 +84,15 @@
                     toastr.success(MESSAGES_CONSTANTS.ERROR);
                 })
         }
+            
+        vm.handleWatcher = function (watcher) {
+            WatcherService.saveOrUpdate(watcher)
+                .then(function () {
+                    toastr.success(MESSAGES_CONSTANTS.SUCCESS);
+                }).catch(function (err) {
+                    toastr.success(MESSAGES_CONSTANTS.ERROR);
+                })
+        }
 
 
         vm.getBlob = function (data) {
