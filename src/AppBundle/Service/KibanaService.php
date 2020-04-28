@@ -447,12 +447,10 @@ class KibanaService
                 "input" => [
                     "search" => [
                         "request" => [
-                            "index" => array(),
-                            "body" => []
-                        ]
+                            "index" => array()                        ]
                     ]
                 ],
-                "condition" => [],
+                "condition" =>  array(),
                 "actions" => [
                     "report_admin" => [
                         "report" => [
@@ -521,6 +519,56 @@ class KibanaService
     public function executeWatcher(Watcher $watcher, string $tenant) {
         $authorization = $this->jwtHelper->encode($this->kibanaAdminUsername, $this->kibanaAdminUuid);
 
+           $content = json_encode([
+            "attributes" => [
+                "id" => $watcher->getKibanaId(),
+                "title" => $watcher->getTitre(),
+                "disable" => $watcher->isEnabled(),
+                "report" => true,
+                "save_payload" => false,
+                "impersonate" => false,
+                "spy" =>false,
+                "trigger" => [
+                    "schedule" => [
+                        "later" => $watcher->getShedule()
+                    ]
+                ],
+                "input" => [
+                    "search" => [
+                        "request" => [
+                            "index" => array()                        ]
+                    ]
+                ],
+                "condition" =>  array(),
+                "actions" => [
+                    "report_admin" => [
+                        "report" => [
+                            "to" => $watcher->getTo(),
+                            "from" => "wassim.dhib@leadwire.io",
+                            "subject" => $watcher->getSubject(),
+                            "priority" =>"high",
+                            "body" => $watcher->getBody(),
+                            "auth" => [
+                                "active" => true,
+                                "mode" => "basic",
+                                "username" =>"admin",
+                                "password" =>"admin"
+                            ],
+                            "snapshot" => [
+                                "res" => $watcher->getRes(),
+                                "url" => $watcher->getUrl(),
+                                "params" => [
+                                    "delay" => intval($watcher->getDelay())
+                                ]
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+        ]);
+
+        
+        
         $headers = [
             'kbn-xsrf' => true,
             'Content-Type' => 'application/json',
@@ -532,16 +580,17 @@ class KibanaService
         ];
 
         $response = $this->httpClient->post(
-            $this->url . "api/sentinl/watcher/_execute/" . $watcher->getKibanaId(),
+            $this->url . "api/sentinl/watcher/_execute",
             [
                 'headers' => $headers,
+                'body' => $content,
             ]
         );
 
         $this->logger->notice(
             "leadwire.kibana.executeWatcher",
             [
-                'url' => $this->url . "api/sentinl/watcher/_execute/" . $watcher->getKibanaId(),
+                'url' => $this->url . "api/sentinl/watcher/_execute",
                 'verb' => 'POST',
                 'headers' => $headers,
                 'status_code' => $response->getStatusCode(),
@@ -576,7 +625,7 @@ class KibanaService
         $this->logger->notice(
             "leadwire.kibana.deleteWatcher",
             [
-                'url' => $this->url . "api/sentinl/watcher/" . $watcher->getId(),
+                'url' => $this->url . "api/sentinl/watcher/" . $watcher->getKibanaId(),
                 'verb' => 'DELETE',
                 'headers' => $headers,
                 'status_code' => $response->getStatusCode(),
@@ -592,7 +641,6 @@ class KibanaService
        
         $content = json_encode([
             "attributes" => [
-                "id" => $watcher->getKibanaId(),
                 "title" => $watcher->getTitre(),
                 "disable" => $watcher->isEnabled(),
                 "report" => true,
@@ -607,12 +655,10 @@ class KibanaService
                 "input" => [
                     "search" => [
                         "request" => [
-                            "index" => array(),
-                            "body" => []
-                        ]
+                            "index" => array()                        ]
                     ]
                 ],
-                "condition" => [],
+                "condition" =>  array(),
                 "actions" => [
                     "report_admin" => [
                         "report" => [
@@ -651,7 +697,7 @@ class KibanaService
         ];
 
         $response = $this->httpClient->put(
-            $this->url . "api/sentinl/watcher" . $watcher->getId(),
+            $this->url . "api/sentinl/watcher/" . $watcher->getKibanaId(),
             [
                 'headers' => $headers,
                 'body' => $content,
@@ -661,7 +707,7 @@ class KibanaService
         $this->logger->notice(
             "leadwire.kibana.handelWatcher",
             [
-                'url' => $this->url . "api/sentinl/watcher" . $watcher->getId(),
+                'url' => $this->url . "api/sentinl/watcher/" . $watcher->getKibanaId(),
                 'verb' => 'PUT',
                 'headers' => $headers,
                 'status_code' => $response->getStatusCode(),
