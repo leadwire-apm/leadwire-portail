@@ -88,6 +88,9 @@ class KibanaService
         $this->url = $settings['host'] . ":" . (string) $settings['port'] . "/";
         $this->kibanaAdminUsername = $settings['kibana_admin_username'];
         $this->kibanaAdminUuid = $settings['kibana_admin_uuid'];
+
+        $this->es_password = $settings['ES_PASSWORD'];
+        $this->email = $settings['MAILER_USER'];
     }
 
     /**
@@ -455,15 +458,15 @@ class KibanaService
                     "report_admin" => [
                         "report" => [
                             "to" => $watcher->getTo(),
-                            "from" => "wassim.dhib@leadwire.io",
+                            "from" => $this->email,
                             "subject" => $watcher->getSubject(),
                             "priority" =>"high",
                             "body" => $watcher->getBody(),
                             "auth" => [
                                 "active" => true,
                                 "mode" => "basic",
-                                "username" =>"admin",
-                                "password" =>"admin"
+                                "username" => "admin",
+                                "password" => $this->es_password
                             ],
                             "snapshot" => [
                                 "res" => $watcher->getRes(),
@@ -544,15 +547,15 @@ class KibanaService
                     "report_admin" => [
                         "report" => [
                             "to" => $watcher->getTo(),
-                            "from" => "wassim.dhib@leadwire.io",
+                            "from" => $this->email,
                             "subject" => $watcher->getSubject(),
                             "priority" =>"high",
                             "body" => $watcher->getBody(),
                             "auth" => [
                                 "active" => true,
                                 "mode" => "basic",
-                                "username" =>"admin",
-                                "password" =>"admin"
+                                "username" => "admin",
+                                "password" => $this->es_password
                             ],
                             "snapshot" => [
                                 "res" => $watcher->getRes(),
@@ -661,15 +664,15 @@ class KibanaService
                     "report_admin" => [
                         "report" => [
                             "to" => $watcher->getTo(),
-                            "from" => "wassim.dhib@leadwire.io",
+                            "from" => $this->email,
                             "subject" => $watcher->getSubject(),
                             "priority" =>"high",
                             "body" => $watcher->getBody(),
                             "auth" => [
                                 "active" => true,
                                 "mode" => "basic",
-                                "username" =>"admin",
-                                "password" =>"admin"
+                                "username" => "admin",
+                                "password" => $this->es_password
                             ],
                             "snapshot" => [
                                 "res" => $watcher->getRes(),
