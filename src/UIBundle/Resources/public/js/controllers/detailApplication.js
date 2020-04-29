@@ -117,7 +117,7 @@
                 }
             });
 
-            ApplicationService.getApplicationWatchers(vm.application.name, envName)
+            ApplicationService.getApplicationReports(vm.application.name, envName)
                 .then(function (response) {
                     vm.reportsList = response;
                 }).catch(function (error) {
@@ -130,7 +130,7 @@
             swal(MESSAGES_CONSTANTS.SWEET_ALERT_VALIDATION())
                 .then(function (willDelete) {
                     if (willDelete) {
-                        ApplicationService.deleteApplicationWatcher(_id, _index)
+                        ApplicationService.deleteApplicationReport(_id, _index)
                             .then(function (response) {
                                 vm.watchers = vm.watchers.filter((_, index) => index !== ind)
                                 toastr.success(MESSAGES_CONSTANTS.SUCCESS);

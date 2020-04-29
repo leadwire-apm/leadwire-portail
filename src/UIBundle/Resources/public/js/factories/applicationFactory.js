@@ -151,17 +151,17 @@
                 /**
                 * 
                 */
-                getApplicationWatchers: function (appName, envName) {
+                getApplicationReports: function (appName, envName) {
                     return $http.get(
-                        CONFIG.BASE_URL + 'api/app/' + appName + '/' + envName + '/watchers',
+                        CONFIG.BASE_URL + 'api/app/' + appName + '/' + envName + '/reports',
                     );
                 },
                 /**
                 * 
                 */
-                deleteApplicationWatcher: function (id, index) {
+                deleteApplicationReport: function (id, index) {
                     return $http.get(
-                        CONFIG.BASE_URL + 'api/app/' + id + '/' + index + '/watcher',
+                        CONFIG.BASE_URL + 'api/app/' + id + '/' + index + '/report',
                     );
                 }
             };
