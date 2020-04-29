@@ -37,7 +37,7 @@
                         <select data-ng-model="ctrl.watcher.dashboard" class="form-control" id="dashboard" name="dashboard"
                             required>
                             <option ng-repeat="dashboard in ctrl.dashboardsList" value="[[dashboard.id]]">
-                                [[dashboard.key]] : [[dashboard.name]]
+                               [[dashboard.group === 'Custom' ? '**Private** ': '']] [[dashboard.key]] : [[dashboard.name]]
                             </option>
                         </select>
 
@@ -51,8 +51,7 @@
                     <label class="col-sm-2 control-label" for="schedule">Schedule *</label>
                     <div class="col-sm-10">
                         <input id="schedule" name="schedule" placeholder="Watcher schedule" type="text"
-                            class="form-control" data-ng-model="ctrl.watcher.schedule" ng-maxlength="32"
-                            autocomplete="false" lowercase-only required>
+                            class="form-control" data-ng-model="ctrl.watcher.schedule" ng-maxlength="32" required>
                         <span class="text-red"
                             ng-show="watcherForm.schedule.$error.required && !watcherForm.schedule.$pristine">
                             This field is required</span>

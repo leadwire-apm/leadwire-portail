@@ -14,7 +14,7 @@
             </section>
         </tab>
         <tab heading="Report" ng-if="user.id == ctrl.application.owner.id || ctrl.hasReportsRule()"
-            ng-click="ctrl.getWatchers()">
+            ng-click="ctrl.getReports()">
             <section class="widget bg-white post-comments" ng-include="'application/reports.html'">
             </section>
         </tab>

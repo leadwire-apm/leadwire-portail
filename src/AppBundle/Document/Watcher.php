@@ -34,8 +34,8 @@ class Watcher
     private $subject;
 
     /**
-     * @ODM\Field(type="string")
-     * @JMS\Type("string")
+     * @ODM\Field(type="integer")
+     * @JMS\Type("integer")
      * @JMS\Expose
      * @JMS\Groups({"Default", "minimalist"})
      *
@@ -162,6 +162,52 @@ class Watcher
      */
     private $enabled;
 
+    /**
+     * @ODM\Field(type="string")
+     * @JMS\Type("string")
+     * @JMS\Expose
+     * @JMS\Groups({"Default", "minimalist"})
+     *
+     * @var string
+     */
+    private $kibanaId;
+
+    /**
+     * @ODM\Field(type="string")
+     * @JMS\Type("string")
+     * @JMS\Expose
+     * @JMS\Groups({"Default", "minimalist"})
+     *
+     * @var string
+     */
+    private $title;
+
+
+    /*
+     * Set the value of kibanaId
+     *
+     * @param  int  $string
+     *
+     * @return  self
+     */
+    public function setKibanaId(string $kibanaId)
+    {
+        $this->kibanaId = $kibanaId;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of kibanaId
+     *
+     * @return string
+     */
+    public function getKibanaId()
+    {
+        return $this->kibanaId;
+    }
+    
+
 
     /**
      * Get id
@@ -181,7 +227,7 @@ class Watcher
      *
      * @return  self
      */
-    public function setIp(string $subject)
+    public function setSubject(string $subject)
     {
         $this->subject = $subject;
 
@@ -199,9 +245,9 @@ class Watcher
     }
 
     /*
-     * Set the value of string
+     * Set the value of integer
      *
-     * @param  int  $string
+     * @param  int  $integer
      *
      * @return  self
      */
@@ -215,7 +261,7 @@ class Watcher
     /**
      * Get the value of delay
      *
-     * @return string
+     * @return integer
      */
     public function getDelay()
     {
@@ -485,5 +531,53 @@ class Watcher
     public function getAppId()
     {
         return $this->appId;
+    }
+
+    /*
+     * Set the value of appId
+     *
+     * @param  boolean  $appId
+     *
+     * @return  self
+     */
+    public function setEnbled(bool $enabled): self
+    {
+        $this->enabled = $enabled;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of enabled
+     *
+     * @return boolean
+     */
+    public function isEnabled()
+    {
+        return $this->enabled;
+    }
+
+     /*
+     * Set the value of title
+     *
+     * @param  string  $title
+     *
+     * @return  self
+     */
+    public function setTitle(string $title)
+    {
+        $this->title = $title;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of title
+     *
+     * @return string
+     */
+    public function getTitle()
+    {
+        return $this->title;
     }
 }

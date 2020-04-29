@@ -152,8 +152,8 @@
                     });
             }
 
-            service.getApplicationWatchers = function (appName, envName) {
-                return ApplicationFactory.getApplicationWatchers(appName, envName)
+            service.getApplicationReports = function (appName, envName) {
+                return ApplicationFactory.getApplicationReports(appName, envName)
                     .then(function (response) {
                         return response.data;
                     })
@@ -162,8 +162,8 @@
                     });
             }
 
-            service.deleteApplicationWatcher = function (id, _index) {
-                return ApplicationFactory.deleteApplicationWatcher(id, _index)
+            service.deleteApplicationReport = function (id, _index) {
+                return ApplicationFactory.deleteApplicationReport(id, _index)
                     .then(function (response) {
                         return response.data;
                     })

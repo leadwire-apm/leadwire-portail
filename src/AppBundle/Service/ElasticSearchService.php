@@ -98,20 +98,6 @@ class ElasticSearchService
         }
     }
 
-    /**
-     * @param Application $app
-     * @param User $user
-     */
-    public function getReports(Application $app, User $user, string $envName)
-    {
-        try {
-            $reports = $this->filter($this->getRawReports($app, $user, $envName));
-            return $reports;
-        } catch (\Exception $e) {
-            $this->logger->error($e->getMessage());
-            throw new HttpException("An error has occurred while executing your request.", 500);
-        }
-    }
 
     /*********************************************
      *          LOWER LEVEL ACTIONS              *
@@ -867,7 +853,7 @@ class ElasticSearchService
       
     }
     
-    function getWatchers($appName, $envName){
+    function getReports($appName, $envName){
         try {
             
             $body = [
@@ -894,7 +880,7 @@ class ElasticSearchService
             );
 
             $this->logger->notice(
-                "leadwire.es.getWatchers",
+                "leadwire.es.getReports",
                 [
                     'url' => $this->url . "watcher_alarms-*/_search",
                     'verb' => 'GET',

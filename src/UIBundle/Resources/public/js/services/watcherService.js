@@ -12,7 +12,6 @@
         var service = this;
 
         service.saveOrUpdate = function (data) {
-            data.delay = String(data.delay);
             return WatcherFactory.saveOrUpdate(data);
         }
 
@@ -22,6 +21,10 @@
 
         service.delete = function (id) {
             return WatcherFactory.delete(id);
+        }
+
+        service.execute = function (id) {
+            return WatcherFactory.execute(id);
         }
     }
 })(window.angular);
