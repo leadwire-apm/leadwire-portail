@@ -436,7 +436,7 @@ class KibanaService
        
         $content = json_encode([
             "attributes" => [
-                "title" => $watcher->getTitre(),
+                "title" => $watcher->getTitle(),
                 "disable" => true,
                 "report" => true,
                 "save_payload" => false,
@@ -472,7 +472,7 @@ class KibanaService
                                 "res" => $watcher->getRes(),
                                 "url" => $watcher->getUrl(),
                                 "params" => [
-                                    "delay" => intval($watcher->getDelay())
+                                    "delay" => $watcher->getDelay()
                                 ]
                             ]
                         ]
@@ -525,7 +525,7 @@ class KibanaService
            $content = json_encode([
             "attributes" => [
                 "id" => $watcher->getKibanaId(),
-                "title" => $watcher->getTitre(),
+                "title" => $watcher->getTitle(),
                 "disable" => $watcher->isEnabled(),
                 "report" => true,
                 "save_payload" => false,
@@ -561,7 +561,7 @@ class KibanaService
                                 "res" => $watcher->getRes(),
                                 "url" => $watcher->getUrl(),
                                 "params" => [
-                                    "delay" => intval($watcher->getDelay())
+                                    "delay" => $watcher->getDelay()
                                 ]
                             ]
                         ]
@@ -642,7 +642,7 @@ class KibanaService
        
         $content = json_encode([
             "attributes" => [
-                "title" => $watcher->getTitre(),
+                "title" => $watcher->getTitle(),
                 "disable" => $watcher->isEnabled(),
                 "report" => true,
                 "save_payload" => false,
@@ -678,7 +678,7 @@ class KibanaService
                                 "res" => $watcher->getRes(),
                                 "url" => $watcher->getUrl(),
                                 "params" => [
-                                    "delay" => intval($watcher->getDelay())
+                                    "delay" => $watcher->getDelay()
                                 ]
                             ]
                         ]

@@ -34,8 +34,8 @@ class Watcher
     private $subject;
 
     /**
-     * @ODM\Field(type="string")
-     * @JMS\Type("string")
+     * @ODM\Field(type="integer")
+     * @JMS\Type("integer")
      * @JMS\Expose
      * @JMS\Groups({"Default", "minimalist"})
      *
@@ -172,6 +172,16 @@ class Watcher
      */
     private $kibanaId;
 
+    /**
+     * @ODM\Field(type="string")
+     * @JMS\Type("string")
+     * @JMS\Expose
+     * @JMS\Groups({"Default", "minimalist"})
+     *
+     * @var string
+     */
+    private $title;
+
 
     /*
      * Set the value of kibanaId
@@ -235,9 +245,9 @@ class Watcher
     }
 
     /*
-     * Set the value of string
+     * Set the value of integer
      *
-     * @param  int  $string
+     * @param  int  $integer
      *
      * @return  self
      */
@@ -251,7 +261,7 @@ class Watcher
     /**
      * Get the value of delay
      *
-     * @return string
+     * @return integer
      */
     public function getDelay()
     {
@@ -545,5 +555,29 @@ class Watcher
     public function isEnabled()
     {
         return $this->enabled;
+    }
+
+     /*
+     * Set the value of title
+     *
+     * @param  string  $title
+     *
+     * @return  self
+     */
+    public function setTitle(string $title)
+    {
+        $this->title = $title;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of title
+     *
+     * @return string
+     */
+    public function getTitle()
+    {
+        return $this->title;
     }
 }

@@ -13,7 +13,7 @@
             'AccessLevelService',
             'EnvironmentService',
             'ApplicationService',
-            '$sce',
+            'DashboardService',
             '$modal',
             'WatcherService',
             applicationDetailCtrlFN,
@@ -31,7 +31,7 @@
         AccessLevelService,
         EnvironmentService,
         ApplicationService,
-        $sce,
+        DashboardService,
         $modal,
         WatcherService,
     ) {
@@ -41,6 +41,28 @@
         vm.selectedEnvironment = $localStorage.selectedEnvId.slice(0);
         vm.ownerTitle = "Owner Github :";
         var envName = "staging";
+
+        /**
+         * get dashboards list
+         */
+        vm.getDashboardsList = function () {
+            DashboardService.fetchDashboardsListByAppId(vm.application.id).then(function (dashboardsList) {
+                Object.keys(dashboardsList).forEach(function (key) {
+                    dashboardsList[key].forEach(function (element) {
+                        vm.dashboardsList.push({ ...element, key })
+                    })
+                })
+            })
+        }
+
+        vm.getDashboardName = function (id) {
+            var name = "-";
+            vm.dashboardsList.forEach(element => {
+                if (element.id === id) 
+                    name = element.name;
+            });
+            return name;
+        }
 
         if (vm.LOGIN_METHOD === 'proxy' || vm.LOGIN_METHOD === 'login') {
             vm.ownerTitle = "Owner Login Id :"
@@ -84,7 +106,7 @@
                     toastr.error(MESSAGES_CONSTANTS.ERROR);
                 })
         }
-            
+
         vm.handleWatcher = function (watcher) {
             WatcherService.saveOrUpdate(watcher)
                 .then(function () {
@@ -132,7 +154,7 @@
                     if (willDelete) {
                         ApplicationService.deleteApplicationReport(_id, _index)
                             .then(function (response) {
-                                vm.watchers = vm.watchers.filter((_, index) => index !== ind)
+                                vm.watchers = vm.watchers.filter((_, index) => index !== ind);
                                 toastr.success(MESSAGES_CONSTANTS.SUCCESS);
                             }).catch(function (error) {
                                 toastr.success(MESSAGES_CONSTANTS.ERROR);
@@ -232,6 +254,7 @@
             ApplicationFactory.get($stateParams.id)
                 .then(function (res) {
                     vm.application = res.data;
+                    vm.getDashboardsList();
                     vm.application.invitations.forEach(invitation => {
                         if (invitation.user && invitation.user.id === $rootScope.user.id) {
                             vm.currentUser = invitation.user;
@@ -369,7 +392,8 @@
                 retention: CONFIG.STRIPE_ENABLED == true ? $rootScope.user.plan.retention : null,
                 DOWNLOAD_URL: CONFIG.DOWNLOAD_URL,
                 currentUser: null,
-                watchersList: []
+                watchersList: [],
+                dashboardsList: [],
             });
             vm.getEnvList();
             vm.getApp();

@@ -12,7 +12,6 @@
         var service = this;
 
         service.saveOrUpdate = function (data) {
-            data.delay = String(data.delay);
             return WatcherFactory.saveOrUpdate(data);
         }
 

@@ -13,6 +13,7 @@ use JMS\Serializer\SerializerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use DateTime;
 
 /**
  * Service class for WatcherService entities
@@ -93,7 +94,16 @@ class WatcherService
         $watcher = $this
             ->serializer
             ->deserialize($json, Watcher::class, 'json', $context);
-        
+
+        $environment = $this->environmentService->getById($watcher->getEnvId());
+        $application = $this->applicationService->getById($watcher->getAppId());
+        $watechrIndex = $environment->getName() . "-" . $application->getApplicationWatcherIndex();
+
+        $date = new DateTime(); 
+        $title = $environment->getName() . "-" . $application->getName() . "-" . strval($date->getTimestamp());
+
+        $watcher->setTitle($title);
+
         $db = $this->watcherManager->getOneBy(
             ['titre' => $watcher->getTitre(),
              'appId' => $watcher->getAppId(),
@@ -102,15 +112,9 @@ class WatcherService
         if ($db !== null && !$watcher->getId()) {
             throw new DuplicateApplicationNameException("An watcher with the same title already exists");
         } elseif ($watcher->getId()){
-            $environment = $this->environmentService->getById($watcher->getEnvId());
-            $application = $this->applicationService->getById($watcher->getAppId());
-            $watechrIndex = $environment->getName() . "-" . $application->getApplicationWatcherIndex();
             $this->KibanaService->handelWatcher($watcher, $watechrIndex);
             $this->watcherManager->update($watcher);
         } else {
-            $environment = $this->environmentService->getById($watcher->getEnvId());
-            $application = $this->applicationService->getById($watcher->getAppId());
-            $watechrIndex = $environment->getName() . "-" . $application->getApplicationWatcherIndex();
             $kbnId = $this->KibanaService->createWatcher($watcher, $watechrIndex);
             $watcher->setKibanaId($kbnId);
             $id = $this->watcherManager->update($watcher);

@@ -46,7 +46,6 @@
         };
 
         if ($modalInstance.watcher) {
-            $modalInstance.watcher.delay = parseInt($modalInstance.watcher.delay);
             vm.watcher = $modalInstance.watcher;
 
             if ($modalInstance.watcher.fromDate && $modalInstance.watcher.toDate) {
