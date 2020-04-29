@@ -434,7 +434,7 @@ class KibanaService
         $content = json_encode([
             "attributes" => [
                 "title" => $watcher->getTitre(),
-                "disable" => false,
+                "disable" => true,
                 "report" => true,
                 "save_payload" => false,
                 "impersonate" => false,
