@@ -106,27 +106,17 @@ class WatcherService
             $application = $this->applicationService->getById($watcher->getAppId());
             $watechrIndex = $environment->getName() . "-" . $application->getApplicationWatcherIndex();
             $this->KibanaService->handelWatcher($watcher, $watechrIndex);
-            $res = $this->watcherManager->update($watcher);
-            if(!$res){
-                throw new HttpException(Response::HTTP_NOT_FOUND, "Watcher update error");
-            }
+            $this->watcherManager->update($watcher);
         } else {
             $environment = $this->environmentService->getById($watcher->getEnvId());
             $application = $this->applicationService->getById($watcher->getAppId());
             $watechrIndex = $environment->getName() . "-" . $application->getApplicationWatcherIndex();
             $kbnId = $this->KibanaService->createWatcher($watcher, $watechrIndex);
-            if($kbnId){
-                $watcher->setKibanaId($kbnId);
-                $id = $this->watcherManager->update($watcher);
-                if(!$id){
-                    throw new HttpException(Response::HTTP_NOT_FOUND, "Watcher create error");
-                }
-            } else {
-                throw new HttpException(Response::HTTP_NOT_FOUND, "Watcher create error");
-            }
+            $watcher->setKibanaId($kbnId);
+            $this->logger->error("#########");
+            $id = $this->watcherManager->update($watcher);
         }
-
-        return $id;
+        return $watcher;
     }
 
     /**

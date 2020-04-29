@@ -68,7 +68,7 @@
                                 vm.watchersList.splice(index, 1);
                                 toastr.success(MESSAGES_CONSTANTS.SUCCESS);
                             }).catch(function (err) {
-                                toastr.success(MESSAGES_CONSTANTS.ERROR);
+                                toastr.error(MESSAGES_CONSTANTS.ERROR);
                             })
                     } else {
                         swal.close();
@@ -81,7 +81,7 @@
                 .then(function () {
                     toastr.success(MESSAGES_CONSTANTS.SUCCESS);
                 }).catch(function (err) {
-                    toastr.success(MESSAGES_CONSTANTS.ERROR);
+                    toastr.error(MESSAGES_CONSTANTS.ERROR);
                 })
         }
             
@@ -90,7 +90,7 @@
                 .then(function () {
                     toastr.success(MESSAGES_CONSTANTS.SUCCESS);
                 }).catch(function (err) {
-                    toastr.success(MESSAGES_CONSTANTS.ERROR);
+                    toastr.error(MESSAGES_CONSTANTS.ERROR);
                 })
         }
 

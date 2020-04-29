@@ -518,7 +518,7 @@ class KibanaService
         }
     }
 
-    public function executeWatcher(Watcher $watcher, string $tenant) {
+    public function executeWatcher(Watcher $watcher, string $tenant):boolean {
         $authorization = $this->jwtHelper->encode($this->kibanaAdminUsername, $this->kibanaAdminUuid);
 
         $headers = [
@@ -651,7 +651,7 @@ class KibanaService
         ];
 
         $response = $this->httpClient->put(
-            $this->url . "api/sentinl/watcher" . $watcher->getId(),
+            $this->url . "api/sentinl/watcher/" . $watcher->getId(),
             [
                 'headers' => $headers,
                 'body' => $content,
@@ -661,7 +661,7 @@ class KibanaService
         $this->logger->notice(
             "leadwire.kibana.handelWatcher",
             [
-                'url' => $this->url . "api/sentinl/watcher" . $watcher->getId(),
+                'url' => $this->url . "api/sentinl/watcher/" . $watcher->getId(),
                 'verb' => 'PUT',
                 'headers' => $headers,
                 'status_code' => $response->getStatusCode(),
