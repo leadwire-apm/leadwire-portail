@@ -46,10 +46,12 @@
          * get dashboards list
          */
         vm.getDashboardsList = function () {
-            DashboardService.fetchDashboardsListByAppId(vm.application.id).then(function (dashboardsList) {
-                Object.keys(dashboardsList).forEach(function (key) {
-                    dashboardsList[key].forEach(function (element) {
-                        vm.dashboardsList.push({ ...element, key })
+            DashboardService.fetchDashboardsAllListByAppId(vm.application.id).then(function (dashboardsList) {
+                Object.keys(dashboardsList).forEach(function (k) {
+                    Object.keys(dashboardsList[k]).forEach(function (key) {
+                        dashboardsList[k][key].forEach(function (element) {
+                            vm.dashboardsList.push({ ...element, key })
+                        })
                     })
                 })
             })
@@ -58,7 +60,7 @@
         vm.getDashboardName = function (id) {
             var name = "-";
             vm.dashboardsList.forEach(element => {
-                if (element.id === id) 
+                if (element.id === id)
                     name = element.name;
             });
             return name;

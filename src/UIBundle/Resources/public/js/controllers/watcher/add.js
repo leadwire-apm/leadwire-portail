@@ -57,10 +57,12 @@
         /**
          * get dashboards list
          */
-        DashboardService.fetchDashboardsListByAppId($modalInstance.appId).then(function (dashboardsList) {
-            Object.keys(dashboardsList).forEach(function (key) {
-                dashboardsList[key].forEach(function (element) {
-                    vm.dashboardsList.push({ ...element, key })
+        DashboardService.fetchDashboardsAllListByAppId($modalInstance.appId).then(function (dashboardsList) {
+            Object.keys(dashboardsList).forEach(function (k) {
+                Object.keys(dashboardsList[k]).forEach(function (key) {
+                    dashboardsList[k][key].forEach(function (element) {
+                        vm.dashboardsList.push({ ...element, key, 'group': k })
+                    })
                 })
             })
             vm.ui.isLoading = false;

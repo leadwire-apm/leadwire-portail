@@ -131,5 +131,23 @@
                     });
             });
         };
+
+        /**
+         *
+         * @param appId
+         * @returns {Promise}
+         */
+        service.fetchDashboardsAllListByAppId = function (appId) {
+            return new Promise(function (resolve, reject) {
+                ApplicationFactory.findMyDashboard(appId, $localStorage.selectedEnv.name)
+                    .then(function (response) {
+                        resolve(response.data);
+                    })
+                    .catch(function (error) {
+                        console.log('Error', error);
+                        reject(error);
+                    });
+            });
+        };
     }
 })(window.angular);

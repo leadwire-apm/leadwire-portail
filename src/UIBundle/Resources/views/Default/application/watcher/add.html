@@ -37,7 +37,7 @@
                         <select data-ng-model="ctrl.watcher.dashboard" class="form-control" id="dashboard" name="dashboard"
                             required>
                             <option ng-repeat="dashboard in ctrl.dashboardsList" value="[[dashboard.id]]">
-                                [[dashboard.key]] : [[dashboard.name]]
+                               [[dashboard.group === 'Custom' ? '**Private** ': '']] [[dashboard.key]] : [[dashboard.name]]
                             </option>
                         </select>
 
