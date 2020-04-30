@@ -156,7 +156,7 @@
                     if (willDelete) {
                         ApplicationService.deleteApplicationReport(_id, _index)
                             .then(function (response) {
-                                vm.watchers = vm.watchers.filter((_, index) => index !== ind);
+                                vm.reportsList = vm.reportsList.filter((_, index) => index !== ind);
                                 toastr.success(MESSAGES_CONSTANTS.SUCCESS);
                             }).catch(function (error) {
                                 toastr.success(MESSAGES_CONSTANTS.ERROR);
