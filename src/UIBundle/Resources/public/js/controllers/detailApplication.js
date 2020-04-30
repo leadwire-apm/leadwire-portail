@@ -120,7 +120,6 @@
                 })
         }
 
-
         vm.getBlob = function (data) {
             var a = document.createElement("a");
             a.href = "data:image/png;base64," + data;
