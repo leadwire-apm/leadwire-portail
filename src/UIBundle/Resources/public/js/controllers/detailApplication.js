@@ -16,6 +16,7 @@
             'DashboardService',
             '$modal',
             'WatcherService',
+            'Paginator',
             applicationDetailCtrlFN,
         ]);
 
@@ -34,6 +35,7 @@
         DashboardService,
         $modal,
         WatcherService,
+        Paginator,
     ) {
         var vm = this;
 
@@ -143,10 +145,13 @@
 
             ApplicationService.getApplicationReports(vm.application.name, envName)
                 .then(function (response) {
-                    vm.reportsList = response;
+                    vm.paginator.items = vm.reportsList = response;
                 }).catch(function (error) {
                     toastr.success(MESSAGES_CONSTANTS.ERROR);
+                    vm.paginator.items = [];
                 });
+            
+            vm.setWatcherLink();
         }
 
         vm.deleteReport = function (_id, _index, ind) {
@@ -165,6 +170,34 @@
                         swal.close();
                     }
                 });
+        }
+
+        vm.isErrorReport = function(msg) {
+            if(msg.toLowerCase().indexOf("error") >= 0){
+                return true;
+            }
+
+            return false;
+        }
+
+        vm.getReportTitre = function(watcher){
+            var titre = "-";
+            vm.watchersList.forEach(function(element){
+                if(element.title === watcher){
+                    titre = element.titre;
+                }
+            })
+            return titre;
+        }
+
+        vm.getReportDashboard = function(watcher){
+            var dashboard = "-";
+            vm.watchersList.forEach(function(element){
+                if(element.title === watcher){
+                    dashboard =  vm.getDashboardName(element.dashboard);
+                }
+            })
+            return dashboard;
         }
 
 
@@ -396,6 +429,9 @@
                 currentUser: null,
                 watchersList: [],
                 dashboardsList: [],
+                paginator: Paginator.create({
+                    itemsPerPage: 5,
+                }),
             });
             vm.getEnvList();
             vm.getApp();
