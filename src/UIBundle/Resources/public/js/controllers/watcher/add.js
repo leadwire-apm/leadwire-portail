@@ -70,7 +70,7 @@
         })
 
         vm.ok = function () {
-            vm.watcher.url = `http://localhost:8008/app/kibana?security_tenant=${$modalInstance.envName + $modalInstance.appName}#/dashboard/${vm.watcher.dashboard}?embed=true${_url}`;
+            vm.watcher.url = `http://localhost:8008/app/kibana?security_tenant=${$modalInstance.envName +"-app-"+ $modalInstance.appName}#/dashboard/${vm.watcher.dashboard}?embed=true${_url}`;
             WatcherService.saveOrUpdate(vm.watcher)
                 .then(function (response) {
                     toastr.success(MESSAGES_CONSTANTS.SUCCESS);
