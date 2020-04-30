@@ -61,7 +61,7 @@
             var name = "-";
             vm.dashboardsList.forEach(element => {
                 if (element.id === id)
-                    name = element.name;
+                    name = element.key + " : " + element.name;
             });
             return name;
         }

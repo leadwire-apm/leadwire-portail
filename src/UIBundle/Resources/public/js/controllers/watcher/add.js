@@ -42,7 +42,7 @@
             "toDate": "",
             "envId": $modalInstance.envId,
             "appId": $modalInstance.appId,
-            "enabled": false
+            "enabled": true
         };
 
         if ($modalInstance.watcher) {
