@@ -58,6 +58,8 @@ parameters:
         iframe_port: '%env(KIBANA_IFRAME_PORT)%'
         kibana_admin_username: '%env(KIBANA_ADMIN_USERNAME)%'
         kibana_admin_uuid: '%env(KIBANA_ADMIN_UUID)%'
+        kibana_mailer_user: '%env(MAILER_USER)%'
+        kibana_password: '%env(ES_PASSWORD)%'
     elastic:
         username: '%env(ES_USERNAME)%'
         password: '%env(ES_PASSWORD)%'
