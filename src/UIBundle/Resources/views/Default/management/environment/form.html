@@ -10,10 +10,12 @@
 </div>
 
 <div class="form-group">
-    <label class="col-sm-2 control-label">Ip *</label>
+    <label class="col-sm-2 control-label">Description *</label>
     <div class="col-sm-10">
-        <input type="text" name="ip" class="form-control" data-ng-model="ctrl.environment.ip" required>
-        <span class="text-red" ng-show="environmetForm.name.$error.required && !environmetForm.ip.$pristine">
+        <textarea name="description" class="form-control" data-ng-model="ctrl.environment.description" required
+            simplemde> </textarea>
+        <span class="text-red"
+            ng-show="environmetForm.description.$error.required && !environmetForm.description.$pristine">
             This field is required</span>
 
     </div>

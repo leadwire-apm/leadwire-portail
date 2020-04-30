@@ -8,7 +8,7 @@
 
     <!-- toggle small sidebar menu -->
     <a href="javascript:;" class="toggle-sidebar hidden-xs hamburger-icon v3"
-       data-ng-click="app.layout.isSmallSidebar = !app.layout.isSmallSidebar">
+        data-ng-click="app.layout.isSmallSidebar = !app.layout.isSmallSidebar">
         <span></span>
         <span></span>
         <span></span>
@@ -23,13 +23,14 @@
         <li class="text-center" ng-if="isChangingContext">
             <spinner is-loading="true" size="32" color="'antiquewhite'"></spinner>
         </li>
-        <li ng-repeat="(key, menu) in menus"
-            ng-if="!isChangingContext && state.includes('app.dashboard') == false"
+        <li ng-repeat="(key, menu) in menus" ng-if="!isChangingContext && state.includes('app.dashboard') == false"
             ui-sref-active="active">
-            <a style="cursor: pointer;" ng-if="menu.route && menu.routeName != 'app.management.reports'" ui-sref="[[menu.routeName]]" ui-sref-opts="{reload: true}"><i class="[[menu.icon]]"></i>
+            <a style="cursor: pointer;" ng-if="menu.route && menu.routeName != 'app.management.reports'"
+                ui-sref="[[menu.routeName]]" ui-sref-opts="{reload: true}"><i class="[[menu.icon]]"></i>
                 <span>[[menu.label]]</span>
             </a>
-            <a style="cursor: pointer;" ng-if="menu.route && menu.routeName == 'app.management.reports'" ng-href="[[menu.route]]">
+            <a style="cursor: pointer;" ng-if="menu.route && menu.routeName == 'app.management.reports'"
+                ng-href="[[menu.route]]">
                 <i class="[[menu.icon]]"></i>
                 <span>[[menu.label]]</span>
             </a>
@@ -40,14 +41,19 @@
         </li>
 
         <div ng-repeat="(key, menu) in menus" ng-if="!isChangingContext && state.includes('app.dashboard')">
-            <li data-toggle="collapse" data-target="#[[key]]" ng-class="collapsed" ui-sref-active-eq style="padding: 13px 21px;">
-                <a><i ng-class="key == 'APM' ? 'fa fa-eye' : 'fa fa-exchange-alt'"></i><span>[[key]]</span></a>
+            <li data-toggle="collapse" data-target="#[[key]]" ng-class="collapsed" ui-sref-active-eq
+                style="padding: 13px 21px;">
+                <a title="[[key]]">
+                    <i ng-class="key == 'APM' ? 'fa fa-eye' : 'fa fa-exchange-alt'"></i>
+                    <span>[[key]]</span>
+                </a>
             </li>
             <ul class="sub-menu collapse" id="[[key]]">
                 <li ng-repeat="submenu in menu" style="list-style-type: none;" ui-sref-active="active">
-                    <a id="[[submenu.routeId]]" ui-sref="[[submenu.routeName]]" ui-sref-opts="{reload: true}" ng-if="submenu.visible" style="padding: 13px 21px;">
-                            <i class="[[submenu.icon]]"></i>
-                            <span>[[submenu.label]]</span>
+                    <a id="[[submenu.routeId]]" ui-sref="[[submenu.routeName]]" ui-sref-opts="{reload: true}"
+                        title="[[submenu.label]]" ng-if="submenu.visible" style="padding: 13px 21px;">
+                        <i class="[[submenu.icon]]"></i>
+                        <span>[[submenu.label]]</span>
                     </a>
                 </li>
             </ul>

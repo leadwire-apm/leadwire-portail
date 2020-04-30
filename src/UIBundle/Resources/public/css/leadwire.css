@@ -752,6 +752,10 @@ blockquote p {
     display: none;
   }
 
+  .layout-small-menu .sidebar-panel > nav ul > li > a > span {
+    display: none;
+}
+
   /* .layout-small-menu .sidebar-panel > nav > ul > div > ul.sub-menu >li > a > span {
     display: none;
   } */
