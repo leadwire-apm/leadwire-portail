@@ -17,7 +17,6 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\Router;
 use Symfony\Component\Routing\RouterInterface;
-use AppBundle\Service\SearchGuardService;
 
 /**
  * Service class for User entities
@@ -39,11 +38,6 @@ class UserService
      * @var ApplicationManager
      */
     private $applicationManager;
-
-    /**
-     * @var SearchGuardService
-     */
-    private $searchGuardService;
 
     /**
      * @var SerializerInterface
@@ -91,7 +85,6 @@ class UserService
      * @param UserManager $userManager
      * @param EnvironmentManager $environmentManager
      * @param ApplicationManager $applicationManager
-     * @param SearchGuardService $searchGuardService
      * @param SerializerInterface $serializer
      * @param LoggerInterface $logger
      * @param SimpleMailerService $mailer
@@ -104,7 +97,6 @@ class UserService
         UserManager $userManager,
         EnvironmentManager $environmentManager,
         ApplicationManager $applicationManager,
-        SearchGuardService $searchGuardService,
         SerializerInterface $serializer,
         LoggerInterface $logger,
         SimpleMailerService $mailer,
@@ -117,7 +109,6 @@ class UserService
         $this->userManager = $userManager;
         $this->environmentManager = $environmentManager;
         $this->applicationManager = $applicationManager;
-        $this->searchGuardService = $searchGuardService;
         $this->serializer = $serializer;
         $this->logger = $logger;
         $this->mailer = $mailer;

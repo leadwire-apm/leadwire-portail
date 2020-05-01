@@ -7,7 +7,6 @@ use AppBundle\Document\Environment;
 use AppBundle\Exception\DuplicateApplicationNameException;
 use AppBundle\Manager\EnvironmentManager;
 use AppBundle\Manager\ApplicationManager;
-use AppBundle\Service\SearchGuardService;
 use AppBundle\Manager\UserManager;
 use AppBundle\Manager\AccessLevelManager;
 use AppBundle\Document\AccessLevel;
@@ -50,11 +49,6 @@ class EnvironmentService
     private $logger;
 
     /**
-     * @var SearchGuardService
-     */
-    private $searchGuardService;
-
-    /**
      * @var UserManager
      */
     private $userManager;
@@ -81,7 +75,6 @@ class EnvironmentService
      * @param ApplicationManager $applicationManager
      * @param SerializerInterface $serializer
      * @param LoggerInterface $logger
-     * @param SearchGuardService $searchGuardService
      * @param UserManager $userManager
      * @param AccessLevelManager $accessLevelManager
      * @param ElasticSearchService $elasticSearchService
@@ -92,7 +85,6 @@ class EnvironmentService
         ApplicationManager $applicationManager,
         SerializerInterface $serializer,
         LoggerInterface $logger,
-        SearchGuardService $searchGuardService,
         UserManager $userManager,
         AccessLevelManager $accessLevelManager,
         ElasticSearchService $elasticSearchService,
@@ -102,7 +94,6 @@ class EnvironmentService
         $this->applicationManager = $applicationManager;
         $this->serializer = $serializer;
         $this->logger = $logger;
-        $this->searchGuardService = $searchGuardService;
         $this->userManager = $userManager;
         $this->accessLevelManager = $accessLevelManager;
         $this->es = $elasticSearchService;

@@ -28,12 +28,6 @@ monolog:
             level: notice
             path:     '%kernel.logs_dir%/kibana_%kernel.environment%.log'
             channels: [kibana]
-        sg:
-            type: stream
-            action_level: notice
-            level: notice
-            path:     '%kernel.logs_dir%/search_guard_%kernel.environment%.log'
-            channels: [search_guard]
         curator:
             type: stream
             action_level: notice

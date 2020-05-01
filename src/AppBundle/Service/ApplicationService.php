@@ -32,7 +32,6 @@ use AppBundle\Service\CuratorService;
 use AppBundle\Service\ElasticSearchService;
 use AppBundle\Service\KibanaService;
 use AppBundle\Service\LdapService;
-use AppBundle\Service\SearchGuardService;
 use AppBundle\Service\StatService;
 
 /**
@@ -132,11 +131,6 @@ class ApplicationService
     private $ldapService;
 
     /**
-     * @var SearchGuardService
-     */
-    private $searchGuardService;
-
-    /**
      * @var StatService
      */
     private $statService;
@@ -162,7 +156,6 @@ class ApplicationService
      * @param ElasticSearchService $elasticSearchService
      * @param KibanaService $kibanaService
      * @param LdapService $ldapService
-     * @param SearchGuardService $searchGuardService
      * @param StatService $statService
      */
     public function __construct(
@@ -184,7 +177,6 @@ class ApplicationService
         ElasticSearchService $elasticSearchService,
         KibanaService $kibanaService,
         LdapService $ldapService,
-        SearchGuardService $searchGuardService,
         StatService $statService
     ) {
         $this->accessLevelManager = $accessLevelManager;
@@ -205,7 +197,6 @@ class ApplicationService
         $this->es = $elasticSearchService;
         $this->kibanaService = $kibanaService;
         $this->ldapService = $ldapService;
-        $this->sg = $searchGuardService;
         $this->statService = $statService;
     }
 

@@ -7,7 +7,6 @@ use AppBundle\Document\Application;
 use AppBundle\Service\KibanaService;
 use AppBundle\Service\EnvironmentService;
 use AppBundle\Service\ApplicationService;
-use AppBundle\Service\SearchGuardService;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use ATS\PaymentBundle\Service\PlanService;
 use AppBundle\Service\ElasticSearchService;
@@ -48,8 +47,6 @@ Load default Application Type. Insert template for Kibana and more..'
         $environmentService = $this->getContainer()->get(EnvironmentService::class);
         /** @var ApplicationService $applicationService */
         $applicationService = $this->getContainer()->get(ApplicationService::class);
-        /** @var SearchGuardService $sgService */
-        //$sgService = $this->getContainer()->get(SearchGuardService::class);
         /** @var CuratorService $curatorService */
         $curatorService = $this->getContainer()->get(CuratorService::class);
 
@@ -72,9 +69,6 @@ Load default Application Type. Insert template for Kibana and more..'
         //$this->display($output, "Creating LDAP entries for demo applications");
         //$ldap->createDemoApplicationsEntries();
         $demoApplications = $applicationService->listDemoApplications();
-
-        //$this->display($output, "Initializing SearchGuard configuration");
-        //$sgService->updateSearchGuardConfig();
 
         //ism policy => delete before create
         $es->deletePolicy("hot-warm-delete-policy");
