@@ -65,6 +65,10 @@ parameters:
         password: '%env(ES_PASSWORD)%'
         host: '%env(ES_HOST)%'
         port: '%env(ES_PORT)%'
+        ism_setup: '%env(ism_setup)%'
+        ism_min_size: '%env(ism_min_size)%'
+        ism_min_doc_count: '%env(ism_min_doc_count)%'
+        ism_min_index_age: '%env(ism_min_index_age)%'
     curator:
         platformName: '%env(PLATFORM_NAME)%'
 
