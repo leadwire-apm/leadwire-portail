@@ -172,6 +172,16 @@
                     });
             }
 
+            service.updateDashbaords =  function (id, dashboards) {
+                return ApplicationFactory.updateDashbaords(id, dashboards)
+                    .then(function (response) {
+                        return response.data;
+                    })
+                    .catch(function (err) {
+                        throw new Error(err);
+                    });
+            }
+
             return service;
         });
 })(window.angular);

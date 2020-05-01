@@ -49,6 +49,8 @@
          */
         vm.getDashboardsList = function () {
             DashboardService.fetchDashboardsAllListByAppId(vm.application.id).then(function (dashboardsList) {
+                vm.dashboardsNameList = Object.keys(dashboardsList['Default']);
+                vm.defaultDashboardsList = dashboardsList['Default'];
                 Object.keys(dashboardsList).forEach(function (k) {
                     Object.keys(dashboardsList[k]).forEach(function (key) {
                         dashboardsList[k][key].forEach(function (element) {
@@ -199,7 +201,6 @@
             return dashboard;
         }
 
-
         vm.hasReportsRule = function () {
             var access = false;
             if (vm.currentUser) {
@@ -296,6 +297,7 @@
                     });
                 });
         };
+
         vm.loadStats = function () {
             ApplicationFactory.stats($stateParams.id)
                 .then(function (response) {
@@ -436,5 +438,25 @@
             vm.getApp();
             vm.loadStats();
         };
+
+        vm.getDashboardByTheme = function(name){
+            return vm.defaultDashboardsList[name];
+        }
+
+        vm.updateDashboardMenu = function() {
+            ApplicationService.updateDashbaords(vm.application.id, vm.defaultDashboardsList)
+            .then(function() {
+                vm.flipActivityIndicator();
+                toastr.success(MESSAGES_CONSTANTS.EDIT_APP_SUCCESS);
+            })
+            .catch(function(error) {
+                vm.flipActivityIndicator();
+                toastr.error(
+                    error.message ||
+                        MESSAGES_CONSTANTS.EDIT_APP_FAILURE ||
+                        MESSAGES_CONSTANTS.ERROR
+                );
+            });
+        }
     }
 })(window.angular, window.swal, window.moment);
