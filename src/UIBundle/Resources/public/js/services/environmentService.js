@@ -1,6 +1,7 @@
 (function (angular) {
     angular.module('leadwireApp')
         .service('EnvironmentService', function (
+            $localStorage,
             EnvironementFactory,
         ) {
             var service = {};
@@ -8,6 +9,7 @@
             service.list = function () {
                 return EnvironementFactory.getAll()
                     .then(function (response) {
+                        $localStorage.envList = response.data;
                         return response.data;
                     })
                     .catch(function (error) {

@@ -2,7 +2,10 @@
     <label class="col-sm-2 control-label">Name *</label>
     <div class="col-sm-10">
         <input type="text" name="name" class="form-control" ng-disabled="ctrl.ui.isEdit"
-            data-ng-model="ctrl.environment.name" required>
+            blacklist="[[ctrl.blacklist]]" data-ng-model="ctrl.environment.name" required>
+        <span class="text-red" ng-show="environmetForm.name.$error.blacklist && !environmetForm.name.$pristine">
+            The word [[ctrl.blackWord]] is blacklisted or already used
+        </span>
         <span class="text-red" ng-show="environmetForm.name.$error.required && !environmetForm.name.$pristine">
             This field is required</span>
 

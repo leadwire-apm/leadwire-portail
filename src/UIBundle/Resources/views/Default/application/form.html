@@ -3,10 +3,11 @@
     <div class="col-sm-10">
 
         <input id="name" name="name" placeholder="Application name" type="text" class="form-control"
-            data-ng-model="ctrl.application.name" ng-maxlength="32" blacklist="leadwire,lead.wire,lead_wire"
-            autocomplete="false" lowercase-only ng-disabled="ctrl.ui.isEditing" required>
+            data-ng-model="ctrl.application.name" ng-maxlength="32"
+            blacklist="[[ctrl.blacklist]]" autocomplete="false" lowercase-only
+            ng-disabled="ctrl.ui.isEditing" required>
         <span class="text-red" ng-show="applicationForm.name.$error.blacklist && !applicationForm.name.$pristine">
-            The word [[ctrl.blackWord]] is blacklisted
+            The word [[ctrl.blackWord]] is blacklisted or already used
         </span>
         <span class="text-red" ng-show="applicationForm.name.$error.required && !applicationForm.name.$pristine">
             This field is required</span>

@@ -40,6 +40,8 @@
 
         $scope.environments = [];
 
+        EnvironmentService.list();
+
         $scope.getEnvironments = function () {
             $scope.getDefaultEnv();
             EnvironmentService.list()

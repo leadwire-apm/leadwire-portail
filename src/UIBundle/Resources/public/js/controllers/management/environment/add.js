@@ -5,6 +5,7 @@
             'toastr',
             'MESSAGES_CONSTANTS',
             '$state',
+            '$localStorage',
             AddEnvironmentCtrlFN,
         ]);
 
@@ -17,8 +18,20 @@
         toastr,
         MESSAGES_CONSTANTS,
         $state,
+        $localStorage,
     ) {
         var vm = this;
+
+        vm.blacklist = $localStorage.applications.reduce(function (p, c, i) {
+            p.push(c.name);
+            return p;
+        }, ["leadwire", "span", "transaction", "error", "metric", "sourcemap"])
+
+        $localStorage.envList.reduce(function (p, c, i) {
+            p.push(c.name);
+            return p;
+        }, vm.blacklist)
+
 
         vm.flipActivityIndicator = function (key) {
             vm.ui[key] = !vm.ui[key];
