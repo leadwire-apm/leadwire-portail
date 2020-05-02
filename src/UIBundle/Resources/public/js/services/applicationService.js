@@ -39,6 +39,8 @@
                         $localStorage.applications ||
                         ($localStorage.applications = [])
                     ).push(response.data);
+                    $localStorage.listApp.push(response.data.name);
+
                     toastr.success(MESSAGES_CONSTANTS.ADD_APP_SUCCESS);
                     return true;
                 } else {

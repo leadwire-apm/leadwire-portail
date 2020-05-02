@@ -113,8 +113,21 @@ class EnvironmentService
         $environment = $this
             ->serializer
             ->deserialize($json, Environment::class, 'json');
+
         if (count($this->getAll()) == 0) {
             $environment->setDefault(true);
+        }
+
+        $env = $this->isExist($environment->getName());
+
+        if($env) {
+            throw new DuplicateApplicationNameException("An environment with the same name already exists");
+        }
+
+        $app = $this->applicationManager->getOneBy(['name' => $environment->getName()]);
+        
+        if($app) {
+            throw new DuplicateApplicationNameException("An application with the same name already exists");
         }
 
         $id = $this->environmentManager->update($environment);
@@ -292,6 +305,21 @@ class EnvironmentService
             throw new HttpException(Response::HTTP_NOT_FOUND, "Environment not Found");
         } else {
             return $environment;
+        }
+
+    }
+
+    /**
+     * @param string $name
+     */
+    public function isExist($name)
+    {
+
+        $environment = $this->environmentManager->getOneBy(['name' => $name]);
+        if ($environment === null) {
+            return false;
+        } else {
+            return true;
         }
 
     }

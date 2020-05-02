@@ -22,10 +22,7 @@
     ) {
         var vm = this;
 
-        vm.blacklist = $localStorage.applications.reduce(function (p, c, i) {
-            p.push(c.name);
-            return p;
-        }, ["leadwire", "span", "transaction", "error", "metric", "sourcemap"])
+        vm.blacklist =["leadwire", "span", "transaction", "error", "metric", "sourcemap", ...$localStorage.listApp];
 
         $localStorage.envList.reduce(function (p, c, i) {
             p.push(c.name);
@@ -42,6 +39,7 @@
             EnvironmentService.create(vm.environment)
                 .then(function () {
                     vm.flipActivityIndicator('isSaving');
+                    $localStorage.envList.push(vm.environment.name);
                     toastr.success(MESSAGES_CONSTANTS.SUCCESS);
                     $state.go('app.management.environmentList');
                 })

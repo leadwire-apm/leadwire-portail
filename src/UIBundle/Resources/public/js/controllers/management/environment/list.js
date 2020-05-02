@@ -4,7 +4,8 @@
             'EnvironmentService',
             'toastr',
             'MESSAGES_CONSTANTS',
-            '$state',
+            'ApplicationFactory',
+            '$localStorage',
             ListEnvironmentCtrlFN,
         ]);
 
@@ -12,13 +13,25 @@
      * Handle add new application logic
      *
      */
-    function ListEnvironmentCtrlFN (
+    function ListEnvironmentCtrlFN(
         EnvironmentService,
         toastr,
         MESSAGES_CONSTANTS,
-        $state,
+        ApplicationFactory,
+        $localStorage,
     ) {
         var vm = this;
+
+        if (!$localStorage.listApp) {
+            ApplicationFactory.findAll()
+                .then(function (res) {
+                    $localStorage.listApp = res.data.reduce(function (p, c, i) {
+                        p.push(c.name);
+                        return p;
+                    }, []);
+                });
+        }
+
 
         vm.flipActivityIndicator = function (key) {
             vm.ui[key] = !vm.ui[key];
@@ -62,7 +75,7 @@
                 });
         };
 
-        vm.setDefault = function(id) {
+        vm.setDefault = function (id) {
             EnvironmentService.setDefault(id)
                 .then(function () {
                     toastr.success(MESSAGES_CONSTANTS.SUCCESS);

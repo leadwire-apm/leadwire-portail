@@ -39,10 +39,7 @@
     ) {
         var vm = this;
 
-        vm.blacklist = $localStorage.applications.reduce(function (p, c, i) {
-            p.push(c.name);
-            return p;
-        }, ["leadwire", "span", "transaction", "error", "metric", "sourcemap"])
+        vm.blacklist = ["leadwire", "span", "transaction", "error", "metric", "sourcemap", ...$localStorage.listApp];
 
         $localStorage.envList.reduce(function (p, c, i) {
             p.push(c.name);

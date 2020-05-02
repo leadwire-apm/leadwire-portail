@@ -9,7 +9,7 @@
  * @param MenuFactory
  * @param toastr
  * @param MESSAGES_CONSTANTS
- * @param DashboardService
+ * @param EnvironmentService,
  * @param ApplicationFactory
  * @param $rootScope
  * @param $state
@@ -25,7 +25,7 @@ function LoginControllerFN(
     $localStorage,
     toastr,
     MESSAGES_CONSTANTS,
-    DashboardService,
+    EnvironmentService,
     ApplicationFactory,
     $rootScope,
     $state,
@@ -206,6 +206,7 @@ function LoginControllerFN(
     function onLoad() {
 
         if ($auth.isAuthenticated()) {
+
             if ($localStorage.user) {
 
                 if (vm.invitationId !== undefined) {
@@ -248,7 +249,7 @@ function LoginControllerFN(
             "$localStorage",
             "toastr",
             "MESSAGES_CONSTANTS",
-            "DashboardService",
+            "EnvironmentService",
             "ApplicationFactory",
             "$rootScope",
             "$state",
