@@ -16,6 +16,7 @@
             'DashboardService',
             '$modal',
             'WatcherService',
+            'Paginator',
             applicationDetailCtrlFN,
         ]);
 
@@ -34,6 +35,7 @@
         DashboardService,
         $modal,
         WatcherService,
+        Paginator,
     ) {
         var vm = this;
 
@@ -47,6 +49,8 @@
          */
         vm.getDashboardsList = function () {
             DashboardService.fetchDashboardsAllListByAppId(vm.application.id).then(function (dashboardsList) {
+                vm.dashboardsNameList = Object.keys(dashboardsList['Default']);
+                vm.defaultDashboardsList = dashboardsList['Default'];
                 Object.keys(dashboardsList).forEach(function (k) {
                     Object.keys(dashboardsList[k]).forEach(function (key) {
                         dashboardsList[k][key].forEach(function (element) {
@@ -61,7 +65,7 @@
             var name = "-";
             vm.dashboardsList.forEach(element => {
                 if (element.id === id)
-                    name = element.name;
+                    name = element.key + " : " + element.name;
             });
             return name;
         }
@@ -118,7 +122,6 @@
                 })
         }
 
-
         vm.getBlob = function (data) {
             var a = document.createElement("a");
             a.href = "data:image/png;base64," + data;
@@ -143,10 +146,13 @@
 
             ApplicationService.getApplicationReports(vm.application.name, envName)
                 .then(function (response) {
-                    vm.reportsList = response;
+                    vm.paginator.items = vm.reportsList = response;
                 }).catch(function (error) {
                     toastr.success(MESSAGES_CONSTANTS.ERROR);
+                    vm.paginator.items = [];
                 });
+            
+            vm.setWatcherLink();
         }
 
         vm.deleteReport = function (_id, _index, ind) {
@@ -156,7 +162,7 @@
                     if (willDelete) {
                         ApplicationService.deleteApplicationReport(_id, _index)
                             .then(function (response) {
-                                vm.watchers = vm.watchers.filter((_, index) => index !== ind);
+                                vm.reportsList = vm.reportsList.filter((_, index) => index !== ind);
                                 toastr.success(MESSAGES_CONSTANTS.SUCCESS);
                             }).catch(function (error) {
                                 toastr.success(MESSAGES_CONSTANTS.ERROR);
@@ -167,6 +173,33 @@
                 });
         }
 
+        vm.isErrorReport = function(msg) {
+            if(msg.toLowerCase().indexOf("error") >= 0){
+                return true;
+            }
+
+            return false;
+        }
+
+        vm.getReportTitre = function(watcher){
+            var titre = "-";
+            vm.watchersList.forEach(function(element){
+                if(element.title === watcher){
+                    titre = element.titre;
+                }
+            })
+            return titre;
+        }
+
+        vm.getReportDashboard = function(watcher){
+            var dashboard = "-";
+            vm.watchersList.forEach(function(element){
+                if(element.title === watcher){
+                    dashboard =  vm.getDashboardName(element.dashboard);
+                }
+            })
+            return dashboard;
+        }
 
         vm.hasReportsRule = function () {
             var access = false;
@@ -264,6 +297,7 @@
                     });
                 });
         };
+
         vm.loadStats = function () {
             ApplicationFactory.stats($stateParams.id)
                 .then(function (response) {
@@ -396,10 +430,33 @@
                 currentUser: null,
                 watchersList: [],
                 dashboardsList: [],
+                paginator: Paginator.create({
+                    itemsPerPage: 5,
+                }),
             });
             vm.getEnvList();
             vm.getApp();
             vm.loadStats();
         };
+
+        vm.getDashboardByTheme = function(name){
+            return vm.defaultDashboardsList[name];
+        }
+
+        vm.updateDashboardMenu = function() {
+            ApplicationService.updateDashbaords(vm.application.id, vm.defaultDashboardsList)
+            .then(function() {
+                vm.flipActivityIndicator();
+                toastr.success(MESSAGES_CONSTANTS.EDIT_APP_SUCCESS);
+            })
+            .catch(function(error) {
+                vm.flipActivityIndicator();
+                toastr.error(
+                    error.message ||
+                        MESSAGES_CONSTANTS.EDIT_APP_FAILURE ||
+                        MESSAGES_CONSTANTS.ERROR
+                );
+            });
+        }
     }
 })(window.angular, window.swal, window.moment);

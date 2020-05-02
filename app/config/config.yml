@@ -58,18 +58,19 @@ parameters:
         iframe_port: '%env(KIBANA_IFRAME_PORT)%'
         kibana_admin_username: '%env(KIBANA_ADMIN_USERNAME)%'
         kibana_admin_uuid: '%env(KIBANA_ADMIN_UUID)%'
+        kibana_mailer_user: '%env(MAILER_USER)%'
+        kibana_password: '%env(ES_PASSWORD)%'
     elastic:
         username: '%env(ES_USERNAME)%'
         password: '%env(ES_PASSWORD)%'
         host: '%env(ES_HOST)%'
         port: '%env(ES_PORT)%'
-    sg:
-        script_path: '%env(SG_ADMIN_SCRIPT_PATH)%'
-        config_dirpath: '%env(SG_ADMIN_CONF_DIR_PATH)%'
+        ism_setup: '%env(ism_setup)%'
+        ism_min_size: '%env(ism_min_size)%'
+        ism_min_doc_count: '%env(ism_min_doc_count)%'
+        ism_min_index_age: '%env(ism_min_index_age)%'
     curator:
         platformName: '%env(PLATFORM_NAME)%'
-        config_path: '%env(CURATOR_CONFIG_PATH)%'
-        script_path: '%env(CURATOR_SCRIPT_PATH)%'
 
 # Framework Configuration
 framework:

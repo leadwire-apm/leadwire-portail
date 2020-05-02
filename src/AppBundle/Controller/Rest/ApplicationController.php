@@ -9,7 +9,6 @@ use AppBundle\Service\ApplicationService;
 use AppBundle\Service\ElasticSearchService;
 use AppBundle\Service\KibanaService;
 use AppBundle\Service\LdapService;
-use AppBundle\Service\SearchGuardService;
 use AppBundle\Service\StatService;
 use ATS\CoreBundle\Controller\Rest\RestControllerTrait;
 use MongoDuplicateKeyException;
@@ -180,7 +179,6 @@ class ApplicationController extends Controller
      * @param LdapService $ldapService
      * @param ElasticSearchService $esService
      * @param KibanaService $kibanaService
-     * @param SearchGuardService $sgService
      * @param CuratorService $curatorService
      *
      * @return JsonResponse
@@ -191,7 +189,6 @@ class ApplicationController extends Controller
         LdapService $ldapService,
         ElasticSearchService $esService,
         KibanaService $kibanaService,
-        SearchGuardService $sgService,
         CuratorService $curatorService,
         ProcessService $processService
     ) {
@@ -261,7 +258,6 @@ class ApplicationController extends Controller
      * @param Request $request
      * @param ApplicationService $applicationService
      * @param ProcessService $processService
-     * @param SearchGuardService $sgService
      * @param string $id
      *
      * @return Response
@@ -270,7 +266,6 @@ class ApplicationController extends Controller
         Request $request,
         ApplicationService $applicationService,
         ProcessService $processService,
-        SearchGuardService $sgService,
         $id
     ) {
         $application = $applicationService->getApplication($id);
@@ -281,10 +276,6 @@ class ApplicationController extends Controller
 
             if ($accessGrantedByOwnership === true || $accessGrantedByRole === true) {
                 $applicationService->deleteApplication($id);
-                $processService->emit($this->getUser(), "heavy-operations-in-progress", "Configuring SearchGuard");
-                $sgService->updateSearchGuardConfig();
-                $processService->emit($this->getUser(), "heavy-operations-done", "Succeeded");
-
                 return $this->renderResponse(null, Response::HTTP_OK);
             } else {
                 $processService->emit($this->getUser(), "heavy-operations-done", "Failed");
@@ -301,7 +292,6 @@ class ApplicationController extends Controller
      * @param Request $request
      * @param ApplicationService $applicationService
      * @param ProcessService $processService
-     * @param SearchGuardService $sgService
      * @param string $id
      *
      * @return Response
@@ -310,7 +300,6 @@ class ApplicationController extends Controller
         Request $request,
         ApplicationService $applicationService,
         ProcessService $processService,
-        SearchGuardService $sgService,
         $id
     ) {
         $applicationService->removeUserApplication($id, $this->getUser());

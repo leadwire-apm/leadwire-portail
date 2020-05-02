@@ -225,6 +225,7 @@
         };
 
         function onLoad() {
+
             $scope.paginator = Paginator.create({
                 start: 0,
                 items: $scope.applications,
@@ -265,7 +266,7 @@
             $scope.selectedAppId = $localStorage.selectedAppId;
             $scope.withCustom = (
                 $localStorage.customMenus || ($localStorage.customMenus = {})
-            ).withCustom;
+            ).withCustom;            
         }
     }
 })(window.angular);

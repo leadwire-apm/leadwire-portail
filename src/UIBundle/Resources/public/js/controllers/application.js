@@ -1,7 +1,7 @@
 (function (angular, swal) {
     angular.module('leadwireApp').controller('applicationListCtrl', [
         '$scope',
-        '$rootScope',
+        'EnvironmentService',
         'ApplicationFactory',
         'toastr',
         'MESSAGES_CONSTANTS',
@@ -12,9 +12,9 @@
         applicationListCtrlFN,
     ]);
 
-    function applicationListCtrlFN (
+    function applicationListCtrlFN(
         $scope,
-        $rootScope,
+        EnvironmentService,
         ApplicationFactory,
         toastr,
         MESSAGES_CONSTANTS,
@@ -25,9 +25,23 @@
     ) {
         var vm = this;
 
-        vm.LOGIN_METHOD      = CONFIG.LOGIN_METHOD;
+        vm.LOGIN_METHOD = CONFIG.LOGIN_METHOD;
 
-        function getApps () {
+        if (!$localStorage.envList)
+            EnvironmentService.list();
+
+        if (!$localStorage.listApp) {
+            ApplicationFactory.findAll()
+                .then(function (res) {
+                    $localStorage.listApp = res.data.reduce(function (p, c, i) {
+                        p.push(c.name);
+                        return p;
+                    }, []);
+                });
+        }
+
+
+        function getApps() {
             // get all
             vm.flipActivityIndicator('isLoading');
             ApplicationFactory.findMyApplications().then(function (response) {
@@ -102,34 +116,34 @@
                     modalVM.enable = function () {
                         ApplicationFactory.activate(selectedApp.id,
                             modalVM.activationCode).then(function (response) {
-                            if (response.data) {
-                                toastr.success(
-                                    MESSAGES_CONSTANTS.ACTIVATE_APP_SUCCESS);
-                                var updatedApp = angular.extend(selectedApp, {
-                                    enabled: true,
-                                });
-                                $scope.$emit('activate:app', updatedApp);
-                                vm.apps = vm.apps.map(function (currentApp) {
-                                    return currentApp.id !== selectedApp.id
-                                        ? currentApp
-                                        : updatedApp;
-                                });
-                                $localStorage.applications = vm.apps;
-                                $state.go('app.applicationDetail', {
-                                    id: selectedApp.id,
-                                });
-                                $modalInstance.close();
-                            } else {
+                                if (response.data) {
+                                    toastr.success(
+                                        MESSAGES_CONSTANTS.ACTIVATE_APP_SUCCESS);
+                                    var updatedApp = angular.extend(selectedApp, {
+                                        enabled: true,
+                                    });
+                                    $scope.$emit('activate:app', updatedApp);
+                                    vm.apps = vm.apps.map(function (currentApp) {
+                                        return currentApp.id !== selectedApp.id
+                                            ? currentApp
+                                            : updatedApp;
+                                    });
+                                    $localStorage.applications = vm.apps;
+                                    $state.go('app.applicationDetail', {
+                                        id: selectedApp.id,
+                                    });
+                                    $modalInstance.close();
+                                } else {
+                                    toastr.error(
+                                        MESSAGES_CONSTANTS.ACTIVATE_APP_FAILURE);
+                                }
+                            }).catch(function (error) {
                                 toastr.error(
-                                    MESSAGES_CONSTANTS.ACTIVATE_APP_FAILURE);
-                            }
-                        }).catch(function (error) {
-                            toastr.error(
-                                error.message ||
-                                MESSAGES_CONSTANTS.EDIT_APP_FAILURE ||
-                                MESSAGES_CONSTANTS.ERROR,
-                            );
-                        });
+                                    error.message ||
+                                    MESSAGES_CONSTANTS.EDIT_APP_FAILURE ||
+                                    MESSAGES_CONSTANTS.ERROR,
+                                );
+                            });
                     };
                 },
                 controllerAs: 'ctrl',

@@ -39,6 +39,8 @@
                         $localStorage.applications ||
                         ($localStorage.applications = [])
                     ).push(response.data);
+                    $localStorage.listApp.push(response.data.name);
+
                     toastr.success(MESSAGES_CONSTANTS.ADD_APP_SUCCESS);
                     return true;
                 } else {
@@ -164,6 +166,16 @@
 
             service.deleteApplicationReport = function (id, _index) {
                 return ApplicationFactory.deleteApplicationReport(id, _index)
+                    .then(function (response) {
+                        return response.data;
+                    })
+                    .catch(function (err) {
+                        throw new Error(err);
+                    });
+            }
+
+            service.updateDashbaords =  function (id, dashboards) {
+                return ApplicationFactory.updateDashbaords(id, dashboards)
                     .then(function (response) {
                         return response.data;
                     })

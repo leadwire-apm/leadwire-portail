@@ -43,7 +43,7 @@ class Environment
      *
      * @var string
      */
-    private $ip;
+    private $description;
 
     /**
      * @ODM\ReferenceMany(targetDocument="AppBundle\Document\Application", mappedBy="environments", storeAs="dbRef")
@@ -109,27 +109,27 @@ class Environment
     }
 
     /**
-     * Set the value of ip
+     * Set the value of description
      *
-     * @param  string  $ip
+     * @param  string  $description
      *
      * @return  self
      */
-    public function setIp(string $ip)
+    public function setDescription(string $description)
     {
-        $this->ip = $ip;
+        $this->description = $description;
 
         return $this;
     }
 
     /**
-     * Get the value of ip
+     * Get the value of description
      *
      * @return string
      */
-    public function getIp()
+    public function getDescription()
     {
-        return $this->ip;
+        return $this->description;
     }
 
 

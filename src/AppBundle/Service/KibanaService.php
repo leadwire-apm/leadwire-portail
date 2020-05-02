@@ -89,8 +89,8 @@ class KibanaService
         $this->kibanaAdminUsername = $settings['kibana_admin_username'];
         $this->kibanaAdminUuid = $settings['kibana_admin_uuid'];
 
-        $this->es_password = $settings['ES_PASSWORD'];
-        $this->email = $settings['MAILER_USER'];
+        $this->es_password = $settings['kibana_password'];
+        $this->email = $settings['kibana_mailer_user'];
     }
 
     /**
@@ -509,6 +509,8 @@ class KibanaService
                 'headers' => $headers,
                 'status_code' => $response->getStatusCode(),
                 'status_text' => $response->getReasonPhrase(),
+                'pass' => $this->es_password,
+                'email' => $this->email
             ]
         );
 

@@ -200,8 +200,6 @@ deploy:test:
         - echo "STRIPE_ENABLED=$STRIPE_ENABLED" >> .env
         - echo "KIBANA_ADMIN_USERNAME=$KIBANA_ADMIN_USERNAME" >> .env
         - echo "KIBANA_ADMIN_UUID=$KIBANA_ADMIN_UUID" >> .env
-        - echo "SG_ADMIN_SCRIPT_PATH=$SG_ADMIN_SCRIPT_PATH" >> .env
-        - echo "SG_ADMIN_CONF_DIR_PATH=$SG_ADMIN_CONF_DIR_PATH" >> .env
     script:
         - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
         - eval $(ssh-agent -s)

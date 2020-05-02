@@ -31,5 +31,10 @@
             <section ng-include="'application/stats.html'">
             </section>
         </tab>
+        <tab heading="Application view" ng-if="user.id == ctrl.application.owner.id"
+            ng-click="ctrl.getDashboardsList()">
+            <section class="widget bg-white post-comments" ng-include="'application/applicationView.html'">
+            </section>
+        </tab>
     </tabset>
 </div>

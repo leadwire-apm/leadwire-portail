@@ -4,6 +4,7 @@ namespace AppBundle\Controller\Rest;
 
 use AppBundle\Document\Environment;
 use AppBundle\Service\EnvironmentService;
+use AppBundle\Exception\DuplicateApplicationNameException;
 use ATS\CoreBundle\Controller\Rest\RestControllerTrait;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -57,10 +58,17 @@ class EnvironmentController extends Controller
     {
         // Only super Admin can do this
         //$this->denyAccessUnlessGranted([User::ROLE_ADMIN, User::ROLE_SUPER_ADMIN]);
-
-        $data = $request->getContent();
-        $successful = $environmentService->add($data);
-        return $this->renderResponse($successful);
+        try {
+            $data = $request->getContent();
+            $successful = $environmentService->add($data);
+            return $this->renderResponse($successful);
+        }
+        catch (DuplicateApplicationNameException $e) {
+            return $this->renderResponse(['message' => $e->getMessage()], Response::HTTP_NOT_ACCEPTABLE);
+        }
+        catch (\Throwable $e) {
+            return $this->renderResponse(['message' => $e->getMessage()], Response::HTTP_NOT_ACCEPTABLE);
+        }
     }
 
     /**

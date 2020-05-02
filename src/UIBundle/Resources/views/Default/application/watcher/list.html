@@ -20,10 +20,9 @@
             <thead>
                 <tr>
                     <th class="col-md-2">Titre</th>
-                    <th class="col-md-2">Dashboard</th>
+                    <th class="col-md-3">Dashboard</th>
                     <th class="col-md-2">Subject</th>
-                    <th class="col-md-2">Delay</th>
-                    <th class="col-md-2">Body</th>
+                    <th class="col-md-2">Schedule</th>
                     <th colspan="2" style="text-align: center">Actions</th>
                 </tr>
             </thead>
@@ -34,14 +33,12 @@
                     </td>
                     <td data-title="Dashboard" data-label="Dashboard">[[ctrl.getDashboardName(watcher.dashboard)]]</td>
                     <td data-title="Subject" data-label="Subject">[[watcher.subject]]</td>
-                    <td data-title="Delay" data-label="Delay">[[watcher.delay]]</td>
-                    <td data-title="Body" data-label="Body">[[watcher.body]]</td>
-
+                    <td data-title="Schedule" data-label="Schedule">[[watcher.schedule]]</td>
                     <td data-title="Actions" data-label="Actions" class="actionsCell">
 
                         <div class="apm-checkbox">
                             <label class="switch switch-sm">
-                                <input type="checkbox" title="Enable" ng-model="watcher.enabled"
+                                <input type="checkbox" title="Disabled/Enabled" ng-model="watcher.enabled"
                                     ng-change="ctrl.handleWatcher(watcher)">
                                 <span>
                                     <i class="handle"></i>

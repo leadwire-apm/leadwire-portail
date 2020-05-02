@@ -7,7 +7,6 @@ use AppBundle\Document\Environment;
 use AppBundle\Exception\DuplicateApplicationNameException;
 use AppBundle\Manager\EnvironmentManager;
 use AppBundle\Manager\ApplicationManager;
-use AppBundle\Service\SearchGuardService;
 use AppBundle\Manager\UserManager;
 use AppBundle\Manager\AccessLevelManager;
 use AppBundle\Document\AccessLevel;
@@ -50,11 +49,6 @@ class EnvironmentService
     private $logger;
 
     /**
-     * @var SearchGuardService
-     */
-    private $searchGuardService;
-
-    /**
      * @var UserManager
      */
     private $userManager;
@@ -81,7 +75,6 @@ class EnvironmentService
      * @param ApplicationManager $applicationManager
      * @param SerializerInterface $serializer
      * @param LoggerInterface $logger
-     * @param SearchGuardService $searchGuardService
      * @param UserManager $userManager
      * @param AccessLevelManager $accessLevelManager
      * @param ElasticSearchService $elasticSearchService
@@ -92,7 +85,6 @@ class EnvironmentService
         ApplicationManager $applicationManager,
         SerializerInterface $serializer,
         LoggerInterface $logger,
-        SearchGuardService $searchGuardService,
         UserManager $userManager,
         AccessLevelManager $accessLevelManager,
         ElasticSearchService $elasticSearchService,
@@ -102,7 +94,6 @@ class EnvironmentService
         $this->applicationManager = $applicationManager;
         $this->serializer = $serializer;
         $this->logger = $logger;
-        $this->searchGuardService = $searchGuardService;
         $this->userManager = $userManager;
         $this->accessLevelManager = $accessLevelManager;
         $this->es = $elasticSearchService;
@@ -122,8 +113,21 @@ class EnvironmentService
         $environment = $this
             ->serializer
             ->deserialize($json, Environment::class, 'json');
+
         if (count($this->getAll()) == 0) {
             $environment->setDefault(true);
+        }
+
+        $env = $this->isExist($environment->getName());
+
+        if($env) {
+            throw new DuplicateApplicationNameException("An environment with the same name already exists");
+        }
+
+        $app = $this->applicationManager->getOneBy(['name' => $environment->getName()]);
+        
+        if($app) {
+            throw new DuplicateApplicationNameException("An application with the same name already exists");
         }
 
         $id = $this->environmentManager->update($environment);
@@ -301,6 +305,21 @@ class EnvironmentService
             throw new HttpException(Response::HTTP_NOT_FOUND, "Environment not Found");
         } else {
             return $environment;
+        }
+
+    }
+
+    /**
+     * @param string $name
+     */
+    public function isExist($name)
+    {
+
+        $environment = $this->environmentManager->getOneBy(['name' => $name]);
+        if ($environment === null) {
+            return false;
+        } else {
+            return true;
         }
 
     }

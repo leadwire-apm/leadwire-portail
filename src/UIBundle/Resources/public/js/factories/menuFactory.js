@@ -160,12 +160,12 @@
             SETTINGS: [
                 {
                     route: 'app.applicationsList',
-                    icon: 'fas fa-window-restore',
+                    icon: 'fa fa-window-restore',
                     label: 'Applications',
                 },
                 {
                     route: 'app.user',
-                    icon: 'fas fa-user-tie',
+                    icon: 'fa fa-user-tie',
                     label: 'Profile',
                 },
             ],
@@ -174,31 +174,31 @@
                 {
                     route: 'app.management.applications',
                     abstractRoute: 'app.management',
-                    icon: 'fas fa-window-restore',
+                    icon: 'fa fa-window-restore',
                     label: 'Applications',
                 },
                 {
                     route: 'app.management.users',
                     abstractRoute: 'app.management',
-                    icon: 'fas fa-user-cog',
+                    icon: 'fa fa-user-cog',
                     label: 'Users',
                 },
                 {
                     route: 'app.management.environmentList',
                     abstractRoute: 'app.management',
-                    icon: 'fas fa-sitemap',
-                    label: 'Environment',
+                    icon: 'fa fa-sitemap',
+                    label: 'Environments',
                 },
                 {
                     route: 'app.management.alerts',
                     abstractRoute: 'app.management',
-                    icon: 'fas fa-exclamation-triangle',
+                    icon: 'fa fa-exclamation-triangle',
                     label: 'Alerts'
                 },
                 {
                     route: 'app.management.anomaly',
                     abstractRoute: 'app.management',
-                    icon: 'fas fa-heartbeat',
+                    icon: 'fa fa-heartbeat',
                     label: 'Anomaly Detectors ',
                 },
                 {
@@ -215,7 +215,7 @@
                 {
                     route: 'app.management.applicationTypes',
                     abstractRoute: 'app.management',
-                    icon: 'fas fa-tools',
+                    icon: 'fa fa-tools',
                     label: 'Application types',
                 },
                 {
@@ -227,7 +227,7 @@
                 {
                     route: 'app.management.templates',
                     abstractRoute: 'app.management',
-                    icon: 'fas fa-file-code',
+                    icon: 'fa fa-file-code',
                     label: 'Templates',
                 },
 
@@ -240,7 +240,7 @@
                 {
                     route: 'app.management.security',
                     abstractRoute: 'app.management',
-                    icon: 'fas fa-shield-alt',
+                    icon: 'fa fa-shield-alt',
                     label: 'Security ',
                 }
             ],

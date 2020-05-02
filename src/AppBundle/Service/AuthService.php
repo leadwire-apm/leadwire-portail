@@ -75,11 +75,6 @@ class AuthService
     private $superAdminUsername;
 
     /**
-     * @var SearchGuardService
-     */
-    private $sgService;
-
-    /**
      * @var EnvironmentService
      */
     private $environmentService;
@@ -93,7 +88,6 @@ class AuthService
         ProcessService $processService,
         LoggerInterface $logger,
         JWTHelper $jwtHelper,
-        SearchGuardService $sgService,
         EnvironmentService $environmentService,
         string $appDomain,
         array $authProviderSettings,
@@ -110,7 +104,6 @@ class AuthService
         $this->appDomain = $appDomain;
         $this->authProviderSettings = $authProviderSettings;
         $this->superAdminUsername = $superAdminUsername;
-        $this->sgService = $sgService;
         $this->environmentService = $environmentService;
     }
 

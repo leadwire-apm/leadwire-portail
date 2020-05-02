@@ -32,7 +32,6 @@ use AppBundle\Service\CuratorService;
 use AppBundle\Service\ElasticSearchService;
 use AppBundle\Service\KibanaService;
 use AppBundle\Service\LdapService;
-use AppBundle\Service\SearchGuardService;
 use AppBundle\Service\StatService;
 
 /**
@@ -132,11 +131,6 @@ class ApplicationService
     private $ldapService;
 
     /**
-     * @var SearchGuardService
-     */
-    private $searchGuardService;
-
-    /**
      * @var StatService
      */
     private $statService;
@@ -162,7 +156,6 @@ class ApplicationService
      * @param ElasticSearchService $elasticSearchService
      * @param KibanaService $kibanaService
      * @param LdapService $ldapService
-     * @param SearchGuardService $searchGuardService
      * @param StatService $statService
      */
     public function __construct(
@@ -184,7 +177,6 @@ class ApplicationService
         ElasticSearchService $elasticSearchService,
         KibanaService $kibanaService,
         LdapService $ldapService,
-        SearchGuardService $searchGuardService,
         StatService $statService
     ) {
         $this->accessLevelManager = $accessLevelManager;
@@ -205,7 +197,6 @@ class ApplicationService
         $this->es = $elasticSearchService;
         $this->kibanaService = $kibanaService;
         $this->ldapService = $ldapService;
-        $this->sg = $searchGuardService;
         $this->statService = $statService;
     }
 
@@ -340,6 +331,21 @@ class ApplicationService
     }
 
     /**
+     * @param string $name
+     */
+    public function isExist($name)
+    {
+
+        $app = $this->applicationManager->getOneBy(['name' => $name]);
+        if ($app === null) {
+            return false;
+        } else {
+            return true;
+        }
+
+    }
+
+    /**
      * Creates a new app from JSON data
      *
      * @param string $json
@@ -362,9 +368,14 @@ class ApplicationService
         $application->setDeployedTypeVersion($applicationType->getVersion());
         $application->setName(\str_replace(' ', '_', $application->getName())); // Make sure thare are no spaces
         $dbApplication = $this->applicationManager->getOneBy(['name' => $application->getName()]);
+        $dbEnvironment = $this->environmentService->isExist($application->getName());
 
         if ($dbApplication !== null) {
             throw new DuplicateApplicationNameException("An application with the same name already exists");
+        }
+
+        if ($dbEnvironment) {
+            throw new DuplicateApplicationNameException("An environment with the same name already exists");
         }
 
         $uuid1 = Uuid::uuid1();

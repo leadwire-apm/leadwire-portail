@@ -11,6 +11,7 @@
             '$state',
             'socket',
             '$rootScope',
+            '$localStorage',
             addApplicationCtrlFN,
         ]);
 
@@ -24,7 +25,7 @@
      * @param MESSAGES_CONSTANTS
      * @param $state
      */
-    function addApplicationCtrlFN (
+    function addApplicationCtrlFN(
         ApplicationFactory,
         ApplicationService,
         ApplicationTypeFactory,
@@ -33,11 +34,19 @@
         MESSAGES_CONSTANTS,
         $state,
         socket,
-        $rootScope
+        $rootScope,
+        $localStorage,
     ) {
         var vm = this;
 
-        socket.on('heavy-operation', function(data) {
+        vm.blacklist = ["leadwire", "span", "transaction", "error", "metric", "sourcemap", ...$localStorage.listApp];
+
+        $localStorage.envList.reduce(function (p, c, i) {
+            p.push(c.name);
+            return p;
+        }, vm.blacklist)
+
+        socket.on('heavy-operation', function (data) {
             if (data.user != $rootScope.user.id) {
                 return;
             }
@@ -92,7 +101,7 @@
             vm.loadApplicationTypes();
 
             EnvironmentService.getDefault()
-                .then(function(response) {
+                .then(function (response) {
                     if (response == null) {
                         $('.panel').addClass('inactive');
                         $('.create-env').css('display', 'block');
@@ -100,7 +109,7 @@
                 });
         };
 
-        function handleAfterSuccess (success) {
+        function handleAfterSuccess(success) {
             if (success) {
                 $rootScope.$broadcast("new:app", {});
                 vm.flipActivityIndicator();
@@ -108,7 +117,7 @@
             }
         }
 
-        function handleOnFailure (error) {
+        function handleOnFailure(error) {
             toastr.error(
                 error.message || MESSAGES_CONSTANTS.ADD_APP_FAILURE ||
                 MESSAGES_CONSTANTS.ERROR,

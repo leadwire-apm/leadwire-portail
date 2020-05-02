@@ -81,6 +81,10 @@ class ElasticSearchService
         );
 
         $this->url = $settings['host'] . ":" . (string) $settings['port'] . "/";
+        $this->ism_setup = $settings['ism_setup'];
+        $this->ism_min_size = $settings['ism_min_size'];
+        $this->ism_min_doc_count = $settings['ism_min_doc_count'];
+        $this->ism_min_index_age = $settings['ism_min_index_age'];
     }
 
     /**
