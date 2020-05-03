@@ -42,7 +42,7 @@
 
         <div ng-repeat="(key, menu) in menus" ng-if="!isChangingContext && state.includes('app.dashboard')">
             <li data-toggle="collapse" data-target="#[[key]]" ng-class="collapsed" ui-sref-active-eq
-                style="padding: 13px 21px;">
+                style="padding: 13px 21px;" ng-if="showMenu(menu)">
                 <a title="[[key]]">
                     <i ng-class="key == 'APM' ? 'fa fa-eye' : 'fa fa-exchange-alt'"></i>
                     <span>[[key]]</span>

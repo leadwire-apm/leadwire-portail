@@ -191,6 +191,17 @@
             }
         };
 
+        $scope.showMenu = function (menu) {
+            if(Array.isArray(menu)){
+                var show = false;
+                menu.map(el => {
+                    if(el.visible)
+                        show = true;
+                })
+                return show;
+            }
+        }
+
         $scope.loadApplications = function () {
             ApplicationFactory.findMyApplications().then(function (response) {
                 $localStorage.applications = response.data;

@@ -437,7 +437,7 @@ class KibanaService
         $content = json_encode([
             "attributes" => [
                 "title" => $watcher->getTitle(),
-                "disable" => true,
+                "disable" => false,
                 "report" => true,
                 "save_payload" => false,
                 "impersonate" => false,
@@ -528,7 +528,7 @@ class KibanaService
             "attributes" => [
                 "id" => $watcher->getKibanaId(),
                 "title" => $watcher->getTitle(),
-                "disable" => $watcher->isEnabled(),
+                "disable" => !$watcher->isEnabled(),
                 "report" => true,
                 "save_payload" => false,
                 "impersonate" => false,
@@ -645,7 +645,7 @@ class KibanaService
         $content = json_encode([
             "attributes" => [
                 "title" => $watcher->getTitle(),
-                "disable" => $watcher->isEnabled(),
+                "disable" => !$watcher->isEnabled(),
                 "report" => true,
                 "save_payload" => false,
                 "impersonate" => false,
