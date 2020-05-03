@@ -469,10 +469,10 @@ class ElasticSearchService
             ];
 	   */
 
-            $content->settings->{"opendistro.index_state_management.policy_id"} = "hot-warm-delete-policy";
-		
+	if ($this->ism_setup == 'true') {
+            $content->settings->{"opendistro.index_state_management.policy_id"} = "hot-warm-delete-policy";	
 	    $content->settings->{"opendistro.index_state_management.rollover_alias"} = $index_rollover_alias ;
-                  
+	}        
       	    $response = $this->httpClient->put(
                 $this->url . "_template/".$index_template,
                 [
@@ -1522,12 +1522,15 @@ class ElasticSearchService
                     "states"=>array(
                         [
                             "name"=>"hot",
-			    "actions"=>array(["rollover"=>["min_doc_count"=>100]]),
+			    "actions"=>array(["rollover"=>["min_doc_count"=>$this->ism_min_doc_count,
+                                                           "min_index_age"=>$this->ism_min_index_age,
+                                                           "min_size"=>$this->ism_min_size
+                                                ]]),
                             "transitions"=>array(["state_name"=>"warm"])
                         ],
                         [
                             "name"=>"warm",
-                            "actions"=>array(["replica_count"=>["number_of_replicas"=>5]]),
+                            "actions"=>array(["replica_count"=>["number_of_replicas"=>1]]),
                             "transitions"=>array([
                                 "state_name"=>"delete",
                                 "conditions"=>["min_index_age"=>"30d"]]
