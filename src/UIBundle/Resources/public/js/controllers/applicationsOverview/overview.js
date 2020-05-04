@@ -10,13 +10,13 @@
 
         var vm = this;
 
-        var SI_SYMBOL = [" Transactions", 
-                           " k Transactions", 
-                           " M Transactions", 
-                           " G Transactions", 
-                           " T Transactions", 
-                           " P Transactions", 
-                           " E Transactions"];
+        var SI_SYMBOL = [" Documents", 
+                           " k Documents", 
+                           " M Documents", 
+                           " G Documents", 
+                           " T Documents", 
+                           " P Documents", 
+                           " E Documents"];
 
         vm.abbreviateNumber = function (number) {
 
@@ -24,7 +24,7 @@
             var tier = Math.log10(number) / 3 | 0;
 
             // if zero, we don't need a suffix
-            if (tier == 0) return  " 0 Transactions";
+            if (tier == 0) return  " 0 Documents";
 
             // get suffix and determine scale
             var suffix = SI_SYMBOL[tier];
