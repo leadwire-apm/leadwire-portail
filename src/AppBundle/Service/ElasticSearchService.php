@@ -825,7 +825,7 @@ class ElasticSearchService
 
             $stats = $this->httpClient->get(
 
-                $this->url ."apm-*-". $env ."-". $app ."-transaction*/_count",
+                $this->url ."*-". $env ."-". $app ."-*/_count",
     
                 [
                     'headers' => [
@@ -843,7 +843,7 @@ class ElasticSearchService
                 [
                     'status_text' => $stats->getReasonPhrase(),
                     'status_code' => $stats->getStatusCode(),
-                    'url' => $this->url ."apm-*-". $env ."-". $app ."-transaction*/_count",
+                    'url' => $this->url ."*-". $env ."-". $app ."-*/_count",
                 ]
             );
     
