@@ -37,6 +37,7 @@ parameters:
     compagne_enabled: '%env(COMPAGNE_ENABLED)%'
     jenkins_url: '%env(JENKINS_URL)%'
     stripe_enabled: '%env(STRIPE_ENABLED)%'
+    logout_url: '%env(LOGOUT_URL)%'
     kibana_admin_username: '%env(KIBANA_ADMIN_USERNAME)%'
     has_all_user_tenant: false
     auth_providers:
@@ -109,6 +110,7 @@ twig:
         COMPAGNE_ENABLED: '%compagne_enabled%'
         JENKINS_URL: '%jenkins_url%'
         STRIPE_ENABLED: '%stripe_enabled%'
+        LOGOUT_URL: '%logout_url%'
     paths:
         '%kernel.project_dir%/src/UIBundle/Resources/views/Default': ~
 

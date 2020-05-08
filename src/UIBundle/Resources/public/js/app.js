@@ -73,6 +73,7 @@ angular.module('leadwireApp', [
         COMPAGNE_ENABLED: COMPAGNE_ENABLED,
         JENKINS_URL: JENKINS_URL,
         STRIPE_ENABLED: STRIPE_ENABLED,
+        LOGOUT_URL: LOGOUT_URL,
     })
     .constant('MESSAGES_CONSTANTS', {
         ERROR: 'Something went wrong,please try again.',

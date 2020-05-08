@@ -60,6 +60,7 @@
 
         $scope.COMPAGNE_ENABLED = CONFIG.COMPAGNE_ENABLED;
         $scope.LOGIN_METHOD = CONFIG.LOGIN_METHOD;
+        $scope.LOGOUT_URL = CONFIG.LOGOUT_URL;
 
         $scope.$on('user:updated', function (event, data) {
             $rootScope.user = data;
@@ -229,7 +230,7 @@
                 .then(function () {
                     toastr.info(MESSAGES_CONSTANTS.LOGOUT_SUCCESS);
                     if (CONFIG.LOGIN_METHOD === "proxy")
-                        window.location.href = 'https://auth.leadwire.io/?logout=1';
+                        window.location.href = CONFIG.LOGOUT_URL;
                     else
                         $location.path('/login');
                 });
