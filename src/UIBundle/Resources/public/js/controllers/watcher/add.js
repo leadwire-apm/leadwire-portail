@@ -39,20 +39,28 @@
             "res": "1280x900",
             "body": "LEADWIRE Screenshot Report",
             "fromDate": "",
-            "toDate": "",
+            "toDate": "now",
             "envId": $modalInstance.envId,
             "appId": $modalInstance.appId,
             "enabled": true
         };
 
+        vm.timerangeList = [
+            {key:"", value:"use dashboard defaults"},
+            {key:"now-15m", value:"Last 15 minutes"},
+            {key:"now-30m", value:"Last 30 minutes"},
+            {key:"now-4h", value:"Last 4 hours"},
+            {key:"now/d", value:"Today "},
+            {key:"now/w", value:"Last 7 Days "},
+            {key:"now-30d", value:"Last 30 Days"},
+            {key:"now-1y", value:"Last Year"},
+        ];
+
         if ($modalInstance.watcher) {
             vm.watcher = $modalInstance.watcher;
-
-            if ($modalInstance.watcher.fromDate && $modalInstance.watcher.toDate) {
-                vm.startDate = moment($modalInstance.watcher.fromDate);
-                vm.endDate = moment($modalInstance.watcher.toDate);
-            }
         }
+
+        var tenant = `${$modalInstance.envName +"-app-"+ $modalInstance.appName}`;
 
         /**
          * get dashboards list
@@ -69,8 +77,23 @@
             $scope.$apply();
         })
 
+        vm.setTenant = function () {
+            vm.dashboardsList.map( el => {
+                if(el.id === vm.watcher.dashboard){
+                    if(el.group === 'custom')
+                        tenant = `${$modalInstance.envName +"-shared-"+ $modalInstance.appName}`;
+                    else
+                        tenant = `${$modalInstance.envName +"-app-"+ $modalInstance.appName}`;
+                }
+            })
+
+        }
+
         vm.ok = function () {
-            vm.watcher.url = `http://localhost:8008/app/kibana?security_tenant=${$modalInstance.envName +"-app-"+ $modalInstance.appName}#/dashboard/${vm.watcher.dashboard}?embed=true${_url}`;
+            vm.watcher.url = `http://localhost:8008/app/kibana?security_tenant=${tenant}#/dashboard/${vm.watcher.dashboard}?embed=true${_url}`;
+            if(vm.watcher.fromDate !== ""){
+                vm.watcher.url += `&_g=(time:(from:${vm.watcher.fromDate},to:now))`;
+            }
             WatcherService.saveOrUpdate(vm.watcher)
                 .then(function (response) {
                     toastr.success(MESSAGES_CONSTANTS.SUCCESS);
@@ -81,68 +104,9 @@
                 })
         }
 
-        vm.cancel = function () {
-            $modalInstance.dismiss();
-        }
-
-        vm.options = {
-            locale: { cancelLabel: 'Clear' },
-            showDropdowns: true,
-            singleDatePicker: false,
-            alwaysShowCalendars: true,
-            showCustomRangeLabel: false,
-            linkedCalendars: false,
-            minDate: "01/01/2010",
-            //maxDate: moment(),
-            timePicker: true,
-            timePicker24Hour: true,
-            ranges: {
-                'Last 15 minutes': [moment().subtract(15, 'minutes'), moment()],
-                'Last 30 minutes': [moment().subtract(30, 'minutes'), moment()],
-                'Today': [moment(), moment()],
-                'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-                'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-                'Last Year': [moment().subtract(12, 'month'), moment()]
-            }
-        };
-
-        function getInterval(int) {
-            switch (int) {
-                case "Last 15 minutes":
-                    return "now-15m";
-                case "Last 30 minutes":
-                    return "now-30m";
-                case "Today":
-                    return "now/d";
-                case "Last 7 Days":
-                    return "now/w";
-                case "Last 30 Days":
-                    return "now-30d";
-                case "Last Year":
-                    return "now-1y";
-                default:
-                    return "now-15m";
-            }
-        }
-
-        vm.sync = function () {
-
-            var startDate = $('#range').data('daterangepicker').startDate.toISOString();
-            var endDate = $('#range').data('daterangepicker').endDate.toISOString();
-            var from = "now-15m";
-            var to = "now";
-
-            if ($('#range').data('daterangepicker').chosenLabel === null) {
-                from = startDate;
-                to = endDate;
-            } else {
-                from = getInterval($('#range').data('daterangepicker').chosenLabel);
-                to = "now";
-            }
-
-            _url = `&_g=(time:(from:${from},to:${to}))`;
-            vm.watcher.toDate = startDate;
-            vm.watcher.fromDate = endDate;
+        vm.cancel = function ($event) {
+            $modalInstance.close("Ok");
+            $event.stopPropagation();
         }
     }
 
