@@ -34,9 +34,15 @@
                     <label class="col-sm-2 control-label" for="dashboard">Dashboard *</label>
                     <div class="col-sm-10">
 
-                        <select data-ng-model="ctrl.watcher.dashboard" class="form-control" id="dashboard"
-                            name="dashboard" ng-change="ctrl.setTenant()" required>
-                            <option ng-repeat="dashboard in ctrl.dashboardsList" value="[[dashboard.id]]">
+                        <select data-ng-model="ctrl.watcher.dashboard" 
+                        class="form-control" 
+                        id="dashboard" 
+                        name="dashboard" 
+                        ng-change="ctrl.setTenant()" 
+                         required>
+                            <option ng-repeat="dashboard in ctrl.dashboardsList"
+                             value="[[dashboard.id]]"
+                             ng-selected="ctrl.watcher.dashboard === dashboard.id">
                                 [[dashboard.group === 'Custom' ? '**Shared ** ': '']] [[dashboard.key]] :
                                 [[dashboard.name]]
                             </option>

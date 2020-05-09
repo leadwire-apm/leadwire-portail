@@ -76,10 +76,10 @@
 
         vm.setWatcherLink = function () {
             WatcherService.list(vm.application.id, vm.selectedEnvironment)
-                .then(function (res) {
-                    vm.watchersList = res.data;
+                .then(function (data) {
+                    vm.watchersList = data;
                 }).catch(function (err) {
-
+                    toastr.error(err.message || MESSAGES_CONSTANTS.ERROR);
                 });
         };
 

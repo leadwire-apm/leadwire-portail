@@ -12,19 +12,55 @@
         var service = this;
 
         service.saveOrUpdate = function (data) {
-            return WatcherFactory.saveOrUpdate(data);
+            return WatcherFactory.saveOrUpdate(data)
+            .then(function (response) {
+                if(response.status === 200)
+                    return response.data;
+                else    
+                    throw new Error(response.data.message);
+            })
+            .catch(function (err) {
+                throw new Error(err);
+            });
         }
 
         service.list = function (appId, envId) {
-            return WatcherFactory.list(appId, envId);
+            return WatcherFactory.list(appId, envId)
+            .then(function (response) {
+                if(response.status === 200)
+                    return response.data;
+                else    
+                    throw new Error(response.data.message);
+            })
+            .catch(function (err) {
+                throw new Error(err);
+            });
         }
 
         service.delete = function (id) {
-            return WatcherFactory.delete(id);
+            return WatcherFactory.delete(id)
+            .then(function (response) {
+                if(response.status === 200)
+                    return response.data;
+                else    
+                    throw new Error(response.data.message);
+            })
+            .catch(function (err) {
+                throw new Error(err);
+            });
         }
 
         service.execute = function (id) {
-            return WatcherFactory.execute(id);
+            return WatcherFactory.execute(id)
+            .then(function (response) {
+                if(response.status === 200)
+                    return response.data;
+                else    
+                    throw new Error(response.data.message);
+            })
+            .catch(function (err) {
+                throw new Error(err);
+            });
         }
     }
 })(window.angular);
