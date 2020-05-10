@@ -31,7 +31,7 @@ angular.module('leadwireApp', [
     .factory('socket', function (socketFactory) {
         return socketFactory({
             prefix: "",
-            ioSocket: io.connect('https://' + APP_DOMAIN + ':' + SOCKET_IO_PORT, {
+            ioSocket: io.connect('https://' + LEADWIRE_APP_DOMAIN + ':' + LEADWIRE_SOCKET_IO_PORT, {
                 secure: true,
                 reconnect: true,
                 reconnectionDelay: 1000,
@@ -57,23 +57,23 @@ angular.module('leadwireApp', [
     })
     .constant('CONFIG', {
         APP_VERSION: APP_VERSION,
-        APP_DOMAIN: APP_DOMAIN,
-        SOCKET_IO_PORT: SOCKET_IO_PORT,
+        LEADWIRE_APP_DOMAIN: LEADWIRE_APP_DOMAIN,
+        LEADWIRE_SOCKET_IO_PORT: LEADWIRE_SOCKET_IO_PORT,
         BASE_URL: BASE_URL,
         ASSETS_BASE_URL: ASSETS_BASE_URL,
         UPLOAD_URL: UPLOAD_URL,
         DOWNLOAD_URL: DOWNLOAD_URL,
-        GITHUB_CLIENT_ID: GITHUB_CLIENT_ID,
+        LEADWIRE_GITHUB_CLIENT_ID: LEADWIRE_GITHUB_CLIENT_ID,
         KIBANA_BASE_URL: KIBANA_BASE_URL,
         DATE_DEFAULT_FORMAT: DATE_DEFAULT_FORMAT,
         EN_DATE_FORMAT: EN_DATE_FORMAT,
         FR_DATE_FORMAT: FR_DATE_FORMAT,
         TAX: TAX,
-        LOGIN_METHOD: LOGIN_METHOD,
-        COMPAGNE_ENABLED: COMPAGNE_ENABLED,
-        JENKINS_URL: JENKINS_URL,
-        STRIPE_ENABLED: STRIPE_ENABLED,
-        LOGOUT_URL: LOGOUT_URL,
+        LEADWIRE_LOGIN_METHOD: LEADWIRE_LOGIN_METHOD,
+        LEADWIRE_COMPAGNE_ENABLED: LEADWIRE_COMPAGNE_ENABLED,
+        LEADWIRE_JENKINS_URL: LEADWIRE_JENKINS_URL,
+        LEADWIRE_STRIPE_ENABLED: LEADWIRE_STRIPE_ENABLED,
+        LEADWIRE_LOGOUT_URL: LEADWIRE_LOGOUT_URL,
     })
     .constant('MESSAGES_CONSTANTS', {
         ERROR: 'Something went wrong,please try again.',

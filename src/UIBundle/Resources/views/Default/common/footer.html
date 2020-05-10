@@ -1,5 +1,5 @@
 <nav class="footer-right">
-  <ul class="nav"  ng-if="LOGIN_METHOD === 'github'">
+  <ul class="nav"  ng-if="LEADWIRE_LOGIN_METHOD === 'github'">
     <li>
       <a href="javascript:;">Feedback</a>
     </li>
@@ -16,16 +16,16 @@
     <li>
       <a href="javascript:;">Copyright <i class="far fa-copyright"></i> <span>leadwire</span> [[app.year]]. All rights reserved ([[app.version]])</a>
     </li>
-    <li ng-if="LOGIN_METHOD === 'github'">
+    <li ng-if="LEADWIRE_LOGIN_METHOD === 'github'">
       <a ui-sref="static.aboutUs" target="_blank" class="btn btn-link btn-sm">About</a>
     </li>
-    <li ng-if="LOGIN_METHOD === 'github'">
+    <li ng-if="LEADWIRE_LOGIN_METHOD === 'github'">
       <a ui-sref="static.help" target="_blank" class="btn btn-link btn-sm">Help</a>
     </li>
-    <li ng-if="LOGIN_METHOD === 'github'">
+    <li ng-if="LEADWIRE_LOGIN_METHOD === 'github'">
       <a ui-sref="static.termsOfService" target="_blank" class="btn btn-link btn-sm">Terms of service</a>
     </li>
-    <li ng-if="LOGIN_METHOD === 'github'">
+    <li ng-if="LEADWIRE_LOGIN_METHOD === 'github'">
       <a ui-sref="static.privacyPolicy" target="_blank" class="btn btn-link btn-sm">Privacy Policy</a>
     </li>
   </ul>

@@ -9,7 +9,7 @@
             '$localStorage',
             function (Menus, $state, CONFIG, UserService, $localStorage) {
 
-                if (CONFIG.STRIPE_ENABLED === true) {
+                if (CONFIG.LEADWIRE_STRIPE_ENABLED === true) {
                     Menus.SETTINGS.push({
                         route: 'app.billingList',
                         icon: 'fa fa-money-bill-alt',
@@ -24,7 +24,7 @@
                     });
                 }
 
-                if (CONFIG.LOGIN_METHOD === 'github') {
+                if (CONFIG.LEADWIRE_LOGIN_METHOD === 'github') {
                     Menus.MANAGEMENT.push(
                         {
                             route: 'app.management.codes',
@@ -63,7 +63,7 @@
                         }
                         if (menuKey === "CAMPAGNE") {
 
-                            if (CONFIG.COMPAGNE_ENABLED === true) {
+                            if (CONFIG.LEADWIRE_COMPAGNE_ENABLED === true) {
                                 if (UserService.isAdmin($localStorage.user)) {
                                     menus.push(
                                         {
@@ -83,7 +83,7 @@
                                     )
                                 }
                                 menus.push({
-                                    url: CONFIG.JENKINS_URL,
+                                    url: CONFIG.LEADWIRE_JENKINS_URL,
                                     icon: 'fa fa-play-circle',
                                     label: 'Launch',
                                     external: true

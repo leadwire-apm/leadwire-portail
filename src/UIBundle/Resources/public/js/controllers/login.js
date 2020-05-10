@@ -73,8 +73,8 @@ function LoginControllerFN(
 
     vm.authenticate = authenticate;
 
-    vm.loginMethod = CONFIG.LOGIN_METHOD;
-    vm.COMPAGNE_ENABLED = CONFIG.COMPAGNE_ENABLED;
+    vm.loginMethod = CONFIG.LEADWIRE_LOGIN_METHOD;
+    vm.LEADWIRE_COMPAGNE_ENABLED = CONFIG.LEADWIRE_COMPAGNE_ENABLED;
 
     if (vm.loginMethod === "proxy") {
         proxyAuthenticate(vm.loginMethod);

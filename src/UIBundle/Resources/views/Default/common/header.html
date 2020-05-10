@@ -12,7 +12,7 @@
   <!-- /logo -->
 
   <ul class="nav navbar-nav navbar-right pull-right">
-    <li class="dropdown pull-left" ng-if="COMPAGNE_ENABLED === true">
+    <li class="dropdown pull-left" ng-if="LEADWIRE_COMPAGNE_ENABLED === true">
       <a href="" ui-sref="app.overview" title="Campaigns">
         <i class="fa fa-paper-plane"></i>
       </a>
@@ -100,13 +100,13 @@
         <span class="pull-left">[[user.fname]] </span>
       </a>
       <ul class="dropdown-menu">
-        <li ng-if="LOGIN_METHOD === 'github'">
+        <li ng-if="LEADWIRE_LOGIN_METHOD === 'github'">
           <a ui-sref="app.user">Settings</a>
         </li>
-        <li ng-if="LOGIN_METHOD === 'github'">
+        <li ng-if="LEADWIRE_LOGIN_METHOD === 'github'">
           <a ui-sref="app.updateSubscription({action:'upgrade'})">Upgrade</a>
         </li>
-        <li ng-if="LOGIN_METHOD === 'github'">
+        <li ng-if="LEADWIRE_LOGIN_METHOD === 'github'">
           <a href="javascript:;">Help</a>
         </li>
         <li>

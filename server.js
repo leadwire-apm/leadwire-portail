@@ -3,15 +3,15 @@ dotenv.config();
 var fs = require('fs');
 var https = require('https');
 var server = https.createServer({
-        key: fs.readFileSync(process.env.SSL_KEY),
-        cert: fs.readFileSync(process.env.SSL_CERT),
+        key: fs.readFileSync(process.env.LEADWIRE_SSL_KEY),
+        cert: fs.readFileSync(process.env.LEADWIRE_SSL_CERT),
         //ca: fs.readFileSync(process.env.SSL_CA),
         requestCert: false,
         rejectUnauthorized: false
     }),
     io         = require('socket.io')(server),
     logger     = require('winston'),
-    port       = process.env.SOCKET_IO_PORT;
+    port       = process.env.LEADWIRE_SOCKET_IO_PORT;
 
 io.on('connection', function (socket) {
     socket.on('broadcast', function (data) {

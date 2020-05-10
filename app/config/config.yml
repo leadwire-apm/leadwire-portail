@@ -11,67 +11,67 @@ imports:
 parameters:
     locale: en
     app_version: 'v1.3.6'
-    app_domain: '%env(APP_DOMAIN)%'
-    app_schemes: '%env(APP_SCHEME)%'
-    socket_io_port: '%env(SOCKET_IO_PORT)%'
+    app_domain: '%env(LEADWIRE_APP_DOMAIN)%'
+    app_schemes: '%env(LEADWIRE_APP_SCHEME)%'
+    socket_io_port: '%env(LEADWIRE_SOCKET_IO_PORT)%'
     activation_code_regex: '[A-Z0-9]B[A-Z0-9]{2}7[A-Z0-9]'
     default_lock_message: 'Your account has been locked'
     secret: 06abd8f87b9d3b88feb152891421cb20017e56dd
     internal_api_prefix: api
-    secret_key: '%env(STRIPE_SECRET_KEY)%'
+    secret_key: '%env(LEADWIRE_STRIPE_SECRET_KEY)%'
     providerName: Stripe
-    super_admin_username: '%env(SUPER_USER_ADMIN_NAME)%'
-    mailer_transport: '%env(MAILER_TRANSPORT)%'
-    mailer_host: '%env(MAILER_HOST)%'
-    mailer_port: '%env(MAILER_PORT)%'
-    mailer_user: '%env(MAILER_USER)%'
-    mailer_password: '%env(MAILER_PASSWORD)%'
+    super_admin_username: '%env(LEADWIRE_SUPER_USER_ADMIN_NAME)%'
+    mailer_transport: '%env(LEADWIRE_MAILER_TRANSPORT)%'
+    mailer_host: '%env(LEADWIRE_MAILER_HOST)%'
+    mailer_port: '%env(LEADWIRE_MAILER_PORT)%'
+    mailer_user: '%env(LEADWIRE_MAILER_USER)%'
+    mailer_password: '%env(LEADWIRE_MAILER_PASSWORD)%'
     sender: "%mailer_user%"
-    github_client_id: '%env(GITHUB_CLIENT_ID)%'
-    auth_providers.settings.token_secret: '%env(JWT_TOKEN_SECRET)%'
-    kibana.host: '%env(KIBANA_HOST)%'
-    kibana.iframe_host: '%env(KIBANA_IFRAME_HOST)%'
-    kibana.port: '%env(KIBANA_PORT)%'
-    kibana.iframe_port: '%env(KIBANA_IFRAME_PORT)%'
-    login_method: '%env(LOGIN_METHOD)%'
-    compagne_enabled: '%env(COMPAGNE_ENABLED)%'
-    jenkins_url: '%env(JENKINS_URL)%'
-    stripe_enabled: '%env(STRIPE_ENABLED)%'
-    logout_url: '%env(LOGOUT_URL)%'
-    kibana_admin_username: '%env(KIBANA_ADMIN_USERNAME)%'
+    github_client_id: '%env(LEADWIRE_GITHUB_CLIENT_ID)%'
+    auth_providers.settings.token_secret: '%env(LEADWIRE_JWT_TOKEN_SECRET)%'
+    kibana.host: '%env(LEADWIRE_KIBANA_HOST)%'
+    kibana.iframe_host: '%env(LEADWIRE_KIBANA_IFRAME_HOST)%'
+    kibana.port: '%env(LEADWIRE_KIBANA_PORT)%'
+    kibana.iframe_port: '%env(LEADWIRE_KIBANA_IFRAME_PORT)%'
+    login_method: '%env(LEADWIRE_LOGIN_METHOD)%'
+    compagne_enabled: '%env(LEADWIRE_COMPAGNE_ENABLED)%'
+    jenkins_url: '%env(LEADWIRE_JENKINS_URL)%'
+    stripe_enabled: '%env(LEADWIRE_STRIPE_ENABLED)%'
+    logout_url: '%env(LEADWIRE_LOGOUT_URL)%'
+    kibana_admin_username: '%env(LEADWIRE_KIBANA_ADMIN_USERNAME)%'
     has_all_user_tenant: false
     auth_providers:
         github:
             github_access_token_url: 'https://github.com/login/oauth/access_token'
             github_users_api_url: 'https://api.github.com/user'
-            github_client_secret: '%env(GITHUB_CLIENT_SECRET)%'
+            github_client_secret: '%env(LEADWIRE_GITHUB_CLIENT_SECRET)%'
         settings:
-            token_secret: '%env(JWT_TOKEN_SECRET)%'
+            token_secret: '%env(LEADWIRE_JWT_TOKEN_SECRET)%'
     ldap:
-        host: '%env(LDAP_HOST)%'
-        port: '%env(LDAP_PORT)%'
-        dn_user: '%env(LDAP_DN_USER)%'
-        mdp: '%env(LDAP_PASSWORD)%'
+        host: '%env(LEADWIRE_LDAP_HOST)%'
+        port: '%env(LEADWIRE_LDAP_PORT)%'
+        dn_user: '%env(LEADWIRE_LDAP_DN_USER)%'
+        mdp: '%env(LEADWIRE_LDAP_PASSWORD)%'
     kibana:
-        host: '%env(KIBANA_HOST)%'
-        port: '%env(KIBANA_PORT)%'
-        iframe_host: '%env(KIBANA_IFRAME_HOST)%'
-        iframe_port: '%env(KIBANA_IFRAME_PORT)%'
-        kibana_admin_username: '%env(KIBANA_ADMIN_USERNAME)%'
-        kibana_admin_uuid: '%env(KIBANA_ADMIN_UUID)%'
-        kibana_mailer_user: '%env(MAILER_USER)%'
-        kibana_password: '%env(ES_PASSWORD)%'
+        host: '%env(LEADWIRE_KIBANA_HOST)%'
+        port: '%env(LEADWIRE_KIBANA_PORT)%'
+        iframe_host: '%env(LEADWIRE_KIBANA_IFRAME_HOST)%'
+        iframe_port: '%env(LEADWIRE_KIBANA_IFRAME_PORT)%'
+        kibana_admin_username: '%env(LEADWIRE_KIBANA_ADMIN_USERNAME)%'
+        kibana_admin_uuid: '%env(LEADWIRE_KIBANA_ADMIN_UUID)%'
+        kibana_mailer_user: '%env(LEADWIRE_MAILER_USER)%'
+        kibana_password: '%env(LEADWIRE_ES_PASSWORD)%'
     elastic:
-        username: '%env(ES_USERNAME)%'
-        password: '%env(ES_PASSWORD)%'
-        host: '%env(ES_HOST)%'
-        port: '%env(ES_PORT)%'
-        ism_setup: '%env(ISM_SETUP)%'
-        ism_min_size: '%env(ISM_MIN_SIZE)%'
-        ism_min_doc_count: '%env(ISM_MIN_DOC_COUNT)%'
+        username: '%env(LEADWIRE_ES_USERNAME)%'
+        password: '%env(LEADWIRE_ES_PASSWORD)%'
+        host: '%env(LEADWIRE_ES_HOST)%'
+        port: '%env(LEADWIRE_ES_PORT)%'
+        ism_setup: '%env(LEADWIRE_ISM_SETUP)%'
+        ism_min_size: '%env(LEADWIRE_ISM_MIN_SIZE)%'
+        ism_min_doc_count: '%env(LEADWIRE_ISM_MIN_DOC_COUNT)%'
         ism_min_index_age: '%env(ISM_MIN_INDEX_Age)%'
     curator:
-        platformName: '%env(PLATFORM_NAME)%'
+        platformName: '%env(LEADWIRE_PLATFORM_NAME)%'
 
 # Framework Configuration
 framework:
@@ -94,23 +94,23 @@ twig:
     strict_variables: '%kernel.debug%'
     globals:
         APP_VERSION:  '%app_version%'
-        APP_DOMAIN: '%app_domain%'
-        SOCKET_IO_PORT: '%socket_io_port%'
+        LEADWIRE_APP_DOMAIN: '%app_domain%'
+        LEADWIRE_SOCKET_IO_PORT: '%socket_io_port%'
         BASE_URL: '%app_schemes%://%app_domain%/'
         ASSETS_BASE_URL: '/'
         UPLOAD_URL: '%app_schemes%://%app_domain%/uploads/'
         DOWNLOAD_URL: '%app_schemes%://%app_domain%/core/api/resource/'
-        GITHUB_CLIENT_ID: '%github_client_id%'
+        LEADWIRE_GITHUB_CLIENT_ID: '%github_client_id%'
         KIBANA_BASE_URL: '%kibana.iframe_host%:%kibana.iframe_port%/'
         DATE_DEFAULT_FORMAT: 'YYYY-MM-DD[T]HH:mm:ssZZ'
         EN_DATE_FORMAT: 'YYYY-DD-MM'
         FR_DATE_FORMAT: 'DD-MM-YYYY'
         TAX: 20
-        LOGIN_METHOD: '%login_method%'
-        COMPAGNE_ENABLED: '%compagne_enabled%'
-        JENKINS_URL: '%jenkins_url%'
-        STRIPE_ENABLED: '%stripe_enabled%'
-        LOGOUT_URL: '%logout_url%'
+        LEADWIRE_LOGIN_METHOD: '%login_method%'
+        LEADWIRE_COMPAGNE_ENABLED: '%compagne_enabled%'
+        LEADWIRE_JENKINS_URL: '%jenkins_url%'
+        LEADWIRE_STRIPE_ENABLED: '%stripe_enabled%'
+        LEADWIRE_LOGOUT_URL: '%logout_url%'
     paths:
         '%kernel.project_dir%/src/UIBundle/Resources/views/Default': ~
 
@@ -126,19 +126,17 @@ assetic:
 
 doctrine_mongodb:
     auto_generate_hydrator_classes: true
-    default_database: '%env(DATABASE_NAME)%'
+    default_database: '%env(LEADWIRE_DATABASE_NAME)%'
     default_connection: default
     default_document_manager: default
     connections:
         default:
-            server: 'mongodb://%env(DATABASE_HOST)%:%env(DATABASE_PORT)%'
+            server: 'mongodb://%env(LEADWIRE_DATABASE_HOST)%:%env(LEADWIRE_DATABASE_PORT)%'
             options:
-                username: '%env(DATABASE_USER)%'
-                password: '%env(DATABASE_PASSWORD)%'
                 connect: true
-                db: '%env(DATABASE_NAME)%'
+                db: '%env(LEADWIRE_DATABASE_NAME)%'
     document_managers:
         default:
             connection: default
-            database: '%env(DATABASE_NAME)%'
+            database: '%env(LEADWIRE_DATABASE_NAME)%'
             auto_mapping: true

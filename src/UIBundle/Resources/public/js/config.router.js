@@ -21,12 +21,12 @@ angular.module('leadwireApp')
              */
 
             $authProvider.github({
-                clientId: CONFIG.GITHUB_CLIENT_ID,
+                clientId: CONFIG.LEADWIRE_GITHUB_CLIENT_ID,
                 url: CONFIG.BASE_URL + 'login/github',
             });
 
             $authProvider.baseUrl = CONFIG.BASE_URL;
-            $authProvider.loginUrl = 'login/' + CONFIG.LOGIN_METHOD;
+            $authProvider.loginUrl = 'login/' + CONFIG.LEADWIRE_LOGIN_METHOD;
 
             // Application routes
             $stateProvider.state('app', {

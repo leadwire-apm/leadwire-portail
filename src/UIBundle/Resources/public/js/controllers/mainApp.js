@@ -58,9 +58,9 @@
             $location.path('/applicationsSverview');
         }
 
-        $scope.COMPAGNE_ENABLED = CONFIG.COMPAGNE_ENABLED;
-        $scope.LOGIN_METHOD = CONFIG.LOGIN_METHOD;
-        $scope.LOGOUT_URL = CONFIG.LOGOUT_URL;
+        $scope.LEADWIRE_COMPAGNE_ENABLED = CONFIG.LEADWIRE_COMPAGNE_ENABLED;
+        $scope.LEADWIRE_LOGIN_METHOD = CONFIG.LEADWIRE_LOGIN_METHOD;
+        $scope.LEADWIRE_LOGOUT_URL = CONFIG.LEADWIRE_LOGOUT_URL;
 
         $scope.$on('user:updated', function (event, data) {
             $rootScope.user = data;
@@ -229,8 +229,8 @@
             $auth.logout()
                 .then(function () {
                     toastr.info(MESSAGES_CONSTANTS.LOGOUT_SUCCESS);
-                    if (CONFIG.LOGIN_METHOD === "proxy")
-                        window.location.href = CONFIG.LOGOUT_URL;
+                    if (CONFIG.LEADWIRE_LOGIN_METHOD === "proxy")
+                        window.location.href = CONFIG.LEADWIRE_LOGOUT_URL;
                     else
                         $location.path('/login');
                 });
@@ -250,7 +250,7 @@
                 author: 'Nyasha',
                 version: CONFIG.APP_VERSION,
                 year: new Date().getFullYear(),
-                LOGIN_METHOD: CONFIG.LOGIN_METHOD,
+                LEADWIRE_LOGIN_METHOD: CONFIG.LEADWIRE_LOGIN_METHOD,
                 layout: {
                     isSmallSidebar: false,
                     isChatOpen: false,

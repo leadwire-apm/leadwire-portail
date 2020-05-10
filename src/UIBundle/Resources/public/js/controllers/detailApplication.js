@@ -39,7 +39,7 @@
     ) {
         var vm = this;
 
-        vm.LOGIN_METHOD = CONFIG.LOGIN_METHOD;
+        vm.LEADWIRE_LOGIN_METHOD = CONFIG.LEADWIRE_LOGIN_METHOD;
         vm.selectedEnvironment = $localStorage.selectedEnvId.slice(0);
         vm.ownerTitle = "Owner Github :";
         var envName = "staging";
@@ -70,7 +70,7 @@
             return name;
         }
 
-        if (vm.LOGIN_METHOD === 'proxy' || vm.LOGIN_METHOD === 'login') {
+        if (vm.LEADWIRE_LOGIN_METHOD === 'proxy' || vm.LEADWIRE_LOGIN_METHOD === 'login') {
             vm.ownerTitle = "Owner Login Id :"
         }
 
@@ -425,7 +425,7 @@
                 environments: [],
                 CONSTANTS: CONFIG,
                 moment: moment,
-                retention: CONFIG.STRIPE_ENABLED == true ? $rootScope.user.plan.retention : null,
+                retention: CONFIG.LEADWIRE_STRIPE_ENABLED == true ? $rootScope.user.plan.retention : null,
                 DOWNLOAD_URL: CONFIG.DOWNLOAD_URL,
                 currentUser: null,
                 watchersList: [],

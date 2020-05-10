@@ -21,37 +21,37 @@ phpunit:
     stage: test
     before_script:
         - touch .env
-        - echo "DATABASE_NAME=leadwire" >> .env
-        - echo "DATABASE_HOST=mongo" >> .env
-        - echo "DATABASE_PORT=27017" >> .env
-        - echo "APP_DOMAIN=leadwire.local" >> .env
-        - echo "APP_SCHEME=http" >> .env
-        - echo "STRIPE_SECRET_KEY=$TEST_STRIPE_SECRET_KEY" >> .env
-        - echo "SUPER_USER_ADMIN_NAME=$TEST_SUPER_USER_ADMIN_NAME" >> .env
-        - echo "MAILER_TRANSPORT=$TEST_MAILER_TRANSPORT" >> .env
-        - echo "MAILER_USER=$TEST_MAILER_USER" >> .env
-        - echo "MAILER_PASSWORD=$TEST_MAILER_PASSWORD" >> .env
-        - echo "GITHUB_CLIENT_ID=$TEST_GITHUB_CLIENT_ID" >> .env
-        - echo "GITHUB_CLIENT_SECRET=$TEST_GITHUB_CLIENT_SECRET" >> .env
-        - echo "JWT_TOKEN_SECRET=$TEST_JWT_TOKEN_SECRET" >> .env
-        - echo "LDAP_HOST=$TEST_LDAP_HOST" >> .env
-        - echo "LDAP_PORT=$TEST_LDAP_PORT" >> .env
-        - echo "LDAP_DN_USER=$TEST_LDAP_DN_USER" >> .env
-        - echo "LDAP_PASSWORD=$TEST_LDAP_PASSWORD" >> .env
-        - echo "KIBANA_HOST=$TEST_KIBANA_HOST" >> .env
-        - echo "KIBANA_IFRAME_HOST=$TEST_KIBANA_HOST" >> .env
-        - echo "KIBANA_PORT=$TEST_KIBANA_PORT" >> .env
-        - echo "KIBANA_IFRAME_PORT=$TEST_KIBANA_PORT" >> .env
-        - echo "ES_USERNAME=$TEST_ES_USERNAME" >> .env
-        - echo "ES_PASSWORD=$TEST_ES_PASSWORD" >> .env
-        - echo "ES_HOST=$TEST_ES_HOST" >> .env
-        - echo "ES_PORT=$TEST_ES_PORT" >> .env
-        - echo "LOGIN_METHOD=$LOGIN_METHOD" >> .env
-        - echo "COMPAGNE_ENABLED=$COMPAGNE_ENABLED" >> .env
-        - echo "JENKINS_URL=$JENKINS_URL" >> .env
-        - echo "STRIPE_ENABLED=$STRIPE_ENABLED" >> .env
-        - echo "KIBANA_ADMIN_USERNAME=$KIBANA_ADMIN_USERNAME" >> .env
-        - echo "KIBANA_ADMIN_UUID=$KIBANA_ADMIN_UUID" >> .env
+        - echo "LEADWIRE_DATABASE_NAME=leadwire" >> .env
+        - echo "LEADWIRE_DATABASE_HOST=mongo" >> .env
+        - echo "LEADWIRE_DATABASE_PORT=27017" >> .env
+        - echo "LEADWIRE_APP_DOMAIN=leadwire.local" >> .env
+        - echo "LEADWIRE_APP_SCHEME=http" >> .env
+        - echo "LEADWIRE_STRIPE_SECRET_KEY=$TEST_LEADWIRE_STRIPE_SECRET_KEY" >> .env
+        - echo "LEADWIRE_SUPER_USER_ADMIN_NAME=$TEST_LEADWIRE_SUPER_USER_ADMIN_NAME" >> .env
+        - echo "LEADWIRE_MAILER_TRANSPORT=$TEST_LEADWIRE_MAILER_TRANSPORT" >> .env
+        - echo "LEADWIRE_MAILER_USER=$TEST_LEADWIRE_MAILER_USER" >> .env
+        - echo "LEADWIRE_MAILER_PASSWORD=$TEST_LEADWIRE_MAILER_PASSWORD" >> .env
+        - echo "LEADWIRE_GITHUB_CLIENT_ID=$TEST_LEADWIRE_GITHUB_CLIENT_ID" >> .env
+        - echo "LEADWIRE_GITHUB_CLIENT_SECRET=$TEST_LEADWIRE_GITHUB_CLIENT_SECRET" >> .env
+        - echo "LEADWIRE_JWT_TOKEN_SECRET=$TEST_LEADWIRE_JWT_TOKEN_SECRET" >> .env
+        - echo "LEADWIRE_LDAP_HOST=$TEST_LEADWIRE_LDAP_HOST" >> .env
+        - echo "LEADWIRE_LDAP_PORT=$TEST_LEADWIRE_LDAP_PORT" >> .env
+        - echo "LEADWIRE_LDAP_DN_USER=$TEST_LEADWIRE_LDAP_DN_USER" >> .env
+        - echo "LEADWIRE_LDAP_PASSWORD=$TEST_LEADWIRE_LDAP_PASSWORD" >> .env
+        - echo "LEADWIRE_KIBANA_HOST=$TEST_LEADWIRE_KIBANA_HOST" >> .env
+        - echo "LEADWIRE_KIBANA_IFRAME_HOST=$TEST_LEADWIRE_KIBANA_HOST" >> .env
+        - echo "LEADWIRE_KIBANA_PORT=$TEST_LEADWIRE_KIBANA_PORT" >> .env
+        - echo "LEADWIRE_KIBANA_IFRAME_PORT=$TEST_LEADWIRE_KIBANA_PORT" >> .env
+        - echo "LEADWIRE_ES_USERNAME=$TEST_LEADWIRE_ES_USERNAME" >> .env
+        - echo "LEADWIRE_ES_PASSWORD=$TEST_LEADWIRE_ES_PASSWORD" >> .env
+        - echo "LEADWIRE_ES_HOST=$TEST_LEADWIRE_ES_HOST" >> .env
+        - echo "LEADWIRE_ES_PORT=$TEST_LEADWIRE_ES_PORT" >> .env
+        - echo "LEADWIRE_LOGIN_METHOD=$LEADWIRE_LOGIN_METHOD" >> .env
+        - echo "LEADWIRE_COMPAGNE_ENABLED=$LEADWIRE_COMPAGNE_ENABLED" >> .env
+        - echo "LEADWIRE_JENKINS_URL=$LEADWIRE_JENKINS_URL" >> .env
+        - echo "LEADWIRE_STRIPE_ENABLED=$LEADWIRE_STRIPE_ENABLED" >> .env
+        - echo "LEADWIRE_KIBANA_ADMIN_USERNAME=$LEADWIRE_KIBANA_ADMIN_USERNAME" >> .env
+        - echo "LEADWIRE_KIBANA_ADMIN_UUID=$LEADWIRE_KIBANA_ADMIN_UUID" >> .env
         - composer install
         - composer install
     tags:
@@ -64,37 +64,37 @@ phpcs:
     stage: lint
     before_script:
         - touch .env
-        - echo "DATABASE_NAME=leadwire" >> .env
-        - echo "DATABASE_HOST=mongo" >> .env
-        - echo "DATABASE_PORT=27017" >> .env
-        - echo "APP_DOMAIN=leadwire.local" >> .env
-        - echo "APP_SCHEME=http" >> .env
-        - echo "STRIPE_SECRET_KEY=$TEST_STRIPE_SECRET_KEY" >> .env
-        - echo "SUPER_USER_ADMIN_NAME=$TEST_SUPER_USER_ADMIN_NAME" >> .env
-        - echo "MAILER_TRANSPORT=$TEST_MAILER_TRANSPORT" >> .env
-        - echo "MAILER_USER=$TEST_MAILER_USER" >> .env
-        - echo "MAILER_PASSWORD=$TEST_MAILER_PASSWORD" >> .env
-        - echo "GITHUB_CLIENT_ID=$TEST_GITHUB_CLIENT_ID" >> .env
-        - echo "GITHUB_CLIENT_SECRET=$TEST_GITHUB_CLIENT_SECRET" >> .env
-        - echo "JWT_TOKEN_SECRET=$TEST_JWT_TOKEN_SECRET" >> .env
-        - echo "LDAP_HOST=$TEST_LDAP_HOST" >> .env
-        - echo "LDAP_PORT=$TEST_LDAP_PORT" >> .env
-        - echo "LDAP_DN_USER=$TEST_LDAP_DN_USER" >> .env
-        - echo "LDAP_PASSWORD=$TEST_LDAP_PASSWORD" >> .env
-        - echo "KIBANA_HOST=$TEST_KIBANA_HOST" >> .env
-        - echo "KIBANA_IFRAME_HOST=$TEST_KIBANA_HOST" >> .env
-        - echo "KIBANA_PORT=$TEST_KIBANA_PORT" >> .env
-        - echo "KIBANA_IFRAME_PORT=$TEST_KIBANA_PORT" >> .env
-        - echo "ES_USERNAME=$TEST_ES_USERNAME" >> .env
-        - echo "ES_PASSWORD=$TEST_ES_PASSWORD" >> .env
-        - echo "ES_HOST=$TEST_ES_HOST" >> .env
-        - echo "ES_PORT=$TEST_ES_PORT" >> .env
-        - echo "LOGIN_METHOD=$LOGIN_METHOD" >> .env
-        - echo "COMPAGNE_ENABLED=$COMPAGNE_ENABLED" >> .env
-        - echo "JENKINS_URL=$JENKINS_URL" >> .env
-        - echo "STRIPE_ENABLED=$STRIPE_ENABLED" >> .env
-        - echo "KIBANA_ADMIN_USERNAME=$KIBANA_ADMIN_USERNAME" >> .env
-        - echo "KIBANA_ADMIN_UUID=$KIBANA_ADMIN_UUID" >> .env
+        - echo "LEADWIRE_DATABASE_NAME=leadwire" >> .env
+        - echo "LEADWIRE_DATABASE_HOST=mongo" >> .env
+        - echo "LEADWIRE_DATABASE_PORT=27017" >> .env
+        - echo "LEADWIRE_APP_DOMAIN=leadwire.local" >> .env
+        - echo "LEADWIRE_APP_SCHEME=http" >> .env
+        - echo "LEADWIRE_STRIPE_SECRET_KEY=$TEST_LEADWIRE_STRIPE_SECRET_KEY" >> .env
+        - echo "LEADWIRE_SUPER_USER_ADMIN_NAME=$TEST_LEADWIRE_SUPER_USER_ADMIN_NAME" >> .env
+        - echo "LEADWIRE_MAILER_TRANSPORT=$TEST_LEADWIRE_MAILER_TRANSPORT" >> .env
+        - echo "LEADWIRE_MAILER_USER=$TEST_LEADWIRE_MAILER_USER" >> .env
+        - echo "LEADWIRE_MAILER_PASSWORD=$TEST_LEADWIRE_MAILER_PASSWORD" >> .env
+        - echo "LEADWIRE_GITHUB_CLIENT_ID=$TEST_LEADWIRE_GITHUB_CLIENT_ID" >> .env
+        - echo "LEADWIRE_GITHUB_CLIENT_SECRET=$TEST_LEADWIRE_GITHUB_CLIENT_SECRET" >> .env
+        - echo "LEADWIRE_JWT_TOKEN_SECRET=$TEST_LEADWIRE_JWT_TOKEN_SECRET" >> .env
+        - echo "LEADWIRE_LDAP_HOST=$TEST_LEADWIRE_LDAP_HOST" >> .env
+        - echo "LEADWIRE_LDAP_PORT=$TEST_LEADWIRE_LDAP_PORT" >> .env
+        - echo "LEADWIRE_LDAP_DN_USER=$TEST_LEADWIRE_LDAP_DN_USER" >> .env
+        - echo "LEADWIRE_LDAP_PASSWORD=$TEST_LEADWIRE_LDAP_PASSWORD" >> .env
+        - echo "LEADWIRE_KIBANA_HOST=$TEST_LEADWIRE_KIBANA_HOST" >> .env
+        - echo "LEADWIRE_KIBANA_IFRAME_HOST=$TEST_LEADWIRE_KIBANA_HOST" >> .env
+        - echo "LEADWIRE_KIBANA_PORT=$TEST_LEADWIRE_KIBANA_PORT" >> .env
+        - echo "LEADWIRE_KIBANA_IFRAME_PORT=$TEST_LEADWIRE_KIBANA_PORT" >> .env
+        - echo "LEADWIRE_ES_USERNAME=$TEST_LEADWIRE_ES_USERNAME" >> .env
+        - echo "LEADWIRE_ES_PASSWORD=$TEST_LEADWIRE_ES_PASSWORD" >> .env
+        - echo "LEADWIRE_ES_HOST=$TEST_LEADWIRE_ES_HOST" >> .env
+        - echo "LEADWIRE_ES_PORT=$TEST_LEADWIRE_ES_PORT" >> .env
+        - echo "LEADWIRE_LOGIN_METHOD=$LEADWIRE_LOGIN_METHOD" >> .env
+        - echo "LEADWIRE_COMPAGNE_ENABLED=$LEADWIRE_COMPAGNE_ENABLED" >> .env
+        - echo "LEADWIRE_JENKINS_URL=$LEADWIRE_JENKINS_URL" >> .env
+        - echo "LEADWIRE_STRIPE_ENABLED=$LEADWIRE_STRIPE_ENABLED" >> .env
+        - echo "LEADWIRE_KIBANA_ADMIN_USERNAME=$LEADWIRE_KIBANA_ADMIN_USERNAME" >> .env
+        - echo "LEADWIRE_KIBANA_ADMIN_UUID=$LEADWIRE_KIBANA_ADMIN_UUID" >> .env
         - composer install
     tags:
         - phpunit
@@ -106,37 +106,37 @@ phpstan:
     stage: lint
     before_script:
         - touch .env
-        - echo "DATABASE_NAME=leadwire" >> .env
-        - echo "DATABASE_HOST=mongo" >> .env
-        - echo "DATABASE_PORT=27017" >> .env
-        - echo "APP_DOMAIN=leadwire.local" >> .env
-        - echo "APP_SCHEME=http" >> .env
-        - echo "STRIPE_SECRET_KEY=$TEST_STRIPE_SECRET_KEY" >> .env
-        - echo "SUPER_USER_ADMIN_NAME=$TEST_SUPER_USER_ADMIN_NAME" >> .env
-        - echo "MAILER_TRANSPORT=$TEST_MAILER_TRANSPORT" >> .env
-        - echo "MAILER_USER=$TEST_MAILER_USER" >> .env
-        - echo "MAILER_PASSWORD=$TEST_MAILER_PASSWORD" >> .env
-        - echo "GITHUB_CLIENT_ID=$TEST_GITHUB_CLIENT_ID" >> .env
-        - echo "GITHUB_CLIENT_SECRET=$TEST_GITHUB_CLIENT_SECRET" >> .env
-        - echo "JWT_TOKEN_SECRET=$TEST_JWT_TOKEN_SECRET" >> .env
-        - echo "LDAP_HOST=$TEST_LDAP_HOST" >> .env
-        - echo "LDAP_PORT=$TEST_LDAP_PORT" >> .env
-        - echo "LDAP_DN_USER=$TEST_LDAP_DN_USER" >> .env
-        - echo "LDAP_PASSWORD=$TEST_LDAP_PASSWORD" >> .env
-        - echo "KIBANA_HOST=$TEST_KIBANA_HOST" >> .env
-        - echo "KIBANA_IFRAME_HOST=$TEST_KIBANA_HOST" >> .env
-        - echo "KIBANA_PORT=$TEST_KIBANA_PORT" >> .env
-        - echo "KIBANA_IFRAME_PORT=$TEST_KIBANA_PORT" >> .env
-        - echo "ES_USERNAME=$TEST_ES_USERNAME" >> .env
-        - echo "ES_PASSWORD=$TEST_ES_PASSWORD" >> .env
-        - echo "ES_HOST=$TEST_ES_HOST" >> .env
-        - echo "ES_PORT=$TEST_ES_PORT" >> .env
-        - echo "LOGIN_METHOD=$LOGIN_METHOD" >> .env
-        - echo "COMPAGNE_ENABLED=$COMPAGNE_ENABLED" >> .env
-        - echo "JENKINS_URL=$JENKINS_URL" >> .env
-        - echo "STRIPE_ENABLED=$STRIPE_ENABLED" >> .env
-        - echo "KIBANA_ADMIN_USERNAME=$KIBANA_ADMIN_USERNAME" >> .env
-        - echo "KIBANA_ADMIN_UUID=$KIBANA_ADMIN_UUID" >> .env
+        - echo "LEADWIRE_DATABASE_NAME=leadwire" >> .env
+        - echo "LEADWIRE_DATABASE_HOST=mongo" >> .env
+        - echo "LEADWIRE_DATABASE_PORT=27017" >> .env
+        - echo "LEADWIRE_APP_DOMAIN=leadwire.local" >> .env
+        - echo "LEADWIRE_APP_SCHEME=http" >> .env
+        - echo "LEADWIRE_STRIPE_SECRET_KEY=$TEST_LEADWIRE_STRIPE_SECRET_KEY" >> .env
+        - echo "LEADWIRE_SUPER_USER_ADMIN_NAME=$TEST_LEADWIRE_SUPER_USER_ADMIN_NAME" >> .env
+        - echo "LEADWIRE_MAILER_TRANSPORT=$TEST_LEADWIRE_MAILER_TRANSPORT" >> .env
+        - echo "LEADWIRE_MAILER_USER=$TEST_LEADWIRE_MAILER_USER" >> .env
+        - echo "LEADWIRE_MAILER_PASSWORD=$TEST_LEADWIRE_MAILER_PASSWORD" >> .env
+        - echo "LEADWIRE_GITHUB_CLIENT_ID=$TEST_LEADWIRE_GITHUB_CLIENT_ID" >> .env
+        - echo "LEADWIRE_GITHUB_CLIENT_SECRET=$TEST_LEADWIRE_GITHUB_CLIENT_SECRET" >> .env
+        - echo "LEADWIRE_JWT_TOKEN_SECRET=$TEST_LEADWIRE_JWT_TOKEN_SECRET" >> .env
+        - echo "LEADWIRE_LDAP_HOST=$TEST_LEADWIRE_LDAP_HOST" >> .env
+        - echo "LEADWIRE_LDAP_PORT=$TEST_LEADWIRE_LDAP_PORT" >> .env
+        - echo "LEADWIRE_LDAP_DN_USER=$TEST_LEADWIRE_LDAP_DN_USER" >> .env
+        - echo "LEADWIRE_LDAP_PASSWORD=$TEST_LEADWIRE_LDAP_PASSWORD" >> .env
+        - echo "LEADWIRE_KIBANA_HOST=$TEST_LEADWIRE_KIBANA_HOST" >> .env
+        - echo "LEADWIRE_KIBANA_IFRAME_HOST=$TEST_LEADWIRE_KIBANA_HOST" >> .env
+        - echo "LEADWIRE_KIBANA_PORT=$TEST_LEADWIRE_KIBANA_PORT" >> .env
+        - echo "LEADWIRE_KIBANA_IFRAME_PORT=$TEST_LEADWIRE_KIBANA_PORT" >> .env
+        - echo "LEADWIRE_ES_USERNAME=$TEST_LEADWIRE_ES_USERNAME" >> .env
+        - echo "LEADWIRE_ES_PASSWORD=$TEST_LEADWIRE_ES_PASSWORD" >> .env
+        - echo "LEADWIRE_ES_HOST=$TEST_LEADWIRE_ES_HOST" >> .env
+        - echo "LEADWIRE_ES_PORT=$TEST_LEADWIRE_ES_PORT" >> .env
+        - echo "LEADWIRE_LOGIN_METHOD=$LEADWIRE_LOGIN_METHOD" >> .env
+        - echo "LEADWIRE_COMPAGNE_ENABLED=$LEADWIRE_COMPAGNE_ENABLED" >> .env
+        - echo "LEADWIRE_JENKINS_URL=$LEADWIRE_JENKINS_URL" >> .env
+        - echo "LEADWIRE_STRIPE_ENABLED=$LEADWIRE_STRIPE_ENABLED" >> .env
+        - echo "LEADWIRE_KIBANA_ADMIN_USERNAME=$LEADWIRE_KIBANA_ADMIN_USERNAME" >> .env
+        - echo "LEADWIRE_KIBANA_ADMIN_UUID=$LEADWIRE_KIBANA_ADMIN_UUID" >> .env
         - composer install
     tags:
         - phpunit
@@ -169,37 +169,37 @@ deploy:test:
         - develop
     before_script:
         - touch .env
-        - echo "DATABASE_NAME=leadwire" >> .env
-        - echo "DATABASE_HOST=mongo" >> .env
-        - echo "DATABASE_PORT=27017" >> .env
-        - echo "APP_DOMAIN=leadwire.local" >> .env
-        - echo "APP_SCHEME=http" >> .env
-        - echo "STRIPE_SECRET_KEY=$TEST_STRIPE_SECRET_KEY" >> .env
-        - echo "SUPER_USER_ADMIN_NAME=$TEST_SUPER_USER_ADMIN_NAME" >> .env
-        - echo "MAILER_TRANSPORT=$TEST_MAILER_TRANSPORT" >> .env
-        - echo "MAILER_USER=$TEST_MAILER_USER" >> .env
-        - echo "MAILER_PASSWORD=$TEST_MAILER_PASSWORD" >> .env
-        - echo "GITHUB_CLIENT_ID=$TEST_GITHUB_CLIENT_ID" >> .env
-        - echo "GITHUB_CLIENT_SECRET=$TEST_GITHUB_CLIENT_SECRET" >> .env
-        - echo "JWT_TOKEN_SECRET=$TEST_JWT_TOKEN_SECRET" >> .env
-        - echo "LDAP_HOST=$TEST_LDAP_HOST" >> .env
-        - echo "LDAP_PORT=$TEST_LDAP_PORT" >> .env
-        - echo "LDAP_DN_USER=$TEST_LDAP_DN_USER" >> .env
-        - echo "LDAP_PASSWORD=$TEST_LDAP_PASSWORD" >> .env
-        - echo "KIBANA_HOST=$TEST_KIBANA_HOST" >> .env
-        - echo "KIBANA_IFRAME_HOST=$TEST_KIBANA_HOST" >> .env
-        - echo "KIBANA_PORT=$TEST_KIBANA_PORT" >> .env
-        - echo "KIBANA_IFRAME_PORT=$TEST_KIBANA_PORT" >> .env
-        - echo "ES_USERNAME=$TEST_ES_USERNAME" >> .env
-        - echo "ES_PASSWORD=$TEST_ES_PASSWORD" >> .env
-        - echo "ES_HOST=$TEST_ES_HOST" >> .env
-        - echo "ES_PORT=$TEST_ES_PORT" >> .env
-        - echo "LOGIN_METHOD=$LOGIN_METHOD" >> .env
-        - echo "COMPAGNE_ENABLED=$COMPAGNE_ENABLED" >> .env
-        - echo "JENKINS_URL=$JENKINS_URL" >> .env
-        - echo "STRIPE_ENABLED=$STRIPE_ENABLED" >> .env
-        - echo "KIBANA_ADMIN_USERNAME=$KIBANA_ADMIN_USERNAME" >> .env
-        - echo "KIBANA_ADMIN_UUID=$KIBANA_ADMIN_UUID" >> .env
+        - echo "LEADWIRE_DATABASE_NAME=leadwire" >> .env
+        - echo "LEADWIRE_DATABASE_HOST=mongo" >> .env
+        - echo "LEADWIRE_DATABASE_PORT=27017" >> .env
+        - echo "LEADWIRE_APP_DOMAIN=leadwire.local" >> .env
+        - echo "LEADWIRE_APP_SCHEME=http" >> .env
+        - echo "LEADWIRE_STRIPE_SECRET_KEY=$TEST_LEADWIRE_STRIPE_SECRET_KEY" >> .env
+        - echo "LEADWIRE_SUPER_USER_ADMIN_NAME=$TEST_LEADWIRE_SUPER_USER_ADMIN_NAME" >> .env
+        - echo "LEADWIRE_MAILER_TRANSPORT=$TEST_LEADWIRE_MAILER_TRANSPORT" >> .env
+        - echo "LEADWIRE_MAILER_USER=$TEST_LEADWIRE_MAILER_USER" >> .env
+        - echo "LEADWIRE_MAILER_PASSWORD=$TEST_LEADWIRE_MAILER_PASSWORD" >> .env
+        - echo "LEADWIRE_GITHUB_CLIENT_ID=$TEST_LEADWIRE_GITHUB_CLIENT_ID" >> .env
+        - echo "LEADWIRE_GITHUB_CLIENT_SECRET=$TEST_LEADWIRE_GITHUB_CLIENT_SECRET" >> .env
+        - echo "LEADWIRE_JWT_TOKEN_SECRET=$TEST_LEADWIRE_JWT_TOKEN_SECRET" >> .env
+        - echo "LEADWIRE_LDAP_HOST=$TEST_LEADWIRE_LDAP_HOST" >> .env
+        - echo "LEADWIRE_LDAP_PORT=$TEST_LEADWIRE_LDAP_PORT" >> .env
+        - echo "LEADWIRE_LDAP_DN_USER=$TEST_LEADWIRE_LDAP_DN_USER" >> .env
+        - echo "LEADWIRE_LDAP_PASSWORD=$TEST_LEADWIRE_LDAP_PASSWORD" >> .env
+        - echo "LEADWIRE_KIBANA_HOST=$TEST_LEADWIRE_KIBANA_HOST" >> .env
+        - echo "LEADWIRE_KIBANA_IFRAME_HOST=$TEST_LEADWIRE_KIBANA_HOST" >> .env
+        - echo "LEADWIRE_KIBANA_PORT=$TEST_LEADWIRE_KIBANA_PORT" >> .env
+        - echo "LEADWIRE_KIBANA_IFRAME_PORT=$TEST_LEADWIRE_KIBANA_PORT" >> .env
+        - echo "LEADWIRE_ES_USERNAME=$TEST_LEADWIRE_ES_USERNAME" >> .env
+        - echo "LEADWIRE_ES_PASSWORD=$TEST_LEADWIRE_ES_PASSWORD" >> .env
+        - echo "LEADWIRE_ES_HOST=$TEST_LEADWIRE_ES_HOST" >> .env
+        - echo "LEADWIRE_ES_PORT=$TEST_LEADWIRE_ES_PORT" >> .env
+        - echo "LEADWIRE_LOGIN_METHOD=$LEADWIRE_LOGIN_METHOD" >> .env
+        - echo "LEADWIRE_COMPAGNE_ENABLED=$LEADWIRE_COMPAGNE_ENABLED" >> .env
+        - echo "LEADWIRE_JENKINS_URL=$LEADWIRE_JENKINS_URL" >> .env
+        - echo "LEADWIRE_STRIPE_ENABLED=$LEADWIRE_STRIPE_ENABLED" >> .env
+        - echo "LEADWIRE_KIBANA_ADMIN_USERNAME=$LEADWIRE_KIBANA_ADMIN_USERNAME" >> .env
+        - echo "LEADWIRE_KIBANA_ADMIN_UUID=$LEADWIRE_KIBANA_ADMIN_UUID" >> .env
     script:
         - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
         - eval $(ssh-agent -s)

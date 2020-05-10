@@ -25,7 +25,7 @@
     ) {
         var vm = this;
 
-        vm.LOGIN_METHOD = CONFIG.LOGIN_METHOD;
+        vm.LEADWIRE_LOGIN_METHOD = CONFIG.LEADWIRE_LOGIN_METHOD;
 
         if (!$localStorage.envList)
             EnvironmentService.list();
