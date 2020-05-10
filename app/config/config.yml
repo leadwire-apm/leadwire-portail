@@ -69,7 +69,7 @@ parameters:
         ism_setup: '%env(LEADWIRE_ISM_SETUP)%'
         ism_min_size: '%env(LEADWIRE_ISM_MIN_SIZE)%'
         ism_min_doc_count: '%env(LEADWIRE_ISM_MIN_DOC_COUNT)%'
-        ism_min_index_age: '%env(ISM_MIN_INDEX_Age)%'
+        ism_min_index_age: '%env(LEADWIRE_ISM_MIN_INDEX_AGE)%'
     curator:
         platformName: '%env(LEADWIRE_PLATFORM_NAME)%'
 
@@ -133,6 +133,8 @@ doctrine_mongodb:
         default:
             server: 'mongodb://%env(LEADWIRE_DATABASE_HOST)%:%env(LEADWIRE_DATABASE_PORT)%'
             options:
+                username: '%env(LEADWIRE_DATABASE_USER)%'
+                password: '%env(LEADWIRE_DATABASE_PASSWORD)%'
                 connect: true
                 db: '%env(LEADWIRE_DATABASE_NAME)%'
     document_managers:
