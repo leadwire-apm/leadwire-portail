@@ -29,7 +29,7 @@
                     <spinner is-loading="ctrl.ui.isLoading" size="24"></spinner>
                 </td>
             </tr>
-            <tr ng-repeat="report in ctrl.reportsList | orderBy: '-_source.watcher'"
+            <tr ng-repeat="report in ctrl.reportsList"
                 ng-if="ctrl.paginator.start<=$index && ctrl.paginator.end>$index"
                 ng-class="{'danger': ctrl.isErrorReport(report._source.message)}">
 
