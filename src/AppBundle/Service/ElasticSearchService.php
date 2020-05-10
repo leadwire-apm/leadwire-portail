@@ -867,12 +867,18 @@ class ElasticSearchService
                             array( [ "match" => ["watcher" => $envName . "-" . $appName . "-*"]] )
                         ]
                     ]
+                ],
+		"sort" => [
+                   "@timestamp" => [
+                         "order" => "asc"
+                  ]
                 ]
+
             ];
 
             $response = $this->httpClient->get(
 
-                $this->url . "watcher_alarms-*/_search",
+                $this->url . "watcher_alarms-*/_search?size=10000",
                 [
                     'auth' => $this->getAuth(),
                     'headers' => [
@@ -886,7 +892,7 @@ class ElasticSearchService
             $this->logger->notice(
                 "leadwire.es.getReports",
                 [
-                    'url' => $this->url . "watcher_alarms-*/_search",
+                    'url' => $this->url . "watcher_alarms-*/_search?size=10000",
                     'verb' => 'GET',
                     'status_code' => $response->getStatusCode(),
                     'status_text' => $response->getReasonPhrase()
