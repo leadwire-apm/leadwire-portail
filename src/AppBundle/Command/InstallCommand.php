@@ -123,9 +123,9 @@ Load default Application Type. Insert template for Kibana and more..'
 
         //$curatorService->updateCuratorConfig();
 
-        exec('npm stop');
-        exec('npm install');
-        exec('npm start');
+    //    exec('npm stop');
+    //    exec('npm install');
+    //    exec('npm start');
 
         return 0;
     }
