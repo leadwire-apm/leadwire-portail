@@ -18,6 +18,8 @@ use Doctrine\Common\DataFixtures\Purger\MongoDBPurger;
 use Doctrine\Common\DataFixtures\Executor\MongoDBExecutor;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use AppBundle\Service\CuratorService;
+use AppBundle\Manager\ApplicationManager;
+
 
 class InstallCommand extends ContainerAwareCommand
 {
@@ -49,6 +51,13 @@ Load default Application Type. Insert template for Kibana and more..'
         $applicationService = $this->getContainer()->get(ApplicationService::class);
         /** @var CuratorService $curatorService */
         $curatorService = $this->getContainer()->get(CuratorService::class);
+        
+        /**
+         * @var ApplicationManager
+         */
+        $applicationManager = $this->getContainer()->get(ApplicationManager::class);;
+
+
 
         /** @var bool $stripeEnabled */
         $stripeEnabled = $this->getContainer()->getParameter('stripe_enabled');
@@ -61,6 +70,13 @@ Load default Application Type. Insert template for Kibana and more..'
             $planService->deleteAllPlans();
         }
 
+        //delete all applications
+        $applications = $applicationManager->getAll();
+            foreach ($applications as $application) {
+                $applicationService->deleteApplication($application->getId());
+            }
+
+
         $this->loadFixtures($output, $purge);
         
         //Purge Elasticsearch
@@ -72,7 +88,9 @@ Load default Application Type. Insert template for Kibana and more..'
 
         //ism policy => delete before create
         $es->deletePolicy("hot-warm-delete-policy");
+        $es->deletePolicy("rollover-hot-warm-delete-policy");
         $es->createPolicy();
+        $es->createRolloverPolicy();
 
         $this->display($output, "Initializing ES & Kibana");
         /** @var Application $application */
@@ -123,9 +141,9 @@ Load default Application Type. Insert template for Kibana and more..'
 
         //$curatorService->updateCuratorConfig();
 
-    //    exec('npm stop');
-    //    exec('npm install');
-    //    exec('npm start');
+        //exec('npm stop');
+        //exec('npm install');
+        //exec('npm start');
 
         return 0;
     }
