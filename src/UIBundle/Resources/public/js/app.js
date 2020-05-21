@@ -31,7 +31,7 @@ angular.module('leadwireApp', [
     .factory('socket', function (socketFactory) {
         return socketFactory({
             prefix: "",
-            ioSocket: io.connect( LEADWIRE_SOCKET_SCHEME + '://' + LEADWIRE_SOCKET_DOMAIN + ':1' + LEADWIRE_SOCKET_IO_PORT, {
+            ioSocket: io.connect( LEADWIRE_SOCKET_SCHEME + '://' + LEADWIRE_SOCKET_DOMAIN + ':' + LEADWIRE_SOCKET_IO_PORT, {
                 secure: true,
                 reconnect: true,
                 reconnectionDelay: 1000,
