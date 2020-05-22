@@ -44,6 +44,10 @@
         vm.ownerTitle = "Owner Github :";
         var envName = "staging";
 
+        vm.isAdmin = function(user) {
+            return user.roles.indexOf("ROLE_SUPER_ADMIN") >= 0;
+        }
+
         /**
          * get dashboards list
          */

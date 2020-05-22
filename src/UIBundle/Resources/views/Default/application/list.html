@@ -13,9 +13,7 @@
                     <table class="table table-striped mb0">
                         <thead>
                             <tr>
-                                <th class="col-md-5">
-                                    <span></span>Name
-                                </th>
+                                <th class="col-md-5">Name</th>
                                 <th class="col-md-2">Type</th>
                                 <th class="col-md-2">Email</th>
                                 <th class="col-md-2">Status</th>
@@ -53,16 +51,16 @@
                                         ng-click="ctrl.enableApp(app)">
                                         <i class="fas fa-key"></i>
                                     </a>
-                                    <a class="btn btn-warning" ng-if="app.enabled && (app.owner.id == user.id)"
+                                    <a class="btn btn-warning" ng-if="app.enabled && (app.owner.id == user.id || ctrl.isAdmin(user))"
                                         title="Edit application" data-placement="left" data-toggle="tooltip"
                                         ui-sref="app.applicationEdit({id:app.id})"><i class="fas fa-pencil-alt"></i></a>
-                                    <button class="btn btn-danger" ng-if="app.owner.id == user.id"
+                                    <button class="btn btn-danger" ng-if="app.owner.id == user.id || ctrl.isAdmin(user)"
                                         title="Delete application" data-placement="left" data-toggle="tooltip"
                                         ng-click="ctrl.deleteApp(app.id)">
                                         <i ng-if="!ctrl.ui.isDeleting" class="fa fa-trash"></i>
                                         <spinner is-loading="ctrl.ui.isDeleting"></spinner>
                                     </button>
-                                    <button class="btn btn-warning" ng-if="app.owner.id != user.id"
+                                    <button class="btn btn-warning" ng-if="app.owner.id != user.id && !ctrl.isAdmin(user)"
                                         title="Remove this application" data-placement="left" data-toggle="tooltip"
                                         ng-click="ctrl.removeApp(app.id)">
                                         <i ng-if="!ctrl.ui.isRemoving" class="fa fa-times"></i>
