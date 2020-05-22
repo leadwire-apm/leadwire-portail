@@ -54,7 +54,7 @@
                 service.baseUrl +
                 'app/kibana?security_tenant=' +
                 tenant +
-                '#/dashboard?_g=()&_a=( description:\'\',filters:!(), fullScreenMode:!f,options:( darkTheme:!f,hidePanelTitles:! f,useMargins:!t),panels:!(), query:(language:lucene,query:\' \'),timeRestore:!f,title:\'New% 20Dashboard\',viewMode:edit)';
+                '#/dashboard?_g=()&_a=( description:\'\',filters:!(), fullScreenMode:!f,options:( darkTheme:!f,hidePanelTitles:! f,useMargins:!t),panels:!(), query:(language:lucene,query:\' \'),timeRestore:!f,title:\'\',viewMode:edit)';
             return url;
         };
         return service;

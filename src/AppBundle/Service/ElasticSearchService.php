@@ -81,10 +81,11 @@ class ElasticSearchService
         );
 
         $this->url = $settings['host'] . ":" . (string) $settings['port'] . "/";
-        $this->ism_setup = $settings['ism_setup'];
         $this->ism_min_size = $settings['ism_min_size'];
         $this->ism_min_doc_count = $settings['ism_min_doc_count'];
         $this->ism_min_index_age = $settings['ism_min_index_age'];
+        $this->ism_rollover_setup = $settings['ism_rollover_setup'];
+        $this->ism_delete_min_index_age = $settings['ism_delete_min_index_age'];
     }
 
     /**
@@ -269,14 +270,39 @@ class ElasticSearchService
             $indexName = \strtolower($qualifier) . "-" . $version . "-" . $environmentName. "-" . $applicationName . "-" . 	$ilm_template ;
 			
 			$aliasName = \strtolower($qualifier) . "-" . $version . "-" . $environmentName. "-" . $applicationName;		
-           
-            $response = $this->httpClient->put(
+            
+	       $response = $this->httpClient->head(
                 $this->url . $indexName . "/",
                 [
                     'auth' => $this->getAuth(),
                     'headers' => $headers,
                 ]
             );
+
+	 $this->logger->notice(
+                "leadwire.es.head",
+                [
+                    'status_code' => $response->getStatusCode(),
+                    'phrase' => $response->getReasonPhrase(),
+                    'url' => $this->url . $indexName . "/",
+                    'verb' => 'HEAD',
+                    'headers' => $headers,
+                    'response' => $response,
+                ]
+            );
+
+	// If index does not exist 
+	  if ($response->getStatusCode() == '404'){
+
+
+		$response = $this->httpClient->put(
+                $this->url . $indexName . "/",
+                [
+                    'auth' => $this->getAuth(),
+                    'headers' => $headers,
+                ]
+            );
+
 
             $this->logger->notice(
                 "leadwire.es.initIndexStateManagement",
@@ -289,6 +315,9 @@ class ElasticSearchService
                     'monitoring_set' => $qualifier,
                 ]
             );
+
+          }
+
 
             $body = \json_decode($bodyString, false);
             
@@ -469,10 +498,13 @@ class ElasticSearchService
             ];
 	   */
 
-	if ($this->ism_setup == 'true') {
-            $content->settings->{"opendistro.index_state_management.policy_id"} = "hot-warm-delete-policy";	
+        if ($this->ism_rollover_setup == 'true') {
+            $content->settings->{"opendistro.index_state_management.policy_id"} = "rollover-hot-warm-delete-policy";	
 	    $content->settings->{"opendistro.index_state_management.rollover_alias"} = $index_rollover_alias ;
-	}        
+	}else {
+	$content->settings->{"opendistro.index_state_management.policy_id"} = "hot-warm-delete-policy";
+	} 
+
       	    $response = $this->httpClient->put(
                 $this->url . "_template/".$index_template,
                 [
@@ -494,9 +526,9 @@ class ElasticSearchService
                     'monitoring_set' => $monitoringSet->getName(),
                 ]
             );
-		
+	if ($this->ism_rollover_setup == 'true') {	
 	$alias_created = $this->initIndexStateManagement( $application->getName(), $envName, $monitoringSet->getName(), $monitoringSet->getVersion()) ;
-		
+	}	
         }
     }
 
@@ -1528,18 +1560,18 @@ class ElasticSearchService
                     "states"=>array(
                         [
                             "name"=>"hot",
-			    "actions"=>array(["rollover"=>["min_doc_count"=>$this->ism_min_doc_count,
-                                                           "min_index_age"=>$this->ism_min_index_age,
-                                                           "min_size"=>$this->ism_min_size
-                                                ]]),
-                            "transitions"=>array(["state_name"=>"warm"])
+                            "actions"=>array(["replica_count"=>["number_of_replicas"=>1]]),
+                            "transitions"=>array([
+                                "state_name"=>"warm",
+                                "conditions"=>["min_index_age"=>"1d"]]
+                            )
                         ],
                         [
                             "name"=>"warm",
-                            "actions"=>array(["replica_count"=>["number_of_replicas"=>1]]),
+                            "actions"=>array(["replica_count"=>["number_of_replicas"=>3]]),
                             "transitions"=>array([
                                 "state_name"=>"delete",
-                                "conditions"=>["min_index_age"=>"30d"]]
+                                "conditions"=>["min_index_age"=>$this->ism_delete_min_index_age]]
                             )
                         ],
                         [
@@ -1579,6 +1611,92 @@ class ElasticSearchService
 
             $this->logger->notice(
                 "leadwire.opendistro.createPolicy",
+                [
+                    'url' => $url,
+                    'verb' => 'PUT',
+                    'status_code' => $response->getStatusCode(),
+                    'status_text' => $response->getReasonPhrase()
+                ]
+            );
+            
+            if($response->getStatusCode() == 201){
+                $status= true;
+            }
+
+            return $status;
+
+        } catch (\Exception $e) {
+            $this->logger->error($e->getMessage());
+            throw new HttpException("An error has occurred while executing your request.",400);
+        }
+    }
+
+
+     function createRolloverPolicy(){
+        try {
+
+            $status = false;
+
+            $policy = [
+                "policy"=>[
+                    "description"=>"rollover hot warm delete workflow",
+                    "default_state"=>"hot",
+                    "schema_version"=>1,
+                    "states"=>array(
+                        [
+                            "name"=>"hot",
+			    "actions"=>array(["rollover"=>["min_doc_count"=>$this->ism_min_doc_count,
+                                                           "min_index_age"=>$this->ism_min_index_age,
+                                                           "min_size"=>$this->ism_min_size
+                                                ]],
+					     ["replica_count"=>["number_of_replicas"=>1]]),
+                            "transitions"=>array(["state_name"=>"warm"])
+                        ],
+                        [
+                            "name"=>"warm",
+                            "actions"=>array(["replica_count"=>["number_of_replicas"=>3]]),
+                            "transitions"=>array([
+                                "state_name"=>"delete",
+                                "conditions"=>["min_index_age"=>$this->ism_delete_min_index_age]]
+                            )
+                        ],
+                        [
+                            "name"=>"delete",
+                            "actions"=>array(
+                                ["notification"=> [
+                                    "destination"=>[
+                                        "chime"=>[
+                                            "url"=>"<URL>"
+                                        ]
+                                    ],
+                                    "message_template"=>[
+                                        "source"=>"The index is being deleted"
+                                        ]
+                                    ]
+                                ]
+                            )
+                        ]
+                    )
+                ]
+            ];
+            
+            $url = $this->url . "_opendistro/_ism/policies/rollover-hot-warm-delete-policy";
+           
+            $response = $this->httpClient->put(
+
+                $url,
+                [
+                    'auth' => $this->getAuth(),
+                    'headers' => [
+                        "Content-Type" => "application/json",
+                    ],
+                    'body' => \json_encode($policy),
+                ]
+
+            );
+
+            $this->logger->notice(
+                "leadwire.opendistro.createRolloverPolicy",
                 [
                     'url' => $url,
                     'verb' => 'PUT',

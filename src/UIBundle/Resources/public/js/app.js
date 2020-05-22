@@ -31,7 +31,7 @@ angular.module('leadwireApp', [
     .factory('socket', function (socketFactory) {
         return socketFactory({
             prefix: "",
-            ioSocket: io.connect('https://' + LEADWIRE_APP_DOMAIN + ':' + LEADWIRE_SOCKET_IO_PORT, {
+            ioSocket: io.connect( LEADWIRE_SOCKET_SCHEME + '://' + LEADWIRE_SOCKET_DOMAIN + ':' + LEADWIRE_SOCKET_IO_PORT, {
                 secure: true,
                 reconnect: true,
                 reconnectionDelay: 1000,
@@ -57,8 +57,9 @@ angular.module('leadwireApp', [
     })
     .constant('CONFIG', {
         APP_VERSION: APP_VERSION,
-        LEADWIRE_APP_DOMAIN: LEADWIRE_APP_DOMAIN,
         LEADWIRE_SOCKET_IO_PORT: LEADWIRE_SOCKET_IO_PORT,
+        LEADWIRE_SOCKET_DOMAIN: LEADWIRE_SOCKET_DOMAIN,
+        LEADWIRE_SOCKET_SCHEME: LEADWIRE_SOCKET_SCHEME,
         BASE_URL: BASE_URL,
         ASSETS_BASE_URL: ASSETS_BASE_URL,
         UPLOAD_URL: UPLOAD_URL,

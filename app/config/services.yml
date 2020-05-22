@@ -91,5 +91,5 @@ services:
 
     AppBundle\Service\ProcessService:
         arguments:
-            $appDomain: "%app_domain%"
+            $appDomain: "%socket_domain%"
             $port: "%socket_io_port%"
