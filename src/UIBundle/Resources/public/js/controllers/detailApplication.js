@@ -45,7 +45,7 @@
         var envName = "staging";
 
         vm.isAdmin = function(user) {
-            return user.roles.indexOf("ROLE_SUPER_ADMIN") >= 0;
+            return user.roles.indexOf("ROLE_SUPER_ADMIN") >= 0 || user.roles.indexOf("ROLE_ADMIN") >= 0;
         }
 
         /**

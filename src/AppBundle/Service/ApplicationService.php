@@ -249,7 +249,7 @@ class ApplicationService
         $accessibleApplications = [];
         $permissions = $this->apManager->getPermissionsForUser($user);
 
-        if(!$user->hasRole('ROLE_SUPER_ADMIN')){
+        if(!$user->hasRole('ROLE_SUPER_ADMIN') && !$user->hasRole('ROLE_ADMIN')){
             /** @var ApplicationPermission $permission */
             foreach ($permissions as $permission) {
                 if ($permission->getApplication()->isRemoved() === false) {

@@ -72,10 +72,11 @@ Load default Application Type. Insert template for Kibana and more..'
 
         //delete all applications
         $applications = $applicationManager->getAll();
+        if($purge){
             foreach ($applications as $application) {
                 $applicationService->deleteApplication($application->getId());
             }
-
+        }
 
         $this->loadFixtures($output, $purge);
         

@@ -28,7 +28,7 @@
         vm.LEADWIRE_LOGIN_METHOD = CONFIG.LEADWIRE_LOGIN_METHOD;
 
         vm.isAdmin = function(user) {
-            return user.roles.indexOf("ROLE_SUPER_ADMIN") >= 0;
+            return user.roles.indexOf("ROLE_SUPER_ADMIN") >= 0 || user.roles.indexOf("ROLE_ADMIN") >= 0;
         }
 
         if (!$localStorage.envList)
