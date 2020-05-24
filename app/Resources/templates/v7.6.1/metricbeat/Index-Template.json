@@ -15676,10 +15676,6 @@
   "settings": {
     "index": {
       "codec": "best_compression",
-      "lifecycle": {
-        "name": "metricbeat",
-        "rollover_alias": "metricbeat-7.6.1"
-      },
       "mapping": {
         "total_fields": {
           "limit": 10000

@@ -4558,10 +4558,6 @@
   "order": 1,
   "settings": {
     "index": {
-      "lifecycle": {
-        "name": "packetbeat",
-        "rollover_alias": "packetbeat-7.6.1"
-      },
       "mapping": {
         "total_fields": {
           "limit": 10000

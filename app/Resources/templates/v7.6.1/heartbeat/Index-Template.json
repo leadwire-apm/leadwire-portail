@@ -2946,10 +2946,6 @@
   "settings": {
     "index": {
       "codec": "best_compression",
-      "lifecycle": {
-        "name": "heartbeat",
-        "rollover_alias": "heartbeat-7.6.1"
-      },
       "mapping": {
         "total_fields": {
           "limit": 10000

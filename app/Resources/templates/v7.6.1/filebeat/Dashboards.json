@@ -154,7 +154,7 @@
                 "optionsJSON": "{\"darkTheme\": false}", 
                 "panelsJSON": "[{\"type\": \"visualization\", \"id\": \"Apache-access-unique-IPs-map-ecs\", \"size_x\": 12, \"size_y\": 3, \"panelIndex\": 1, \"col\": 1, \"row\": 1}, {\"type\": \"visualization\", \"id\": \"Apache-response-codes-of-top-URLs-ecs\", \"size_x\": 8, \"size_y\": 3, \"panelIndex\": 2, \"col\": 1, \"row\": 6}, {\"type\": \"visualization\", \"id\": \"Apache-browsers-ecs\", \"size_x\": 4, \"size_y\": 3, \"panelIndex\": 3, \"col\": 9, \"row\": 6}, {\"type\": \"visualization\", \"id\": \"Apache-operating-systems-ecs\", \"size_x\": 2, \"size_y\": 2, \"panelIndex\": 4, \"col\": 11, \"row\": 4}, {\"type\": \"visualization\", \"id\": \"Apache-error-logs-over-time-ecs\", \"size_x\": 12, \"size_y\": 2, \"panelIndex\": 5, \"col\": 1, \"row\": 9}, {\"type\": \"visualization\", \"id\": \"Apache-response-codes-over-time-ecs\", \"size_x\": 10, \"size_y\": 2, \"panelIndex\": 6, \"col\": 1, \"row\": 4}, {\"sort\": [\"@timestamp\", \"desc\"], \"type\": \"search\", \"id\": \"Apache-errors-log-ecs\", \"size_x\": 12, \"size_y\": 3, \"panelIndex\": 7, \"col\": 1, \"columns\": [\"source.address\", \"log.level\", \"apache2.error.module\", \"message\"], \"row\": 11}]", 
                 "timeRestore": false, 
-                "title": "[Filebeat Apache] Access and error logs ECS", 
+                "title": "[Logs] [Apache] Access and error logs ECS", 
                 "uiStateJSON": "{\"P-1\": {\"mapCenter\": [40.713955826286046, -0.17578125], \"mapCollar\": {\"zoom\": 2, \"bottom_right\": {\"lat\": -39.667755, \"lon\": 180}, \"top_left\": {\"lat\": 90, \"lon\": -180}}, \"mapBounds\": {\"bottom_right\": {\"lat\": -3.864254615721396, \"lon\": 205.3125}, \"top_left\": {\"lat\": 67.7427590666639, \"lon\": -205.6640625}}, \"mapZoom\": 2}}", 
                 "version": 1
             }, 
@@ -271,7 +271,7 @@
                 "optionsJSON": "{\"darkTheme\": false}", 
                 "panelsJSON": "[{\"type\": \"visualization\", \"id\": \"6295bdd0-0a0e-11e7-825f-6748cda7d858-ecs\", \"size_x\": 4, \"size_y\": 4, \"panelIndex\": 1, \"col\": 1, \"row\": 1}, {\"type\": \"visualization\", \"id\": \"5ebdbe50-0a0f-11e7-825f-6748cda7d858-ecs\", \"size_x\": 4, \"size_y\": 4, \"panelIndex\": 2, \"col\": 9, \"row\": 1}, {\"type\": \"visualization\", \"id\": \"2bb0fa70-0a11-11e7-9e84-43da493ad0c7-ecs\", \"size_x\": 6, \"size_y\": 3, \"panelIndex\": 3, \"col\": 1, \"row\": 5}, {\"type\": \"visualization\", \"id\": \"d1726930-0a7f-11e7-8b04-eb22a5669f27-ecs\", \"size_x\": 6, \"size_y\": 3, \"panelIndex\": 5, \"col\": 7, \"row\": 5}, {\"type\": \"visualization\", \"id\": \"c5411910-0a87-11e7-8b04-eb22a5669f27-ecs\", \"size_x\": 4, \"size_y\": 4, \"panelIndex\": 6, \"col\": 5, \"row\": 1}, {\"sort\": [\"@timestamp\", \"desc\"], \"type\": \"search\", \"id\": \"4ac0a370-0a11-11e7-8b04-eb22a5669f27-ecs\", \"size_x\": 12, \"size_y\": 3, \"panelIndex\": 7, \"col\": 1, \"columns\": [\"event.action\", \"auditd.log.sequence\", \"user.name\"], \"row\": 8}]", 
                 "timeRestore": false, 
-                "title": "[Filebeat Auditd] Audit Events ECS", 
+                "title": "[Logs] [Auditd] Audit Events ECS", 
                 "uiStateJSON": "{\"P-5\": {\"mapCollar\": {\"zoom\": 2, \"bottom_right\": {\"lat\": -87.16078, \"lon\": 180}, \"top_left\": {\"lat\": 87.16078, \"lon\": -180}}, \"mapZoom\": 2, \"mapBounds\": {\"bottom_right\": {\"lat\": -43.580390855607845, \"lon\": 102.65625}, \"top_left\": {\"lat\": 43.58039085560784, \"lon\": -102.3046875}}}, \"P-2\": {\"vis\": {\"params\": {\"sort\": {\"columnIndex\": null, \"direction\": null}}}}}", 
                 "version": 1
             }, 
@@ -376,7 +376,7 @@
                 "optionsJSON": "{\"darkTheme\": false}", 
                 "panelsJSON": "[{\"type\": \"visualization\", \"id\": \"5c7af030-fa2a-11e6-bbd3-29c986c96e5a-ecs\", \"size_x\": 12, \"size_y\": 4, \"panelIndex\": 1, \"col\": 1, \"row\": 6}, {\"type\": \"visualization\", \"id\": \"51164310-fa2b-11e6-bbd3-29c986c96e5a-ecs\", \"size_x\": 12, \"size_y\": 3, \"panelIndex\": 2, \"col\": 1, \"row\": 10}, {\"type\": \"visualization\", \"id\": \"dc589770-fa2b-11e6-bbd3-29c986c96e5a-ecs\", \"size_x\": 12, \"size_y\": 4, \"panelIndex\": 3, \"col\": 1, \"row\": 2}, {\"type\": \"visualization\", \"id\": \"327417e0-8462-11e7-bab8-bd2f0fb42c54-ecs\", \"size_x\": 12, \"size_y\": 1, \"panelIndex\": 4, \"col\": 1, \"row\": 1}]", 
                 "timeRestore": false, 
-                "title": "[Filebeat System] Sudo commands ECS", 
+                "title": "[Logs] [System] Sudo commands ECS", 
                 "uiStateJSON": "{\"P-3\": {\"vis\": {\"params\": {\"sort\": {\"columnIndex\": null, \"direction\": null}}}}}", 
                 "version": 1
             }, 
@@ -459,7 +459,7 @@
                 "optionsJSON": "{\"useMargins\": true, \"darkTheme\": false, \"hidePanelTitles\": false}", 
                 "panelsJSON": "[{\"gridData\": {\"i\": \"1\", \"h\": 15, \"y\": 0, \"w\": 24, \"x\": 0}, \"embeddableConfig\": {}, \"panelIndex\": \"1\", \"version\": \"6.5.2\", \"type\": \"visualization\", \"id\": \"55251360-aa32-11e8-9c06-877f0445e3e0-ecs\"}, {\"gridData\": {\"i\": \"2\", \"h\": 15, \"y\": 0, \"w\": 24, \"x\": 24}, \"embeddableConfig\": {}, \"panelIndex\": \"2\", \"version\": \"6.5.2\", \"type\": \"visualization\", \"id\": \"7fb671f0-aa32-11e8-9c06-877f0445e3e0-ecs\"}, {\"gridData\": {\"i\": \"3\", \"h\": 15, \"y\": 15, \"w\": 24, \"x\": 0}, \"embeddableConfig\": {}, \"panelIndex\": \"3\", \"version\": \"6.5.2\", \"type\": \"visualization\", \"id\": \"11f8b9c0-aa32-11e8-9c06-877f0445e3e0-ecs\"}, {\"gridData\": {\"i\": \"4\", \"h\": 15, \"y\": 15, \"w\": 24, \"x\": 24}, \"embeddableConfig\": {}, \"panelIndex\": \"4\", \"version\": \"6.5.2\", \"type\": \"visualization\", \"id\": \"68af8ef0-aa33-11e8-9c06-877f0445e3e0-ecs\"}]", 
                 "timeRestore": false, 
-                "title": "[Filebeat HAProxy] Overview ECS", 
+                "title": "[Logs] [HAProxy] Overview ECS", 
                 "version": 1
             }, 
             "id": "3560d580-aa34-11e8-9c06-877f0445e3e0-ecs", 
@@ -533,7 +533,7 @@
                 "optionsJSON": "{\"darkTheme\": false}", 
                 "panelsJSON": "[{\"type\": \"visualization\", \"id\": \"0bc34b60-2419-11e7-a83b-d5f4cebac9ff-ecs\", \"size_x\": 6, \"size_y\": 3, \"panelIndex\": 1, \"col\": 1, \"row\": 1}, {\"type\": \"visualization\", \"id\": \"fb09d4b0-2418-11e7-a83b-d5f4cebac9ff-ecs\", \"size_x\": 6, \"size_y\": 3, \"panelIndex\": 2, \"col\": 7, \"row\": 1}, {\"sort\": [\"@timestamp\", \"desc\"], \"type\": \"search\", \"id\": \"c876e6a0-2418-11e7-a83b-d5f4cebac9ff-ecs\", \"size_x\": 12, \"size_y\": 29, \"panelIndex\": 3, \"col\": 1, \"columns\": [\"icinga.debug.facility\", \"log.level\", \"message\"], \"row\": 4}]", 
                 "timeRestore": false, 
-                "title": "[Filebeat Icinga] Debug Log ECS", 
+                "title": "[Logs] [Icinga] Debug Log ECS", 
                 "uiStateJSON": "{}", 
                 "version": 1
             }, 
@@ -607,7 +607,7 @@
                 "optionsJSON": "{\"darkTheme\": false}", 
                 "panelsJSON": "[{\"type\": \"visualization\", \"id\": \"d8e5dc40-2417-11e7-a83b-d5f4cebac9ff-ecs\", \"size_x\": 6, \"size_y\": 3, \"panelIndex\": 1, \"col\": 7, \"row\": 1}, {\"sort\": [\"@timestamp\", \"desc\"], \"type\": \"search\", \"id\": \"ffaf5a30-2413-11e7-a0d9-39604d45ca7f-ecs\", \"size_x\": 12, \"size_y\": 25, \"panelIndex\": 2, \"col\": 1, \"columns\": [\"icinga.main.facility\", \"log.level\", \"message\"], \"row\": 4}, {\"type\": \"visualization\", \"id\": \"2cf77780-2418-11e7-a83b-d5f4cebac9ff-ecs\", \"size_x\": 6, \"size_y\": 3, \"panelIndex\": 3, \"col\": 1, \"row\": 1}]", 
                 "timeRestore": false, 
-                "title": "[Filebeat Icinga] Main Log ECS", 
+                "title": "[Logs] [Icinga] Main Log ECS", 
                 "uiStateJSON": "{}", 
                 "version": 1
             }, 
@@ -665,7 +665,7 @@
                 "optionsJSON": "{\"darkTheme\": false}", 
                 "panelsJSON": "[{\"type\": \"visualization\", \"id\": \"a59b5e00-2417-11e7-a83b-d5f4cebac9ff-ecs\", \"size_x\": 12, \"size_y\": 2, \"panelIndex\": 1, \"col\": 1, \"row\": 1}, {\"sort\": [\"@timestamp\", \"desc\"], \"type\": \"search\", \"id\": \"710043e0-2417-11e7-a83b-d5f4cebac9ff-ecs\", \"size_x\": 12, \"size_y\": 13, \"panelIndex\": 2, \"col\": 1, \"columns\": [\"icinga.startup.facility\", \"log.level\", \"message\"], \"row\": 3}]", 
                 "timeRestore": false, 
-                "title": "[Filebeat Icinga] Startup Errors ECS", 
+                "title": "[Logs] [Icinga] Startup Errors ECS", 
                 "uiStateJSON": "{}", 
                 "version": 1
             }, 
@@ -780,7 +780,7 @@
                 "optionsJSON": "{\"useMargins\": true, \"darkTheme\": false, \"hidePanelTitles\": false}", 
                 "panelsJSON": "[{\"gridData\": {\"i\": \"1\", \"h\": 3, \"y\": 0, \"w\": 12, \"x\": 0}, \"type\": \"visualization\", \"version\": \"6.1.2\", \"panelIndex\": \"1\", \"id\": \"eb2db5b0-fe11-11e7-a3b0-d13028918f9f-ecs\"}, {\"gridData\": {\"i\": \"2\", \"h\": 3, \"y\": 3, \"w\": 7, \"x\": 0}, \"type\": \"visualization\", \"version\": \"6.1.2\", \"panelIndex\": \"2\", \"id\": \"f31414b0-fe14-11e7-a3b0-d13028918f9f-ecs\"}, {\"gridData\": {\"i\": \"4\", \"h\": 3, \"y\": 9, \"w\": 6, \"x\": 0}, \"type\": \"visualization\", \"version\": \"6.1.2\", \"panelIndex\": \"4\", \"id\": \"63129c80-fe12-11e7-a3b0-d13028918f9f-ecs\"}, {\"gridData\": {\"i\": \"5\", \"h\": 3, \"y\": 9, \"w\": 6, \"x\": 6}, \"type\": \"visualization\", \"version\": \"6.1.2\", \"panelIndex\": \"5\", \"id\": \"ccd3f9c0-fe12-11e7-a3b0-d13028918f9f-ecs\"}, {\"gridData\": {\"i\": \"6\", \"h\": 3, \"y\": 3, \"w\": 5, \"x\": 7}, \"type\": \"visualization\", \"version\": \"6.1.2\", \"panelIndex\": \"6\", \"id\": \"41f38230-fe17-11e7-a3b0-d13028918f9f-ecs\"}, {\"gridData\": {\"i\": \"7\", \"h\": 3, \"y\": 6, \"w\": 12, \"x\": 0}, \"type\": \"visualization\", \"version\": \"6.1.2\", \"panelIndex\": \"7\", \"id\": \"c0d02cd0-fe1b-11e7-a3b0-d13028918f9f-ecs\"}]", 
                 "timeRestore": false, 
-                "title": "[Filebeat IIS] Access and error logs ECS", 
+                "title": "[Logs] [IIS] Access and error logs ECS", 
                 "uiStateJSON": "{}", 
                 "version": 1
             }, 
@@ -878,7 +878,7 @@
                 "optionsJSON": "{\"darkTheme\": false}", 
                 "panelsJSON": "[{\"type\": \"visualization\", \"id\": \"number-of-kafka-stracktraces-by-class-ecs\", \"size_x\": 6, \"size_y\": 3, \"panelIndex\": 1, \"col\": 1, \"row\": 1}, {\"sort\": [\"@timestamp\", \"desc\"], \"type\": \"search\", \"id\": \"Kafka stacktraces-ecs\", \"size_x\": 6, \"size_y\": 3, \"panelIndex\": 2, \"col\": 7, \"columns\": [\"kafka.log.class\", \"kafka.log.trace.class\", \"kafka.log.trace.full\"], \"row\": 1}, {\"sort\": [\"@timestamp\", \"desc\"], \"type\": \"search\", \"id\": \"All Kafka logs-ecs\", \"size_x\": 12, \"size_y\": 5, \"panelIndex\": 3, \"col\": 1, \"columns\": [\"log.level\", \"kafka.log.component\", \"message\"], \"row\": 6}, {\"type\": \"visualization\", \"id\": \"3f7c33c0-87ee-11e7-ad9c-db80de0bf8d3-ecs\", \"size_x\": 12, \"size_y\": 2, \"panelIndex\": 4, \"col\": 1, \"row\": 4}]", 
                 "timeRestore": false, 
-                "title": "[Filebeat Kafka] Overview ECS", 
+                "title": "[Logs] [Kafka] Overview ECS", 
                 "uiStateJSON": "{}", 
                 "version": 1
             }, 
@@ -953,7 +953,7 @@
                 "optionsJSON": "{\"darkTheme\": false}", 
                 "panelsJSON": "[{\"type\": \"visualization\", \"id\": \"0b1dace0-cbdb-11e7-9852-73e0a9df1bb6-ecs\", \"size_x\": 6, \"size_y\": 3, \"panelIndex\": 2, \"col\": 7, \"row\": 1}, {\"type\": \"visualization\", \"id\": \"e90b7240-cbda-11e7-9852-73e0a9df1bb6-ecs\", \"size_x\": 6, \"size_y\": 3, \"panelIndex\": 3, \"col\": 1, \"row\": 1}, {\"sort\": [\"@timestamp\", \"desc\"], \"type\": \"search\", \"id\": \"cfaba090-cbda-11e7-9852-73e0a9df1bb6-ecs\", \"size_x\": 12, \"size_y\": 10, \"panelIndex\": 4, \"col\": 1, \"columns\": [\"log.level\", \"logstash.log.module\", \"message\", \"source\"], \"row\": 4}]", 
                 "timeRestore": false, 
-                "title": "[Filebeat Logstash] Logstash Logs ECS", 
+                "title": "[Logs] [Logstash] Logstash Logs ECS", 
                 "uiStateJSON": "{}", 
                 "version": 1
             }, 
@@ -1070,7 +1070,7 @@
                 "optionsJSON": "{\"darkTheme\": false}", 
                 "panelsJSON": "[{\"sort\": [\"@timestamp\", \"desc\"], \"type\": \"search\", \"id\": \"742e45d0-cbdd-11e7-9852-73e0a9df1bb6-ecs\", \"size_x\": 12, \"size_y\": 9, \"panelIndex\": 1, \"col\": 1, \"columns\": [\"log.level\", \"logstash.slowlog.plugin_type\", \"logstash.slowlog.plugin_name\", \"logstash.slowlog.message\", \"logstash.slowlog.plugin_params\", \"logstash.slowlog.execution_time_ns\"], \"row\": 7}, {\"type\": \"visualization\", \"id\": \"0b1dace0-cbdb-11e7-9852-73e0a9df1bb6-ecs\", \"size_x\": 6, \"size_y\": 3, \"panelIndex\": 2, \"col\": 7, \"row\": 1}, {\"type\": \"visualization\", \"id\": \"e90b7240-cbda-11e7-9852-73e0a9df1bb6-ecs\", \"size_x\": 6, \"size_y\": 3, \"panelIndex\": 3, \"col\": 1, \"row\": 1}, {\"type\": \"visualization\", \"id\": \"b3315630-cbdf-11e7-9852-73e0a9df1bb6-ecs\", \"size_x\": 12, \"size_y\": 3, \"panelIndex\": 4, \"col\": 1, \"row\": 4}]", 
                 "timeRestore": false, 
-                "title": "[Filebeat Logstash] Slowlogs ECS", 
+                "title": "[Logs] [Logstash] Slowlogs ECS", 
                 "uiStateJSON": "{\"P-4\": {\"vis\": {\"params\": {\"sort\": {\"columnIndex\": 3, \"direction\": null}}}}}", 
                 "version": 1
             }, 
@@ -1155,7 +1155,7 @@
                 "optionsJSON": "{\"darkTheme\": false}", 
                 "panelsJSON": "[{\"type\": \"visualization\", \"id\": \"0fef5710-0a82-11e8-bffe-ff7d4f68cf94-ecs\", \"size_x\": 4, \"size_y\": 3, \"panelIndex\": 1, \"col\": 1, \"row\": 1}, {\"sort\": [\"@timestamp\", \"desc\"], \"type\": \"search\", \"id\": \"e49fe000-0a7e-11e8-bffe-ff7d4f68cf94-ecs\", \"size_x\": 8, \"size_y\": 3, \"panelIndex\": 2, \"col\": 5, \"columns\": [\"mongodb.log.timestamp\", \"log.level\", \"mongodb.log.component\", \"mongodb.log.context\", \"message\"], \"row\": 1}, {\"sort\": [\"mongodb.log.timestamp\", \"asc\"], \"type\": \"search\", \"id\": \"bfc96a60-0a80-11e8-bffe-ff7d4f68cf94-ecs\", \"size_x\": 12, \"size_y\": 6, \"panelIndex\": 3, \"col\": 1, \"columns\": [\"mongodb.log.timestamp\", \"log.level\", \"mongodb.log.component\", \"mongodb.log.context\", \"message\"], \"row\": 4}]", 
                 "timeRestore": false, 
-                "title": "[Filebeat MongoDB] Overview ECS", 
+                "title": "[Logs] [MongoDB] Overview ECS", 
                 "uiStateJSON": "{}", 
                 "version": 1
             }, 
@@ -1297,7 +1297,7 @@
                 "optionsJSON": "{\"darkTheme\": false}", 
                 "panelsJSON": "[{\"type\": \"visualization\", \"id\": \"MySQL-slowest-queries-ecs\", \"size_x\": 6, \"size_y\": 4, \"panelIndex\": 1, \"col\": 1, \"row\": 8}, {\"type\": \"visualization\", \"id\": \"MySQL-Slow-queries-over-time-ecs\", \"size_x\": 6, \"size_y\": 3, \"panelIndex\": 2, \"col\": 1, \"row\": 1}, {\"type\": \"visualization\", \"id\": \"MySQL-error-logs-ecs\", \"size_x\": 6, \"size_y\": 3, \"panelIndex\": 3, \"col\": 7, \"row\": 1}, {\"sort\": [\"@timestamp\", \"desc\"], \"type\": \"search\", \"id\": \"Filebeat-MySQL-error-log-ecs\", \"size_x\": 6, \"size_y\": 5, \"panelIndex\": 4, \"col\": 7, \"columns\": [\"log.level\", \"message\"], \"row\": 8}, {\"type\": \"visualization\", \"id\": \"MySQL-Error-logs-levels-ecs\", \"size_x\": 6, \"size_y\": 4, \"panelIndex\": 5, \"col\": 7, \"row\": 4}, {\"type\": \"visualization\", \"id\": \"MySQL-Slow-logs-by-count-ecs\", \"size_x\": 6, \"size_y\": 4, \"panelIndex\": 6, \"col\": 1, \"row\": 4}]", 
                 "timeRestore": false, 
-                "title": "[Filebeat MySQL] Overview ECS", 
+                "title": "[Logs] [MySQL] Overview ECS", 
                 "uiStateJSON": "{\"P-1\": {\"vis\": {\"params\": {\"sort\": {\"columnIndex\": null, \"direction\": null}}}}}", 
                 "version": 1
             }, 
@@ -1460,7 +1460,7 @@
                 "optionsJSON": "{\"useMargins\": true, \"darkTheme\": false, \"hidePanelTitles\": false}", 
                 "panelsJSON": "[{\"gridData\": {\"i\": \"1\", \"h\": 11, \"y\": 0, \"w\": 17, \"x\": 0}, \"embeddableConfig\": {}, \"panelIndex\": \"1\", \"version\": \"6.6.0\", \"type\": \"visualization\", \"id\": \"6987a800-41a8-11e9-a4da-b1df688edbcd-ecs\"}, {\"gridData\": {\"i\": \"2\", \"h\": 11, \"y\": 0, \"w\": 17, \"x\": 31}, \"embeddableConfig\": {}, \"panelIndex\": \"2\", \"version\": \"6.6.0\", \"type\": \"visualization\", \"id\": \"0b2061d0-41ad-11e9-a4da-b1df688edbcd-ecs\"}, {\"gridData\": {\"i\": \"3\", \"h\": 12, \"y\": 20, \"w\": 25, \"x\": 0}, \"embeddableConfig\": {}, \"panelIndex\": \"3\", \"version\": \"6.6.0\", \"type\": \"visualization\", \"id\": \"4a6d9ec0-41a8-11e9-a4da-b1df688edbcd-ecs\"}, {\"gridData\": {\"i\": \"4\", \"h\": 9, \"y\": 11, \"w\": 12, \"x\": 11}, \"embeddableConfig\": {\"vis\": {\"legendOpen\": false}}, \"panelIndex\": \"4\", \"version\": \"6.6.0\", \"type\": \"visualization\", \"id\": \"c3d1ab80-41a8-11e9-a4da-b1df688edbcd-ecs\"}, {\"gridData\": {\"i\": \"5\", \"h\": 9, \"y\": 11, \"w\": 11, \"x\": 0}, \"embeddableConfig\": {\"vis\": {\"legendOpen\": false}}, \"panelIndex\": \"5\", \"version\": \"6.6.0\", \"type\": \"visualization\", \"id\": \"7716c780-41ad-11e9-a4da-b1df688edbcd-ecs\"}, {\"gridData\": {\"i\": \"6\", \"h\": 9, \"y\": 11, \"w\": 11, \"x\": 37}, \"embeddableConfig\": {\"vis\": {\"legendOpen\": false}}, \"panelIndex\": \"6\", \"version\": \"6.6.0\", \"type\": \"visualization\", \"id\": \"3f6cca40-41ae-11e9-a4da-b1df688edbcd-ecs\"}, {\"gridData\": {\"i\": \"7\", \"h\": 11, \"y\": 0, \"w\": 14, \"x\": 17}, \"embeddableConfig\": {\"vis\": {\"legendOpen\": false}}, \"panelIndex\": \"7\", \"version\": \"6.6.0\", \"type\": \"visualization\", \"id\": \"7ed62870-41ae-11e9-a4da-b1df688edbcd-ecs\"}, {\"gridData\": {\"i\": \"8\", \"h\": 9, \"y\": 11, \"w\": 14, \"x\": 23}, \"embeddableConfig\": {}, \"panelIndex\": \"8\", \"version\": \"6.6.0\", \"type\": \"visualization\", \"id\": \"04083600-41af-11e9-a4da-b1df688edbcd-ecs\"}, {\"gridData\": {\"i\": \"9\", \"h\": 12, \"y\": 20, \"w\": 22, \"x\": 25}, \"embeddableConfig\": {}, \"panelIndex\": \"9\", \"version\": \"6.6.0\", \"type\": \"visualization\", \"id\": \"c669ae20-41ed-11e9-ac5c-71ffa38a62e3-ecs\"}]", 
                 "timeRestore": false, 
-                "title": "[Filebeat NATS] Overview ECS", 
+                "title": "[Logs] [NATS] Overview ECS", 
                 "version": 1
             }, 
             "id": "Filebeat-nats-overview-ecs", 
@@ -1637,7 +1637,7 @@
                 "optionsJSON": "{\"darkTheme\": false}", 
                 "panelsJSON": "[{\"type\": \"visualization\", \"id\": \"f398d2f0-fa77-11e6-ae9b-81e5311e8cab-ecs\", \"size_x\": 6, \"size_y\": 3, \"panelIndex\": 1, \"col\": 1, \"row\": 2}, {\"type\": \"visualization\", \"id\": \"5dd15c00-fa78-11e6-ae9b-81e5311e8cab-ecs\", \"size_x\": 6, \"size_y\": 3, \"panelIndex\": 2, \"col\": 7, \"row\": 2}, {\"type\": \"visualization\", \"id\": \"e121b140-fa78-11e6-a1df-a78bd7504d38-ecs\", \"size_x\": 6, \"size_y\": 3, \"panelIndex\": 3, \"col\": 1, \"row\": 5}, {\"type\": \"visualization\", \"id\": \"d56ee420-fa79-11e6-a1df-a78bd7504d38-ecs\", \"size_x\": 6, \"size_y\": 3, \"panelIndex\": 4, \"col\": 7, \"row\": 5}, {\"type\": \"visualization\", \"id\": \"12667040-fa80-11e6-a1df-a78bd7504d38-ecs\", \"size_x\": 6, \"size_y\": 3, \"panelIndex\": 5, \"col\": 1, \"row\": 8}, {\"type\": \"visualization\", \"id\": \"346bb290-fa80-11e6-a1df-a78bd7504d38-ecs\", \"size_x\": 6, \"size_y\": 3, \"panelIndex\": 6, \"col\": 7, \"row\": 8}, {\"type\": \"visualization\", \"id\": \"327417e0-8462-11e7-bab8-bd2f0fb42c54-ecs\", \"size_x\": 12, \"size_y\": 1, \"panelIndex\": 7, \"col\": 1, \"row\": 1}]", 
                 "timeRestore": false, 
-                "title": "[Filebeat System] New users and groups ECS", 
+                "title": "[Logs] [System] New users and groups ECS", 
                 "uiStateJSON": "{\"P-5\": {\"vis\": {\"params\": {\"sort\": {\"columnIndex\": null, \"direction\": null}}}}, \"P-1\": {\"vis\": {\"params\": {\"sort\": {\"columnIndex\": null, \"direction\": null}}}}}", 
                 "version": 1
             }, 
@@ -1732,7 +1732,7 @@
                 "optionsJSON": "{\"darkTheme\": false}", 
                 "panelsJSON": "[{\"sort\": [\"@timestamp\", \"desc\"], \"type\": \"search\", \"id\": \"9eb25600-a1f0-11e7-928f-5dbe6f6f5519-ecs\", \"size_x\": 12, \"size_y\": 3, \"panelIndex\": 11, \"col\": 1, \"columns\": [\"log.level\", \"message\"], \"row\": 5}, {\"sort\": [\"@timestamp\", \"desc\"], \"type\": \"search\", \"id\": \"6d9e66d0-a1f0-11e7-928f-5dbe6f6f5519-ecs\", \"size_x\": 12, \"size_y\": 7, \"panelIndex\": 16, \"col\": 1, \"columns\": [\"url.original\", \"http.request.method\", \"http.response.status_code\", \"http.response.body.bytes\"], \"row\": 8}, {\"type\": \"visualization\", \"id\": \"1cfb1a80-a1f4-11e7-928f-5dbe6f6f5519-ecs\", \"size_x\": 12, \"size_y\": 3, \"panelIndex\": 18, \"col\": 1, \"row\": 2}, {\"type\": \"visualization\", \"id\": \"97109780-a2a5-11e7-928f-5dbe6f6f5519-ecs\", \"size_x\": 12, \"size_y\": 1, \"panelIndex\": 19, \"col\": 1, \"row\": 1}]", 
                 "timeRestore": false, 
-                "title": "[Filebeat Nginx] Access and error logs ECS", 
+                "title": "[Logs] [Nginx] Access and error logs ECS", 
                 "uiStateJSON": "{}", 
                 "version": 1
             }, 
@@ -1897,7 +1897,7 @@
                 "optionsJSON": "{\"darkTheme\": false}", 
                 "panelsJSON": "[{\"type\": \"visualization\", \"id\": \"Nginx-Access-Browsers-ecs\", \"size_x\": 3, \"size_y\": 3, \"panelIndex\": 3, \"col\": 10, \"row\": 12}, {\"type\": \"visualization\", \"id\": \"Nginx-Access-OSes-ecs\", \"size_x\": 3, \"size_y\": 3, \"panelIndex\": 4, \"col\": 7, \"row\": 12}, {\"type\": \"visualization\", \"id\": \"Nginx-Access-Map-ecs\", \"size_x\": 12, \"size_y\": 4, \"panelIndex\": 8, \"col\": 1, \"row\": 2}, {\"type\": \"visualization\", \"id\": \"b70b1b20-a1f4-11e7-928f-5dbe6f6f5519-ecs\", \"size_x\": 12, \"size_y\": 3, \"panelIndex\": 13, \"col\": 1, \"row\": 6}, {\"type\": \"visualization\", \"id\": \"9184fa00-a1f5-11e7-928f-5dbe6f6f5519-ecs\", \"size_x\": 6, \"size_y\": 3, \"panelIndex\": 14, \"col\": 7, \"row\": 9}, {\"type\": \"visualization\", \"id\": \"46322e50-a1f6-11e7-928f-5dbe6f6f5519-ecs\", \"size_x\": 6, \"size_y\": 3, \"panelIndex\": 15, \"col\": 1, \"row\": 9}, {\"type\": \"visualization\", \"id\": \"0dd6f320-a29f-11e7-928f-5dbe6f6f5519-ecs\", \"size_x\": 6, \"size_y\": 3, \"panelIndex\": 16, \"col\": 1, \"row\": 12}, {\"type\": \"visualization\", \"id\": \"97109780-a2a5-11e7-928f-5dbe6f6f5519-ecs\", \"size_x\": 12, \"size_y\": 1, \"panelIndex\": 17, \"col\": 1, \"row\": 1}]", 
                 "timeRestore": false, 
-                "title": "[Filebeat Nginx] Overview ECS", 
+                "title": "[Logs] [Nginx] Overview ECS", 
                 "uiStateJSON": "{\"P-4\": {\"vis\": {\"legendOpen\": true}}, \"P-8\": {\"mapCenter\": [50.51342652633956, -0.17578125], \"mapCollar\": {\"zoom\": 2, \"bottom_right\": {\"lat\": -49.583095, \"lon\": 180}, \"top_left\": {\"lat\": 90, \"lon\": -180}}, \"mapBounds\": {\"bottom_right\": {\"lat\": -7.362466865535738, \"lon\": 245.39062500000003}, \"top_left\": {\"lat\": 77.07878389624943, \"lon\": -245.74218750000003}}, \"mapZoom\": 2}}", 
                 "version": 1
             }, 
@@ -1973,7 +1973,7 @@
                 "optionsJSON": "{\"darkTheme\": false}", 
                 "panelsJSON": "[{\"type\": \"visualization\", \"id\": \"PostgreSQL Log Level Count-ecs\", \"size_x\": 3, \"size_y\": 3, \"panelIndex\": 1, \"col\": 1, \"row\": 1}, {\"sort\": [\"@timestamp\", \"desc\"], \"type\": \"search\", \"id\": \"PostgreSQL All Logs-ecs\", \"size_x\": 12, \"size_y\": 6, \"panelIndex\": 2, \"col\": 1, \"columns\": [\"user.name\", \"postgresql.log.database\", \"log.level\", \"message\", \"postgresql.log.query\"], \"row\": 4}, {\"type\": \"visualization\", \"id\": \"3dbd5370-87f3-11e7-ad9c-db80de0bf8d3-ecs\", \"size_x\": 9, \"size_y\": 3, \"panelIndex\": 3, \"col\": 4, \"row\": 1}]", 
                 "timeRestore": false, 
-                "title": "[Filebeat PostgreSQL] Overview ECS", 
+                "title": "[Logs] [PostgreSQL] Overview ECS", 
                 "uiStateJSON": "{\"P-1\": {\"vis\": {\"params\": {\"sort\": {\"columnIndex\": null, \"direction\": null}}}}}", 
                 "version": 1
             }, 
@@ -2056,7 +2056,7 @@
                 "optionsJSON": "{\"darkTheme\": false}", 
                 "panelsJSON": "[{\"type\": \"visualization\", \"id\": \"PostgreSQL Query Count and Duration-ecs\", \"size_x\": 6, \"size_y\": 3, \"panelIndex\": 1, \"col\": 1, \"row\": 1}, {\"sort\": [\"@timestamp\", \"desc\"], \"type\": \"search\", \"id\": \"Slow PostgreSQL Queries-ecs\", \"size_x\": 6, \"size_y\": 3, \"panelIndex\": 2, \"col\": 7, \"columns\": [\"user.name\", \"postgresql.log.database\", \"event.duration\", \"postgresql.log.query\"], \"row\": 1}, {\"sort\": [\"@timestamp\", \"desc\"], \"type\": \"search\", \"id\": \"PostgreSQL Query Durations-ecs\", \"size_x\": 12, \"size_y\": 5, \"panelIndex\": 3, \"col\": 1, \"columns\": [\"user.name\", \"postgresql.log.database\", \"event.duration\", \"postgresql.log.query\"], \"row\": 4}]", 
                 "timeRestore": false, 
-                "title": "[Filebeat PostgreSQL] Query Duration Overview ECS", 
+                "title": "[Logs] [PostgreSQL] Query Duration Overview ECS", 
                 "uiStateJSON": "{}", 
                 "version": 1
             }, 
@@ -2169,7 +2169,7 @@
                 "optionsJSON": "{\"darkTheme\": false}", 
                 "panelsJSON": "[{\"type\": \"visualization\", \"id\": \"78b9afe0-478f-11e7-b1f0-cb29bac6bf8b-ecs\", \"size_x\": 3, \"size_y\": 3, \"panelIndex\": 2, \"col\": 1, \"row\": 5}, {\"type\": \"visualization\", \"id\": \"d2864600-478f-11e7-be88-2ddb32f3df97-ecs\", \"size_x\": 9, \"size_y\": 3, \"panelIndex\": 3, \"col\": 4, \"row\": 5}, {\"sort\": [\"@timestamp\", \"desc\"], \"type\": \"search\", \"id\": \"73613570-4791-11e7-be88-2ddb32f3df97-ecs\", \"size_x\": 12, \"size_y\": 4, \"panelIndex\": 4, \"col\": 1, \"columns\": [\"host.name\", \"log.level\", \"redis.log.role\", \"message\"], \"row\": 8}, {\"type\": \"visualization\", \"id\": \"dcccaa80-4791-11e7-be88-2ddb32f3df97-ecs\", \"size_x\": 6, \"size_y\": 4, \"panelIndex\": 5, \"col\": 7, \"row\": 1}, {\"sort\": [\"@timestamp\", \"desc\"], \"type\": \"search\", \"id\": \"0ab87b80-478e-11e7-b1f0-cb29bac6bf8b-ecs\", \"size_x\": 6, \"size_y\": 4, \"panelIndex\": 6, \"col\": 1, \"columns\": [\"host.name\", \"message\", \"redis.slowlog.duration.us\", \"redis.slowlog.key\"], \"row\": 1}]", 
                 "timeRestore": false, 
-                "title": "[Filebeat Redis] Overview ECS", 
+                "title": "[Logs] [Redis] Overview ECS", 
                 "uiStateJSON": "{\"P-5\": {\"vis\": {\"legendOpen\": false}}}", 
                 "version": 1
             }, 
@@ -2313,7 +2313,7 @@
                 "optionsJSON": "{\"useMargins\": true, \"darkTheme\": false, \"hidePanelTitles\": false}", 
                 "panelsJSON": "[{\"gridData\": {\"i\": \"1\", \"h\": 12, \"y\": 0, \"w\": 10, \"x\": 0}, \"embeddableConfig\": {}, \"panelIndex\": \"1\", \"version\": \"7.0.0-alpha1-SNAPSHOT\", \"type\": \"visualization\", \"id\": \"dad521d0-ff69-11e8-93c5-d5ecd1b3e307-ecs\"}, {\"gridData\": {\"i\": \"2\", \"h\": 12, \"y\": 0, \"w\": 38, \"x\": 10}, \"embeddableConfig\": {}, \"panelIndex\": \"2\", \"version\": \"7.0.0-alpha1-SNAPSHOT\", \"type\": \"visualization\", \"id\": \"1579d690-ff6b-11e8-93c5-d5ecd1b3e307-ecs\"}, {\"gridData\": {\"i\": \"3\", \"h\": 10, \"y\": 12, \"w\": 10, \"x\": 8}, \"embeddableConfig\": {}, \"panelIndex\": \"3\", \"version\": \"7.0.0-alpha1-SNAPSHOT\", \"type\": \"visualization\", \"id\": \"51677b80-ff6b-11e8-93c5-d5ecd1b3e307-ecs\"}, {\"gridData\": {\"i\": \"4\", \"h\": 10, \"y\": 12, \"w\": 12, \"x\": 36}, \"embeddableConfig\": {}, \"panelIndex\": \"4\", \"version\": \"7.0.0-alpha1-SNAPSHOT\", \"type\": \"visualization\", \"id\": \"30962fe0-ff6c-11e8-93c5-d5ecd1b3e307-ecs\"}, {\"gridData\": {\"i\": \"5\", \"h\": 10, \"y\": 12, \"w\": 8, \"x\": 0}, \"embeddableConfig\": {}, \"panelIndex\": \"5\", \"version\": \"7.0.0-alpha1-SNAPSHOT\", \"type\": \"visualization\", \"id\": \"b06c0460-ff6c-11e8-93c5-d5ecd1b3e307-ecs\"}, {\"gridData\": {\"i\": \"6\", \"h\": 10, \"y\": 12, \"w\": 18, \"x\": 18}, \"embeddableConfig\": {}, \"panelIndex\": \"6\", \"version\": \"7.0.0-alpha1-SNAPSHOT\", \"type\": \"visualization\", \"id\": \"11858000-ff6d-11e8-93c5-d5ecd1b3e307-ecs\"}, {\"gridData\": {\"i\": \"7\", \"h\": 10, \"y\": 22, \"w\": 48, \"x\": 0}, \"embeddableConfig\": {}, \"panelIndex\": \"7\", \"version\": \"7.0.0-alpha1-SNAPSHOT\", \"type\": \"search\", \"id\": \"6d56a010-ff6a-11e8-93c5-d5ecd1b3e307-ecs\"}]", 
                 "timeRestore": false, 
-                "title": "[Filebeat Santa] Overview ECS", 
+                "title": "[Logs] [Santa] Overview ECS", 
                 "version": 1
             }, 
             "id": "161855f0-ff6a-11e8-93c5-d5ecd1b3e307-ecs", 
@@ -2432,7 +2432,7 @@
                 "optionsJSON": "{\"darkTheme\": false}", 
                 "panelsJSON": "[{\"type\": \"visualization\", \"id\": \"d16bb400-f9cc-11e6-8115-a7c18106d86a-ecs\", \"size_x\": 12, \"size_y\": 3, \"panelIndex\": 1, \"col\": 1, \"row\": 5}, {\"type\": \"visualization\", \"id\": \"78b74f30-f9cd-11e6-8115-a7c18106d86a-ecs\", \"size_x\": 12, \"size_y\": 3, \"panelIndex\": 2, \"col\": 1, \"row\": 2}, {\"type\": \"visualization\", \"id\": \"341ffe70-f9ce-11e6-8115-a7c18106d86a-ecs\", \"size_x\": 6, \"size_y\": 4, \"panelIndex\": 3, \"col\": 1, \"row\": 8}, {\"type\": \"visualization\", \"id\": \"3cec3eb0-f9d3-11e6-8a3e-2b904044ea1d-ecs\", \"size_x\": 6, \"size_y\": 4, \"panelIndex\": 4, \"col\": 7, \"row\": 8}, {\"sort\": [\"@timestamp\", \"desc\"], \"type\": \"search\", \"id\": \"62439dc0-f9c9-11e6-a747-6121780e0414-ecs\", \"size_x\": 12, \"size_y\": 3, \"panelIndex\": 5, \"col\": 1, \"columns\": [\"system.auth.ssh.event\", \"system.auth.ssh.method\", \"user.name\", \"source.ip\", \"source.geo.country_iso_code\"], \"row\": 12}, {\"type\": \"visualization\", \"id\": \"327417e0-8462-11e7-bab8-bd2f0fb42c54-ecs\", \"size_x\": 12, \"size_y\": 1, \"panelIndex\": 6, \"col\": 1, \"row\": 1}]", 
                 "timeRestore": false, 
-                "title": "[Filebeat System] SSH login attempts ECS", 
+                "title": "[Logs] [System] SSH login attempts ECS", 
                 "uiStateJSON": "{\"P-4\": {\"mapCenter\": [39.774769485295465, 23.203125], \"mapCollar\": {\"zoom\": 3, \"bottom_right\": {\"lat\": -14.777884999999998, \"lon\": 125.771485}, \"top_left\": {\"lat\": 85.593335, \"lon\": -79.189455}}, \"mapBounds\": {\"bottom_right\": {\"lat\": 10.31491928581316, \"lon\": 74.53125}, \"top_left\": {\"lat\": 60.50052541051131, \"lon\": -27.94921875}}, \"mapZoom\": 3}}", 
                 "version": 1
             }, 
@@ -2521,7 +2521,7 @@
                 "optionsJSON": "{\"darkTheme\": false}", 
                 "panelsJSON": "[{\"type\": \"visualization\", \"id\": \"Syslog-events-by-hostname-ecs\", \"size_x\": 8, \"size_y\": 4, \"panelIndex\": 1, \"col\": 1, \"row\": 2}, {\"type\": \"visualization\", \"id\": \"Syslog-hostnames-and-processes-ecs\", \"size_x\": 4, \"size_y\": 4, \"panelIndex\": 2, \"col\": 9, \"row\": 2}, {\"sort\": [\"@timestamp\", \"desc\"], \"type\": \"search\", \"id\": \"Syslog-system-logs-ecs\", \"size_x\": 12, \"size_y\": 7, \"panelIndex\": 3, \"col\": 1, \"columns\": [\"host.hostname\", \"process.name\", \"message\"], \"row\": 6}, {\"type\": \"visualization\", \"id\": \"327417e0-8462-11e7-bab8-bd2f0fb42c54-ecs\", \"size_x\": 12, \"size_y\": 1, \"panelIndex\": 4, \"col\": 1, \"row\": 1}]", 
                 "timeRestore": false, 
-                "title": "[Filebeat System] Syslog dashboard ECS", 
+                "title": "[Logs] [System] Syslog dashboard ECS", 
                 "uiStateJSON": "{}", 
                 "version": 1
             }, 
@@ -2653,7 +2653,7 @@
                 "optionsJSON": "{\"darkTheme\": false}", 
                 "panelsJSON": "[{\"type\": \"visualization\", \"id\": \"Traefik-Access-Browsers-ecs\", \"size_x\": 4, \"size_y\": 4, \"panelIndex\": 3, \"col\": 1, \"row\": 10}, {\"type\": \"visualization\", \"id\": \"Traefik-Access-OSes-ecs\", \"size_x\": 4, \"size_y\": 4, \"panelIndex\": 4, \"col\": 5, \"row\": 10}, {\"type\": \"visualization\", \"id\": \"New-Visualization-ecs\", \"size_x\": 12, \"size_y\": 3, \"panelIndex\": 5, \"col\": 1, \"row\": 4}, {\"type\": \"visualization\", \"id\": \"Traefik-Access-Response-codes-by-top-URLs-ecs\", \"size_x\": 12, \"size_y\": 3, \"panelIndex\": 6, \"col\": 1, \"row\": 7}, {\"type\": \"visualization\", \"id\": \"Sent-sizes-ecs\", \"size_x\": 4, \"size_y\": 4, \"panelIndex\": 7, \"col\": 9, \"row\": 10}, {\"type\": \"visualization\", \"id\": \"Traefik-Access-Map-ecs\", \"size_x\": 12, \"size_y\": 3, \"panelIndex\": 8, \"col\": 1, \"row\": 1}]", 
                 "timeRestore": false, 
-                "title": "[Filebeat Traefik] Access logs ECS", 
+                "title": "[Logs] [Traefik] Access logs ECS", 
                 "uiStateJSON": "{\"P-4\": {\"vis\": {\"legendOpen\": true}}, \"P-8\": {\"mapCenter\": [50.51342652633956, -0.17578125]}}", 
                 "version": 1
             }, 
@@ -2833,7 +2833,7 @@
                 "optionsJSON": "{\"useMargins\": true, \"darkTheme\": false, \"hidePanelTitles\": false}", 
                 "panelsJSON": "[{\"gridData\": {\"i\": \"1\", \"h\": 4, \"y\": 6, \"w\": 6, \"x\": 6}, \"type\": \"search\", \"version\": \"6.2.4\", \"panelIndex\": \"1\", \"id\": \"7a9482d0-eb00-11e7-8f04-51231daa5b05-ecs\"}, {\"gridData\": {\"i\": \"2\", \"h\": 5, \"y\": 1, \"w\": 7, \"x\": 5}, \"type\": \"visualization\", \"version\": \"6.2.4\", \"panelIndex\": \"2\", \"id\": \"a9fd8bb0-eb01-11e7-8f04-51231daa5b05-ecs\"}, {\"gridData\": {\"i\": \"3\", \"h\": 4, \"y\": 6, \"w\": 6, \"x\": 0}, \"type\": \"search\", \"version\": \"6.2.4\", \"panelIndex\": \"3\", \"id\": \"3824b080-eb02-11e7-8f04-51231daa5b05-ecs\"}, {\"gridData\": {\"i\": \"4\", \"h\": 3, \"y\": 1, \"w\": 5, \"x\": 0}, \"type\": \"visualization\", \"version\": \"6.2.4\", \"panelIndex\": \"4\", \"id\": \"1da1ed30-eb03-11e7-8f04-51231daa5b05-ecs\"}, {\"gridData\": {\"i\": \"5\", \"h\": 2, \"y\": 4, \"w\": 5, \"x\": 0}, \"embeddableConfig\": {\"vis\": {\"legendOpen\": false, \"defaultColors\": {\"0 - 100\": \"rgb(0,104,55)\"}}}, \"panelIndex\": \"5\", \"version\": \"6.2.4\", \"type\": \"visualization\", \"id\": \"240f3630-eb05-11e7-8f04-51231daa5b05-ecs\"}, {\"gridData\": {\"i\": \"6\", \"h\": 1, \"y\": 0, \"w\": 12, \"x\": 0}, \"type\": \"visualization\", \"version\": \"6.1.0-SNAPSHOT\", \"panelIndex\": \"6\", \"id\": \"2d6e0760-f4ab-11e7-8647-534bb4c21040-ecs\"}]", 
                 "timeRestore": false, 
-                "title": "[Filebeat Osquery] Compliance pack ECS", 
+                "title": "[Logs] [Osquery] Compliance pack ECS", 
                 "uiStateJSON": "{\"P-5\": {\"vis\": {\"defaultColors\": {\"0 - 100\": \"rgb(0,104,55)\"}}}}", 
                 "version": 1
             }, 
@@ -2943,7 +2943,7 @@
                 "optionsJSON": "{\"useMargins\": true, \"darkTheme\": false, \"hidePanelTitles\": false}", 
                 "panelsJSON": "[{\"gridData\": {\"i\": \"1\", \"h\": 2, \"y\": 1, \"w\": 4, \"x\": 8}, \"type\": \"visualization\", \"version\": \"6.1.0-SNAPSHOT\", \"panelIndex\": \"1\", \"id\": \"6ec10290-f4aa-11e7-8647-534bb4c21040-ecs\"}, {\"gridData\": {\"i\": \"2\", \"h\": 2, \"y\": 1, \"w\": 4, \"x\": 4}, \"type\": \"visualization\", \"version\": \"6.1.0-SNAPSHOT\", \"panelIndex\": \"2\", \"id\": \"ffdbba50-f4a9-11e7-8647-534bb4c21040-ecs\"}, {\"gridData\": {\"i\": \"3\", \"h\": 2, \"y\": 1, \"w\": 4, \"x\": 0}, \"type\": \"visualization\", \"version\": \"6.1.0-SNAPSHOT\", \"panelIndex\": \"3\", \"id\": \"ab587180-f4a9-11e7-8647-534bb4c21040-ecs\"}, {\"gridData\": {\"i\": \"4\", \"h\": 1, \"y\": 0, \"w\": 12, \"x\": 0}, \"type\": \"visualization\", \"version\": \"6.1.0-SNAPSHOT\", \"panelIndex\": \"4\", \"id\": \"2d6e0760-f4ab-11e7-8647-534bb4c21040-ecs\"}, {\"gridData\": {\"i\": \"5\", \"h\": 4, \"y\": 3, \"w\": 12, \"x\": 0}, \"type\": \"search\", \"version\": \"6.1.0-SNAPSHOT\", \"panelIndex\": \"5\", \"id\": \"0fe5dc00-f49b-11e7-8647-534bb4c21040-ecs\"}]", 
                 "timeRestore": false, 
-                "title": "[Filebeat Osquery] OSSEC rootkit pack ECS", 
+                "title": "[Logs] [Osquery] OSSEC rootkit pack ECS", 
                 "uiStateJSON": "{}", 
                 "version": 1
             }, 

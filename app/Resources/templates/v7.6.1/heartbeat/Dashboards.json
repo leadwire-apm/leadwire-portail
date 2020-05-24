@@ -4,7 +4,7 @@
     "id": "f3e771c0-eb19-11e6-be20-559646f8b9ba",
     "type": "dashboard",
     "attributes": {
-      "title": "Heartbeat HTTP monitoring",
+      "title": "[Uptime] HTTP monitoring",
       "hits": 0,
       "description": "",
       "panelsJSON": "[{\"size_x\":12,\"size_y\":4,\"panelIndex\":1,\"col\":1,\"row\":7,\"panelRefName\":\"panel_0\"},{\"size_x\":4,\"size_y\":4,\"panelIndex\":2,\"col\":9,\"row\":1,\"panelRefName\":\"panel_1\"},{\"size_x\":8,\"size_y\":4,\"panelIndex\":3,\"col\":1,\"row\":1,\"panelRefName\":\"panel_2\"},{\"size_x\":12,\"size_y\":2,\"panelIndex\":4,\"col\":1,\"row\":5,\"panelRefName\":\"panel_3\"},{\"size_x\":12,\"size_y\":5,\"panelIndex\":5,\"col\":1,\"row\":11,\"panelRefName\":\"panel_4\"}]",

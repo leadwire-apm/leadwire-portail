@@ -4352,10 +4352,6 @@
   "order": 1,
   "settings": {
     "index": {
-      "lifecycle": {
-        "name": "filebeat",
-        "rollover_alias": "filebeat-7.6.1"
-      },
       "mapping": {
         "total_fields": {
           "limit": 10000
