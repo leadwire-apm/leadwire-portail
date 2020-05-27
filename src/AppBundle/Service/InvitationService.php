@@ -327,10 +327,18 @@ class InvitationService
         $invitedUser = $this->userManager->getOneBy(['id' => $userId]);
         $application = $this->applicationService->getApplication($appId);
         $invitation = new Invitation();
-        $invitation->setApplication($application);
-        $invitation->setUser($invitedUser);
-        $invitation->setEmail($invitedUser->getEmail());
-        $invitation->setPending(false);
+        $inv = $this->invitationManager->getOneBy(['user' => $invitedUser, 'application' => $application]);
+       
+        if($inv === null){
+            $invitation->setApplication($application);
+            $invitation->setUser($invitedUser);
+            $invitation->setEmail($invitedUser->getEmail());
+            $invitation->setPending(false);
+        }else{
+            $inv->setPending(false);
+            $invitation = $inv;
+        }
+
 
         $this->invitationManager->update($invitation);
 
