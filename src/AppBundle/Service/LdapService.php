@@ -163,8 +163,7 @@ class LdapService
         }
     }
 
-    
-    /**
+ /**
      * Create LDAP Admin user entry
      *
      * @return boolean
@@ -186,9 +185,9 @@ class LdapService
                 "objectclass" => ['person', 'top', 'inetOrgPerson', 'organizationalPerson'],
                 "sn" => "ADMIN",
                 "givenName" => "Admin",
-                "mail" => "contact@leadwire.io",
+                "mail" => $this->settings['admin_email'],
                 "uid" => "admin",
-                "userPassword" => "{SSHA}KrVJR86xuoezxyDgOgrq7haWg2QgPbJ2",
+                "userPassword" => $this->settings['admin_password'],
                 "description" => "admin",
             ]
         );
@@ -200,8 +199,8 @@ class LdapService
 
       return $status;
     }
-    
-    
+
+
     /**
      * Create LDAP entries for new users
      *
