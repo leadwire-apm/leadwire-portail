@@ -38,7 +38,7 @@ Load default Application Type. Insert template for Kibana and more..'
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         /** @var LdapService $ldap */
-        //$ldap = $this->getContainer()->get(LdapService::class);
+        $ldap = $this->getContainer()->get(LdapService::class);
         /** @var ElasticSearchService $es */
         $es = $this->getContainer()->get(ElasticSearchService::class);
         /** @var KibanaService $kibana */
@@ -71,11 +71,12 @@ Load default Application Type. Insert template for Kibana and more..'
         }
 
         //delete all applications
+        if ($purge) {
         $applications = $applicationManager->getAll();
             foreach ($applications as $application) {
                 $applicationService->deleteApplication($application->getId());
             }
-
+        }
 
         $this->loadFixtures($output, $purge);
         
@@ -83,10 +84,13 @@ Load default Application Type. Insert template for Kibana and more..'
         //$this->purgeES($output, $purge, $es);
 
         //$this->display($output, "Creating LDAP entries for demo applications");
-        //$ldap->createDemoApplicationsEntries();
+        $ldap->createAdminUser();
         $demoApplications = $applicationService->listDemoApplications();
 
         //ism policy => delete before create
+        $es->createConfig();
+        $es->createLeadwireRole();
+        $es->createLeadwireRolesMapping();
         $es->deletePolicy("hot-warm-delete-policy");
         $es->deletePolicy("rollover-hot-warm-delete-policy");
         $es->createPolicy();
