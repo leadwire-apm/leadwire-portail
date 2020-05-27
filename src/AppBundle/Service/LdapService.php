@@ -163,6 +163,45 @@ class LdapService
         }
     }
 
+    
+    /**
+     * Create LDAP Admin user entry
+     *
+     * @return boolean
+     */
+    public function createAdminUser(): bool
+    {
+       $status = true;
+
+       $adminRecord = $this->ldap->query('ou=people,dc=leadwire,dc=io', "(uid=admin)")->execute();
+       $entry = $adminRecord[0];
+
+       if ($entry instanceof Entry) {
+
+       // Admin new entry
+       $entry = new Entry(
+            "cn=admin,ou=people,dc=leadwire,dc=io",
+            [
+                "cn" => "admin",
+                "objectclass" => ['person', 'top', 'inetOrgPerson', 'organizationalPerson'],
+                "sn" => "ADMIN",
+                "givenName" => "Admin",
+                "mail" => "contact@leadwire.io",
+                "uid" => "admin",
+                "userPassword" => "{SSHA}KrVJR86xuoezxyDgOgrq7haWg2QgPbJ2",
+                "description" => "admin",
+            ]
+        );
+
+	 $this->entryManager->update($entry);
+            } else {
+                throw new \Exception("Unable to find LDAP record for admin user");
+            }
+
+      return $status;
+    }
+    
+    
     /**
      * Create LDAP entries for new users
      *
