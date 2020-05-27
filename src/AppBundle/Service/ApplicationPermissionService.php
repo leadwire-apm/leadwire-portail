@@ -21,8 +21,23 @@ class ApplicationPermissionService
 
     public function grantPermission(Application $application, User $user, $accessType = ApplicationPermission::ACCESS_GUEST)
     {
-        $permission = new ApplicationPermission();
-        $permission->setApplication($application)->setUser($user)->setAccess($accessType);
-        $this->apManager->update($permission);
+        $listPermissions = $this->apManager->getPermissionsForUser($user);
+        $alredyGranted = false;
+
+        foreach ($listPermissions as $pirm) {
+            if ($pirm->getApplication()->getId() === $application->getId()) {
+                $alredyGranted = true;
+            }
+        }
+
+        if(!$alredyGranted){
+            $permission = new ApplicationPermission();
+            $permission->setApplication($application)->setUser($user)->setAccess($accessType);
+            $this->apManager->update($permission);
+        } 
+    }
+
+    public function removeApplicationPermissionsByUser(Application $application, User $user){
+        $this->apManager->removeApplicationPermissionsByUser($application, $user);
     }
 }

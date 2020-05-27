@@ -183,6 +183,26 @@
                         throw new Error(err);
                     });
             }
+            
+            service.grantUser = function(appid, userid) {
+                return ApplicationFactory.grantUser(appid, userid)
+                    .then(function (response) {
+                        return response.data;
+                    })
+                    .catch(function (err, rr) {
+                        throw new Error(err);
+                    });
+            }
+
+            service.revokePermission = function(appid, userid) {
+                return ApplicationFactory.revokePermission(appid, userid)
+                    .then(function (response) {
+                        return response.data;
+                    })
+                    .catch(function (err, rr) {
+                        throw new Error(err);
+                    });
+            }
 
             return service;
         });

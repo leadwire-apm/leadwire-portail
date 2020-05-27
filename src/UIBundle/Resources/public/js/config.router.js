@@ -256,6 +256,18 @@ angular.module('leadwireApp')
                     controller: 'DetailUserController',
                     controllerAs: 'ctrl',
                 })
+                .state('app.management.userManageApplications', {
+                    url: '/users/:id/manageApplications',
+                    templateUrl: 'management/users/userManageApplications.html',
+                    resolve: {
+                        permissions: function (RouteGuard) {
+                            return RouteGuard.adminRequired();
+                        },
+                        menu: updateMenuItems(MenuEnum.MANAGEMENT),
+                    },
+                    controller: 'ManageUserApplicationsController',
+                    controllerAs: 'ctrl',
+                })
                 .state('app.management.plans', {
                     url: '/plans/list',
                     templateUrl: 'management/plans/list.html',

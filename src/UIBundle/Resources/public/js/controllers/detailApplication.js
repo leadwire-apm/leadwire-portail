@@ -272,7 +272,7 @@
             var list = [];
 
             vm.environments.forEach(environment => {
-                if (angular.isDefined(vm.currentUser.acl[environment.id][vm.application.id].REPORT)) {
+                if (vm.currentUser && angular.isDefined(vm.currentUser.acl[environment.id][vm.application.id].REPORT)) {
                     list.push(environment);
                     vm.selectedEnvironment = environment.id;
                 }
