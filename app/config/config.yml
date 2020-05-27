@@ -39,6 +39,11 @@ parameters:
     compagne_enabled: '%env(LEADWIRE_COMPAGNE_ENABLED)%'
     jenkins_url: '%env(LEADWIRE_JENKINS_URL)%'
     stripe_enabled: '%env(LEADWIRE_STRIPE_ENABLED)%'
+    cluster_name : '%env(LEADWIRE_CLUSTER_NAME)%'
+    cluster_version : '%env(LEADWIRE_CLUSTER_VERSION)%'
+    setup_cluster : '%env(LEADWIRE_SETUP_CLUSTER)%'
+    setup_demo: '%env(LEADWIRE_SETUP_DEMO)%'
+    setup_ldap: '%env(LEADWIRE_SETUP_LDAP)%'
     logout_url: '%env(LEADWIRE_LOGOUT_URL)%'
     kibana_admin_username: '%env(LEADWIRE_KIBANA_ADMIN_USERNAME)%'
     has_all_user_tenant: false
@@ -54,6 +59,8 @@ parameters:
         port: '%env(LEADWIRE_LDAP_PORT)%'
         dn_user: '%env(LEADWIRE_LDAP_DN_USER)%'
         mdp: '%env(LEADWIRE_LDAP_PASSWORD)%'
+        admin_password: '%env(LEADWIRE_ADMIN_PASSWORD)%'
+        admin_email: '%env(LEADWIRE_ADMIN_EMAIL)%'
     kibana:
         host: '%env(LEADWIRE_KIBANA_HOST)%'
         port: '%env(LEADWIRE_KIBANA_PORT)%'
