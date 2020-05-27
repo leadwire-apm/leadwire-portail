@@ -274,6 +274,8 @@ class EnvironmentService
                 $this->es->deleteTenant($sharedIndex);
                 $this->es->deleteTenant($appIndex);
                 $this->es->deleteTenant($watechrIndex);
+                
+                $this->es->deleteTemplatesForEnvironment($environment);
             }
             return $this->environmentManager->delete($environment);
         }

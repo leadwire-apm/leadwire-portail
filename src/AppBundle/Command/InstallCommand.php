@@ -38,7 +38,7 @@ Load default Application Type. Insert template for Kibana and more..'
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         /** @var LdapService $ldap */
-        //$ldap = $this->getContainer()->get(LdapService::class);
+        $ldap = $this->getContainer()->get(LdapService::class);
         /** @var ElasticSearchService $es */
         $es = $this->getContainer()->get(ElasticSearchService::class);
         /** @var KibanaService $kibana */
@@ -58,6 +58,15 @@ Load default Application Type. Insert template for Kibana and more..'
         $applicationManager = $this->getContainer()->get(ApplicationManager::class);;
 
 
+        /** @var bool $setupCluster */
+        $setupCluster = $this->getContainer()->getParameter('setup_cluster');
+
+       /** @var bool $setupLdap */
+        $setupLdap = $this->getContainer()->getParameter('setup_ldap');
+
+       /** @var bool $setupDemoApplication */
+        $setupDemoApplication = $this->getContainer()->getParameter('setup_demo');
+
 
         /** @var bool $stripeEnabled */
         $stripeEnabled = $this->getContainer()->getParameter('stripe_enabled');
@@ -71,28 +80,39 @@ Load default Application Type. Insert template for Kibana and more..'
         }
 
         //delete all applications
+       if ($purge) {
         $applications = $applicationManager->getAll();
             foreach ($applications as $application) {
                 $applicationService->deleteApplication($application->getId());
             }
-
+        }
 
         $this->loadFixtures($output, $purge);
-        
-        //Purge Elasticsearch
-        //$this->purgeES($output, $purge, $es);
+       
+        if ($setupLdap){
+        $this->display($output, "Creating LDAP entries for admin user");
+        $ldap->createAdminUser();
+	}
 
-        //$this->display($output, "Creating LDAP entries for demo applications");
-        //$ldap->createDemoApplicationsEntries();
         $demoApplications = $applicationService->listDemoApplications();
 
-        //ism policy => delete before create
+      
+        if ($setupCluster){
+        $this->display($output, "Initializing Elasticsearch Cluster Setup");
+	$es->createConfig();
+        $es->createLeadwireRole();
         $es->deletePolicy("hot-warm-delete-policy");
         $es->deletePolicy("rollover-hot-warm-delete-policy");
         $es->createPolicy();
         $es->createRolloverPolicy();
+        $es->createLeadwireRolesMapping();
+        foreach ($demoApplications as $application) {
+        $es->initIndexTemplate($application);
+	}
+	}
 
-        $this->display($output, "Initializing ES & Kibana");
+        if ($setupDemoApplication) {
+	$this->display($output, "Initializing Demo Application");
         /** @var Application $application */
         foreach ($demoApplications as $application) {
             $sharedIndex = "staging-" . $application->getSharedIndex();
@@ -133,34 +153,18 @@ Load default Application Type. Insert template for Kibana and more..'
             $es->createRole("staging", $application->getName(), array(), array($watechrIndex), array("kibana_all_write"), true, true);
             $es->createRoleMapping("staging", $application->getName(), 'demo',  true, true);
         }
+       }
 
         if ($stripeEnabled === true) {
             $this->display($output, "Creating Stripe Plans with new Data");
             $planService->createDefaultPlans();
         }
 
-        //$curatorService->updateCuratorConfig();
-
-        //exec('npm stop');
-        //exec('npm install');
-        //exec('npm start');
 
         return 0;
     }
 
     
-    
-     private function purgeES($output, $purge, $es)
-    {
-        if ($purge === false) {
-            return;
-        }
-         
-       $es->purgeIndices();
-       $es->purgeAliases();
-       $es->purgeTemplates();
-        
-    }
          
          
     private function loadFixtures($output, $purge)

@@ -652,6 +652,12 @@ class ApplicationService
                 $this->es->deleteRoleMapping($environment->getName(), $application->getName(), false, false);
                 $this->es->deleteRoleMapping($environment->getName(), $application->getName(), true, true);
             }
+            
+             /**
+             * remove templates
+             */
+	         $this->es->deleteTemplatesForApplication($application);
+            
         }
     }
 
