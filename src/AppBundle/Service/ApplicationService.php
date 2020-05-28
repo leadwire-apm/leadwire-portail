@@ -247,6 +247,34 @@ class ApplicationService
     public function listUserAccessibleApplciations(User $user): array
     {
         $accessibleApplications = [];
+
+        $permissions = $this->apManager->getPermissionsForUser($user);
+
+        if(!$user->hasRole('ROLE_SUPER_ADMIN') && !$user->hasRole('ROLE_ADMIN')){
+            /** @var ApplicationPermission $permission */
+            foreach ($permissions as $permission) {
+                if ($permission->getApplication()->isRemoved() === false) {
+                    $accessibleApplications[] = $permission->getApplication();
+                }
+            }
+        } else {
+            $accessibleApplications = $this->getApplications(['removed' => false]);
+        }
+
+
+        return $accessibleApplications;
+    }
+
+    /**
+     *
+     * @param string $id
+     * @return Application[]
+     */
+    public function listUserAccessibleApplciationsById($id): array
+    {
+        $accessibleApplications = [];
+        $user = $this->userManager->getOneBy(['id' => $id]);
+
         $permissions = $this->apManager->getPermissionsForUser($user);
 
         /** @var ApplicationPermission $permission */
@@ -255,7 +283,6 @@ class ApplicationService
                 $accessibleApplications[] = $permission->getApplication();
             }
         }
-
         return $accessibleApplications;
     }
 

@@ -130,7 +130,7 @@ class WatcherService
     public function list($payload) {
         $res =  $this->watcherManager->getByEnvDash( $payload['appId'], $payload['envId']);
 
-        if(!$res){
+        if(!$res && !empty($res)){
             throw new HttpException(Response::HTTP_NOT_FOUND, "Watcher get list error");
         }
 

@@ -457,7 +457,7 @@ class UserService
 
         $user = $this->userManager->getOneBy(['id' => $id]);
 
-        if ($user instanceof User) {
+        if ($user instanceof User && $user->getName() !== "admin") {
             $user->toggleLock();
             if ($user->isLocked() === true) {
                 // It's a lock operation --> Update the lock message if any

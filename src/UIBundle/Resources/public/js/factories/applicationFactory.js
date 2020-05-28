@@ -10,6 +10,13 @@
                 findMyApplications: function () {
                     return $http.get(CONFIG.BASE_URL + 'api/app/list');
                 },
+                  /**
+                 *
+                 * @returns {Promise}
+                 */
+                findMyApplicationsById: function (id) {
+                    return $http.get(CONFIG.BASE_URL + 'api/app/list/'+id);
+                },
                 /**
                  *
                  * @returns {Promise}
@@ -163,7 +170,21 @@
                     return $http.get(
                         CONFIG.BASE_URL + 'api/app/' + id + '/' + index + '/report',
                     );
-                }
+                },
+                /**
+                *
+                * @returns {Promise}
+                */
+               grantUser: function (appid, userid) {
+                return $http.get(
+                    CONFIG.BASE_URL + 'api/app/' + appid + '/' + userid + '/grantPermission'
+                );
+            },
+            revokePermission: function (appid, userid) {
+                return $http.get(
+                    CONFIG.BASE_URL + 'api/app/' + appid + '/' + userid + '/revokePermission'
+                );
+            },
             };
         });
 })(window.angular);

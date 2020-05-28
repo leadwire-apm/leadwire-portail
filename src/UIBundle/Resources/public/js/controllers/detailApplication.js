@@ -44,6 +44,10 @@
         vm.ownerTitle = "Owner Github :";
         var envName = "staging";
 
+        vm.isAdmin = function(user) {
+            return user.roles.indexOf("ROLE_SUPER_ADMIN") >= 0 || user.roles.indexOf("ROLE_ADMIN") >= 0;
+        }
+
         /**
          * get dashboards list
          */
@@ -268,7 +272,7 @@
             var list = [];
 
             vm.environments.forEach(environment => {
-                if (angular.isDefined(vm.currentUser.acl[environment.id][vm.application.id].REPORT)) {
+                if (vm.currentUser && angular.isDefined(vm.currentUser.acl[environment.id][vm.application.id].REPORT)) {
                     list.push(environment);
                     vm.selectedEnvironment = environment.id;
                 }

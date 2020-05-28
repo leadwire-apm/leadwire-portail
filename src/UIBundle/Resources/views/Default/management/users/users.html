@@ -9,8 +9,7 @@
                 <div class="col-sm-offset-10" style="display: flex">
                     <label for="search">Only administrators :</label>
                     <label for="search" class="switch switch-sm ml10">
-                        <input id="search" type="checkbox"
-                               data-ng-model="ctrl.onlyAdmins">
+                        <input id="search" type="checkbox" data-ng-model="ctrl.onlyAdmins">
                         <span><i class="handle"></i></span>
                     </label>
 
@@ -21,70 +20,77 @@
                     <div class="no-more-tables">
                         <table class="table table-striped mb0">
                             <thead>
-                            <tr>
-                                <th class="text-center">Name</th>
-                                <th class="text-center">Email</th>
-                                <th class="text-center">Status</th>
-                                <th colspan="3" class="text-center">Actions</th>
-                            </tr>
+                                <tr>
+                                    <th class="text-center">Name</th>
+                                    <th class="text-center">Email</th>
+                                    <th class="text-center">Status</th>
+                                    <th colspan="3" class="text-center">Actions</th>
+                                </tr>
                             </thead>
                             <tbody>
-                            <tr ng-if="ctrl.ui.isLoading" class="text-center">
-                                <td colspan="6">
-                                    <spinner is-loading="ctrl.ui.isLoading"
-                                             size="24"></spinner>
-                                </td>
-                            </tr>
-                            <tr ng-repeat="user in ctrl.users | inArray:ctrl.onlyAdmins:'roles':ctrl.ADMINS"
-                                class="text-center">
-                                <td data-title="Name" data-label="Name" class="text-left">
-                                    <span ng-if="ctrl.isAdmin(user)" class="fas fa-user-cog" data-toggle="tooltip" data-placement="top" title="This user has administrative privileges"></span>
-                                    <span>
-                                        [[user.name]]
-                                    </span>
-                                </td>
-                                <td data-title="Email" data-label="Email">
-                                    [[user.email]]
-                                    <span ng-if="user.emailValid" class="fa fa-check-circle" style="color: #2ECC71;" data-toggle="tooltip" data-placement="top" title="User email is verified"></span>
-                                </td>
-                                <td data-title="Status" data-label="Status">
-                                <span data-ng-class="user.locked ? 'label label-danger' : 'label label-success'" style="vertical-align: center">
-                                    [[user.locked ? 'Blocked' : 'Active']]
-                                </span>
-                                </td>
-                                <td data-title="Actions" data-label="Actions" class="text-center">
-                                    <button class="btn btn-default"
+                                <tr ng-if="ctrl.ui.isLoading" class="text-center">
+                                    <td colspan="6">
+                                        <spinner is-loading="ctrl.ui.isLoading" size="24"></spinner>
+                                    </td>
+                                </tr>
+                                <tr ng-repeat="user in ctrl.users | inArray:ctrl.onlyAdmins:'roles':ctrl.ADMINS"
+                                    class="text-center">
+                                    <td data-title="Name" data-label="Name" class="text-left">
+                                        <span ng-if="ctrl.isAdmin(user)" class="fas fa-user-cog" data-toggle="tooltip"
+                                            data-placement="top" title="This user has administrative privileges"></span>
+                                        <span>
+                                            [[user.name]]
+                                        </span>
+                                    </td>
+                                    <td data-title="Email" data-label="Email">
+                                        [[user.email]]
+                                        <span ng-if="user.emailValid" class="fa fa-check-circle" style="color: #2ECC71;"
+                                            data-toggle="tooltip" data-placement="top"
+                                            title="User email is verified"></span>
+                                    </td>
+                                    <td data-title="Status" data-label="Status">
+                                        <span data-ng-class="user.locked ? 'label label-danger' : 'label label-success'"
+                                            style="vertical-align: center">
+                                            [[user.locked ? 'Blocked' : 'Active']]
+                                        </span>
+                                    </td>
+                                    <td data-title="Actions" data-label="Actions" class="text-center">
+                                        <button class="btn btn-default" title="Manage user applications"
+                                            data-placement="top" data-toggle="tooltip"
+                                            data-ng-class="text-green"
+                                            data-ng-disabled="ctrl.ui.isProcessing" 
+                                            ng-click="ctrl.goManageApplications(user.id)"
+                                            ng-if="user.name !== 'admin'">
+                                            <i class="fas fa-window-restore"></i>
+                                        </button>
+                                        <button class="btn btn-default"
                                             title="[[ctrl.isAdmin(user) ? 'Revoke Admin role from this user' : 'Promote this user to Admin']]"
-                                            data-placement="top"
-                                            data-toggle="tooltip"
+                                            data-placement="top" data-toggle="tooltip"
                                             data-ng-class="ctrl.isAdmin(user) ? 'text-red' : 'text-green'"
                                             data-ng-disabled="ctrl.ui.isProcessing"
+                                            ng-if="user.name !== 'admin'"
                                             ng-click="ctrl.handleChangePermission(user)">
-                                        <i ng-class="ctrl.isAdmin(user) ? 'fa fa-angle-double-down' : 'fa fa-angle-double-up'"></i>
-                                    </button>
-                                    <button data-ng-class="user.locked ? 'btn btn-success' : 'btn btn-danger'"
-                                            title="[[user.locked ? 'Activate' : 'Block']]"
-                                            data-placement="top"
-                                            data-toggle="tooltip"
-                                            ng-click="ctrl.handleOnToggleLock(user)"
+                                            <i
+                                                ng-class="ctrl.isAdmin(user) ? 'fa fa-angle-double-down' : 'fa fa-angle-double-up'"></i>
+                                        </button>
+                                        <button data-ng-class="user.locked ? 'btn btn-success' : 'btn btn-danger'"
+                                            title="[[user.locked ? 'Activate' : 'Block']]" data-placement="top"
+                                            data-toggle="tooltip" ng-click="ctrl.handleOnToggleLock(user)"
                                             data-ng-disabled="ctrl.ui.isProcessing">
-                                        <i ng-class="user.locked ? 'fa fa-unlock' : 'fa fa-lock'"></i>
-                                    </button>
+                                            <i ng-class="user.locked ? 'fa fa-unlock' : 'fa fa-lock'"></i>
+                                        </button>
 
-                                    <button class="btn btn-info"
-                                            ng-click="ctrl.goDetail(user.id)"
-                                            data-ng-disabled="ctrl.ui.isProcessing"
-                                    >
-                                        <i class="fa fa-info-circle"></i>
-                                    </button>
-                                    <button class="btn btn-danger bg-red"
-                                            ng-click="ctrl.handleDeleteUser(user.id)"
+                                        <button class="btn btn-info" ng-click="ctrl.goDetail(user.id)"
+                                            data-ng-disabled="ctrl.ui.isProcessing">
+                                            <i class="fa fa-info-circle"></i>
+                                        </button>
+                                        <button class="btn btn-danger bg-red" ng-click="ctrl.handleDeleteUser(user.id)"
                                             data-ng-disabled="user.deleted || ctrl.ui.isProcessing">
-                                        <i class="fa fa-trash"></i>
-                                    </button>
+                                            <i class="fa fa-trash"></i>
+                                        </button>
 
-                                </td>
-                            </tr>
+                                    </td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>

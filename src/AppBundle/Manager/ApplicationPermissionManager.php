@@ -58,4 +58,16 @@ class ApplicationPermissionManager extends AbstractManager
             ->getQuery()
             ->execute();
     }
+
+    public function removeApplicationPermissionsByUser(Application $application, User $user)
+    {
+        $this
+            ->getDocumentRepository()
+            ->createQueryBuilder()
+            ->remove()
+            ->field('application.id')->equals($application->getId())
+            ->field('user.id')->equals($user->getId())
+            ->getQuery()
+            ->execute();
+    }
 }

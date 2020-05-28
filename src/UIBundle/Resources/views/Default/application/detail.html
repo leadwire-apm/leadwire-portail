@@ -5,20 +5,20 @@
             <section ng-include="'application/applicationInfo.html'">
             </section>
         </tab>
-        <tab heading="Invited Users" ng-if="user.id == ctrl.application.owner.id">
+        <tab heading="Invited Users" ng-if="user.id == ctrl.application.owner.id || ctrl.isAdmin(user)">
             <section class="widget bg-white post-comments" ng-include="'application/listInvitations.html'">
             </section>
         </tab>
-        <tab heading="Access Rules" ng-if="user.id == ctrl.application.owner.id">
+        <tab heading="Access Rules" ng-if="user.id == ctrl.application.owner.id || ctrl.isAdmin(user)">
             <section class="widget bg-white post-comments" ng-include="'application/rules.html'">
             </section>
         </tab>
-        <tab heading="Report" ng-if="user.id == ctrl.application.owner.id || ctrl.hasReportsRule()"
+        <tab heading="Report" ng-if="user.id == ctrl.application.owner.id || ctrl.hasReportsRule() || ctrl.isAdmin(user)"
             ng-click="ctrl.getReports()">
             <section class="widget bg-white post-comments" ng-include="'application/reports.html'">
             </section>
         </tab>
-        <tab heading="Watcher" ng-if="user.id == ctrl.application.owner.id || ctrl.hasReportsRule()"
+        <tab heading="Watcher" ng-if="user.id == ctrl.application.owner.id || ctrl.hasReportsRule() || ctrl.isAdmin(user)"
             ng-click="ctrl.setWatcherLink()">
             <section class="widget bg-white post-comments" ng-include="'application/watcher/list.html'">
             </section>
@@ -31,7 +31,7 @@
             <section ng-include="'application/stats.html'">
             </section>
         </tab>
-        <tab heading="Application view" ng-if="user.id == ctrl.application.owner.id"
+        <tab heading="Application view" ng-if="user.id == ctrl.application.owner.id || ctrl.isAdmin(user)"
             ng-click="ctrl.getDashboardsList()">
             <section class="widget bg-white post-comments" ng-include="'application/applicationView.html'">
             </section>

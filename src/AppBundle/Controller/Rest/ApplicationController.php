@@ -4,7 +4,6 @@ namespace AppBundle\Controller\Rest;
 
 use AppBundle\Document\Application;
 use AppBundle\Document\User;
-use AppBundle\Exception\DuplicateApplicationNameException;
 use AppBundle\Service\ApplicationService;
 use AppBundle\Service\ElasticSearchService;
 use AppBundle\Service\KibanaService;
@@ -19,10 +18,14 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use AppBundle\Exception\DuplicateApplicationNameException;
 use Symfony\Component\Routing\Annotation\Route;
 use AppBundle\Manager\ApplicationManager;
 use AppBundle\Service\ProcessService;
 use AppBundle\Service\CuratorService;
+use AppBundle\Service\InvitationService;
+
 
 class ApplicationController extends Controller
 {
@@ -152,6 +155,22 @@ class ApplicationController extends Controller
     public function listUserApplicationsAction(Request $request, ApplicationService $applicationService)
     {
         $applications = $applicationService->listUserAccessibleApplciations($this->getUser());
+
+        return $this->renderResponse($applications, Response::HTTP_OK);
+    }
+
+    /**
+     * @Route("/list/{id}", methods="GET")
+     *
+     * @param Request $request
+     * @param ApplicationService $applicationService
+     * @param string  $id
+     *
+     * @return Response
+     */
+    public function listUserApplicationsActionById(Request $request, ApplicationService $applicationService, $id)
+    {
+        $applications = $applicationService->listUserAccessibleApplciationsById($id);
 
         return $this->renderResponse($applications, Response::HTTP_OK);
     }
@@ -317,7 +336,7 @@ class ApplicationController extends Controller
      */
     public function getAllApplicationsAction(Request $request, ApplicationService $applicationService)
     {
-        $this->denyAccessUnlessGranted([User::ROLE_ADMIN, User::ROLE_SUPER_ADMIN]);
+        //$this->denyAccessUnlessGranted([User::ROLE_ADMIN, User::ROLE_SUPER_ADMIN]);
 
         $applications = $applicationService->getApplications();
 
@@ -500,6 +519,56 @@ class ApplicationController extends Controller
         try{
             $data = $KibanaService->deleteReport($id, $ind);
             return $this->renderResponse($data);
+        } catch (MongoDuplicateKeyException $e) {
+            return $this->renderResponse(['message' => $e->getMessage()], Response::HTTP_NOT_ACCEPTABLE);
+        }
+    }
+
+    /**
+     * @Route("/{appid}/{userid}/grantPermission", methods="GET")
+     *
+     * @param Request $request
+     * @param InvitationService $invitationService
+     * @param string $appid
+     * @param string $userid
+     */
+    public function grantUserPermission( Request $request, InvitationService $invitationService, string $appid, string $userid){
+        try {
+
+            $this->denyAccessUnlessGranted([User::ROLE_ADMIN, User::ROLE_SUPER_ADMIN]);
+
+            $user = $invitationService->grantPermission($appid, $userid);
+
+            $payload = [
+                "id" => $user->getId(),
+                "name" => $user->getName(),
+                "username" => $user->getUsername(),
+                "email" => $user->getEmail(),
+                "acls" => $user->acl(),
+            ];
+
+            return $this->renderResponse($payload, Response::HTTP_OK, []);
+
+        } catch (MongoDuplicateKeyException $e) {
+            return $this->renderResponse(['message' => $e->getMessage()], Response::HTTP_NOT_ACCEPTABLE);
+        }
+    }
+
+    /**
+     * @Route("/{appid}/{userid}/revokePermission", methods="GET")
+     *
+     * @param Request $request
+     * @param InvitationService $invitationService
+     * @param string $appid
+     * @param string $userid
+     */
+    public function revokeUserPermission( Request $request, InvitationService $invitationService, string $appid, string $userid){
+        try {
+
+            $this->denyAccessUnlessGranted([User::ROLE_ADMIN, User::ROLE_SUPER_ADMIN]);
+            $user = $invitationService->RevokePermission($appid, $userid);
+            return $this->renderResponse($user, Response::HTTP_OK, []);
+
         } catch (MongoDuplicateKeyException $e) {
             return $this->renderResponse(['message' => $e->getMessage()], Response::HTTP_NOT_ACCEPTABLE);
         }
