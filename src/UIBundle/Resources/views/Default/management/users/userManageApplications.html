@@ -52,17 +52,17 @@
                                     </td>
                                     <td data-title="Consult" data-label="Consult">
                                         <span>
-                                            <input type="radio" name="app_dashboard_[[ $index ]]" value="EDIT"
-                                                ng-checked="ctrl.getAclLevel(application.id, 'CONSULT')"
-                                                ng-click="ctrl.setAccess('CONSULT', 'ACCESS', application.id)" 
+                                            <input type="radio" name="app_dashboard_[[ $index ]]" value="EDITOR"
+                                                ng-checked="ctrl.getAclLevel(application.id, 'VIEWER ')"
+                                                ng-click="ctrl.setAccess('VIEWER ', 'ACCESS', application.id)" 
                                                 ng-disabled="!ctrl.hasAccess(application) || ctrl.user.id === application.owner.id"/>
                                         </span>
                                     </td>
                                     <td data-title="Edit" data-label="Edit">
                                         <span>
-                                            <input type="radio" name="app_dashboard_[[ $index ]]" value="EDIT"
-                                                ng-checked="ctrl.getAclLevel(application.id, 'EDIT')"
-                                                ng-click="ctrl.setAccess('EDIT', 'ACCESS', application.id)" 
+                                            <input type="radio" name="app_dashboard_[[ $index ]]" value="EDITOR"
+                                                ng-checked="ctrl.getAclLevel(application.id, 'EDITOR')"
+                                                ng-click="ctrl.setAccess('EDITOR', 'ACCESS', application.id)" 
                                                 ng-disabled="!ctrl.hasAccess(application) || ctrl.user.id === application.owner.id"/>
                                         </span>
                                     </td>

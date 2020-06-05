@@ -201,7 +201,7 @@ class EnvironmentService
                         ->setEnvironment($env)
                         ->setApplication($acl->getApplication())
                         ->setLevel($acl->getLevel())
-                        ->setAccess(AccessLevel::EDIT)
+                        ->setAccess(AccessLevel::EDITOR)
                     );
                     $this->userManager->update($user);
                 }
@@ -213,7 +213,7 @@ class EnvironmentService
                         ->setEnvironment($env)
                         ->setApplication($acl->getApplication())
                         ->setLevel($acl->getLevel())
-                        ->setAccess(AccessLevel::CONSULT)
+                        ->setAccess(AccessLevel::VIEWER )
                     );                
                 }
                 $this->userManager->update($user);

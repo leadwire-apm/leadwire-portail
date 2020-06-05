@@ -188,13 +188,13 @@ class AccessLevelService
             $user->addAccessLevel($accessLevel);
         }
         if($level === AccessLevel::REPORT){
-            if($access === AccessLevel::EDIT){
+            if($access === AccessLevel::EDITOR){
                 $this->es->updateRoleMapping("add", $environment->getName(), $user, $application->getName(), true, true);
             } else {
                 $this->es->updateRoleMapping("delete", $environment->getName(), $user, $application->getName(), true, true);
             } 
         } else {
-            if($access === AccessLevel::EDIT){
+            if($access === AccessLevel::EDITOR){
                 $this->es->updateRoleMapping("add", $environment->getName(), $user, $application->getName(), true, false);
             } else {
                 $this->es->updateRoleMapping("delete", $environment->getName(), $user, $application->getName(), true, false);

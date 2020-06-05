@@ -23,8 +23,9 @@ class AccessLevel
     const ACCESS = "ACCESS";
     const ALERT  = "ALERT";
 
-    const CONSULT = "CONSULT";
-    const EDIT = "EDIT";
+    const VIEWER  = "VIEWER ";
+    const EDITOR = "EDITOR";
+    const ADMIN = "ADMIN";
 
     /**
      * @var \MongoId

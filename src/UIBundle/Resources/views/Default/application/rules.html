@@ -37,22 +37,22 @@
                     [[invitation.user.username]]
                 </td>
                 <td data-title="Read" data-label="Read">
-                    <input type="radio" value="CONSULT" name="app_dashboard_[[ $index ]]"
-                        ng-checked="invitation.user.acl[ctrl.selectedEnvironment][ctrl.application.id]['ACCESS'] == 'CONSULT'"
-                        ng-click="ctrl.setAccess(invitation.user.id, 'CONSULT', 'ACCESS')" />
+                    <input type="radio" value="VIEWER " name="app_dashboard_[[ $index ]]"
+                        ng-checked="invitation.user.acl[ctrl.selectedEnvironment][ctrl.application.id]['ACCESS'] == 'VIEWER '"
+                        ng-click="ctrl.setAccess(invitation.user.id, 'VIEWER ', 'ACCESS')" />
                 </td>
                 <td data-title="Write" data-label="Write">
-                    <input type="radio" name="app_dashboard_[[ $index ]]" value="EDIT"
-                        ng-checked="invitation.user.acl[ctrl.selectedEnvironment][ctrl.application.id]['ACCESS'] == 'EDIT'"
-                        ng-click="ctrl.setAccess(invitation.user.id, 'EDIT', 'ACCESS')" />
+                    <input type="radio" name="app_dashboard_[[ $index ]]" value="EDITOR"
+                        ng-checked="invitation.user.acl[ctrl.selectedEnvironment][ctrl.application.id]['ACCESS'] == 'EDITOR'"
+                        ng-click="ctrl.setAccess(invitation.user.id, 'EDITOR', 'ACCESS')" />
                 </td>
                 <td data-title="Write" data-label="Write">
                     <input type="checkbox" />
                 </td>
                 <td data-title="Write" data-label="Write">
                     <input type="checkbox" ng-model="report"
-                        ng-checked="invitation.user.acl[ctrl.selectedEnvironment][ctrl.application.id]['REPORT'] == 'EDIT'"
-                        ng-click="ctrl.setAccess(invitation.user.id, 'EDIT', 'REPORT', !!report)" />
+                        ng-checked="invitation.user.acl[ctrl.selectedEnvironment][ctrl.application.id]['REPORT'] == 'EDITOR'"
+                        ng-click="ctrl.setAccess(invitation.user.id, 'EDITOR', 'REPORT', !!report)" />
                 </td>
             </tr>
         </tbody>

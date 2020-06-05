@@ -437,13 +437,13 @@ class ApplicationService
                     ->setEnvironment($environment)
                     ->setApplication($application)
                     ->setLevel(AccessLevel::ACCESS)
-                    ->setAccess(AccessLevel::EDIT)
+                    ->setAccess(AccessLevel::EDITOR)
                 );   
             $user->addAccessLevel((new AccessLevel())
                     ->setEnvironment($environment)
                     ->setApplication($application)
                     ->setLevel(AccessLevel::REPORT)
-                    ->setAccess(AccessLevel::EDIT)
+                    ->setAccess(AccessLevel::EDITOR)
                 );     
         }
         $this->userManager->update($user);
@@ -778,7 +778,7 @@ class ApplicationService
                 ->setEnvironment($env)
                 ->setApplication($demoApplication)
                 ->setLevel("ACCESS")
-                ->setAccess("CONSULT"));
+                ->setAccess("VIEWER "));
 
             $this->userManager->update($user);
 
