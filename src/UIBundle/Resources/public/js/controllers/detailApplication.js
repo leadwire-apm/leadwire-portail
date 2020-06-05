@@ -281,14 +281,6 @@
             return list;
         }
 
-        vm.filter = function (invitation) {
-            if (angular.isDefined(invitation.user) && vm.currentUser.id !== invitation.user.id) {
-                return true;
-            } else {
-                return false;
-            }
-        }
-
         vm.getApp = function () {
             ApplicationFactory.get($stateParams.id)
                 .then(function (res) {

@@ -28,7 +28,8 @@
                     <spinner is-loading="ctrl.ui.isLoading" size="24"></spinner>
                 </td>
             </tr>
-            <tr ng-repeat="invitation in ctrl.application.invitations | filter:ctrl.filter">
+            <tr ng-repeat="invitation in ctrl.application.invitations" 
+            ng-if="!invitation.pending && user.id !== invitation.user.id">
                 <td data-title="Name" data-label="Name">
                     [[invitation.user.email]]
                 </td>
