@@ -119,7 +119,9 @@
             swal(MESSAGES_CONSTANTS.SWEET_ALERT_VALIDATION())
                 .then(function (willDelete) {
                     if (willDelete) {
-                        WatcherService.delete(id)
+                        WatcherService.delete(id, 
+                            {'appId': vm.application.id, 
+                             'envId': vm.selectedEnvironment})
                             .then(function () {
                                 vm.watchersList.splice(index, 1);
                                 toastr.success(MESSAGES_CONSTANTS.SUCCESS);
@@ -133,7 +135,9 @@
         }
 
         vm.executeWatcher = function (id) {
-            WatcherService.execute(id)
+            WatcherService.execute(id,
+                {'appId': vm.application.id, 
+                'envId': vm.selectedEnvironment})
                 .then(function () {
                     toastr.success(MESSAGES_CONSTANTS.SUCCESS);
                 }).catch(function (err) {
@@ -318,7 +322,7 @@
                     application: {
                         id: vm.application.id,
                     },
-                })
+                },vm.selectedEnvironment)
                     .then(function () {
                         toastr.success(MESSAGES_CONSTANTS.INVITE_USER_SUCCESS);
                         vm.getApp();
@@ -355,7 +359,9 @@
                 .then(function (willDelete) {
                     if (willDelete) {
                         vm.ui.isDeleting = true;
-                        InvitationFactory.remove(id)
+                        InvitationFactory.remove(id, 
+                            {'appId': vm.application.id, 
+                            'envId': vm.selectedEnvironment})
                             .then(function () {
                                 swal.close();
                                 toastr.success(
@@ -366,6 +372,7 @@
                             })
                             .catch(function (error) {
                                 swal.close();
+                                vm.ui.isDeleting = false;
                                 toastr.error(
                                     error.message ||
                                     MESSAGES_CONSTANTS.DELETE_INVITATION_FAILURE ||
@@ -444,7 +451,8 @@
         }
 
         vm.updateDashboardMenu = function () {
-            ApplicationService.updateDashbaords(vm.application.id, vm.defaultDashboardsList)
+            ApplicationService.updateDashbaords(vm.application.id,vm.selectedEnvironment, 
+                vm.defaultDashboardsList)
                 .then(function () {
                     vm.flipActivityIndicator();
                     toastr.success(MESSAGES_CONSTANTS.EDIT_APP_SUCCESS);

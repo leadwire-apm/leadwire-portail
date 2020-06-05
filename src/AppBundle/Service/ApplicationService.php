@@ -867,4 +867,16 @@ class ApplicationService
         }
 
     }
+
+    public function userHasPermission($appId, User $user, $env, $listAcess) {
+        $hasPermission = false;
+        foreach($listAcess as $access){
+            $acc = $user->hasAppPermission($env, $appId,$access);
+
+            if($acc){
+                $hasPermission = $acc;
+            }
+        }
+        return $hasPermission ;
+    }
 }

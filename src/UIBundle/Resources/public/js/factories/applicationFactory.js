@@ -86,9 +86,9 @@
                 *
                 * @returns {Promise}
                 */
-                updateDashbaords: function (id, body) {
+                updateDashbaords: function (id, envId, body) {
                     return $http.put(
-                        CONFIG.BASE_URL + 'api/app/' + id + '/update-dashboards',
+                        CONFIG.BASE_URL + `api/app/${id}/${envId}/update-dashboards`,
                         body,
                     );
                 },

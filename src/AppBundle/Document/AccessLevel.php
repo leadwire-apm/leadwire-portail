@@ -20,8 +20,6 @@ use AppBundle\Document\Application;
 class AccessLevel
 {
     const ACCESS = "ACCESS";
-    const ALERT  = "ALERT";
-
     const VIEWER  = "VIEWER ";
     const EDITOR = "EDITOR";
     const ADMIN = "ADMIN";
