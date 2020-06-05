@@ -74,7 +74,7 @@ class InvitationController extends Controller
             $app["application"]["id"], 
             $user, 
             $envId, 
-            array(AccessLevel::ADMIN,AccessLevel::EDITOR))){
+            array(AccessLevel::ADMIN))){
             $successful = $invitationService->newInvitation($data, $this->getUser());
             return $this->renderResponse($successful);
         } else {
@@ -120,7 +120,7 @@ class InvitationController extends Controller
             $_data["appId"], 
             $user, 
             $_data["envId"],
-            array(AccessLevel::ADMIN,AccessLevel::EDITOR))){
+            array(AccessLevel::ADMIN))){
                 $invitationService->deleteInvitation($id);
                 return $this->renderResponse(null);
         } else {
