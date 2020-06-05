@@ -19,7 +19,6 @@ use AppBundle\Document\Application;
  */
 class AccessLevel
 {
-    const REPORT = "REPORT";
     const ACCESS = "ACCESS";
     const ALERT  = "ALERT";
 

@@ -17,10 +17,9 @@
             <tr>
                 <th class="col-md-3">User Email</th>
                 <th class="col-md-3">User Name</th>
-                <th class="col-md-2">Cosult</th>
-                <th class="col-md-2">Edit</th>
-                <th class="col-md-1">Alert</th>
-                <th class="col-md-1">Report</th>
+                <th class="col-md-2">Viewer</th>
+                <th class="col-md-2">Editor</th>
+                <th class="col-md-1">Admin</th>
             </tr>
         </thead>
         <tbody>
@@ -36,23 +35,20 @@
                 <td data-title="Email" data-label="Email">
                     [[invitation.user.username]]
                 </td>
-                <td data-title="Read" data-label="Read">
+                <td data-title="Viewer" data-label="Viewer">
                     <input type="radio" value="VIEWER " name="app_dashboard_[[ $index ]]"
                         ng-checked="invitation.user.acl[ctrl.selectedEnvironment][ctrl.application.id]['ACCESS'] == 'VIEWER '"
                         ng-click="ctrl.setAccess(invitation.user.id, 'VIEWER ', 'ACCESS')" />
                 </td>
-                <td data-title="Write" data-label="Write">
+                <td data-title="Editor" data-label="Editor">
                     <input type="radio" name="app_dashboard_[[ $index ]]" value="EDITOR"
                         ng-checked="invitation.user.acl[ctrl.selectedEnvironment][ctrl.application.id]['ACCESS'] == 'EDITOR'"
                         ng-click="ctrl.setAccess(invitation.user.id, 'EDITOR', 'ACCESS')" />
                 </td>
-                <td data-title="Write" data-label="Write">
-                    <input type="checkbox" />
-                </td>
-                <td data-title="Write" data-label="Write">
-                    <input type="checkbox" ng-model="report"
-                        ng-checked="invitation.user.acl[ctrl.selectedEnvironment][ctrl.application.id]['REPORT'] == 'EDITOR'"
-                        ng-click="ctrl.setAccess(invitation.user.id, 'EDITOR', 'REPORT', !!report)" />
+                <td data-title="Admin" data-label="Admin">
+                    <input type="radio" name="app_dashboard_[[ $index ]]" value="ADMIN"
+                        ng-checked="invitation.user.acl[ctrl.selectedEnvironment][ctrl.application.id]['ACCESS'] == 'ADMIN'"
+                        ng-click="ctrl.setAccess(invitation.user.id, 'ADMIN', 'ACCESS')" />
                 </td>
             </tr>
         </tbody>

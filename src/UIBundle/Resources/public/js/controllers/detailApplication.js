@@ -44,8 +44,32 @@
         vm.ownerTitle = "Owner Github :";
         var envName = "staging";
 
-        vm.isAdmin = function(user) {
-            return user.roles.indexOf("ROLE_SUPER_ADMIN") >= 0 || user.roles.indexOf("ROLE_ADMIN") >= 0;
+        vm.isAdmin = function (user) {
+            var access = false;
+            access = user.roles.indexOf("ROLE_SUPER_ADMIN") >= 0 || user.roles.indexOf("ROLE_ADMIN") >= 0;
+            if(!access){
+                if (vm.currentUser) {
+                    Object.keys(vm.currentUser.acl).forEach(element => {
+                        if (vm.currentUser.acl[element][vm.application.id].ACCESS === "ADMIN") {
+                            access = true;
+                        }
+                    });
+                }
+            }
+
+            return access;
+        }
+
+        vm.isEditor = function () {
+            var access = false;
+            if (vm.currentUser) {
+                Object.keys(vm.currentUser.acl).forEach(element => {
+                    if (vm.currentUser.acl[element][vm.application.id].ACCESS === "EDITOR") {
+                        access = true;
+                    }
+                });
+            }
+            return access;
         }
 
         /**
@@ -155,7 +179,7 @@
                     toastr.success(MESSAGES_CONSTANTS.ERROR);
                     vm.paginator.items = [];
                 });
-            
+
             vm.setWatcherLink();
         }
 
@@ -177,47 +201,35 @@
                 });
         }
 
-        vm.isErrorReport = function(msg) {
-            if(msg.toLowerCase().indexOf("error") >= 0){
+        vm.isErrorReport = function (msg) {
+            if (msg.toLowerCase().indexOf("error") >= 0) {
                 return true;
             }
 
             return false;
         }
 
-        vm.getReportTitre = function(watcher){
+        vm.getReportTitre = function (watcher) {
             var titre = "-";
-            vm.watchersList.forEach(function(element){
-                if(element.title === watcher){
+            vm.watchersList.forEach(function (element) {
+                if (element.title === watcher) {
                     titre = element.titre;
                 }
             })
             return titre;
         }
 
-        vm.getReportDashboard = function(watcher){
+        vm.getReportDashboard = function (watcher) {
             var dashboard = "-";
-            vm.watchersList.forEach(function(element){
-                if(element.title === watcher){
-                    dashboard =  vm.getDashboardName(element.dashboard);
+            vm.watchersList.forEach(function (element) {
+                if (element.title === watcher) {
+                    dashboard = vm.getDashboardName(element.dashboard);
                 }
             })
             return dashboard;
         }
 
-        vm.hasReportsRule = function () {
-            var access = false;
-            if (vm.currentUser) {
-                Object.keys(vm.currentUser.acl).forEach(element => {
-                    if (vm.currentUser.acl[element][vm.application.id].REPORT) {
-                        access = true;
-                    }
-                });
-            }
-            return access;
-        }
-
-        vm.setAccess = function (user, access, level, report) {
+        vm.setAccess = function (user, access, level) {
             acl = {
                 "user": user,
                 "env": vm.selectedEnvironment,
@@ -225,54 +237,38 @@
                 "level": level,
                 "access": access
             };
-
-            if (angular.isDefined(report) && !report) {
-                AccessLevelService.deleteAccess(acl)
-                    .then(function (response) {
-                        var __app = { ...vm.application };
-                        __app.invitations.forEach((element, id) => {
-                            if (element.user && element.user.id === user) {
-                                vm.application.invitations[id].user.acl = response.data.acls;
-                            }
-                        });
-                        toastr.success(MESSAGES_CONSTANTS.SUCCESS);
-                    })
-                    .catch(function (error) {
-                        toastr.success(MESSAGES_CONSTANTS.ERROR);
-                        vm.flipActivityIndicator('isLoading');
-                        vm.getApp();
+            
+            AccessLevelService.setAccess(acl)
+                .then(function (response) {
+                    var __app = { ...vm.application };
+                    __app.invitations.forEach((element, id) => {
+                        if (element.user && element.user.id === user) {
+                            vm.application.invitations[id].user.acl = response.data.acls;
+                        }
                     });
-            } else {
-                AccessLevelService.setAccess(acl)
-                    .then(function (response) {
-                        var __app = { ...vm.application };
-                        __app.invitations.forEach((element, id) => {
-                            if (element.user && element.user.id === user) {
-                                vm.application.invitations[id].user.acl = response.data.acls;
-                            }
-                        });
-                        toastr.success(MESSAGES_CONSTANTS.SUCCESS);
-                    })
-                    .catch(function (error) {
-                        toastr.success(MESSAGES_CONSTANTS.ERROR);
-                        vm.flipActivityIndicator('isLoading');
-                        vm.getApp();
-                    });
-            }
-
+                    toastr.success(MESSAGES_CONSTANTS.SUCCESS);
+                })
+                .catch(function (error) {
+                    toastr.success(MESSAGES_CONSTANTS.ERROR);
+                    vm.flipActivityIndicator('isLoading');
+                    vm.getApp();
+                });
 
         }
 
-        vm.getEnvironmentsForReport = function () {
-
-            if (vm.application && $rootScope.user.id === vm.application.owner.id) {
+        vm.getEnvironmentsForReport = function (user) {
+            var isAdmin = user.roles.indexOf("ROLE_SUPER_ADMIN") >= 0 || user.roles.indexOf("ROLE_ADMIN") >= 0;
+            if (vm.application && $rootScope.user.id === vm.application.owner.id || isAdmin) {
                 return vm.environments;
             }
 
             var list = [];
 
             vm.environments.forEach(environment => {
-                if (vm.currentUser && angular.isDefined(vm.currentUser.acl[environment.id][vm.application.id].REPORT)) {
+                if (vm.currentUser && 
+                    angular.isDefined(vm.currentUser.acl[environment.id][vm.application.id].ACCESS === "VIEWER") ||
+                    angular.isDefined(vm.currentUser.acl[environment.id][vm.application.id].ACCESS === "EDITOR") ||
+                    angular.isDefined(vm.currentUser.acl[environment.id][vm.application.id].ACCESS === "ADMIN")) {
                     list.push(environment);
                     vm.selectedEnvironment = environment.id;
                 }
@@ -282,7 +278,7 @@
         }
 
         vm.filter = function (invitation) {
-            if (angular.isDefined(invitation.user)) {
+            if (angular.isDefined(invitation.user) && vm.currentUser.id !== invitation.user.id) {
                 return true;
             } else {
                 return false;
@@ -443,24 +439,24 @@
             vm.loadStats();
         };
 
-        vm.getDashboardByTheme = function(name){
+        vm.getDashboardByTheme = function (name) {
             return vm.defaultDashboardsList[name];
         }
 
-        vm.updateDashboardMenu = function() {
+        vm.updateDashboardMenu = function () {
             ApplicationService.updateDashbaords(vm.application.id, vm.defaultDashboardsList)
-            .then(function() {
-                vm.flipActivityIndicator();
-                toastr.success(MESSAGES_CONSTANTS.EDIT_APP_SUCCESS);
-            })
-            .catch(function(error) {
-                vm.flipActivityIndicator();
-                toastr.error(
-                    error.message ||
+                .then(function () {
+                    vm.flipActivityIndicator();
+                    toastr.success(MESSAGES_CONSTANTS.EDIT_APP_SUCCESS);
+                })
+                .catch(function (error) {
+                    vm.flipActivityIndicator();
+                    toastr.error(
+                        error.message ||
                         MESSAGES_CONSTANTS.EDIT_APP_FAILURE ||
                         MESSAGES_CONSTANTS.ERROR
-                );
-            });
+                    );
+                });
         }
     }
 })(window.angular, window.swal, window.moment);

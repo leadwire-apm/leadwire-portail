@@ -10,12 +10,6 @@
                     acl
                 );
             },
-            deleteAccess: function (acl) {
-                return $http.post(
-                    CONFIG.BASE_URL + 'api/access-level/delete',
-                    acl
-                );
-            }
         };
     }
 })(window.angular);
