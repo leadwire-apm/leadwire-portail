@@ -2,11 +2,12 @@
     angular.module('leadwireApp')
         .controller('anomalyController', [
             '$sce',
+            'CONFIG',
             ManagerAnomalyCtrlFN,
         ]);
 
-    function ManagerAnomalyCtrlFN($sce) {
+    function ManagerAnomalyCtrlFN($sce, CONFIG) {
         var vm = this;
-        vm.setAnomalyLink = $sce.trustAsResourceUrl("https://kibana.leadwire.io/app/opendistro-anomaly-detection-kibana#/dashboard?embed=true");
+        vm.setAnomalyLink = $sce.trustAsResourceUrl(`${CONFIG.LEADWIRE_KIBANA_HOST}/app/opendistro-anomaly-detection-kibana#/dashboard?embed=true`);
     }
 })(window.angular);

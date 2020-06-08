@@ -66,8 +66,10 @@
                     return "now-30m";
                 case "Today":
                     return "now/d";
-                case "Last 7 Days":
+                case "This Week":
                     return "now/w";
+                case "Last 7 Days":
+                    return "now-7d";
                 case "Last 30 Days":
                     return "now-30d";
                 case "Last Year":
@@ -125,6 +127,7 @@
                 'Last 15 minutes': [moment().subtract(15, 'minutes'), moment()],
                 'Last 30 minutes': [moment().subtract(30, 'minutes'), moment()],
                 'Today': [moment(), moment()],
+                'This Week': [moment().startOf('isoWeek'), moment()],
                 'Last 7 Days': [moment().subtract(6, 'days'), moment()],
                 'Last 30 Days': [moment().subtract(29, 'days'), moment()],
                 'Last Year': [moment().subtract(12, 'month'), moment()]

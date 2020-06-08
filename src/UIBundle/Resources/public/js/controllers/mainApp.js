@@ -211,21 +211,12 @@
             });
         };
 
+        window.onunload = () => {
+           alert('okkk')
+         }
+
         $scope.logout = function () {
-            delete $localStorage.user;
-            delete $localStorage.currentMenu;
-            delete $localStorage.applications;
-            delete $localStorage.dashboards;
-            delete $localStorage.selectedAppId;
-            delete $localStorage.selectedApp;
-            delete $localStorage.selectedEnvId;
-            delete $localStorage.selectedEnv;
-
-            delete $localStorage.date;
-            delete $localStorage.refresh;
-            delete $localStorage.chosenLabel;
-            delete $localStorage.mode;
-
+            window.localStorage.clear();
             $auth.logout()
                 .then(function () {
                     toastr.info(MESSAGES_CONSTANTS.LOGOUT_SUCCESS);
