@@ -21,19 +21,18 @@ class DashboardManager extends AbstractManager
     /**
      * Get Dashboard 
      *
-     * @param string $userId
      * @param string $applicationId
      * @param string $dashboardId
      *
      * @return Dashboard
      */
-    public function getOrCreateDashboard($userId, $applicationId, $dashboardId, $visible = true)
+    public function getOrCreateDashboard($applicationId, $dashboardId, $visible = true)
     {
         /** @var Dashboard $dashboard */
-        $dashboard = $this->getDocumentRepository()->findOneBy(['applicationId' => $applicationId, 'userId' => $userId, 'dashboardId' => $dashboardId]);
+        $dashboard = $this->getDocumentRepository()->findOneBy(['applicationId' => $applicationId, 'dashboardId' => $dashboardId]);
 
         if ($dashboard === null) {
-            $dashboard = $this->create($userId, $applicationId, $dashboardId, $visible);
+            $dashboard = $this->create($applicationId, $dashboardId, $visible);
         }
 
         return $dashboard;
@@ -42,32 +41,28 @@ class DashboardManager extends AbstractManager
     /**
      * Get Dashboard 
      *
-     * @param string $userId
      * @param string $applicationId
      * @param string $dashboardId
      *
      * @return Dashboard
      */
-    public function getDashboard($userId, $applicationId, $dashboardId)
+    public function getDashboard($applicationId, $dashboardId)
     {
-        return $this->getDocumentRepository()->findOneBy(['applicationId' => $applicationId, 'userId' => $userId, 'dashboardId' => $dashboardId]);
+        return $this->getDocumentRepository()->findOneBy(['applicationId' => $applicationId, 'dashboardId' => $dashboardId]);
     }
 
     /**
      *
-     * @param string $userId
      * @param string $applicationId
      * @param string $dashboardId
      * @param boolean $visible
      *
      * @return Dashboard
      */
-    public function create($userId, $applicationId, $dashboardId, $visible = true): Dashboard
+    public function create($applicationId, $dashboardId, $visible = true): Dashboard
     {
         $dashboard = new Dashboard();
-        $dashboard
-            ->setUserId($userId)
-            ->setApplicationId($applicationId)
+        $dashboard->setApplicationId($applicationId)
             ->setDashboardId($dashboardId)
             ->setVisible($visible);
 

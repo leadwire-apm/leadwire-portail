@@ -807,7 +807,7 @@ class ApplicationService
             foreach ($array_keys as $value) {
                 foreach ($array[$value] as $element) {
                    
-                    $dashboard = $this->dashboardManager->getDashboard($userId, $applicationId, $element['id']);
+                    $dashboard = $this->dashboardManager->getDashboard($applicationId, $element['id']);
                     $dashboard->setVisible($element['visible']);
                     $this->dashboardManager->update($dashboard);
                     $state['successful'] = true;
