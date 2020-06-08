@@ -304,12 +304,12 @@ class InvitationService
                 $envName = $environment->getName();
                 $this->es->updateRoleMapping("add", $envName, $invitedUser, $application->getName(), false, false);
                
-                // set app data access level to read for invited user
+                // set app data access level to read for application
                 $invitedUser->addAccessLevel((new AccessLevel())
                         ->setEnvironment($environment)
                         ->setApplication($application)
                         ->setLevel(AccessLevel::ACCESS)
-                        ->setAccess(AccessLevel::CONSULT));
+                        ->setAccess(AccessLevel::VIEWER ));
 
                 $this->userManager->update($invitedUser);
             }
@@ -355,7 +355,7 @@ class InvitationService
                     ->setEnvironment($environment)
                     ->setApplication($application)
                     ->setLevel(AccessLevel::ACCESS)
-                    ->setAccess(AccessLevel::CONSULT));
+                    ->setAccess(AccessLevel::VIEWER));
 
             $this->userManager->update($invitedUser);
         }

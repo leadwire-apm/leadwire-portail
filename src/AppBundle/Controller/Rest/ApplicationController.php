@@ -25,6 +25,7 @@ use AppBundle\Manager\ApplicationManager;
 use AppBundle\Service\ProcessService;
 use AppBundle\Service\CuratorService;
 use AppBundle\Service\InvitationService;
+use AppBundle\Document\AccessLevel;
 
 
 class ApplicationController extends Controller
@@ -457,17 +458,31 @@ class ApplicationController extends Controller
     }
 
     /**
-     * @Route("/{id}/update-dashboards", methods="PUT")
+     * @Route("/{id}/{envId}/update-dashboards", methods="PUT")
      *
      * @param Request $request
      * @param ApplicationService $applicationService
      * @param string $id
+     * @param string $envId
      */
-    public function updateApplicationActionDashboards( Request $request, ApplicationService $applicationService, string $id){
+    public function updateApplicationActionDashboards( 
+        Request $request, 
+        ApplicationService $applicationService, 
+        string $id,
+        string $envId){
         try{
             $data = $request->getContent();
-            $state = $applicationService->updateApplicationDashboards($data, $id, $this->getUser()->getId());
-            return $this->renderResponse($state['successful']);
+            $user = $this->getUser();
+            if($applicationService->userHasPermission(
+                $id, 
+                $user, 
+                $envId,
+                array(AccessLevel::ADMIN, AccessLevel::EDITOR))){
+                    $state = $applicationService->updateApplicationDashboards($data, $id, $user->getId());
+                    return $this->renderResponse($state['successful']);
+                } else {
+                return $this->exception(['message' => "You dont have rights permissions"], 400);
+            }
         } catch (MongoDuplicateKeyException $e) {
             return $this->renderResponse(['message' => $e->getMessage()], Response::HTTP_NOT_ACCEPTABLE);
         }

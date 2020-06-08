@@ -1,7 +1,7 @@
 <?php declare (strict_types = 1);
 
 namespace AppBundle\Controller\Rest;
-
+use AppBundle\Service\ApplicationService;
 use AppBundle\Document\AccessLevel;
 use AppBundle\Service\AccessLevelService;
 use AppBundle\Service\UserService;
@@ -22,53 +22,37 @@ class AccessLevelController extends Controller
      *
      * @param Request            $request
      * @param AccessLevelService $accessLevelService
-     *
+     * @param ApplicationService $applicationService
      * @return Response
      */
-    public function updateAction(Request $request, AccessLevelService $accessLevelService)
+    public function updateAction(
+        Request $request, 
+        AccessLevelService $accessLevelService,
+        ApplicationService $applicationService)
     {
         try {
             $acl = $request->getContent();
-            $user = $accessLevelService->update(json_decode($acl, true));
+            $data = json_decode($acl, true);
+            $currentUser = $this->getUser();
 
-            $payload = [
-                "id" => $user->getId(),
-                "name" => $user->getName(),
-                "username" => $user->getUsername(),
-                "email" => $user->getEmail(),
-                "acls" => $user->acl(),
-            ];
+            if($applicationService->userHasPermission(
+                $data["app"], 
+                $currentUser, 
+                $data["env"], 
+                array(AccessLevel::ADMIN))){
+                    $user = $accessLevelService->update($data);
+                    $payload = [
+                        "id" => $user->getId(),
+                        "name" => $user->getName(),
+                        "username" => $user->getUsername(),
+                        "email" => $user->getEmail(),
+                        "acls" => $user->acl(),
+                    ];
+                    return $this->renderResponse($payload, Response::HTTP_OK, []);
+                }else{
+                    return $this->exception(['message' => "You dont have rights permissions"], 400);
+                }
 
-            return $this->renderResponse($payload, Response::HTTP_OK, []);
-        } catch (\Exception $e) {
-            return $this->exception($e->getMessage(), 400);
-        }
-    }
-
-
-    /**
-     * @Route("/delete", methods="POST")
-     *
-     * @param Request            $request
-     * @param AccessLevelService $accessLevelService
-     *
-     * @return Response
-     */
-    public function deleteAction(Request $request, AccessLevelService $accessLevelService)
-    {
-        try {
-            $acl = $request->getContent();
-            $user = $accessLevelService->delete(json_decode($acl, true));
-
-            $payload = [
-                "id" => $user->getId(),
-                "name" => $user->getName(),
-                "username" => $user->getUsername(),
-                "email" => $user->getEmail(),
-                "acls" => $user->acl(),
-            ];
-
-            return $this->renderResponse($payload, Response::HTTP_OK, []);
         } catch (\Exception $e) {
             return $this->exception($e->getMessage(), 400);
         }

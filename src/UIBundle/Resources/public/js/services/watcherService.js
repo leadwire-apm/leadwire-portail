@@ -37,8 +37,8 @@
             });
         }
 
-        service.delete = function (id) {
-            return WatcherFactory.delete(id)
+        service.delete = function (id, data) {
+            return WatcherFactory.delete(id, data)
             .then(function (response) {
                 if(response.status === 200)
                     return response.data;
@@ -50,8 +50,8 @@
             });
         }
 
-        service.execute = function (id) {
-            return WatcherFactory.execute(id)
+        service.execute = function (id, data) {
+            return WatcherFactory.execute(id, data)
             .then(function (response) {
                 if(response.status === 200)
                     return response.data;

@@ -35,9 +35,5 @@
         service.setAccess = function (acl) {
             return AccessLevelFactory.setAccess(acl);
         }
-
-        service.deleteAccess = function (acl) {
-            return AccessLevelFactory.deleteAccess(acl);
-        }
     }
 })(window.angular);

@@ -93,34 +93,6 @@ class AccessLevelService
     }
 
     /**
-     * delete
-     *
-     * @param array $json
-     *
-     * @return User
-     */
-    public function delete($payload)
-    {
-        $env = $payload['env'];
-        $app = $payload['app'];
-        $level = $payload['level'];
-        $user = $this->userManager->getOneBy(['id' => $payload['user']]);
-        $environment = $this->environmentService->getById($env);
-        $application = $this->applicationService->getById($app);
-        $accessLevel = $user->getAccessLevelsApp($env, $app, $level);
-        $user->removeAccessLevel($accessLevel);
-
-        if($level === AccessLevel::REPORT){
-            $this->es->updateRoleMapping("delete", $environment->getName(), $user, $application->getName(), true, true);
-        } else {
-            $this->es->updateRoleMapping("delete", $environment->getName(), $user, $application->getName(), true, false);
-        }  
-
-        $this->userManager->update($user);
-        return $user;
-    }
-
-    /**
      * Update
      *
      * @param array $json
@@ -187,21 +159,19 @@ class AccessLevelService
             $accessLevel->setAccess($access);
             $user->addAccessLevel($accessLevel);
         }
-        if($level === AccessLevel::REPORT){
-            if($access === AccessLevel::EDIT){
+        if($level === AccessLevel::ACCESS) {
+            if($access === AccessLevel::EDITOR || $access === AccessLevel::ADMIN) {
+                //add watcher access
                 $this->es->updateRoleMapping("add", $environment->getName(), $user, $application->getName(), true, true);
-            } else {
-                $this->es->updateRoleMapping("delete", $environment->getName(), $user, $application->getName(), true, true);
-            } 
-        } else {
-            if($access === AccessLevel::EDIT){
+                //add write access
                 $this->es->updateRoleMapping("add", $environment->getName(), $user, $application->getName(), true, false);
             } else {
+               //delete watcher access
+                $this->es->updateRoleMapping("delete", $environment->getName(), $user, $application->getName(), true, true);
+               //delete write access
                 $this->es->updateRoleMapping("delete", $environment->getName(), $user, $application->getName(), true, false);
             } 
         }
-         
-
         $this->userManager->update($user);
     }
 

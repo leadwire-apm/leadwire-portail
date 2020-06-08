@@ -1167,6 +1167,32 @@ class User implements AdvancedUserInterface
     }
 
     /**
+     * Get access levels
+     *
+     * @return mixed
+     */
+    public function hasAppPermission($env, $app, $access)
+    {
+        if ($this->accessLevels == null) {
+            $this->accessLevels = new ArrayCollection();
+        }
+        $acls = $this->accessLevels->toArray();
+        $hasPermission = false;
+
+        foreach ($acls as $acl) {
+            if (
+                $env == (string) $acl->getEnvironment()->getId()
+                && $app == (string) $acl->getApplication()->getId()
+                && $access == $acl->getAccess()
+            ) {
+                $hasPermission = true;
+            }
+        }
+
+        return $hasPermission;
+    }
+
+    /**
      * remove access levels
      *
      * @param string $env

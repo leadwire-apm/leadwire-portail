@@ -16,14 +16,15 @@
                     {appId, envId}
                 );
             },
-            delete: function (id) {
-                return $http.delete(
-                    CONFIG.BASE_URL + `api/watcher/${id}/delete`
+            delete: function (id, data) {
+                return $http.post(
+                    CONFIG.BASE_URL + `api/watcher/${id}/delete`, data
                 );
             },
-            execute: function (id) {
+            execute: function (id, data) {
                 return $http.post(
-                    CONFIG.BASE_URL + `api/watcher/${id}/execute`
+                    CONFIG.BASE_URL + `api/watcher/${id}/execute`,
+                    data
                 );
             },
         };

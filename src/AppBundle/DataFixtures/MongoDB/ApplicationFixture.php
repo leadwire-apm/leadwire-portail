@@ -65,7 +65,7 @@ class ApplicationFixture extends AbstractFixture implements OrderedFixtureInterf
             ->setEnvironment($environment)
             ->setApplication($demo)
             ->setLevel(AccessLevel::ACCESS)
-            ->setAccess(AccessLevel::EDIT);
+            ->setAccess(AccessLevel::ADMIN);
         $user->addAccessLevel($accessLevelAppDashboard);
 
         $manager->persist($user);

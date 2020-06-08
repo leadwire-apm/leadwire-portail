@@ -27,8 +27,9 @@
                                 <tr>
                                     <th class="text-center">Name</th>
                                     <th class="text-center">Owner</th>
-                                    <th class="text-center">Consult</th>
-                                    <th class="text-center">Edit</th>
+                                    <th class="text-center">Viewer</th>
+                                    <th class="text-center">Editor</th>
+                                    <th class="text-center">Admin</th>
                                     <th colspan="3" class="text-center">Actions</th>
                                 </tr>
                             </thead>
@@ -50,19 +51,27 @@
                                             style="color: #2ECC71;" data-toggle="tooltip" data-placement="top"
                                             title="application owner"></span>
                                     </td>
-                                    <td data-title="Consult" data-label="Consult">
+                                    <td data-title="Viewer" data-label="Viewer">
                                         <span>
-                                            <input type="radio" name="app_dashboard_[[ $index ]]" value="EDIT"
-                                                ng-checked="ctrl.getAclLevel(application.id, 'CONSULT')"
-                                                ng-click="ctrl.setAccess('CONSULT', 'ACCESS', application.id)" 
+                                            <input type="radio" name="app_dashboard_[[ $index ]]" value="VIEWER"
+                                                ng-checked="ctrl.getAclLevel(application.id, 'VIEWER ')"
+                                                ng-click="ctrl.setAccess('VIEWER ', 'ACCESS', application.id)" 
                                                 ng-disabled="!ctrl.hasAccess(application) || ctrl.user.id === application.owner.id"/>
                                         </span>
                                     </td>
-                                    <td data-title="Edit" data-label="Edit">
+                                    <td data-title="Editor" data-label="Editor">
                                         <span>
-                                            <input type="radio" name="app_dashboard_[[ $index ]]" value="EDIT"
-                                                ng-checked="ctrl.getAclLevel(application.id, 'EDIT')"
-                                                ng-click="ctrl.setAccess('EDIT', 'ACCESS', application.id)" 
+                                            <input type="radio" name="app_dashboard_[[ $index ]]" value="EDITOR"
+                                                ng-checked="ctrl.getAclLevel(application.id, 'EDITOR')"
+                                                ng-click="ctrl.setAccess('EDITOR', 'ACCESS', application.id)" 
+                                                ng-disabled="!ctrl.hasAccess(application) || ctrl.user.id === application.owner.id"/>
+                                        </span>
+                                    </td>
+                                    <td data-title="Admin" data-label="Admin">
+                                        <span>
+                                            <input type="radio" name="app_dashboard_[[ $index ]]" value="ADMIN"
+                                                ng-checked="ctrl.getAclLevel(application.id, 'ADMIN')"
+                                                ng-click="ctrl.setAccess('ADMIN', 'ACCESS', application.id)" 
                                                 ng-disabled="!ctrl.hasAccess(application) || ctrl.user.id === application.owner.id"/>
                                         </span>
                                     </td>

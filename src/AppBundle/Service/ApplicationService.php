@@ -437,13 +437,7 @@ class ApplicationService
                     ->setEnvironment($environment)
                     ->setApplication($application)
                     ->setLevel(AccessLevel::ACCESS)
-                    ->setAccess(AccessLevel::EDIT)
-                );   
-            $user->addAccessLevel((new AccessLevel())
-                    ->setEnvironment($environment)
-                    ->setApplication($application)
-                    ->setLevel(AccessLevel::REPORT)
-                    ->setAccess(AccessLevel::EDIT)
+                    ->setAccess(AccessLevel::ADMIN)
                 );     
         }
         $this->userManager->update($user);
@@ -778,7 +772,7 @@ class ApplicationService
                 ->setEnvironment($env)
                 ->setApplication($demoApplication)
                 ->setLevel("ACCESS")
-                ->setAccess("CONSULT"));
+                ->setAccess("VIEWER "));
 
             $this->userManager->update($user);
 
@@ -872,5 +866,17 @@ class ApplicationService
             return $application;
         }
 
+    }
+
+    public function userHasPermission($appId, User $user, $env, $listAcess) {
+        $hasPermission = false;
+        foreach($listAcess as $access){
+            $acc = $user->hasAppPermission($env, $appId,$access);
+
+            if($acc){
+                $hasPermission = $acc;
+            }
+        }
+        return $hasPermission ;
     }
 }

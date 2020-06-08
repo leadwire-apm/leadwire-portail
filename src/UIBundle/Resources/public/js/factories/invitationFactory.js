@@ -4,9 +4,9 @@
         'CONFIG',
         function($http, CONFIG) {
             return {
-                save: function(body) {
+                save: function(body, envId) {
                     return $http.post(
-                        CONFIG.BASE_URL + 'api/invitation/new',
+                        CONFIG.BASE_URL + `api/invitation/${envId}/new`,
                         body
                     );
                 },
@@ -21,9 +21,10 @@
                         body
                     );
                 },
-                remove: function(id) {
-                    return $http.delete(
-                        CONFIG.BASE_URL + 'api/invitation/' + id + '/delete'
+                remove: function(id, data) {
+                    return $http.post(
+                        CONFIG.BASE_URL + 'api/invitation/' + id + '/delete',
+                        data
                     );
                 },
                 accept: function(id, body) {

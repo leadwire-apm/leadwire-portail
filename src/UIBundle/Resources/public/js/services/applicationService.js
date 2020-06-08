@@ -174,8 +174,8 @@
                     });
             }
 
-            service.updateDashbaords =  function (id, dashboards) {
-                return ApplicationFactory.updateDashbaords(id, dashboards)
+            service.updateDashbaords =  function (id, envId, dashboards) {
+                return ApplicationFactory.updateDashbaords(id, envId, dashboards)
                     .then(function (response) {
                         return response.data;
                     })
