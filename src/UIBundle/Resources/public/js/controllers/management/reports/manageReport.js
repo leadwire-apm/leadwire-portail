@@ -4,10 +4,11 @@
             '$sce',
             '$localStorage',
             '$scope',
+            'CONFIG',
             ManageReportCtrlFN,
         ]);
 
-    function ManageReportCtrlFN($sce, $localStorage, $scope) {
+    function ManageReportCtrlFN($sce, $localStorage, $scope, CONFIG) {
         var vm = this;
         vm.refresh = $localStorage.refresh || "0";
 
@@ -26,10 +27,10 @@
                 from = startDate;
                 to = endDate;
             }
-            vm.setReportLink = $sce.trustAsResourceUrl(`https://kibana.leadwire.io/app/sentinl#/reports?embed=true&_g=(refreshInterval:(pause:${autoRefresh},value:${ref}),time:(from:'${from}',mode:${mode},to:'${to}'))`);
+            vm.setReportLink = $sce.trustAsResourceUrl(`${CONFIG.LEADWIRE_KIBANA_HOST}/app/sentinl#/reports?embed=true&_g=(refreshInterval:(pause:${autoRefresh},value:${ref}),time:(from:'${from}',mode:${mode},to:'${to}'))`);
             $scope.$apply()
         } else {
-            vm.setReportLink = $sce.trustAsResourceUrl(`https://kibana.leadwire.io/app/sentinl#/reports?embed=true&_g=(refreshInterval:(pause:!t,value:${vm.refresh * 1000}),time:(from:now-15m,mode:quick,to:now))`);
+            vm.setReportLink = $sce.trustAsResourceUrl(`${CONFIG.LEADWIRE_KIBANA_HOST}/app/sentinl#/reports?embed=true&_g=(refreshInterval:(pause:!t,value:${vm.refresh * 1000}),time:(from:now-15m,mode:quick,to:now))`);
             $scope.$apply()
         }
 
@@ -103,7 +104,7 @@
             }
 
             var ref = (parseInt(vm.refresh) * 1000).toString()
-            vm.setReportLink = $sce.trustAsResourceUrl(`https://kibana.leadwire.io/app/sentinl#/reports?embed=true&_g=(refreshInterval:(pause:${autoRefresh},value:${ref}),time:(from:'${from}',mode:${mode},to:'${to}'))`);
+            vm.setReportLink = $sce.trustAsResourceUrl(`${CONFIG.LEADWIRE_KIBANA_HOST}/app/sentinl#/reports?embed=true&_g=(refreshInterval:(pause:${autoRefresh},value:${ref}),time:(from:'${from}',mode:${mode},to:'${to}'))`);
         }
 
     }
