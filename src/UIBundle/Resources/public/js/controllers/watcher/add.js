@@ -50,8 +50,9 @@
             {key:"now-15m", value:"Last 15 minutes"},
             {key:"now-30m", value:"Last 30 minutes"},
             {key:"now-4h", value:"Last 4 hours"},
-            {key:"now/d", value:"Today "},
-            {key:"now/w", value:"Last 7 Days "},
+            {key:"now/d", value:"Today"},
+            {key:"now/w", value:"This Week"},
+            {key:"now-7d", value:"Last 7 Days"},
             {key:"now-30d", value:"Last 30 Days"},
             {key:"now-1y", value:"Last Year"},
         ];
