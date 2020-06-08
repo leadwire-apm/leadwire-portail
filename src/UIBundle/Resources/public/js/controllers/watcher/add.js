@@ -81,7 +81,7 @@
         vm.setTenant = function () {
             vm.dashboardsList.map( el => {
                 if(el.id === vm.watcher.dashboard){
-                    if(el.group === 'custom')
+                    if(el.group.toLowerCase() === 'custom')
                         tenant = `${$modalInstance.envName +"-shared-"+ $modalInstance.appName}`;
                     else
                         tenant = `${$modalInstance.envName +"-app-"+ $modalInstance.appName}`;
