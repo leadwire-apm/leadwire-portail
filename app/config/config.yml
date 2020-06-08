@@ -45,6 +45,7 @@ parameters:
     setup_demo: '%env(LEADWIRE_SETUP_DEMO)%'
     setup_ldap: '%env(LEADWIRE_SETUP_LDAP)%'
     logout_url: '%env(LEADWIRE_LOGOUT_URL)%'
+    leadwire_kibana_host: '%env(LEADWIRE_KIBANA_HOST)%'
     kibana_admin_username: '%env(LEADWIRE_KIBANA_ADMIN_USERNAME)%'
     has_all_user_tenant: false
     auth_providers:
@@ -123,6 +124,7 @@ twig:
         LEADWIRE_JENKINS_URL: '%jenkins_url%'
         LEADWIRE_STRIPE_ENABLED: '%stripe_enabled%'
         LEADWIRE_LOGOUT_URL: '%logout_url%'
+        LEADWIRE_KIBANA_HOST: '%leadwire_kibana_host%'
     paths:
         '%kernel.project_dir%/src/UIBundle/Resources/views/Default': ~
 
