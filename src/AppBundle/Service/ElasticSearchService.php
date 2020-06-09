@@ -2255,7 +2255,47 @@ $config =  [
         }
     }
     
-    
+    function addPipline($name, $body): bool{
+        try {
+
+            $status = false;
+
+            $url = $this->url . "_ingest/pipeline/" . $name ;
+           
+            $response = $this->httpClient->put(
+
+                $url,
+                [
+                    'auth' => $this->getAuth(),
+                    'headers' => [
+                        "Content-Type" => "application/json",
+                    ],
+                    'body' => \json_encode($body),
+                ]
+
+            );
+
+            $this->logger->notice(
+                "leadwire.opendistro.addPipline",
+                [
+                    'url' => $url,
+                    'verb' => 'PUT',
+                    'status_code' => $response->getStatusCode(),
+                    'status_text' => $response->getReasonPhrase()
+                ]
+            );
+            
+            if($response->getStatusCode() == 201){
+                $status= true;
+            }
+
+            return $status;
+
+        } catch (\Exception $e) {
+            $this->logger->error($e->getMessage());
+            throw new HttpException("An error has occurred while executing your request.",400);
+        }
+    }
     
     
 }

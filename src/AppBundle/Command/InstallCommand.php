@@ -160,6 +160,13 @@ Load default Application Type. Insert template for Kibana and more..'
             $planService->createDefaultPlans();
         }
 
+        $string = file_get_contents("./app/Resources/templates/v7.2.1/pipelines/pipeline.json");
+
+        $json_a = json_decode($string, true);
+
+        foreach ($json_a as $name => $body) {
+            $es->addPipline($name, $body);
+        }
 
         return 0;
     }
