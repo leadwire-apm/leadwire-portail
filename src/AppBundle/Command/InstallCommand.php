@@ -87,7 +87,7 @@ Load default Application Type. Insert template for Kibana and more..'
             }
         }
 
-        $this->loadFixtures($output, $purge);
+        $this->loadFixtures($output, true);
        
         if ($setupLdap){
         $this->display($output, "Creating LDAP entries for admin user");
