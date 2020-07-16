@@ -87,7 +87,7 @@ Load default Application Type. Insert template for Kibana and more..'
             }
         }
 
-        $this->loadFixtures($output, true);
+        $this->loadFixtures($output, $purge);
        
         if ($setupLdap){
         $this->display($output, "Creating LDAP entries for admin user");
@@ -215,7 +215,7 @@ Load default Application Type. Insert template for Kibana and more..'
                 $output->writeln(sprintf('  <comment>></comment> <info>%s</info>', $message));
             }
         );
-        $executor->execute($fixtures, false);
+        $executor->execute($fixtures, !$purge);
     }
 
     private function display($output, $message)
