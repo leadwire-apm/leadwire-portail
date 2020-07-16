@@ -176,9 +176,9 @@ Load default Application Type. Insert template for Kibana and more..'
          
     private function loadFixtures($output, $purge)
     {
-        if ($purge === false) {
-            return;
-        }
+        //if ($purge === false) {
+        //    return;
+        //}
 
         /** @var DocumentManager $dm */
         $dm = $this->getContainer()->get('doctrine_mongodb')->getManager();
