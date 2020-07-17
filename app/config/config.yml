@@ -47,6 +47,8 @@ parameters:
     logout_url: '%env(LEADWIRE_LOGOUT_URL)%'
     leadwire_kibana_host: '%env(LEADWIRE_KIBANA_IFRAME_HOST)%'
     kibana_admin_username: '%env(LEADWIRE_KIBANA_ADMIN_USERNAME)%'
+    kibana_host: '%env(LEADWIRE_KIBANA_HOST)%'
+    kibana_port: '%env(LEADWIRE_KIBANA_PORT)%'
     has_all_user_tenant: false
     auth_providers:
         github:
@@ -125,6 +127,8 @@ twig:
         LEADWIRE_STRIPE_ENABLED: '%stripe_enabled%'
         LEADWIRE_LOGOUT_URL: '%logout_url%'
         LEADWIRE_KIBANA_HOST: '%leadwire_kibana_host%'
+        KIBANA_HOST: '%kibana_host%'
+        KIBANA_PORT: '%kibana_port%'
     paths:
         '%kernel.project_dir%/src/UIBundle/Resources/views/Default': ~
 

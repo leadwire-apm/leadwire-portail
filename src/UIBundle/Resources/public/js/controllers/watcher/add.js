@@ -7,7 +7,9 @@
             'WatcherService',
             'toastr',
             'MESSAGES_CONSTANTS',
-            '$scope', AddWatcherCtrl]);
+            '$scope', 
+            'CONFIG',
+            AddWatcherCtrl]);
 
     /**
      * Handle clustyer stats
@@ -19,7 +21,8 @@
         WatcherService,
         toastr,
         MESSAGES_CONSTANTS,
-        $scope) {
+        $scope,
+        CONFIG) {
 
         var vm = this;
         var _url = "";
@@ -91,7 +94,7 @@
         }
 
         vm.ok = function () {
-            vm.watcher.url = `http://localhost:8008/app/kibana?security_tenant=${tenant}#/dashboard/${vm.watcher.dashboard}?embed=true${_url}`;
+            vm.watcher.url = `${CONFIG.KIBANA_HOST}:${CONFIG.KIBANA_PORT}/app/kibana?security_tenant=${tenant}#/dashboard/${vm.watcher.dashboard}?embed=true${_url}`;
             if(vm.watcher.fromDate !== ""){
                 vm.watcher.url += `&_g=(time:(from:${vm.watcher.fromDate},to:now))`;
             }
