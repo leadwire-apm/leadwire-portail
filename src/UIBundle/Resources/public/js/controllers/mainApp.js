@@ -40,6 +40,31 @@
 
         $scope.environments = [];
 
+        $scope.getIcon = function (menuName) {
+            var icon = "";
+            switch (menuName) {
+                case "APM":
+                    icon = "fa fa-eye";
+                    break;
+                case "Logs":
+                    icon = "fa fa-list-alt";
+                    break;
+                case "Metrics":
+                    icon = "fa fa-tachometer-alt";
+                    break;
+                case "Network":
+                    icon = "fa fa-network-wired";
+                    break;
+                case "Uptime":
+                    icon = "fa fa-history";
+                    break;
+                default:
+                    break;
+            }
+
+            return icon;
+        }
+
         $scope.getEnvironments = function () {
             $scope.getDefaultEnv();
             EnvironmentService.list()
@@ -50,7 +75,7 @@
                 });
         }
 
-        $scope.setSelectedEnv = function(environment){
+        $scope.setSelectedEnv = function (environment) {
             $scope.selectedEnvId = $localStorage.selectedEnvId = environment.id;
             $scope.selectedEnv = $localStorage.selectedEnv = environment;
             $rootScope.$broadcast('environment:updated');
@@ -158,7 +183,7 @@
                 });
         };
 
-         $scope.getDefaultEnv = function () {
+        $scope.getDefaultEnv = function () {
             $scope.isChangingContextEnv = true;
             if ($localStorage.selectedEnvId && $localStorage.selectedEnv) {
                 $scope.selectedEnvId = $localStorage.selectedEnvId;
@@ -193,10 +218,10 @@
         };
 
         $scope.showMenu = function (menu) {
-            if(Array.isArray(menu)){
+            if (Array.isArray(menu)) {
                 var show = false;
                 menu.map(el => {
-                    if(el.visible)
+                    if (el.visible)
                         show = true;
                 })
                 return show;
@@ -212,8 +237,8 @@
         };
 
         window.onunload = () => {
-           alert('okkk')
-         }
+            alert('okkk')
+        }
 
         $scope.logout = function () {
             window.localStorage.clear();
@@ -269,7 +294,7 @@
             $scope.selectedAppId = $localStorage.selectedAppId;
             $scope.withCustom = (
                 $localStorage.customMenus || ($localStorage.customMenus = {})
-            ).withCustom;            
+            ).withCustom;
         }
     }
 })(window.angular);
