@@ -1266,6 +1266,7 @@ $role = array (
         array (
           0 => "indices:data/read/search*",
           1 => "indices:data/read/field_caps*",
+	  2 => "indices:data/read/mget*",
         ),
       ),
     ),
