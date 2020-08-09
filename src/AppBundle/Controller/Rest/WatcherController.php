@@ -24,7 +24,9 @@ class WatcherController extends Controller
             $app, 
             $user, 
             $envId, 
-            array(AccessLevel::ADMIN, AccessLevel::EDITOR))){
+            array(AccessLevel::ADMIN, AccessLevel::EDITOR)) || 
+            $user->hasRole('ROLE_SUPER_ADMIN') || 
+            $user->hasRole('ROLE_ADMIN')){
             return true;
         } else {
             return false;
