@@ -17,7 +17,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Doctrine\Common\DataFixtures\Purger\MongoDBPurger;
 use Doctrine\Common\DataFixtures\Executor\MongoDBExecutor;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
-use AppBundle\Service\CuratorService;
+use AppBundle\Service\UserService;
 use AppBundle\Manager\ApplicationManager;
 
 
@@ -31,12 +31,11 @@ class InstallCommand extends ContainerAwareCommand
             ->addOption("purge", "p", InputOption::VALUE_NONE, "Purge the database")
             ->setHelp(
                 'Creates files and data required by the app.
-Load default Application Type. Insert template for Kibana and more..'
+                Load default Application Type. Insert template for Kibana and more..'
             );
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
-    {
+    protected function execute(InputInterface $input, OutputInterface $output) {
         /** @var LdapService $ldap */
         $ldap = $this->getContainer()->get(LdapService::class);
         /** @var ElasticSearchService $es */
@@ -45,12 +44,12 @@ Load default Application Type. Insert template for Kibana and more..'
         $kibana = $this->getContainer()->get(KibanaService::class);
         /** @var PlanService $planService */
         $planService = $this->getContainer()->get(PlanService::class);
-        /** @var EnvironmentService $curatorService */
+        /** @var EnvironmentService $environmentService */
         $environmentService = $this->getContainer()->get(EnvironmentService::class);
         /** @var ApplicationService $applicationService */
         $applicationService = $this->getContainer()->get(ApplicationService::class);
-        /** @var CuratorService $curatorService */
-        $curatorService = $this->getContainer()->get(CuratorService::class);
+        /** @var UserService $userService */
+        $userService = $this->getContainer()->get(UserService::class);
         
         /**
          * @var ApplicationManager
@@ -73,6 +72,12 @@ Load default Application Type. Insert template for Kibana and more..'
 
         /** @var bool $purge */
         $purge = $input->getOption("purge") === true ?: false;
+        //get usersCount
+        $usersCount = sizeof($userService->getUsers());
+        if(!$purge && $usersCount > 0) {
+            $this->display($output, "Entries already exist, nothing to do !");
+            return 0;
+        }
 
         if ($stripeEnabled === true) {
             $this->display($output, "Deleting Stripe plans");
@@ -90,70 +95,70 @@ Load default Application Type. Insert template for Kibana and more..'
         $this->loadFixtures($output, $purge);
        
         if ($setupLdap){
-        $this->display($output, "Creating LDAP entries for admin user");
-        $ldap->createAdminUser();
-	}
+            $this->display($output, "Creating LDAP entries for admin user");
+            $ldap->createAdminUser();
+	    }
 
         $demoApplications = $applicationService->listDemoApplications();
 
       
         if ($setupCluster){
-        $this->display($output, "Initializing Elasticsearch Cluster Setup");
-	$es->createConfig();
-        $es->createLeadwireRole();
-        $es->deletePolicy("hot-warm-delete-policy");
-        $es->deletePolicy("rollover-hot-warm-delete-policy");
-        $es->createPolicy();
-        $es->createRolloverPolicy();
-        $es->createLeadwireRolesMapping();
-        foreach ($demoApplications as $application) {
-        $es->initIndexTemplate($application);
-	}
-	}
+            $this->display($output, "Initializing Elasticsearch Cluster Setup");
+            $es->createConfig();
+            $es->createLeadwireRole();
+            $es->deletePolicy("hot-warm-delete-policy");
+            $es->deletePolicy("rollover-hot-warm-delete-policy");
+            $es->createPolicy();
+            $es->createRolloverPolicy();
+            $es->createLeadwireRolesMapping();
+            foreach ($demoApplications as $application) {
+                $es->initIndexTemplate($application);
+	        }
+	    }
 
         if ($setupDemoApplication) {
-	$this->display($output, "Initializing Demo Application");
-        /** @var Application $application */
-        foreach ($demoApplications as $application) {
-            $sharedIndex = "staging-" . $application->getSharedIndex();
-            $appIndex = "staging-" . $application->getApplicationIndex();
-            $patternIndex = "*-staging-" . $application->getName() . "-*";
-            $watechrIndex = "staging-" . $application->getApplicationWatcherIndex();
-           
-            $es->createTenant($appIndex);
-            $es->createTenant($sharedIndex);
-            $es->createTenant($watechrIndex);
-
-            $es->createIndexTemplate($application, $applicationService->getActiveApplicationsNames(), "staging");
-            $kibana->loadIndexPatternForApplication(
-                $application,
-                $appIndex,
-                "staging"
-            );
-
-            $kibana->createApplicationDashboards($application, "staging");
-
-            $kibana->loadIndexPatternForApplication(
-                $application,
-                $sharedIndex,
-                "staging"
-            );
-
-            $kibana->loadDefaultIndex($appIndex, 'default');
-            $kibana->makeDefaultIndex($appIndex, 'default');
-
-            $kibana->loadDefaultIndex($sharedIndex, 'default');
-            $kibana->makeDefaultIndex($sharedIndex, 'default');
+	        $this->display($output, "Initializing Demo Application");
+            /** @var Application $application */
+            foreach ($demoApplications as $application) {
+                $sharedIndex = "staging-" . $application->getSharedIndex();
+                $appIndex = "staging-" . $application->getApplicationIndex();
+                $patternIndex = "*-staging-" . $application->getName() . "-*";
+                $watechrIndex = "staging-" . $application->getApplicationWatcherIndex();
             
-            //create role for application
-            $es->createRole("staging", $application->getName(), array($patternIndex), array($sharedIndex, $appIndex), array("kibana_all_read"), false, false);
-            $es->createRoleMapping("staging", $application->getName(), 'demo',  false, false);
+                $es->createTenant($appIndex);
+                $es->createTenant($sharedIndex);
+                $es->createTenant($watechrIndex);
 
-            //create role for watcher
-            $es->createRole("staging", $application->getName(), array(), array($watechrIndex), array("kibana_all_write"), true, true);
-            $es->createRoleMapping("staging", $application->getName(), 'demo',  true, true);
+                $es->createIndexTemplate($application, $applicationService->getActiveApplicationsNames(), "staging");
+                $kibana->loadIndexPatternForApplication(
+                    $application,
+                    $appIndex,
+                    "staging"
+                );
+
+                $kibana->createApplicationDashboards($application, "staging");
+
+                $kibana->loadIndexPatternForApplication(
+                    $application,
+                    $sharedIndex,
+                    "staging"
+                );
+
+                $kibana->loadDefaultIndex($appIndex, 'default');
+                $kibana->makeDefaultIndex($appIndex, 'default');
+
+                $kibana->loadDefaultIndex($sharedIndex, 'default');
+                $kibana->makeDefaultIndex($sharedIndex, 'default');
+                
+                //create role for application
+                $es->createRole("staging", $application->getName(), array($patternIndex), array($sharedIndex, $appIndex), array("kibana_all_read"), false, false);
+                $es->createRoleMapping("staging", $application->getName(), 'demo',  false, false);
+
+                //create role for watcher
+                $es->createRole("staging", $application->getName(), array(), array($watechrIndex), array("kibana_all_write"), true, true);
+                $es->createRoleMapping("staging", $application->getName(), 'demo',  true, true);
+            }
         }
-       }
 
         if ($stripeEnabled === true) {
             $this->display($output, "Creating Stripe Plans with new Data");
