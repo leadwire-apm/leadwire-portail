@@ -767,15 +767,20 @@ class ApplicationService
                 ->setAccess(ApplicationPermission::ACCESS_DEMO)
                 ->setModifiedAt($now);
             $this->apManager->update($permission);
-
-            $user->addAccessLevel((new AccessLevel())
+            if($user->hasRole('ROLE_SUPER_ADMIN') || $user->hasRole('ROLE_ADMIN')) {
+                $user->addAccessLevel((new AccessLevel())
                 ->setEnvironment($env)
                 ->setApplication($demoApplication)
                 ->setLevel("ACCESS")
-                ->setAccess("VIEWER "));
-
+                ->setAccess("EDITOR"));
+            }else{
+                $user->addAccessLevel((new AccessLevel())
+                ->setEnvironment($env)
+                ->setApplication($demoApplication)
+                ->setLevel("ACCESS")
+                ->setAccess("VIEWER"));
+            }
             $this->userManager->update($user);
-
         }
     }
 
