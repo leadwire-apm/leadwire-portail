@@ -15,7 +15,12 @@
                         date-range-picker-options="options" clear-on-cancel="true" class="form-control">
                 </div>
             </div>
-            <div class="col-sm-3 col-md-offset-4" style="padding:10px">
+            <div class="col-sm-4" style="padding:10px; display: grid; text-align: center;">
+                <div class="input-prepend input-group input-group-md" ng-if="ctrl.isAdmin()">
+                    <a class="btn btn-primary" ng-click="ctrl.goToEditDashboard()"> Edit dashboard </a>
+                </div>
+            </div>
+            <div class="col-sm-3" style="padding:10px">
                 <div class="input-prepend input-group input-group-md">
                     <span class="add-on input-group-addon"><i class="fas fa-sync"></i></span>
                     <select class="form-control" ng-model="ctrl.refresh" data-ng-change="sync()">

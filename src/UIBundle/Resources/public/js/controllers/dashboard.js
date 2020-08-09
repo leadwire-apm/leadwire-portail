@@ -58,6 +58,26 @@
 
         };
 
+        vm.goToEditDashboard = function(){
+            window.open(DashboardService.getDashboard($state.params.id, $state.params.tenant) + `?_g=(refreshInterval:(pause:!t,value:${vm.refresh * 1000}),time:(from:now-15m,mode:quick,to:now))`);
+        }
+
+        vm.isAdmin = function () {
+            var access = false;
+            var user = $localStorage.user;
+            var selectedApp = $localStorage.selectedApp;
+            access = user.roles.indexOf("ROLE_SUPER_ADMIN") >= 0 || user.roles.indexOf("ROLE_ADMIN") >= 0;
+            if(!access){
+                Object.keys(user.acl).forEach(element => {
+                    if (user.acl[element][selectedApp.id].ACCESS === "ADMIN" || user.acl[element][selectedApp.id].ACCESS === "EDITOR") {
+                        access = true;
+                    }
+                });
+                
+            }
+            return access;
+        }
+
         function getInterval(int) {
             switch (int) {
                 case "Last 15 minutes":
