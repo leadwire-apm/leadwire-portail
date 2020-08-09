@@ -375,6 +375,8 @@ class UserService
                 ->serializer
                 ->deserialize($json, User::class, 'json', $context);
 
+            $_user= $this->getUser($user->getId());
+            $user->setEmail($_user->getEmail());
             $this->userManager->update($user);
 
             $isSuccessful = true;

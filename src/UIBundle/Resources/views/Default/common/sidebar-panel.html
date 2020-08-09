@@ -44,7 +44,7 @@
             <li data-toggle="collapse" data-target="#[[key]]" ng-class="collapsed" ui-sref-active-eq
                 style="padding: 13px 21px;" ng-if="showMenu(menu)">
                 <a title="[[key]]">
-                    <i ng-class="key == 'APM' ? 'fa fa-eye' : 'fa fa-exchange-alt'"></i>
+                    <i ng-class="key !== '' ? getIcon(key) : 'fa fa-exchange-alt'"></i>
                     <span>[[key]]</span>
                 </a>
             </li>
