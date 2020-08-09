@@ -158,7 +158,7 @@ class AuthService
 
     public function proxyLoginProvider(array $params)
     {
-        $user = $this->userManager->getOneBy(['email' => $params['email']]);
+        $user = $this->userManager->getOneBy(['username' => $params['username']]);
 
         if ($user === null) {
             $user = $this->handleNewUser($params);
