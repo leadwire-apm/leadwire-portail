@@ -39,6 +39,7 @@
         onLoad();
 
         $scope.environments = [];
+        $scope.title = "Admin settings";
 
         $scope.getIcon = function (menuName) {
             var icon = "";
@@ -141,6 +142,10 @@
             });
         });
 
+        $scope.$on('update:title', function (event, title) {
+            $scope.title = title;
+        });
+
         if (angular.isDefined($localStorage.layout)) {
             $scope.app.layout = $localStorage.layout;
         } else {
@@ -165,6 +170,7 @@
                 .then(function (response) {
                     $scope.isChangingContext = false;
                     $scope.selectedAppId = response.appId;
+                    $scope.$emit('update:title', "Dashboards " + app.name);
                     if (response.dashboards && response.dashboards.length) {
                         $state.go('app.dashboard.home', {
                             id: response.dashboards[0].id,

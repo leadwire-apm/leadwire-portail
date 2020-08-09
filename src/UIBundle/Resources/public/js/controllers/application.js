@@ -168,6 +168,7 @@
             vm.selectedEnvId = $localStorage.selectedEnvId;
             vm.getApps = getApps;
             vm.getApps();
+            $scope.$emit('update:title', "User settings");
         };
     }
 })(window.angular, window.swal);
