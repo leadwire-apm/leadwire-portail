@@ -10,7 +10,7 @@ imports:
 # Parameters Configuration
 parameters:
     locale: en
-    app_version: 'v1.3.11'
+    app_version: 'v1.3.12'
     app_domain: '%env(LEADWIRE_APP_DOMAIN)%'
     socket_scheme: '%env(LEADWIRE_SOCKET_SCHEME)%'
     socket_domain: '%env(LEADWIRE_SOCKET_DOMAIN)%'
