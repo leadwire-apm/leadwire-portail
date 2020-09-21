@@ -52,3 +52,23 @@ app_rest_step:
     resource: "@AppBundle/Controller/Rest/StepController.php"
     type: "annotation"
     prefix: "/%internal_api_prefix%/step"
+
+app_rest_environment:
+    resource: "@AppBundle/Controller/Rest/EnvironmentController.php"
+    type: "annotation"
+    prefix: "/%internal_api_prefix%/environment"
+
+app_rest_overview:
+    resource: "@AppBundle/Controller/Rest/OverviewController.php"
+    type: "annotation"
+    prefix: "/%internal_api_prefix%/overview"
+
+app_rest_access_level:
+    resource: "@AppBundle/Controller/Rest/AccessLevelController.php"
+    type: "annotation"
+    prefix: "/%internal_api_prefix%/access-level"
+
+app_rest_watcher:
+    resource: "@AppBundle/Controller/Rest/WatcherController.php"
+    type: "annotation"
+    prefix: "/%internal_api_prefix%/watcher"

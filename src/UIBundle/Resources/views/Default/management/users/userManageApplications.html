@@ -1,0 +1,95 @@
+<div class="panel" ng-init="ctrl.init()">
+    <div class="panel-heading">
+        <h4>Manage User Applications </h4>
+        <hr>
+    </div>
+    <div class="col-sm-6"></div>
+    <div class="col-sm-3">
+        <h6>Environment select</h6>
+    </div>
+    <div class="col-sm-3">
+        <select data-ng-model="ctrl.selectedEnvironment" class="form-control">
+            <option ng-selected="ctrl.selectedEnvironment == environment.id"
+                ng-repeat="environment in ctrl.environments" value="[[environment.id]]">
+                [[environment.name]]
+            </option>
+        </select>
+
+    </div>
+
+    <div class="panel-body">
+        <div class="row no-margin">
+            <div class="row">
+                <div class="col-lg-12 ">
+                    <div class="no-more-tables">
+                        <table class="table table-striped mb0">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">Name</th>
+                                    <th class="text-center">Owner</th>
+                                    <th class="text-center">Viewer</th>
+                                    <th class="text-center">Editor</th>
+                                    <th class="text-center">Admin</th>
+                                    <th colspan="3" class="text-center">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-if="ctrl.ui.isLoading" class="text-center">
+                                    <td colspan="6">
+                                        <spinner is-loading="ctrl.ui.isLoading" size="24"></spinner>
+                                    </td>
+                                </tr>
+                                <tr ng-repeat="application in ctrl.applications" ng-if="!ctrl.ui.isLoading"
+                                    class="text-center">
+                                    <td data-title="Name" data-label="Name">
+                                        <span>
+                                            [[application.name]]
+                                        </span>
+                                    </td>
+                                    <td data-title="Owner" data-label="Owner">
+                                        <span ng-if="ctrl.user.id === application.owner.id" class="fa fa-check-circle"
+                                            style="color: #2ECC71;" data-toggle="tooltip" data-placement="top"
+                                            title="application owner"></span>
+                                    </td>
+                                    <td data-title="Viewer" data-label="Viewer">
+                                        <span>
+                                            <input type="radio" name="app_dashboard_[[ $index ]]" value="VIEWER"
+                                                ng-checked="ctrl.getAclLevel(application.id, 'VIEWER ')"
+                                                ng-click="ctrl.setAccess('VIEWER ', 'ACCESS', application.id)" 
+                                                ng-disabled="!ctrl.hasAccess(application) || ctrl.user.id === application.owner.id"/>
+                                        </span>
+                                    </td>
+                                    <td data-title="Editor" data-label="Editor">
+                                        <span>
+                                            <input type="radio" name="app_dashboard_[[ $index ]]" value="EDITOR"
+                                                ng-checked="ctrl.getAclLevel(application.id, 'EDITOR')"
+                                                ng-click="ctrl.setAccess('EDITOR', 'ACCESS', application.id)" 
+                                                ng-disabled="!ctrl.hasAccess(application) || ctrl.user.id === application.owner.id"/>
+                                        </span>
+                                    </td>
+                                    <td data-title="Admin" data-label="Admin">
+                                        <span>
+                                            <input type="radio" name="app_dashboard_[[ $index ]]" value="ADMIN"
+                                                ng-checked="ctrl.getAclLevel(application.id, 'ADMIN')"
+                                                ng-click="ctrl.setAccess('ADMIN', 'ACCESS', application.id)" 
+                                                ng-disabled="!ctrl.hasAccess(application) || ctrl.user.id === application.owner.id"/>
+                                        </span>
+                                    </td>
+                                    <td data-title="Actions" data-label="Actions">
+                                        <button data-ng-class="!ctrl.hasAccess(application) ? 'btn btn-success' : 'btn btn-danger'"
+                                            title="[[!ctrl.hasAccess(application) ? 'Activate' : 'Block']]" data-placement="top"
+                                            data-toggle="tooltip" ng-click="ctrl.handleOnToggleLock(application, !ctrl.hasAccess(application))"
+                                            data-ng-disabled="ctrl.ui.isProcessing"
+                                            ng-if="application.name !== 'demo' && ctrl.user.id !== application.owner.id">
+                                            <i ng-class="user.locked ? 'fa fa-unlock' : 'fa fa-lock'"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

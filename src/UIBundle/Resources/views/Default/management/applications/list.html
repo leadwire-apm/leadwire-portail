@@ -9,8 +9,7 @@
                 <div class="col-sm-offset-10" style="display: flex">
                     <label for="search">All Applications :</label>
                     <label for="search" class="switch switch-sm ml10">
-                        <input id="search" type="checkbox"
-                                data-ng-model="ctrl.allApplications">
+                        <input id="search" type="checkbox" data-ng-model="ctrl.allApplications">
                         <span><i class="handle"></i></span>
                     </label>
 
@@ -19,88 +18,71 @@
             <div class="col-lg-12 ">
                 <table class="table table-striped mb0">
                     <thead>
-                    <tr>
-                        <th class="text-center">Name</th>
-                        <th class="text-center">Owner</th>
-                        <th class="text-center">Type</th>
-                        <th class="text-center">Status</th>
-                        <th class="text-center" colspan="3"
-                            style="text-align: center">Actions
-                        </th>
-                    </tr>
+                        <tr>
+                            <th class="text-center">Name</th>
+                            <th class="text-center">Owner</th>
+                            <th class="text-center">Type</th>
+                            <th class="text-center">Status</th>
+                            <th class="text-center" colspan="3" style="text-align: center">Actions
+                            </th>
+                        </tr>
                     </thead>
                     <tbody>
-                    <tr ng-if="ctrl.ui.isLoading" class="text-center">
-                        <td colspan="6">
-                            <spinner is-loading="ctrl.ui.isLoading"
-                                     size="24"></spinner>
-                        </td>
-                    </tr>
-                    <tr ng-repeat="application in ctrl.applications | filter: (!ctrl.allApplications || '') && {removed: false}"
-                        class="text-center"
-                    >
-                        <td data-title="Name" data-label="Name">
-                            [[application.name]]
-                        </td>
-                        <td data-title="Owner" data-label="Owner">
-                            [[application.owner.name]]
-                        </td>
-                        <td data-title="Type" data-label="Type">
-                            [[application.type.name]]
-                        </td>
-                        <td data-title="Status" data-label="Status">
+                        <tr ng-if="ctrl.ui.isLoading" class="text-center">
+                            <td colspan="6">
+                                <spinner is-loading="ctrl.ui.isLoading" size="24"></spinner>
+                            </td>
+                        </tr>
+                        <tr ng-repeat="application in ctrl.applications | filter: (!ctrl.allApplications || '') && {removed: false}"
+                            class="text-center">
+                            <td data-title="Name" data-label="Name">
+                                [[application.name]]
+                            </td>
+                            <td data-title="Owner" data-label="Owner">
+                                [[application.owner.name]]
+                            </td>
+                            <td data-title="Type" data-label="Type">
+                                [[application.type.name]]
+                            </td>
+                            <td data-title="Status" data-label="Status">
                                 <span class="label"
-                                      data-ng-class="application.removed ? 'label-danger' : !application.enabled ? 'label-warning' : 'label-success'">
-                                    [[application.removed ? 'Removed' : application.enabled ? 'Activated' : 'Deactivated']]
+                                    data-ng-class="application.removed ? 'label-danger' : !application.enabled ? 'label-warning' : 'label-success'">
+                                    [[application.removed ? 'Removed' : application.enabled ? 'Activated' :
+                                    'Deactivated']]
                                 </span>
-                        </td>
-                        <td data-title="Actions" data-label="Actions" class="text-left">
-                                <a
-                                title="Application's Details"
-                                data-placement="top"
-                                data-toggle="tooltip"
-                                ui-sref="app.management.applicationDetail({id:application.id})"
-                                class="btn btn-info">
-                                <i class="fa fa-info-circle"></i>
-                            </a>
-                            <button
-                                    title="[[application.enabled ? 'Deactivate' : 'Activate']]"
-                                    data-placement="top"
-                                    data-toggle="tooltip"
-                                    data-ng-disabled="application.removed"
+                            </td>
+                            <td data-title="Actions" data-label="Actions" class="center">
+                                <a title="Application's Details" data-placement="top" data-toggle="tooltip"
+                                    ui-sref="app.management.applicationDetail({id:application.id})"
+                                    class="btn btn-info">
+                                    <i class="fa fa-info-circle"></i>
+                                </a>
+                                <button title="[[application.enabled ? 'Deactivate' : 'Activate']]" data-placement="top"
+                                    data-toggle="tooltip" data-ng-disabled="application.removed"
                                     data-ng-class="application.enabled ? 'btn btn-danger' : 'btn btn-success'"
                                     ng-click="ctrl.handleOnToggleStatus(application)">
-                                <i class="fa"
-                                   data-ng-class="application.enabled ? 'fa-lock' : 'fa-unlock'"></i>
-                            </button>
-                            <a
-                                title="Edit Application"
-                                data-placement="top"
-                                data-toggle="tooltip"
-                                ui-sref="app.management.editApplication({id:application.id})"
-                                class="btn btn-warning">
-                                <i class="fas fa-pencil-alt"></i>
-                            </a>
-                            <button class="btn bg-green"
+                                    <i class="fa" data-ng-class="application.enabled ? 'fa-lock' : 'fa-unlock'"></i>
+                                </button>
+                                <a title="Edit Application" data-placement="top" data-toggle="tooltip"
+                                    ui-sref="app.management.editApplication({id:application.id})"
+                                    class="btn btn-warning">
+                                    <i class="fas fa-pencil-alt"></i>
+                                </a>
+                                <button class="btn bg-green"
                                     title="[[ application.type.version === application.deployedTypeVersion ? 'No changes to apply' : 'Apply Changes']]"
-                                    data-placement="top"
-                                    data-toggle="tooltip"
+                                    data-placement="top" data-toggle="tooltip"
                                     ng-disabled="application.type.version === application.deployedTypeVersion"
                                     ng-click="ctrl.applyChanges(application.id)">
-                                <i class="fas fa-sync-alt"></i>
-                                <spinner is-loading="ctrl.ui['isApplyingChanges'+application.id]"></spinner>
-                            </button>
-                            <button class="btn bg-red"
-                                    title="Delete"
-                                    data-placement="top"
-                                    data-toggle="tooltip"
-                                    data-ng-disabled="application.removed"
-                                    ng-click="ctrl.handleOnDelete(application)">
-                                <i class="fa fa-trash"></i>
-                                <spinner is-loading="ctrl.ui['isDeleting'+application.id]"></spinner>
-                            </button>
-                        </td>
-                    </tr>
+                                    <i class="fas fa-sync-alt"></i>
+                                    <spinner is-loading="ctrl.ui['isApplyingChanges'+application.id]"></spinner>
+                                </button>
+                                <button class="btn bg-red" title="Delete" data-placement="top" data-toggle="tooltip"
+                                    data-ng-disabled="application.removed" ng-click="ctrl.handleOnDelete(application)">
+                                    <i class="fa fa-trash"></i>
+                                    <spinner is-loading="ctrl.ui['isDeleting'+application.id]"></spinner>
+                                </button>
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
             </div>

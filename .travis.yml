@@ -1,0 +1,10 @@
+dist: trusty
+
+jobs:
+  include:
+    - stage: build docker image
+      script:
+      - echo "$DOCKER_PASSWORD" | docker login -u leadwire --password-stdin
+      - docker build -t leadwire/apm-leadwire-portail .
+      - docker tag apm-leadwire-portail leadwire/apm-leadwire-portail:latest
+      - docker push leadwire/apm-leadwire-portail:latest

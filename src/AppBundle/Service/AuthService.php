@@ -3,11 +3,14 @@
 namespace AppBundle\Service;
 
 use AppBundle\Document\User;
+use AppBundle\Document\AccessLevel;
 use AppBundle\Manager\UserManager;
 use AppBundle\Service\ElasticSearchService;
 use AppBundle\Service\JWTHelper;
 use AppBundle\Service\KibanaService;
 use AppBundle\Service\LdapService;
+use AppBundle\Service\ProcessService;
+use AppBundle\Service\EnvironmentService;
 use Firebase\JWT\ExpiredException;
 use GuzzleHttp\Client;
 use Psr\Log\LoggerInterface;
@@ -42,6 +45,11 @@ class AuthService
     private $kibanaService;
 
     /**
+     * @var ProcessService
+     */
+    private $processService;
+
+    /**
      * @var LoggerInterface
      */
     private $logger;
@@ -67,9 +75,9 @@ class AuthService
     private $superAdminUsername;
 
     /**
-     * @var SearchGuardService
+     * @var EnvironmentService
      */
-    private $sgService;
+    private $environmentService;
 
     public function __construct(
         UserManager $userManage,
@@ -77,9 +85,10 @@ class AuthService
         LdapService $ldapService,
         ElasticSearchService $esService,
         KibanaService $kibanaService,
+        ProcessService $processService,
         LoggerInterface $logger,
         JWTHelper $jwtHelper,
-        SearchGuardService $sgService,
+        EnvironmentService $environmentService,
         string $appDomain,
         array $authProviderSettings,
         string $superAdminUsername
@@ -89,12 +98,13 @@ class AuthService
         $this->ldapService = $ldapService;
         $this->esService = $esService;
         $this->kibanaService = $kibanaService;
+        $this->processService = $processService;
         $this->jwtHelper = $jwtHelper;
         $this->logger = $logger;
         $this->appDomain = $appDomain;
         $this->authProviderSettings = $authProviderSettings;
         $this->superAdminUsername = $superAdminUsername;
-        $this->sgService = $sgService;
+        $this->environmentService = $environmentService;
     }
 
     /**
@@ -118,10 +128,12 @@ class AuthService
         if ($user === null) {
             $user = $this->handleNewUser($data);
         } else {
+            $this->processService->emit($user, "heavy-operations-done", "Succeeded");
             $this->validateActiveStatus($user);
         }
 
         $this->checkSuperAdminRoles($user);
+        $this->processService->emit($user, "heavy-operations-done", "Succeded");
 
         return $user;
     }
@@ -134,10 +146,11 @@ class AuthService
         $user = $this->userManager->getOneBy($params);
 
         if ($user === null) {
+            $this->processService->emit($user, "heavy-operations-done", "Failed");
             throw new AccessDeniedHttpException("User is undefined");
         } else {
+            $this->processService->emit($user, "heavy-operations-done", "Succeded");
             $this->validateActiveStatus($user);
-
             $this->checkSuperAdminRoles($user);
         }
         return $user;
@@ -145,16 +158,16 @@ class AuthService
 
     public function proxyLoginProvider(array $params)
     {
-        $user = $this->userManager->getOneBy(['email' => $params['email']]);
+        $user = $this->userManager->getOneBy(['username' => $params['username']]);
 
         if ($user === null) {
             $user = $this->handleNewUser($params);
         } else {
+            $this->processService->emit($user, "heavy-operations-done", "Succeded");
             $this->validateActiveStatus($user);
         }
 
         $this->checkSuperAdminRoles($user);
-
         return $user;
     }
 
@@ -263,12 +276,12 @@ class AuthService
      */
     private function checkSuperAdminRoles(User $user): void
     {
-        if ($user->getUsername() === $this->superAdminUsername &&
-            $user->hasRole(User::ROLE_SUPER_ADMIN) === false
-        ) {
+        if ($user->getUsername() === $this->superAdminUsername) {
+            $user->revoke(User::ROLE_SUPER_ADMIN);
             $user->promote(User::ROLE_SUPER_ADMIN);
-            $this->userManager->update($user);
         }
+
+        $this->userManager->update($user);
     }
 
     private function handleNewUser(array $parameters): ?User
@@ -283,19 +296,24 @@ class AuthService
         }
 
         if ($user !== null) {
-            // User creation in DB is successful
-            // Should create LDAP & ElasticSearch entries
-            $this->ldapService->createNewUserEntries($user);
-            $this->ldapService->registerDemoApplications($user);
+            //create user in opendistro
+            $this->esService->createUser($user);
+            $this->esService->updateRoleMapping("add", "staging", $user, "demo", false, false);
+
+            if($user->hasRole('ROLE_SUPER_ADMIN') || $user->hasRole('ROLE_ADMIN')) {
+                $this->esService->updateRoleMapping("add", "staging", $user, "demo", true, true);
+            }
+            
+            $this->processService->emit($user, "heavy-operations-in-progress", "Register Applications");
             $this->applicationService->registerDemoApplications($user);
 
-            $this->esService->deleteIndex($user->getUserIndex());
+            $this->processService->emit($user, "heavy-operations-in-progress", "Creating Kibana Dashboards");
             $this->kibanaService->loadIndexPatternForUserTenant($user);
 
             $this->kibanaService->loadDefaultIndex($user->getUserIndex(), 'default');
             $this->kibanaService->makeDefaultIndex($user->getUserIndex(), 'default');
 
-            $this->sgService->updateSearchGuardConfig();
+            $this->processService->emit($user, "heavy-operations-done", "Succeded");
         }
 
         return $user;

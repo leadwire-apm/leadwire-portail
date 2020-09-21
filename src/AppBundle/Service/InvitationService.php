@@ -17,6 +17,9 @@ use ATS\EmailBundle\Service\SimpleMailerService;
 use AppBundle\Manager\ApplicationPermissionManager;
 use AppBundle\Service\ApplicationPermissionService;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use AppBundle\Service\ElasticSearchService;
+use AppBundle\Service\EnvironmentService;
+use AppBundle\Document\AccessLevel;
 
 /**
  * Service class for Invitation entities
@@ -75,6 +78,16 @@ class InvitationService
     private $userManager;
 
     /**
+     * @var ElasticSearchService
+     */
+    private $elasticSearchService;
+
+    /**
+     * @var EnvironmentService
+     */
+    private $environmentService;
+
+    /**
      * Constructor
      *
      * @param InvitationManager $invitationManager
@@ -86,6 +99,8 @@ class InvitationService
      * @param ApplicationService $applicationService
      * @param ApplicationPermissionService $permissionService
      * @param UserManager $userManager
+     * @param ElasticSearchService $elasticSearchService
+     * @param EnvironmentService $environmentService
      */
     public function __construct(
         InvitationManager $invitationManager,
@@ -97,6 +112,8 @@ class InvitationService
         ApplicationService $applicationService,
         ApplicationPermissionService $permissionService,
         UserManager $userManager,
+        ElasticSearchService $elasticSearchService,
+        EnvironmentService $environmentService,
         string $sender
     ) {
         $this->invitationManager = $invitationManager;
@@ -110,6 +127,8 @@ class InvitationService
         $this->applicationService = $applicationService;
         $this->permissionService = $permissionService;
         $this->userManager = $userManager;
+        $this->es = $elasticSearchService;
+        $this->environmentService = $environmentService;
     }
 
     /**
@@ -273,13 +292,106 @@ class InvitationService
         $invitation = $this->invitationManager->getOneBy(['id' => $id, 'isPending' => true]);
         $invitedUser = $this->userManager->getOneBy(['id' => $userId]);
 
-        if ($invitation instanceof Invitation && $invitedUser instanceof User) {
+        if ($invitation instanceof Invitation && $invitedUser instanceof User)  {
             $invitation->setPending(false);
             $invitation->setUser($invitedUser);
             $application = $invitation->getApplication();
             $this->permissionService->grantPermission($application, $invitedUser, ApplicationPermission::ACCESS_GUEST);
-            $this->ldap->registerApplication($invitedUser, $application);
             $this->invitationManager->update($invitation);
+            $this->userManager->update($invitedUser);
+
+            foreach ($application->getEnvironments() as $environment) {
+                $envName = $environment->getName();
+                $this->es->updateRoleMapping("add", $envName, $invitedUser, $application->getName(), false, false);
+               
+                // set app data access level to read for application
+                $invitedUser->addAccessLevel((new AccessLevel())
+                        ->setEnvironment($environment)
+                        ->setApplication($application)
+                        ->setLevel(AccessLevel::ACCESS)
+                        ->setAccess(AccessLevel::VIEWER ));
+
+                $this->userManager->update($invitedUser);
+            }
+        } 
+    }
+
+    /**
+     * @param string $id
+     * @param string $userId
+     *
+     * @return user
+     */
+    public function grantPermission($appId, $userId)
+    {
+        $invitedUser = $this->userManager->getOneBy(['id' => $userId]);
+        $application = $this->applicationService->getApplication($appId);
+        $invitation = new Invitation();
+        $inv = $this->invitationManager->getOneBy(['user' => $invitedUser, 'application' => $application]);
+       
+        if($inv === null){
+            $invitation->setApplication($application);
+            $invitation->setUser($invitedUser);
+            $invitation->setEmail($invitedUser->getEmail());
+            $invitation->setPending(false);
+        }else{
+            $inv->setPending(false);
+            $invitation = $inv;
         }
+
+
+        $this->invitationManager->update($invitation);
+
+        $this->permissionService->grantPermission($application, $invitedUser, ApplicationPermission::ACCESS_GUEST);
+
+        $this->userManager->update($invitedUser);
+
+        foreach ($application->getEnvironments() as $environment) {
+            $envName = $environment->getName();
+            $this->es->updateRoleMapping("add", $envName, $invitedUser, $application->getName(), false, false);
+            
+            // set app data access level to read for invited user
+            $invitedUser->addAccessLevel((new AccessLevel())
+                    ->setEnvironment($environment)
+                    ->setApplication($application)
+                    ->setLevel(AccessLevel::ACCESS)
+                    ->setAccess(AccessLevel::VIEWER));
+
+            $this->userManager->update($invitedUser);
+        }
+        return $invitedUser;
+    }
+
+    /**
+     * @param string $id
+     * @param string $userId
+     *
+     * @return user
+     */
+    public function RevokePermission($appId, $userId)
+    {
+        $invitedUser = $this->userManager->getOneBy(['id' => $userId]);
+        $application = $this->applicationService->getApplication($appId);
+
+        $invitation = $this->invitationManager->getOneBy(['user' => $invitedUser, 'application' => $application]);
+       
+        if($invitation){
+            $this->invitationManager->deleteById($invitation->getId());
+        }
+
+        $this->permissionService->removeApplicationPermissionsByUser($application, $invitedUser);
+
+        foreach ($application->getEnvironments() as $environment) {
+            $envName = $environment->getName();
+            $envId = $environment->getId();
+           
+            $accessLevel = $invitedUser->getAccessLevelsApp($envId, $appId, AccessLevel::ACCESS);
+            if($accessLevel){
+                $invitedUser->removeAccessLevel($accessLevel);
+                $this->es->updateRoleMapping("delete", $envName, $invitedUser, $application->getName(), true, false);
+                $this->es->updateRoleMapping("delete", $envName, $invitedUser, $application->getName(), false, false);
+            }
+        }
+        $this->userManager->update($invitedUser);
     }
 }

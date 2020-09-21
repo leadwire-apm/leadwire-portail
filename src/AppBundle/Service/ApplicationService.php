@@ -7,11 +7,13 @@ use AppBundle\Document\ApplicationPermission;
 use AppBundle\Document\DeleteTask;
 use AppBundle\Document\Task;
 use AppBundle\Document\User;
+use AppBundle\Document\Dashboard;
 use AppBundle\Exception\DuplicateApplicationNameException;
 use AppBundle\Manager\ActivationCodeManager;
 use AppBundle\Manager\ApplicationManager;
 use AppBundle\Manager\ApplicationPermissionManager;
 use AppBundle\Manager\DeleteTaskManager;
+use AppBundle\Manager\DashboardManager;
 use AppBundle\Service\ActivationCodeService;
 use JMS\Serializer\DeserializationContext;
 use JMS\Serializer\SerializerInterface;
@@ -20,6 +22,17 @@ use Ramsey\Uuid\Uuid;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use AppBundle\Manager\ApplicationTypeManager;
+use AppBundle\Service\EnvironmentService;
+use AppBundle\Document\AccessLevel;
+use AppBundle\Manager\UserManager;
+use AppBundle\Manager\AccessLevelManager;
+
+use AppBundle\Service\ProcessService;
+use AppBundle\Service\CuratorService;
+use AppBundle\Service\ElasticSearchService;
+use AppBundle\Service\KibanaService;
+use AppBundle\Service\LdapService;
+use AppBundle\Service\StatService;
 
 /**
  * Service class for App entities
@@ -31,6 +44,11 @@ class ApplicationService
      * @var ApplicationManager
      */
     private $applicationManager;
+
+    /**
+     * @var AccessLevelManager
+     */
+    private $accessLevelManager;
 
     /**
      * @var ApplicationTypeManager
@@ -73,8 +91,54 @@ class ApplicationService
     private $taskManager;
 
     /**
+     * @var DashboardManager
+     */
+    private $dashboardManager;
+
+    /**
+     * @var EnvironmentService
+     */
+    private $environmentService;
+
+    /**
+     * @var UserManager
+     */
+    private $userManager;
+
+    /**
+     * @var ProcessService
+     */
+    private $processService;
+
+    /**
+     * @var CuratorService
+     */
+    private $curatorService;
+
+    /**
+     * @var ElasticSearchService
+     */
+    private $elasticSearchService;
+
+    /**
+     * @var KibanaService
+     */
+    private $kibanaService;
+
+    /**
+     * @var LdapService
+     */
+    private $ldapService;
+
+    /**
+     * @var StatService
+     */
+    private $statService;
+
+    /**
      * Constructor
      *
+     * @param AccessLevelManager $accessLevelManager
      * @param ApplicationManager $applicationManager
      * @param ApplicationTypeManager $applicationTypeManager
      * @param ActivationCodeManager $activationCodeManager
@@ -84,8 +148,18 @@ class ApplicationService
      * @param LoggerInterface $logger
      * @param ApplicationTypeService $appTypeService
      * @param ActivationCodeService $activationCodeService
+     * @param DashboardManager $dashboardManager
+     * @param EnvironmentService $environmentService
+     * @param UserManager $userManager
+     * @param ProcessService $processService
+     * @param CuratorService $curatorService
+     * @param ElasticSearchService $elasticSearchService
+     * @param KibanaService $kibanaService
+     * @param LdapService $ldapService
+     * @param StatService $statService
      */
     public function __construct(
+        AccessLevelManager $accessLevelManager,
         ApplicationManager $applicationManager,
         ApplicationTypeManager $applicationTypeManager,
         ActivationCodeManager $activationCodeManager,
@@ -94,8 +168,18 @@ class ApplicationService
         SerializerInterface $serializer,
         LoggerInterface $logger,
         ApplicationTypeService $appTypeService,
-        ActivationCodeService $activationCodeService
+        ActivationCodeService $activationCodeService,
+        DashboardManager $dashboardManager,
+        EnvironmentService $environmentService,
+        UserManager $userManager,
+        ProcessService $processService,
+        CuratorService $curatorService,
+        ElasticSearchService $elasticSearchService,
+        KibanaService $kibanaService,
+        LdapService $ldapService,
+        StatService $statService
     ) {
+        $this->accessLevelManager = $accessLevelManager;
         $this->applicationManager = $applicationManager;
         $this->applicationTypeManager = $applicationTypeManager;
         $this->activationCodeManager = $activationCodeManager;
@@ -105,6 +189,15 @@ class ApplicationService
         $this->logger = $logger;
         $this->appTypeService = $appTypeService;
         $this->activationCodeService = $activationCodeService;
+        $this->dashboardManager = $dashboardManager;
+        $this->environmentService = $environmentService;
+        $this->userManager = $userManager;
+        $this->processService = $processService;
+        $this->curatorService = $curatorService;
+        $this->es = $elasticSearchService;
+        $this->kibanaService = $kibanaService;
+        $this->ldapService = $ldapService;
+        $this->statService = $statService;
     }
 
     /**
@@ -154,6 +247,34 @@ class ApplicationService
     public function listUserAccessibleApplciations(User $user): array
     {
         $accessibleApplications = [];
+
+        $permissions = $this->apManager->getPermissionsForUser($user);
+
+        if(!$user->hasRole('ROLE_SUPER_ADMIN') && !$user->hasRole('ROLE_ADMIN')){
+            /** @var ApplicationPermission $permission */
+            foreach ($permissions as $permission) {
+                if ($permission->getApplication()->isRemoved() === false) {
+                    $accessibleApplications[] = $permission->getApplication();
+                }
+            }
+        } else {
+            $accessibleApplications = $this->getApplications(['removed' => false]);
+        }
+
+
+        return $accessibleApplications;
+    }
+
+    /**
+     *
+     * @param string $id
+     * @return Application[]
+     */
+    public function listUserAccessibleApplciationsById($id): array
+    {
+        $accessibleApplications = [];
+        $user = $this->userManager->getOneBy(['id' => $id]);
+
         $permissions = $this->apManager->getPermissionsForUser($user);
 
         /** @var ApplicationPermission $permission */
@@ -162,7 +283,6 @@ class ApplicationService
                 $accessibleApplications[] = $permission->getApplication();
             }
         }
-
         return $accessibleApplications;
     }
 
@@ -238,6 +358,21 @@ class ApplicationService
     }
 
     /**
+     * @param string $name
+     */
+    public function isExist($name)
+    {
+
+        $app = $this->applicationManager->getOneBy(['name' => $name]);
+        if ($app === null) {
+            return false;
+        } else {
+            return true;
+        }
+
+    }
+
+    /**
      * Creates a new app from JSON data
      *
      * @param string $json
@@ -260,9 +395,14 @@ class ApplicationService
         $application->setDeployedTypeVersion($applicationType->getVersion());
         $application->setName(\str_replace(' ', '_', $application->getName())); // Make sure thare are no spaces
         $dbApplication = $this->applicationManager->getOneBy(['name' => $application->getName()]);
+        $dbEnvironment = $this->environmentService->isExist($application->getName());
 
         if ($dbApplication !== null) {
             throw new DuplicateApplicationNameException("An application with the same name already exists");
+        }
+
+        if ($dbEnvironment) {
+            throw new DuplicateApplicationNameException("An environment with the same name already exists");
         }
 
         $uuid1 = Uuid::uuid1();
@@ -273,11 +413,16 @@ class ApplicationService
             ->setUuid($uuid1->toString())
             ->setRemoved(false);
 
+        foreach ($this->environmentService->getAll() as $environment) {
+            $application->addEnvironment($environment);
+        }
+
         /** @var string $applicationTypeId */
         $applicationTypeId = $application->getType()->getId();
         $ap = $this->appTypeService->getApplicationType($applicationTypeId);
         $application->setType($ap);
         $this->applicationManager->update($application);
+        
         $applicationPermission = new ApplicationPermission();
         $applicationPermission
             ->setUser($user)
@@ -286,8 +431,73 @@ class ApplicationService
             ->setModifiedAt(new \DateTime());
 
         $this->apManager->update($applicationPermission);
-
+        
+        foreach ($application->getEnvironments() as $environment) {
+            $user->addAccessLevel((new AccessLevel())
+                    ->setEnvironment($environment)
+                    ->setApplication($application)
+                    ->setLevel(AccessLevel::ACCESS)
+                    ->setAccess(AccessLevel::ADMIN)
+                );     
+        }
+        $this->userManager->update($user);
+        $this->createIndexApp($application, $user);
         return $application;
+    }
+
+    /**
+     * create application index and shared index
+     * 
+     */
+    function createIndexApp(Application $application, User $user){
+        if($application !== null){
+
+            foreach ($this->environmentService->getAll() as $environment) {
+                $envName = $environment->getName();
+                $sharedIndex =  $envName . "-" . $application->getSharedIndex();
+                $appIndex =  $envName . "-" . $application->getApplicationIndex();
+                $patternIndex = "*-" . $envName . "-" . $application->getName() . "-*";
+                $watechrIndex = $envName ."-" . $application->getApplicationWatcherIndex();
+
+                $this->es->createTenant($appIndex);
+                $this->es->createIndexTemplate($application, $this->getActiveApplicationsNames(), $envName);
+    
+    
+                $this->kibanaService->loadIndexPatternForApplication(
+                    $application,
+                    $appIndex,
+                    $envName 
+                );
+    
+                $this->kibanaService->loadDefaultIndex($appIndex, 'default');
+                $this->kibanaService->makeDefaultIndex($appIndex, 'default');
+        
+                $this->kibanaService->createApplicationDashboards($application, $envName);
+                
+                $this->es->createTenant($sharedIndex);
+        
+                $this->kibanaService->loadIndexPatternForApplication(
+                    $application,
+                    $sharedIndex,
+                    $envName
+                );
+
+                $this->es->createTenant($watechrIndex);
+
+                $this->kibanaService->loadDefaultIndex($sharedIndex, 'default');
+                $this->kibanaService->makeDefaultIndex($sharedIndex, 'default');
+
+                $this->es->createRole($envName, $application->getName(), array($patternIndex), array($sharedIndex, $appIndex), array("kibana_all_read"), false, false);
+                $this->es->createRole($envName, $application->getName(), array($patternIndex), array($sharedIndex, $appIndex), array("kibana_all_write"), true, false);
+                $this->es->createRole($envName, $application->getName(), array(), array($watechrIndex), array("kibana_all_write"), true, true);
+
+
+                $this->es->createRoleMapping($envName, $application->getName(), $user->getName(), false, false);
+                $this->es->createRoleMapping($envName, $application->getName(), $user->getName(), true, false); 
+                $this->es->createRoleMapping($envName, $application->getName(), $user->getName(), true, true); 
+  
+            }
+        }
     }
 
     /**
@@ -306,6 +516,7 @@ class ApplicationService
         ];
 
         try {
+
             $realApp = $this->applicationManager->getOneBy(['id' => $id]);
 
             if ($realApp === null) {
@@ -328,6 +539,12 @@ class ApplicationService
             $state['successful'] = true;
 
             $state['application'] = $realApp;
+
+            $this->updateIndexApp($realApp);
+
+            //$this->curatorService->updateCuratorConfig();
+
+
         } catch (\Exception $e) {
             $this->logger->error($e->getMessage());
             $state['successful'] = false;
@@ -336,6 +553,46 @@ class ApplicationService
         }
 
         return $state;
+    }
+
+    /**
+     * update application index
+     */
+    function updateIndexApp(Application $application){
+
+        foreach ($application->getEnvironments() as $environment){
+           
+            $envName = $environment->getName();
+            $sharedIndex =  $envName . "-" . $application->getSharedIndex();
+            $appIndex =  $envName . "-" . $application->getApplicationIndex();
+            
+            $this->es->deleteTenant($appIndex);
+            $this->es->deleteIndex($appIndex);
+
+            $this->es->createTenant($appIndex);
+            $this->es->createIndexTemplate($application, $this->getActiveApplicationsNames(), $envName);
+            
+            $this->kibanaService->loadIndexPatternForApplication(
+                $application,
+                $appIndex,
+                $envName
+            );
+
+            $this->kibanaService->loadDefaultIndex($appIndex, 'default');
+            $this->kibanaService->makeDefaultIndex($appIndex, 'default');
+
+            $this->kibanaService->createApplicationDashboards($application, $envName);
+            
+            $this->kibanaService->loadIndexPatternForApplication(
+                $application,
+                $sharedIndex,
+                $envName
+            );
+
+            $this->kibanaService->loadDefaultIndex($sharedIndex, 'default');
+            $this->kibanaService->makeDefaultIndex($sharedIndex, 'default');
+        }
+
     }
 
     /**
@@ -371,16 +628,84 @@ class ApplicationService
             $this->taskManager->update($task);
 
             $this->applicationManager->update($application);
+
+            /**
+             * clear dashboard table
+             */
+            $dashboards = $this->dashboardManager->getBy(['applicationId' => $id]);
+            foreach ($dashboards as $dashboard) {
+                $this->dashboardManager->delete($dashboard);
+            }
+
+            /**
+             * remove acls
+             */
+            foreach ($this->userManager->getAll() as $user) {
+                $acls = $user->removeAccessLevelsApp($id);
+                $this->userManager->update($user);
+                foreach ($acls as $acl) {
+                    $this->accessLevelManager->delete($acl);
+                }
+            }
+
+            /**
+             * delete roles & tenants
+             */
+            foreach($this->environmentService->getAll() as $environment){
+                $sharedIndex =  $environment->getName() . "-" . $application->getSharedIndex();
+                $appIndex =  $environment->getName() . "-" . $application->getApplicationIndex();
+                $watechrIndex = $environment->getName() ."-" . $application->getApplicationWatcherIndex();
+
+                $this->es->deleteRole($environment->getName(), $application->getName(), true, false);
+                $this->es->deleteRole($environment->getName(), $application->getName(), false, false);
+                $this->es->deleteRole($environment->getName(), $application->getName(), true, true);
+
+                $this->es->deleteTenant($sharedIndex);
+                $this->es->deleteTenant($appIndex);
+                $this->es->deleteTenant($watechrIndex);
+            }
+
+            /**
+             * remove role mapping
+             */
+            foreach($this->environmentService->getAll() as $environment){
+                $this->es->deleteRoleMapping($environment->getName(), $application->getName(), true, false);
+                $this->es->deleteRoleMapping($environment->getName(), $application->getName(), false, false);
+                $this->es->deleteRoleMapping($environment->getName(), $application->getName(), true, true);
+            }
+            
+             /**
+             * remove templates
+             */
+	         $this->es->deleteTemplatesForApplication($application);
+            
         }
     }
 
     public function removeUserApplication(string $id, User $user)
-    {
-        $applicationPermission = $this->apManager->getOneBy(['application.id' => $id, 'user.id' => $user->getId()]);
+    {  
+        try {
 
-        if ($applicationPermission !== null) {
-            $applicationPermission->setAccess(ApplicationPermission::ACCESS_DENIED);
-            $this->apManager->update($applicationPermission);
+            $applicationPermission = $this->apManager->getOneBy(['application.id' => $id, 'user.id' => $user->getId()]);
+            if ($applicationPermission !== null) {
+                $application = $applicationPermission->getApplication();
+                $applicationPermission->setAccess(ApplicationPermission::ACCESS_DENIED);
+                $this->apManager->update($applicationPermission);
+                $acls = $user->removeAccessLevelsApp($id);
+                $this->userManager->update($user);
+                foreach ($acls as $acl) {
+                    $this->accessLevelManager->delete($acl);
+                }
+                /**
+                 * remove role mapping
+                 */
+                foreach($this->environmentService->getAll() as $environment){
+                    $this->es->updateRoleMapping("delete", $environment->getName(), $user, $application->getName(), true, false);
+                    $this->es->updateRoleMapping("delete", $environment->getName(), $user, $application->getName(), false, false);
+                }
+            }
+        } catch (\Exception $e) {
+            $this->logger->error($e->getMessage());
         }
     }
 
@@ -421,6 +746,7 @@ class ApplicationService
     public function registerDemoApplications(User $user): void
     {
         $demoApplications = $this->applicationManager->getBy(['demo' => true]);
+        $env = $this->environmentService->getByName("staging");
         $now = new \DateTime();
 
         foreach ($demoApplications as $demoApplication) {
@@ -441,6 +767,121 @@ class ApplicationService
                 ->setAccess(ApplicationPermission::ACCESS_DEMO)
                 ->setModifiedAt($now);
             $this->apManager->update($permission);
+            if($user->hasRole('ROLE_SUPER_ADMIN') || $user->hasRole('ROLE_ADMIN')) {
+                $user->addAccessLevel((new AccessLevel())
+                ->setEnvironment($env)
+                ->setApplication($demoApplication)
+                ->setLevel("ACCESS")
+                ->setAccess("EDITOR"));
+            }else{
+                $user->addAccessLevel((new AccessLevel())
+                ->setEnvironment($env)
+                ->setApplication($demoApplication)
+                ->setLevel("ACCESS")
+                ->setAccess("VIEWER"));
+            }
+            $this->userManager->update($user);
         }
+    }
+
+
+    /**
+     * Updates a specific app from JSON data
+     *
+     * @param string $dashboards
+     * @param string $applicationId
+     * @param string $userId
+     *    
+     * */
+    public function updateApplicationDashboards($dashboards, $applicationId, $userId):array    {
+      
+        $state = [
+            'successful' => false,
+            'esUpdateRequired' => false,
+            'application' => null,
+        ];
+
+        try {
+
+            $array = json_decode($dashboards, true);
+            $array_keys = array_keys( $array);
+
+            $context = new DeserializationContext();
+            $context->setGroups(['Default']);
+
+            foreach ($array_keys as $value) {
+                foreach ($array[$value] as $element) {
+                   
+                    $dashboard = $this->dashboardManager->getDashboard($applicationId, $element['id']);
+                    $dashboard->setVisible($element['visible']);
+                    $this->dashboardManager->update($dashboard);
+                    $state['successful'] = true;
+                }
+            }
+
+        } catch (\Exception $e) {
+            $this->logger->error($e->getMessage());
+            $state['successful'] = false;
+            $state['esUpdateRequired'] = false;
+            $state['application'] = null;
+        }
+
+        return $state;
+    }
+
+    /**
+     * Remove environment from application
+     *
+     * @param  Application $application
+     * @param  Environment $environment
+     *
+     * @return Application
+     */
+    public function removeEnvironment(Application $application, Environment $environment)
+    {
+        $application->removeEnvironment($environment);
+        $this->applicationManager->update($application);
+
+        return $application;
+    }
+
+     /**
+     * @param string $id
+     */
+    public function getById($id)
+    {
+        $application = $this->applicationManager->getOneBy(['id' => $id]);
+        if ($application === null) {
+            throw new HttpException(Response::HTTP_NOT_FOUND, "Application not Found");
+        } else {
+            return $application;
+        }
+
+    }
+
+    /**
+     * @param string $name
+     */
+    public function getByName($name)
+    {
+        $application = $this->applicationManager->getOneBy(['name' => $name]);
+        if ($application === null) {
+            throw new HttpException(Response::HTTP_NOT_FOUND, "Application not Found");
+        } else {
+            return $application;
+        }
+
+    }
+
+    public function userHasPermission($appId, User $user, $env, $listAcess) {
+        $hasPermission = false;
+        foreach($listAcess as $access){
+            $acc = $user->hasAppPermission($env, $appId,$access);
+
+            if($acc){
+                $hasPermission = $acc;
+            }
+        }
+        return $hasPermission ;
     }
 }

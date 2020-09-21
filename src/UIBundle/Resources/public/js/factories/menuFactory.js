@@ -9,7 +9,7 @@
             '$localStorage',
             function (Menus, $state, CONFIG, UserService, $localStorage) {
 
-                if(CONFIG.STRIPE_ENABLED === true){
+                if (CONFIG.LEADWIRE_STRIPE_ENABLED === true) {
                     Menus.SETTINGS.push({
                         route: 'app.billingList',
                         icon: 'fa fa-money-bill-alt',
@@ -24,7 +24,7 @@
                     });
                 }
 
-                if(CONFIG.LOGIN_METHOD === 'github'){
+                if (CONFIG.LEADWIRE_LOGIN_METHOD === 'github') {
                     Menus.MANAGEMENT.push(
                         {
                             route: 'app.management.codes',
@@ -35,26 +35,39 @@
                     )
                 }
 
+                function normalizeRouteParams(params) {
+                    if (!_.has(params, 'ls')) return params;
+                    var result = Object.keys(params.ls).reduce(function (acc, current) {
+                        acc[current] = _.get($localStorage, params.ls[current]);
+                        return acc;
+                    }, params);
+                    delete result.ls;
+
+                    return result;
+                }
+
                 return {
-                    update : function(){
+                    update: function () {
 
                     },
                     get: function (menuKey) {
                         var menus = [];
                         if (menuKey in Menus) {
                             menus = Menus[menuKey].map(function (menu) {
+
                                 return angular.extend({}, menu, {
-                                    route: $state.href(menu.route),
+                                    route: $state.href(menu.route, normalizeRouteParams(menu.params)),
+                                    routeName: menu.route
                                 });
                             });
                         }
-                        if(menuKey === "CAMPAGNE"){
+                        if (menuKey === "CAMPAGNE") {
 
-                            if(CONFIG.COMPAGNE_ENABLED === true){
+                            if (CONFIG.LEADWIRE_COMPAGNE_ENABLED === true) {
                                 if (UserService.isAdmin($localStorage.user)) {
                                     menus.push(
                                         {
-                                            route:  $state.href('app.management.tmecs'),
+                                            route: $state.href('app.management.tmecs'),
                                             abstractRoute: 'app.management',
                                             icon: 'fa fa-table',
                                             label: 'Manage Campaigns',
@@ -63,17 +76,17 @@
                                 } else {
                                     menus.push(
                                         {
-                                            route:  $state.href('app.tmecs'),
+                                            route: $state.href('app.tmecs'),
                                             icon: 'fa fa-table',
                                             label: 'Campaigns',
                                         }
                                     )
                                 }
                                 menus.push({
-                                    url: CONFIG.JENKINS_URL,
+                                    url: CONFIG.LEADWIRE_JENKINS_URL,
                                     icon: 'fa fa-play-circle',
                                     label: 'Launch',
-                                    external:true
+                                    external: true
                                 })
                             }
                         }
@@ -84,16 +97,24 @@
                         labelCallback,
                         routeCallback,
                         iconCallback,
+                        visibleCallback,
+                        routeNameCallback,
+                        routeOptsCallback,
+                        routeIdCallback
                     ) {
                         try {
-                            newMenus = Object.keys(menus);
+                            newMenus = {};
 
-                            newMenus.forEach(function(theme) {
+                            Object.keys(menus).forEach(function (theme) {
                                 sub = menus[theme].map(function (menu) {
                                     return {
                                         label: labelCallback(menu),
                                         route: routeCallback(menu),
                                         icon: iconCallback(menu),
+                                        visible: visibleCallback(menu),
+                                        routeName: routeNameCallback(menu),
+                                        routeOpts: routeOptsCallback(menu),
+                                        routeId: routeIdCallback(menu)
                                     };
                                 });
 
@@ -128,7 +149,7 @@
             CAMPAGNE: 'CAMPAGNE',
         })
         .constant('Menus', {
-               CAMPAGNE:  [
+            CAMPAGNE: [
                 {
                     route: 'app.overview',
                     icon: 'fa fa-paper-plane',
@@ -138,47 +159,90 @@
             DASHBOARD: [],
             SETTINGS: [
                 {
-                    route: 'app.user',
-                    icon: 'fa fa-user',
-                    label: 'Profile',
+                    route: 'app.applicationsList',
+                    icon: 'fa fa-window-restore',
+                    label: 'Applications',
                 },
                 {
-                    route: 'app.applicationsList',
-                    icon: 'fa fa-desktop',
-                    label: 'Applications',
+                    route: 'app.user',
+                    icon: 'fa fa-user-tie',
+                    label: 'Profile',
                 },
             ],
             MANAGEMENT: [
-                {
-                    route: 'app.management.users',
-                    abstractRoute: 'app.management',
-                    icon: 'fa fa-user',
-                    label: 'Manage Users',
-                },
+
                 {
                     route: 'app.management.applications',
                     abstractRoute: 'app.management',
-                    icon: 'fa fa-desktop',
-                    label: 'Manage applications',
+                    icon: 'fa fa-window-restore',
+                    label: 'Applications',
+                },
+                {
+                    route: 'app.management.users',
+                    abstractRoute: 'app.management',
+                    icon: 'fa fa-user-cog',
+                    label: 'Users',
+                },
+                {
+                    route: 'app.management.environmentList',
+                    abstractRoute: 'app.management',
+                    icon: 'fa fa-sitemap',
+                    label: 'Environments',
+                },
+                {
+                    route: 'app.management.alerts',
+                    abstractRoute: 'app.management',
+                    icon: 'fa fa-exclamation-triangle',
+                    label: 'Alerts'
+                },
+                {
+                    route: 'app.management.anomaly',
+                    abstractRoute: 'app.management',
+                    icon: 'fa fa-heartbeat',
+                    label: 'Anomaly Detectors ',
+                },
+                {
+                    route: 'app.management.reports',
+                    abstractRoute: 'app.management',
+                    icon: 'fa fa-th-list',
+                    label: 'Reports',
+                    params: {
+                        ls: {
+                            tenant: 'user.userIndex'
+                        }
+                    }
                 },
                 {
                     route: 'app.management.applicationTypes',
                     abstractRoute: 'app.management',
-                    icon: 'fa fa-desktop',
-                    label: 'Manage application types',
+                    icon: 'fa fa-tools',
+                    label: 'Application types',
                 },
                 {
                     route: 'app.management.monitoringSets',
                     abstractRoute: 'app.management',
                     icon: 'fa fa-desktop',
-                    label: 'Manage monitoring sets',
+                    label: 'Monitoring sets',
                 },
                 {
                     route: 'app.management.templates',
                     abstractRoute: 'app.management',
-                    icon: 'fa fa-file-alt',
-                    label: 'Manage templates',
+                    icon: 'fa fa-file-code',
+                    label: 'Templates',
                 },
+
+                {
+                    route: 'app.management.index',
+                    abstractRoute: 'app.management',
+                    icon: 'fa fa-cogs',
+                    label: 'Index state management'
+                },
+                {
+                    route: 'app.management.security',
+                    abstractRoute: 'app.management',
+                    icon: 'fa fa-shield-alt',
+                    label: 'Security ',
+                }
             ],
         });
 })(window.angular);

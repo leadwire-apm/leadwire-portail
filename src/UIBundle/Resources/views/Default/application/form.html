@@ -2,23 +2,16 @@
     <label class="col-sm-2 control-label" for="name">Name *</label>
     <div class="col-sm-10">
 
-        <input id="name" name="name" placeholder="Application name" type="text"
-               class="form-control"
-               data-ng-model="ctrl.application.name"
-               ng-maxlength="32"
-               blacklist="leadwire,lead.wire,lead_wire"
-               autocomplete="false"
-               lowercase-only
-               required>
-        <span class="text-red"
-              ng-show="applicationForm.name.$error.blacklist && !applicationForm.name.$pristine">
-            The word [[ctrl.blackWord]] is blacklisted
+        <input id="name" name="name" placeholder="Application name" type="text" class="form-control"
+            data-ng-model="ctrl.application.name" ng-maxlength="32"
+            blacklist="[[ctrl.blacklist]]" autocomplete="false" lowercase-only
+            ng-disabled="ctrl.ui.isEditing" required>
+        <span class="text-red" ng-show="applicationForm.name.$error.blacklist && !applicationForm.name.$pristine">
+            The word [[ctrl.blackWord]] is blacklisted or already used
         </span>
-        <span class="text-red"
-              ng-show="applicationForm.name.$error.required && !applicationForm.name.$pristine">
+        <span class="text-red" ng-show="applicationForm.name.$error.required && !applicationForm.name.$pristine">
             This field is required</span>
-        <span class="text-red"
-              ng-show="applicationForm.name.$error.maxlength && !applicationForm.name.$pristine">
+        <span class="text-red" ng-show="applicationForm.name.$error.maxlength && !applicationForm.name.$pristine">
             The text entered exceeds the maximum length</span>
     </div>
 </div>
@@ -26,15 +19,14 @@
 <div class="form-group">
     <label class="col-sm-2 control-label" for="type">Type *</label>
     <div class="col-sm-10">
-        <select name="type" id="type" class="form-control"
-                data-ng-model="ctrl.application.type.id" required>
+        <select name="type" id="type" class="form-control" data-ng-model="ctrl.application.type.id" required>
             <option value="">Select a type</option>
-            <option ng-selected="ctrl.application.type.id == type.id" ng-repeat="type in ctrl.applicationTypes" value="[[type.id]]">
+            <option ng-selected="ctrl.application.type.id == type.id" ng-repeat="type in ctrl.applicationTypes"
+                value="[[type.id]]">
                 [[type.name]]
             </option>
         </select>
-        <span class="text-red"
-              ng-show="applicationForm.type.$error.required && !applicationForm.type.$pristine">
+        <span class="text-red" ng-show="applicationForm.type.$error.required && !applicationForm.type.$pristine">
             This field is required</span>
     </div>
 </div>
@@ -42,24 +34,19 @@
 <div class="form-group">
     <label class="col-sm-2 control-label" for="description">Description</label>
     <div class="col-sm-10">
-        <textarea
-                id="description"
-                rows="7" class="form-control" placeholder="Description .."
-                data-ng-model="ctrl.application.description"></textarea>
+        <textarea id="description" rows="7" class="form-control" placeholder="Description .."
+            data-ng-model="ctrl.application.description"></textarea>
     </div>
 </div>
 
 <div class="form-group" ng-if="!ctrl.ui.isEditing">
     <label class="col-sm-2 control-label">Email *</label>
     <div class="col-sm-10">
-        <input type="email" name="email" class="form-control"
-               data-ng-model="ctrl.application.email"
-               placeholder="Email" required>
-        <span class="text-red"
-              ng-show="applicationForm.email.$error.required && !applicationForm.email.$pristine">
+        <input type="email" name="email" class="form-control" data-ng-model="ctrl.application.email" placeholder="Email"
+            required>
+        <span class="text-red" ng-show="applicationForm.email.$error.required && !applicationForm.email.$pristine">
             This field is required</span>
-        <span class="text-red"
-              ng-show="applicationForm.email.$error.email && !applicationForm.email.$pristine">
+        <span class="text-red" ng-show="applicationForm.email.$error.email && !applicationForm.email.$pristine">
             This field should be a valid email</span>
 
     </div>

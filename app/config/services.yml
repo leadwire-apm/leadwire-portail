@@ -83,13 +83,13 @@ services:
             $domain: "%app_domain%"
             $secret: "%auth_providers.settings.token_secret%"
 
-    AppBundle\Service\SearchGuardService:
-        arguments:
-            $sgConfig: "%sg%"
-        tags:
-            - { name: monolog.logger, channel: search_guard }
     AppBundle\Service\CuratorService:
         arguments:
             $curatorConfig: "%curator%"
         tags:
             - { name: monolog.logger, channel: curator }
+
+    AppBundle\Service\ProcessService:
+        arguments:
+            $appDomain: "%socket_domain%"
+            $port: "%socket_io_port%"

@@ -24,7 +24,7 @@
     ) {
         var vm = this;
 
-        vm.loginMethod = CONSTANTS.LOGIN_METHOD;
+        vm.loginMethod = CONSTANTS.LEADWIRE_LOGIN_METHOD;
         vm.ownerTitle = "Owner Github :"
 
         if(vm.loginMethod === 'proxy' || vm.loginMethod === 'login'){

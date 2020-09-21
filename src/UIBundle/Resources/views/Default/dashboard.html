@@ -1,11 +1,42 @@
 <div>
     <div class="bg-blue-grey text-center" ng-if="!ctrl.applications || ctrl.applications.length===0">
-        <h3 >Welcome to Leadwire
+        <h3>Welcome to Leadwire
         </h3>
         <a ui-sref="app.applicationsAdd" class="btn btn-primary"><i class="fa fa-plus-circle"></i> Create your first
             application</a>
     </div>
-    <div ng-if="ctrl.dashboardLink">
-        <iframe scrolling="no" ng-src="[[trustSrc(ctrl.dashboardLink)]]" frameborder="0" iframe-set-dimensions-onload></iframe>
+    <div>
+        <div class="col-sm-12">
+            <div class="col-sm-3 col-md-offset-1" style="padding:10px">
+                <div class="input-prepend input-group input-group-md">
+                    <span class="add-on input-group-addon"><i class="fa fa-calendar"></i></span>
+                    <input id="range" date-range-picker="t2" start-date="startDate" end-date="endDate"
+                        placeholder="select" data-ng-required="true" on-change="sync()"
+                        date-range-picker-options="options" clear-on-cancel="true" class="form-control">
+                </div>
+            </div>
+            <div class="col-sm-4" style="padding:10px; display: grid; text-align: center;">
+                <div class="input-prepend input-group input-group-md" ng-if="ctrl.isAdmin()">
+                    <a class="btn btn-primary" ng-click="ctrl.goToEditDashboard()"> Edit dashboard </a>
+                </div>
+            </div>
+            <div class="col-sm-3" style="padding:10px">
+                <div class="input-prepend input-group input-group-md">
+                    <span class="add-on input-group-addon"><i class="fas fa-sync"></i></span>
+                    <select class="form-control" ng-model="ctrl.refresh" data-ng-change="sync()">
+                        <option value="0" selected>Auto refresh OFF</option>
+                        <option value="10">10 Seconds</option>
+                        <option value="20">20 Seconds</option>
+                        <option value="30">30 Seconds</option>
+                        <option value="60">1 Minute</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div ng-if="ctrl.dashboardLink">
+            <iframe scrolling="yes" ng-src="[[ctrl.dashboardLink]]" frameborder="0"
+                iframe-set-dimensions-onload></iframe>
+        </div>
+
     </div>
 </div>

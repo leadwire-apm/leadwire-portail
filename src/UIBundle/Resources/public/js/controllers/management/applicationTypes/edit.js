@@ -7,6 +7,9 @@
             'MESSAGES_CONSTANTS',
             '$state',
             'toastr',
+            'socket',
+            '$timeout',
+            '$rootScope',
             EditApplicationTypeControllerCtrlFN,
         ]);
 
@@ -21,8 +24,38 @@
         MESSAGES_CONSTANTS,
         $state,
         toastr,
+        socket,
+        $timeout,
+        $rootScope
     ) {
         var vm = this;
+
+        socket.on('heavy-operation', function(data) {
+            if (data.user != $rootScope.user.id) {
+                return;
+            }
+
+            if (data.status == "in-progress") {
+                if ($('#toast-container').hasClass('toast-top-right') == false) {
+                    toastr.info(
+                        data.message + '...',
+                        "Operation in progress",
+                        {
+                            timeOut: 0,
+                            extendedTimeOut: 0,
+                            closeButton: true,
+                            onClick: null,
+                            preventDuplicates: true
+                        }
+                    );
+                } else {
+                    $('.toast-message').html(data.message + '...');
+                }
+            }
+            if (data.status == "done") {
+                toastr.clear();
+            }
+        });
 
         vm.flipActivityIndicator = function (key) {
             vm.ui[key] = !vm.ui[key];
@@ -37,8 +70,10 @@
                     .forEach(function(ms) {
                         selected.push(ms.id);
                     });
-                    $('.selectpicker').selectpicker('val', selected);
-                    $('.selectpicker').selectpicker('refresh');
+                    $timeout(function () {
+                        $('.selectpicker').selectpicker('val', selected);
+                        $('.selectpicker').selectpicker('refresh');
+                    });
                 });
 
         };
@@ -49,13 +84,19 @@
                 vm.availableMonitoringSets = monitoringSets;
                 $('.selectpicker').append(vm.availableMonitoringSets.map(function(v,k){return '<option value="' + v.id + '">'+v.name+'</option>'}));
                 $('.selectpicker').selectpicker('refresh');
-                vm.loadApplicationType($stateParams.id)
+                vm.loadApplicationType($stateParams.id);
             });
         };
 
         vm.editAppType = function () {
             vm.flipActivityIndicator('isSaving')
-            vm.applicationType.monitoringSets = vm.applicationType.monitoringSets.map(function (ms) {return {'id': ms};});
+            vm.applicationType.monitoringSets = vm.applicationType.monitoringSets.map(function (ms) {
+                if (ms instanceof Object) {
+                    return {"id": ms.id};
+                }
+
+                return {"id": ms};
+            });
             ApplicationTypeService.update(vm.applicationType)
                 .then(function () {
                     vm.flipActivityIndicator('isSaving')
@@ -78,7 +119,7 @@
                     name: '',
                     description: '',
                     installation: '',
-                    monitoringSets:[]
+                    monitoringSets: []
                 },
                 availableMonitoringSets: []
             });

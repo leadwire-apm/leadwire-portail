@@ -22,10 +22,26 @@ angular.module('leadwireApp', [
     'toastr',
     'simplemde',
     'ng.jsoneditor',
+    'ysilvela.socket-io',
+    'angularjs.daterangepicker',
 ], function ($interpolateProvider) {
     $interpolateProvider.startSymbol('[[');
     $interpolateProvider.endSymbol(']]');
 })
+    .factory('socket', function (socketFactory) {
+        return socketFactory({
+            prefix: "",
+            ioSocket: io.connect( LEADWIRE_SOCKET_SCHEME + '://' + LEADWIRE_SOCKET_DOMAIN + ':' + LEADWIRE_SOCKET_IO_PORT, {
+                secure: true,
+                reconnect: true,
+                reconnectionDelay: 1000,
+                reconnectionDelayMax: 4000,
+                reconnectionAttempts: 4,
+                requestCert: false,
+                rejectUnauthorized: false
+            })
+        });
+    })
     .constant('COLORS', {
         default: '#e2e2e2',
         primary: '#09c',
@@ -41,24 +57,31 @@ angular.module('leadwireApp', [
     })
     .constant('CONFIG', {
         APP_VERSION: APP_VERSION,
+        LEADWIRE_SOCKET_IO_PORT: LEADWIRE_SOCKET_IO_PORT,
+        LEADWIRE_SOCKET_DOMAIN: LEADWIRE_SOCKET_DOMAIN,
+        LEADWIRE_SOCKET_SCHEME: LEADWIRE_SOCKET_SCHEME,
         BASE_URL: BASE_URL,
         ASSETS_BASE_URL: ASSETS_BASE_URL,
         UPLOAD_URL: UPLOAD_URL,
         DOWNLOAD_URL: DOWNLOAD_URL,
-        GITHUB_CLIENT_ID: GITHUB_CLIENT_ID,
+        LEADWIRE_GITHUB_CLIENT_ID: LEADWIRE_GITHUB_CLIENT_ID,
         KIBANA_BASE_URL: KIBANA_BASE_URL,
         DATE_DEFAULT_FORMAT: DATE_DEFAULT_FORMAT,
         EN_DATE_FORMAT: EN_DATE_FORMAT,
         FR_DATE_FORMAT: FR_DATE_FORMAT,
         TAX: TAX,
-        LOGIN_METHOD: LOGIN_METHOD,
-        COMPAGNE_ENABLED: COMPAGNE_ENABLED,
-        JENKINS_URL: JENKINS_URL,
-        STRIPE_ENABLED: STRIPE_ENABLED,
+        LEADWIRE_LOGIN_METHOD: LEADWIRE_LOGIN_METHOD,
+        LEADWIRE_COMPAGNE_ENABLED: LEADWIRE_COMPAGNE_ENABLED,
+        LEADWIRE_JENKINS_URL: LEADWIRE_JENKINS_URL,
+        LEADWIRE_STRIPE_ENABLED: LEADWIRE_STRIPE_ENABLED,
+        LEADWIRE_LOGOUT_URL: LEADWIRE_LOGOUT_URL,
+        LEADWIRE_KIBANA_HOST: LEADWIRE_KIBANA_HOST,
+        KIBANA_PORT: KIBANA_PORT,
+        KIBANA_HOST: KIBANA_HOST
     })
     .constant('MESSAGES_CONSTANTS', {
         ERROR: 'Something went wrong,please try again.',
-        SUCCESS: 'Operation successfully completed\n.',
+        SUCCESS: 'Operation successfully completed.',
         EDIT_APP_SUCCESS: 'Your app has been updated successfully.',
         ACTIVATE_APP_SUCCESS: 'Your app has been activated successfully.',
         ACTIVATE_APP_FAILURE:
@@ -70,6 +93,8 @@ angular.module('leadwireApp', [
         REMOVE_APP_SUCCESS: 'The app has been removed.',
         DELETE_INVITATION_SUCCESS: 'The invitation has been deleted.',
         CODE_COPIED: 'The code was copied successfully',
+        RULE_ASSIGNED_SUCCESS: 'The role has been assigned successfully',
+        RULE_DELETED_SUCCESS: 'The role has been deleted successfully',
         ADD_APP_SUCCESS:
             'Your app has been added successfully. You need to activate your app',
         LOGIN_SUCCESS: function (provider) {

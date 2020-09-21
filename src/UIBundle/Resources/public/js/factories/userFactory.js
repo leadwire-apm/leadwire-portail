@@ -7,6 +7,9 @@
             list: function () {
                 return $http.get(CONFIG.BASE_URL + 'api/user/list');
             },
+            listACLManagement: function () {
+                return $http.get(CONFIG.BASE_URL + 'api/user/acl/list/management');
+            },
             delete: function (id) {
                 return $http.delete(
                     CONFIG.BASE_URL + 'api/user/' + id + '/delete');
@@ -58,9 +61,21 @@
                 );
             },
             getProxyHeaders: function(){
-                return $http.get( CONFIG.BASE_URL 
+                return $http.get( CONFIG.BASE_URL
                 );
             },
+            grantAccess: function(payload) {
+                return $http.put(
+                    CONFIG.BASE_URL + 'api/user/access-level/grant',
+                    payload
+                );
+            },
+            revokeAccess: function(payload) {
+                return $http.put(
+                    CONFIG.BASE_URL + 'api/user/access-level/revoke',
+                    payload
+                );
+            }
         };
     }
 })(window.angular);

@@ -7,7 +7,6 @@ use AppBundle\Manager\UserManager;
 use AppBundle\Service\LdapService;
 use AppBundle\Service\KibanaService;
 use AppBundle\Service\ApplicationService;
-use AppBundle\Service\SearchGuardService;
 use AppBundle\Service\ElasticSearchService;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
@@ -35,8 +34,6 @@ class InitializeUserCommand extends ContainerAwareCommand
         $applicationService = $this->getContainer()->get(ApplicationService::class);
         $es = $this->getContainer()->get(ElasticSearchService::class);
         $kibana = $this->getContainer()->get(KibanaService::class);
-        $sg = $this->getContainer()->get(SearchGuardService::class);
-
         /** @var ?bool $withLdap */
         $withLdap = $input->getOption("with-ldap");
         /** @var ?bool $withKibana */
@@ -74,7 +71,6 @@ class InitializeUserCommand extends ContainerAwareCommand
 
         if ($withSg === true) {
             $output->write("<info>Updaing SearchGuard Configuration </info>");
-            $sg->updateSearchGuardConfig();
             $output->write(".");
             $output->writeln("Done");
         }

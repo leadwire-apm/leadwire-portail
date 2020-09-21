@@ -1,6 +1,6 @@
 (function (angular) {
     angular.module('leadwireApp')
-        .factory('ApplicationFactory', function ($http, CONFIG) {
+        .factory('ApplicationFactory', function ($http, CONFIG, $rootScope) {
             return {
 
                 /**
@@ -9,6 +9,13 @@
                  */
                 findMyApplications: function () {
                     return $http.get(CONFIG.BASE_URL + 'api/app/list');
+                },
+                  /**
+                 *
+                 * @returns {Promise}
+                 */
+                findMyApplicationsById: function (id) {
+                    return $http.get(CONFIG.BASE_URL + 'api/app/list/'+id);
                 },
                 /**
                  *
@@ -21,9 +28,25 @@
                  *
                  * @returns {Promise}
                  */
-                findMyDashboard: function (id) {
+                findAllMinimalist: function () {
+                    return $http.get(CONFIG.BASE_URL + 'api/app/all/minimalist');
+                },
+                /**
+                 *
+                 * @returns {Promise}
+                 */
+                findMyDashboard: function (id, envName) {
                     return $http.get(
-                        CONFIG.BASE_URL + 'api/app/' + id + '/dashboards',
+                        CONFIG.BASE_URL + 'api/app/' + id + '/dashboards/' + envName,
+                    );
+                },
+                /**
+                 *
+                 * @returns {Promise}
+                 */
+                findMyReports: function (id, envName) {
+                    return $http.get(
+                        CONFIG.BASE_URL + 'api/app/' + id + '/reports/' + envName,
                     );
                 },
                 /**
@@ -44,7 +67,7 @@
                  *
                  * @returns {Promise}
                  */
-                get: function (id, scope="Default") {
+                get: function (id, scope = "Default") {
                     return $http.get(
                         CONFIG.BASE_URL + 'api/app/' + id + '/get/' + scope,
                     );
@@ -56,6 +79,16 @@
                 update: function (id, body) {
                     return $http.put(
                         CONFIG.BASE_URL + 'api/app/' + id + '/update',
+                        body,
+                    );
+                },
+                /**
+                *
+                * @returns {Promise}
+                */
+                updateDashbaords: function (id, envId, body) {
+                    return $http.put(
+                        CONFIG.BASE_URL + `api/app/${id}/${envId}/update-dashboards`,
                         body,
                     );
                 },
@@ -114,6 +147,44 @@
                         CONFIG.BASE_URL + 'api/app/' + id + '/apply-change',
                     );
                 },
+                /**
+                 * 
+                 */
+                getApplicationDocumentsCount: function (appName, envName) {
+                    return $http.get(
+                        CONFIG.BASE_URL + 'api/app/' + appName + '/' + envName + '/documents',
+                    );
+                },
+                /**
+                * 
+                */
+                getApplicationReports: function (appName, envName) {
+                    return $http.get(
+                        CONFIG.BASE_URL + 'api/app/' + appName + '/' + envName + '/reports',
+                    );
+                },
+                /**
+                * 
+                */
+                deleteApplicationReport: function (id, index) {
+                    return $http.get(
+                        CONFIG.BASE_URL + 'api/app/' + id + '/' + index + '/report',
+                    );
+                },
+                /**
+                *
+                * @returns {Promise}
+                */
+               grantUser: function (appid, userid) {
+                return $http.get(
+                    CONFIG.BASE_URL + 'api/app/' + appid + '/' + userid + '/grantPermission'
+                );
+            },
+            revokePermission: function (appid, userid) {
+                return $http.get(
+                    CONFIG.BASE_URL + 'api/app/' + appid + '/' + userid + '/revokePermission'
+                );
+            },
             };
         });
 })(window.angular);

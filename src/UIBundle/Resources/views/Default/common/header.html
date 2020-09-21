@@ -1,169 +1,152 @@
-<div class="brand ">
-  <!-- toggle offscreen menu -->
-  <div class="toggle-offscreen visible-xs">
-    <offscreen class="visible-xs"></offscreen>
+<div class="row brand">
+  <div class="col-lg-4" style="padding-left: 2%; padding-top: 1%;">
+   <h4>[[title]]</h4> 
   </div>
-  <!-- /toggle offscreen menu -->
+  <div class="col-lg-8">
+    <!-- toggle offscreen menu -->
+    <div class="toggle-offscreen visible-xs">
+      <offscreen class="visible-xs"></offscreen>
+    </div>
+    <!-- /toggle offscreen menu -->
 
-  <!-- logo -->
-  <div class="brand-logo visible-xs-inline-block" style="margin-left: 30px;">
-    <img data-ng-src="images/logo-dark.png" height="25" alt="" />
-  </div>
-  <!-- /logo -->
+    <!-- logo -->
+    <div class="brand-logo visible-xs-inline-block" style="margin-left: 30px;">
+      <img data-ng-src="images/logo-dark.png" height="25" alt="" />
+    </div>
+    <!-- /logo -->
 
-  <ul class="nav navbar-nav navbar-right pull-right">
-        <li class="dropdown pull-left" ng-if="COMPAGNE_ENABLED === true">
-            <a  href="" ui-sref="app.overview"  title="Campaigns">
-        <i class="fa fa-paper-plane"></i>
-      </a>
-    </li>
+    <ul class="nav navbar-nav navbar-right pull-right">
+      <li class="dropdown pull-left" ng-if="LEADWIRE_COMPAGNE_ENABLED === true">
+        <a href="" ui-sref="app.overview" title="Campaigns">
+          <i class="fa fa-paper-plane"></i>
+        </a>
+      </li>
 
-    <li class="pull-left">
-      <a
-        href=""
-        ng-click="loadApplications()"
-        title="Dashboards"
-        data-placement="left"
-        data-toggle="tooltip"
-        quick-launch
-      >
-        <img src="images/elasticsearch.png" width="15px"></img>
-      </a>
-    </li>
-    <li class="pull-left hidden-xs" ng-if="isAdmin()">
-      <a ui-sref="app.management.users" title="Admin Settings">
-        [[text]]
-        <i class="fas fa-wrench"></i>
-      </a>
-    </li>
-    <li class="pull-left hidden-xs">
-      <a
-        ui-sref="app.user"
-        title="User Settings"
-        data-placement="left"
-        data-toggle="tooltip"
-      >
-        <i style="font-size: 15px;" class="fa fa-cog"></i>
-      </a>
-    </li>
-    <li class="dropdown hidden" dropdown>
-      <a href="javascript:;" class="dropdown-toggle isDisabled ">
-        <!--dropdown-toggle-->
-        <i class="fa fa-bell-o"></i>
-        <div class="status bg-danger border-danger animated bounce"></div>
-      </a>
-      <ul class="dropdown-menu notifications">
-        <li class="notifications-header">
-          <p class="text-muted small">You have 3 new messages</p>
-        </li>
-        <li>
-          <ul class="notifications-list">
-            <li>
-              <a href="javascript:;">
-                <span class="pull-left mt2 mr15">
-                  <span class="img-circle">
-                    <img
-                      data-ng-src="images/avatar.jpg"
-                      class="avatar avatar-xs"
-                      alt=""
-                    />
+      <li class="pull-left">
+        <a href="" ng-click="loadApplications()" title="Dashboards" data-placement="left" data-toggle="tooltip"
+          quick-launch>
+          <img src="images/elasticsearch.png" width="15px"></img>
+        </a>
+      </li>
+      <li class="pull-left hidden-xs" ng-if="isAdmin()">
+        <a ui-sref="app.management.applications" title="Admin Settings">
+          [[text]]
+          <i class="fas fa-wrench"></i>
+        </a>
+      </li>
+      <li class="pull-left hidden-xs">
+        <a ui-sref="app.applicationsList" title="User Settings" data-placement="left" data-toggle="tooltip">
+          <i style="font-size: 15px;" class="fa fa-cog"></i>
+        </a>
+      </li>
+      <li class="dropdown hidden" dropdown>
+        <a href="javascript:;" class="dropdown-toggle isDisabled ">
+          <!--dropdown-toggle-->
+          <i class="fa fa-bell-o"></i>
+          <div class="status bg-danger border-danger animated bounce"></div>
+        </a>
+        <ul class="dropdown-menu notifications">
+          <li class="notifications-header">
+            <p class="text-muted small">You have 3 new messages</p>
+          </li>
+          <li>
+            <ul class="notifications-list">
+              <li>
+                <a href="javascript:;">
+                  <span class="pull-left mt2 mr15">
+                    <span class="img-circle">
+                      <img data-ng-src="images/avatar.jpg" class="avatar avatar-xs" alt="" />
+                    </span>
                   </span>
-                </span>
-                <div class="overflow-hidden">
-                  <span>Sean launched a new application</span>
-                  <span class="time">2 seconds ago</span>
-                </div>
-              </a>
-            </li>
-            <li>
-              <a href="javascript:;">
-                <div class="pull-left mt2 mr15">
-                  <div class="circle-icon bg-danger">
-                    <i class="fa fa-chain-broken"></i>
+                  <div class="overflow-hidden">
+                    <span>Sean launched a new application</span>
+                    <span class="time">2 seconds ago</span>
                   </div>
-                </div>
-                <div class="overflow-hidden">
-                  <span>Removed chrome from app list</span>
-                  <span class="time">4 Hours ago</span>
-                </div>
-              </a>
-            </li>
-            <li>
-              <a href="javascript:;">
-                <span class="pull-left mt2 mr15">
-                  <img
-                    data-ng-src="images/face3.jpg"
-                    class="avatar avatar-xs img-circle"
-                    alt=""
-                  />
-                </span>
-                <div class="overflow-hidden">
-                  <span class="text-muted">Jack Hunt has registered</span>
-                  <span class="time">9 hours ago</span>
-                </div>
-              </a>
-            </li>
-          </ul>
-        </li>
-        <li class="notifications-footer">
-          <a href="javascript:;">See all messages</a>
-        </li>
-      </ul>
-    </li>
+                </a>
+              </li>
+              <li>
+                <a href="javascript:;">
+                  <div class="pull-left mt2 mr15">
+                    <div class="circle-icon bg-danger">
+                      <i class="fa fa-chain-broken"></i>
+                    </div>
+                  </div>
+                  <div class="overflow-hidden">
+                    <span>Removed chrome from app list</span>
+                    <span class="time">4 Hours ago</span>
+                  </div>
+                </a>
+              </li>
+              <li>
+                <a href="javascript:;">
+                  <span class="pull-left mt2 mr15">
+                    <img data-ng-src="images/face3.jpg" class="avatar avatar-xs img-circle" alt="" />
+                  </span>
+                  <div class="overflow-hidden">
+                    <span class="text-muted">Jack Hunt has registered</span>
+                    <span class="time">9 hours ago</span>
+                  </div>
+                </a>
+              </li>
+            </ul>
+          </li>
+          <li class="notifications-footer">
+            <a href="javascript:;">See all messages</a>
+          </li>
+        </ul>
+      </li>
 
-    <li class="dropdown pull-left" dropdown>
-      <a href="javascript:;" class="dropdown-toggle" dropdown-toggle>
-        <span class="img-circle ml10">
-          <img
-            http-src="[[user.avatar]]"
-            class="header-avatar "
-            alt="[[user.name]]"
-            title="[[user.name]]"
-          />
-        </span>
-        <span class="pull-left">[[user.fname]] </span>
-      </a>
-      <ul class="dropdown-menu">
-        <li ng-if="LOGIN_METHOD === 'github'">
-          <a ui-sref="app.user">Settings</a>
-        </li>
-        <li ng-if="LOGIN_METHOD === 'github'"> 
-          <a ui-sref="app.updateSubscription({action:'upgrade'})">Upgrade</a>
-        </li>
-        <li ng-if="LOGIN_METHOD === 'github'">
-          <a href="javascript:;">Help</a>
-        </li>
-        <li>
-          <a data-ng-click="logout()">Logout</a>
-        </li>
-      </ul>
-    </li>
-  </ul>
-  <!-- toggle chat sidebar small screen-->
-  <!--<div class="toggle-chat">-->
-  <!--<a href="javascript:;" class="hamburger-icon v2 visible-xs"-->
-  <!--data-ng-click="app.layout.isChatOpen = !app.layout.isChatOpen">-->
-  <!--<span></span>-->
-  <!--<span></span>-->
-  <!--<span></span>-->
-  <!--</a>-->
-  <!--</div>-->
-  <!-- /toggle chat sidebar small screen-->
+      <li class="dropdown pull-left" dropdown>
+        <a href="javascript:;" class="dropdown-toggle" dropdown-toggle>
+          <span class="img-circle ml10">
+            <img http-src="[[user.avatar]]" class="header-avatar " alt="[[user.name]]" title="[[user.name]]" />
+          </span>
+          <span class="pull-left">[[user.fname]] </span>
+        </a>
+        <ul class="dropdown-menu">
+          <li ng-if="LEADWIRE_LOGIN_METHOD === 'github'">
+            <a ui-sref="app.user">Settings</a>
+          </li>
+          <li ng-if="LEADWIRE_LOGIN_METHOD === 'github'">
+            <a ui-sref="app.updateSubscription({action:'upgrade'})">Upgrade</a>
+          </li>
+          <li ng-if="LEADWIRE_LOGIN_METHOD === 'github'">
+            <a href="javascript:;">Help</a>
+          </li>
+          <li>
+            <a ui-sref="app.clusterOverview">Cluster</a>
+          </li>
+          <li>
+            <a ui-sref="app.applicationsOverview">Applications Overview</a>
+          </li>
+          <li>
+            <a data-ng-click="logout()">Logout</a>
+          </li>
+        </ul>
+      </li>
+      <li>
+        <a href ng-init="app.layout.isChatOpen = flase" class="hamburger-icon v2"
+          ng-click="app.layout.isChatOpen = !app.layout.isChatOpen; getEnvironments()">
+          <span></span> <span></span> <span></span> </a>
+      </li>
+    </ul>
+    <!-- toggle chat sidebar small screen-->
+    <!--<div class="toggle-chat">-->
+    <!--<a href="javascript:;" class="hamburger-icon v2 visible-xs"-->
+    <!--data-ng-click="app.layout.isChatOpen = !app.layout.isChatOpen">-->
+    <!--<span></span>-->
+    <!--<span></span>-->
+    <!--<span></span>-->
+    <!--</a>-->
+    <!--</div>-->
+    <!-- /toggle chat sidebar small screen-->
+  </div>
+
+  <!--<ul class="nav navbar-nav hidden-xs">-->
+  <!--<li>-->
+  <!--<p class="navbar-text">-->
+  <!--[[$state.current.data.title]]-->
+  <!--</p>-->
+  <!--</li>-->
+  <!--</ul>-->
 </div>
-
-<!--<ul class="nav navbar-nav hidden-xs">-->
-<!--<li>-->
-<!--<p class="navbar-text">-->
-<!--[[$state.current.data.title]]-->
-<!--</p>-->
-<!--</li>-->
-<!--</ul>-->
-
-<style>
-  .isDisabled {
-    color: currentColor;
-    cursor: not-allowed;
-    opacity: 0.5;
-    text-decoration: none;
-  }
-</style>

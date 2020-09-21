@@ -1,0 +1,70 @@
+<div class="no-more-tables row">
+    <div class="col-sm-3">
+        <a class="btn btn-primary pull-right mb10" ng-click="ctrl.addWatcher()"><i class="fa fa-plus-circle"></i>
+            Watcher</a>
+    </div>
+    <div class="col-sm-5"></div>
+    <div class="col-sm-4 flex">
+        <label class="control-label" for="titre">Environment select</label>
+        <select data-ng-model="ctrl.selectedEnvironment" class="form-control" ng-change="ctrl.setWatcherLink()">
+            <option ng-selected="ctrl.selectedEnvironment == environment.id"
+                ng-repeat="environment in ctrl.getEnvironmentsForReport(user)" value="[[environment.id]]">
+                [[environment.name]]
+            </option>
+        </select>
+
+    </div>
+
+    <div ng-if="ctrl.watchersList">
+        <table class="table table-striped mb2">
+            <thead>
+                <tr>
+                    <th class="col-md-2">Titre</th>
+                    <th class="col-md-3">Dashboard</th>
+                    <th class="col-md-2">Subject</th>
+                    <th class="col-md-2">Schedule</th>
+                    <th colspan="2" style="text-align: center">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="watcher in ctrl.watchersList">
+                    <td data-title="Titre" data-label="Titre">
+                        <span></span>[[watcher.titre]]
+                    </td>
+                    <td data-title="Dashboard" data-label="Dashboard">[[ctrl.getDashboardName(watcher.dashboard)]]</td>
+                    <td data-title="Subject" data-label="Subject">[[watcher.subject]]</td>
+                    <td data-title="Schedule" data-label="Schedule">[[watcher.schedule]]</td>
+                    <td data-title="Actions" data-label="Actions" class="actionsCell">
+
+                        <div class="apm-checkbox">
+                            <label class="switch switch-sm">
+                                <input type="checkbox" title="Disabled/Enabled" ng-model="watcher.enabled"
+                                    ng-change="ctrl.handleWatcher(watcher)">
+                                <span>
+                                    <i class="handle"></i>
+                                </span>
+                            </label>
+                        </div>
+
+                        <a class="btn btn-success" title="Execute" data-placement="left" data-toggle="tooltip"
+                            ng-click="ctrl.executeWatcher(watcher.id)">
+                            <i class="fas fa-play"></i>
+                        </a>
+
+                        <a class="btn btn-danger" title="Delete" data-placement="left" data-toggle="tooltip"
+                            ng-click="ctrl.deleteWatcher(watcher.id, $index)">
+                            <i class="fa fa-trash"></i>
+                        </a>
+
+                        <a class="btn btn-info" title="Edit" data-placement="left" data-toggle="tooltip"
+                            ng-click="ctrl.editWatcher(watcher)">
+                            <i class="fa fa-pen"></i>
+                        </a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+
+</div>

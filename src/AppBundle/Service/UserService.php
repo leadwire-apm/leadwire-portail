@@ -4,6 +4,8 @@ namespace AppBundle\Service;
 
 use AppBundle\Document\User;
 use AppBundle\Manager\UserManager;
+use AppBundle\Manager\ApplicationManager;
+use AppBundle\Manager\EnvironmentManager;
 use ATS\EmailBundle\Document\Email;
 use ATS\EmailBundle\Service\SimpleMailerService;
 use ATS\PaymentBundle\Service\CustomerService;
@@ -26,6 +28,16 @@ class UserService
      * @var UserManager
      */
     private $userManager;
+
+    /**
+     * @var EnvironmentManager
+     */
+    private $environmentManager;
+
+    /**
+     * @var ApplicationManager
+     */
+    private $applicationManager;
 
     /**
      * @var SerializerInterface
@@ -71,6 +83,8 @@ class UserService
      * Constructor
      *
      * @param UserManager $userManager
+     * @param EnvironmentManager $environmentManager
+     * @param ApplicationManager $applicationManager
      * @param SerializerInterface $serializer
      * @param LoggerInterface $logger
      * @param SimpleMailerService $mailer
@@ -81,6 +95,8 @@ class UserService
      */
     public function __construct(
         UserManager $userManager,
+        EnvironmentManager $environmentManager,
+        ApplicationManager $applicationManager,
         SerializerInterface $serializer,
         LoggerInterface $logger,
         SimpleMailerService $mailer,
@@ -91,6 +107,8 @@ class UserService
         string $sender
     ) {
         $this->userManager = $userManager;
+        $this->environmentManager = $environmentManager;
+        $this->applicationManager = $applicationManager;
         $this->serializer = $serializer;
         $this->logger = $logger;
         $this->mailer = $mailer;
@@ -357,6 +375,8 @@ class UserService
                 ->serializer
                 ->deserialize($json, User::class, 'json', $context);
 
+            $_user= $this->getUser($user->getId());
+            $user->setEmail($_user->getEmail());
             $this->userManager->update($user);
 
             $isSuccessful = true;
@@ -439,7 +459,7 @@ class UserService
 
         $user = $this->userManager->getOneBy(['id' => $id]);
 
-        if ($user instanceof User) {
+        if ($user instanceof User && $user->getName() !== "admin") {
             $user->toggleLock();
             if ($user->isLocked() === true) {
                 // It's a lock operation --> Update the lock message if any
@@ -452,4 +472,5 @@ class UserService
 
         return $isSuccessful;
     }
+    
 }

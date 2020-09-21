@@ -21,12 +21,12 @@ angular.module('leadwireApp')
              */
 
             $authProvider.github({
-                clientId: CONFIG.GITHUB_CLIENT_ID,
+                clientId: CONFIG.LEADWIRE_GITHUB_CLIENT_ID,
                 url: CONFIG.BASE_URL + 'login/github',
             });
 
             $authProvider.baseUrl = CONFIG.BASE_URL;
-            $authProvider.loginUrl = 'login/' + CONFIG.LOGIN_METHOD;
+            $authProvider.loginUrl = 'login/' + CONFIG.LEADWIRE_LOGIN_METHOD;
 
             // Application routes
             $stateProvider.state('app', {
@@ -108,9 +108,8 @@ angular.module('leadwireApp')
                         },
                         deps: updateMenuItems(MenuEnum.SETTINGS),
                         beforeMount: [
-                            '$rootScope',
                             'UserService',
-                            function ($rootScope, UserService) {
+                            function (UserService) {
                                 UserService.handleFirstLogin();
                                 return Promise.resolve();
                             },
@@ -215,17 +214,6 @@ angular.module('leadwireApp')
                         menu: updateMenuItems(MenuEnum.DASHBOARD),
                     },
                 })
-                .state('app.dashboard.manageDashboard', {
-                    url: '/dashboard/manage/{tenant}',
-                    templateUrl: 'manageDashboards.html',
-                    controller: 'manageDashboardsCtrl',
-                    controllerAs: 'ctrl',
-                    resolve: {
-                        permissions: function (RouteGuard) {
-                            return RouteGuard.loginRequired();
-                        },
-                    },
-                })
                 .state('app.management', {
                     abstract: true,
                     url: '/management',
@@ -266,6 +254,18 @@ angular.module('leadwireApp')
                         menu: updateMenuItems(MenuEnum.MANAGEMENT),
                     },
                     controller: 'DetailUserController',
+                    controllerAs: 'ctrl',
+                })
+                .state('app.management.userManageApplications', {
+                    url: '/users/:id/manageApplications',
+                    templateUrl: 'management/users/userManageApplications.html',
+                    resolve: {
+                        permissions: function (RouteGuard) {
+                            return RouteGuard.adminRequired();
+                        },
+                        menu: updateMenuItems(MenuEnum.MANAGEMENT),
+                    },
+                    controller: 'ManageUserApplicationsController',
                     controllerAs: 'ctrl',
                 })
                 .state('app.management.plans', {
@@ -447,7 +447,7 @@ angular.module('leadwireApp')
                     controllerAs: 'ctrl',
                 })
                 .state('app.management.editTemplate', {
-                    url: '/templates/:id/edit',
+                    url: '/templates/:id/:name/:type/edit',
                     templateUrl: 'management/templates/edit.html',
                     resolve: {
                         permissions: function (RouteGuard) {
@@ -457,6 +457,102 @@ angular.module('leadwireApp')
                     },
                     controller: 'EditTemplateController',
                     controllerAs: 'ctrl',
+                })
+                .state('app.management.environmentList', {
+                    url: '/environment/list',
+                    templateUrl: 'management/environment/list.html',
+                    resolve: {
+                        permissions: function (RouteGuard) {
+                            return RouteGuard.adminRequired();
+                        },
+                        menu: updateMenuItems(MenuEnum.MANAGEMENT),
+                    },
+                    controller: 'ListEnvironmentController',
+                    controllerAs: 'ctrl',
+                })
+                .state('app.management.addEnvironment', {
+                    url: '/environment/new',
+                    templateUrl: 'management/environment/add.html',
+                    resolve: {
+                        permissions: function (RouteGuard) {
+                            return RouteGuard.adminRequired();
+                        },
+                        menu: updateMenuItems(MenuEnum.MANAGEMENT),
+                    },
+                    controller: 'AddEnvironmentController',
+                    controllerAs: 'ctrl',
+                })
+                .state('app.management.editEnvironment', {
+                    url: '/environment/:id/edit',
+                    templateUrl: 'management/environment/edit.html',
+                    resolve: {
+                        permissions: function (RouteGuard) {
+                            return RouteGuard.adminRequired();
+                        },
+                        menu: updateMenuItems(MenuEnum.MANAGEMENT),
+                    },
+                    controller: 'EditEnvironmentController',
+                    controllerAs: 'ctrl',
+                })
+                .state('app.management.reports', {
+                    url: '/reports/{tenant}',
+                    templateUrl: 'management/reports/manageReports.html',
+                    controller: 'ManageReportController',
+                    controllerAs: 'ctrl',
+                    resolve: {
+                        permissions: function (RouteGuard) {
+                            return RouteGuard.adminRequired();
+                        },
+                        menu: updateMenuItems(MenuEnum.MANAGEMENT),
+                    },
+                })
+                .state('app.management.alerts', {
+                    url: '/alerts',
+                    templateUrl: 'management/alerts/manageAlerts.html',
+                    controller: 'ManageAlertsController',
+                    controllerAs: 'ctrl',
+                    resolve: {
+                        permissions: function (RouteGuard) {
+                            return RouteGuard.adminRequired();
+                        },
+                        menu: updateMenuItems(MenuEnum.MANAGEMENT),
+                    },
+                })
+                .state('app.management.index', {
+                    url: '/index',
+                    templateUrl: 'management/index/manageIndex.html',
+                    controller: 'ManageIndexController',
+                    controllerAs: 'ctrl',
+                    resolve: {
+                        permissions: function (RouteGuard) {
+                            return RouteGuard.adminRequired();
+                        },
+                        menu: updateMenuItems(MenuEnum.MANAGEMENT),
+                    },
+                })
+                .state('app.management.security', {
+                    url: '/security',
+                    templateUrl: 'management/security/manageSecurity.html',
+                    controller: 'ManageSecurityController',
+                    controllerAs: 'ctrl',
+                    resolve: {
+                        permissions: function (RouteGuard) {
+                            return RouteGuard.adminRequired();
+                        },
+                        menu: updateMenuItems(MenuEnum.MANAGEMENT),
+                    },
+                })
+                .state('app.management.anomaly', {
+                    url: '/anomalyDetector',
+                    templateUrl: 'management/anomaly/anomalyDetector.html',
+                    controller: 'anomalyController',
+                    controllerAs: 'ctrl',
+                    resolve: {
+                        permissions: function (RouteGuard) {
+                            return RouteGuard.adminRequired();
+                        },
+                        menu: updateMenuItems(MenuEnum.MANAGEMENT),
+                    },
                 })
                 .state('app.management.codes', {
                     url: '/codes/list',
@@ -571,9 +667,51 @@ angular.module('leadwireApp')
                 })
                 //END TMEC
 
-            function updateMenuItems (key) {
+                .state('app.clusterOverview', {
+                    url: '/overview',
+                    templateUrl: 'overview/overview.html',
+                    resolve: {
+                        permissions: function (RouteGuard) {
+                            return RouteGuard.loginRequired();
+                        },
+                        menu: getMenuItems(),
+                    },
+                    controller: 'OverviewController',
+                    controllerAs: 'ctrl',
+                })
+
+                .state('app.applicationsOverview', {
+                    url: '/applicationsSverview',
+                    templateUrl: 'applicationsOverview/overview.html',
+                    resolve: {
+                        permissions: function (RouteGuard) {
+                            return RouteGuard.loginRequired();
+                        },
+                        menu: getMenuItems(),
+                    },
+                    controller: 'ApplicationOverviewController',
+                    controllerAs: 'ctrl',
+                })
+
+            function updateMenuItems(key) {
                 return function (MenuFactory, $rootScope) {
-                    $rootScope.menus = MenuFactory.get(key);
+                    if (key != "DASHBOARD") {
+                        $rootScope.menus = MenuFactory.get(key);
+                    }
+                    return Promise.resolve();
+                };
+            }
+
+            function getMenuItems() {
+                return function (MenuFactory, $rootScope, $localStorage, UserService) {
+
+                    const isAdmin = UserService.isAdmin($localStorage.user);
+                    const isSuperAdmin = $localStorage.user.roles.indexOf(UserService.getRoles().SUPER_ADMIN) !== -1;
+                    if (isAdmin || isSuperAdmin) {
+                        $rootScope.menus = MenuFactory.get("MANAGEMENT");
+                    } else {
+                        $rootScope.menus = MenuFactory.get("SETTINGS");
+                    }
                     return Promise.resolve();
                 };
             }

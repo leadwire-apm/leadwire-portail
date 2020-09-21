@@ -45,6 +45,31 @@ class UserController extends Controller
     }
 
     /**
+     * @Route("/acl/list/management", methods="GET")
+     *
+     * @return Response
+     */
+    public function listUsersACLManagementAction(Request $request, UserService $userService)
+    {
+        $users = $userService->listUsersByRole("all");
+        $data = [];
+
+        array_map(function ($user) use (&$data) {
+            if (!$user->hasRole('ROLE_ADMIN') && !$user->hasRole('ROLE_SUPER_ADMIN')) {
+                $data[] = [
+                    "id" => $user->getId(),
+                    "name" => $user->getName(),
+                    "username" => $user->getUsername(),
+                    "email" => $user->getEmail(),
+                    "acls" => $user->acl(),
+                ];
+            }
+        }, $users);
+
+        return $this->renderResponse($data, Response::HTTP_OK, []);
+    }
+
+    /**
      * @Route("/{id}/get", methods="GET")
      *
      * @param Request $request

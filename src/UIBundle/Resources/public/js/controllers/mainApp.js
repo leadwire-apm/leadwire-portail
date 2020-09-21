@@ -11,6 +11,7 @@
             'ApplicationFactory',
             'UserService',
             'DashboardService',
+            'EnvironmentService',
             'MESSAGES_CONSTANTS',
             'toastr',
             'Paginator',
@@ -18,7 +19,7 @@
             AppCtrlFN,
         ]);
 
-    function AppCtrlFN (
+    function AppCtrlFN(
         $scope,
         $state,
         $rootScope,
@@ -28,20 +29,84 @@
         ApplicationFactory,
         UserService,
         DashboardService,
+        EnvironmentService,
         MESSAGES_CONSTANTS,
         toastr,
         Paginator,
         CONFIG,
     ) {
+
         onLoad();
-        $scope.COMPAGNE_ENABLED = CONFIG.COMPAGNE_ENABLED;
-        $scope.LOGIN_METHOD     = CONFIG.LOGIN_METHOD;
+
+        $scope.environments = [];
+        $scope.title = "Admin settings";
+
+        $scope.getIcon = function (menuName) {
+            var icon = "";
+            switch (menuName) {
+                case "APM":
+                    icon = "fa fa-eye";
+                    break;
+                case "Logs":
+                    icon = "fa fa-list-alt";
+                    break;
+                case "Metrics":
+                    icon = "fa fa-tachometer-alt";
+                    break;
+                case "Network":
+                    icon = "fa fa-network-wired";
+                    break;
+                case "Uptime":
+                    icon = "fa fa-history";
+                    break;
+                default:
+                    break;
+            }
+
+            return icon;
+        }
+
+        $scope.getEnvironments = function () {
+            $scope.getDefaultEnv();
+            EnvironmentService.list()
+                .then(function (environments) {
+                    $scope.environments = environments;
+                })
+                .catch(function (error) {
+                });
+        }
+
+        $scope.setSelectedEnv = function (environment) {
+            $scope.selectedEnvId = $localStorage.selectedEnvId = environment.id;
+            $scope.selectedEnv = $localStorage.selectedEnv = environment;
+            $rootScope.$broadcast('environment:updated');
+            $scope.app.layout.isChatOpen = false;
+            $location.path('/applicationsSverview');
+        }
+
+        $scope.LEADWIRE_COMPAGNE_ENABLED = CONFIG.LEADWIRE_COMPAGNE_ENABLED;
+        $scope.LEADWIRE_LOGIN_METHOD = CONFIG.LEADWIRE_LOGIN_METHOD;
+        $scope.LEADWIRE_LOGOUT_URL = CONFIG.LEADWIRE_LOGOUT_URL;
 
         $scope.$on('user:updated', function (event, data) {
             $rootScope.user = data;
         });
         $scope.$on('update:image', function (event, data) {
             $scope.$broadcast('reload:src', data);
+        });
+        $scope.$on('new:app', function (event, data) {
+            UserService.get($localStorage.user.id)
+                .then(function (user) {
+                    $rootScope.user = $localStorage.user = user;
+                    $scope.$apply();
+                })
+                .catch(function () {
+                    $scope.$apply(function () {
+                        $scope.isChangingContext = false;
+                    });
+                    toastr.error(MESSAGES_CONSTANTS.ERROR);
+                })
+                ;
         });
 
         $scope.$on('set:apps', function (event, apps) {
@@ -61,6 +126,7 @@
             );
             $scope.$emit('context:updated');
         });
+
         $scope.$on('set:customMenus', function (event, customMenus) {
             $localStorage.customMenus = customMenus;
             $scope.withCustom = $localStorage.customMenus.withCustom;
@@ -74,6 +140,10 @@
                     ? currentApp
                     : activatedApp;
             });
+        });
+
+        $scope.$on('update:title', function (event, title) {
+            $scope.title = title;
         });
 
         if (angular.isDefined($localStorage.layout)) {
@@ -100,6 +170,7 @@
                 .then(function (response) {
                     $scope.isChangingContext = false;
                     $scope.selectedAppId = response.appId;
+                    $scope.$emit('update:title', "Dashboards " + app.name);
                     if (response.dashboards && response.dashboards.length) {
                         $state.go('app.dashboard.home', {
                             id: response.dashboards[0].id,
@@ -118,6 +189,30 @@
                 });
         };
 
+        $scope.getDefaultEnv = function () {
+            $scope.isChangingContextEnv = true;
+            if ($localStorage.selectedEnvId && $localStorage.selectedEnv) {
+                $scope.selectedEnvId = $localStorage.selectedEnvId;
+                $scope.selectedEnv = $localStorage.selectedEnv;
+                return;
+            }
+
+            EnvironmentService.getDefault()
+                .then(function (response) {
+                    $scope.isChangingContext = false;
+                    $scope.selectedEnvId = $localStorage.selectedEnvId = response.id;
+                    $scope.selectedEnv = $localStorage.selectedEnv = response;
+                })
+                .catch(function () {
+                    $scope.$apply(function () {
+                        $scope.isChangingContext = false;
+                    });
+                    toastr.error(MESSAGES_CONSTANTS.ERROR);
+                });
+        };
+
+        $rootScope.setDefaultEnv = $scope.getDefaultEnv;
+
         $scope.brandRedirectTo = function () {
             if ($localStorage.dashboards && $localStorage.dashboards.length) {
                 $state.go('app.dashboard.home', {
@@ -128,7 +223,18 @@
             }
         };
 
-        $scope.loadApplications = function() {
+        $scope.showMenu = function (menu) {
+            if (Array.isArray(menu)) {
+                var show = false;
+                menu.map(el => {
+                    if (el.visible)
+                        show = true;
+                })
+                return show;
+            }
+        }
+
+        $scope.loadApplications = function () {
             ApplicationFactory.findMyApplications().then(function (response) {
                 $localStorage.applications = response.data;
                 $scope.$emit('set:apps', response.data);
@@ -136,22 +242,24 @@
             });
         };
 
-        $scope.logout = function () {
-            delete $localStorage.user;
-            delete $localStorage.currentMenu;
-            delete $localStorage.applications;
-            delete $localStorage.dashboards;
-            delete $localStorage.selectedAppId;
-            delete $localStorage.selectedApp;
+        window.onunload = () => {
+            alert('okkk')
+        }
 
+        $scope.logout = function () {
+            window.localStorage.clear();
             $auth.logout()
                 .then(function () {
                     toastr.info(MESSAGES_CONSTANTS.LOGOUT_SUCCESS);
-                    $location.path('/login');
+                    if (CONFIG.LEADWIRE_LOGIN_METHOD === "proxy")
+                        window.location.href = CONFIG.LEADWIRE_LOGOUT_URL;
+                    else
+                        $location.path('/login');
                 });
         };
 
-        function onLoad () {
+        function onLoad() {
+
             $scope.paginator = Paginator.create({
                 start: 0,
                 items: $scope.applications,
@@ -164,7 +272,7 @@
                 author: 'Nyasha',
                 version: CONFIG.APP_VERSION,
                 year: new Date().getFullYear(),
-                LOGIN_METHOD: CONFIG.LOGIN_METHOD,
+                LEADWIRE_LOGIN_METHOD: CONFIG.LEADWIRE_LOGIN_METHOD,
                 layout: {
                     isSmallSidebar: false,
                     isChatOpen: false,
@@ -186,6 +294,7 @@
             $scope.isAdmin = function () {
                 return UserService.isAdmin($localStorage.user);
             };
+
             $rootScope.user = $localStorage.user;
             $scope.applications = $localStorage.applications;
             $scope.selectedAppId = $localStorage.selectedAppId;

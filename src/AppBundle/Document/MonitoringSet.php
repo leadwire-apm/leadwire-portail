@@ -251,10 +251,9 @@ class MonitoringSet
         return $this->templates->count() === self::TEMPLATES_COUNT;
     }
 
-    public function getFormattedVersion()
+    public function getFormattedVersion(string $envName, string $appName)
     {
-        return strtolower($this->getQualifier()) . "-" . $this->getVersion();
-    }
+        return strtolower($this->getQualifier()) . "-" . $envName . "-" . $appName . "-" .$this->getVersion();    }
 
     /**
      * Get the value of applicationTypes

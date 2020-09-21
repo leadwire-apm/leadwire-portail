@@ -3,6 +3,7 @@
 namespace AppBundle\Document;
 
 use AppBundle\Document\User;
+use AppBundle\Document\Environment;
 use Doctrine\Bundle\MongoDBBundle\Validator\Constraints\Unique;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
@@ -24,6 +25,7 @@ class Application
      * @ODM\Id("strategy=auto")
      * @JMS\Type("string")
      * @JMS\Expose
+     * @JMS\Groups({"Default", "minimalist"})
      */
     private $id;
 
@@ -34,7 +36,7 @@ class Application
      * @ODM\UniqueIndex()
      * @JMS\Type("string")
      * @JMS\Expose
-     * @JMS\Groups({"Default"})
+     * @JMS\Groups({"Default", "minimalist"})
      */
     private $uuid;
 
@@ -46,7 +48,7 @@ class Application
      * @Assert\Length(min=5, max=32)
      * @JMS\Type("string")
      * @JMS\Expose
-     * @JMS\Groups({"Default"})
+     * @JMS\Groups({"Default", "minimalist"})
      */
     private $name;
 
@@ -144,6 +146,16 @@ class Application
     private $demo;
 
     /**
+     * @var Collection
+     *
+     * @ODM\ReferenceMany(targetDocument="AppBundle\Document\Environment", cascade={"persist"}, inversedBy="applications", storeAs="dbRef")
+     * @JMS\Expose
+     * @JMS\Groups({"full", "Default"})
+     * @JMS\Type("array<AppBundle\Document\Environment>")
+     */
+    private $environments;
+
+    /**
      * @ODM\Field(type="date")
      * @JMS\Type("DateTime")
      * @JMS\Expose
@@ -152,12 +164,14 @@ class Application
      * @var \DateTime
      */
     private $createdAt;
+
     /**
      * Constructor
      */
     public function __construct()
     {
         $this->invitations = new ArrayCollection();
+        $this->environments = new ArrayCollection();
         $this->enabled = false;
         $this->removed = false;
     }
@@ -388,13 +402,13 @@ class Application
     }
 
     /**
-     * Get elastic index
-     * @deprecated 1.1
+     * @JMS\VirtualProperty
+     *
      * @return string
      */
-    public function getIndex()
+    public function getApplicationIndex(): string
     {
-        return 'app_' . $this->getUuid();
+        return "app-" . $this->name;
     }
 
     /**
@@ -402,9 +416,9 @@ class Application
      *
      * @return string
      */
-    public function getApplicationIndex(): string
+    public function getApplicationWatcherIndex(): string
     {
-        return "app_" . $this->uuid;
+        return "watcher-" . $this->name;
     }
 
     /**
@@ -414,7 +428,7 @@ class Application
      */
     public function getSharedIndex(): string
     {
-        return "shared_" . $this->uuid;
+        return "shared-" . $this->name;
     }
 
     /**
@@ -457,6 +471,56 @@ class Application
     public function getInvitations()
     {
         return $this->invitations;
+    }
+
+    /**
+     * Get the value of environments
+     */
+    public function getEnvironments($toArray = true)
+    {
+        if ($this->environments === null) {
+            $this->environments = new ArrayCollection();
+        }
+
+        return $toArray ? $this->environments->toArray() : $this->environments;
+    }
+
+    /**
+     * Add  environment
+     *
+     * @param  Environment  $environment
+     *
+     * @return  self
+     */
+    public function addEnvironment(Environment $environment)
+    {
+        if ($this->environments == null) {
+            $this->environments = new ArrayCollection();
+        }
+        if (!$this->environments->contains($environment)) {
+            $this->environments->add($environment);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove environment
+     *
+     * @param  Environment  $environment
+     *
+     * @return  self
+     */
+    public function removeEnvironment(Environment $environment)
+    {
+        if ($this->environments == null) {
+            $this->environments = new ArrayCollection();
+        }
+        if ($this->environments->contains($environment)) {
+            $this->environments->removeElement($environment);
+        }
+
+        return $this;
     }
 
     /**

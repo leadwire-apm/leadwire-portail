@@ -22,7 +22,7 @@
      * @param $state
      * @constructor
      */
-    function DashboardServiceFN (
+    function DashboardServiceFN(
         ApplicationFactory,
         MenuFactory,
         $rootScope,
@@ -51,15 +51,35 @@
                     });
                 },
                 function (menu) {
-                    return menu.icon || 'fas fa-tachometer-alt';
+                    return menu.icon || 'fa fa-tachometer-alt';
                 },
+                function (menu) {
+                    return menu.visible;
+                },
+                function (menu) {
+                    return 'app.dashboard.home({id:"' + menu.id + '",tenant:"' + menu.tenant + '"})';
+                },
+                function (menu) {
+                    return {
+                        id: menu.id,
+                        tenant: menu.tenant
+                    }
+                },
+                function (menu) {
+                    return "L" + menu.id.replace(/-/g, "");
+                }
             );
             $rootScope.menus = $localStorage.currentMenu;
             $localStorage.currentApplicationMenus = $localStorage.currentMenu;
         };
 
-        service.getDashboard = function(tenant, dashboardId) {
-            return CONFIG.KIBANA_BASE_URL + tenant + '?token=' + $auth.getToken() + '#/dashboard/' + dashboardId;
+        service.getDashboard = function (dashboardId, tenant) {
+            var index = $localStorage.selectedApp.applicationIndex;
+            if(tenant.indexOf('shared') > -1) {
+                index = $localStorage.selectedApp.sharedIndex;
+            }
+            var tenant = $localStorage.selectedEnv.name + "-" + index
+            return CONFIG.KIBANA_BASE_URL + "app/kibana?security_tenant=" + tenant + '#/dashboard/' + dashboardId;
         };
         /**
          *
@@ -68,7 +88,7 @@
          */
         service.fetchDashboardsByAppId = function (appId) {
             return new Promise(function (resolve, reject) {
-                ApplicationFactory.findMyDashboard(appId)
+                ApplicationFactory.findMyDashboard(appId, $localStorage.selectedEnv.name)
                     .then(function (response) {
                         $localStorage.dashboards = response.data.Default;
                         //inform other controller that we changed context
@@ -86,6 +106,42 @@
                             custom: response.data.Custom,
                             path: 'app.dashboard.home',
                         });
+                    })
+                    .catch(function (error) {
+                        console.log('Error', error);
+                        reject(error);
+                    });
+            });
+        };
+
+        /**
+         *
+         * @param appId
+         * @returns {Promise}
+         */
+        service.fetchDashboardsListByAppId = function (appId) {
+            return new Promise(function (resolve, reject) {
+                ApplicationFactory.findMyDashboard(appId, $localStorage.selectedEnv.name)
+                    .then(function (response) {
+                        resolve(response.data.Default);
+                    })
+                    .catch(function (error) {
+                        console.log('Error', error);
+                        reject(error);
+                    });
+            });
+        };
+
+        /**
+         *
+         * @param appId
+         * @returns {Promise}
+         */
+        service.fetchDashboardsAllListByAppId = function (appId) {
+            return new Promise(function (resolve, reject) {
+                ApplicationFactory.findMyDashboard(appId, $localStorage.selectedEnv.name)
+                    .then(function (response) {
+                        resolve(response.data);
                     })
                     .catch(function (error) {
                         console.log('Error', error);

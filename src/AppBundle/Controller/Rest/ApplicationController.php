@@ -4,12 +4,10 @@ namespace AppBundle\Controller\Rest;
 
 use AppBundle\Document\Application;
 use AppBundle\Document\User;
-use AppBundle\Exception\DuplicateApplicationNameException;
 use AppBundle\Service\ApplicationService;
 use AppBundle\Service\ElasticSearchService;
 use AppBundle\Service\KibanaService;
 use AppBundle\Service\LdapService;
-use AppBundle\Service\SearchGuardService;
 use AppBundle\Service\StatService;
 use ATS\CoreBundle\Controller\Rest\RestControllerTrait;
 use MongoDuplicateKeyException;
@@ -20,9 +18,15 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use AppBundle\Exception\DuplicateApplicationNameException;
 use Symfony\Component\Routing\Annotation\Route;
 use AppBundle\Manager\ApplicationManager;
+use AppBundle\Service\ProcessService;
 use AppBundle\Service\CuratorService;
+use AppBundle\Service\InvitationService;
+use AppBundle\Document\AccessLevel;
+
 
 class ApplicationController extends Controller
 {
@@ -42,15 +46,16 @@ class ApplicationController extends Controller
     {
         $data = $applicationService->getApplication($id);
 
-        return $this->renderResponse($data, Response::HTTP_OK, [$group]);
+        return $this->renderResponse($data);
     }
 
     /**
-     * @Route("/{id}/dashboards", methods="GET")
+     * @Route("/{id}/dashboards/{envName}", methods="GET")
      *
      * @param Request $request
      * @param ApplicationService $applicationService
      * @param string  $id
+     * @param string  $envName
      *
      * @return Response
      */
@@ -58,14 +63,40 @@ class ApplicationController extends Controller
         Request $request,
         ApplicationService $applicationService,
         ElasticSearchService $esService,
-        $id
+        $id,
+        $envName
     ) {
         $app = $applicationService->getApplication($id);
         if ($app === null) {
             throw new HttpException(Response::HTTP_NOT_FOUND, "App not Found");
         } else {
-            $dashboards = $esService->getDashboads($app, $this->getUser());
+            $dashboards = $esService->getDashboads($app, $this->getUser(), $envName);
             return $this->renderResponse($dashboards);
+        }
+    }
+
+    /**
+     * @Route("/{id}/reports/{envName}", methods="GET")
+     *
+     * @param Request $request
+     * @param ApplicationService $applicationService
+     * @param string  $id
+     * @param sring $envName
+     * @return Response
+     */
+    public function getApplicationReportsAction(
+        Request $request,
+        ApplicationService $applicationService,
+        ElasticSearchService $esService,
+        $id,
+        $envName
+    ) {
+        $app = $applicationService->getApplication($id);
+        if ($app === null) {
+            throw new HttpException(Response::HTTP_NOT_FOUND, "App not Found");
+        } else {
+            $reports = $esService->getReports($app, $this->getUser(),  $envName);
+            return $this->renderResponse($reports);
         }
     }
 
@@ -130,6 +161,22 @@ class ApplicationController extends Controller
     }
 
     /**
+     * @Route("/list/{id}", methods="GET")
+     *
+     * @param Request $request
+     * @param ApplicationService $applicationService
+     * @param string  $id
+     *
+     * @return Response
+     */
+    public function listUserApplicationsActionById(Request $request, ApplicationService $applicationService, $id)
+    {
+        $applications = $applicationService->listUserAccessibleApplciationsById($id);
+
+        return $this->renderResponse($applications, Response::HTTP_OK);
+    }
+
+    /**
      * @Route("/invited/list", methods="GET")
      *
      * @param Request $request
@@ -152,7 +199,6 @@ class ApplicationController extends Controller
      * @param LdapService $ldapService
      * @param ElasticSearchService $esService
      * @param KibanaService $kibanaService
-     * @param SearchGuardService $sgService
      * @param CuratorService $curatorService
      *
      * @return JsonResponse
@@ -163,59 +209,27 @@ class ApplicationController extends Controller
         LdapService $ldapService,
         ElasticSearchService $esService,
         KibanaService $kibanaService,
-        SearchGuardService $sgService,
-        CuratorService $curatorService
+        CuratorService $curatorService,
+        ProcessService $processService
     ) {
         $status = false;
         $application = null;
+        $processService->emit($this->getUser(), "heavy-operations-in-progress", "Creating application settings");
         try {
             $data = $request->getContent();
             $application = $applicationService->newApplication($data, $this->getUser());
-
-            if ($application !== null) {
-                // Application created in MongoDB. proceed with LDAP & ES entries
-                $ldapService->createApplicationEntry($application);
-                $ldapService->registerApplication($this->getUser(), $application);
-
-                $esService->deleteIndex($application->getApplicationIndex());
-                $esService->createIndexTemplate($application, $applicationService->getActiveApplicationsNames());
-
-                $esService->createAlias($application);
-
-                $kibanaService->loadIndexPatternForApplication(
-                    $application,
-                    $application->getApplicationIndex()
-                );
-
-                $kibanaService->loadDefaultIndex($application->getApplicationIndex(), 'default');
-                $kibanaService->makeDefaultIndex($application->getApplicationIndex(), 'default');
-
-                $kibanaService->createApplicationDashboards($application);
-
-                $esService->deleteIndex($application->getSharedIndex());
-
-                $kibanaService->loadIndexPatternForApplication(
-                    $application,
-                    $application->getSharedIndex()
-                );
-
-                $kibanaService->loadDefaultIndex($application->getSharedIndex(), 'default');
-                $kibanaService->makeDefaultIndex($application->getSharedIndex(), 'default');
-
-                $sgService->updateSearchGuardConfig();
-
-                $curatorService->updateCuratorConfig();
-
-                $status = true;
-            }
+            $status = true;
+            $processService->emit($this->getUser(), "heavy-operations-done", "Successeded");
         } catch (DuplicateApplicationNameException $e) {
+            $processService->emit($this->getUser(), "heavy-operations-done", "Failed");
             return $this->renderResponse(['message' => $e->getMessage()], Response::HTTP_NOT_ACCEPTABLE);
         } catch (\Exception $e) {
+            $processService->emit($this->getUser(), "heavy-operations-done", "Failed");
             if ($application instanceof Application) {
                 $applicationService->obliterateApplication($application);
 
-                return $this->renderResponse(['message' => $e->getMessage()], Response::HTTP_NOT_ACCEPTABLE);
             }
+            return $this->renderResponse(['message' => $e->getMessage()], Response::HTTP_NOT_ACCEPTABLE);
         }
 
         if ($status === true) {
@@ -243,43 +257,17 @@ class ApplicationController extends Controller
         ElasticSearchService $esService,
         KibanaService $kibanaService,
         CuratorService $curatorService,
+        ProcessService $processService,
         string $id
     ) {
+        $processService->emit($this->getUser(), "heavy-operations-in-progress", "Updating application settings");
         try {
             $data = $request->getContent();
             $state = $applicationService->updateApplication($data, $id);
-            if ($state['esUpdateRequired'] === true) {
-                $application = $state['application'];
-                $esService->deleteIndex($application->getApplicationIndex());
-                $esService->createIndexTemplate($application, $applicationService->getActiveApplicationsNames());
-
-                $aliases = $esService->createAlias($application);
-
-                $kibanaService->loadIndexPatternForApplication(
-                    $application,
-                    $application->getApplicationIndex()
-                );
-
-                $kibanaService->loadDefaultIndex($application->getApplicationIndex(), 'default');
-                $kibanaService->makeDefaultIndex($application->getApplicationIndex(), 'default');
-
-                $kibanaService->createApplicationDashboards($application);
-
-                $esService->deleteIndex($application->getSharedIndex());
-
-                $kibanaService->loadIndexPatternForApplication(
-                    $application,
-                    $application->getSharedIndex()
-                );
-
-                $kibanaService->loadDefaultIndex($application->getSharedIndex(), 'default');
-                $kibanaService->makeDefaultIndex($application->getSharedIndex(), 'default');
-
-                $curatorService->updateCuratorConfig();
-            }
-
+            $processService->emit($this->getUser(), "heavy-operations-done", "Succeeded");
             return $this->renderResponse($state['successful']);
         } catch (MongoDuplicateKeyException $e) {
+            $processService->emit($this->getUser(), "heavy-operations-done", "Failed");
             return $this->renderResponse(['message' => "Application's name must be unique"], Response::HTTP_UNAUTHORIZED);
         }
     }
@@ -289,12 +277,17 @@ class ApplicationController extends Controller
      *
      * @param Request $request
      * @param ApplicationService $applicationService
+     * @param ProcessService $processService
      * @param string $id
      *
      * @return Response
      */
-    public function deleteApplicationAction(Request $request, ApplicationService $applicationService, $id)
-    {
+    public function deleteApplicationAction(
+        Request $request,
+        ApplicationService $applicationService,
+        ProcessService $processService,
+        $id
+    ) {
         $application = $applicationService->getApplication($id);
 
         if ($application !== null) {
@@ -303,9 +296,9 @@ class ApplicationController extends Controller
 
             if ($accessGrantedByOwnership === true || $accessGrantedByRole === true) {
                 $applicationService->deleteApplication($id);
-
                 return $this->renderResponse(null, Response::HTTP_OK);
             } else {
+                $processService->emit($this->getUser(), "heavy-operations-done", "Failed");
                 throw new UnauthorizedHttpException('', "Unauthorized action");
             }
         } else {
@@ -318,14 +311,19 @@ class ApplicationController extends Controller
      *
      * @param Request $request
      * @param ApplicationService $applicationService
+     * @param ProcessService $processService
      * @param string $id
      *
      * @return Response
      */
-    public function removeApplicationAction(Request $request, ApplicationService $applicationService, $id)
-    {
+    public function removeApplicationAction(
+        Request $request,
+        ApplicationService $applicationService,
+        ProcessService $processService,
+        $id
+    ) {
         $applicationService->removeUserApplication($id, $this->getUser());
-
+        $processService->emit($this->getUser(), "heavy-operations-done", "Succeeded");
         return new JsonResponse(null, Response::HTTP_ACCEPTED);
     }
 
@@ -339,11 +337,30 @@ class ApplicationController extends Controller
      */
     public function getAllApplicationsAction(Request $request, ApplicationService $applicationService)
     {
-        $this->denyAccessUnlessGranted([User::ROLE_ADMIN, User::ROLE_SUPER_ADMIN]);
+        //$this->denyAccessUnlessGranted([User::ROLE_ADMIN, User::ROLE_SUPER_ADMIN]);
 
         $applications = $applicationService->getApplications();
 
         return $this->renderResponse($applications, Response::HTTP_OK);
+    }
+
+    /**
+     * @Route("/all/minimalist", methods="GET")
+     *
+     * @param Request $request
+     * @param ApplicationService $applicationService
+     *
+     * @return Response
+     */
+    public function getAllMinimalistApplicationsAction(Request $request, ApplicationService $applicationService)
+    {
+        $this->denyAccessUnlessGranted([User::ROLE_ADMIN, User::ROLE_SUPER_ADMIN]);
+
+        $applications = array_filter($applicationService->getApplications(), function($app) {
+            return !$app->isRemoved();
+        });
+
+        return $this->renderResponse($applications, Response::HTTP_OK, ['minimalist']);
     }
 
     /**
@@ -381,40 +398,195 @@ class ApplicationController extends Controller
         ApplicationManager $applicationManager,
         ElasticSearchService $esService,
         KibanaService $kibanaService,
+        ProcessService $processService,
         string $id
     ) {
         $application = $applicationService->getApplication($id);
-
+        $processService->emit($this->getUser(), "heavy-operations-in-progress", "Updating Application Type");
         if ($application instanceof Application) {
-            $esService->deleteIndex($application->getApplicationIndex());
-            $esService->createIndexTemplate($application, $applicationService->getActiveApplicationsNames());
-            $aliases = $esService->createAlias($application);
-            $kibanaService->loadIndexPatternForApplication(
-                $application,
-                $application->getApplicationIndex()
-            );
-
-            $kibanaService->loadDefaultIndex($application->getApplicationIndex(), 'default');
-            $kibanaService->makeDefaultIndex($application->getApplicationIndex(), 'default');
-
-            $kibanaService->createApplicationDashboards($application);
-
-            $esService->deleteIndex($application->getSharedIndex());
-
-            $kibanaService->loadIndexPatternForApplication(
-                $application,
-                $application->getSharedIndex()
-            );
-
-            $kibanaService->loadDefaultIndex($application->getSharedIndex(), 'default');
-            $kibanaService->makeDefaultIndex($application->getSharedIndex(), 'default');
             
-            $application->setDeployedTypeVersion($application->getType()->getVersion());
-            $applicationManager->update($application);
+            $processService->emit($this->getUser(), "heavy-operations-in-progress", "Updating Index-patterns");
+
+            foreach($application->getEnvironments() as $environment){
+             
+                $envName = $environment->getName();
+                $sharedIndex =  $envName . "-" . $application->getSharedIndex();
+                $appIndex =  $envName . "-" . $application->getApplicationIndex();
+                $watechrIndex = $envName ."-" . $application->getApplicationWatcherIndex();
+                $esService->deleteIndex($appIndex);
+                $esService->deleteTenant($appIndex);
+
+                $esService->createTenant($appIndex);
+                $esService->createIndexTemplate($application, $applicationService->getActiveApplicationsNames(), $envName);
+
+                $processService->emit($this->getUser(), "heavy-operations-in-progress", "Updating Kibana Dashboards");
+                              
+                $kibanaService->loadIndexPatternForApplication(
+                    $application,
+                    $appIndex,
+                    $envName
+                );
+    
+                $kibanaService->loadDefaultIndex($appIndex, 'default');
+                $kibanaService->makeDefaultIndex($appIndex, 'default');
+
+                $kibanaService->createApplicationDashboards($application, $envName);
+    
+               // $esService->deleteIndex($sharedIndex);
+               // $esService->deleteTenant($sharedIndex);
+               // $esService->createTenant($sharedIndex);
+                
+                $kibanaService->loadIndexPatternForApplication(
+                    $application,
+                    $sharedIndex,
+                    $envName
+                );
+
+                $esService->deleteTenant($watechrIndex);
+                $esService->createTenant($watechrIndex);
+    
+                $kibanaService->loadDefaultIndex($sharedIndex, 'default');
+                $kibanaService->makeDefaultIndex($sharedIndex, 'default');
+            }
+            $processService->emit($this->getUser(), "heavy-operations-done", "Succeeded");
         } else {
+            $processService->emit($this->getUser(), "heavy-operations-done", "Failed");
             throw new NotFoundHttpException("Application with ID {$id} not found.");
         }
 
         return $this->renderResponse(true);
     }
+
+    /**
+     * @Route("/{id}/{envId}/update-dashboards", methods="PUT")
+     *
+     * @param Request $request
+     * @param ApplicationService $applicationService
+     * @param string $id
+     * @param string $envId
+     */
+    public function updateApplicationActionDashboards( 
+        Request $request, 
+        ApplicationService $applicationService, 
+        string $id,
+        string $envId){
+        try{
+            $data = $request->getContent();
+            $user = $this->getUser();
+            if($applicationService->userHasPermission(
+                $id, 
+                $user, 
+                $envId,
+                array(AccessLevel::ADMIN, AccessLevel::EDITOR))){
+                    $state = $applicationService->updateApplicationDashboards($data, $id, $user->getId());
+                    return $this->renderResponse($state['successful']);
+                } else {
+                return $this->exception(['message' => "You dont have rights permissions"], 400);
+            }
+        } catch (MongoDuplicateKeyException $e) {
+            return $this->renderResponse(['message' => $e->getMessage()], Response::HTTP_NOT_ACCEPTABLE);
+        }
+    }
+
+    /**
+     * @Route("/{app}/{env}/documents", methods="GET")
+     *
+     * @param Request $request
+     * @param ElasticSearchService $esService
+     * @param string $app
+     * @param string $env
+     */
+    public function getApplicationDocumentsCount( Request $request, ElasticSearchService $esService, string $app, string $env){
+        try{
+            $data = $esService->getApplicationTransactions($app, $env);
+            return $this->renderResponse($data);
+        } catch (MongoDuplicateKeyException $e) {
+            return $this->renderResponse(['message' => $e->getMessage()], Response::HTTP_NOT_ACCEPTABLE);
+        }
+    }
+
+    /**
+     * @Route("/{app}/{env}/reports", methods="GET")
+     *
+     * @param Request $request
+     * @param ElasticSearchService $esService
+     * @param string $app
+     * @param string $env
+     */
+    public function getApplicationReports( Request $request, ElasticSearchService $esService, string $app, string $env){
+        try{
+            $data = $esService->getReports($app, $env);
+            return $this->renderResponse($data);
+        } catch (MongoDuplicateKeyException $e) {
+            return $this->renderResponse(['message' => $e->getMessage()], Response::HTTP_NOT_ACCEPTABLE);
+        }
+    }
+
+    /**
+     * @Route("/{id}/{ind}/report", methods="GET")
+     *
+     * @param Request $request
+     * @param KibanaService $KibanaService
+     * @param string $id
+     * @param string $ind
+     */
+    public function deleteApplicationReport( Request $request, KibanaService $KibanaService, string $id, string $ind){
+        try{
+            $data = $KibanaService->deleteReport($id, $ind);
+            return $this->renderResponse($data);
+        } catch (MongoDuplicateKeyException $e) {
+            return $this->renderResponse(['message' => $e->getMessage()], Response::HTTP_NOT_ACCEPTABLE);
+        }
+    }
+
+    /**
+     * @Route("/{appid}/{userid}/grantPermission", methods="GET")
+     *
+     * @param Request $request
+     * @param InvitationService $invitationService
+     * @param string $appid
+     * @param string $userid
+     */
+    public function grantUserPermission( Request $request, InvitationService $invitationService, string $appid, string $userid){
+        try {
+
+            $this->denyAccessUnlessGranted([User::ROLE_ADMIN, User::ROLE_SUPER_ADMIN]);
+
+            $user = $invitationService->grantPermission($appid, $userid);
+
+            $payload = [
+                "id" => $user->getId(),
+                "name" => $user->getName(),
+                "username" => $user->getUsername(),
+                "email" => $user->getEmail(),
+                "acls" => $user->acl(),
+            ];
+
+            return $this->renderResponse($payload, Response::HTTP_OK, []);
+
+        } catch (MongoDuplicateKeyException $e) {
+            return $this->renderResponse(['message' => $e->getMessage()], Response::HTTP_NOT_ACCEPTABLE);
+        }
+    }
+
+    /**
+     * @Route("/{appid}/{userid}/revokePermission", methods="GET")
+     *
+     * @param Request $request
+     * @param InvitationService $invitationService
+     * @param string $appid
+     * @param string $userid
+     */
+    public function revokeUserPermission( Request $request, InvitationService $invitationService, string $appid, string $userid){
+        try {
+
+            $this->denyAccessUnlessGranted([User::ROLE_ADMIN, User::ROLE_SUPER_ADMIN]);
+            $user = $invitationService->RevokePermission($appid, $userid);
+            return $this->renderResponse($user, Response::HTTP_OK, []);
+
+        } catch (MongoDuplicateKeyException $e) {
+            return $this->renderResponse(['message' => $e->getMessage()], Response::HTTP_NOT_ACCEPTABLE);
+        }
+    }
 }
+

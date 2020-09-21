@@ -28,16 +28,16 @@ class User implements AdvancedUserInterface
      * @var \MongoId
      *
      * @ODM\Id("strategy=auto")
-     * @JMS\Expose
      * @JMS\Type("string")
+     * @JMS\Expose
      */
     protected $id;
 
     /**
      * @var string
      * @ODM\Field(type="string")
-     * @JMS\Expose
      * @JMS\Type("string")
+     * @JMS\Expose
      */
     protected $username;
 
@@ -59,6 +59,7 @@ class User implements AdvancedUserInterface
      * @var bool
      *
      * @ODM\Field(type="boolean")
+     * @JMS\Type("boolean")
      * @JMS\Expose
      */
     private $active;
@@ -102,8 +103,8 @@ class User implements AdvancedUserInterface
     /**
      * @var string
      * @ODM\Field(type="string")
-     * @JMS\Expose
      * @JMS\Type("string")
+     * @JMS\Expose
      */
     private $name;
 
@@ -239,6 +240,13 @@ class User implements AdvancedUserInterface
     private $lockMessage;
 
     /**
+     * @ODM\ReferenceMany(targetDocument="AccessLevel", inversedBy="user", cascade={"persist", "delete"}, storeAs="dbRef")
+     * @JMS\Type("array<AppBundle\Document\AccessLevel>")
+     * @JMS\Expose
+     */
+    private $accessLevels;
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -248,6 +256,9 @@ class User implements AdvancedUserInterface
         $this->deleted = false;
 
         $this->applications = new ArrayCollection();
+        $this->applicationsAccessLevel = new ArrayCollection();
+        $this->environmentsAccessLevel = new ArrayCollection();
+        $this->accessLevels = new ArrayCollection();
     }
 
     /**
@@ -428,6 +439,10 @@ class User implements AdvancedUserInterface
      */
     public function hasRole($role)
     {
+        if ($this->roles == null) {
+            return false;
+        }
+
         return in_array($role, $this->roles);
     }
 
@@ -940,9 +955,294 @@ class User implements AdvancedUserInterface
     public function addApplication(Application $application): self
     {
         if ($this->applications !== null && $this->applications->contains($application) === false) {
-            $this->applications->addElement($application);
+            $this->applications->add($application);
         }
 
         return $this;
+    }
+
+    /**
+     * Set access levels
+     *
+     * @param array $accessLevels
+     *
+     * @return User
+     */
+    public function setAccessLevels(array $accessLevels)
+    {
+        $this->accessLevels = new ArrayCollection();
+        foreach ($accessLevel as $accessLevel) {
+            $this->addAccessLevel($accessLevel);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Get access levels
+     *
+     * @return mixed
+     */
+    public function getAccessLevels($toArray = true)
+    {
+        if ($this->accessLevels == null) {
+            $this->accessLevels = new ArrayCollection();
+        }
+
+        return $toArray ? $this->accessLevels->toArray() : $this->accessLevels;
+    }
+
+    /**
+     * Add access level
+     *
+     * @param AccessLevel $accessLevel
+     *
+     * @return User
+     */
+    public function addAccessLevel(AccessLevel $accessLevel)
+    {
+        if ($this->accessLevels == null) {
+            $this->accessLevels = new ArrayCollection();
+        }
+
+        if (!$this->accessLevels->contains($accessLevel)) {
+            $this->accessLevels->add($accessLevel);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove access level
+     *
+     * @param AccessLevel $accessLevel
+     *
+     * @return User
+     */
+    public function removeAccessLevel(AccessLevel $accessLevel)
+    {
+        if ($this->accessLevels == null) {
+            $this->accessLevels = new ArrayCollection();
+        }
+
+        if ($this->accessLevels->contains($accessLevel)) {
+            $this->accessLevels->removeElement($accessLevel);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove all access level
+     *
+     * @param AccessLevel $accessLevel
+     *
+     * @return User
+     */
+    public function removeAllAccessLevel()
+    {
+        $this->accessLevels->clear();
+
+        return $this;
+    }
+
+    /**
+     * Normalize access levels
+     *
+     * @JMS\VirtualProperty
+     * @JMS\Type("array")
+     * @JMS\Expose
+     *
+     * @return array
+     */
+    public function acl()
+    {
+        return array_merge_recursive($this->normalizeAccessLevelsEnv(),$this->normalizeAccessLevels());
+    }
+
+    /**
+     * Normalize access levels
+     *
+     * @return array
+     */
+    private function normalizeAccessLevels()
+    {
+        $acls = [];
+
+        foreach ($this->accessLevels as $acl) {
+            $env = $acl->getEnvironment();
+            $app = $acl->getApplication();
+            if ($app->isRemoved()) {
+                continue;
+            }
+            $acls[$env->getId()][$app->getId()][$acl->getLevel()] = $acl->getAccess();
+        }
+
+        return $acls;
+    }
+
+    /**
+     * Normalize access levels env
+     *
+     * @return array
+     */
+    private function normalizeAccessLevelsEnv()
+    {
+        $appAcls = $this->normalizeAccessLevels();
+        $acls = [];
+
+        foreach ($this->accessLevels as $acl) {
+            $env = $acl->getEnvironment();
+            $access = [];
+            foreach ($env->getApplications() as $app) {
+                if($app->isRemoved()) {
+                    continue;
+                }
+                if (empty($access)) {
+                    $access[$env->getId()][$acl->getLevel()] = $acl->getAccess();
+                    $acls[$env->getId()]["all"][$acl->getLevel()] = $acl->getAccess();
+                } else if (
+                        !isset($appAcls[$env->getId()][$app->getId()][$acl->getLevel()])
+                        || $access[$env->getId()][$acl->getLevel()] != $appAcls[$env->getId()][$app->getId()][$acl->getLevel()]
+                    ) {
+                        $acls[$env->getId()]["all"][$acl->getLevel()] = "HYBRID";
+                } else {
+                    $acls[$env->getId()]["all"][$acl->getLevel()] = $access[$env->getId()][$acl->getLevel()];
+                }
+            }
+        }
+
+        return $acls;
+    }
+
+    /**
+     * Get access levels
+     *
+     * @return mixed
+     */
+    public function getAccessLevelsEnv($env, $level)
+    {
+        if ($this->accessLevels == null) {
+            $this->accessLevels = new ArrayCollection();
+        }
+        $acls = $this->accessLevels->toArray();
+        $aclsEnv = [];
+
+        foreach ($acls as $acl) {
+            if (
+                $env == (string) $acl->getEnvironment()->getId()
+                && $level == $acl->getLevel()
+            ) {
+                $aclsEnv[] = $acl;
+            }
+        }
+
+        return $aclsEnv;
+    }
+
+    /**
+     * Get access levels
+     *
+     * @return mixed
+     */
+    public function getAccessLevelsApp($env, $app, $level)
+    {
+        if ($this->accessLevels == null) {
+            $this->accessLevels = new ArrayCollection();
+        }
+        $acls = $this->accessLevels->toArray();
+        $aclApp = null;
+
+        foreach ($acls as $acl) {
+            if (
+                $env == (string) $acl->getEnvironment()->getId()
+                && $app == (string) $acl->getApplication()->getId()
+                && $level == $acl->getLevel()
+            ) {
+                $aclApp = $acl;
+            }
+        }
+
+        return $aclApp;
+    }
+
+    /**
+     * Get access levels
+     *
+     * @return mixed
+     */
+    public function hasAppPermission($env, $app, $access)
+    {
+        if ($this->accessLevels == null) {
+            $this->accessLevels = new ArrayCollection();
+        }
+        $acls = $this->accessLevels->toArray();
+        $hasPermission = false;
+
+        foreach ($acls as $acl) {
+            if (
+                $env == (string) $acl->getEnvironment()->getId()
+                && $app == (string) $acl->getApplication()->getId()
+                && $access == $acl->getAccess()
+            ) {
+                $hasPermission = true;
+            }
+        }
+
+        return $hasPermission;
+    }
+
+    /**
+     * remove access levels
+     *
+     * @param string $env
+     *
+     * @return array
+     */
+    public function removeAccessLevelsEnv($env)
+    {
+        if ($this->accessLevels == null) {
+            $this->accessLevels = new ArrayCollection();
+        }
+        $acls = $this->accessLevels->toArray();
+        $aclsEnv = [];
+
+        foreach ($acls as $acl) {
+            if (
+                $env == (string) $acl->getEnvironment()->getId()
+            ) {
+                $aclsEnv[] = $acl;
+                $this->removeAccessLevel($acl);
+            }
+        }
+
+        return $aclsEnv;
+    }
+
+    /**
+     * remove access levels
+     *
+     * @param string $app
+     *
+     * @return array
+     */
+    public function removeAccessLevelsApp($app)
+    {
+        if ($this->accessLevels == null) {
+            $this->accessLevels = new ArrayCollection();
+        }
+        $acls = $this->accessLevels->toArray();
+        $aclsApp = [];
+
+        foreach ($acls as $acl) {
+            if (
+                $app == (string) $acl->getApplication()->getId()
+            ) {
+                $aclsApp[] = $acl;
+                $this->removeAccessLevel($acl);
+            }
+        }
+
+        return $aclsApp;
     }
 }

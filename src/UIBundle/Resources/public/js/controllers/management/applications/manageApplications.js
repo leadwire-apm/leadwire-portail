@@ -4,6 +4,7 @@
             'ApplicationService',
             'toastr',
             'MESSAGES_CONSTANTS',
+            '$scope',
             ManageApplicationsCtrlFN,
         ]);
 
@@ -15,6 +16,7 @@
         ApplicationService,
         toastr,
         MESSAGES_CONSTANTS,
+        $scope
     ) {
         var vm = this;
 
@@ -122,6 +124,7 @@
                 allApplications: false,
             });
             vm.loadApplications();
+            $scope.$emit('update:title', "Admin settings");
         };
 
     }

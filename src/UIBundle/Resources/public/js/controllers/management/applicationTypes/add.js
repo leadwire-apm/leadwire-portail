@@ -6,6 +6,8 @@
             'toastr',
             'MESSAGES_CONSTANTS',
             '$state',
+            'socket',
+            '$rootScope',
             AddApplicationTypeCtrlFN,
         ]);
 
@@ -19,8 +21,37 @@
         toastr,
         MESSAGES_CONSTANTS,
         $state,
+        socket,
+        $rootScope
     ) {
         var vm = this;
+
+        socket.on('heavy-operation', function(data) {
+            if (data.user != $rootScope.user.id) {
+                return;
+            }
+
+            if (data.status == "in-progress") {
+                if ($('#toast-container').hasClass('toast-message') == false) {
+                    toastr.info(
+                        data.message + '...',
+                        "Operation in progress",
+                        {
+                            timeOut: 0,
+                            extendedTimeOut: 0,
+                            closeButton: true,
+                            onClick: null,
+                            preventDuplicates: true
+                        }
+                    );
+                } else {
+                    $('.toast-message').html(data.message + '...');
+                }
+            }
+            if (data.status == "done") {
+                toastr.clear();
+            }
+        });
 
         vm.flipActivityIndicator = function (key) {
             vm.ui[key] = !vm.ui[key];

@@ -14,12 +14,12 @@ class SgRoles
         $this->sg_all_access['indices'] = ['*' => ["*" => ['UNLIMITED']]];
         
         $this->sg_kibana_server['cluster'] = ['CLUSTER_MONITOR', 'CLUSTER_COMPOSITE_OPS', 'cluster:admin/xpack/monitoring*', 'indices:admin/template*', 'indices:data/read/scroll*'];
-        $this->sg_kibana_server['indices'] = ['?kibana*' => ['*' => ['INDICES_ALL']] , 'watcher*' => ['*' => ['indices:data/read/search', 'MANAGE', 'CREATE_INDEX', 'INDEX', 'READ', 'WRITE', 'DELETE']] , '*' => ["*" => ['indices:admin/aliases*', 'indices:data/read/search']]];
+        $this->sg_kibana_server['indices'] = ['?kibana*' => ['*' => ['EDITOR']] , 'watcher*' => ['*' => ['indices:data/read/search', 'MANAGE', 'CREATE_INDEX', 'INDEX', 'VIEWER ', 'WRITE', 'DELETE']] , '*' => ["*" => ['indices:admin/aliases*', 'indices:data/read/search']]];
 
         $this->sg_own_index['cluster'] = ['CLUSTER_COMPOSITE_OPS'];
         $this->sg_own_index['indices'] = [
             '?kibana_${user_name}' => [
-                "*" => ['INDICES_ALL'],
+                "*" => ['EDITOR'],
             ],
             '*' => [
                 "*" => ['indices:admin/aliases/get', 'indices:monitor/stats', 'indices:admin/template/get', 'indices:admin/mappings/get', 'indices:admin/get', 'indices:data/read/field_caps'],

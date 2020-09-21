@@ -219,7 +219,7 @@
             if (connectedUser.id &&
                 (!connectedUser.email || !connectedUser.plan)) {
                 // show modal
-                if(CONFIG.STRIPE_ENABLED === "true"){
+                if(CONFIG.LEADWIRE_STRIPE_ENABLED === "true"){
                     $modal.open({
                         ariaLabelledBy: 'User-form',
                         size: 'lg',
@@ -314,6 +314,16 @@
                 });
         };
 
+        service.listACLManagement = function () {
+            return UserFactory.listACLManagement()
+                .then(function (response) {
+                    return response.data;
+                })
+                .catch(function (err) {
+                    throw new Error(err);
+                });
+        };
+
         service.update = function (updatedUser) {
             return UserFactory.update(updatedUser);
         };
@@ -330,6 +340,7 @@
         };
         service.isAdmin = function (user) {
             return ADMINS.some(function (role) {
+                if(user && user.roles)
                 return user.roles.includes(role);
             });
         };

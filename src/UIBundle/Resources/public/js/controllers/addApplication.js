@@ -5,9 +5,13 @@
             'ApplicationFactory',
             'ApplicationService',
             'ApplicationTypeFactory',
+            'EnvironmentService',
             'toastr',
             'MESSAGES_CONSTANTS',
             '$state',
+            'socket',
+            '$rootScope',
+            '$localStorage',
             addApplicationCtrlFN,
         ]);
 
@@ -21,15 +25,54 @@
      * @param MESSAGES_CONSTANTS
      * @param $state
      */
-    function addApplicationCtrlFN (
+    function addApplicationCtrlFN(
         ApplicationFactory,
         ApplicationService,
         ApplicationTypeFactory,
+        EnvironmentService,
         toastr,
         MESSAGES_CONSTANTS,
         $state,
+        socket,
+        $rootScope,
+        $localStorage,
     ) {
         var vm = this;
+
+        vm.blacklist = ["leadwire", "span", "transaction", "error", "metric", "sourcemap", ...$localStorage.listApp];
+
+        $localStorage.envList.reduce(function (p, c, i) {
+            p.push(c.name);
+            return p;
+        }, vm.blacklist)
+
+        socket.on('heavy-operation', function (data) {
+            if (data.user != $rootScope.user.id) {
+                return;
+            }
+
+            if (data.status == "in-progress") {
+                if ($('#toast-container').hasClass('toast-top-right') == false) {
+                    toastr.info(
+                        data.message + '...',
+                        "Operation in progress",
+                        {
+                            timeOut: 0,
+                            extendedTimeOut: 0,
+                            closeButton: true,
+                            onClick: null,
+                            preventDuplicates: true
+                        }
+                    );
+                } else {
+                    $('.toast-message').html(data.message + '...');
+                }
+            }
+            if (data.status == "done") {
+                toastr.clear();
+            }
+        });
+
         vm.saveApp = function () {
             vm.flipActivityIndicator();
             ApplicationFactory.save(vm.application)
@@ -56,16 +99,25 @@
                 },
             });
             vm.loadApplicationTypes();
+
+            EnvironmentService.getDefault()
+                .then(function (response) {
+                    if (response == null) {
+                        $('.panel').addClass('inactive');
+                        $('.create-env').css('display', 'block');
+                    }
+                });
         };
 
-        function handleAfterSuccess (success) {
+        function handleAfterSuccess(success) {
             if (success) {
+                $rootScope.$broadcast("new:app", {});
                 vm.flipActivityIndicator();
                 $state.go('app.applicationsList');
             }
         }
 
-        function handleOnFailure (error) {
+        function handleOnFailure(error) {
             toastr.error(
                 error.message || MESSAGES_CONSTANTS.ADD_APP_FAILURE ||
                 MESSAGES_CONSTANTS.ERROR,
