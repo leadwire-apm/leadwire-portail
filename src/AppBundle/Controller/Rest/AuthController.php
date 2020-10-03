@@ -69,9 +69,9 @@ class AuthController extends Controller
 
     public function proxyAction(Request $request, AuthService $authService)
     {
-        if (!$request->headers->get('username') ||
-            !$request->headers->get('email') ||
-            !$request->headers->get('group')
+        if ($request->headers->get('username') === null || trim($request->headers->get('username')) === '' ||
+            $request->headers->get('email') === null || trim($request->headers->get('email')) === '' ||
+            $request->headers->get('group') === null || trim($request->headers->get('group')) === '' 
         ) {
             return new JsonResponse("Headers not found", 404);
         }

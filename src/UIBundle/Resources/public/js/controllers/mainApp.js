@@ -244,7 +244,7 @@
         }
 
         $scope.logout = function () {
-            window.localStorage.clear();
+            window.sessionStorage.clear();
             $auth.logout()
                 .then(function () {
                     toastr.info(MESSAGES_CONSTANTS.LOGOUT_SUCCESS);
