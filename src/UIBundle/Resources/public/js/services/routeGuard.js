@@ -2,7 +2,7 @@
     angular
         .module('leadwireApp')
         .service('RouteGuard', function RouteGuardFN (
-            $q, UserService, $location, $auth, $rootScope, $localStorage) {
+            $q, UserService, $location, $auth, $rootScope, $sessionStorage) {
 
                 var service = this;
 
@@ -28,9 +28,9 @@
 
                 service.adminRequired = function () {
                     var deferred = $q.defer();
-                    var roles = $localStorage.user && $localStorage.user.roles;
+                    var roles = $sessionStorage.user && $sessionStorage.user.roles;
                     if (roles && $auth.isAuthenticated()) {
-                        if (UserService.isAdmin($localStorage.user)) {
+                        if (UserService.isAdmin($sessionStorage.user)) {
                             deferred.resolve();
                         } else {
                             deferred.reject('UNAUTHORIZED');

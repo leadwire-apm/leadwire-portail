@@ -4,28 +4,28 @@
         '$scope',
         '$rootScope',
         'DashboardService',
-        '$localStorage',
+        '$sessionStorage',
         '$state',
         '$stateParams',
         dashboardCtrl,
     ]);
 
-    function dashboardCtrl($sce, $scope, $rootScope, DashboardService, $localStorage, $state, $stateParams) {
+    function dashboardCtrl($sce, $scope, $rootScope, DashboardService, $sessionStorage, $state, $stateParams) {
         var vm = this;
 
         trustSrc = function (src) {
             return $sce.trustAsResourceUrl(src);
         }
 
-        vm.refresh = $localStorage.refresh || "0";
-        vm.applications = $localStorage.applications;
+        vm.refresh = $sessionStorage.refresh || "0";
+        vm.applications = $sessionStorage.applications;
 
-        $scope.startDate = $localStorage.date ? moment($localStorage.date.startDate) : moment();
-        $scope.endDate = $localStorage.date ? moment($localStorage.date.endDate) : moment();
+        $scope.startDate = $sessionStorage.date ? moment($sessionStorage.date.startDate) : moment();
+        $scope.endDate = $sessionStorage.date ? moment($sessionStorage.date.endDate) : moment();
 
         vm.onLoad = function () {
             vm.isLoading = true;
-            $rootScope.menus = $localStorage.currentApplicationMenus;
+            $rootScope.menus = $sessionStorage.currentApplicationMenus;
             $scope.$watch(
                 function () {
                     $el = document.querySelector('#L' + $stateParams.id.replace(/-/g, ""));
@@ -41,8 +41,8 @@
             if (vm.refresh !== "0") {
                 var startDate = $scope.startDate.toISOString();
                 var endDate = $scope.endDate.toISOString();
-                var mode = $localStorage.mode
-                var from = getInterval($localStorage.chosenLabel);
+                var mode = $sessionStorage.mode
+                var from = getInterval($sessionStorage.chosenLabel);
                 var to = "now";
                 var autoRefresh = "!f";
                 var ref = (parseInt(vm.refresh) * 1000).toString()
@@ -108,10 +108,10 @@
             var to = "now";
             var autoRefresh = "!t";
 
-            $localStorage.date = $('#range').data('daterangepicker');
-            $localStorage.refresh = vm.refresh;
-            $localStorage.chosenLabel = $('#range').data('daterangepicker').chosenLabel;
-            $localStorage.mode = mode;
+            $sessionStorage.date = $('#range').data('daterangepicker');
+            $sessionStorage.refresh = vm.refresh;
+            $sessionStorage.chosenLabel = $('#range').data('daterangepicker').chosenLabel;
+            $sessionStorage.mode = mode;
 
             if ($('#range').data('daterangepicker').chosenLabel === null) {
                 mode = "absolute";
@@ -121,7 +121,7 @@
                 mode = "quick";
                 from = getInterval($('#range').data('daterangepicker').chosenLabel);
                 to = "now";
-                $localStorage.mode = mode;
+                $sessionStorage.mode = mode;
             }
             if (vm.refresh !== "0") {
                 autoRefresh = "!f";

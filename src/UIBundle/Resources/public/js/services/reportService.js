@@ -5,7 +5,7 @@
             'ApplicationFactory',
             'MenuFactory',
             '$rootScope',
-            '$localStorage',
+            '$sessionStorage',
             '$state',
             '$auth',
             'CONFIG',
@@ -18,7 +18,7 @@
      * @param ApplicationFactory
      * @param MenuFactory
      * @param $rootScope
-     * @param $localStorage
+     * @param $sessionStorage
      * @param $state
      * @constructor
      */
@@ -26,7 +26,7 @@
         ApplicationFactory,
         MenuFactory,
         $rootScope,
-        $localStorage,
+        $sessionStorage,
         $state,
         $auth,
         CONFIG,
@@ -39,7 +39,7 @@
          */
         service.updateSidebarMenus = function (reports) {
             //change sidebar menu using Menu factory
-            $localStorage.currentMenu = MenuFactory.set(
+            $sessionStorage.currentMenu = MenuFactory.set(
                 reports,
                 function (menu) {
                     return menu.name;
@@ -54,8 +54,8 @@
                     return menu.icon || 'fa fa-cogs';
                 },
             );
-            $rootScope.menus = $localStorage.currentMenu;
-            $localStorage.currentApplicationMenus = $localStorage.currentMenu;
+            $rootScope.menus = $sessionStorage.currentMenu;
+            $sessionStorage.currentApplicationMenus = $sessionStorage.currentMenu;
         };
 
         /**
@@ -67,7 +67,7 @@
             return new Promise(function (resolve, reject) {
                 ApplicationFactory.findMyReport(appId)
                     .then(function (response) {
-                        $localStorage.reports = response.data.Default;
+                        $sessionStorage.reports = response.data.Default;
                         //inform other controller that we changed context
                         $rootScope.$broadcast('set:contextApp', appId);
                         $rootScope.$broadcast('set:customMenus', {

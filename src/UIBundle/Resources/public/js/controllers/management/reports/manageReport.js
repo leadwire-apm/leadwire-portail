@@ -2,24 +2,24 @@
     angular.module('leadwireApp')
         .controller('ManageReportController', [
             '$sce',
-            '$localStorage',
+            '$sessionStorage',
             '$scope',
             'CONFIG',
             ManageReportCtrlFN,
         ]);
 
-    function ManageReportCtrlFN($sce, $localStorage, $scope, CONFIG) {
+    function ManageReportCtrlFN($sce, $sessionStorage, $scope, CONFIG) {
         var vm = this;
-        vm.refresh = $localStorage.refresh || "0";
+        vm.refresh = $sessionStorage.refresh || "0";
 
-        $scope.startDate = $localStorage.date ? moment($localStorage.date.startDate) : moment();
-        $scope.endDate = $localStorage.date ? moment($localStorage.date.endDate) : moment();
+        $scope.startDate = $sessionStorage.date ? moment($sessionStorage.date.startDate) : moment();
+        $scope.endDate = $sessionStorage.date ? moment($sessionStorage.date.endDate) : moment();
 
         if (vm.refresh !== "0") {
             var startDate = $scope.startDate.toISOString();
             var endDate = $scope.endDate.toISOString();
-            var mode = $localStorage.mode
-            var from = getInterval($localStorage.chosenLabel);
+            var mode = $sessionStorage.mode
+            var from = getInterval($sessionStorage.chosenLabel);
             var to = "now";
             var autoRefresh = "!f";
             var ref = (parseInt(vm.refresh) * 1000).toString()
@@ -87,10 +87,10 @@
             var to = "now";
             var autoRefresh = "!t";
 
-            $localStorage.date = $('#range').data('daterangepicker');
-            $localStorage.refresh = vm.refresh;
-            $localStorage.chosenLabel = $('#range').data('daterangepicker').chosenLabel;
-            $localStorage.mode = mode;
+            $sessionStorage.date = $('#range').data('daterangepicker');
+            $sessionStorage.refresh = vm.refresh;
+            $sessionStorage.chosenLabel = $('#range').data('daterangepicker').chosenLabel;
+            $sessionStorage.mode = mode;
 
             if ($('#range').data('daterangepicker').chosenLabel === null) {
                 mode = "absolute";
@@ -100,7 +100,7 @@
                 mode = "quick";
                 from = getInterval($('#range').data('daterangepicker').chosenLabel);
                 to = "now";
-                $localStorage.mode = mode;
+                $sessionStorage.mode = mode;
             }
             if (vm.refresh !== "0") {
                 autoRefresh = "!f";

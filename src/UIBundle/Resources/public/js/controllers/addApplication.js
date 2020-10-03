@@ -11,7 +11,7 @@
             '$state',
             'socket',
             '$rootScope',
-            '$localStorage',
+            '$sessionStorage',
             addApplicationCtrlFN,
         ]);
 
@@ -35,13 +35,13 @@
         $state,
         socket,
         $rootScope,
-        $localStorage,
+        $sessionStorage,
     ) {
         var vm = this;
 
-        vm.blacklist = ["leadwire", "span", "transaction", "error", "metric", "sourcemap", ...$localStorage.listApp];
+        vm.blacklist = ["leadwire", "span", "transaction", "error", "metric", "sourcemap", ...$sessionStorage.listApp];
 
-        $localStorage.envList.reduce(function (p, c, i) {
+        $sessionStorage.envList.reduce(function (p, c, i) {
             p.push(c.name);
             return p;
         }, vm.blacklist)

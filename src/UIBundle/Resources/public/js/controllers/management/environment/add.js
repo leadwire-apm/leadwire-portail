@@ -5,7 +5,7 @@
             'toastr',
             'MESSAGES_CONSTANTS',
             '$state',
-            '$localStorage',
+            '$sessionStorage',
             AddEnvironmentCtrlFN,
         ]);
 
@@ -18,13 +18,13 @@
         toastr,
         MESSAGES_CONSTANTS,
         $state,
-        $localStorage,
+        $sessionStorage,
     ) {
         var vm = this;
 
-        vm.blacklist =["leadwire", "span", "transaction", "error", "metric", "sourcemap", ...$localStorage.listApp];
+        vm.blacklist =["leadwire", "span", "transaction", "error", "metric", "sourcemap", ...$sessionStorage.listApp];
 
-        $localStorage.envList.reduce(function (p, c, i) {
+        $sessionStorage.envList.reduce(function (p, c, i) {
             p.push(c.name);
             return p;
         }, vm.blacklist)
@@ -39,7 +39,7 @@
             EnvironmentService.create(vm.environment)
                 .then(function () {
                     vm.flipActivityIndicator('isSaving');
-                    $localStorage.envList.push(vm.environment.name);
+                    $sessionStorage.envList.push(vm.environment.name);
                     toastr.success(MESSAGES_CONSTANTS.SUCCESS);
                     $state.go('app.management.environmentList');
                 })

@@ -5,7 +5,7 @@
  * @param $auth
  * @param InvitationService
  * @param UserService
- * @param $localStorage
+ * @param $sessionStorage
  * @param MenuFactory
  * @param toastr
  * @param MESSAGES_CONSTANTS
@@ -22,7 +22,7 @@ function LoginControllerFN(
     InvitationService,
     UserService,
     MenuFactory,
-    $localStorage,
+    $sessionStorage,
     toastr,
     MESSAGES_CONSTANTS,
     EnvironmentService,
@@ -184,7 +184,7 @@ function LoginControllerFN(
           const isSuperAdmin =
           user.roles.indexOf(UserService.getRoles().SUPER_ADMIN) !== -1;
           if (isAdmin || isSuperAdmin) {
-              $localStorage.currentMenu = MenuFactory.get("MANAGEMENT");
+              $sessionStorage.currentMenu = MenuFactory.get("MANAGEMENT");
               return { path: "app.management.applications" };
           } else {
               // Simple user
@@ -207,18 +207,18 @@ function LoginControllerFN(
 
         if ($auth.isAuthenticated()) {
 
-            if ($localStorage.user) {
+            if ($sessionStorage.user) {
 
                 if (vm.invitationId !== undefined) {
                     InvitationService.acceptInvitation(
                         vm.invitationId,
-                        $localStorage.user.id
+                        $sessionStorage.user.id
                     )
                         .then(function (app) {
                             toastr.remove();
                             toastr.success(MESSAGES_CONSTANTS.INVITATION_ACCEPTED);
                             (
-                                $localStorage.applications || ($localStorage.applications = [])
+                                $sessionStorage.applications || ($sessionStorage.applications = [])
                             ).push(app);
                             $state.go("app.applicationsList");
                         })
@@ -246,7 +246,7 @@ function LoginControllerFN(
             "InvitationService",
             "UserService",
             "MenuFactory",
-            "$localStorage",
+            "$sessionStorage",
             "toastr",
             "MESSAGES_CONSTANTS",
             "EnvironmentService",

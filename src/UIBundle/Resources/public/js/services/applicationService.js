@@ -2,7 +2,7 @@
     angular.module('leadwireApp')
         .service('ApplicationService', function (
             ApplicationFactory,
-            $localStorage,
+            $sessionStorage,
             DashboardService,
             $rootScope,
             MESSAGES_CONSTANTS,
@@ -36,10 +36,10 @@
                 if (response.data !== false && response.status === 200) {
                     //add app to LocalStorage so we can find it in the top menu
                     (
-                        $localStorage.applications ||
-                        ($localStorage.applications = [])
+                        $sessionStorage.applications ||
+                        ($sessionStorage.applications = [])
                     ).push(response.data);
-                    $localStorage.listApp.push(response.data.name);
+                    $sessionStorage.listApp.push(response.data.name);
 
                     toastr.success(MESSAGES_CONSTANTS.ADD_APP_SUCCESS);
                     return true;
@@ -145,7 +145,7 @@
             }
 
             service.getApplicationDocumentsCount = function (appName) {
-                return ApplicationFactory.getApplicationDocumentsCount(appName, $localStorage.selectedEnv.name)
+                return ApplicationFactory.getApplicationDocumentsCount(appName, $sessionStorage.selectedEnv.name)
                     .then(function (response) {
                         return response.data;
                     })

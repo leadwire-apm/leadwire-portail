@@ -17,17 +17,17 @@
         .service('CountryService', [
             'CountryApi',
             '$rootScope',
-            '$localStorage',
-            function(CountryApi, $rootScope, $localStorage) {
+            '$sessionStorage',
+            function(CountryApi, $rootScope, $sessionStorage) {
                 var service = this;
 
                 /**
                  * Fetch country code for phone input
                  */
                 service.loadCountries = function() {
-                    if (!$localStorage.countries) {
+                    if (!$sessionStorage.countries) {
                         CountryApi.getAll().then(function(res) {
-                            $localStorage.countries = res.data.map(function(
+                            $sessionStorage.countries = res.data.map(function(
                                 country
                             ) {
                                 return angular.extend(country, {
@@ -38,10 +38,10 @@
                                         country.callingCodes[0]
                                 });
                             });
-                            $rootScope.countries = $localStorage.countries;
+                            $rootScope.countries = $sessionStorage.countries;
                         });
                     } else {
-                        $rootScope.countries = $localStorage.countries;
+                        $rootScope.countries = $sessionStorage.countries;
                     }
                 };
             }

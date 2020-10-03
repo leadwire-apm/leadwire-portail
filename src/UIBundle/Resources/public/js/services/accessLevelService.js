@@ -3,7 +3,7 @@
         .service('AccessLevelService', [
             'AccessLevelFactory',
             '$rootScope',
-            '$localStorage',
+            '$sessionStorage',
             'InvitationService',
             '$ocLazyLoad',
             '$modal',
@@ -15,7 +15,7 @@
     function AccessLevelServiceFN(
         AccessLevelFactory,
         $rootScope,
-        $localStorage,
+        $sessionStorage,
         InvitationService,
         $ocLazyLoad,
         $modal,

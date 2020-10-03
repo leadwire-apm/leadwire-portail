@@ -5,7 +5,7 @@
         'ApplicationFactory',
         'toastr',
         'MESSAGES_CONSTANTS',
-        '$localStorage',
+        '$sessionStorage',
         'Paginator',
         '$modal',
         'CONFIG',
@@ -18,7 +18,7 @@
         ApplicationFactory,
         toastr,
         MESSAGES_CONSTANTS,
-        $localStorage,
+        $sessionStorage,
         Paginator,
         $modal,
         CONFIG,
@@ -31,13 +31,13 @@
             return user.roles.indexOf("ROLE_SUPER_ADMIN") >= 0 || user.roles.indexOf("ROLE_ADMIN") >= 0;
         }
 
-        if (!$localStorage.envList)
+        if (!$sessionStorage.envList)
             EnvironmentService.list();
 
-        if (!$localStorage.listApp) {
+        if (!$sessionStorage.listApp) {
             ApplicationFactory.findAll()
                 .then(function (res) {
-                    $localStorage.listApp = res.data.reduce(function (p, c, i) {
+                    $sessionStorage.listApp = res.data.reduce(function (p, c, i) {
                         p.push(c.name);
                         return p;
                     }, []);
@@ -52,7 +52,7 @@
                 vm.flipActivityIndicator('isLoading');
                 vm.apps = vm.paginator.items = response.data;
                 $scope.$emit('set:apps', vm.apps);
-                $localStorage.applications = vm.apps;
+                $sessionStorage.applications = vm.apps;
             }).catch(function () {
                 vm.flipActivityIndicator('isLoading');
                 vm.apps = [];
@@ -132,7 +132,7 @@
                                             ? currentApp
                                             : updatedApp;
                                     });
-                                    $localStorage.applications = vm.apps;
+                                    $sessionStorage.applications = vm.apps;
                                     $state.go('app.applicationDetail', {
                                         id: selectedApp.id,
                                     });
@@ -165,7 +165,7 @@
                     itemsPerPage: 5,
                 }),
             });
-            vm.selectedEnvId = $localStorage.selectedEnvId;
+            vm.selectedEnvId = $sessionStorage.selectedEnvId;
             vm.getApps = getApps;
             vm.getApps();
             $scope.$emit('update:title', "User settings");

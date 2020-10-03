@@ -5,7 +5,7 @@
             'toastr',
             'MESSAGES_CONSTANTS',
             'ApplicationFactory',
-            '$localStorage',
+            '$sessionStorage',
             ListEnvironmentCtrlFN,
         ]);
 
@@ -18,14 +18,14 @@
         toastr,
         MESSAGES_CONSTANTS,
         ApplicationFactory,
-        $localStorage,
+        $sessionStorage,
     ) {
         var vm = this;
 
-        if (!$localStorage.listApp) {
+        if (!$sessionStorage.listApp) {
             ApplicationFactory.findAll()
                 .then(function (res) {
-                    $localStorage.listApp = res.data.reduce(function (p, c, i) {
+                    $sessionStorage.listApp = res.data.reduce(function (p, c, i) {
                         p.push(c.name);
                         return p;
                     }, []);

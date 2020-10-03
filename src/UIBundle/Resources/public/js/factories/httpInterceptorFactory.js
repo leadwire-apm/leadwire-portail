@@ -4,8 +4,8 @@
             '$q',
             '$location',
             'MESSAGES_CONSTANTS',
-            '$localStorage',
-            function ($q, $location, MESSAGES_CONSTANTS, $localStorage) {
+            '$sessionStorage',
+            function ($q, $location, MESSAGES_CONSTANTS, $sessionStorage) {
                 return {
                     request: function (config) {
                         if (
@@ -22,7 +22,7 @@
                         console.log('status: ', response.status);
                         if (response.status === 403 || response.status ===
                             401) {
-                            $localStorage.$reset();
+                            $sessionStorage.$reset();
                             $location.path('/login');
                             throw {
                                 data: response.data,

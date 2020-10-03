@@ -3,7 +3,7 @@
         .service('UserService', [
             'UserFactory',
             '$rootScope',
-            '$localStorage',
+            '$sessionStorage',
             'InvitationService',
             '$ocLazyLoad',
             '$modal',
@@ -15,7 +15,7 @@
     function UserServiceFN (
         UserFactory,
         $rootScope,
-        $localStorage,
+        $sessionStorage,
         InvitationService,
         $ocLazyLoad,
         $modal,
@@ -35,8 +35,8 @@
         service.setProfile = function (force) {
             return new Promise(function (resolve, reject) {
                 if (
-                    angular.isUndefined($localStorage.user) ||
-                    $localStorage.user === null ||
+                    angular.isUndefined($sessionStorage.user) ||
+                    $sessionStorage.user === null ||
                     force
                 ) {
                     UserFactory.getProfile()
@@ -61,17 +61,17 @@
                             }
 
                             userInfo.avatar = response.data.avatar;
-                            $localStorage.user = userInfo;
+                            $sessionStorage.user = userInfo;
                             $rootScope.$broadcast('user:updated', userInfo);
-                            resolve($localStorage.user);
+                            resolve($sessionStorage.user);
                         })
                         .catch(function (error) {
-                            $localStorage.$reset();
+                            $sessionStorage.$reset();
                             console.log(error);
                             reject(error);
                         });
                 } else {
-                    resolve($localStorage.user);
+                    resolve($sessionStorage.user);
                 }
             });
         };
@@ -88,8 +88,8 @@
                 var updatedInfo = service.transformUser(user);
                 UserFactory.update(updatedInfo)
                     .then(function (updated) {
-                        $localStorage.user = angular.extend(
-                            $localStorage.user,
+                        $sessionStorage.user = angular.extend(
+                            $sessionStorage.user,
                             updatedInfo,
                             {
                                 contact: user.contact,
@@ -105,8 +105,8 @@
                                             id: user.id,
                                             avatar: response.data.name,
                                         });
-                                        $localStorage.user = angular.extend(
-                                            $localStorage.user, {
+                                        $sessionStorage.user = angular.extend(
+                                            $sessionStorage.user, {
                                                 avatar: response.data.name,
                                             });
                                         resolve(response.data.name);
@@ -142,15 +142,15 @@
                             InvitationService.acceptInvitation(invitationId,
                                 user.id)
                                 .then(function () {
-                                    resolve($localStorage.user);
+                                    resolve($sessionStorage.user);
                                 })
                                 .catch(function (error) {
                                     console.log('handleBeforeRedirect 1',
                                         error);
-                                    resolve($localStorage.user);
+                                    resolve($sessionStorage.user);
                                 });
                         } else {
-                            resolve($localStorage.user);
+                            resolve($sessionStorage.user);
                         }
                     })
                     .catch(function (error) {
@@ -205,7 +205,7 @@
                 delete payload.card;
             }
 
-            return UserFactory.subscribe(payload, $localStorage.user.id);
+            return UserFactory.subscribe(payload, $sessionStorage.user.id);
         };
 
         /**
@@ -214,7 +214,7 @@
          * and subscribe to a plan
          */
         service.handleFirstLogin = function () {
-            var connectedUser = angular.extend({}, $localStorage.user);
+            var connectedUser = angular.extend({}, $sessionStorage.user);
             // var connectedUser = {id:'sa'};
             if (connectedUser.id &&
                 (!connectedUser.email || !connectedUser.plan)) {
@@ -240,7 +240,7 @@
          * @returns {*}
          */
         service.getInvoices = function () {
-            return UserFactory.invoices($localStorage.user.id);
+            return UserFactory.invoices($sessionStorage.user.id);
         };
         /**
          * load subscription
@@ -248,7 +248,7 @@
          * @returns {*}
          */
         service.getSubscription = function () {
-            return UserFactory.subscription($localStorage.user.id);
+            return UserFactory.subscription($sessionStorage.user.id);
         };
 
         /**
@@ -258,7 +258,7 @@
          * @returns {*}
          */
         service.updateSubscription = function (body) {
-            return UserFactory.updateSubscription(body, $localStorage.user.id)
+            return UserFactory.updateSubscription(body, $sessionStorage.user.id)
                 .then(
                     function (updateResponse) {
                         if (updateResponse.status === 200) {
@@ -287,7 +287,7 @@
             delete payload.expiry;
 
             return UserFactory.editPaymentMethod(payload,
-                $localStorage.user.id);
+                $sessionStorage.user.id);
         };
 
         service.delete = function (id) {
