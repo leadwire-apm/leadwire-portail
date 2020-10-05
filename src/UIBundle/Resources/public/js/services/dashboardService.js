@@ -5,7 +5,7 @@
             'ApplicationFactory',
             'MenuFactory',
             '$rootScope',
-            '$localStorage',
+            '$sessionStorage',
             '$state',
             '$auth',
             'CONFIG',
@@ -18,7 +18,7 @@
      * @param ApplicationFactory
      * @param MenuFactory
      * @param $rootScope
-     * @param $localStorage
+     * @param $sessionStorage
      * @param $state
      * @constructor
      */
@@ -26,7 +26,7 @@
         ApplicationFactory,
         MenuFactory,
         $rootScope,
-        $localStorage,
+        $sessionStorage,
         $state,
         $auth,
         CONFIG,
@@ -39,7 +39,7 @@
          */
         service.updateSidebarMenus = function (dashboards) {
             //change sidebar menu using Menu factory
-            $localStorage.currentMenu = MenuFactory.set(
+            $sessionStorage.currentMenu = MenuFactory.set(
                 dashboards,
                 function (menu) {
                     return menu.name;
@@ -69,16 +69,16 @@
                     return "L" + menu.id.replace(/-/g, "");
                 }
             );
-            $rootScope.menus = $localStorage.currentMenu;
-            $localStorage.currentApplicationMenus = $localStorage.currentMenu;
+            $rootScope.menus = $sessionStorage.currentMenu;
+            $sessionStorage.currentApplicationMenus = $sessionStorage.currentMenu;
         };
 
         service.getDashboard = function (dashboardId, tenant) {
-            var index = $localStorage.selectedApp.applicationIndex;
+            var index = $sessionStorage.selectedApp.applicationIndex;
             if(tenant.indexOf('shared') > -1) {
-                index = $localStorage.selectedApp.sharedIndex;
+                index = $sessionStorage.selectedApp.sharedIndex;
             }
-            var tenant = $localStorage.selectedEnv.name + "-" + index
+            var tenant = $sessionStorage.selectedEnv.name + "-" + index
             return CONFIG.KIBANA_BASE_URL + "app/kibana?security_tenant=" + tenant + '#/dashboard/' + dashboardId;
         };
         /**
@@ -88,9 +88,9 @@
          */
         service.fetchDashboardsByAppId = function (appId) {
             return new Promise(function (resolve, reject) {
-                ApplicationFactory.findMyDashboard(appId, $localStorage.selectedEnv.name)
+                ApplicationFactory.findMyDashboard(appId, $sessionStorage.selectedEnv.name)
                     .then(function (response) {
-                        $localStorage.dashboards = response.data.Default;
+                        $sessionStorage.dashboards = response.data.Default;
                         //inform other controller that we changed context
                         $rootScope.$broadcast('set:contextApp', appId);
                         $rootScope.$broadcast('set:customMenus', {
@@ -121,7 +121,7 @@
          */
         service.fetchDashboardsListByAppId = function (appId) {
             return new Promise(function (resolve, reject) {
-                ApplicationFactory.findMyDashboard(appId, $localStorage.selectedEnv.name)
+                ApplicationFactory.findMyDashboard(appId, $sessionStorage.selectedEnv.name)
                     .then(function (response) {
                         resolve(response.data.Default);
                     })
@@ -139,7 +139,7 @@
          */
         service.fetchDashboardsAllListByAppId = function (appId) {
             return new Promise(function (resolve, reject) {
-                ApplicationFactory.findMyDashboard(appId, $localStorage.selectedEnv.name)
+                ApplicationFactory.findMyDashboard(appId, $sessionStorage.selectedEnv.name)
                     .then(function (response) {
                         resolve(response.data);
                     })

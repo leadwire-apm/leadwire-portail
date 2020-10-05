@@ -7,9 +7,9 @@
 
     angular.module('leadwireApp').factory('ConfigService', ConfigService);
 
-    ConfigService.$inject = ['$http', '$auth', '$localStorage', 'CONFIG'];
+    ConfigService.$inject = ['$http', '$auth', '$sessionStorage', 'CONFIG'];
 
-    function ConfigService($http, $auth, $localStorage, CONFIG) {
+    function ConfigService($http, $auth, $sessionStorage, CONFIG) {
         var service = {};
 
         service.baseUrl = CONFIG.KIBANA_BASE_URL;
@@ -18,16 +18,16 @@
             var tenant = '';
             switch (tenantPrefix) {
                 case 'app_':
-                    tenant = $localStorage.selectedApp.sharedIndex;
+                    tenant = $sessionStorage.selectedApp.sharedIndex;
                     break;
                 case 'shared_':
-                    tenant = $localStorage.selectedApp.sharedIndex;
+                    tenant = $sessionStorage.selectedApp.sharedIndex;
                     break;
                 case 'user_':
-                    tenant = $localStorage.user.userIndex;
+                    tenant = $sessionStorage.user.userIndex;
                     break;
                 case 'all_user_':
-                    tenant = $localStorage.user.allUserIndex;
+                    tenant = $sessionStorage.user.allUserIndex;
                     break;
                 default:
                     tenant = tenantPrefix;
@@ -47,7 +47,7 @@
             var tenant = "Private";
 
             if (params === "shared") {
-                tenant = $localStorage.selectedEnv.name + "-" + $localStorage.selectedApp.sharedIndex;
+                tenant = $sessionStorage.selectedEnv.name + "-" + $sessionStorage.selectedApp.sharedIndex;
             }
 
             var url =

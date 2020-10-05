@@ -2,22 +2,21 @@
     angular
         .module('leadwireApp')
         .run(function ($rootScope,
-                       $localStorage,
+                       $sessionStorage,
                        CONFIG, $templateCache,
                        $state,
-                       $stateParams,
                        MenuFactory,
                        $location,
                        iFrameService) {
-            // $rootScope.menus = $localStorage.currentMenu;
-            $rootScope.applications = $localStorage.applications;
-            $rootScope.dashboards = $localStorage.dashboards;
+            // $rootScope.menus = $sessionStorage.currentMenu;
+            $rootScope.applications = $sessionStorage.applications;
+            $rootScope.dashboards = $sessionStorage.dashboards;
             $rootScope.ASSETS_BASE_URL = CONFIG.ASSETS_BASE_URL;
             $rootScope.DOWNLOAD_URL = CONFIG.DOWNLOAD_URL;
             $rootScope.UPLOAD_URL = CONFIG.UPLOAD_URL;
 
             $rootScope.$watch('applications', function (newVal) {
-                $localStorage.applications = newVal;
+                $sessionStorage.applications = newVal;
             });
 
             $state.defaultErrorHandler(function (error) {

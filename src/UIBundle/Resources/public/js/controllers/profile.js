@@ -2,7 +2,7 @@
     angular
         .module('leadwireApp')
         .controller('profileCtrl', [
-            '$localStorage',
+            '$sessionStorage',
             '$location',
             'toastr',
             '$scope',
@@ -12,7 +12,7 @@
         ]);
 
     function ProfileCtrlFN(
-        $localStorage,
+        $sessionStorage,
         $location,
         toastr,
         $scope,
@@ -38,7 +38,7 @@
         };
 
         vm.handleSuccessForm = function handleSuccess(fileName) {
-            // $localStorage.user = vm.user;
+            // $sessionStorage.user = vm.user;
             if (fileName) {
                 $scope.$emit('update:image', fileName);
             }
@@ -47,7 +47,7 @@
         };
 
         function onLoad() {
-            vm.user = angular.extend({}, $localStorage.user);
+            vm.user = angular.extend({}, $sessionStorage.user);
             vm.showCheckBoxes = false;
             CountryService.loadCountries();
         }

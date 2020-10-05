@@ -4,19 +4,19 @@
         .controller('customDashboardsCtrl', [
             '$scope',
             'DashboardService',
-            '$localStorage',
+            '$sessionStorage',
             'ConfigService',
             '$state',
             controller
         ]);
 
-    function controller($scope, DashboardService, $localStorage, ConfigService, $state) {
+    function controller($scope, DashboardService, $sessionStorage, ConfigService, $state) {
         var vm = this;
 
         vm.onLoad = function() {
             vm.isLoading = true;
             DashboardService.fetchDashboardsByAppId(
-                $localStorage.selectedAppId
+                $sessionStorage.selectedAppId
             )
                 .then(function(data) {
                     vm.loadThemeList.apply(vm, [data.custom]);
@@ -27,9 +27,9 @@
         };
 
         vm.loadThemeList = function(dashboards) {
-            var customDashboards = dashboards || $localStorage.customMenus.list;
-            vm.selectedApp = $localStorage.selectedApp;
-            vm.currentUser = $localStorage.user;
+            var customDashboards = dashboards || $sessionStorage.customMenus.list;
+            vm.selectedApp = $sessionStorage.selectedApp;
+            vm.currentUser = $sessionStorage.user;
             $scope.$apply(function() {
                 vm.isLoading = false;
                 vm.themeList = Object.keys(customDashboards).reduce(function(

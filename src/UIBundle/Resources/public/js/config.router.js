@@ -15,6 +15,7 @@ angular.module('leadwireApp')
             CONFIG) {
             // For unmatched routes
             $urlRouterProvider.otherwise('/applications/list');
+            $authProvider.storageType = 'sessionStorage';
 
             /**
              *  Satellizer config
@@ -230,10 +231,10 @@ angular.module('leadwireApp')
                         beforeMount: [
                             'MenuFactory',
                             '$rootScope',
-                            '$localStorage',
+                            '$sessionStorage',
                             'UserService',
                             function (
-                                MenuFactory, $rootScope, $localStorage, UserService) {
+                                MenuFactory, $rootScope, $sessionStorage, UserService) {
                                 $rootScope.menus = MenuFactory.get(MenuEnum.MANAGEMENT);
                             },
                         ],
@@ -703,10 +704,10 @@ angular.module('leadwireApp')
             }
 
             function getMenuItems() {
-                return function (MenuFactory, $rootScope, $localStorage, UserService) {
+                return function (MenuFactory, $rootScope, $sessionStorage, UserService) {
 
-                    const isAdmin = UserService.isAdmin($localStorage.user);
-                    const isSuperAdmin = $localStorage.user.roles.indexOf(UserService.getRoles().SUPER_ADMIN) !== -1;
+                    const isAdmin = UserService.isAdmin($sessionStorage.user);
+                    const isSuperAdmin = $sessionStorage.user.roles.indexOf(UserService.getRoles().SUPER_ADMIN) !== -1;
                     if (isAdmin || isSuperAdmin) {
                         $rootScope.menus = MenuFactory.get("MANAGEMENT");
                     } else {

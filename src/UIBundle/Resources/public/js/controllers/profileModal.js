@@ -2,7 +2,7 @@
     angular
         .module('leadwireApp')
         .controller('profileModalCtrl', [
-            '$localStorage',
+            '$sessionStorage',
             'PlanFactory',
             '$location',
             '$modalInstance',
@@ -16,7 +16,7 @@
         ]);
 
     function ProfileModalCtrlFN(
-        $localStorage,
+        $sessionStorage,
         PlanFactory,
         $location,
         $modalInstance,
@@ -73,7 +73,7 @@
         };
 
         vm.handleSuccessForm = function handleSuccess(fileName) {
-            $localStorage.user = vm.user;
+            $sessionStorage.user = vm.user;
             toastr.success('User has been updated successfully');
             if (fileName) {
                 $scope.$emit('update:image', fileName);
@@ -166,7 +166,7 @@
 
         function onLoad() {
             vm = angular.extend(vm, {
-                user: angular.extend({}, $localStorage.user),
+                user: angular.extend({}, $sessionStorage.user),
                 step: {
                     number: 1,
                     title: 'User Settings'

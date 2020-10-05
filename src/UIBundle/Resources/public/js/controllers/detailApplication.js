@@ -9,7 +9,7 @@
             'CONFIG',
             'toastr',
             'MESSAGES_CONSTANTS',
-            '$localStorage',
+            '$sessionStorage',
             'AccessLevelService',
             'EnvironmentService',
             'ApplicationService',
@@ -28,7 +28,7 @@
         CONFIG,
         toastr,
         MESSAGES_CONSTANTS,
-        $localStorage,
+        $sessionStorage,
         AccessLevelService,
         EnvironmentService,
         ApplicationService,
@@ -40,7 +40,7 @@
         var vm = this;
 
         vm.LEADWIRE_LOGIN_METHOD = CONFIG.LEADWIRE_LOGIN_METHOD;
-        vm.selectedEnvironment = $localStorage.selectedEnvId.slice(0);
+        vm.selectedEnvironment = $sessionStorage.selectedEnvId.slice(0);
         vm.ownerTitle = "Owner Github :";
         var envName = "staging";
 

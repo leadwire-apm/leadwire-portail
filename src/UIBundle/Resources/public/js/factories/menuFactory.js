@@ -6,8 +6,8 @@
             '$state',
             'CONFIG',
             'UserService',
-            '$localStorage',
-            function (Menus, $state, CONFIG, UserService, $localStorage) {
+            '$sessionStorage',
+            function (Menus, $state, CONFIG, UserService, $sessionStorage) {
 
                 if (CONFIG.LEADWIRE_STRIPE_ENABLED === true) {
                     Menus.SETTINGS.push({
@@ -38,7 +38,7 @@
                 function normalizeRouteParams(params) {
                     if (!_.has(params, 'ls')) return params;
                     var result = Object.keys(params.ls).reduce(function (acc, current) {
-                        acc[current] = _.get($localStorage, params.ls[current]);
+                        acc[current] = _.get($sessionStorage, params.ls[current]);
                         return acc;
                     }, params);
                     delete result.ls;
@@ -64,7 +64,7 @@
                         if (menuKey === "CAMPAGNE") {
 
                             if (CONFIG.LEADWIRE_COMPAGNE_ENABLED === true) {
-                                if (UserService.isAdmin($localStorage.user)) {
+                                if (UserService.isAdmin($sessionStorage.user)) {
                                     menus.push(
                                         {
                                             route: $state.href('app.management.tmecs'),

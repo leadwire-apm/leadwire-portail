@@ -7,7 +7,7 @@
             '$rootScope',
             '$auth',
             '$location',
-            '$localStorage',
+            '$sessionStorage',
             'ApplicationFactory',
             'UserService',
             'DashboardService',
@@ -25,7 +25,7 @@
         $rootScope,
         $auth,
         $location,
-        $localStorage,
+        $sessionStorage,
         ApplicationFactory,
         UserService,
         DashboardService,
@@ -76,9 +76,10 @@
                 });
         }
 
-        $scope.setSelectedEnv = function (environment) {
-            $scope.selectedEnvId = $localStorage.selectedEnvId = environment.id;
-            $scope.selectedEnv = $localStorage.selectedEnv = environment;
+
+        $scope.setSelectedEnv = function(environment){
+            $scope.selectedEnvId = $sessionStorage.selectedEnvId = environment.id;
+            $scope.selectedEnv = $sessionStorage.selectedEnv = environment;
             $rootScope.$broadcast('environment:updated');
             $scope.app.layout.isChatOpen = false;
             $location.path('/applicationsSverview');
@@ -95,9 +96,9 @@
             $scope.$broadcast('reload:src', data);
         });
         $scope.$on('new:app', function (event, data) {
-            UserService.get($localStorage.user.id)
+            UserService.get($sessionStorage.user.id)
                 .then(function (user) {
-                    $rootScope.user = $localStorage.user = user;
+                    $rootScope.user = $sessionStorage.user = user;
                     $scope.$apply();
                 })
                 .catch(function () {
@@ -110,7 +111,7 @@
         });
 
         $scope.$on('set:apps', function (event, apps) {
-            $scope.applications = $localStorage.applications = apps;
+            $scope.applications = $sessionStorage.applications = apps;
             $scope.paginator = Paginator.create({
                 start: 0,
                 items: $scope.applications,
@@ -118,8 +119,8 @@
         });
 
         $scope.$on('set:contextApp', function (event, appId) {
-            $scope.selectedAppId = $localStorage.selectedAppId = appId;
-            $localStorage.selectedApp = $localStorage.applications.find(
+            $scope.selectedAppId = $sessionStorage.selectedAppId = appId;
+            $sessionStorage.selectedApp = $sessionStorage.applications.find(
                 function (currApp) {
                     return currApp.id === appId;
                 },
@@ -128,13 +129,13 @@
         });
 
         $scope.$on('set:customMenus', function (event, customMenus) {
-            $localStorage.customMenus = customMenus;
-            $scope.withCustom = $localStorage.customMenus.withCustom;
+            $sessionStorage.customMenus = customMenus;
+            $scope.withCustom = $sessionStorage.customMenus.withCustom;
         });
 
         $scope.$on('activate:app', function (event, activatedApp) {
-            $scope.applications = $localStorage.applications = (
-                $localStorage.applications || ($localStorage.applications = [])
+            $scope.applications = $sessionStorage.applications = (
+                $sessionStorage.applications || ($sessionStorage.applications = [])
             ).map(function (currentApp) {
                 return currentApp.id !== activatedApp.id
                     ? currentApp
@@ -142,20 +143,16 @@
             });
         });
 
-        $scope.$on('update:title', function (event, title) {
-            $scope.title = title;
-        });
-
-        if (angular.isDefined($localStorage.layout)) {
-            $scope.app.layout = $localStorage.layout;
+        if (angular.isDefined($sessionStorage.layout)) {
+            $scope.app.layout = $sessionStorage.layout;
         } else {
-            $localStorage.layout = $scope.app.layout;
+            $sessionStorage.layout = $scope.app.layout;
         }
 
         $scope.$watch(
             'app.layout',
             function () {
-                $localStorage.layout = $scope.app.layout;
+                $sessionStorage.layout = $scope.app.layout;
             },
             true,
         );
@@ -191,17 +188,17 @@
 
         $scope.getDefaultEnv = function () {
             $scope.isChangingContextEnv = true;
-            if ($localStorage.selectedEnvId && $localStorage.selectedEnv) {
-                $scope.selectedEnvId = $localStorage.selectedEnvId;
-                $scope.selectedEnv = $localStorage.selectedEnv;
+            if ($sessionStorage.selectedEnvId && $sessionStorage.selectedEnv) {
+                $scope.selectedEnvId = $sessionStorage.selectedEnvId;
+                $scope.selectedEnv = $sessionStorage.selectedEnv;
                 return;
             }
 
             EnvironmentService.getDefault()
                 .then(function (response) {
                     $scope.isChangingContext = false;
-                    $scope.selectedEnvId = $localStorage.selectedEnvId = response.id;
-                    $scope.selectedEnv = $localStorage.selectedEnv = response;
+                    $scope.selectedEnvId = $sessionStorage.selectedEnvId = response.id;
+                    $scope.selectedEnv = $sessionStorage.selectedEnv = response;
                 })
                 .catch(function () {
                     $scope.$apply(function () {
@@ -214,9 +211,9 @@
         $rootScope.setDefaultEnv = $scope.getDefaultEnv;
 
         $scope.brandRedirectTo = function () {
-            if ($localStorage.dashboards && $localStorage.dashboards.length) {
+            if ($sessionStorage.dashboards && $sessionStorage.dashboards.length) {
                 $state.go('app.dashboard.home', {
-                    id: $localStorage.dashboards[0].id,
+                    id: $sessionStorage.dashboards[0].id,
                 });
             } else {
                 $state.go('app.applicationsList');
@@ -236,7 +233,7 @@
 
         $scope.loadApplications = function () {
             ApplicationFactory.findMyApplications().then(function (response) {
-                $localStorage.applications = response.data;
+                $sessionStorage.applications = response.data;
                 $scope.$emit('set:apps', response.data);
             }).catch(function () {
             });
@@ -247,7 +244,7 @@
         }
 
         $scope.logout = function () {
-            window.localStorage.clear();
+            window.sessionStorage.clear();
             $auth.logout()
                 .then(function () {
                     toastr.info(MESSAGES_CONSTANTS.LOGOUT_SUCCESS);
@@ -292,15 +289,15 @@
             };
 
             $scope.isAdmin = function () {
-                return UserService.isAdmin($localStorage.user);
+                return UserService.isAdmin($sessionStorage.user);
             };
 
-            $rootScope.user = $localStorage.user;
-            $scope.applications = $localStorage.applications;
-            $scope.selectedAppId = $localStorage.selectedAppId;
+            $rootScope.user = $sessionStorage.user;
+            $scope.applications = $sessionStorage.applications;
+            $scope.selectedAppId = $sessionStorage.selectedAppId;
             $scope.withCustom = (
-                $localStorage.customMenus || ($localStorage.customMenus = {})
-            ).withCustom;
+                $sessionStorage.customMenus || ($sessionStorage.customMenus = {})
+            ).withCustom;            
         }
     }
 })(window.angular);

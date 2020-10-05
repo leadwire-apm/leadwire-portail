@@ -60,7 +60,7 @@
         </div>
 
         <li ng-if="!isChangingContext && state.includes('app.dashboard')">
-            <a ng-href="[['#/dashboard/custom/' + $localStorage.selectedAppId]]">
+            <a ng-href="[['#/dashboard/custom/' + $sessionStorage.selectedAppId]]">
                 <i class="fa fa-file-alt"></i>
                 <span>Custom</span>
             </a>

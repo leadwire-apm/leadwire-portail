@@ -9,7 +9,7 @@
             'toastr',
             'MESSAGES_CONSTANTS',
             '$state',
-            '$localStorage',
+            '$sessionStorage',
             ManageUserApplicationsCtrlFN,
         ]);
 
@@ -26,7 +26,7 @@
         toastr,
         MESSAGES_CONSTANTS,
         $state,
-        $localStorage
+        $sessionStorage
     ) {
         var vm = this;
         var userId = $state.params.id;
@@ -175,7 +175,7 @@
                 },
                 applications: [],
                 user: {},
-                selectedEnvironment: $localStorage.selectedEnvId.slice(0),
+                selectedEnvironment: $sessionStorage.selectedEnvId.slice(0),
                 environments: [],
                 userApplications: null
 
