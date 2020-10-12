@@ -791,7 +791,7 @@ class ElasticSearchService
             $response = ["nodes" => array()];
 
             $nodesStats = $this->httpClient->get(
-                $this->url . "_nodes/stats/os,fs,jvm,indices",
+                $this->url . "_nodes/stats/os,fs,jvm,indices,ingest",
     
                 [
                     'headers' => [
@@ -896,6 +896,7 @@ class ElasticSearchService
                 "os" => $os,
                 "jvm" => $jvm,
                 "fs" => $fs,
+                "ingest" => $nodesStats[$key]["ingest"]["total"],
                 "documents" => $nodesStats[$key]["indices"]["docs"]["count"],
                 "roles" => $nodeOs[$key]["roles"],
                 "isOpen" => false,
