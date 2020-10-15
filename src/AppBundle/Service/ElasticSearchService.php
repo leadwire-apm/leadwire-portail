@@ -456,6 +456,7 @@ class ElasticSearchService
     {
         $monitoringSets = $application->getType()->getMonitoringSets();
 
+
         foreach ($monitoringSets as $monitoringSet) {
             if ($monitoringSet->isValid() === false) {
                 $this->logger->warning(
@@ -523,6 +524,58 @@ class ElasticSearchService
     public function createIndexTemplate(Application $application, array $activeApplications, string $envName)
     {
         $monitoringSets = $application->getType()->getMonitoringSets();
+
+
+        $watcher_template = array (
+            'order' => 10,
+            'index_patterns' => 
+            array (
+              0 => 'watcher_alarms-*',
+            ),
+            'settings' => 
+            array (
+              'index' => 
+              array (
+                'opendistro' => 
+                array (
+                  'index_state_management' => 
+                  array (
+                    'policy_id' => 'hot-warm-delete-policy',
+                  ),
+                ),
+              ),
+            ),
+        );
+
+        if ($this->ism_rollover_setup == 'true') {
+            $watcher_template->settings->{"opendistro.index_state_management.policy_id"} = "rollover-hot-warm-delete-policy";	
+	        $watcher_template->settings->{"opendistro.index_state_management.rollover_alias"} = "watcher_alarms" ;
+	    }
+
+        $response = $this->httpClient->put(
+            $this->url . "_template/watcher_alarms",
+            [
+                'auth' => $this->getAuth(),
+                'headers' => [
+                    "Content-Type" => "application/json",
+                ],
+                'body' => \json_encode($watcher_template),
+            ]
+        );
+
+        $this->logger->notice(
+            "leadwire.es.createIndexTemplate",
+            [
+                'status_code' => $response->getStatusCode(),
+                'phrase' => $response->getReasonPhrase(),
+                'url' => $this->url . "_template/watcher_alarms",
+                'verb' => 'PUT',
+                'monitoring_set' => "watcher_alarms",
+            ]
+        );
+
+
+
 
         foreach ($monitoringSets as $monitoringSet) {
             if ($monitoringSet->isValid() === false) {
@@ -952,21 +1005,24 @@ class ElasticSearchService
     function getReports($appName, $envName){
         try {
             
-            $body = [
-                "query" => [
-                    "bool" => [
-                        "must" => [
-                            array( [ "match" => ["watcher" => $envName . "-" . $appName . "-*"]] )
-                        ]
-                    ]
-                ],
-		"sort" => [
-                   "@timestamp" => [
-                         "order" => "asc"
-                  ]
-                ]
+            $body = array (
+                'query' =>
+                array (
+                  'match' =>
+                  array (
+                    'watcher' => $envName . "-" . $appName . "-*" ,
+                  ),
+                ),
+                'sort' =>
+                array (
+                  '@timestamp' =>
+                  array (
+                    'order' => 'desc',
+                  ),
+                ),
+              );
 
-            ];
+
 
             $response = $this->httpClient->get(
 
@@ -1871,6 +1927,60 @@ $config =  [
         return $this->patchRoleMapping("replace", $envName, $applicationName, $users, $isWrite, $isWatcher);
     }
 
+
+    function createBackupLocation(): bool{
+        try {
+
+            $status = false;
+
+            $backup = array(
+                'type' => 'fs',
+                'settings' => 
+               (object) array(
+                  'location' => '/mnt/snapshots/local_backup',
+               ),
+            );
+
+            
+            $url = $this->url . "_snapshot/local_backup";
+           
+            $response = $this->httpClient->post(
+
+                $url,
+                [
+                    'auth' => $this->getAuth(),
+                    'headers' => [
+                        "Content-Type" => "application/json",
+                    ],
+                    'body' => \json_encode($backup),
+                ]
+
+            );
+
+            $this->logger->notice(
+                "leadwire.opendistro.createBackupLocation",
+                [
+                    'url' => $url,
+                    'verb' => 'POST',
+                    'status_code' => $response->getStatusCode(),
+                    'status_text' => $response->getReasonPhrase()
+                ]
+            );
+            
+            if($response->getStatusCode() == 201){
+                $status= true;
+            }
+
+            return $status;
+
+        } catch (\Exception $e) {
+            $this->logger->error($e->getMessage());
+            throw new HttpException("An error has occurred while executing your request.",400);
+        }
+    }
+
+
+
     function createAlert(string $appName, string $envName, string $type ): bool{
         try {
 
@@ -1948,7 +2058,7 @@ $config =  [
                         ],
                         [
                             "name"=>"warm",
-                            "actions"=>array(["replica_count"=>["number_of_replicas"=>3]]),
+                            "actions"=>array(["replica_count"=>["number_of_replicas"=>0]],["force_merge"=>["max_num_segments"=>1]]),
                             "transitions"=>array([
                                 "state_name"=>"delete",
                                 "conditions"=>["min_index_age"=>$this->ism_delete_min_index_age]]
@@ -1957,22 +2067,17 @@ $config =  [
                         [
                             "name"=>"delete",
                             "actions"=>array(
-                                ["notification"=> [
-                                    "destination"=>[
-                                        "chime"=>[
-                                            "url"=>"<URL>"
-                                        ]
-                                    ],
-                                    "message_template"=>[
-                                        "source"=>"The index is being deleted"
-                                        ]
-                                    ]
+                                ["delete"=> 
+                                (object) array()
                                 ]
                             )
                         ]
                     )
                 ]
             ];
+            
+              
+              
             
             $url = $this->url . "_opendistro/_ism/policies/hot-warm-delete-policy";
            
@@ -1995,6 +2100,7 @@ $config =  [
                     'url' => $url,
                     'verb' => 'PUT',
                     'status_code' => $response->getStatusCode(),
+                    'policy' => \json_encode($policy),
                     'status_text' => $response->getReasonPhrase()
                 ]
             );
@@ -2017,6 +2123,7 @@ $config =  [
 
             $status = false;
 
+          
             $policy = [
                 "policy"=>[
                     "description"=>"rollover hot warm delete workflow",
@@ -2025,16 +2132,19 @@ $config =  [
                     "states"=>array(
                         [
                             "name"=>"hot",
-			    "actions"=>array(["rollover"=>["min_doc_count"=>$this->ism_min_doc_count,
-                                                           "min_index_age"=>$this->ism_min_index_age,
-                                                           "min_size"=>$this->ism_min_size
-                                                ]],
-					     ["replica_count"=>["number_of_replicas"=>1]]),
-                            "transitions"=>array(["state_name"=>"warm"])
+                            "actions"=>array(["rollover"=>["min_doc_count"=>$this->ism_min_doc_count,
+                            "min_index_age"=>$this->ism_min_index_age,
+                            "min_size"=>$this->ism_min_size
+                 ]],
+                        ["replica_count"=>["number_of_replicas"=>1]]),
+                            "transitions"=>array([
+                                "state_name"=>"warm",
+                                "conditions"=>["min_index_age"=>"1d"]]
+                            )
                         ],
                         [
                             "name"=>"warm",
-                            "actions"=>array(["replica_count"=>["number_of_replicas"=>3]]),
+                            "actions"=>array(["replica_count"=>["number_of_replicas"=>0]],["force_merge"=>["max_num_segments"=>1]]),
                             "transitions"=>array([
                                 "state_name"=>"delete",
                                 "conditions"=>["min_index_age"=>$this->ism_delete_min_index_age]]
@@ -2043,16 +2153,8 @@ $config =  [
                         [
                             "name"=>"delete",
                             "actions"=>array(
-                                ["notification"=> [
-                                    "destination"=>[
-                                        "chime"=>[
-                                            "url"=>"<URL>"
-                                        ]
-                                    ],
-                                    "message_template"=>[
-                                        "source"=>"The index is being deleted"
-                                        ]
-                                    ]
+                                ["delete"=> 
+                                (object) array()
                                 ]
                             )
                         ]
