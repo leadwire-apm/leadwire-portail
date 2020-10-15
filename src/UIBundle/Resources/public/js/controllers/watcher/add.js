@@ -9,6 +9,7 @@
             'MESSAGES_CONSTANTS',
             '$scope', 
             'CONFIG',
+            '$sessionStorage',
             AddWatcherCtrl]);
 
     /**
@@ -22,7 +23,8 @@
         toastr,
         MESSAGES_CONSTANTS,
         $scope,
-        CONFIG) {
+        CONFIG,
+        $sessionStorage) {
 
         var vm = this;
         var _url = "";
@@ -73,7 +75,13 @@
             Object.keys(dashboardsList).forEach(function (k) {
                 Object.keys(dashboardsList[k]).forEach(function (key) {
                     dashboardsList[k][key].forEach(function (element) {
-                        vm.dashboardsList.push({ ...element, key, 'group': k })
+                        if(k === 'Custom' && element.tenant === $sessionStorage.user.username){
+                            vm.dashboardsList.push({ ...element, key, 'group': 'private', 'text': '** Private **' })
+                        } else if (k === 'Custom' && element.tenant !== $sessionStorage.user.username){
+                            vm.dashboardsList.push({ ...element, key, 'group': 'shared', 'text': '** Shared **' })
+                        } else {
+                            vm.dashboardsList.push({ ...element, key, 'group': 'default', 'text': '' })
+                        }
                     })
                 })
             })
@@ -84,10 +92,12 @@
         vm.setTenant = function () {
             vm.dashboardsList.map( el => {
                 if(el.id === vm.watcher.dashboard){
-                    if(el.group.toLowerCase() === 'custom')
+                    if(el.group.toLowerCase() === 'shared')
                         tenant = `${$modalInstance.envName +"-shared-"+ $modalInstance.appName}`;
-                    else
+                    else if(el.group.toLowerCase() === 'default')
                         tenant = `${$modalInstance.envName +"-app-"+ $modalInstance.appName}`;
+                    else
+                    tenant = $sessionStorage.user.username;
                 }
             })
 

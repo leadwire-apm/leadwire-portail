@@ -299,7 +299,8 @@ class AuthService
             //create user in opendistro
             $this->esService->createUser($user);
             $this->esService->updateRoleMapping("add", "staging", $user, "demo", false, false);
-
+            $this->esService->createTenant($user->getUsername() . "_tenant");
+            
             if($user->hasRole('ROLE_SUPER_ADMIN') || $user->hasRole('ROLE_ADMIN')) {
                 $this->esService->updateRoleMapping("add", "staging", $user, "demo", true, true);
             }
