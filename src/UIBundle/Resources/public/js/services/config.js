@@ -44,7 +44,7 @@
 
         service.setDashboard = function (params) {
 
-            var tenant = "Private";
+            var tenant = $sessionStorage.user.username;
 
             if (params === "shared") {
                 tenant = $sessionStorage.selectedEnv.name + "-" + $sessionStorage.selectedApp.sharedIndex;

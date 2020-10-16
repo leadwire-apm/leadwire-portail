@@ -43,7 +43,7 @@
                             <option ng-repeat="dashboard in ctrl.dashboardsList"
                              value="[[dashboard.id]]"
                              ng-selected="ctrl.watcher.dashboard === dashboard.id">
-                                [[dashboard.group === 'Custom' ? '**Shared ** ': '']] [[dashboard.key]] :
+                                [[dashboard.text]] [[dashboard.key]] :
                                 [[dashboard.name]]
                             </option>
                         </select>
