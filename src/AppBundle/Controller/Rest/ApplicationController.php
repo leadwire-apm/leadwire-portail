@@ -305,6 +305,39 @@ class ApplicationController extends Controller
             throw new NotFoundHttpException("Application [$id] not found");
         }
     }
+    /**
+     * @Route("/{id}/purge", methods="GET")
+     *
+     * @param Request $request
+     * @param ApplicationService $applicationService
+     * @param ProcessService $processService
+     * @param string $id
+     *
+     * @return Response
+     */
+    public function purgeApplicationAction(
+        Request $request,
+        ApplicationService $applicationService,
+        ProcessService $processService,
+        $id
+    ) {
+        $application = $applicationService->getApplication($id);
+
+        if ($application !== null) {
+            $accessGrantedByRole = $this->getUser()->hasRole(User::ROLE_ADMIN) || $this->getUser()->hasRole(User::ROLE_SUPER_ADMIN);
+            $accessGrantedByOwnership = $application->getOwner()->getId() === $this->getUser()->getId();
+
+            if ($accessGrantedByOwnership === true || $accessGrantedByRole === true) {
+                $applicationService->purgeApplication($id);
+                return $this->renderResponse(null, Response::HTTP_OK);
+            } else {
+                $processService->emit($this->getUser(), "heavy-operations-done", "Failed");
+                throw new UnauthorizedHttpException('', "Unauthorized action");
+            }
+        } else {
+            throw new NotFoundHttpException("Application [$id] not found");
+        }
+    }
 
     /**
      * @Route("/{id}/remove", methods="DELETE")

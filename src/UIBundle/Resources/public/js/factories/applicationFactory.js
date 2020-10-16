@@ -105,6 +105,15 @@
                  *
                  * @returns {Promise}
                  */
+                purge: function (id) {
+                    return $http.get(
+                        CONFIG.BASE_URL + 'api/app/' + id + '/purge',
+                    );
+                },
+                /**
+                 *
+                 * @returns {Promise}
+                 */
                 remove: function (id) {
                     return $http.delete(
                         CONFIG.BASE_URL + 'api/app/' + id + '/remove',
