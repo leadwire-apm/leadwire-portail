@@ -36,6 +36,32 @@
 
         };
 
+        vm.handleOnPurge = function (application) {
+            swal(MESSAGES_CONSTANTS.SWEET_ALERT_VALIDATION())
+                .then(function (willDelete) {
+                    if (willDelete) {
+                        vm.purgeApplication(application.id);
+                    } else {
+                        swal.close();
+                    }
+                });
+        }
+
+        vm.purgeApplication = function(id) {
+            vm.flipActivityIndicator('isPurging' + id);
+            ApplicationService.purge(id)
+                .then(function () {
+                    vm.flipActivityIndicator('isPurging' + id);
+                    toastr.success(MESSAGES_CONSTANTS.SUCCESS);
+                })
+                .then(vm.loadApplications)
+                .catch(function (err) {
+                    vm.flipActivityIndicator('isPurging' + id);
+                    toastr.error(MESSAGES_CONSTANTS.ERROR);
+                });
+
+        }
+
         vm.applyChanges = function(applicationId) {
             swal(MESSAGES_CONSTANTS.SWEET_ALERT_VALIDATION('This will update ElasticSearch indexes and Kibana dashboard for the current application.'))
                 .then(function (willUpdate) {

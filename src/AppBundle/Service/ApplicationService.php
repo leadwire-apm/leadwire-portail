@@ -311,7 +311,7 @@ class ApplicationService
     public function getApplication($id): ?Application
     {
         // Very bad programming
-        return $this->applicationManager->getOneBy(['_id' => $id, 'removed' => false]);
+        return $this->applicationManager->getOneBy(['_id' => $id]);
     }
 
     /**
@@ -605,6 +605,24 @@ class ApplicationService
         $this->apManager->removeApplicationPermissions($application);
 
         $this->applicationManager->deleteById((string) $application->getId());
+    }
+
+    /**
+     * Purge data index and db entry
+     *
+     * @param string $id
+     *
+     * @return void
+     */
+    public function purgeApplication($id)
+    {
+        $application = $this->applicationManager->getOneBy(['id' => $id]);
+        if ($application === null) {
+            throw new HttpException(Response::HTTP_NOT_FOUND, "Application not Found");
+        } else {
+            $this->applicationManager->deleteById((string) $application->getId());     
+            $this->es->deleteApplicationIndexes($application);
+        }
     }
 
     /**
