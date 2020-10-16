@@ -844,6 +844,21 @@ class ElasticSearchService
 				]
 			);
 
+			$master = $this->httpClient->get(
+				$this->url . "_cat/master?format=json",
+				[
+					'headers' => [
+						'Content-type' => 'application/json',
+					],
+					'auth' => [
+						$this->settings['username'],
+						$this->settings['password'],
+					],
+				]
+			);
+
+			$masterNode = \json_decode($master->getBody())[0]->node;
+
 			$clusterHealth = $this->httpClient->get(
 				$this->url . "_cluster/health",
 				[
@@ -929,6 +944,7 @@ class ElasticSearchService
 					"documents" => $nodesStats[$key]["indices"]["docs"]["count"],
 					"roles" => $nodeOs[$key]["roles"],
 					"isOpen" => false,
+					"isMaster" => $masterNode === $nodeOs[$key]["name"]
 				];
 
 				array_push($response["nodes"], $data);
