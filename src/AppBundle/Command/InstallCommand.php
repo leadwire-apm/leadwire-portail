@@ -112,6 +112,7 @@ class InstallCommand extends ContainerAwareCommand
             $es->createPolicy();
             $es->createRolloverPolicy();
             $es->createLeadwireRolesMapping();
+            $es->alertManager();
             foreach ($demoApplications as $application) {
                 $es->initIndexTemplate($application);
 	        }
