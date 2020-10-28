@@ -39,7 +39,8 @@
                 <accordion-heading>
                     <i class="fas fa-server"></i>
                         [[node.nodeName]]
-                    <span style="margin-left: 25px;" class="label label-primary" ng-if="ctrl.isMasterNode(node)"> Master </span>
+                    <span style="margin-left: 25px;" class="label label-primary" ng-if="node.isMaster">  Master </span>
+                    <span style="margin-left: 25px;" class="label label-info" ng-if="ctrl.isMasterNode(node)"> Eligible Master </span>
                     <span style="margin-left: 25px;" class="label label-success" ng-if="ctrl.isDataNode(node)"> Data </span>
                     <i class="pull-right glyphicon"
                         ng-class="{'glyphicon-chevron-down': isopen, 'glyphicon-chevron-right': !isopen}"></i>
