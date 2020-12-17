@@ -29,11 +29,6 @@
                 ui-sref="[[menu.routeName]]" ui-sref-opts="{reload: true}"><i class="[[menu.icon]]"></i>
                 <span>[[menu.label]]</span>
             </a>
-            <a style="cursor: pointer;" ng-if="menu.route && menu.routeName == 'app.management.reports'"
-                ng-href="[[menu.route]]">
-                <i class="[[menu.icon]]"></i>
-                <span>[[menu.label]]</span>
-            </a>
             <a ng-if="menu.url" ng-href="[[menu.url]]" target="_blank">
                 <i class="[[menu.icon]]"></i>
                 <span>[[menu.label]]</span>

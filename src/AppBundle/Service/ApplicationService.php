@@ -457,7 +457,6 @@ class ApplicationService
                 $sharedIndex =  $envName . "-" . $application->getSharedIndex();
                 $appIndex =  $envName . "-" . $application->getApplicationIndex();
                 $patternIndex = "*-" . $envName . "-" . $application->getName() . "-*";
-                $watechrIndex = $envName ."-" . $application->getApplicationWatcherIndex();
 
                 $this->es->createTenant($appIndex);
                 $this->es->createIndexTemplate($application, $this->getActiveApplicationsNames(), $envName);
@@ -482,19 +481,15 @@ class ApplicationService
                     $envName
                 );
 
-                $this->es->createTenant($watechrIndex);
-
                 $this->kibanaService->loadDefaultIndex($sharedIndex, 'default');
                 $this->kibanaService->makeDefaultIndex($sharedIndex, 'default');
 
-                $this->es->createRole($envName, $application->getName(), array($patternIndex), array($sharedIndex, $appIndex), array("kibana_all_read"), false, false);
-                $this->es->createRole($envName, $application->getName(), array($patternIndex), array($sharedIndex, $appIndex), array("kibana_all_write"), true, false);
-                $this->es->createRole($envName, $application->getName(), array(), array($watechrIndex), array("kibana_all_write"), true, true);
+                $this->es->createRole($envName, $application->getName(), array($patternIndex), array($sharedIndex, $appIndex), array("kibana_all_read"), false);
+                $this->es->createRole($envName, $application->getName(), array($patternIndex), array($sharedIndex, $appIndex), array("kibana_all_write"), true);
 
 
-                $this->es->createRoleMapping($envName, $application->getName(), $user->getName(), false, false);
-                $this->es->createRoleMapping($envName, $application->getName(), $user->getName(), true, false); 
-                $this->es->createRoleMapping($envName, $application->getName(), $user->getName(), true, true); 
+                $this->es->createRoleMapping($envName, $application->getName(), $user->getName(), false);
+                $this->es->createRoleMapping($envName, $application->getName(), $user->getName(), true); 
   
             }
         }
@@ -672,24 +667,20 @@ class ApplicationService
             foreach($this->environmentService->getAll() as $environment){
                 $sharedIndex =  $environment->getName() . "-" . $application->getSharedIndex();
                 $appIndex =  $environment->getName() . "-" . $application->getApplicationIndex();
-                $watechrIndex = $environment->getName() ."-" . $application->getApplicationWatcherIndex();
 
-                $this->es->deleteRole($environment->getName(), $application->getName(), true, false);
-                $this->es->deleteRole($environment->getName(), $application->getName(), false, false);
-                $this->es->deleteRole($environment->getName(), $application->getName(), true, true);
+                $this->es->deleteRole($environment->getName(), $application->getName(), true);
+                $this->es->deleteRole($environment->getName(), $application->getName(), false);
 
                 $this->es->deleteTenant($sharedIndex);
                 $this->es->deleteTenant($appIndex);
-                $this->es->deleteTenant($watechrIndex);
             }
 
             /**
              * remove role mapping
              */
             foreach($this->environmentService->getAll() as $environment){
-                $this->es->deleteRoleMapping($environment->getName(), $application->getName(), true, false);
-                $this->es->deleteRoleMapping($environment->getName(), $application->getName(), false, false);
-                $this->es->deleteRoleMapping($environment->getName(), $application->getName(), true, true);
+                $this->es->deleteRoleMapping($environment->getName(), $application->getName(), true);
+                $this->es->deleteRoleMapping($environment->getName(), $application->getName(), false);
             }
             
              /**
@@ -718,8 +709,8 @@ class ApplicationService
                  * remove role mapping
                  */
                 foreach($this->environmentService->getAll() as $environment){
-                    $this->es->updateRoleMapping("delete", $environment->getName(), $user, $application->getName(), true, false);
-                    $this->es->updateRoleMapping("delete", $environment->getName(), $user, $application->getName(), false, false);
+                    $this->es->updateRoleMapping("delete", $environment->getName(), $user, $application->getName(), true);
+                    $this->es->updateRoleMapping("delete", $environment->getName(), $user, $application->getName(), false);
                 }
             }
         } catch (\Exception $e) {

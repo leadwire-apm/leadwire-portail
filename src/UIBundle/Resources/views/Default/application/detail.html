@@ -13,14 +13,8 @@
             <section class="widget bg-white post-comments" ng-include="'application/rules.html'">
             </section>
         </tab>
-        <tab heading="Report"
-            ng-click="ctrl.getReports()">
+        <tab heading="Report">
             <section class="widget bg-white post-comments" ng-include="'application/reports.html'">
-            </section>
-        </tab>
-        <tab heading="Watcher" ng-if="user.id == ctrl.application.owner.id || ctrl.isEditor() || ctrl.isAdmin(user)"
-            ng-click="ctrl.setWatcherLink()">
-            <section class="widget bg-white post-comments" ng-include="'application/watcher/list.html'">
             </section>
         </tab>
         <tab heading="Installation" ng-if="user.id == ctrl.application.owner.id  && ctrl.LEADWIRE_LOGIN_METHOD === 'github'">

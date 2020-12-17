@@ -76,31 +76,6 @@ class ApplicationController extends Controller
     }
 
     /**
-     * @Route("/{id}/reports/{envName}", methods="GET")
-     *
-     * @param Request $request
-     * @param ApplicationService $applicationService
-     * @param string  $id
-     * @param sring $envName
-     * @return Response
-     */
-    public function getApplicationReportsAction(
-        Request $request,
-        ApplicationService $applicationService,
-        ElasticSearchService $esService,
-        $id,
-        $envName
-    ) {
-        $app = $applicationService->getApplication($id);
-        if ($app === null) {
-            throw new HttpException(Response::HTTP_NOT_FOUND, "App not Found");
-        } else {
-            $reports = $esService->getReports($app, $this->getUser(),  $envName);
-            return $this->renderResponse($reports);
-        }
-    }
-
-    /**
      * @Route("/{id}/stats", methods="GET")
      *
      * @param StatService $statService
@@ -445,7 +420,6 @@ class ApplicationController extends Controller
                 $envName = $environment->getName();
                 $sharedIndex =  $envName . "-" . $application->getSharedIndex();
                 $appIndex =  $envName . "-" . $application->getApplicationIndex();
-                $watechrIndex = $envName ."-" . $application->getApplicationWatcherIndex();
                 $esService->deleteIndex($appIndex);
                 $esService->deleteTenant($appIndex);
 
@@ -464,19 +438,12 @@ class ApplicationController extends Controller
                 $kibanaService->makeDefaultIndex($appIndex, 'default');
 
                 $kibanaService->createApplicationDashboards($application, $envName);
-    
-               // $esService->deleteIndex($sharedIndex);
-               // $esService->deleteTenant($sharedIndex);
-               // $esService->createTenant($sharedIndex);
                 
                 $kibanaService->loadIndexPatternForApplication(
                     $application,
                     $sharedIndex,
                     $envName
                 );
-
-                $esService->deleteTenant($watechrIndex);
-                $esService->createTenant($watechrIndex);
     
                 $kibanaService->loadDefaultIndex($sharedIndex, 'default');
                 $kibanaService->makeDefaultIndex($sharedIndex, 'default');
@@ -532,40 +499,6 @@ class ApplicationController extends Controller
     public function getApplicationDocumentsCount( Request $request, ElasticSearchService $esService, string $app, string $env){
         try{
             $data = $esService->getApplicationTransactions($app, $env);
-            return $this->renderResponse($data);
-        } catch (MongoDuplicateKeyException $e) {
-            return $this->renderResponse(['message' => $e->getMessage()], Response::HTTP_NOT_ACCEPTABLE);
-        }
-    }
-
-    /**
-     * @Route("/{app}/{env}/reports", methods="GET")
-     *
-     * @param Request $request
-     * @param ElasticSearchService $esService
-     * @param string $app
-     * @param string $env
-     */
-    public function getApplicationReports( Request $request, ElasticSearchService $esService, string $app, string $env){
-        try{
-            $data = $esService->getReports($app, $env);
-            return $this->renderResponse($data);
-        } catch (MongoDuplicateKeyException $e) {
-            return $this->renderResponse(['message' => $e->getMessage()], Response::HTTP_NOT_ACCEPTABLE);
-        }
-    }
-
-    /**
-     * @Route("/{id}/{ind}/report", methods="GET")
-     *
-     * @param Request $request
-     * @param KibanaService $KibanaService
-     * @param string $id
-     * @param string $ind
-     */
-    public function deleteApplicationReport( Request $request, KibanaService $KibanaService, string $id, string $ind){
-        try{
-            $data = $KibanaService->deleteReport($id, $ind);
             return $this->renderResponse($data);
         } catch (MongoDuplicateKeyException $e) {
             return $this->renderResponse(['message' => $e->getMessage()], Response::HTTP_NOT_ACCEPTABLE);

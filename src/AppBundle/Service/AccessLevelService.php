@@ -161,15 +161,11 @@ class AccessLevelService
         }
         if($level === AccessLevel::ACCESS) {
             if($access === AccessLevel::EDITOR || $access === AccessLevel::ADMIN) {
-                //add watcher access
-                $this->es->updateRoleMapping("add", $environment->getName(), $user, $application->getName(), true, true);
                 //add write access
-                $this->es->updateRoleMapping("add", $environment->getName(), $user, $application->getName(), true, false);
+                $this->es->updateRoleMapping("add", $environment->getName(), $user, $application->getName(), true);
             } else {
-               //delete watcher access
-                $this->es->updateRoleMapping("delete", $environment->getName(), $user, $application->getName(), true, true);
                //delete write access
-                $this->es->updateRoleMapping("delete", $environment->getName(), $user, $application->getName(), true, false);
+                $this->es->updateRoleMapping("delete", $environment->getName(), $user, $application->getName(), true);
             } 
         }
         $this->userManager->update($user);

@@ -15,7 +15,6 @@
             'ApplicationService',
             'DashboardService',
             '$modal',
-            'WatcherService',
             'Paginator',
             applicationDetailCtrlFN,
         ]);
@@ -34,7 +33,6 @@
         ApplicationService,
         DashboardService,
         $modal,
-        WatcherService,
         Paginator,
     ) {
         var vm = this;
@@ -102,58 +100,6 @@
             vm.ownerTitle = "Owner Login Id :"
         }
 
-        vm.setWatcherLink = function () {
-            WatcherService.list(vm.application.id, vm.selectedEnvironment)
-                .then(function (data) {
-                    vm.watchersList = data;
-                }).catch(function (err) {
-                    toastr.error(err.message || MESSAGES_CONSTANTS.ERROR);
-                });
-        };
-
-        vm.editWatcher = function (watcher) {
-            vm.addWatcher(watcher);
-        }
-
-        vm.deleteWatcher = function (id, index) {
-            swal(MESSAGES_CONSTANTS.SWEET_ALERT_VALIDATION())
-                .then(function (willDelete) {
-                    if (willDelete) {
-                        WatcherService.delete(id, 
-                            {'appId': vm.application.id, 
-                             'envId': vm.selectedEnvironment})
-                            .then(function () {
-                                vm.watchersList.splice(index, 1);
-                                toastr.success(MESSAGES_CONSTANTS.SUCCESS);
-                            }).catch(function (err) {
-                                toastr.error(MESSAGES_CONSTANTS.ERROR);
-                            })
-                    } else {
-                        swal.close();
-                    }
-                });
-        }
-
-        vm.executeWatcher = function (id) {
-            WatcherService.execute(id,
-                {'appId': vm.application.id, 
-                'envId': vm.selectedEnvironment})
-                .then(function () {
-                    toastr.success(MESSAGES_CONSTANTS.SUCCESS);
-                }).catch(function (err) {
-                    toastr.error(MESSAGES_CONSTANTS.ERROR);
-                })
-        }
-
-        vm.handleWatcher = function (watcher) {
-            WatcherService.saveOrUpdate(watcher)
-                .then(function () {
-                    toastr.success(MESSAGES_CONSTANTS.SUCCESS);
-                }).catch(function (err) {
-                    toastr.error(MESSAGES_CONSTANTS.ERROR);
-                })
-        }
-
         vm.getBlob = function (data) {
             var a = document.createElement("a");
             a.href = "data:image/png;base64," + data;
@@ -164,73 +110,6 @@
 
         vm.getDate = function (data) {
             return data['@timestamp'];
-        }
-
-        vm.getReports = function () {
-
-            envName = "staging";
-
-            vm.environments.forEach(element => {
-                if (element.id === vm.selectedEnvironment) {
-                    envName = element.name;
-                }
-            });
-
-            ApplicationService.getApplicationReports(vm.application.name, envName)
-                .then(function (response) {
-                    vm.paginator.items = vm.reportsList = response;
-                }).catch(function (error) {
-                    toastr.success(MESSAGES_CONSTANTS.ERROR);
-                    vm.paginator.items = [];
-                });
-
-            vm.setWatcherLink();
-        }
-
-        vm.deleteReport = function (_id, _index, ind) {
-
-            swal(MESSAGES_CONSTANTS.SWEET_ALERT_VALIDATION())
-                .then(function (willDelete) {
-                    if (willDelete) {
-                        ApplicationService.deleteApplicationReport(_id, _index)
-                            .then(function (response) {
-                                vm.reportsList = vm.reportsList.filter((_, index) => index !== ind);
-                                toastr.success(MESSAGES_CONSTANTS.SUCCESS);
-                            }).catch(function (error) {
-                                toastr.success(MESSAGES_CONSTANTS.ERROR);
-                            });
-                    } else {
-                        swal.close();
-                    }
-                });
-        }
-
-        vm.isErrorReport = function (msg) {
-            if (msg.toLowerCase().indexOf("error") >= 0) {
-                return true;
-            }
-
-            return false;
-        }
-
-        vm.getReportTitre = function (watcher) {
-            var titre = "-";
-            vm.watchersList.forEach(function (element) {
-                if (element.title === watcher) {
-                    titre = element.titre;
-                }
-            })
-            return titre;
-        }
-
-        vm.getReportDashboard = function (watcher) {
-            var dashboard = "-";
-            vm.watchersList.forEach(function (element) {
-                if (element.title === watcher) {
-                    dashboard = vm.getDashboardName(element.dashboard);
-                }
-            })
-            return dashboard;
         }
 
         vm.setAccess = function (user, access, level) {
@@ -258,27 +137,6 @@
                     vm.getApp();
                 });
 
-        }
-
-        vm.getEnvironmentsForReport = function (user) {
-            var isAdmin = user.roles.indexOf("ROLE_SUPER_ADMIN") >= 0 || user.roles.indexOf("ROLE_ADMIN") >= 0;
-            if (vm.application && $rootScope.user.id === vm.application.owner.id || isAdmin) {
-                return vm.environments;
-            }
-
-            var list = [];
-
-            vm.environments.forEach(environment => {
-                if (vm.currentUser && 
-                    angular.isDefined(vm.currentUser.acl[environment.id][vm.application.id].ACCESS === "VIEWER") ||
-                    angular.isDefined(vm.currentUser.acl[environment.id][vm.application.id].ACCESS === "EDITOR") ||
-                    angular.isDefined(vm.currentUser.acl[environment.id][vm.application.id].ACCESS === "ADMIN")) {
-                    list.push(environment);
-                    vm.selectedEnvironment = environment.id;
-                }
-            });
-
-            return list;
         }
 
         vm.getApp = function () {
@@ -391,26 +249,6 @@
                 });
         }
 
-        vm.addWatcher = function (watcher) {
-            vm.modal = $modal.open({
-                size: 'lg',
-                templateUrl: 'application/watcher/add.html',
-                controller: 'AddWatcherCtrl',
-                controllerAs: 'ctrl'
-            });
-
-            vm.modal.appId = vm.application.id;
-            vm.modal.envName = envName;
-            vm.modal.appName = vm.application.name;
-            vm.modal.envId = vm.selectedEnvironment;
-            vm.modal.watcher = watcher;
-
-            vm.modal.result.then(function () {
-                vm.setWatcherLink();
-            });
-
-        }
-
         vm.onLoad = function () {
             $rootScope.currentNav = 'settings';
             vm = angular.extend(vm, {
@@ -427,7 +265,6 @@
                 retention: CONFIG.LEADWIRE_STRIPE_ENABLED == true ? $rootScope.user.plan.retention : null,
                 DOWNLOAD_URL: CONFIG.DOWNLOAD_URL,
                 currentUser: null,
-                watchersList: [],
                 dashboardsList: [],
                 paginator: Paginator.create({
                     itemsPerPage: 5,
