@@ -81,6 +81,11 @@
             var tenant = $sessionStorage.selectedEnv.name + "-" + index
             return CONFIG.KIBANA_BASE_URL + "app/kibana?security_tenant=" + tenant + '#/dashboard/' + dashboardId;
         };
+
+        service.getReport = function (dashboardId, tenant, index) {
+            var tenant = $sessionStorage.selectedEnv.name + "-" + index
+            return CONFIG.KIBANA_BASE_URL + "app/opendistro_kibana_reports?security_tenant=" + tenant + '#/dashboard/' + dashboardId + "?embed=true";
+        };
         /**
          *
          * @param appId

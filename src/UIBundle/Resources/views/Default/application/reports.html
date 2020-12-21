@@ -1,3 +1,18 @@
 <div class="no-more-tables row">
-    <h1>test</h1>
+    <div class="container row">
+        <div class="col-md-2">
+            <a ng-click="ctrl.openPrivateReports()"  class="btn btn-primary pull-right ml10 ">
+                Private reports </a>
+        </div>
+        <div class="col-md-8"></div>
+        <div class="col-md-2">
+            <a ng-click="ctrl.openShredReports()" class="btn btn-primary pull-right ml10 ">
+                Shared reports</a>
+        </div>
+    </div>
+
+    <hr>
+
+    <iframe scrolling="yes" ng-src="[[ctrl.reportLink]]" frameborder="0"
+    iframe-set-dimensions-onload></iframe>
 </div>
