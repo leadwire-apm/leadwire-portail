@@ -82,9 +82,14 @@
             return CONFIG.KIBANA_BASE_URL + "app/kibana?security_tenant=" + tenant + '#/dashboard/' + dashboardId;
         };
 
-        service.getReport = function (dashboardId, tenant, index) {
-            var tenant = $sessionStorage.selectedEnv.name + "-" + index
-            return CONFIG.KIBANA_BASE_URL + "app/opendistro_kibana_reports?security_tenant=" + tenant + '#/dashboard/' + dashboardId + "?embed=true";
+        service.getReport = function (tenant, index) {
+            if(tenant && index) {
+                var tenant = $sessionStorage.selectedEnv.name + "-" + index
+                return CONFIG.KIBANA_BASE_URL + "app/opendistro_kibana_reports?security_tenant=" + tenant +"#/?embed=true";
+            } else {
+                return CONFIG.KIBANA_BASE_URL + "app/opendistro_kibana_reports?security_tenant=__user__#/?embed=true";
+            }
+
         };
         /**
          *

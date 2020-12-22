@@ -38,12 +38,16 @@
         $state
     ) {
         var vm = this;
+        vm.showPrivate = false;
+        vm.showShared = false;
 
         vm.openPrivateReports = function(){
-            vm.reportLink = trustSrc(DashboardService.getReport($state.params.id, vm.selectedEnv.name + "app" + vm.application.uuid, vm.application.applicationIndex));
+            vm.showPrivate = true;
+            vm.showShared = false;
         }
         vm.openShredReports = function(){
-            vm.reportLink = trustSrc(DashboardService.getReport($state.params.id, vm.selectedEnv.name + "app" + vm.application.uuid, vm.application.sharedIndex));
+            vm.showPrivate = false;
+            vm.showShared = true;
         }
 
         vm.LEADWIRE_LOGIN_METHOD = CONFIG.LEADWIRE_LOGIN_METHOD;
@@ -157,7 +161,9 @@
             ApplicationFactory.get($stateParams.id)
                 .then(function (res) {
                     vm.application = res.data;
-                    vm.reportLink = trustSrc(DashboardService.getReport($state.params.id, vm.selectedEnv.name + "app" + vm.application.uuid, vm.application.applicationIndex));
+                    vm.reportLinkPrivate = trustSrc(DashboardService.getReport());
+                    vm.reportLinkShared = trustSrc(DashboardService.getReport(vm.selectedEnv.name + "app" + vm.application.uuid, vm.application.sharedIndex));
+                    vm.showPrivate = true;
                     vm.getDashboardsList();
                     vm.application.invitations.forEach(invitation => {
                         if (invitation.user && invitation.user.id === $rootScope.user.id) {
