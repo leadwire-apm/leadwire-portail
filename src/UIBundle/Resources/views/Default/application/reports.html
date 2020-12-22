@@ -13,9 +13,10 @@
 
     <hr>
 
-    <iframe scrolling="yes" src="[[ctrl.reportLinkPrivate]]" frameborder="0" ng-show="ctrl.showPrivate"
-        iframe-set-dimensions-onload></iframe>
-
-    <iframe scrolling="yes" src="[[ctrl.reportLinkShared]]" frameborder="0" ng-if="ctrl.showShared"
-        iframe-set-dimensions-onload></iframe>
+    <div ng-if="ctrl.showPrivate">
+        <iframe scrolling="yes" src="[[ctrl.reportLinkPrivate]]" frameborder="0" iframe-set-dimensions-onload></iframe>
+    </div>
+    <div ng-if="ctrl.showShared">
+        <iframe scrolling="yes" src="[[ctrl.reportLinkShared]]" frameborder="0"  iframe-set-dimensions-onload></iframe>
+    </div>
 </div>
