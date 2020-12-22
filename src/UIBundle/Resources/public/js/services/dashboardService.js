@@ -79,7 +79,7 @@
                 index = $sessionStorage.selectedApp.sharedIndex;
             }
             var tenant = $sessionStorage.selectedEnv.name + "-" + index
-            return CONFIG.KIBANA_BASE_URL + "app/kibana?security_tenant=" + tenant + '#/dashboard/' + dashboardId;
+            return CONFIG.KIBANA_BASE_URL + "app/kibana?security_tenant=__user__#/dashboard/" + dashboardId;
         };
 
         service.getReport = function (tenant, index) {
