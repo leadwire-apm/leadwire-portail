@@ -60,6 +60,13 @@
                 <span>Custom</span>
             </a>
         </li>
+
+        <li ng-if="!isChangingContext && state.includes('app.dashboard')">
+            <a ng-href="[['#/private/reports']]">
+                <i class="fa fa-file-alt"></i>
+                <span>Private Reports</span>
+            </a>
+        </li>
     </ul>
 </nav>
 <!-- main navigation -->

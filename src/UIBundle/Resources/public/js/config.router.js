@@ -215,6 +215,18 @@ angular.module('leadwireApp')
                         menu: updateMenuItems(MenuEnum.DASHBOARD),
                     },
                 })
+                .state('app.dashboard.privateReports', {
+                    url: '/private/reports',
+                    templateUrl: 'privateReports.html',
+                    controller: 'privateReportsCtrl',
+                    controllerAs: 'ctrl',
+                    resolve: {
+                        permissions: function (RouteGuard) {
+                            return RouteGuard.loginRequired();
+                        },
+                        menu: updateMenuItems(MenuEnum.DASHBOARD),
+                    },
+                })
                 .state('app.management', {
                     abstract: true,
                     url: '/management',

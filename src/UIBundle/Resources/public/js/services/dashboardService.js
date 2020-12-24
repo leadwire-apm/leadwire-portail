@@ -86,6 +86,10 @@
             return CONFIG.KIBANA_BASE_URL + "app/opendistro_kibana_reports?security_tenant=" + tenant +"#/?embed=true";
         };
 
+        service.getPrivateReport = function () {
+            return CONFIG.KIBANA_BASE_URL + "app/opendistro_kibana_reports?security_tenant=__user__#/?embed=true";
+        };
+
         /**
          *
          * @param appId

@@ -6,11 +6,10 @@
             'DashboardService',
             '$sessionStorage',
             'ConfigService',
-            '$state',
             controller
         ]);
 
-    function controller($scope, DashboardService, $sessionStorage, ConfigService, $state) {
+    function controller($scope, DashboardService, $sessionStorage, ConfigService) {
         var vm = this;
 
         vm.onLoad = function() {
