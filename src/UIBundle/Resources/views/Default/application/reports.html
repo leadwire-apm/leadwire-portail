@@ -4,7 +4,14 @@
             <a ng-click="ctrl.openPrivateReports()" class="btn btn-primary pull-right ml10 ">
                 Private reports </a>
         </div>
-        <div class="col-md-8"></div>
+        <div class="col-md-8">
+            <select data-ng-model="ctrl.selectedEnvironment" class="form-control" ng-change="ctrl.getReports()">
+                <option ng-selected="ctrl.selectedEnvironment === environment.id"
+                    ng-repeat="environment in ctrl.getEnvironmentsForReport(user)" value="[[environment.id]]" ng-if="environment.name">
+                    [[environment.name]]
+                </option>
+            </select>
+        </div>
         <div class="col-md-2">
             <a ng-click="ctrl.openShredReports()" class="btn btn-primary pull-right ml10">
                 Shared reports</a>
@@ -17,6 +24,6 @@
         <iframe scrolling="yes" src="[[ctrl.reportLinkPrivate]]" frameborder="0" iframe-set-dimensions-onload></iframe>
     </div>
     <div ng-if="ctrl.showShared">
-        <iframe scrolling="yes" src="[[ctrl.reportLinkShared]]" frameborder="0"  iframe-set-dimensions-onload></iframe>
+        <iframe scrolling="yes" src="[[ctrl.reportLinkShared]]" frameborder="0" iframe-set-dimensions-onload></iframe>
     </div>
 </div>

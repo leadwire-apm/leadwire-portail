@@ -16,7 +16,6 @@
             'DashboardService',
             '$sce',
             'Paginator',
-            '$state',
             applicationDetailCtrlFN,
         ]);
 
@@ -35,35 +34,74 @@
         DashboardService,
         $sce,
         Paginator,
-        $state
     ) {
         var vm = this;
         vm.showPrivate = false;
         vm.showShared = false;
+        vm.envName = "staging";
 
-        vm.openPrivateReports = function(){
+        vm.openPrivateReports = function () {
             vm.showPrivate = true;
             vm.showShared = false;
         }
-        vm.openShredReports = function(){
+        vm.openShredReports = function () {
             vm.showPrivate = false;
             vm.showShared = true;
         }
 
+        vm.getReports = function () {
+            vm.environments.forEach(element => {
+                if (element.id === vm.selectedEnvironment) {
+                    vm.envName = element.name;
+                }
+            });
+            vm.reportLinkPrivate = trustSrc(DashboardService.getReport(vm.envName + "-"+ vm.application.applicationIndex));
+            vm.reportLinkShared = trustSrc(DashboardService.getReport(vm.envName + "-" + vm.application.sharedIndex));
+        }
+
         vm.LEADWIRE_LOGIN_METHOD = CONFIG.LEADWIRE_LOGIN_METHOD;
         vm.selectedEnvironment = $sessionStorage.selectedEnvId.slice(0);
-        vm.selectedEnv = $sessionStorage.selectedEnv;
         vm.ownerTitle = "Owner Github :";
 
         trustSrc = function (src) {
             return $sce.trustAsResourceUrl(src);
         }
 
+        vm.getEnvironmentsForReport = function (user) {
+            var isAdmin = user.roles.indexOf("ROLE_SUPER_ADMIN") >= 0 || user.roles.indexOf("ROLE_ADMIN") >= 0;
+            if (vm.application && $rootScope.user.id === vm.application.owner.id || isAdmin) {
+                return vm.environments;
+            }
+
+            var list = [];
+
+            vm.environments.forEach(environment => {
+                if (vm.currentUser &&
+                    angular.isDefined(vm.currentUser.acl[environment.id][vm.application.id].ACCESS === "VIEWER") ||
+                    angular.isDefined(vm.currentUser.acl[environment.id][vm.application.id].ACCESS === "EDITOR") ||
+                    angular.isDefined(vm.currentUser.acl[environment.id][vm.application.id].ACCESS === "ADMIN")) {
+                    list.push(environment);
+                    vm.selectedEnvironment = environment.id;
+                }
+            });
+
+            return list;
+        }
+
+        vm.getEnvList = function () {
+            EnvironmentService.list()
+                .then(function (environments) {
+                    vm.environments = environments;
+                })
+                .catch(function (error) {
+                });
+        }
+
 
         vm.isAdmin = function (user) {
             var access = false;
             access = user.roles.indexOf("ROLE_SUPER_ADMIN") >= 0 || user.roles.indexOf("ROLE_ADMIN") >= 0;
-            if(!access){
+            if (!access) {
                 if (vm.currentUser) {
                     Object.keys(vm.currentUser.acl).forEach(element => {
                         if (vm.currentUser.acl[element][vm.application.id].ACCESS === "ADMIN") {
@@ -138,7 +176,7 @@
                 "level": level,
                 "access": access
             };
-            
+
             AccessLevelService.setAccess(acl)
                 .then(function (response) {
                     var __app = { ...vm.application };
@@ -161,8 +199,8 @@
             ApplicationFactory.get($stateParams.id)
                 .then(function (res) {
                     vm.application = res.data;
-                    vm.reportLinkPrivate = trustSrc(DashboardService.getReport());
-                    vm.reportLinkShared = trustSrc(DashboardService.getReport(vm.selectedEnv.name + "app" + vm.application.uuid, vm.application.sharedIndex));
+                    vm.reportLinkPrivate = trustSrc(DashboardService.getReport(vm.envName + "-"+ vm.application.applicationIndex));
+                    vm.reportLinkShared = trustSrc(DashboardService.getReport(vm.envName + "-" + vm.application.sharedIndex));
                     vm.showPrivate = true;
                     vm.getDashboardsList();
                     vm.application.invitations.forEach(invitation => {
@@ -193,7 +231,7 @@
                     application: {
                         id: vm.application.id,
                     },
-                },vm.selectedEnvironment)
+                }, vm.selectedEnvironment)
                     .then(function () {
                         toastr.success(MESSAGES_CONSTANTS.INVITE_USER_SUCCESS);
                         vm.getApp();
@@ -230,9 +268,11 @@
                 .then(function (willDelete) {
                     if (willDelete) {
                         vm.ui.isDeleting = true;
-                        InvitationFactory.remove(id, 
-                            {'appId': vm.application.id, 
-                            'envId': vm.selectedEnvironment})
+                        InvitationFactory.remove(id,
+                            {
+                                'appId': vm.application.id,
+                                'envId': vm.selectedEnvironment
+                            })
                             .then(function () {
                                 swal.close();
                                 toastr.success(
@@ -260,15 +300,6 @@
             suffix = typeof suffix !== 'undefined' ? suffix : '';
             vm.ui['isSaving' + suffix] = !vm.ui['isSaving' + suffix];
         };
-
-        vm.getEnvList = function () {
-            EnvironmentService.list()
-                .then(function (environments) {
-                    vm.environments = environments;
-                })
-                .catch(function (error) {
-                });
-        }
 
         vm.onLoad = function () {
             $rootScope.currentNav = 'settings';
@@ -301,7 +332,7 @@
         }
 
         vm.updateDashboardMenu = function () {
-            ApplicationService.updateDashbaords(vm.application.id,vm.selectedEnvironment, 
+            ApplicationService.updateDashbaords(vm.application.id, vm.selectedEnvironment,
                 vm.defaultDashboardsList)
                 .then(function () {
                     vm.flipActivityIndicator();
