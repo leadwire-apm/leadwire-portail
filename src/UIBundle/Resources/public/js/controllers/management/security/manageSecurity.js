@@ -9,7 +9,7 @@
 
     function ManagerSecurityCtrlFN($sce, CONFIG) {
         const _list = [ 
-            `${CONFIG.LEADWIRE_KIBANA_HOST}/app/security-configuration#/?embed=true`,
+            `${CONFIG.LEADWIRE_KIBANA_HOST}/app/opendistro_security#/app/opendistro_security/getstarted?embed=true`,
             `${CONFIG.LEADWIRE_KIBANA_HOST}/app/security-multitenancy#/?embed=true`, 
             `${CONFIG.LEADWIRE_KIBANA_HOST}/app/security-configuration#/rolesmapping?embed=true`,
             `${CONFIG.LEADWIRE_KIBANA_HOST}/app/security-configuration#/roles?embed=true`,
