@@ -51,7 +51,7 @@
 
             var url =
                 service.baseUrl +
-                "app/dashboards#/create?app/kibana?security_tenant=" + tenant + "&_g=()&_a=(description:'',filters:!(),fullScreenMode:!f,options:(hidePanelTitles:!f,useMargins:!t),panels:!(),query:(language:kuery,query:''),timeRestore:!f,title:'',viewMode:edit)";
+                "app/dashboards?security_tenant=" + tenant + "#/create?_g=(filters:!(),refreshInterval:(pause:!t,value:0),time:(from:now-15m,to:now))&_a=(description:'',filters:!(),fullScreenMode:!f,options:(hidePanelTitles:!f,useMargins:!t),panels:!(),query:(language:kuery,query:''),timeRestore:!f,title:'',viewMode:edit)";
             return url;
         };
         return service;
