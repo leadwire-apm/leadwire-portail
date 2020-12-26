@@ -28,7 +28,7 @@ class TemplateFixture extends AbstractFixture implements OrderedFixtureInterface
 
 
 
-        $apmFolderPath = "./app/Resources/templates/v7.6.1/apm";
+        $apmFolderPath = "./app/Resources/templates/v7.10.0/apm";
         $finder = new Finder();
         $finder->files()->in($apmFolderPath);
         /** @var \SplFileInfo $file */
@@ -46,7 +46,7 @@ class TemplateFixture extends AbstractFixture implements OrderedFixtureInterface
         }
         $manager->flush();
 
-        $infrastructureFolderPath = "./app/Resources/templates/v7.6.1/metricbeat";
+        $infrastructureFolderPath = "./app/Resources/templates/v7.10.0/metricbeat";
         $finder = new Finder();
         $finder->files()->in($infrastructureFolderPath);
         /** @var \SplFileInfo $file */
@@ -64,7 +64,7 @@ class TemplateFixture extends AbstractFixture implements OrderedFixtureInterface
         }
         $manager->flush();
 
-	$logFolderPath = "./app/Resources/templates/v7.6.1/filebeat";
+	$logFolderPath = "./app/Resources/templates/v7.10.0/filebeat";
         $finder = new Finder();
         $finder->files()->in($logFolderPath);
         /** @var \SplFileInfo $file */
@@ -82,7 +82,7 @@ class TemplateFixture extends AbstractFixture implements OrderedFixtureInterface
         }
         $manager->flush();
 
-        $networkFolderPath = "./app/Resources/templates/v7.6.1/packetbeat";
+        $networkFolderPath = "./app/Resources/templates/v7.10.0/packetbeat";
         $finder = new Finder();
         $finder->files()->in($networkFolderPath);
         /** @var \SplFileInfo $file */
@@ -100,7 +100,7 @@ class TemplateFixture extends AbstractFixture implements OrderedFixtureInterface
         }
         $manager->flush();
 
-    $uptimeFolderPath = "./app/Resources/templates/v7.6.1/heartbeat";
+    $uptimeFolderPath = "./app/Resources/templates/v7.10.0/heartbeat";
         $finder = new Finder();
         $finder->files()->in($uptimeFolderPath);
         /** @var \SplFileInfo $file */

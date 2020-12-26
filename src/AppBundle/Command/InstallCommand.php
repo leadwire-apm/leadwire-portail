@@ -167,7 +167,7 @@ class InstallCommand extends ContainerAwareCommand
             $planService->createDefaultPlans();
         }
 
-        $string = file_get_contents("./app/Resources/templates/v7.6.1/pipelines/pipelines.json");
+        $string = file_get_contents("./app/Resources/templates/v7.10.0/pipelines/pipelines.json");
 
         $json_a = json_decode($string, true);
 
