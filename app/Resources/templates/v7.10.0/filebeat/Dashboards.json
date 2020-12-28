@@ -1626,4 +1626,6 @@
             "type": "dashboard",
             "version": 3
         }
-
+ ],
+    "version": "6.0.0-beta1-SNAPSHOT"
+}
