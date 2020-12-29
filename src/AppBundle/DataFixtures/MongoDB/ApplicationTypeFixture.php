@@ -15,7 +15,7 @@ class ApplicationTypeFixture extends AbstractFixture implements OrderedFixtureIn
     {
         $defaultType = new ApplicationType();
         $defaultType->setName(ApplicationType::DEFAULT_TYPE);
-        $defaultType->setDescription("Elastic Stack 7.6.x");
+        $defaultType->setDescription("Elastic Stack 7.10.x");
         $defaultType->setVersion(1);
 
         $manager->persist($defaultType);
