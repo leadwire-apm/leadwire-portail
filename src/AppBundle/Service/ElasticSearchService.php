@@ -1609,7 +1609,7 @@ class ElasticSearchService
 		}
 	}
 
-	private function getRoleMapping(String $envName, string $applicationName) : array
+	private function getRoleMapping(String $envName, string $applicationName, bool $isWrite) : array
 	{
 		try {
 			$status = false;
