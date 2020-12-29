@@ -154,7 +154,7 @@
                 "optionsJSON": "{\"darkTheme\": false}",
                 "panelsJSON": "[{\"panelIndex\": 1, \"id\": \"Apache-access-unique-IPs-map-ecs\", \"type\": \"visualization\", \"size_y\": 3, \"col\": 1, \"row\": 1, \"size_x\": 12}, {\"panelIndex\": 2, \"id\": \"Apache-response-codes-of-top-URLs-ecs\", \"type\": \"visualization\", \"size_y\": 3, \"col\": 1, \"row\": 6, \"size_x\": 8}, {\"panelIndex\": 3, \"id\": \"Apache-browsers-ecs\", \"type\": \"visualization\", \"size_y\": 3, \"col\": 9, \"row\": 6, \"size_x\": 4}, {\"panelIndex\": 4, \"id\": \"Apache-operating-systems-ecs\", \"type\": \"visualization\", \"size_y\": 2, \"col\": 11, \"row\": 4, \"size_x\": 2}, {\"panelIndex\": 5, \"id\": \"Apache-error-logs-over-time-ecs\", \"type\": \"visualization\", \"size_y\": 2, \"col\": 1, \"row\": 9, \"size_x\": 12}, {\"panelIndex\": 6, \"id\": \"Apache-response-codes-over-time-ecs\", \"type\": \"visualization\", \"size_y\": 2, \"col\": 1, \"row\": 4, \"size_x\": 10}, {\"panelIndex\": 7, \"sort\": [\"@timestamp\", \"desc\"], \"id\": \"Apache-errors-log-ecs\", \"size_x\": 12, \"size_y\": 3, \"columns\": [\"source.address\", \"log.level\", \"apache2.error.module\", \"message\"], \"type\": \"search\", \"row\": 11, \"col\": 1}]",
                 "timeRestore": false,
-                "title": "[Filebeat] Apache Access and error logs ECS",
+                "title": "[Logs] Apache Access and error logs ECS",
                 "uiStateJSON": "{\"P-1\": {\"mapCenter\": [40.713955826286046, -0.17578125], \"mapZoom\": 2, \"mapBounds\": {\"bottom_right\": {\"lat\": -3.864254615721396, \"lon\": 205.3125}, \"top_left\": {\"lat\": 67.7427590666639, \"lon\": -205.6640625}}, \"mapCollar\": {\"bottom_right\": {\"lat\": -39.667755, \"lon\": 180}, \"top_left\": {\"lat\": 90, \"lon\": -180}, \"zoom\": 2}}}",
                 "version": 1
             },
@@ -237,7 +237,7 @@
                 "optionsJSON": "{\"useMargins\": true, \"darkTheme\": false, \"hidePanelTitles\": false}",
                 "panelsJSON": "[{\"panelIndex\": \"1\", \"version\": \"6.5.2\", \"id\": \"55251360-aa32-11e8-9c06-877f0445e3e0-ecs\", \"type\": \"visualization\", \"gridData\": {\"i\": \"1\", \"h\": 15, \"w\": 24, \"y\": 0, \"x\": 0}, \"embeddableConfig\": {}}, {\"panelIndex\": \"2\", \"version\": \"6.5.2\", \"id\": \"7fb671f0-aa32-11e8-9c06-877f0445e3e0-ecs\", \"type\": \"visualization\", \"gridData\": {\"i\": \"2\", \"h\": 15, \"w\": 24, \"y\": 0, \"x\": 24}, \"embeddableConfig\": {}}, {\"panelIndex\": \"3\", \"version\": \"6.5.2\", \"id\": \"11f8b9c0-aa32-11e8-9c06-877f0445e3e0-ecs\", \"type\": \"visualization\", \"gridData\": {\"i\": \"3\", \"h\": 15, \"w\": 24, \"y\": 15, \"x\": 0}, \"embeddableConfig\": {}}, {\"panelIndex\": \"4\", \"version\": \"6.5.2\", \"id\": \"68af8ef0-aa33-11e8-9c06-877f0445e3e0-ecs\", \"type\": \"visualization\", \"gridData\": {\"i\": \"4\", \"h\": 15, \"w\": 24, \"y\": 15, \"x\": 24}, \"embeddableConfig\": {}}]",
                 "timeRestore": false,
-                "title": "[Filebeat] HAProxy Overview ECS",
+                "title": "[Logs] HAProxy Overview ECS",
                 "version": 1
             },
             "id": "3560d580-aa34-11e8-9c06-877f0445e3e0-ecs",
@@ -352,7 +352,7 @@
                 "optionsJSON": "{\"useMargins\": true, \"darkTheme\": false, \"hidePanelTitles\": false}",
                 "panelsJSON": "[{\"panelIndex\": \"1\", \"version\": \"6.1.2\", \"id\": \"eb2db5b0-fe11-11e7-a3b0-d13028918f9f-ecs\", \"type\": \"visualization\", \"gridData\": {\"i\": \"1\", \"h\": 3, \"w\": 12, \"y\": 0, \"x\": 0}}, {\"panelIndex\": \"2\", \"version\": \"6.1.2\", \"id\": \"f31414b0-fe14-11e7-a3b0-d13028918f9f-ecs\", \"type\": \"visualization\", \"gridData\": {\"i\": \"2\", \"h\": 3, \"w\": 7, \"y\": 3, \"x\": 0}}, {\"panelIndex\": \"4\", \"version\": \"6.1.2\", \"id\": \"63129c80-fe12-11e7-a3b0-d13028918f9f-ecs\", \"type\": \"visualization\", \"gridData\": {\"i\": \"4\", \"h\": 3, \"w\": 6, \"y\": 9, \"x\": 0}}, {\"panelIndex\": \"5\", \"version\": \"6.1.2\", \"id\": \"ccd3f9c0-fe12-11e7-a3b0-d13028918f9f-ecs\", \"type\": \"visualization\", \"gridData\": {\"i\": \"5\", \"h\": 3, \"w\": 6, \"y\": 9, \"x\": 6}}, {\"panelIndex\": \"6\", \"version\": \"6.1.2\", \"id\": \"41f38230-fe17-11e7-a3b0-d13028918f9f-ecs\", \"type\": \"visualization\", \"gridData\": {\"i\": \"6\", \"h\": 3, \"w\": 5, \"y\": 3, \"x\": 7}}, {\"panelIndex\": \"7\", \"version\": \"6.1.2\", \"id\": \"c0d02cd0-fe1b-11e7-a3b0-d13028918f9f-ecs\", \"type\": \"visualization\", \"gridData\": {\"i\": \"7\", \"h\": 3, \"w\": 12, \"y\": 6, \"x\": 0}}]",
                 "timeRestore": false,
-                "title": "[Filebeat] IIS Access and error logs ECS",
+                "title": "[Logs] IIS Access and error logs ECS",
                 "uiStateJSON": "{}",
                 "version": 1
             },
@@ -438,7 +438,7 @@
                 "optionsJSON": "{\"darkTheme\": false}",
                 "panelsJSON": "[{\"panelIndex\": 1, \"id\": \"0fef5710-0a82-11e8-bffe-ff7d4f68cf94-ecs\", \"type\": \"visualization\", \"size_y\": 3, \"col\": 1, \"row\": 1, \"size_x\": 4}, {\"panelIndex\": 2, \"sort\": [\"@timestamp\", \"desc\"], \"id\": \"e49fe000-0a7e-11e8-bffe-ff7d4f68cf94-ecs\", \"size_x\": 8, \"size_y\": 3, \"columns\": [\"mongodb.log.timestamp\", \"log.level\", \"mongodb.log.component\", \"mongodb.log.context\", \"message\"], \"type\": \"search\", \"row\": 1, \"col\": 5}, {\"panelIndex\": 3, \"sort\": [\"mongodb.log.timestamp\", \"asc\"], \"id\": \"bfc96a60-0a80-11e8-bffe-ff7d4f68cf94-ecs\", \"size_x\": 12, \"size_y\": 6, \"columns\": [\"mongodb.log.timestamp\", \"log.level\", \"mongodb.log.component\", \"mongodb.log.context\", \"message\"], \"type\": \"search\", \"row\": 4, \"col\": 1}]",
                 "timeRestore": false,
-                "title": "[Filebeat] MongoDB Overview ECS",
+                "title": "[Logs] MongoDB Overview ECS",
                 "uiStateJSON": "{}",
                 "version": 1
             },
@@ -580,7 +580,7 @@
                 "optionsJSON": "{\"darkTheme\": false}",
                 "panelsJSON": "[{\"panelIndex\": 1, \"id\": \"MySQL-slowest-queries-ecs\", \"type\": \"visualization\", \"size_y\": 4, \"col\": 1, \"row\": 8, \"size_x\": 6}, {\"panelIndex\": 2, \"id\": \"MySQL-Slow-queries-over-time-ecs\", \"type\": \"visualization\", \"size_y\": 3, \"col\": 1, \"row\": 1, \"size_x\": 6}, {\"panelIndex\": 3, \"id\": \"MySQL-error-logs-ecs\", \"type\": \"visualization\", \"size_y\": 3, \"col\": 7, \"row\": 1, \"size_x\": 6}, {\"panelIndex\": 4, \"sort\": [\"@timestamp\", \"desc\"], \"id\": \"Filebeat-MySQL-error-log-ecs\", \"size_x\": 6, \"size_y\": 5, \"columns\": [\"log.level\", \"message\"], \"type\": \"search\", \"row\": 8, \"col\": 7}, {\"panelIndex\": 5, \"id\": \"MySQL-Error-logs-levels-ecs\", \"type\": \"visualization\", \"size_y\": 4, \"col\": 7, \"row\": 4, \"size_x\": 6}, {\"panelIndex\": 6, \"id\": \"MySQL-Slow-logs-by-count-ecs\", \"type\": \"visualization\", \"size_y\": 4, \"col\": 1, \"row\": 4, \"size_x\": 6}]",
                 "timeRestore": false,
-                "title": "[Filebeat] MySQL Overview ECS",
+                "title": "[Logs] MySQL Overview ECS",
                 "uiStateJSON": "{\"P-1\": {\"vis\": {\"params\": {\"sort\": {\"columnIndex\": null, \"direction\": null}}}}}",
                 "version": 1
             },
@@ -599,7 +599,7 @@
                 "optionsJSON": "{\"darkTheme\": false}",
                 "panelsJSON": "[{\"panelIndex\": \"36b94fba-26a2-4a63-9260-1e5bdf3a9dd8\", \"panelRefName\": \"panel_0\", \"embeddableConfig\": {}, \"gridData\": {\"i\": \"36b94fba-26a2-4a63-9260-1e5bdf3a9dd8\", \"h\": 4, \"w\": 48, \"y\": 0, \"x\": 0}, \"version\": \"7.8.0\"}, {\"panelIndex\": \"a7e7600a-703f-48a0-9a3a-3670294ee98b\", \"panelRefName\": \"panel_1\", \"embeddableConfig\": {}, \"gridData\": {\"i\": \"a7e7600a-703f-48a0-9a3a-3670294ee98b\", \"h\": 12, \"w\": 48, \"y\": 4, \"x\": 0}, \"version\": \"7.8.0\"}, {\"panelIndex\": \"1a56c416-e1e4-4e0e-bd2b-ac5e3553d118\", \"panelRefName\": \"panel_2\", \"embeddableConfig\": {}, \"gridData\": {\"i\": \"1a56c416-e1e4-4e0e-bd2b-ac5e3553d118\", \"h\": 12, \"w\": 48, \"y\": 16, \"x\": 0}, \"version\": \"7.8.0\"}, {\"panelIndex\": \"7e5729fd-aa67-4ee2-aaa3-8a67e529d4b1\", \"panelRefName\": \"panel_3\", \"embeddableConfig\": {}, \"gridData\": {\"i\": \"7e5729fd-aa67-4ee2-aaa3-8a67e529d4b1\", \"h\": 28, \"w\": 48, \"y\": 28, \"x\": 0}, \"version\": \"7.8.0\"}]",
                 "timeRestore": false,
-                "title": "[Filebeat] Nginx Ingress Controller access and error logs",
+                "title": "[Logs] Nginx Ingress Controller access and error logs",
                 "version": 1
             },
             "id": "0b3dba40-f341-11ea-a3fd-1b45ec532bb3",
@@ -755,7 +755,7 @@
                 "optionsJSON": "{\"darkTheme\": false}",
                 "panelsJSON": "[{\"panelIndex\": \"3\", \"panelRefName\": \"panel_0\", \"embeddableConfig\": {}, \"gridData\": {\"i\": \"3\", \"h\": 12, \"w\": 12, \"y\": 32, \"x\": 36}, \"version\": \"7.8.0\"}, {\"panelIndex\": \"4\", \"panelRefName\": \"panel_1\", \"embeddableConfig\": {\"vis\": {\"legendOpen\": true}}, \"gridData\": {\"i\": \"4\", \"h\": 12, \"w\": 11, \"y\": 32, \"x\": 25}, \"version\": \"7.8.0\"}, {\"panelIndex\": \"8\", \"panelRefName\": \"panel_2\", \"embeddableConfig\": {\"mapCenter\": null, \"mapZoom\": null, \"mapBounds\": {\"bottom_right\": {\"lat\": -7.362466865535738, \"lon\": 245.39062500000003}, \"top_left\": {\"lat\": 77.07878389624943, \"lon\": -245.74218750000003}}, \"mapCollar\": {\"bottom_right\": {\"lat\": -49.583095, \"lon\": 180}, \"top_left\": {\"lat\": 90, \"lon\": -180}, \"zoom\": 2}}, \"gridData\": {\"i\": \"8\", \"h\": 16, \"w\": 48, \"y\": 4, \"x\": 0}, \"version\": \"7.8.0\"}, {\"panelIndex\": \"f760cd68-8472-4709-b516-ba74f0c00db8\", \"panelRefName\": \"panel_3\", \"embeddableConfig\": {}, \"gridData\": {\"i\": \"f760cd68-8472-4709-b516-ba74f0c00db8\", \"h\": 4, \"w\": 48, \"y\": 0, \"x\": 0}, \"version\": \"7.8.0\"}, {\"panelIndex\": \"9351d7ed-b2f4-419b-8c15-4696f69c2831\", \"panelRefName\": \"panel_4\", \"embeddableConfig\": {}, \"gridData\": {\"i\": \"9351d7ed-b2f4-419b-8c15-4696f69c2831\", \"h\": 12, \"w\": 48, \"y\": 20, \"x\": 0}, \"version\": \"7.8.0\"}, {\"panelIndex\": \"a62866e6-5c7f-4c52-a619-d01fb5005d7c\", \"panelRefName\": \"panel_5\", \"embeddableConfig\": {}, \"gridData\": {\"i\": \"a62866e6-5c7f-4c52-a619-d01fb5005d7c\", \"h\": 12, \"w\": 12, \"y\": 32, \"x\": 0}, \"version\": \"7.8.0\"}, {\"panelIndex\": \"453e4965-85d2-48a8-aea6-b37970d50ec5\", \"panelRefName\": \"panel_6\", \"embeddableConfig\": {}, \"gridData\": {\"i\": \"453e4965-85d2-48a8-aea6-b37970d50ec5\", \"h\": 12, \"w\": 13, \"y\": 32, \"x\": 12}, \"version\": \"7.8.0\"}, {\"panelIndex\": \"606dd662-23fe-4fec-a781-7a5831eb1dc4\", \"panelRefName\": \"panel_7\", \"embeddableConfig\": {}, \"gridData\": {\"i\": \"606dd662-23fe-4fec-a781-7a5831eb1dc4\", \"h\": 12, \"w\": 18, \"y\": 44, \"x\": 0}, \"version\": \"7.8.0\"}, {\"panelIndex\": \"23972f5a-8e18-457a-8288-adf6f15e792e\", \"panelRefName\": \"panel_8\", \"embeddableConfig\": {}, \"gridData\": {\"i\": \"23972f5a-8e18-457a-8288-adf6f15e792e\", \"h\": 12, \"w\": 15, \"y\": 44, \"x\": 18}, \"version\": \"7.8.0\"}, {\"panelIndex\": \"4b4ec4d3-b8a2-4d94-9a6c-b469552940e8\", \"panelRefName\": \"panel_9\", \"embeddableConfig\": {}, \"gridData\": {\"i\": \"4b4ec4d3-b8a2-4d94-9a6c-b469552940e8\", \"h\": 12, \"w\": 15, \"y\": 44, \"x\": 33}, \"version\": \"7.8.0\"}]",
                 "timeRestore": false,
-                "title": "[Filebeat] Nginx Ingress Controller Overview",
+                "title": "[Logs] Nginx Ingress Controller Overview",
                 "version": 1
             },
             "id": "dfbc0840-f340-11ea-a3fd-1b45ec532bb3",
@@ -1162,7 +1162,7 @@
                 "optionsJSON": "{\"darkTheme\": false}",
                 "panelsJSON": "[{\"panelIndex\": 11, \"sort\": [\"@timestamp\", \"desc\"], \"id\": \"9eb25600-a1f0-11e7-928f-5dbe6f6f5519-ecs\", \"size_x\": 12, \"size_y\": 3, \"columns\": [\"log.level\", \"message\"], \"type\": \"search\", \"row\": 5, \"col\": 1}, {\"panelIndex\": 16, \"sort\": [\"@timestamp\", \"desc\"], \"id\": \"6d9e66d0-a1f0-11e7-928f-5dbe6f6f5519-ecs\", \"size_x\": 12, \"size_y\": 7, \"columns\": [\"url.original\", \"http.request.method\", \"http.response.status_code\", \"http.response.body.bytes\"], \"type\": \"search\", \"row\": 8, \"col\": 1}, {\"panelIndex\": 18, \"id\": \"1cfb1a80-a1f4-11e7-928f-5dbe6f6f5519-ecs\", \"type\": \"visualization\", \"size_y\": 3, \"col\": 1, \"row\": 2, \"size_x\": 12}, {\"panelIndex\": 19, \"id\": \"97109780-a2a5-11e7-928f-5dbe6f6f5519-ecs\", \"type\": \"visualization\", \"size_y\": 1, \"col\": 1, \"row\": 1, \"size_x\": 12}]",
                 "timeRestore": false,
-                "title": "[Filebeat] Nginx Access and error logs ECS",
+                "title": "[Logs] Nginx Access and error logs ECS",
                 "uiStateJSON": "{}",
                 "version": 1
             },
@@ -1327,7 +1327,7 @@
                 "optionsJSON": "{\"darkTheme\": false}",
                 "panelsJSON": "[{\"panelIndex\": 3, \"id\": \"Nginx-Access-Browsers-ecs\", \"type\": \"visualization\", \"size_y\": 3, \"col\": 10, \"row\": 12, \"size_x\": 3}, {\"panelIndex\": 4, \"id\": \"Nginx-Access-OSes-ecs\", \"type\": \"visualization\", \"size_y\": 3, \"col\": 7, \"row\": 12, \"size_x\": 3}, {\"panelIndex\": 8, \"id\": \"Nginx-Access-Map-ecs\", \"type\": \"visualization\", \"size_y\": 4, \"col\": 1, \"row\": 2, \"size_x\": 12}, {\"panelIndex\": 13, \"id\": \"b70b1b20-a1f4-11e7-928f-5dbe6f6f5519-ecs\", \"type\": \"visualization\", \"size_y\": 3, \"col\": 1, \"row\": 6, \"size_x\": 12}, {\"panelIndex\": 14, \"id\": \"9184fa00-a1f5-11e7-928f-5dbe6f6f5519-ecs\", \"type\": \"visualization\", \"size_y\": 3, \"col\": 7, \"row\": 9, \"size_x\": 6}, {\"panelIndex\": 15, \"id\": \"46322e50-a1f6-11e7-928f-5dbe6f6f5519-ecs\", \"type\": \"visualization\", \"size_y\": 3, \"col\": 1, \"row\": 9, \"size_x\": 6}, {\"panelIndex\": 16, \"id\": \"0dd6f320-a29f-11e7-928f-5dbe6f6f5519-ecs\", \"type\": \"visualization\", \"size_y\": 3, \"col\": 1, \"row\": 12, \"size_x\": 6}, {\"panelIndex\": 17, \"id\": \"97109780-a2a5-11e7-928f-5dbe6f6f5519-ecs\", \"type\": \"visualization\", \"size_y\": 1, \"col\": 1, \"row\": 1, \"size_x\": 12}]",
                 "timeRestore": false,
-                "title": "[Filebeat] Nginx Overview ECS",
+                "title": "[Logs] Nginx Overview ECS",
                 "uiStateJSON": "{\"P-4\": {\"vis\": {\"legendOpen\": true}}, \"P-8\": {\"mapCenter\": [50.51342652633956, -0.17578125], \"mapZoom\": 2, \"mapBounds\": {\"bottom_right\": {\"lat\": -7.362466865535738, \"lon\": 245.39062500000003}, \"top_left\": {\"lat\": 77.07878389624943, \"lon\": -245.74218750000003}}, \"mapCollar\": {\"bottom_right\": {\"lat\": -49.583095, \"lon\": 180}, \"top_left\": {\"lat\": 90, \"lon\": -180}, \"zoom\": 2}}}",
                 "version": 1
             },
@@ -1403,7 +1403,7 @@
                 "optionsJSON": "{\"darkTheme\": false}",
                 "panelsJSON": "[{\"panelIndex\": 1, \"id\": \"PostgreSQL Log Level Count-ecs\", \"type\": \"visualization\", \"size_y\": 3, \"col\": 1, \"row\": 1, \"size_x\": 3}, {\"panelIndex\": 2, \"sort\": [\"@timestamp\", \"desc\"], \"id\": \"PostgreSQL All Logs-ecs\", \"size_x\": 12, \"size_y\": 6, \"columns\": [\"user.name\", \"postgresql.log.database\", \"log.level\", \"message\", \"postgresql.log.query\"], \"type\": \"search\", \"row\": 4, \"col\": 1}, {\"panelIndex\": 3, \"id\": \"3dbd5370-87f3-11e7-ad9c-db80de0bf8d3-ecs\", \"type\": \"visualization\", \"size_y\": 3, \"col\": 4, \"row\": 1, \"size_x\": 9}]",
                 "timeRestore": false,
-                "title": "[Filebeat] PostgreSQL Overview ECS",
+                "title": "[Logs] PostgreSQL Overview ECS",
                 "uiStateJSON": "{\"P-1\": {\"vis\": {\"params\": {\"sort\": {\"columnIndex\": null, \"direction\": null}}}}}",
                 "version": 1
             },
@@ -1486,7 +1486,7 @@
                 "optionsJSON": "{\"darkTheme\": false}",
                 "panelsJSON": "[{\"panelIndex\": 1, \"id\": \"PostgreSQL Query Count and Duration-ecs\", \"type\": \"visualization\", \"size_y\": 3, \"col\": 1, \"row\": 1, \"size_x\": 6}, {\"panelIndex\": 2, \"sort\": [\"@timestamp\", \"desc\"], \"id\": \"Slow PostgreSQL Queries-ecs\", \"size_x\": 6, \"size_y\": 3, \"columns\": [\"user.name\", \"postgresql.log.database\", \"event.duration\", \"postgresql.log.query\"], \"type\": \"search\", \"row\": 1, \"col\": 7}, {\"panelIndex\": 3, \"sort\": [\"@timestamp\", \"desc\"], \"id\": \"PostgreSQL Query Durations-ecs\", \"size_x\": 12, \"size_y\": 5, \"columns\": [\"user.name\", \"postgresql.log.database\", \"event.duration\", \"postgresql.log.query\"], \"type\": \"search\", \"row\": 4, \"col\": 1}]",
                 "timeRestore": false,
-                "title": "[Filebeat] PostgreSQL Query Duration Overview ECS",
+                "title": "[Logs] PostgreSQL Query Duration Overview ECS",
                 "uiStateJSON": "{}",
                 "version": 1
             },
@@ -1618,7 +1618,7 @@
                 "optionsJSON": "{\"darkTheme\": false}",
                 "panelsJSON": "[{\"panelIndex\": 3, \"id\": \"Traefik-Access-Browsers-ecs\", \"type\": \"visualization\", \"size_y\": 4, \"col\": 1, \"row\": 10, \"size_x\": 4}, {\"panelIndex\": 4, \"id\": \"Traefik-Access-OSes-ecs\", \"type\": \"visualization\", \"size_y\": 4, \"col\": 5, \"row\": 10, \"size_x\": 4}, {\"panelIndex\": 5, \"id\": \"New-Visualization-ecs\", \"type\": \"visualization\", \"size_y\": 3, \"col\": 1, \"row\": 4, \"size_x\": 12}, {\"panelIndex\": 6, \"id\": \"Traefik-Access-Response-codes-by-top-URLs-ecs\", \"type\": \"visualization\", \"size_y\": 3, \"col\": 1, \"row\": 7, \"size_x\": 12}, {\"panelIndex\": 7, \"id\": \"Sent-sizes-ecs\", \"type\": \"visualization\", \"size_y\": 4, \"col\": 9, \"row\": 10, \"size_x\": 4}, {\"panelIndex\": 8, \"id\": \"Traefik-Access-Map-ecs\", \"type\": \"visualization\", \"size_y\": 3, \"col\": 1, \"row\": 1, \"size_x\": 12}]",
                 "timeRestore": false,
-                "title": "[Filebeat] Traefik Access logs ECS",
+                "title": "[Logs] Traefik Access logs ECS",
                 "uiStateJSON": "{\"P-4\": {\"vis\": {\"legendOpen\": true}}, \"P-8\": {\"mapCenter\": [50.51342652633956, -0.17578125]}}",
                 "version": 1
             },
