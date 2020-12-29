@@ -4,7 +4,7 @@
             "attributes": {
                 "description": "",
                 "kibanaSavedObjectMeta": {
-                    "searchSourceJSON": "{\"filter\": [], \"index\": \"packetbeat-*\", \"query\": {\"language\": \"kuery\", \"query\": \"\"}}"
+                    "searchSourceJSON": "{\"filter\": [], \"index\": \"__replace_token__\", \"query\": {\"language\": \"kuery\", \"query\": \"\"}}"
                 },
                 "savedSearchId": "eaa83e60-190b-11e9-be0d-adde5066235e-ecs",
                 "title": "Cassandra ResponseKeyspace [Packetbeat] ECS",
@@ -21,7 +21,7 @@
             "attributes": {
                 "description": "",
                 "kibanaSavedObjectMeta": {
-                    "searchSourceJSON": "{\"filter\": [], \"index\": \"packetbeat-*\", \"query\": {\"language\": \"kuery\", \"query\": \"\"}}"
+                    "searchSourceJSON": "{\"filter\": [], \"index\": \"__replace_token__\", \"query\": {\"language\": \"kuery\", \"query\": \"\"}}"
                 },
                 "savedSearchId": "eaa83e60-190b-11e9-be0d-adde5066235e-ecs",
                 "title": "Cassandra ResponseType [Packetbeat] ECS",
@@ -38,7 +38,7 @@
             "attributes": {
                 "description": "",
                 "kibanaSavedObjectMeta": {
-                    "searchSourceJSON": "{\"filter\": [], \"index\": \"packetbeat-*\", \"query\": {\"language\": \"kuery\", \"query\": \"\"}}"
+                    "searchSourceJSON": "{\"filter\": [], \"index\": \"__replace_token__\", \"query\": {\"language\": \"kuery\", \"query\": \"\"}}"
                 },
                 "savedSearchId": "eaa83e60-190b-11e9-be0d-adde5066235e-ecs",
                 "title": "Cassandra ResponseTime [Packetbeat] ECS",
@@ -55,7 +55,7 @@
             "attributes": {
                 "description": "",
                 "kibanaSavedObjectMeta": {
-                    "searchSourceJSON": "{\"filter\": [], \"index\": \"packetbeat-*\", \"query\": {\"language\": \"kuery\", \"query\": \"\"}}"
+                    "searchSourceJSON": "{\"filter\": [], \"index\": \"__replace_token__\", \"query\": {\"language\": \"kuery\", \"query\": \"\"}}"
                 },
                 "savedSearchId": "eaa83e60-190b-11e9-be0d-adde5066235e-ecs",
                 "title": "Cassandra RequestCount [Packetbeat] ECS",
@@ -72,7 +72,7 @@
             "attributes": {
                 "description": "",
                 "kibanaSavedObjectMeta": {
-                    "searchSourceJSON": "{\"filter\": [], \"index\": \"packetbeat-*\", \"query\": {\"language\": \"kuery\", \"query\": \"\"}}"
+                    "searchSourceJSON": "{\"filter\": [], \"index\": \"__replace_token__\", \"query\": {\"language\": \"kuery\", \"query\": \"\"}}"
                 },
                 "savedSearchId": "eaa83e60-190b-11e9-be0d-adde5066235e-ecs",
                 "title": "Cassandra Ops [Packetbeat] ECS",
@@ -89,7 +89,7 @@
             "attributes": {
                 "description": "",
                 "kibanaSavedObjectMeta": {
-                    "searchSourceJSON": "{\"filter\": [], \"index\": \"packetbeat-*\", \"query\": {\"language\": \"kuery\", \"query\": \"\"}}"
+                    "searchSourceJSON": "{\"filter\": [], \"index\": \"__replace_token__\", \"query\": {\"language\": \"kuery\", \"query\": \"\"}}"
                 },
                 "savedSearchId": "eaa83e60-190b-11e9-be0d-adde5066235e-ecs",
                 "title": "Cassandra RequestCountStackByType [Packetbeat] ECS",
@@ -106,7 +106,7 @@
             "attributes": {
                 "description": "",
                 "kibanaSavedObjectMeta": {
-                    "searchSourceJSON": "{\"filter\": [], \"index\": \"packetbeat-*\", \"query\": {\"language\": \"kuery\", \"query\": \"\"}}"
+                    "searchSourceJSON": "{\"filter\": [], \"index\": \"__replace_token__\", \"query\": {\"language\": \"kuery\", \"query\": \"\"}}"
                 },
                 "savedSearchId": "eaa83e60-190b-11e9-be0d-adde5066235e-ecs",
                 "title": "Cassandra ResponseCountStackByType [Packetbeat] ECS",
@@ -123,7 +123,7 @@
             "attributes": {
                 "description": "",
                 "kibanaSavedObjectMeta": {
-                    "searchSourceJSON": "{\"filter\": [], \"index\": \"packetbeat-*\", \"query\": {\"language\": \"kuery\", \"query\": \"\"}}"
+                    "searchSourceJSON": "{\"filter\": [], \"index\": \"__replace_token__\", \"query\": {\"language\": \"kuery\", \"query\": \"\"}}"
                 },
                 "savedSearchId": "eaa83e60-190b-11e9-be0d-adde5066235e-ecs",
                 "title": "Cassandra RequestCountByType [Packetbeat] ECS",
@@ -140,7 +140,7 @@
             "attributes": {
                 "description": "",
                 "kibanaSavedObjectMeta": {
-                    "searchSourceJSON": "{\"filter\": [], \"index\": \"packetbeat-*\", \"query\": {\"language\": \"kuery\", \"query\": \"\"}}"
+                    "searchSourceJSON": "{\"filter\": [], \"index\": \"__replace_token__\", \"query\": {\"language\": \"kuery\", \"query\": \"\"}}"
                 },
                 "savedSearchId": "eaa83e60-190b-11e9-be0d-adde5066235e-ecs",
                 "title": "Cassandra ResponseCountByType [Packetbeat] ECS",
@@ -180,7 +180,7 @@
                 "description": "",
                 "hits": 0,
                 "kibanaSavedObjectMeta": {
-                    "searchSourceJSON": "{\"highlight\": {\"post_tags\": [\"@/kibana-highlighted-field@\"], \"require_field_match\": false, \"pre_tags\": [\"@kibana-highlighted-field@\"], \"fields\": {\"*\": {}}, \"fragment_size\": 2147483647}, \"index\": \"packetbeat-*\", \"query\": {\"language\": \"kuery\", \"query\": \"\"}, \"highlightAll\": true, \"filter\": [{\"$state\": {\"store\": \"appState\"}, \"meta\": {\"negate\": false, \"index\": \"packetbeat-*\", \"params\": {\"type\": \"phrase\", \"query\": \"QUERY\"}, \"disabled\": false, \"alias\": null, \"key\": \"cassandra.request.headers.op\", \"value\": \"QUERY\", \"type\": \"phrase\"}, \"query\": {\"match\": {\"cassandra.request.headers.op\": {\"type\": \"phrase\", \"query\": \"QUERY\"}}}}, {\"$state\": {\"store\": \"appState\"}, \"meta\": {\"negate\": true, \"index\": \"packetbeat-*\", \"params\": {\"type\": \"phrase\", \"query\": \"ERROR\"}, \"disabled\": false, \"alias\": null, \"key\": \"cassandra.response.headers.op\", \"value\": \"ERROR\", \"type\": \"phrase\"}, \"query\": {\"match\": {\"cassandra.response.headers.op\": {\"type\": \"phrase\", \"query\": \"ERROR\"}}}}], \"version\": true}"
+                    "searchSourceJSON": "{\"highlight\": {\"post_tags\": [\"@/kibana-highlighted-field@\"], \"require_field_match\": false, \"pre_tags\": [\"@kibana-highlighted-field@\"], \"fields\": {\"*\": {}}, \"fragment_size\": 2147483647}, \"index\": \"__replace_token__\", \"query\": {\"language\": \"kuery\", \"query\": \"\"}, \"highlightAll\": true, \"filter\": [{\"$state\": {\"store\": \"appState\"}, \"meta\": {\"negate\": false, \"index\": \"__replace_token__\", \"params\": {\"type\": \"phrase\", \"query\": \"QUERY\"}, \"disabled\": false, \"alias\": null, \"key\": \"cassandra.request.headers.op\", \"value\": \"QUERY\", \"type\": \"phrase\"}, \"query\": {\"match\": {\"cassandra.request.headers.op\": {\"type\": \"phrase\", \"query\": \"QUERY\"}}}}, {\"$state\": {\"store\": \"appState\"}, \"meta\": {\"negate\": true, \"index\": \"__replace_token__\", \"params\": {\"type\": \"phrase\", \"query\": \"ERROR\"}, \"disabled\": false, \"alias\": null, \"key\": \"cassandra.response.headers.op\", \"value\": \"ERROR\", \"type\": \"phrase\"}, \"query\": {\"match\": {\"cassandra.response.headers.op\": {\"type\": \"phrase\", \"query\": \"ERROR\"}}}}], \"version\": true}"
                 },
                 "sort": [
                     "@timestamp",
@@ -202,7 +202,7 @@
                 "description": "",
                 "hits": 0,
                 "kibanaSavedObjectMeta": {
-                    "searchSourceJSON": "{\"filter\": [{\"$state\": {\"store\": \"appState\"}, \"meta\": {\"negate\": false, \"index\": \"packetbeat-*\", \"params\": {\"type\": \"phrase\", \"query\": \"cassandra\"}, \"disabled\": false, \"alias\": null, \"key\": \"event.dataset\", \"value\": \"cassandra\", \"type\": \"phrase\"}, \"query\": {\"match\": {\"event.dataset\": {\"type\": \"phrase\", \"query\": \"cassandra\"}}}}], \"index\": \"packetbeat-*\", \"version\": true, \"query\": {\"language\": \"kuery\", \"query\": \"\"}, \"highlightAll\": true}"
+                    "searchSourceJSON": "{\"filter\": [{\"$state\": {\"store\": \"appState\"}, \"meta\": {\"negate\": false, \"index\": \"__replace_token__\", \"params\": {\"type\": \"phrase\", \"query\": \"cassandra\"}, \"disabled\": false, \"alias\": null, \"key\": \"event.dataset\", \"value\": \"cassandra\", \"type\": \"phrase\"}, \"query\": {\"match\": {\"event.dataset\": {\"type\": \"phrase\", \"query\": \"cassandra\"}}}}], \"index\": \"__replace_token__\", \"version\": true, \"query\": {\"language\": \"kuery\", \"query\": \"\"}, \"highlightAll\": true}"
                 },
                 "sort": [
                     "@timestamp",
@@ -245,7 +245,7 @@
                 "title": "Message Types over Time [Packetbeat DHCPv4] ECS",
                 "uiStateJSON": "{}",
                 "version": 1,
-                "visState": "{\"type\": \"metrics\", \"aggs\": [], \"title\": \"Message Types over Time [Packetbeat DHCPv4] ECS\", \"params\": {\"type\": \"timeseries\", \"index_pattern\": \"packetbeat-*\", \"time_field\": \"@timestamp\", \"background_color_rules\": [{\"id\": \"c2cf4410-8ba8-11e8-ae15-bdcba81344e6\"}], \"drop_last_bucket\": 1, \"ignore_global_filter\": 0, \"show_grid\": 1, \"axis_formatter\": \"number\", \"show_legend\": 1, \"interval\": \"auto\", \"id\": \"61ca57f0-469d-11e7-af02-69e470af7417\", \"filter\": \"type:dhcpv4\", \"axis_position\": \"left\", \"series\": [{\"point_size\": 1, \"color\": \"#68BC00\", \"terms_field\": \"dhcpv4.option.message_type\", \"metrics\": [{\"type\": \"count\", \"id\": \"8abe6eb1-8ba9-11e8-ae15-bdcba81344e6\"}], \"split_mode\": \"terms\", \"stacked\": \"none\", \"fill\": 0.5, \"id\": \"8abe6eb0-8ba9-11e8-ae15-bdcba81344e6\", \"seperate_axis\": 0, \"label\": \"Response\", \"filter\": \"NOT dhcpv4.option.message_type:nak NOT dhcpv4.option.message_type:decline\", \"axis_position\": \"right\", \"line_width\": 1, \"chart_type\": \"line\", \"formatter\": \"number\"}, {\"point_size\": \"3\", \"color\": \"rgba(244,78,59,1)\", \"metrics\": [{\"type\": \"count\", \"id\": \"ae5610d1-8ba9-11e8-ae15-bdcba81344e6\"}], \"split_mode\": \"everything\", \"stacked\": \"none\", \"fill\": 0.5, \"series_drop_last_bucket\": 0, \"id\": \"ae5610d0-8ba9-11e8-ae15-bdcba81344e6\", \"seperate_axis\": 0, \"label\": \"nak\", \"filter\": \"dhcpv4.option.message_type:nak\", \"axis_position\": \"right\", \"line_width\": \"4\", \"chart_type\": \"line\", \"formatter\": \"number\"}, {\"point_size\": \"3\", \"color\": \"rgba(244,78,59,1)\", \"metrics\": [{\"type\": \"count\", \"id\": \"cf7ba181-8ba9-11e8-ae15-bdcba81344e6\"}], \"split_mode\": \"everything\", \"stacked\": \"none\", \"fill\": 0.5, \"series_drop_last_bucket\": 0, \"id\": \"cf7ba180-8ba9-11e8-ae15-bdcba81344e6\", \"seperate_axis\": 0, \"label\": \"decline\", \"filter\": \"dhcpv4.option.message_type:decline\", \"axis_position\": \"right\", \"line_width\": \"4\", \"chart_type\": \"line\", \"formatter\": \"number\"}]}}"
+                "visState": "{\"type\": \"metrics\", \"aggs\": [], \"title\": \"Message Types over Time [Packetbeat DHCPv4] ECS\", \"params\": {\"type\": \"timeseries\", \"index_pattern\": \"__replace_token__\", \"time_field\": \"@timestamp\", \"background_color_rules\": [{\"id\": \"c2cf4410-8ba8-11e8-ae15-bdcba81344e6\"}], \"drop_last_bucket\": 1, \"ignore_global_filter\": 0, \"show_grid\": 1, \"axis_formatter\": \"number\", \"show_legend\": 1, \"interval\": \"auto\", \"id\": \"61ca57f0-469d-11e7-af02-69e470af7417\", \"filter\": \"type:dhcpv4\", \"axis_position\": \"left\", \"series\": [{\"point_size\": 1, \"color\": \"#68BC00\", \"terms_field\": \"dhcpv4.option.message_type\", \"metrics\": [{\"type\": \"count\", \"id\": \"8abe6eb1-8ba9-11e8-ae15-bdcba81344e6\"}], \"split_mode\": \"terms\", \"stacked\": \"none\", \"fill\": 0.5, \"id\": \"8abe6eb0-8ba9-11e8-ae15-bdcba81344e6\", \"seperate_axis\": 0, \"label\": \"Response\", \"filter\": \"NOT dhcpv4.option.message_type:nak NOT dhcpv4.option.message_type:decline\", \"axis_position\": \"right\", \"line_width\": 1, \"chart_type\": \"line\", \"formatter\": \"number\"}, {\"point_size\": \"3\", \"color\": \"rgba(244,78,59,1)\", \"metrics\": [{\"type\": \"count\", \"id\": \"ae5610d1-8ba9-11e8-ae15-bdcba81344e6\"}], \"split_mode\": \"everything\", \"stacked\": \"none\", \"fill\": 0.5, \"series_drop_last_bucket\": 0, \"id\": \"ae5610d0-8ba9-11e8-ae15-bdcba81344e6\", \"seperate_axis\": 0, \"label\": \"nak\", \"filter\": \"dhcpv4.option.message_type:nak\", \"axis_position\": \"right\", \"line_width\": \"4\", \"chart_type\": \"line\", \"formatter\": \"number\"}, {\"point_size\": \"3\", \"color\": \"rgba(244,78,59,1)\", \"metrics\": [{\"type\": \"count\", \"id\": \"cf7ba181-8ba9-11e8-ae15-bdcba81344e6\"}], \"split_mode\": \"everything\", \"stacked\": \"none\", \"fill\": 0.5, \"series_drop_last_bucket\": 0, \"id\": \"cf7ba180-8ba9-11e8-ae15-bdcba81344e6\", \"seperate_axis\": 0, \"label\": \"decline\", \"filter\": \"dhcpv4.option.message_type:decline\", \"axis_position\": \"right\", \"line_width\": \"4\", \"chart_type\": \"line\", \"formatter\": \"number\"}]}}"
             },
             "id": "8460fcd0-8baa-11e8-9676-ef67484126fb-ecs",
             "type": "visualization",
@@ -301,7 +301,7 @@
                 "description": "",
                 "hits": 0,
                 "kibanaSavedObjectMeta": {
-                    "searchSourceJSON": "{\"filter\": [{\"$state\": {\"store\": \"appState\"}, \"meta\": {\"negate\": false, \"index\": \"packetbeat-*\", \"params\": {\"type\": \"phrase\", \"query\": \"dhcpv4\"}, \"disabled\": false, \"alias\": null, \"key\": \"event.dataset\", \"value\": \"dhcpv4\", \"type\": \"phrase\"}, \"query\": {\"match\": {\"event.dataset\": {\"type\": \"phrase\", \"query\": \"dhcpv4\"}}}}], \"index\": \"packetbeat-*\", \"version\": true, \"query\": {\"language\": \"kuery\", \"query\": \"\"}, \"highlightAll\": true}"
+                    "searchSourceJSON": "{\"filter\": [{\"$state\": {\"store\": \"appState\"}, \"meta\": {\"negate\": false, \"index\": \"__replace_token__\", \"params\": {\"type\": \"phrase\", \"query\": \"dhcpv4\"}, \"disabled\": false, \"alias\": null, \"key\": \"event.dataset\", \"value\": \"dhcpv4\", \"type\": \"phrase\"}, \"query\": {\"match\": {\"event.dataset\": {\"type\": \"phrase\", \"query\": \"dhcpv4\"}}}}], \"index\": \"__replace_token__\", \"version\": true, \"query\": {\"language\": \"kuery\", \"query\": \"\"}, \"highlightAll\": true}"
                 },
                 "sort": [
                     "@timestamp",
@@ -406,7 +406,7 @@
             "attributes": {
                 "description": "",
                 "kibanaSavedObjectMeta": {
-                    "searchSourceJSON": "{\"filter\": [], \"index\": \"packetbeat-*\", \"query\": {\"language\": \"kuery\", \"query\": \"\"}}"
+                    "searchSourceJSON": "{\"filter\": [], \"index\": \"__replace_token__\", \"query\": {\"language\": \"kuery\", \"query\": \"\"}}"
                 },
                 "savedSearchId": "d19e8485-7df5-47ce-8009-9dc3c42bcf17-ecs",
                 "title": "DNS Request Status Over Time [Packetbeat] ECS",
@@ -423,7 +423,7 @@
             "attributes": {
                 "description": "",
                 "kibanaSavedObjectMeta": {
-                    "searchSourceJSON": "{\"filter\": [], \"index\": \"packetbeat-*\", \"query\": {\"language\": \"kuery\", \"query\": \"\"}}"
+                    "searchSourceJSON": "{\"filter\": [], \"index\": \"__replace_token__\", \"query\": {\"language\": \"kuery\", \"query\": \"\"}}"
                 },
                 "savedSearchId": "d19e8485-7df5-47ce-8009-9dc3c42bcf17-ecs",
                 "title": "DNS Question Types [Packetbeat] ECS",
@@ -440,7 +440,7 @@
             "attributes": {
                 "description": "",
                 "kibanaSavedObjectMeta": {
-                    "searchSourceJSON": "{\"filter\": [{\"$state\": {\"store\": \"appState\"}, \"meta\": {\"negate\": false, \"index\": \"packetbeat-*\", \"params\": {\"type\": \"phrase\", \"query\": \"OK\"}, \"disabled\": false, \"alias\": null, \"key\": \"status\", \"value\": \"OK\", \"type\": \"phrase\"}, \"query\": {\"match\": {\"status\": {\"type\": \"phrase\", \"query\": \"OK\"}}}}], \"highlight\": {\"post_tags\": [\"@/kibana-highlighted-field@\"], \"require_field_match\": false, \"pre_tags\": [\"@kibana-highlighted-field@\"], \"fields\": {\"*\": {}}, \"fragment_size\": 2147483647}, \"index\": \"packetbeat-*\", \"query\": {\"language\": \"kuery\", \"query\": \"\"}}"
+                    "searchSourceJSON": "{\"filter\": [{\"$state\": {\"store\": \"appState\"}, \"meta\": {\"negate\": false, \"index\": \"__replace_token__\", \"params\": {\"type\": \"phrase\", \"query\": \"OK\"}, \"disabled\": false, \"alias\": null, \"key\": \"status\", \"value\": \"OK\", \"type\": \"phrase\"}, \"query\": {\"match\": {\"status\": {\"type\": \"phrase\", \"query\": \"OK\"}}}}], \"highlight\": {\"post_tags\": [\"@/kibana-highlighted-field@\"], \"require_field_match\": false, \"pre_tags\": [\"@kibana-highlighted-field@\"], \"fields\": {\"*\": {}}, \"fragment_size\": 2147483647}, \"index\": \"__replace_token__\", \"query\": {\"language\": \"kuery\", \"query\": \"\"}}"
                 },
                 "savedSearchId": "d19e8485-7df5-47ce-8009-9dc3c42bcf17-ecs",
                 "title": "DNS Top 10 Questions [Packetbeat] ECS",
@@ -457,7 +457,7 @@
             "attributes": {
                 "description": "",
                 "kibanaSavedObjectMeta": {
-                    "searchSourceJSON": "{\"filter\": [], \"highlight\": {\"post_tags\": [\"@/kibana-highlighted-field@\"], \"require_field_match\": false, \"pre_tags\": [\"@kibana-highlighted-field@\"], \"fields\": {\"*\": {}}, \"fragment_size\": 2147483647}, \"index\": \"packetbeat-*\", \"query\": {\"language\": \"kuery\", \"query\": \"\"}}"
+                    "searchSourceJSON": "{\"filter\": [], \"highlight\": {\"post_tags\": [\"@/kibana-highlighted-field@\"], \"require_field_match\": false, \"pre_tags\": [\"@kibana-highlighted-field@\"], \"fields\": {\"*\": {}}, \"fragment_size\": 2147483647}, \"index\": \"__replace_token__\", \"query\": {\"language\": \"kuery\", \"query\": \"\"}}"
                 },
                 "savedSearchId": "d19e8485-7df5-47ce-8009-9dc3c42bcf17-ecs",
                 "title": "DNS Response Codes [Packetbeat] ECS",
@@ -515,7 +515,7 @@
                 "description": "",
                 "hits": 0,
                 "kibanaSavedObjectMeta": {
-                    "searchSourceJSON": "{\"highlight\": {\"post_tags\": [\"@/kibana-highlighted-field@\"], \"require_field_match\": false, \"pre_tags\": [\"@kibana-highlighted-field@\"], \"fields\": {\"*\": {}}, \"fragment_size\": 2147483647}, \"index\": \"packetbeat-*\", \"query\": {\"language\": \"kuery\", \"query\": \"\"}, \"highlightAll\": true, \"filter\": [{\"$state\": {\"store\": \"appState\"}, \"meta\": {\"negate\": false, \"index\": \"packetbeat-*\", \"params\": {\"type\": \"phrase\", \"query\": \"dns\"}, \"disabled\": false, \"alias\": null, \"key\": \"network.protocol\", \"value\": \"dns\", \"type\": \"phrase\"}, \"query\": {\"match\": {\"network.protocol\": {\"type\": \"phrase\", \"query\": \"dns\"}}}}], \"version\": true}"
+                    "searchSourceJSON": "{\"highlight\": {\"post_tags\": [\"@/kibana-highlighted-field@\"], \"require_field_match\": false, \"pre_tags\": [\"@kibana-highlighted-field@\"], \"fields\": {\"*\": {}}, \"fragment_size\": 2147483647}, \"index\": \"__replace_token__\", \"query\": {\"language\": \"kuery\", \"query\": \"\"}, \"highlightAll\": true, \"filter\": [{\"$state\": {\"store\": \"appState\"}, \"meta\": {\"negate\": false, \"index\": \"__replace_token__\", \"params\": {\"type\": \"phrase\", \"query\": \"dns\"}, \"disabled\": false, \"alias\": null, \"key\": \"network.protocol\", \"value\": \"dns\", \"type\": \"phrase\"}, \"query\": {\"match\": {\"network.protocol\": {\"type\": \"phrase\", \"query\": \"dns\"}}}}], \"version\": true}"
                 },
                 "sort": [
                     "@timestamp",
@@ -603,7 +603,7 @@
             "attributes": {
                 "description": "",
                 "kibanaSavedObjectMeta": {
-                    "searchSourceJSON": "{\"filter\": [], \"index\": \"packetbeat-*\", \"query\": {\"language\": \"kuery\", \"query\": \"type:dns\"}}"
+                    "searchSourceJSON": "{\"filter\": [], \"index\": \"__replace_token__\", \"query\": {\"language\": \"kuery\", \"query\": \"type:dns\"}}"
                 },
                 "title": "Top Domains by Data Volume ECS",
                 "uiStateJSON": "{\"vis\": {\"params\": {\"sort\": {\"direction\": null, \"columnIndex\": null}}}}",
@@ -626,7 +626,7 @@
                 "description": "",
                 "hits": 0,
                 "kibanaSavedObjectMeta": {
-                    "searchSourceJSON": "{\"highlight\": {\"post_tags\": [\"@/kibana-highlighted-field@\"], \"require_field_match\": false, \"pre_tags\": [\"@kibana-highlighted-field@\"], \"fields\": {\"*\": {}}, \"fragment_size\": 2147483647}, \"index\": \"packetbeat-*\", \"query\": {\"language\": \"kuery\", \"query\": \"\"}, \"highlightAll\": true, \"filter\": [{\"$state\": {\"store\": \"appState\"}, \"meta\": {\"negate\": false, \"index\": \"packetbeat-*\", \"params\": {\"type\": \"phrase\", \"query\": \"dns\"}, \"disabled\": false, \"alias\": null, \"key\": \"network.protocol\", \"value\": \"dns\", \"type\": \"phrase\"}, \"query\": {\"match\": {\"network.protocol\": {\"type\": \"phrase\", \"query\": \"dns\"}}}}], \"version\": true}"
+                    "searchSourceJSON": "{\"highlight\": {\"post_tags\": [\"@/kibana-highlighted-field@\"], \"require_field_match\": false, \"pre_tags\": [\"@kibana-highlighted-field@\"], \"fields\": {\"*\": {}}, \"fragment_size\": 2147483647}, \"index\": \"__replace_token__\", \"query\": {\"language\": \"kuery\", \"query\": \"\"}, \"highlightAll\": true, \"filter\": [{\"$state\": {\"store\": \"appState\"}, \"meta\": {\"negate\": false, \"index\": \"__replace_token__\", \"params\": {\"type\": \"phrase\", \"query\": \"dns\"}, \"disabled\": false, \"alias\": null, \"key\": \"network.protocol\", \"value\": \"dns\", \"type\": \"phrase\"}, \"query\": {\"match\": {\"network.protocol\": {\"type\": \"phrase\", \"query\": \"dns\"}}}}], \"version\": true}"
                 },
                 "sort": [
                     "@timestamp",
@@ -759,7 +759,7 @@
                 "description": "",
                 "hits": 0,
                 "kibanaSavedObjectMeta": {
-                    "searchSourceJSON": "{\"highlight\": {\"post_tags\": [\"@/kibana-highlighted-field@\"], \"require_field_match\": false, \"pre_tags\": [\"@kibana-highlighted-field@\"], \"fields\": {\"*\": {}}, \"fragment_size\": 2147483647}, \"index\": \"packetbeat-*\", \"query\": {\"language\": \"kuery\", \"query\": \"type: flow\"}, \"highlightAll\": true, \"filter\": [], \"version\": true}"
+                    "searchSourceJSON": "{\"highlight\": {\"post_tags\": [\"@/kibana-highlighted-field@\"], \"require_field_match\": false, \"pre_tags\": [\"@kibana-highlighted-field@\"], \"fields\": {\"*\": {}}, \"fragment_size\": 2147483647}, \"index\": \"__replace_token__\", \"query\": {\"language\": \"kuery\", \"query\": \"type: flow\"}, \"highlightAll\": true, \"filter\": [], \"version\": true}"
                 },
                 "sort": [
                     "@timestamp",
@@ -813,7 +813,7 @@
             "attributes": {
                 "description": "",
                 "kibanaSavedObjectMeta": {
-                    "searchSourceJSON": "{\"filter\": [{\"$state\": {\"store\": \"appState\"}, \"meta\": {\"negate\": false, \"index\": \"packetbeat-*\", \"params\": {\"type\": \"phrase\", \"query\": \"http\"}, \"disabled\": false, \"alias\": null, \"key\": \"type\", \"value\": \"http\", \"type\": \"phrase\"}, \"query\": {\"match\": {\"network.protocol\": {\"type\": \"phrase\", \"query\": \"http\"}}}}], \"highlight\": {\"post_tags\": [\"@/kibana-highlighted-field@\"], \"pre_tags\": [\"@kibana-highlighted-field@\"], \"fields\": {\"*\": {}}}, \"index\": \"packetbeat-*\", \"query\": {\"language\": \"kuery\", \"query\": \"http.response.status_code >= 300\"}}"
+                    "searchSourceJSON": "{\"filter\": [{\"$state\": {\"store\": \"appState\"}, \"meta\": {\"negate\": false, \"index\": \"__replace_token__\", \"params\": {\"type\": \"phrase\", \"query\": \"http\"}, \"disabled\": false, \"alias\": null, \"key\": \"type\", \"value\": \"http\", \"type\": \"phrase\"}, \"query\": {\"match\": {\"network.protocol\": {\"type\": \"phrase\", \"query\": \"http\"}}}}], \"highlight\": {\"post_tags\": [\"@/kibana-highlighted-field@\"], \"pre_tags\": [\"@kibana-highlighted-field@\"], \"fields\": {\"*\": {}}}, \"index\": \"__replace_token__\", \"query\": {\"language\": \"kuery\", \"query\": \"http.response.status_code >= 300\"}}"
                 },
                 "title": "HTTP error codes [Packetbeat] ECS",
                 "uiStateJSON": "{}",
@@ -829,7 +829,7 @@
             "attributes": {
                 "description": "",
                 "kibanaSavedObjectMeta": {
-                    "searchSourceJSON": "{\"filter\": [{\"$state\": {\"store\": \"appState\"}, \"meta\": {\"negate\": false, \"index\": \"packetbeat-*\", \"params\": {\"type\": \"phrase\", \"query\": \"http\"}, \"disabled\": false, \"alias\": null, \"key\": \"network.protocol\", \"value\": \"http\", \"type\": \"phrase\"}, \"query\": {\"match\": {\"network.protocol\": {\"type\": \"phrase\", \"query\": \"http\"}}}}, {\"$state\": {\"store\": \"appState\"}, \"meta\": {\"negate\": true, \"index\": \"packetbeat-*\", \"params\": {\"lt\": 299, \"gte\": 200}, \"disabled\": false, \"alias\": null, \"key\": \"http.response.status_code\", \"value\": \"200 to 299\", \"type\": \"range\"}, \"range\": {\"http.response.status_code\": {\"lte\": 299, \"gte\": 200}}}], \"highlight\": {\"post_tags\": [\"@/kibana-highlighted-field@\"], \"pre_tags\": [\"@kibana-highlighted-field@\"], \"fields\": {\"*\": {}}}, \"index\": \"packetbeat-*\", \"query\": {\"language\": \"kuery\", \"query\": \"\"}}"
+                    "searchSourceJSON": "{\"filter\": [{\"$state\": {\"store\": \"appState\"}, \"meta\": {\"negate\": false, \"index\": \"__replace_token__\", \"params\": {\"type\": \"phrase\", \"query\": \"http\"}, \"disabled\": false, \"alias\": null, \"key\": \"network.protocol\", \"value\": \"http\", \"type\": \"phrase\"}, \"query\": {\"match\": {\"network.protocol\": {\"type\": \"phrase\", \"query\": \"http\"}}}}, {\"$state\": {\"store\": \"appState\"}, \"meta\": {\"negate\": true, \"index\": \"__replace_token__\", \"params\": {\"lt\": 299, \"gte\": 200}, \"disabled\": false, \"alias\": null, \"key\": \"http.response.status_code\", \"value\": \"200 to 299\", \"type\": \"range\"}, \"range\": {\"http.response.status_code\": {\"lte\": 299, \"gte\": 200}}}], \"highlight\": {\"post_tags\": [\"@/kibana-highlighted-field@\"], \"pre_tags\": [\"@kibana-highlighted-field@\"], \"fields\": {\"*\": {}}}, \"index\": \"__replace_token__\", \"query\": {\"language\": \"kuery\", \"query\": \"\"}}"
                 },
                 "title": "HTTP error codes evolution [Packetbeat] ECS",
                 "uiStateJSON": "{}",
@@ -916,7 +916,7 @@
                 "description": "",
                 "hits": 0,
                 "kibanaSavedObjectMeta": {
-                    "searchSourceJSON": "{\"filter\": [{\"$state\": {\"store\": \"appState\"}, \"meta\": {\"negate\": false, \"index\": \"packetbeat-*\", \"params\": {\"type\": \"phrase\", \"query\": \"http\"}, \"disabled\": false, \"alias\": null, \"key\": \"network.protocol\", \"value\": \"http\", \"type\": \"phrase\"}, \"query\": {\"match\": {\"network.protocol\": {\"type\": \"phrase\", \"query\": \"http\"}}}}], \"index\": \"packetbeat-*\", \"version\": true, \"query\": {\"language\": \"kuery\", \"query\": \"\"}, \"highlightAll\": true}"
+                    "searchSourceJSON": "{\"filter\": [{\"$state\": {\"store\": \"appState\"}, \"meta\": {\"negate\": false, \"index\": \"__replace_token__\", \"params\": {\"type\": \"phrase\", \"query\": \"http\"}, \"disabled\": false, \"alias\": null, \"key\": \"network.protocol\", \"value\": \"http\", \"type\": \"phrase\"}, \"query\": {\"match\": {\"network.protocol\": {\"type\": \"phrase\", \"query\": \"http\"}}}}], \"index\": \"__replace_token__\", \"version\": true, \"query\": {\"language\": \"kuery\", \"query\": \"\"}, \"highlightAll\": true}"
                 },
                 "sort": [
                     "@timestamp",
@@ -1092,7 +1092,7 @@
                 "description": "",
                 "hits": 0,
                 "kibanaSavedObjectMeta": {
-                    "searchSourceJSON": "{\"filter\": [{\"$state\": {\"store\": \"appState\"}, \"meta\": {\"negate\": false, \"index\": \"packetbeat-*\", \"params\": {\"type\": \"phrase\", \"query\": \"mongodb\"}, \"disabled\": false, \"alias\": null, \"key\": \"type\", \"value\": \"mongodb\", \"type\": \"phrase\"}, \"query\": {\"match\": {\"type\": {\"type\": \"phrase\", \"query\": \"mongodb\"}}}}, {\"$state\": {\"store\": \"appState\"}, \"meta\": {\"negate\": true, \"index\": \"packetbeat-*\", \"params\": {\"type\": \"phrase\", \"query\": \"OK\"}, \"disabled\": false, \"alias\": null, \"key\": \"status\", \"value\": \"OK\", \"type\": \"phrase\"}, \"query\": {\"match\": {\"status\": {\"type\": \"phrase\", \"query\": \"OK\"}}}}], \"index\": \"packetbeat-*\", \"version\": true, \"query\": {\"language\": \"kuery\", \"query\": \"\"}, \"highlightAll\": true}"
+                    "searchSourceJSON": "{\"filter\": [{\"$state\": {\"store\": \"appState\"}, \"meta\": {\"negate\": false, \"index\": \"__replace_token__\", \"params\": {\"type\": \"phrase\", \"query\": \"mongodb\"}, \"disabled\": false, \"alias\": null, \"key\": \"type\", \"value\": \"mongodb\", \"type\": \"phrase\"}, \"query\": {\"match\": {\"type\": {\"type\": \"phrase\", \"query\": \"mongodb\"}}}}, {\"$state\": {\"store\": \"appState\"}, \"meta\": {\"negate\": true, \"index\": \"__replace_token__\", \"params\": {\"type\": \"phrase\", \"query\": \"OK\"}, \"disabled\": false, \"alias\": null, \"key\": \"status\", \"value\": \"OK\", \"type\": \"phrase\"}, \"query\": {\"match\": {\"status\": {\"type\": \"phrase\", \"query\": \"OK\"}}}}], \"index\": \"__replace_token__\", \"version\": true, \"query\": {\"language\": \"kuery\", \"query\": \"\"}, \"highlightAll\": true}"
                 },
                 "sort": [
                     "@timestamp",
@@ -1119,7 +1119,7 @@
                 "description": "",
                 "hits": 0,
                 "kibanaSavedObjectMeta": {
-                    "searchSourceJSON": "{\"highlight\": {\"post_tags\": [\"@/kibana-highlighted-field@\"], \"pre_tags\": [\"@kibana-highlighted-field@\"], \"fields\": {\"*\": {}}, \"fragment_size\": 2147483647}, \"index\": \"packetbeat-*\", \"query\": {\"language\": \"kuery\", \"query\": \"\"}, \"highlightAll\": true, \"filter\": [{\"$state\": {\"store\": \"appState\"}, \"meta\": {\"negate\": false, \"index\": \"packetbeat-*\", \"params\": {\"type\": \"phrase\", \"query\": \"mongodb\"}, \"disabled\": false, \"alias\": null, \"key\": \"event.dataset\", \"value\": \"mongodb\", \"type\": \"phrase\"}, \"query\": {\"match\": {\"event.dataset\": {\"type\": \"phrase\", \"query\": \"mongodb\"}}}}], \"version\": true}"
+                    "searchSourceJSON": "{\"highlight\": {\"post_tags\": [\"@/kibana-highlighted-field@\"], \"pre_tags\": [\"@kibana-highlighted-field@\"], \"fields\": {\"*\": {}}, \"fragment_size\": 2147483647}, \"index\": \"__replace_token__\", \"query\": {\"language\": \"kuery\", \"query\": \"\"}, \"highlightAll\": true, \"filter\": [{\"$state\": {\"store\": \"appState\"}, \"meta\": {\"negate\": false, \"index\": \"__replace_token__\", \"params\": {\"type\": \"phrase\", \"query\": \"mongodb\"}, \"disabled\": false, \"alias\": null, \"key\": \"event.dataset\", \"value\": \"mongodb\", \"type\": \"phrase\"}, \"query\": {\"match\": {\"event.dataset\": {\"type\": \"phrase\", \"query\": \"mongodb\"}}}}], \"version\": true}"
                 },
                 "sort": [
                     "@timestamp",
@@ -1146,7 +1146,7 @@
                 "description": "",
                 "hits": 0,
                 "kibanaSavedObjectMeta": {
-                    "searchSourceJSON": "{\"highlight\": {\"post_tags\": [\"@/kibana-highlighted-field@\"], \"pre_tags\": [\"@kibana-highlighted-field@\"], \"fields\": {\"*\": {}}, \"fragment_size\": 2147483647}, \"index\": \"packetbeat-*\", \"query\": {\"language\": \"kuery\", \"query\": \"request: \\\"writeConcern w 0\\\"\"}, \"highlightAll\": true, \"filter\": [{\"$state\": {\"store\": \"appState\"}, \"meta\": {\"negate\": false, \"index\": \"packetbeat-*\", \"params\": {\"type\": \"phrase\", \"query\": \"mongodb\"}, \"disabled\": false, \"alias\": null, \"key\": \"event.dataset\", \"value\": \"mongodb\", \"type\": \"phrase\"}, \"query\": {\"match\": {\"event.dataset\": {\"type\": \"phrase\", \"query\": \"mongodb\"}}}}], \"version\": true}"
+                    "searchSourceJSON": "{\"highlight\": {\"post_tags\": [\"@/kibana-highlighted-field@\"], \"pre_tags\": [\"@kibana-highlighted-field@\"], \"fields\": {\"*\": {}}, \"fragment_size\": 2147483647}, \"index\": \"__replace_token__\", \"query\": {\"language\": \"kuery\", \"query\": \"request: \\\"writeConcern w 0\\\"\"}, \"highlightAll\": true, \"filter\": [{\"$state\": {\"store\": \"appState\"}, \"meta\": {\"negate\": false, \"index\": \"__replace_token__\", \"params\": {\"type\": \"phrase\", \"query\": \"mongodb\"}, \"disabled\": false, \"alias\": null, \"key\": \"event.dataset\", \"value\": \"mongodb\", \"type\": \"phrase\"}, \"query\": {\"match\": {\"event.dataset\": {\"type\": \"phrase\", \"query\": \"mongodb\"}}}}], \"version\": true}"
                 },
                 "sort": [
                     "@timestamp",
@@ -1326,7 +1326,7 @@
                 "description": "",
                 "hits": 0,
                 "kibanaSavedObjectMeta": {
-                    "searchSourceJSON": "{\"highlight\": {\"post_tags\": [\"@/kibana-highlighted-field@\"], \"pre_tags\": [\"@kibana-highlighted-field@\"], \"fields\": {\"*\": {}}}, \"index\": \"packetbeat-*\", \"query\": {\"language\": \"kuery\", \"query\": \"\"}, \"highlightAll\": true, \"filter\": [{\"$state\": {\"store\": \"appState\"}, \"meta\": {\"negate\": true, \"index\": \"packetbeat-*\", \"params\": {\"type\": \"phrase\", \"query\": \"OK\"}, \"disabled\": false, \"alias\": null, \"key\": \"status\", \"value\": \"OK\", \"type\": \"phrase\"}, \"query\": {\"match\": {\"status\": {\"type\": \"phrase\", \"query\": \"OK\"}}}}, {\"$state\": {\"store\": \"appState\"}, \"meta\": {\"negate\": false, \"index\": \"packetbeat-*\", \"params\": {\"type\": \"phrase\", \"query\": \"mysql\"}, \"disabled\": false, \"alias\": null, \"key\": \"event.dataset\", \"value\": \"mysql\", \"type\": \"phrase\"}, \"query\": {\"match\": {\"event.dataset\": {\"type\": \"phrase\", \"query\": \"mysql\"}}}}], \"version\": true}"
+                    "searchSourceJSON": "{\"highlight\": {\"post_tags\": [\"@/kibana-highlighted-field@\"], \"pre_tags\": [\"@kibana-highlighted-field@\"], \"fields\": {\"*\": {}}}, \"index\": \"__replace_token__\", \"query\": {\"language\": \"kuery\", \"query\": \"\"}, \"highlightAll\": true, \"filter\": [{\"$state\": {\"store\": \"appState\"}, \"meta\": {\"negate\": true, \"index\": \"__replace_token__\", \"params\": {\"type\": \"phrase\", \"query\": \"OK\"}, \"disabled\": false, \"alias\": null, \"key\": \"status\", \"value\": \"OK\", \"type\": \"phrase\"}, \"query\": {\"match\": {\"status\": {\"type\": \"phrase\", \"query\": \"OK\"}}}}, {\"$state\": {\"store\": \"appState\"}, \"meta\": {\"negate\": false, \"index\": \"__replace_token__\", \"params\": {\"type\": \"phrase\", \"query\": \"mysql\"}, \"disabled\": false, \"alias\": null, \"key\": \"event.dataset\", \"value\": \"mysql\", \"type\": \"phrase\"}, \"query\": {\"match\": {\"event.dataset\": {\"type\": \"phrase\", \"query\": \"mysql\"}}}}], \"version\": true}"
                 },
                 "sort": [
                     "@timestamp",
@@ -1352,7 +1352,7 @@
                 "description": "",
                 "hits": 0,
                 "kibanaSavedObjectMeta": {
-                    "searchSourceJSON": "{\"highlight\": {\"post_tags\": [\"@/kibana-highlighted-field@\"], \"pre_tags\": [\"@kibana-highlighted-field@\"], \"fields\": {\"*\": {}}}, \"index\": \"packetbeat-*\", \"query\": {\"language\": \"kuery\", \"query\": \"\"}, \"highlightAll\": true, \"filter\": [{\"$state\": {\"store\": \"appState\"}, \"meta\": {\"negate\": false, \"index\": \"packetbeat-*\", \"params\": {\"type\": \"phrase\", \"query\": \"mysql\"}, \"disabled\": false, \"alias\": null, \"key\": \"type\", \"value\": \"mysql\", \"type\": \"phrase\"}, \"query\": {\"match\": {\"type\": {\"type\": \"phrase\", \"query\": \"mysql\"}}}}], \"version\": true}"
+                    "searchSourceJSON": "{\"highlight\": {\"post_tags\": [\"@/kibana-highlighted-field@\"], \"pre_tags\": [\"@kibana-highlighted-field@\"], \"fields\": {\"*\": {}}}, \"index\": \"__replace_token__\", \"query\": {\"language\": \"kuery\", \"query\": \"\"}, \"highlightAll\": true, \"filter\": [{\"$state\": {\"store\": \"appState\"}, \"meta\": {\"negate\": false, \"index\": \"__replace_token__\", \"params\": {\"type\": \"phrase\", \"query\": \"mysql\"}, \"disabled\": false, \"alias\": null, \"key\": \"type\", \"value\": \"mysql\", \"type\": \"phrase\"}, \"query\": {\"match\": {\"type\": {\"type\": \"phrase\", \"query\": \"mysql\"}}}}], \"version\": true}"
                 },
                 "sort": [
                     "@timestamp",
@@ -1545,7 +1545,7 @@
                 "description": "",
                 "hits": 0,
                 "kibanaSavedObjectMeta": {
-                    "searchSourceJSON": "{\"highlight\": {\"post_tags\": [\"@/kibana-highlighted-field@\"], \"require_field_match\": false, \"pre_tags\": [\"@kibana-highlighted-field@\"], \"fields\": {\"*\": {}}, \"fragment_size\": 2147483647}, \"index\": \"packetbeat-*\", \"query\": {\"language\": \"kuery\", \"query\": \"\"}, \"highlightAll\": true, \"filter\": [{\"$state\": {\"store\": \"appState\"}, \"meta\": {\"negate\": false, \"index\": \"packetbeat-*\", \"params\": {\"type\": \"phrase\", \"query\": \"nfs-ecs\"}, \"disabled\": false, \"alias\": null, \"key\": \"event.dataset\", \"value\": \"nfs-ecs\", \"type\": \"phrase\"}, \"query\": {\"match\": {\"event.dataset\": {\"type\": \"phrase\", \"query\": \"nfs-ecs\"}}}}], \"version\": true}"
+                    "searchSourceJSON": "{\"highlight\": {\"post_tags\": [\"@/kibana-highlighted-field@\"], \"require_field_match\": false, \"pre_tags\": [\"@kibana-highlighted-field@\"], \"fields\": {\"*\": {}}, \"fragment_size\": 2147483647}, \"index\": \"__replace_token__\", \"query\": {\"language\": \"kuery\", \"query\": \"\"}, \"highlightAll\": true, \"filter\": [{\"$state\": {\"store\": \"appState\"}, \"meta\": {\"negate\": false, \"index\": \"__replace_token__\", \"params\": {\"type\": \"phrase\", \"query\": \"nfs-ecs\"}, \"disabled\": false, \"alias\": null, \"key\": \"event.dataset\", \"value\": \"nfs-ecs\", \"type\": \"phrase\"}, \"query\": {\"match\": {\"event.dataset\": {\"type\": \"phrase\", \"query\": \"nfs-ecs\"}}}}], \"version\": true}"
                 },
                 "sort": [
                     "@timestamp",
@@ -1567,7 +1567,7 @@
                 "description": "",
                 "hits": 0,
                 "kibanaSavedObjectMeta": {
-                    "searchSourceJSON": "{\"highlight\": {\"post_tags\": [\"@/kibana-highlighted-field@\"], \"require_field_match\": false, \"pre_tags\": [\"@kibana-highlighted-field@\"], \"fields\": {\"*\": {}}, \"fragment_size\": 2147483647}, \"index\": \"packetbeat-*\", \"query\": {\"language\": \"kuery\", \"query\": \"\"}, \"highlightAll\": true, \"filter\": [{\"$state\": {\"store\": \"appState\"}, \"meta\": {\"negate\": true, \"index\": \"packetbeat-*\", \"params\": {\"type\": \"phrase\", \"query\": \"NFSERR_NOENT\"}, \"disabled\": false, \"alias\": null, \"key\": \"nfs.status\", \"value\": \"NFSERR_NOENT\", \"type\": \"phrase\"}, \"query\": {\"match\": {\"nfs.status\": {\"type\": \"phrase\", \"query\": \"NFSERR_NOENT\"}}}}, {\"$state\": {\"store\": \"appState\"}, \"meta\": {\"negate\": true, \"index\": \"packetbeat-*\", \"params\": {\"type\": \"phrase\", \"query\": \"NFS_OK\"}, \"disabled\": false, \"alias\": null, \"key\": \"nfs.status\", \"value\": \"NFS_OK\", \"type\": \"phrase\"}, \"query\": {\"match\": {\"nfs.status\": {\"type\": \"phrase\", \"query\": \"NFS_OK\"}}}}, {\"$state\": {\"store\": \"appState\"}, \"meta\": {\"negate\": false, \"index\": \"packetbeat-*\", \"params\": {\"type\": \"phrase\", \"query\": \"nfs-ecs\"}, \"disabled\": false, \"alias\": null, \"key\": \"event.dataset\", \"value\": \"nfs-ecs\", \"type\": \"phrase\"}, \"query\": {\"match\": {\"event.dataset\": {\"type\": \"phrase\", \"query\": \"nfs-ecs\"}}}}], \"version\": true}"
+                    "searchSourceJSON": "{\"highlight\": {\"post_tags\": [\"@/kibana-highlighted-field@\"], \"require_field_match\": false, \"pre_tags\": [\"@kibana-highlighted-field@\"], \"fields\": {\"*\": {}}, \"fragment_size\": 2147483647}, \"index\": \"__replace_token__\", \"query\": {\"language\": \"kuery\", \"query\": \"\"}, \"highlightAll\": true, \"filter\": [{\"$state\": {\"store\": \"appState\"}, \"meta\": {\"negate\": true, \"index\": \"__replace_token__\", \"params\": {\"type\": \"phrase\", \"query\": \"NFSERR_NOENT\"}, \"disabled\": false, \"alias\": null, \"key\": \"nfs.status\", \"value\": \"NFSERR_NOENT\", \"type\": \"phrase\"}, \"query\": {\"match\": {\"nfs.status\": {\"type\": \"phrase\", \"query\": \"NFSERR_NOENT\"}}}}, {\"$state\": {\"store\": \"appState\"}, \"meta\": {\"negate\": true, \"index\": \"__replace_token__\", \"params\": {\"type\": \"phrase\", \"query\": \"NFS_OK\"}, \"disabled\": false, \"alias\": null, \"key\": \"nfs.status\", \"value\": \"NFS_OK\", \"type\": \"phrase\"}, \"query\": {\"match\": {\"nfs.status\": {\"type\": \"phrase\", \"query\": \"NFS_OK\"}}}}, {\"$state\": {\"store\": \"appState\"}, \"meta\": {\"negate\": false, \"index\": \"__replace_token__\", \"params\": {\"type\": \"phrase\", \"query\": \"nfs-ecs\"}, \"disabled\": false, \"alias\": null, \"key\": \"event.dataset\", \"value\": \"nfs-ecs\", \"type\": \"phrase\"}, \"query\": {\"match\": {\"event.dataset\": {\"type\": \"phrase\", \"query\": \"nfs-ecs\"}}}}], \"version\": true}"
                 },
                 "sort": [
                     "@timestamp",
@@ -1621,7 +1621,7 @@
             "attributes": {
                 "description": "",
                 "kibanaSavedObjectMeta": {
-                    "searchSourceJSON": "{\"filter\": [{\"$state\": {\"store\": \"appState\"}, \"meta\": {\"negate\": true, \"index\": \"packetbeat-*\", \"params\": {\"type\": \"phrase\", \"query\": \"flow\"}, \"disabled\": false, \"alias\": null, \"key\": \"event.type\", \"value\": \"flow\", \"type\": \"phrase\"}, \"query\": {\"match\": {\"event.type\": {\"type\": \"phrase\", \"query\": \"flow\"}}}}], \"index\": \"packetbeat-*\", \"query\": {\"language\": \"kuery\", \"query\": \"\"}}"
+                    "searchSourceJSON": "{\"filter\": [{\"$state\": {\"store\": \"appState\"}, \"meta\": {\"negate\": true, \"index\": \"__replace_token__\", \"params\": {\"type\": \"phrase\", \"query\": \"flow\"}, \"disabled\": false, \"alias\": null, \"key\": \"event.type\", \"value\": \"flow\", \"type\": \"phrase\"}, \"query\": {\"match\": {\"event.type\": {\"type\": \"phrase\", \"query\": \"flow\"}}}}], \"index\": \"__replace_token__\", \"query\": {\"language\": \"kuery\", \"query\": \"\"}}"
                 },
                 "title": "Transaction Types [Packetbeat] ECS",
                 "uiStateJSON": "{}",
@@ -1705,7 +1705,7 @@
             "attributes": {
                 "description": "",
                 "kibanaSavedObjectMeta": {
-                    "searchSourceJSON": "{\"filter\": [], \"index\": \"packetbeat-*\", \"query\": {\"language\": \"kuery\", \"query\": \"\"}}"
+                    "searchSourceJSON": "{\"filter\": [], \"index\": \"__replace_token__\", \"query\": {\"language\": \"kuery\", \"query\": \"\"}}"
                 },
                 "title": "Client IP Locations (requires GeoIP enrichment) [Packetbeat] ECS",
                 "uiStateJSON": "{\"mapCenter\": [0, -0.17578125]}",
@@ -1792,7 +1792,7 @@
                 "description": "",
                 "hits": 0,
                 "kibanaSavedObjectMeta": {
-                    "searchSourceJSON": "{\"filter\": [{\"$state\": {\"store\": \"appState\"}, \"meta\": {\"negate\": false, \"index\": \"packetbeat-*\", \"params\": {\"type\": \"phrase\", \"query\": \"http\"}, \"disabled\": false, \"alias\": null, \"key\": \"network.protocol\", \"value\": \"http\", \"type\": \"phrase\"}, \"query\": {\"match\": {\"network.protocol\": {\"type\": \"phrase\", \"query\": \"http\"}}}}], \"index\": \"packetbeat-*\", \"version\": true, \"query\": {\"language\": \"kuery\", \"query\": \"\"}, \"highlightAll\": true}"
+                    "searchSourceJSON": "{\"filter\": [{\"$state\": {\"store\": \"appState\"}, \"meta\": {\"negate\": false, \"index\": \"__replace_token__\", \"params\": {\"type\": \"phrase\", \"query\": \"http\"}, \"disabled\": false, \"alias\": null, \"key\": \"network.protocol\", \"value\": \"http\", \"type\": \"phrase\"}, \"query\": {\"match\": {\"network.protocol\": {\"type\": \"phrase\", \"query\": \"http\"}}}}], \"index\": \"__replace_token__\", \"version\": true, \"query\": {\"language\": \"kuery\", \"query\": \"\"}, \"highlightAll\": true}"
                 },
                 "sort": [
                     "@timestamp",
@@ -1822,7 +1822,7 @@
                 "description": "",
                 "hits": 0,
                 "kibanaSavedObjectMeta": {
-                    "searchSourceJSON": "{\"highlight\": {\"post_tags\": [\"@/kibana-highlighted-field@\"], \"require_field_match\": false, \"pre_tags\": [\"@kibana-highlighted-field@\"], \"fields\": {\"*\": {}}, \"fragment_size\": 2147483647}, \"index\": \"packetbeat-*\", \"query\": {\"language\": \"kuery\", \"query\": \"\"}, \"highlightAll\": true, \"filter\": [{\"$state\": {\"store\": \"appState\"}, \"meta\": {\"negate\": true, \"index\": \"packetbeat-*\", \"params\": {\"type\": \"phrase\", \"query\": \"flow\"}, \"disabled\": false, \"alias\": null, \"key\": \"event.dataset\", \"value\": \"flow\", \"type\": \"phrase\"}, \"query\": {\"match\": {\"event.dataset\": {\"type\": \"phrase\", \"query\": \"flow\"}}}}], \"version\": true}"
+                    "searchSourceJSON": "{\"highlight\": {\"post_tags\": [\"@/kibana-highlighted-field@\"], \"require_field_match\": false, \"pre_tags\": [\"@kibana-highlighted-field@\"], \"fields\": {\"*\": {}}, \"fragment_size\": 2147483647}, \"index\": \"__replace_token__\", \"query\": {\"language\": \"kuery\", \"query\": \"\"}, \"highlightAll\": true, \"filter\": [{\"$state\": {\"store\": \"appState\"}, \"meta\": {\"negate\": true, \"index\": \"__replace_token__\", \"params\": {\"type\": \"phrase\", \"query\": \"flow\"}, \"disabled\": false, \"alias\": null, \"key\": \"event.dataset\", \"value\": \"flow\", \"type\": \"phrase\"}, \"query\": {\"match\": {\"event.dataset\": {\"type\": \"phrase\", \"query\": \"flow\"}}}}], \"version\": true}"
                 },
                 "sort": [
                     "@timestamp",
@@ -1852,7 +1852,7 @@
                 "description": "",
                 "hits": 0,
                 "kibanaSavedObjectMeta": {
-                    "searchSourceJSON": "{\"highlight\": {\"post_tags\": [\"@/kibana-highlighted-field@\"], \"require_field_match\": false, \"pre_tags\": [\"@kibana-highlighted-field@\"], \"fields\": {\"*\": {}}, \"fragment_size\": 2147483647}, \"index\": \"packetbeat-*\", \"query\": {\"language\": \"kuery\", \"query\": \"\"}, \"highlightAll\": true, \"filter\": [{\"$state\": {\"store\": \"appState\"}, \"meta\": {\"negate\": true, \"index\": \"packetbeat-*\", \"params\": {\"type\": \"phrase\", \"query\": \"flow\"}, \"disabled\": false, \"alias\": null, \"key\": \"event.dataset\", \"value\": \"flow\", \"type\": \"phrase\"}, \"query\": {\"match\": {\"event.dataset\": {\"type\": \"phrase\", \"query\": \"flow\"}}}}, {\"$state\": {\"store\": \"appState\"}, \"meta\": {\"negate\": true, \"index\": \"packetbeat-*\", \"params\": {\"type\": \"phrase\", \"query\": \"OK\"}, \"disabled\": false, \"alias\": null, \"key\": \"status\", \"value\": \"OK\", \"type\": \"phrase\"}, \"query\": {\"match\": {\"status\": {\"type\": \"phrase\", \"query\": \"OK\"}}}}], \"version\": true}"
+                    "searchSourceJSON": "{\"highlight\": {\"post_tags\": [\"@/kibana-highlighted-field@\"], \"require_field_match\": false, \"pre_tags\": [\"@kibana-highlighted-field@\"], \"fields\": {\"*\": {}}, \"fragment_size\": 2147483647}, \"index\": \"__replace_token__\", \"query\": {\"language\": \"kuery\", \"query\": \"\"}, \"highlightAll\": true, \"filter\": [{\"$state\": {\"store\": \"appState\"}, \"meta\": {\"negate\": true, \"index\": \"__replace_token__\", \"params\": {\"type\": \"phrase\", \"query\": \"flow\"}, \"disabled\": false, \"alias\": null, \"key\": \"event.dataset\", \"value\": \"flow\", \"type\": \"phrase\"}, \"query\": {\"match\": {\"event.dataset\": {\"type\": \"phrase\", \"query\": \"flow\"}}}}, {\"$state\": {\"store\": \"appState\"}, \"meta\": {\"negate\": true, \"index\": \"__replace_token__\", \"params\": {\"type\": \"phrase\", \"query\": \"OK\"}, \"disabled\": false, \"alias\": null, \"key\": \"status\", \"value\": \"OK\", \"type\": \"phrase\"}, \"query\": {\"match\": {\"status\": {\"type\": \"phrase\", \"query\": \"OK\"}}}}], \"version\": true}"
                 },
                 "sort": [
                     "@timestamp",
@@ -1877,7 +1877,7 @@
                 "description": "",
                 "hits": 0,
                 "kibanaSavedObjectMeta": {
-                    "searchSourceJSON": "{\"highlight\": {\"post_tags\": [\"@/kibana-highlighted-field@\"], \"require_field_match\": false, \"pre_tags\": [\"@kibana-highlighted-field@\"], \"fields\": {\"*\": {}}, \"fragment_size\": 2147483647}, \"index\": \"packetbeat-*\", \"query\": {\"language\": \"kuery\", \"query\": \"\"}, \"highlightAll\": true, \"filter\": [{\"$state\": {\"store\": \"appState\"}, \"meta\": {\"negate\": false, \"index\": \"packetbeat-*\", \"params\": {\"type\": \"phrase\", \"query\": \"dns\"}, \"disabled\": false, \"alias\": null, \"key\": \"network.protocol\", \"value\": \"dns\", \"type\": \"phrase\"}, \"query\": {\"match\": {\"network.protocol\": {\"type\": \"phrase\", \"query\": \"dns\"}}}}], \"version\": true}"
+                    "searchSourceJSON": "{\"highlight\": {\"post_tags\": [\"@/kibana-highlighted-field@\"], \"require_field_match\": false, \"pre_tags\": [\"@kibana-highlighted-field@\"], \"fields\": {\"*\": {}}, \"fragment_size\": 2147483647}, \"index\": \"__replace_token__\", \"query\": {\"language\": \"kuery\", \"query\": \"\"}, \"highlightAll\": true, \"filter\": [{\"$state\": {\"store\": \"appState\"}, \"meta\": {\"negate\": false, \"index\": \"__replace_token__\", \"params\": {\"type\": \"phrase\", \"query\": \"dns\"}, \"disabled\": false, \"alias\": null, \"key\": \"network.protocol\", \"value\": \"dns\", \"type\": \"phrase\"}, \"query\": {\"match\": {\"network.protocol\": {\"type\": \"phrase\", \"query\": \"dns\"}}}}], \"version\": true}"
                 },
                 "sort": [
                     "@timestamp",
@@ -1899,7 +1899,7 @@
                 "description": "",
                 "hits": 0,
                 "kibanaSavedObjectMeta": {
-                    "searchSourceJSON": "{\"filter\": [{\"$state\": {\"store\": \"appState\"}, \"meta\": {\"negate\": false, \"index\": \"packetbeat-*\", \"type\": \"exists\", \"disabled\": false, \"alias\": \"TLS sessions\", \"key\": \"tls.established\", \"value\": \"exists\"}, \"exists\": {\"field\": \"tls.established\"}}], \"index\": \"packetbeat-*\", \"version\": true, \"query\": {\"language\": \"kuery\", \"query\": \"\"}, \"highlightAll\": true}"
+                    "searchSourceJSON": "{\"filter\": [{\"$state\": {\"store\": \"appState\"}, \"meta\": {\"negate\": false, \"index\": \"__replace_token__\", \"type\": \"exists\", \"disabled\": false, \"alias\": \"TLS sessions\", \"key\": \"tls.established\", \"value\": \"exists\"}, \"exists\": {\"field\": \"tls.established\"}}], \"index\": \"__replace_token__\", \"version\": true, \"query\": {\"language\": \"kuery\", \"query\": \"\"}, \"highlightAll\": true}"
                 },
                 "sort": [
                     "@timestamp",
@@ -2079,7 +2079,7 @@
                 "description": "",
                 "hits": 0,
                 "kibanaSavedObjectMeta": {
-                    "searchSourceJSON": "{\"highlight\": {\"post_tags\": [\"@/kibana-highlighted-field@\"], \"pre_tags\": [\"@kibana-highlighted-field@\"], \"fields\": {\"*\": {}}}, \"index\": \"packetbeat-*\", \"query\": {\"language\": \"kuery\", \"query\": \"\"}, \"highlightAll\": true, \"filter\": [{\"$state\": {\"store\": \"appState\"}, \"meta\": {\"negate\": true, \"index\": \"packetbeat-*\", \"params\": {\"type\": \"phrase\", \"query\": \"OK\"}, \"disabled\": false, \"alias\": null, \"key\": \"status\", \"value\": \"OK\", \"type\": \"phrase\"}, \"query\": {\"match\": {\"status\": {\"type\": \"phrase\", \"query\": \"OK\"}}}}, {\"$state\": {\"store\": \"appState\"}, \"meta\": {\"negate\": false, \"index\": \"packetbeat-*\", \"params\": {\"type\": \"phrase\", \"query\": \"pgsql\"}, \"disabled\": false, \"alias\": null, \"key\": \"event.dataset\", \"value\": \"pgsql\", \"type\": \"phrase\"}, \"query\": {\"match\": {\"event.dataset\": {\"type\": \"phrase\", \"query\": \"pgsql\"}}}}], \"version\": true}"
+                    "searchSourceJSON": "{\"highlight\": {\"post_tags\": [\"@/kibana-highlighted-field@\"], \"pre_tags\": [\"@kibana-highlighted-field@\"], \"fields\": {\"*\": {}}}, \"index\": \"__replace_token__\", \"query\": {\"language\": \"kuery\", \"query\": \"\"}, \"highlightAll\": true, \"filter\": [{\"$state\": {\"store\": \"appState\"}, \"meta\": {\"negate\": true, \"index\": \"__replace_token__\", \"params\": {\"type\": \"phrase\", \"query\": \"OK\"}, \"disabled\": false, \"alias\": null, \"key\": \"status\", \"value\": \"OK\", \"type\": \"phrase\"}, \"query\": {\"match\": {\"status\": {\"type\": \"phrase\", \"query\": \"OK\"}}}}, {\"$state\": {\"store\": \"appState\"}, \"meta\": {\"negate\": false, \"index\": \"__replace_token__\", \"params\": {\"type\": \"phrase\", \"query\": \"pgsql\"}, \"disabled\": false, \"alias\": null, \"key\": \"event.dataset\", \"value\": \"pgsql\", \"type\": \"phrase\"}, \"query\": {\"match\": {\"event.dataset\": {\"type\": \"phrase\", \"query\": \"pgsql\"}}}}], \"version\": true}"
                 },
                 "sort": [
                     "@timestamp",
@@ -2105,7 +2105,7 @@
                 "description": "",
                 "hits": 0,
                 "kibanaSavedObjectMeta": {
-                    "searchSourceJSON": "{\"highlight\": {\"post_tags\": [\"@/kibana-highlighted-field@\"], \"pre_tags\": [\"@kibana-highlighted-field@\"], \"fields\": {\"*\": {}}}, \"index\": \"packetbeat-*\", \"query\": {\"language\": \"kuery\", \"query\": \"\"}, \"highlightAll\": true, \"filter\": [{\"$state\": {\"store\": \"appState\"}, \"meta\": {\"negate\": false, \"index\": \"packetbeat-*\", \"params\": {\"type\": \"phrase\", \"query\": \"pgsql\"}, \"disabled\": false, \"alias\": null, \"key\": \"event.dataset\", \"value\": \"pgsql\", \"type\": \"phrase\"}, \"query\": {\"match\": {\"event.dataset\": {\"type\": \"phrase\", \"query\": \"pgsql\"}}}}], \"version\": true}"
+                    "searchSourceJSON": "{\"highlight\": {\"post_tags\": [\"@/kibana-highlighted-field@\"], \"pre_tags\": [\"@kibana-highlighted-field@\"], \"fields\": {\"*\": {}}}, \"index\": \"__replace_token__\", \"query\": {\"language\": \"kuery\", \"query\": \"\"}, \"highlightAll\": true, \"filter\": [{\"$state\": {\"store\": \"appState\"}, \"meta\": {\"negate\": false, \"index\": \"__replace_token__\", \"params\": {\"type\": \"phrase\", \"query\": \"pgsql\"}, \"disabled\": false, \"alias\": null, \"key\": \"event.dataset\", \"value\": \"pgsql\", \"type\": \"phrase\"}, \"query\": {\"match\": {\"event.dataset\": {\"type\": \"phrase\", \"query\": \"pgsql\"}}}}], \"version\": true}"
                 },
                 "sort": [
                     "@timestamp",
@@ -2267,7 +2267,7 @@
                 "description": "",
                 "hits": 0,
                 "kibanaSavedObjectMeta": {
-                    "searchSourceJSON": "{\"highlight\": {\"post_tags\": [\"@/kibana-highlighted-field@\"], \"pre_tags\": [\"@kibana-highlighted-field@\"], \"fields\": {\"*\": {}}}, \"index\": \"packetbeat-*\", \"query\": {\"language\": \"kuery\", \"query\": \"type: thrift\"}, \"highlightAll\": true, \"filter\": [{\"$state\": {\"store\": \"appState\"}, \"meta\": {\"negate\": false, \"index\": \"packetbeat-*\", \"params\": {\"type\": \"phrase\", \"query\": \"thrift\"}, \"disabled\": false, \"alias\": null, \"key\": \"event.dataset\", \"value\": \"thrift\", \"type\": \"phrase\"}, \"query\": {\"match\": {\"event.dataset\": {\"type\": \"phrase\", \"query\": \"thrift\"}}}}], \"version\": true}"
+                    "searchSourceJSON": "{\"highlight\": {\"post_tags\": [\"@/kibana-highlighted-field@\"], \"pre_tags\": [\"@kibana-highlighted-field@\"], \"fields\": {\"*\": {}}}, \"index\": \"__replace_token__\", \"query\": {\"language\": \"kuery\", \"query\": \"type: thrift\"}, \"highlightAll\": true, \"filter\": [{\"$state\": {\"store\": \"appState\"}, \"meta\": {\"negate\": false, \"index\": \"__replace_token__\", \"params\": {\"type\": \"phrase\", \"query\": \"thrift\"}, \"disabled\": false, \"alias\": null, \"key\": \"event.dataset\", \"value\": \"thrift\", \"type\": \"phrase\"}, \"query\": {\"match\": {\"event.dataset\": {\"type\": \"phrase\", \"query\": \"thrift\"}}}}], \"version\": true}"
                 },
                 "sort": [
                     "@timestamp",
@@ -2293,7 +2293,7 @@
                 "description": "",
                 "hits": 0,
                 "kibanaSavedObjectMeta": {
-                    "searchSourceJSON": "{\"highlight\": {\"post_tags\": [\"@/kibana-highlighted-field@\"], \"pre_tags\": [\"@kibana-highlighted-field@\"], \"fields\": {\"*\": {}}}, \"index\": \"packetbeat-*\", \"query\": {\"language\": \"kuery\", \"query\": \"type: thrift\"}, \"highlightAll\": true, \"filter\": [{\"$state\": {\"store\": \"appState\"}, \"meta\": {\"negate\": true, \"index\": \"packetbeat-*\", \"params\": {\"type\": \"phrase\", \"query\": \"OK\"}, \"disabled\": false, \"alias\": null, \"key\": \"status\", \"value\": \"OK\", \"type\": \"phrase\"}, \"query\": {\"match\": {\"status\": {\"type\": \"phrase\", \"query\": \"OK\"}}}}, {\"$state\": {\"store\": \"appState\"}, \"meta\": {\"negate\": false, \"index\": \"packetbeat-*\", \"params\": {\"type\": \"phrase\", \"query\": \"thrift\"}, \"disabled\": false, \"alias\": null, \"key\": \"event.dataset\", \"value\": \"thrift\", \"type\": \"phrase\"}, \"query\": {\"match\": {\"event.dataset\": {\"type\": \"phrase\", \"query\": \"thrift\"}}}}], \"version\": true}"
+                    "searchSourceJSON": "{\"highlight\": {\"post_tags\": [\"@/kibana-highlighted-field@\"], \"pre_tags\": [\"@kibana-highlighted-field@\"], \"fields\": {\"*\": {}}}, \"index\": \"__replace_token__\", \"query\": {\"language\": \"kuery\", \"query\": \"type: thrift\"}, \"highlightAll\": true, \"filter\": [{\"$state\": {\"store\": \"appState\"}, \"meta\": {\"negate\": true, \"index\": \"__replace_token__\", \"params\": {\"type\": \"phrase\", \"query\": \"OK\"}, \"disabled\": false, \"alias\": null, \"key\": \"status\", \"value\": \"OK\", \"type\": \"phrase\"}, \"query\": {\"match\": {\"status\": {\"type\": \"phrase\", \"query\": \"OK\"}}}}, {\"$state\": {\"store\": \"appState\"}, \"meta\": {\"negate\": false, \"index\": \"__replace_token__\", \"params\": {\"type\": \"phrase\", \"query\": \"thrift\"}, \"disabled\": false, \"alias\": null, \"key\": \"event.dataset\", \"value\": \"thrift\", \"type\": \"phrase\"}, \"query\": {\"match\": {\"event.dataset\": {\"type\": \"phrase\", \"query\": \"thrift\"}}}}], \"version\": true}"
                 },
                 "sort": [
                     "@timestamp",
@@ -2364,7 +2364,7 @@
             "attributes": {
                 "description": "",
                 "kibanaSavedObjectMeta": {
-                    "searchSourceJSON": "{\"filter\": [{\"$state\": {\"store\": \"appState\"}, \"meta\": {\"negate\": false, \"index\": \"packetbeat-*\", \"type\": \"custom\", \"disabled\": false, \"alias\": null, \"key\": \"query\", \"value\": \"{\\\"exists\\\":{\\\"field\\\":\\\"tls\\\"}}\"}, \"query\": {\"exists\": {\"field\": \"tls\"}}}], \"index\": \"packetbeat-*\", \"query\": {\"language\": \"kuery\", \"query\": \"\"}}"
+                    "searchSourceJSON": "{\"filter\": [{\"$state\": {\"store\": \"appState\"}, \"meta\": {\"negate\": false, \"index\": \"__replace_token__\", \"type\": \"custom\", \"disabled\": false, \"alias\": null, \"key\": \"query\", \"value\": \"{\\\"exists\\\":{\\\"field\\\":\\\"tls\\\"}}\"}, \"query\": {\"exists\": {\"field\": \"tls\"}}}], \"index\": \"__replace_token__\", \"query\": {\"language\": \"kuery\", \"query\": \"\"}}"
                 },
                 "title": "TLS Alerts [Packetbeat] ECS",
                 "uiStateJSON": "{\"vis\": {\"colors\": {\"None\": \"#7EB26D\", \"handshake_failure\": \"#E24D42\"}}}",
@@ -2380,7 +2380,7 @@
             "attributes": {
                 "description": "",
                 "kibanaSavedObjectMeta": {
-                    "searchSourceJSON": "{\"filter\": [{\"$state\": {\"store\": \"appState\"}, \"meta\": {\"negate\": false, \"index\": \"packetbeat-*\", \"type\": \"exists\", \"disabled\": false, \"alias\": null, \"key\": \"tls.established\", \"value\": \"exists\"}, \"exists\": {\"field\": \"tls.established\"}}], \"index\": \"packetbeat-*\", \"query\": {\"language\": \"kuery\", \"query\": \"\"}}"
+                    "searchSourceJSON": "{\"filter\": [{\"$state\": {\"store\": \"appState\"}, \"meta\": {\"negate\": false, \"index\": \"__replace_token__\", \"type\": \"exists\", \"disabled\": false, \"alias\": null, \"key\": \"tls.established\", \"value\": \"exists\"}, \"exists\": {\"field\": \"tls.established\"}}], \"index\": \"__replace_token__\", \"query\": {\"language\": \"kuery\", \"query\": \"\"}}"
                 },
                 "title": "Total Number of TLS Sessions [Packetbeat] ECS",
                 "uiStateJSON": "{\"P-5\": {\"vis\": {\"defaultColors\": {\"0 - 100\": \"rgb(0,104,55)\"}}}, \"P-7\": {\"vis\": {\"params\": {\"sort\": {\"direction\": null, \"columnIndex\": null}}}}}",
@@ -2532,7 +2532,7 @@
             "attributes": {
                 "description": "",
                 "kibanaSavedObjectMeta": {
-                    "searchSourceJSON": "{\"filter\": [{\"$state\": {\"store\": \"appState\"}, \"meta\": {\"negate\": false, \"index\": \"packetbeat-*\", \"params\": {\"lt\": 1000000000, \"gte\": 0}, \"disabled\": false, \"alias\": null, \"key\": \"event.duration\", \"value\": \"0 to 1,000,000,000\", \"type\": \"range\"}, \"range\": {\"event.duration\": {\"lt\": 1000000000, \"gte\": 0}}}], \"query\": {\"language\": \"kuery\", \"query\": \"\"}}"
+                    "searchSourceJSON": "{\"filter\": [{\"$state\": {\"store\": \"appState\"}, \"meta\": {\"negate\": false, \"index\": \"__replace_token__\", \"params\": {\"lt\": 1000000000, \"gte\": 0}, \"disabled\": false, \"alias\": null, \"key\": \"event.duration\", \"value\": \"0 to 1,000,000,000\", \"type\": \"range\"}, \"range\": {\"event.duration\": {\"lt\": 1000000000, \"gte\": 0}}}], \"query\": {\"language\": \"kuery\", \"query\": \"\"}}"
                 },
                 "savedSearchId": "8e2af860-d520-11e7-9fff-7b1ebf397ba9-ecs",
                 "title": "TLS Handshake Latency [Packetbeat] ECS",
@@ -2553,7 +2553,7 @@
                 "description": "",
                 "hits": 0,
                 "kibanaSavedObjectMeta": {
-                    "searchSourceJSON": "{\"filter\": [{\"$state\": {\"store\": \"appState\"}, \"meta\": {\"negate\": false, \"index\": \"packetbeat-*\", \"type\": \"exists\", \"disabled\": false, \"alias\": \"TLS sessions\", \"key\": \"tls.established\", \"value\": \"exists\"}, \"exists\": {\"field\": \"tls.established\"}}], \"index\": \"packetbeat-*\", \"version\": true, \"query\": {\"language\": \"kuery\", \"query\": \"\"}, \"highlightAll\": true}"
+                    "searchSourceJSON": "{\"filter\": [{\"$state\": {\"store\": \"appState\"}, \"meta\": {\"negate\": false, \"index\": \"__replace_token__\", \"type\": \"exists\", \"disabled\": false, \"alias\": \"TLS sessions\", \"key\": \"tls.established\", \"value\": \"exists\"}, \"exists\": {\"field\": \"tls.established\"}}], \"index\": \"__replace_token__\", \"version\": true, \"query\": {\"language\": \"kuery\", \"query\": \"\"}, \"highlightAll\": true}"
                 },
                 "sort": [
                     "@timestamp",
@@ -2575,7 +2575,7 @@
                 "description": "",
                 "hits": 0,
                 "kibanaSavedObjectMeta": {
-                    "searchSourceJSON": "{\"filter\": [{\"$state\": {\"store\": \"appState\"}, \"meta\": {\"negate\": false, \"index\": \"packetbeat-*\", \"type\": \"exists\", \"disabled\": false, \"alias\": null, \"key\": \"tls.client.server_name\", \"value\": \"exists\"}, \"exists\": {\"field\": \"tls.client.server_name\"}}], \"index\": \"packetbeat-*\", \"version\": true, \"query\": {\"language\": \"kuery\", \"query\": \"\"}, \"highlightAll\": true}"
+                    "searchSourceJSON": "{\"filter\": [{\"$state\": {\"store\": \"appState\"}, \"meta\": {\"negate\": false, \"index\": \"__replace_token__\", \"type\": \"exists\", \"disabled\": false, \"alias\": null, \"key\": \"tls.client.server_name\", \"value\": \"exists\"}, \"exists\": {\"field\": \"tls.client.server_name\"}}], \"index\": \"__replace_token__\", \"version\": true, \"query\": {\"language\": \"kuery\", \"query\": \"\"}, \"highlightAll\": true}"
                 },
                 "sort": [
                     "@timestamp",
@@ -2597,7 +2597,7 @@
                 "description": "",
                 "hits": 0,
                 "kibanaSavedObjectMeta": {
-                    "searchSourceJSON": "{\"filter\": [{\"$state\": {\"store\": \"appState\"}, \"meta\": {\"negate\": false, \"index\": \"packetbeat-*\", \"type\": \"exists\", \"disabled\": false, \"alias\": null, \"key\": \"tls.detailed.version\", \"value\": \"exists\"}, \"exists\": {\"field\": \"tls.detailed.version\"}}], \"index\": \"packetbeat-*\", \"version\": true, \"query\": {\"language\": \"kuery\", \"query\": \"\"}, \"highlightAll\": true}"
+                    "searchSourceJSON": "{\"filter\": [{\"$state\": {\"store\": \"appState\"}, \"meta\": {\"negate\": false, \"index\": \"__replace_token__\", \"type\": \"exists\", \"disabled\": false, \"alias\": null, \"key\": \"tls.detailed.version\", \"value\": \"exists\"}, \"exists\": {\"field\": \"tls.detailed.version\"}}], \"index\": \"__replace_token__\", \"version\": true, \"query\": {\"language\": \"kuery\", \"query\": \"\"}, \"highlightAll\": true}"
                 },
                 "sort": [
                     "@timestamp",
@@ -2619,7 +2619,7 @@
                 "description": "",
                 "hits": 0,
                 "kibanaSavedObjectMeta": {
-                    "searchSourceJSON": "{\"filter\": [{\"$state\": {\"store\": \"appState\"}, \"meta\": {\"negate\": false, \"index\": \"packetbeat-*\", \"type\": \"exists\", \"disabled\": false, \"alias\": null, \"key\": \"tls.detailed.server_certificate.public_key_size\", \"value\": \"exists\"}, \"exists\": {\"field\": \"tls.detailed.server_certificate.public_key_size\"}}], \"index\": \"packetbeat-*\", \"version\": true, \"query\": {\"language\": \"kuery\", \"query\": \"\"}, \"highlightAll\": true}"
+                    "searchSourceJSON": "{\"filter\": [{\"$state\": {\"store\": \"appState\"}, \"meta\": {\"negate\": false, \"index\": \"__replace_token__\", \"type\": \"exists\", \"disabled\": false, \"alias\": null, \"key\": \"tls.detailed.server_certificate.public_key_size\", \"value\": \"exists\"}, \"exists\": {\"field\": \"tls.detailed.server_certificate.public_key_size\"}}], \"index\": \"__replace_token__\", \"version\": true, \"query\": {\"language\": \"kuery\", \"query\": \"\"}, \"highlightAll\": true}"
                 },
                 "sort": [
                     "@timestamp",
@@ -2641,7 +2641,7 @@
                 "description": "",
                 "hits": 0,
                 "kibanaSavedObjectMeta": {
-                    "searchSourceJSON": "{\"filter\": [{\"$state\": {\"store\": \"appState\"}, \"meta\": {\"negate\": false, \"index\": \"packetbeat-*\", \"type\": \"exists\", \"disabled\": false, \"alias\": null, \"key\": \"tls.client.ja3\", \"value\": \"exists\"}, \"exists\": {\"field\": \"tls.client.ja3\"}}], \"index\": \"packetbeat-*\", \"version\": true, \"query\": {\"language\": \"kuery\", \"query\": \"\"}, \"highlightAll\": true}"
+                    "searchSourceJSON": "{\"filter\": [{\"$state\": {\"store\": \"appState\"}, \"meta\": {\"negate\": false, \"index\": \"__replace_token__\", \"type\": \"exists\", \"disabled\": false, \"alias\": null, \"key\": \"tls.client.ja3\", \"value\": \"exists\"}, \"exists\": {\"field\": \"tls.client.ja3\"}}], \"index\": \"__replace_token__\", \"version\": true, \"query\": {\"language\": \"kuery\", \"query\": \"\"}, \"highlightAll\": true}"
                 },
                 "sort": [
                     "@timestamp",
@@ -2663,7 +2663,7 @@
                 "description": "",
                 "hits": 0,
                 "kibanaSavedObjectMeta": {
-                    "searchSourceJSON": "{\"filter\": [{\"$state\": {\"store\": \"appState\"}, \"meta\": {\"negate\": false, \"index\": \"packetbeat-*\", \"type\": \"exists\", \"disabled\": false, \"alias\": null, \"key\": \"tls.established\", \"value\": \"exists\"}, \"exists\": {\"field\": \"tls.established\"}}, {\"$state\": {\"store\": \"appState\"}, \"meta\": {\"negate\": false, \"index\": \"packetbeat-*\", \"type\": \"exists\", \"disabled\": false, \"alias\": null, \"key\": \"event.duration\", \"value\": \"exists\"}, \"exists\": {\"field\": \"event.duration\"}}], \"index\": \"packetbeat-*\", \"version\": true, \"query\": {\"language\": \"kuery\", \"query\": \"\"}, \"highlightAll\": true}"
+                    "searchSourceJSON": "{\"filter\": [{\"$state\": {\"store\": \"appState\"}, \"meta\": {\"negate\": false, \"index\": \"__replace_token__\", \"type\": \"exists\", \"disabled\": false, \"alias\": null, \"key\": \"tls.established\", \"value\": \"exists\"}, \"exists\": {\"field\": \"tls.established\"}}, {\"$state\": {\"store\": \"appState\"}, \"meta\": {\"negate\": false, \"index\": \"__replace_token__\", \"type\": \"exists\", \"disabled\": false, \"alias\": null, \"key\": \"event.duration\", \"value\": \"exists\"}, \"exists\": {\"field\": \"event.duration\"}}], \"index\": \"__replace_token__\", \"version\": true, \"query\": {\"language\": \"kuery\", \"query\": \"\"}, \"highlightAll\": true}"
                 },
                 "sort": [
                     "@timestamp",
