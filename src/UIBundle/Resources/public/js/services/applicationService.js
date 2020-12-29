@@ -164,26 +164,6 @@
                     });
             }
 
-            service.getApplicationReports = function (appName, envName) {
-                return ApplicationFactory.getApplicationReports(appName, envName)
-                    .then(function (response) {
-                        return response.data;
-                    })
-                    .catch(function (err) {
-                        throw new Error(err);
-                    });
-            }
-
-            service.deleteApplicationReport = function (id, _index) {
-                return ApplicationFactory.deleteApplicationReport(id, _index)
-                    .then(function (response) {
-                        return response.data;
-                    })
-                    .catch(function (err) {
-                        throw new Error(err);
-                    });
-            }
-
             service.updateDashbaords =  function (id, envId, dashboards) {
                 return ApplicationFactory.updateDashbaords(id, envId, dashboards)
                     .then(function (response) {

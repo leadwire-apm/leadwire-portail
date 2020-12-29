@@ -302,7 +302,7 @@ class InvitationService
 
             foreach ($application->getEnvironments() as $environment) {
                 $envName = $environment->getName();
-                $this->es->updateRoleMapping("add", $envName, $invitedUser, $application->getName(), false, false);
+                $this->es->updateRoleMapping("add", $envName, $invitedUser, $application->getName(), false);
                
                 // set app data access level to read for application
                 $invitedUser->addAccessLevel((new AccessLevel())
@@ -348,7 +348,7 @@ class InvitationService
 
         foreach ($application->getEnvironments() as $environment) {
             $envName = $environment->getName();
-            $this->es->updateRoleMapping("add", $envName, $invitedUser, $application->getName(), false, false);
+            $this->es->updateRoleMapping("add", $envName, $invitedUser, $application->getName(), false);
             
             // set app data access level to read for invited user
             $invitedUser->addAccessLevel((new AccessLevel())
@@ -388,8 +388,8 @@ class InvitationService
             $accessLevel = $invitedUser->getAccessLevelsApp($envId, $appId, AccessLevel::ACCESS);
             if($accessLevel){
                 $invitedUser->removeAccessLevel($accessLevel);
-                $this->es->updateRoleMapping("delete", $envName, $invitedUser, $application->getName(), true, false);
-                $this->es->updateRoleMapping("delete", $envName, $invitedUser, $application->getName(), false, false);
+                $this->es->updateRoleMapping("delete", $envName, $invitedUser, $application->getName(), true);
+                $this->es->updateRoleMapping("delete", $envName, $invitedUser, $application->getName(), false);
             }
         }
         $this->userManager->update($invitedUser);

@@ -298,11 +298,11 @@ class AuthService
         if ($user !== null) {
             //create user in opendistro
             $this->esService->createUser($user);
-            $this->esService->updateRoleMapping("add", "staging", $user, "demo", false, false);
+            $this->esService->updateRoleMapping("add", "staging", $user, "demo", false);
             $this->esService->createTenant($user->getUsername());
             
             if($user->hasRole('ROLE_SUPER_ADMIN') || $user->hasRole('ROLE_ADMIN')) {
-                $this->esService->updateRoleMapping("add", "staging", $user, "demo", true, true);
+                $this->esService->updateRoleMapping("add", "staging", $user, "demo", true);
             }
             
             $this->processService->emit($user, "heavy-operations-in-progress", "Register Applications");

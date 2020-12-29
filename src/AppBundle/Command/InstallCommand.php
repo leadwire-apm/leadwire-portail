@@ -125,11 +125,9 @@ class InstallCommand extends ContainerAwareCommand
                 $sharedIndex = "staging-" . $application->getSharedIndex();
                 $appIndex = "staging-" . $application->getApplicationIndex();
                 $patternIndex = "*-staging-" . $application->getName() . "-*";
-                $watechrIndex = "staging-" . $application->getApplicationWatcherIndex();
             
                 $es->createTenant($appIndex);
                 $es->createTenant($sharedIndex);
-                $es->createTenant($watechrIndex);
 
                 $es->createIndexTemplate($application, $applicationService->getActiveApplicationsNames(), "staging");
                 $kibana->loadIndexPatternForApplication(
@@ -153,12 +151,8 @@ class InstallCommand extends ContainerAwareCommand
                 $kibana->makeDefaultIndex($sharedIndex, 'default');
                 
                 //create role for application
-                $es->createRole("staging", $application->getName(), array($patternIndex), array($sharedIndex, $appIndex), array("kibana_all_read"), false, false);
-                $es->createRoleMapping("staging", $application->getName(), 'demo',  false, false);
-
-                //create role for watcher
-                $es->createRole("staging", $application->getName(), array(), array($watechrIndex), array("kibana_all_write"), true, true);
-                $es->createRoleMapping("staging", $application->getName(), 'demo',  true, true);
+                $es->createRole("staging", $application->getName(), array($patternIndex), array($sharedIndex, $appIndex), array("kibana_all_read"), false);
+                $es->createRoleMapping("staging", $application->getName(), 'demo',  false);
             }
         }
 

@@ -75,6 +75,9 @@
 <script type="text/ng-template" id="customDashboards.html">
     {% include 'customDashboards.html' %}
 </script>
+<script type="text/ng-template" id="privateReports.html">
+    {% include 'privateReports.html' %}
+</script>
 <script type="text/ng-template" id="common/layout.html">
     {% include 'common/layout.html' %}
 </script>
@@ -161,12 +164,6 @@
 </script>
 <script type="text/ng-template" id="application/reports.html">
     {% include 'application/reports.html' %}
-</script>
-<script type="text/ng-template" id="application/watcher/list.html">
-    {% include 'application/watcher/list.html' %}
-</script>
-<script type="text/ng-template" id="application/watcher/add.html">
-    {% include 'application/watcher/add.html' %}
 </script>
 <script type="text/ng-template" id="application/applicationView.html">
     {% include 'application/applicationView.html' %}
@@ -271,11 +268,6 @@
 
 <script type="text/ng-template" id="management/templates/form.html">
     {% include 'management/templates/form.html' %}
-</script>
-
-
-<script type="text/ng-template" id="management/reports/manageReports.html">
-    {% include 'management/reports/manageReports.html' %}
 </script>
 
 <script type="text/ng-template" id="management/alerts/manageAlerts.html">
@@ -468,7 +460,6 @@
         'bundles/ui/js/factories/environmentFactory.js'
         'bundles/ui/js/factories/OverviewFactory.js'
         'bundles/ui/js/factories/accessLevelFactory.js'
-        'bundles/ui/js/factories/watcherFactory.js'
 
         'bundles/ui/js/services/routeGuard.js'
         'bundles/ui/js/services/applicationService.js'
@@ -489,7 +480,6 @@
         'bundles/ui/js/services/iFrameService.js'
         'bundles/ui/js/services/OverviewService.js'
         'bundles/ui/js/services/accessLevelService.js'
-        'bundles/ui/js/services/watcherService.js'
 
         'bundles/ui/js/directives/anchor-scroll.js'
         'bundles/ui/js/directives/blacklist.js'
@@ -522,6 +512,7 @@
         'bundles/ui/js/controllers/updateSubscription.js'
         'bundles/ui/js/controllers/application.js'
         'bundles/ui/js/controllers/customDashboards.js'
+        'bundles/ui/js/controllers/privateReports.js'
         'bundles/ui/js/controllers/detailApplication.js'
         'bundles/ui/js/controllers/login.js'
         'bundles/ui/js/controllers/profileModal.js'
@@ -546,7 +537,6 @@
         'bundles/ui/js/controllers/management/templates/list.js'
         'bundles/ui/js/controllers/management/templates/add.js'
         'bundles/ui/js/controllers/management/templates/edit.js'
-        'bundles/ui/js/controllers/management/reports/manageReport.js'
         'bundles/ui/js/controllers/management/alerts/manageAlerts.js'
         'bundles/ui/js/controllers/management/index/manageIndex.js'
         'bundles/ui/js/controllers/management/security/manageSecurity.js'
@@ -571,8 +561,6 @@
         'bundles/ui/js/controllers/billingList.js'
         'bundles/ui/js/controllers/dashboard.js'
         'bundles/ui/js/controllers/editPaymentMethod.js'
-
-        'bundles/ui/js/controllers/watcher/add.js'
 
 
         'bundles/ui/js/config.router.js'

@@ -44,15 +44,6 @@
                  *
                  * @returns {Promise}
                  */
-                findMyReports: function (id, envName) {
-                    return $http.get(
-                        CONFIG.BASE_URL + 'api/app/' + id + '/reports/' + envName,
-                    );
-                },
-                /**
-                 *
-                 * @returns {Promise}
-                 */
                 findInvitedApps: function () {
                     return $http.get(CONFIG.BASE_URL + 'api/app/invited/list');
                 },
@@ -162,22 +153,6 @@
                 getApplicationDocumentsCount: function (appName, envName) {
                     return $http.get(
                         CONFIG.BASE_URL + 'api/app/' + appName + '/' + envName + '/documents',
-                    );
-                },
-                /**
-                * 
-                */
-                getApplicationReports: function (appName, envName) {
-                    return $http.get(
-                        CONFIG.BASE_URL + 'api/app/' + appName + '/' + envName + '/reports',
-                    );
-                },
-                /**
-                * 
-                */
-                deleteApplicationReport: function (id, index) {
-                    return $http.get(
-                        CONFIG.BASE_URL + 'api/app/' + id + '/' + index + '/report',
                     );
                 },
                 /**

@@ -32,7 +32,7 @@
                     return $el;
                 },
                 function (newValue, oldValue) {
-                    if (newValue != null) {
+                    if (newValue != null && newValue.parentNode.parentNode.parentNode.childNodes[1].querySelector) {
                         newValue.parentNode.parentNode.parentNode.childNodes[1].querySelector('a').click();
                     }
                 }
@@ -64,8 +64,8 @@
 
         vm.isAdmin = function () {
             var access = false;
-            var user = $localStorage.user;
-            var selectedApp = $localStorage.selectedApp;
+            var user = $sessionStorage.user;
+            var selectedApp = $sessionStorage.selectedApp;
             access = user.roles.indexOf("ROLE_SUPER_ADMIN") >= 0 || user.roles.indexOf("ROLE_ADMIN") >= 0;
             if(!access){
                 Object.keys(user.acl).forEach(element => {

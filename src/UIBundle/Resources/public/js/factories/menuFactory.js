@@ -202,17 +202,6 @@
                     label: 'Anomaly Detectors ',
                 },
                 {
-                    route: 'app.management.reports',
-                    abstractRoute: 'app.management',
-                    icon: 'fa fa-th-list',
-                    label: 'Reports',
-                    params: {
-                        ls: {
-                            tenant: 'user.userIndex'
-                        }
-                    }
-                },
-                {
                     route: 'app.management.applicationTypes',
                     abstractRoute: 'app.management',
                     icon: 'fa fa-tools',

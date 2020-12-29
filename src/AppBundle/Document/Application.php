@@ -416,16 +416,6 @@ class Application
      *
      * @return string
      */
-    public function getApplicationWatcherIndex(): string
-    {
-        return "watcher-" . $this->name;
-    }
-
-    /**
-     * @JMS\VirtualProperty
-     *
-     * @return string
-     */
     public function getSharedIndex(): string
     {
         return "shared-" . $this->name;
