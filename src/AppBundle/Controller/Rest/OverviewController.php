@@ -25,4 +25,9 @@ class OverviewController extends Controller
         $data = $esService->getClusterInformations();
         return $this->renderResponse($data);
     }
+
+    public function getRcaOverview(Request $request, ElasticSearchService $esService) {
+        $data = $esService->getRcaOverview();
+        return $this->renderResponse($data);
+    }
 }
