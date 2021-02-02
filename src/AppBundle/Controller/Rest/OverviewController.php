@@ -26,6 +26,13 @@ class OverviewController extends Controller
         return $this->renderResponse($data);
     }
 
+    /**
+     * @Route("/getRcaOverview", methods="GET")
+     *
+     * @param Request $request
+     * 
+     * @return Response
+     */
     public function getRcaOverview(Request $request, ElasticSearchService $esService) {
         $data = $esService->getRcaOverview();
         return $this->renderResponse($data);
