@@ -258,7 +258,7 @@ class ElasticSearchService
      *
      * @return array
      */
-					public function initIndexStateManagement(string $applicationName, string $environmentName, string $qualifier, string $version) : array
+	public function initIndexStateManagement(string $applicationName, string $environmentName, string $qualifier, string $version) : array
 	{
 		$ilm_template = "000001";
 		$createdAliases = [];
@@ -2202,6 +2202,41 @@ class ElasticSearchService
 			}
 
 			return $status;
+		} catch (\Exception $e) {
+			$this->logger->error($e->getMessage());
+			throw new HttpException("An error has occurred while executing your request.", 400);
+		}
+	}
+
+	public function getRcaOverview(){
+		try {
+			$data = [];
+			$url = "https://es.leadwire.io/_opendistro/_performanceanalyzer/rca";
+
+			$response = $this->httpClient->get($url);
+
+			$this->logger->notice(
+				"leadwire.opendistro.addPipline",
+				[
+					'url' => $url,
+					'verb' => 'GET',
+					'status_code' => $response->getStatusCode(),
+					'status_text' => $response->getReasonPhrase()
+				]
+			);
+
+			$res = json_decode($response->getBody());
+
+			foreach ($res as $k => $v){
+				$items = (array)$v;
+				$data[$k] = array();
+
+				foreach ($items as $va) {
+					$value = (array)$va;
+					array_push($data[$k], $value);
+				}
+			}
+			return $data;
 		} catch (\Exception $e) {
 			$this->logger->error($e->getMessage());
 			throw new HttpException("An error has occurred while executing your request.", 400);
