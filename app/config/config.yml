@@ -38,7 +38,7 @@ parameters:
     login_method: '%env(LEADWIRE_LOGIN_METHOD)%'
     campagne_enabled: 'false'
     jenkins_url: 'unused'
-    stripe_enabled: 'unused'
+    stripe_enabled: 'false'
     cluster_name : '%env(LEADWIRE_CLUSTER_NAME)%'
     cluster_version : '%env(LEADWIRE_CLUSTER_VERSION)%'
     setup_cluster : '%env(LEADWIRE_SETUP_CLUSTER)%'
