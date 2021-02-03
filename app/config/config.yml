@@ -20,7 +20,7 @@ parameters:
     default_lock_message: 'Your account has been locked'
     secret: 06abd8f87b9d3b88feb152891421cb20017e56dd
     internal_api_prefix: api
-    secret_key: '%env(LEADWIRE_STRIPE_SECRET_KEY)%'
+    secret_key: 'unused'
     providerName: Stripe
     super_admin_username: '%env(LEADWIRE_SUPER_USER_ADMIN_NAME)%'
     mailer_transport: '%env(LEADWIRE_MAILER_TRANSPORT)%'
@@ -36,9 +36,9 @@ parameters:
     kibana.port: '%env(LEADWIRE_KIBANA_PORT)%'
     kibana.iframe_port: '%env(LEADWIRE_KIBANA_IFRAME_PORT)%'
     login_method: '%env(LEADWIRE_LOGIN_METHOD)%'
-    compagne_enabled: '%env(LEADWIRE_COMPAGNE_ENABLED)%'
-    jenkins_url: '%env(LEADWIRE_JENKINS_URL)%'
-    stripe_enabled: '%env(LEADWIRE_STRIPE_ENABLED)%'
+    campagne_enabled: 'false'
+    jenkins_url: 'unused'
+    stripe_enabled: 'unused'
     cluster_name : '%env(LEADWIRE_CLUSTER_NAME)%'
     cluster_version : '%env(LEADWIRE_CLUSTER_VERSION)%'
     setup_cluster : '%env(LEADWIRE_SETUP_CLUSTER)%'
@@ -54,7 +54,7 @@ parameters:
         github:
             github_access_token_url: 'https://github.com/login/oauth/access_token'
             github_users_api_url: 'https://api.github.com/user'
-            github_client_secret: '%env(LEADWIRE_GITHUB_CLIENT_SECRET)%'
+            github_client_secret: 'unused'
         settings:
             token_secret: '%env(LEADWIRE_JWT_TOKEN_SECRET)%'
     ldap:
@@ -115,14 +115,14 @@ twig:
         ASSETS_BASE_URL: '/'
         UPLOAD_URL: '%app_schemes%://%app_domain%/uploads/'
         DOWNLOAD_URL: '%app_schemes%://%app_domain%/core/api/resource/'
-        LEADWIRE_GITHUB_CLIENT_ID: '%github_client_id%'
+        LEADWIRE_GITHUB_CLIENT_ID: 'unused'
         KIBANA_BASE_URL: '%kibana.iframe_host%:%kibana.iframe_port%/'
         DATE_DEFAULT_FORMAT: 'YYYY-MM-DD[T]HH:mm:ssZZ'
         EN_DATE_FORMAT: 'YYYY-DD-MM'
         FR_DATE_FORMAT: 'DD-MM-YYYY'
         TAX: 20
         LEADWIRE_LOGIN_METHOD: '%login_method%'
-        LEADWIRE_COMPAGNE_ENABLED: '%compagne_enabled%'
+        LEADWIRE_COMPAGNE_ENABLED: '%campagne_enabled%'
         LEADWIRE_JENKINS_URL: '%jenkins_url%'
         LEADWIRE_STRIPE_ENABLED: '%stripe_enabled%'
         LEADWIRE_LOGOUT_URL: '%logout_url%'
