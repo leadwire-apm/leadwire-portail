@@ -492,7 +492,7 @@ class ApplicationService
 		    
 		//datawrite user, role and role mapping    
 		$this->es->createRoleDataWrite($envName, $application->getName(), array($patternIndex));
-		$this->es->createUser("datawrite_".$envName."_".$application->getName() );
+		$this->es->createODFEUser("datawrite_".$envName."_".$application->getName() );
 		$this->es->createDataWriteRoleMapping($envName, $application->getName(), "datawrite_" . $envName . "_" . $application->getName() );
   
             }
