@@ -1219,7 +1219,7 @@ class ElasticSearchService
 		}
 	}
 	
-	function createAnomaly_full_access() : bool
+	function createAnomaly_full_accessRole() : bool
 	{
 		$status = false;
 		try {
