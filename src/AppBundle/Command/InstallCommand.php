@@ -109,7 +109,6 @@ class InstallCommand extends ContainerAwareCommand
             $es->createBackupLocation();
             $es->createLeadwireRole();
 	    $es->createLeadwireRolesMapping();
-	    $es->createAnomaly_full_accessRole();
 	    $es->createAnomaly_full_accessRolesMapping();   
             $es->createAlerting_full_accessRolesMapping();
             $es->deletePolicy("hot-warm-delete-policy");
