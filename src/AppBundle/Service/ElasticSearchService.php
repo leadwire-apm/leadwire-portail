@@ -1244,39 +1244,39 @@ class ElasticSearchService
 						),
 					),
 					
-					"authz" => 
-						array (
-						  "roles_from_leadwireldap" => 
-						  array (
-						    "http_enabled" => false,
-						    "transport_enabled" => false,
-						    "authorization_backend" => 
-						    array (
-						      "type" => "ldap",
-						      "config" => 
-						      array (
-							"enable_ssl" => false,
-							"enable_start_tls" => false,
-							"enable_ssl_client_auth" => false,
-							"verify_hostnames" => false,
-							"hosts" => 
-							array (
-							  0 => "leadwire-ldap:389",
-							),
-							"rolebase" => "ou=roles,dc=leadwire,dc=io",
-							"rolesearch" => "(member={0})",
-							"userrolename" => "disabled",
-							"rolename" => "cn",
-							"resolve_nested_roles" => true,
-							"userbase" => "ou=people,dc=leadwire,dc=io",
-							"usersearch" => "(uid={0})",
-							"bind_dn" => "cn=admin,dc=leadwire,dc=io",
-							"password" => "admin"
-						      ),
-						    ),
-						    "description" => "Authorize via LDAP",
-						  ),
-						),
+					  "authz" =>
+                                                array (
+                                                  "roles_from_leadwireldap" =>
+                                                  array (
+                                                    "http_enabled" => true,
+                                                    "transport_enabled" => false,
+                                                    "authorization_backend" =>
+                                                    array (
+                                                      "type" => "ldap",
+                                                      "config" =>
+                                                      array (
+                                                        "enable_ssl" => false,
+                                                        "enable_start_tls" => false,
+                                                        "enable_ssl_client_auth" => false,
+                                                        "verify_hostnames" => false,
+                                                        "hosts" =>
+                                                        array (
+                                                          0 => "leadwire-ldap:389",
+                                                        ),
+                                                        "rolebase" => "ou=roles,dc=leadwire,dc=io",
+                                                        "rolesearch" => "(roleOccupant={0})",
+                                                        "userrolename" => "disabled",
+                                                        "rolename" => "cn",
+                                                        "resolve_nested_roles" => true,
+                                                        "userbase" => "ou=people,dc=leadwire,dc=io",
+                                                        "usersearch" => "(uid={0})",
+                                                        "bind_dn" => "cn=admin,dc=leadwire,dc=io",
+                                                        "password" => "admin"
+                                                      ),
+                                                    ),
+                                                    "description" => "Authorize via LDAP",
+                                                  ),
+
 					
 					"do_not_fail_on_forbidden" => false,
 					"multi_rolespan_enabled" => true,
