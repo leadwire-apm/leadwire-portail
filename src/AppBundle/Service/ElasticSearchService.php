@@ -1451,6 +1451,68 @@ class ElasticSearchService
 		}
 	}
 
+					
+	function createRoleDataWrite(
+		string $envName,
+		string $applicationName,
+		array $index_patterns,
+		array $tenant_patterns,
+		array $allowed_actions
+		) : bool
+	{
+		try {
+			$status = false;
+			
+			$role = [
+				"index_permissions" => array(
+					[
+						"index_patterns" => $index_patterns,
+						"dls" => "",
+						"fls" => array(),
+						"masked_fields" => array(),
+						"allowed_actions" => array("indices:admin/create", "indices:data/write*", "indices:admin/mapping/put")
+					]
+				),
+			];
+			
+
+			$url = $this->url . "_opendistro/_security/api/roles/datawrite_role_" . $envName . "_" . $applicationName;
+
+
+			$response = $this->httpClient->put(
+
+				$url,
+				[
+					'auth' => $this->getAuth(),
+					'headers' => [
+						"Content-Type" => "application/json",
+					],
+					'body' => \json_encode($role),
+				]
+
+			);
+
+			$this->logger->notice(
+				"leadwire.opendistro.createRoleDataWrite",
+				[
+					'url' => $url,
+					'verb' => 'PUT',
+					'status_code' => $response->getStatusCode(),
+					'status_text' => $response->getReasonPhrase()
+				]
+			);
+
+			if ($response->getStatusCode() == 201) {
+				$status = true;
+			}
+
+			return $status;
+		} catch (\Exception $e) {
+			$this->logger->error($e->getMessage());
+			throw new HttpException("An error has occurred while executing your request.", 400);
+		}
+	}
+					
 	function createRole(
 		string $envName,
 		string $applicationName,
