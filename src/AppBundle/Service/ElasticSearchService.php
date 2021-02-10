@@ -1824,6 +1824,57 @@ class ElasticSearchService
 			throw new HttpException("An error has occurred while executing your request.", 400);
 		}
 	}
+					
+	function putClusterSettings() : bool
+	{
+		try {
+			$status = false;
+
+			$cluster_setting = array (
+			  'persistent' => 
+			  array (
+				'opendistro.alerting.filter_by_backend_roles' => 'true',
+				'opendistro.anomaly_detection.filter_by_backend_roles' => 'true'
+			  ),
+			);
+
+			$url = $this->url . "_cluster/settings";
+
+			$response = $this->httpClient->put(
+
+				$url,
+				[
+					'auth' => $this->getAuth(),
+					'headers' => [
+						"Content-Type" => "application/json",
+					],
+					'body' => \json_encode($cluster_setting),
+				]
+
+			);
+
+			$this->logger->notice(
+				"leadwire.opendistro.putClusterSettings",
+				[
+					'url' => $url,
+					'verb' => 'PUT',
+					'status_code' => $response->getStatusCode(),
+					'status_text' => $response->getReasonPhrase()
+				]
+			);
+
+			if ($response->getStatusCode() == 201) {
+				$status = true;
+			}
+
+			return $status;
+		} catch (\Exception $e) {
+			$this->logger->error($e->getMessage());
+			throw new HttpException("An error has occurred while executing your request.", 400);
+		}
+	}				
+					
+	
 
 	function createAlert(string $appName, string $envName, string $type) : bool
 	{
