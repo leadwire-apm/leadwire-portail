@@ -105,13 +105,18 @@ class InstallCommand extends ContainerAwareCommand
         if ($setupCluster){
             $this->display($output, "Initializing Elasticsearch Cluster Setup");
             $es->createConfig();
+	    $es->putClusterSettings();
             $es->createBackupLocation();
             $es->createLeadwireRole();
+	    $es->createLeadwireRolesMapping();
+	    $es->createAnomaly_full_accessRole();
+	    $es->createAnomaly_full_accessRolesMapping();   
+            $es->createAlerting_full_accessRolesMapping();
             $es->deletePolicy("hot-warm-delete-policy");
             $es->deletePolicy("rollover-hot-warm-delete-policy");
             $es->createPolicy();
             $es->createRolloverPolicy();
-            $es->createLeadwireRolesMapping();
+            
             $es->alertManager();
             foreach ($demoApplications as $application) {
                 $es->initIndexTemplate($application);
