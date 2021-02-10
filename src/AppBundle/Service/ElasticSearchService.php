@@ -1124,6 +1124,7 @@ class ElasticSearchService
 		$status = false;
 		try {
 			$role = array(
+				"cluster_permissions" => array("cluster:monitor/health","cluster:monitor/state"),
 				"index_permissions" => array(
 					0 => array(
 						"index_patterns" => array(
@@ -1171,6 +1172,94 @@ class ElasticSearchService
 			throw new HttpException("An error has occurred while executing your request.", 400);
 		}
 	}
+	
+		function createAnomaly_full_accessRolesMapping() : bool
+	{
+		$status = false;
+		try {
+			$rolesmapping = array(
+				'users' => array(
+					0 => '*',
+				),
+			);
+
+			$response = $this->httpClient->put(
+
+				$this->url . "_opendistro/_security/api/rolesmapping/anomaly_full_access",
+				[
+					'auth' => $this->getAuth(),
+					'headers' => [
+						"Content-Type" => "application/json",
+					],
+					'body' => \json_encode($rolesmapping),
+				]
+
+			);
+
+			$this->logger->notice(
+				"leadwire.opendistro.createAnomaly_full_accessRolesMapping",
+				[
+					'url' => $this->url . "_opendistro/_security/api/rolesmapping/anomaly_full_access",
+					'verb' => 'PUT',
+					'status_code' => $response->getStatusCode(),
+					'status_text' => $response->getReasonPhrase()
+				]
+			);
+
+			if ($response->getStatusCode() == 201) {
+				$status = true;
+			}
+
+			return $status;
+		} catch (\Exception $e) {
+			$this->logger->error($e->getMessage());
+			throw new HttpException("An error has occurred while executing your request.", 400);
+		}
+	}
+	
+	function createAnomaly_full_access() : bool
+	{
+		$status = false;
+		try {
+			$role = array(
+				"cluster_permissions" => array("cluster:admin/opendistro/ad*"),
+			);
+
+			$response = $this->httpClient->put(
+
+				$this->url . "_opendistro/_security/api/roles/anomaly_full_access",
+				[
+					'auth' => $this->getAuth(),
+					'headers' => [
+						"Content-Type" => "application/json",
+					],
+					'body' => \json_encode($role),
+				]
+
+			);
+
+			$this->logger->notice(
+				"leadwire.opendistro.createanomaly_full_access",
+				[
+					'url' => $this->url . "_opendistro/_security/api/roles/anomaly_full_access",
+					'verb' => 'PUT',
+					'status_code' => $response->getStatusCode(),
+					'status_text' => $response->getReasonPhrase()
+				]
+			);
+
+			if ($response->getStatusCode() == 201) {
+				$status = true;
+			}
+
+			return $status;
+		} catch (\Exception $e) {
+			$this->logger->error($e->getMessage());
+			throw new HttpException("An error has occurred while executing your request.", 400);
+		}
+	}
+	
+	
 
 	function createConfig() : bool
 	{
@@ -1339,7 +1428,8 @@ class ElasticSearchService
 						"dls" => "",
 						"fls" => array(),
 						"masked_fields" => array(),
-						"allowed_actions" => array("kibana_all_read")
+						"allowed_actions" => array("kibana_all_read", "indices:monitor/settings/get","indices:monitor/stats","indices:admin/aliases/get",
+									   "indices:admin/mappings/get","indices:admin/resolve/index")
 					]
 				),
 				"tenant_permissions" => array(
