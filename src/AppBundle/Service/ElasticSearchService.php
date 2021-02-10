@@ -886,7 +886,44 @@ class ElasticSearchService
 	}
 
 	/*****************************opendistro*************************************/
+	function createODFEUser(string  $user) : bool
+	{
+		try {
+			$status = false;
+			$response = $this->httpClient->put(
 
+				$this->url . "_opendistro/_security/api/internalusers/" . $user,
+				[
+					'auth' => $this->getAuth(),
+					'headers' => [
+						"Content-Type" => "application/json",
+					],
+					'body' => \json_encode(["password" => $user]),
+				]
+
+			);
+
+			$this->logger->notice(
+				"leadwire.opendistro.createUser",
+				[
+					'url' => $this->url . "_opendistro/_security/api/internalusers/" . $user,
+					'verb' => 'PUT',
+					'status_code' => $response->getStatusCode(),
+					'status_text' => $response->getReasonPhrase()
+
+				]
+			);
+
+			if ($response->getStatusCode() == 201) {
+				$status = true;
+			}
+
+			return $status;
+		} catch (\Exception $e) {
+			$this->logger->error($e->getMessage());
+			throw new HttpException("An error has occurred while executing your request.", 400);
+		}
+	}
 
 	function createUser(User $user) : bool
 	{
