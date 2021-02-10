@@ -1410,7 +1410,7 @@ class ElasticSearchService
                                                     ),
                                                     "description" => "Authorize via LDAP",
                                                   ),
-
+						),
 					
 					"do_not_fail_on_forbidden" => false,
 					"multi_rolespan_enabled" => true,
@@ -1456,7 +1456,7 @@ class ElasticSearchService
 	function createDataWriteRoleMapping(
 		string $envName,
 		string $applicationName,
-		string $userName = '',
+		string $userName = ''
 	) : bool
 	{
 		try {
