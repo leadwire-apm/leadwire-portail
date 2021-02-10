@@ -1259,6 +1259,49 @@ class ElasticSearchService
 		}
 	}
 	
+		function createAlerting_full_accessRolesMapping() : bool
+	{
+		$status = false;
+		try {
+			$rolesmapping = array(
+				'users' => array(
+					0 => '*',
+				),
+			);
+
+			$response = $this->httpClient->put(
+
+				$this->url . "_opendistro/_security/api/rolesmapping/alerting_full_access",
+				[
+					'auth' => $this->getAuth(),
+					'headers' => [
+						"Content-Type" => "application/json",
+					],
+					'body' => \json_encode($rolesmapping),
+				]
+
+			);
+
+			$this->logger->notice(
+				"leadwire.opendistro.createAlerting_full_accessRolesMapping",
+				[
+					'url' => $this->url . "_opendistro/_security/api/rolesmapping/alerting_full_access",
+					'verb' => 'PUT',
+					'status_code' => $response->getStatusCode(),
+					'status_text' => $response->getReasonPhrase()
+				]
+			);
+
+			if ($response->getStatusCode() == 201) {
+				$status = true;
+			}
+
+			return $status;
+		} catch (\Exception $e) {
+			$this->logger->error($e->getMessage());
+			throw new HttpException("An error has occurred while executing your request.", 400);
+		}
+	}
 	
 
 	function createConfig() : bool
