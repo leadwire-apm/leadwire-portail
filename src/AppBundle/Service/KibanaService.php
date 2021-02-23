@@ -247,6 +247,104 @@ class KibanaService
 
         return true;
     }
+    
+    
+        /**
+     * * curl 'http://leadwire-kibana:5601/api/v1/configuration/audit/config' -H 'Content-Type: application/json' -H 'kbn-version: 7.10.0' --data-raw '{ ... }'
+     *
+     * @return bool
+     */
+    public function loadAuditConfig(): bool
+    {
+        $content = array (
+					  'compliance' => 
+					  array (
+						'enabled' => true,
+						'write_log_diffs' => false,
+						'read_watched_fields' => 
+						array (
+						),
+						'read_ignore_users' => 
+						array (
+						  0 => 'kibanaserver',
+						),
+						'write_watched_indices' => 
+						array (
+						),
+						'write_ignore_users' => 
+						array (
+						  0 => 'kibanaserver',
+						),
+						'read_metadata_only' => true,
+						'write_metadata_only' => true,
+						'external_config' => false,
+						'internal_config' => true,
+					  ),
+					  'enabled' => false,
+					  'audit' => 
+					  array (
+						'ignore_users' => 
+						array (
+						  0 => 'kibanaserver',
+						),
+						'ignore_requests' => 
+						array (
+						),
+						'disabled_rest_categories' => 
+						array (
+						  0 => 'AUTHENTICATED',
+						  1 => 'GRANTED_PRIVILEGES',
+						),
+						'disabled_transport_categories' => 
+						array (
+						  0 => 'AUTHENTICATED',
+						  1 => 'GRANTED_PRIVILEGES',
+						),
+						'log_request_body' => true,
+						'resolve_indices' => true,
+						'resolve_bulk_requests' => false,
+						'exclude_sensitive_headers' => true,
+						'enable_transport' => true,
+						'enable_rest' => true,
+					  ),
+					);
+
+
+        $headers = [
+            'Content-Type' => 'application/json',
+			'kbn-version' => '7.10.0',
+            'x-proxy-roles' => $this->kibanaAdminUsername,
+            'X-Proxy-User' => $this->kibanaAdminUsername,
+            'x-forwarded-for' => '127.0.0.1',
+        ];
+
+        $authorization = $this->jwtHelper->encode($this->kibanaAdminUsername, $this->kibanaAdminUuid);
+
+        $headers['Authorization'] = "Bearer $authorization";
+
+        $response = $this->httpClient->post(
+            $this->url . "api/v1/configuration/audit/config",
+            [
+                'headers' => $headers,
+				'body' => \json_encode($content)
+            ]
+        );
+
+        $this->logger->notice(
+            "leadwire.kibana.loadAuditConfig",
+            [
+                'url' => $this->url . "api/v1/configuration/audit/config",
+                'verb' => 'POST',
+                'headers' => $headers,
+                'status_code' => $response->getStatusCode(),
+                'status_text' => $response->getReasonPhrase(),
+            ]
+        );
+
+        return true;
+    }
+    
+    
 
     /**
      * * curl --insecure -H "Authorization: Bearer ${authorization}" -X POST "$protocol://$host:$port/api/saved_objects/index-pattern/default" -H 'kbn-xsrf: true' -H 'Content-Type: application/json' -d '{ "attributes": { "title": "*" }}'
