@@ -119,6 +119,8 @@ class InstallCommand extends ContainerAwareCommand
             $es->deletePolicy("rollover-hot-warm-delete-policy");
             $es->createPolicy();
             $es->createRolloverPolicy();
+		
+	    $kibana->loadAuditConfig();
             
             $es->alertManager();
             foreach ($demoApplications as $application) {
