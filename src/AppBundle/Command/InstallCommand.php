@@ -106,6 +106,10 @@ class InstallCommand extends ContainerAwareCommand
             $this->display($output, "Initializing Elasticsearch Cluster Setup");
             $es->createConfig();
 	    $es->putClusterSettings();
+	    $es->deleteODFEUser('logstash');
+            $es->deleteODFEUser('snapshotrestore');
+	    $es->deleteODFEUser('kibanaro');
+	    $es->deleteODFEUser('readall');
             $es->createBackupLocation();
             $es->createLeadwireRole();
 	    $es->createLeadwireRolesMapping();
