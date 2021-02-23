@@ -307,8 +307,10 @@ class KibanaService
         $userAccessibleApplications = $this->permissionManager->getAccessibleApplications($user);
 
         foreach ($userAccessibleApplications as $application) {
-            foreach($application->getEnvironments as $environment){
-                $this->loadIndexPatternForApplication($application, $user->getUserIndex(), $environment->getName());
+            if(is_array($environment)) {
+                foreach($application->getEnvironments as $environment){
+                    $this->loadIndexPatternForApplication($application, $user->getUserIndex(), $environment->getName());
+                }
             }
         }
     }
