@@ -22,7 +22,8 @@
     ) {
         var vm = this;
 
-        if (!$sessionStorage.listApp) {
+        //filter app name
+         /*if (!$sessionStorage.listApp) {
             ApplicationFactory.findAll()
                 .then(function (res) {
                     $sessionStorage.listApp = res.data.reduce(function (p, c, i) {
@@ -30,7 +31,7 @@
                         return p;
                     }, []);
                 });
-        }
+        }*/
 
 
         vm.flipActivityIndicator = function (key) {

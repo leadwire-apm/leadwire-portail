@@ -345,7 +345,7 @@ class ApplicationController extends Controller
      */
     public function getAllApplicationsAction(Request $request, ApplicationService $applicationService)
     {
-        //$this->denyAccessUnlessGranted([User::ROLE_ADMIN, User::ROLE_SUPER_ADMIN]);
+        $this->denyAccessUnlessGranted([User::ROLE_ADMIN, User::ROLE_SUPER_ADMIN]);
 
         $applications = $applicationService->getApplications();
 

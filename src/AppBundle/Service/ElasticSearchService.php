@@ -812,7 +812,6 @@ class ElasticSearchService
 					"memory_used_byte" => $nodesStats[$key]["os"]["mem"]["used_in_bytes"],
 					"memory_Total_byte" => $nodesStats[$key]["os"]["mem"]["total_in_bytes"],
 					"os_name" => $nodeOs[$key]["os"]["name"],
-					"os_arche" => $nodeOs[$key]["os"]["arche"],
 					"os_version" => $nodeOs[$key]["os"]["version"],
 					"os_allocated_processors" => $nodeOs[$key]["os"]["allocated_processors"]
 				];
