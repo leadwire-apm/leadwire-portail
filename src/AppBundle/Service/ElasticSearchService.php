@@ -923,6 +923,48 @@ class ElasticSearchService
 			throw new HttpException("An error has occurred while executing your request.", 400);
 		}
 	}
+	
+	
+	function deleteODFEUser(string  $user) : bool
+	{
+		try {
+			$status = false;
+			$response = $this->httpClient->delete(
+
+				$this->url . "_opendistro/_security/api/internalusers/" . $user,
+				[
+					'auth' => $this->getAuth(),
+					'headers' => [
+						"Content-Type" => "application/json",
+					],
+					'body' => \json_encode(["password" => $user]),
+				]
+
+			);
+
+			$this->logger->notice(
+				"leadwire.opendistro.deleteODFEUser",
+				[
+					'url' => $this->url . "_opendistro/_security/api/internalusers/" . $user,
+					'verb' => 'DELETE',
+					'status_code' => $response->getStatusCode(),
+					'status_text' => $response->getReasonPhrase()
+
+				]
+			);
+
+			if ($response->getStatusCode() == 201) {
+				$status = true;
+			}
+
+			return $status;
+		} catch (\Exception $e) {
+			$this->logger->error($e->getMessage());
+			throw new HttpException("An error has occurred while executing your request.", 400);
+		}
+	}
+	
+	
 
 	function createUser(User $user) : bool
 	{
