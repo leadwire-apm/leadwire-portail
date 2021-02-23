@@ -1,0 +1,100 @@
+{
+    "order" : 0,
+    "index_patterns" : [
+      "otel-v1-apm-span-*"
+    ],
+    "settings" : {
+      "index" : {
+        "opendistro" : {
+          "index_state_management" : {
+            "policy_id" : "raw-span-policy",
+            "rollover_alias" : "otel-v1-apm-span"
+          }
+        }
+      }
+    },
+    "mappings" : {
+      "_source" : {
+        "enabled" : true
+      },
+      "dynamic_templates" : [
+        {
+          "resource_attributes_map" : {
+            "path_match" : "resource.attributes.*",
+            "mapping" : {
+              "type" : "keyword"
+            }
+          }
+        },
+        {
+          "attributes_map" : {
+            "path_match" : "attributes.*",
+            "mapping" : {
+              "type" : "keyword"
+            }
+          }
+        }
+      ],
+      "date_detection" : false,
+      "properties" : {
+        "traceId" : {
+          "ignore_above" : 256,
+          "type" : "keyword"
+        },
+        "kind" : {
+          "ignore_above" : 128,
+          "type" : "keyword"
+        },
+        "traceGroup" : {
+          "ignore_above" : 1024,
+          "type" : "keyword"
+        },
+        "serviceName" : {
+          "type" : "keyword"
+        },
+        "parentSpanId" : {
+          "ignore_above" : 256,
+          "type" : "keyword"
+        },
+        "spanId" : {
+          "ignore_above" : 256,
+          "type" : "keyword"
+        },
+        "name" : {
+          "ignore_above" : 1024,
+          "type" : "keyword"
+        },
+        "startTime" : {
+          "type" : "date_nanos"
+        },
+        "links" : {
+          "type" : "nested"
+        },
+        "endTime" : {
+          "type" : "date_nanos"
+        },
+        "durationInNanos" : {
+          "type" : "long"
+        },
+        "events" : {
+          "type" : "nested",
+          "properties" : {
+            "time" : {
+              "type" : "date_nanos"
+            }
+          }
+        },
+        "status" : {
+          "properties" : {
+            "code" : {
+              "type" : "integer"
+            },
+            "message" : {
+              "type" : "keyword"
+            }
+          }
+        }
+      }
+    },
+    "aliases" : { }
+}

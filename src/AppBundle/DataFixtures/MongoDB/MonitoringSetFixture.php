@@ -16,6 +16,9 @@ class MonitoringSetFixture extends AbstractFixture implements OrderedFixtureInte
     const FILEBEAT_MONITORING_SET = "FILEBEAT";
     const PACKETBEAT_MONITORING_SET = "PACKETBEAT";
     const HEARTBEAT_MONITORING_SET = "HEARTBEAT";    
+    const OTEL_SVCMAP_MONITORING_SET = "OTEL-V1-APM-SERVICE-MAP";    
+    const OTEL_SPAN_MONITORING_SET = "OTEL-V1-APM-SPAN";    
+
 
     public function load(ObjectManager $manager)
     {
@@ -55,6 +58,20 @@ class MonitoringSetFixture extends AbstractFixture implements OrderedFixtureInte
         $manager->persist($ms);
         $manager->persist($applicationType);
         $this->addReference(self::HEARTBEAT_MONITORING_SET, $ms);
+	    
+      /** OTEL-V1-APM-SERVICE-MAP */
+        $ms = new MonitoringSet();
+        $ms->setName("OTEL-V1-APM-SERVICE-MAP")->setQualifier("OTEL-V1-APM-SERVICE-MAP")->setVersion("7.10.0")->addToApplicationType($applicationType);
+        $manager->persist($ms);
+        $manager->persist($applicationType);
+        $this->addReference(self::OTEL_SVCMAP_MONITORING_SET, $ms);
+	    
+      /** OTEL-V1-APM-SPAN */
+        $ms = new MonitoringSet();
+        $ms->setName("OTEL-V1-APM-SPAN")->setQualifier("OTEL-V1-APM-SPAN")->setVersion("7.10.0")->addToApplicationType($applicationType);
+        $manager->persist($ms);
+        $manager->persist($applicationType);
+        $this->addReference(self::OTEL_SPAN_MONITORING_SET, $ms);
 
 
         $manager->flush();

@@ -486,10 +486,14 @@ class ApplicationService
 
                 $this->es->createRole($envName, $application->getName(), array($patternIndex), array($sharedIndex, $appIndex), array("kibana_all_read"), false);
                 $this->es->createRole($envName, $application->getName(), array($patternIndex), array($sharedIndex, $appIndex), array("kibana_all_write"), true);
-
-
+		    
                 $this->es->createRoleMapping($envName, $application->getName(), $user->getName(), false);
                 $this->es->createRoleMapping($envName, $application->getName(), $user->getName(), true); 
+		    
+		//datawrite user, role and role mapping    
+		$this->es->createRoleDataWrite($envName, $application->getName(), array($patternIndex));
+		$this->es->createODFEUser("datawrite_".$envName."_".$application->getName() );
+		$this->es->createDataWriteRoleMapping($envName, $application->getName(), "datawrite_" . $envName . "_" . $application->getName() );
   
             }
         }

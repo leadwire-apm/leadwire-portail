@@ -885,7 +885,44 @@ class ElasticSearchService
 	}
 
 	/*****************************opendistro*************************************/
+	function createODFEUser(string  $user) : bool
+	{
+		try {
+			$status = false;
+			$response = $this->httpClient->put(
 
+				$this->url . "_opendistro/_security/api/internalusers/" . $user,
+				[
+					'auth' => $this->getAuth(),
+					'headers' => [
+						"Content-Type" => "application/json",
+					],
+					'body' => \json_encode(["password" => $user]),
+				]
+
+			);
+
+			$this->logger->notice(
+				"leadwire.opendistro.createUser",
+				[
+					'url' => $this->url . "_opendistro/_security/api/internalusers/" . $user,
+					'verb' => 'PUT',
+					'status_code' => $response->getStatusCode(),
+					'status_text' => $response->getReasonPhrase()
+
+				]
+			);
+
+			if ($response->getStatusCode() == 201) {
+				$status = true;
+			}
+
+			return $status;
+		} catch (\Exception $e) {
+			$this->logger->error($e->getMessage());
+			throw new HttpException("An error has occurred while executing your request.", 400);
+		}
+	}
 
 	function createUser(User $user) : bool
 	{
@@ -1118,11 +1155,14 @@ class ElasticSearchService
 		}
 	}
 
+	
+	
 	function createLeadwireRole() : bool
 	{
 		$status = false;
 		try {
 			$role = array(
+				"cluster_permissions" => array("cluster:monitor/health","cluster:monitor/state"),
 				"index_permissions" => array(
 					0 => array(
 						"index_patterns" => array(
@@ -1170,6 +1210,137 @@ class ElasticSearchService
 			throw new HttpException("An error has occurred while executing your request.", 400);
 		}
 	}
+	
+		function createAnomaly_full_accessRolesMapping() : bool
+	{
+		$status = false;
+		try {
+			$rolesmapping = array(
+				'users' => array(
+					0 => '*',
+				),
+			);
+
+			$response = $this->httpClient->put(
+
+				$this->url . "_opendistro/_security/api/rolesmapping/anomaly_full_access",
+				[
+					'auth' => $this->getAuth(),
+					'headers' => [
+						"Content-Type" => "application/json",
+					],
+					'body' => \json_encode($rolesmapping),
+				]
+
+			);
+
+			$this->logger->notice(
+				"leadwire.opendistro.createAnomaly_full_accessRolesMapping",
+				[
+					'url' => $this->url . "_opendistro/_security/api/rolesmapping/anomaly_full_access",
+					'verb' => 'PUT',
+					'status_code' => $response->getStatusCode(),
+					'status_text' => $response->getReasonPhrase()
+				]
+			);
+
+			if ($response->getStatusCode() == 201) {
+				$status = true;
+			}
+
+			return $status;
+		} catch (\Exception $e) {
+			$this->logger->error($e->getMessage());
+			throw new HttpException("An error has occurred while executing your request.", 400);
+		}
+	}
+	
+	function createAnomaly_full_accessRole() : bool
+	{
+		$status = false;
+		try {
+			$role = array(
+				"cluster_permissions" => array("cluster:admin/opendistro/ad*"),
+			);
+
+			$response = $this->httpClient->put(
+
+				$this->url . "_opendistro/_security/api/roles/anomaly_full_access",
+				[
+					'auth' => $this->getAuth(),
+					'headers' => [
+						"Content-Type" => "application/json",
+					],
+					'body' => \json_encode($role),
+				]
+
+			);
+
+			$this->logger->notice(
+				"leadwire.opendistro.createanomaly_full_access",
+				[
+					'url' => $this->url . "_opendistro/_security/api/roles/anomaly_full_access",
+					'verb' => 'PUT',
+					'status_code' => $response->getStatusCode(),
+					'status_text' => $response->getReasonPhrase()
+				]
+			);
+
+			if ($response->getStatusCode() == 201) {
+				$status = true;
+			}
+
+			return $status;
+		} catch (\Exception $e) {
+			$this->logger->error($e->getMessage());
+			throw new HttpException("An error has occurred while executing your request.", 400);
+		}
+	}
+	
+		function createAlerting_full_accessRolesMapping() : bool
+	{
+		$status = false;
+		try {
+			$rolesmapping = array(
+				'users' => array(
+					0 => '*',
+				),
+			);
+
+			$response = $this->httpClient->put(
+
+				$this->url . "_opendistro/_security/api/rolesmapping/alerting_full_access",
+				[
+					'auth' => $this->getAuth(),
+					'headers' => [
+						"Content-Type" => "application/json",
+					],
+					'body' => \json_encode($rolesmapping),
+				]
+
+			);
+
+			$this->logger->notice(
+				"leadwire.opendistro.createAlerting_full_accessRolesMapping",
+				[
+					'url' => $this->url . "_opendistro/_security/api/rolesmapping/alerting_full_access",
+					'verb' => 'PUT',
+					'status_code' => $response->getStatusCode(),
+					'status_text' => $response->getReasonPhrase()
+				]
+			);
+
+			if ($response->getStatusCode() == 201) {
+				$status = true;
+			}
+
+			return $status;
+		} catch (\Exception $e) {
+			$this->logger->error($e->getMessage());
+			throw new HttpException("An error has occurred while executing your request.", 400);
+		}
+	}
+	
 
 	function createConfig() : bool
 	{
@@ -1194,7 +1365,7 @@ class ElasticSearchService
 							"remoteIpHeader" => "x-forwarded-for",
 						),
 					),
-					"authc" => array(
+					"authc" => array( 
 						"basic_internal_auth_domain" => array(
 							"http_enabled" => true,
 							"transport_enabled" => true,
@@ -1242,6 +1413,41 @@ class ElasticSearchService
 							"description" => "Authenticate via SSL client certificates",
 						),
 					),
+					
+					  "authz" =>
+                                                array (
+                                                  "roles_from_leadwireldap" =>
+                                                  array (
+                                                    "http_enabled" => true,
+                                                    "transport_enabled" => false,
+                                                    "authorization_backend" =>
+                                                    array (
+                                                      "type" => "ldap",
+                                                      "config" =>
+                                                      array (
+                                                        "enable_ssl" => false,
+                                                        "enable_start_tls" => false,
+                                                        "enable_ssl_client_auth" => false,
+                                                        "verify_hostnames" => false,
+                                                        "hosts" =>
+                                                        array (
+                                                          0 => "leadwire-ldap:389",
+                                                        ),
+                                                        "rolebase" => "ou=roles,dc=leadwire,dc=io",
+                                                        "rolesearch" => "(roleOccupant={0})",
+                                                        "userrolename" => "disabled",
+                                                        "rolename" => "cn",
+                                                        "resolve_nested_roles" => true,
+                                                        "userbase" => "ou=people,dc=leadwire,dc=io",
+                                                        "usersearch" => "(uid={0})",
+                                                        "bind_dn" => "cn=admin,dc=leadwire,dc=io",
+                                                        "password" => "admin"
+                                                      ),
+                                                    ),
+                                                    "description" => "Authorize via LDAP",
+                                                  ),
+						),
+					
 					"do_not_fail_on_forbidden" => false,
 					"multi_rolespan_enabled" => true,
 					"hosts_resolver_mode" => "ip-only",
@@ -1283,6 +1489,115 @@ class ElasticSearchService
 		}
 	}
 
+	function createDataWriteRoleMapping(
+		string $envName,
+		string $applicationName,
+		string $userName = ''
+	) : bool
+	{
+		try {
+			$status = false;
+
+			$role = [
+				"users" => array($userName)
+			];
+
+
+			$url = $this->url . "_opendistro/_security/api/rolesmapping/datawrite_role_" . $envName . "_" . $applicationName;
+
+
+			$response = $this->httpClient->put(
+				$url,
+				[
+					'auth' => $this->getAuth(),
+					'headers' => [
+						"Content-Type" => "application/json",
+					],
+					'body' => \json_encode($role),
+				]
+
+			);
+
+			$this->logger->notice(
+				"leadwire.opendistro.createDataWriteRoleMapping",
+				[
+					'url' => $url,
+					'verb' => 'PUT',
+					'status_code' => $response->getStatusCode(),
+					'status_text' => $response->getReasonPhrase()
+				]
+			);
+
+			if ($response->getStatusCode() == 201) {
+				$status = true;
+			}
+
+			return $status;
+		} catch (\Exception $e) {
+			$this->logger->error($e->getMessage());
+			throw new HttpException("An error has occurred while executing your request.", 400);
+		}
+	}
+					
+	function createRoleDataWrite(
+		string $envName,
+		string $applicationName,
+		array $index_patterns
+		) : bool
+	{
+		try {
+			$status = false;
+			
+			$role = [
+				"index_permissions" => array(
+					[
+						"index_patterns" => $index_patterns,
+						"dls" => "",
+						"fls" => array(),
+						"masked_fields" => array(),
+						"allowed_actions" => array("indices:admin/create", "indices:data/write*", "indices:admin/mapping/put")
+					]
+				),
+			];
+			
+
+			$url = $this->url . "_opendistro/_security/api/roles/datawrite_role_" . $envName . "_" . $applicationName;
+
+
+			$response = $this->httpClient->put(
+
+				$url,
+				[
+					'auth' => $this->getAuth(),
+					'headers' => [
+						"Content-Type" => "application/json",
+					],
+					'body' => \json_encode($role),
+				]
+
+			);
+
+			$this->logger->notice(
+				"leadwire.opendistro.createRoleDataWrite",
+				[
+					'url' => $url,
+					'verb' => 'PUT',
+					'status_code' => $response->getStatusCode(),
+					'status_text' => $response->getReasonPhrase()
+				]
+			);
+
+			if ($response->getStatusCode() == 201) {
+				$status = true;
+			}
+
+			return $status;
+		} catch (\Exception $e) {
+			$this->logger->error($e->getMessage());
+			throw new HttpException("An error has occurred while executing your request.", 400);
+		}
+	}
+					
 	function createRole(
 		string $envName,
 		string $applicationName,
@@ -1303,7 +1618,8 @@ class ElasticSearchService
 						"dls" => "",
 						"fls" => array(),
 						"masked_fields" => array(),
-						"allowed_actions" => array("kibana_all_read")
+						"allowed_actions" => array("kibana_all_read", "indices:monitor/settings/get","indices:monitor/stats","indices:admin/aliases/get",
+									   "indices:admin/mappings/get","indices:admin/resolve/index")
 					]
 				),
 				"tenant_permissions" => array(
@@ -1788,6 +2104,57 @@ class ElasticSearchService
 			throw new HttpException("An error has occurred while executing your request.", 400);
 		}
 	}
+					
+	function putClusterSettings() : bool
+	{
+		try {
+			$status = false;
+
+			$cluster_setting = array (
+			  'persistent' => 
+			  array (
+				'opendistro.alerting.filter_by_backend_roles' => 'true',
+				'opendistro.anomaly_detection.filter_by_backend_roles' => 'true'
+			  ),
+			);
+
+			$url = $this->url . "_cluster/settings";
+
+			$response = $this->httpClient->put(
+
+				$url,
+				[
+					'auth' => $this->getAuth(),
+					'headers' => [
+						"Content-Type" => "application/json",
+					],
+					'body' => \json_encode($cluster_setting),
+				]
+
+			);
+
+			$this->logger->notice(
+				"leadwire.opendistro.putClusterSettings",
+				[
+					'url' => $url,
+					'verb' => 'PUT',
+					'status_code' => $response->getStatusCode(),
+					'status_text' => $response->getReasonPhrase()
+				]
+			);
+
+			if ($response->getStatusCode() == 201) {
+				$status = true;
+			}
+
+			return $status;
+		} catch (\Exception $e) {
+			$this->logger->error($e->getMessage());
+			throw new HttpException("An error has occurred while executing your request.", 400);
+		}
+	}				
+					
+	
 
 	function createAlert(string $appName, string $envName, string $type) : bool
 	{

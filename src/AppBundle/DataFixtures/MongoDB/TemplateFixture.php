@@ -21,10 +21,14 @@ class TemplateFixture extends AbstractFixture implements OrderedFixtureInterface
         $infrastructureMonitoringSet = $this->getReference(MonitoringSetFixture::METRICBEAT_MONITORING_SET);
         /** @var MonitoringSet $logMonitoringSet */
         $logMonitoringSet = $this->getReference(MonitoringSetFixture::FILEBEAT_MONITORING_SET);
-       /** @var MonitoringSet $networkMonitoringSet */
+        /** @var MonitoringSet $networkMonitoringSet */
         $networkMonitoringSet = $this->getReference(MonitoringSetFixture::PACKETBEAT_MONITORING_SET);
-       /** @var MonitoringSet $uptimeMonitoringSet */
+        /** @var MonitoringSet $uptimeMonitoringSet */
         $uptimeMonitoringSet = $this->getReference(MonitoringSetFixture::HEARTBEAT_MONITORING_SET);
+	/** @var MonitoringSet $otelv1apmservicemapMonitoringSet */
+        $otelv1apmservicemapMonitoringSet = $this->getReference(MonitoringSetFixture::OTEL_SVCMAP_MONITORING_SET );
+	/** @var MonitoringSet $otelv1apmspanMonitoringSet */
+        $otelv1apmspanMonitoringSet = $this->getReference(MonitoringSetFixture::OTEL_SPAN_MONITORING_SET  );
 
 
 
@@ -115,6 +119,43 @@ class TemplateFixture extends AbstractFixture implements OrderedFixtureInterface
             $template->setMonitoringSet($uptimeMonitoringSet);
             $manager->persist($template);
             $manager->persist($uptimeMonitoringSet);
+        }
+        $manager->flush();
+	    
+      $otelv1apmservicemapFolderPath = "./app/Resources/templates/v7.10.0/otel-v1-apm-service-map";
+        $finder = new Finder();
+        $finder->files()->in($otelv1apmservicemapFolderPath);
+        /** @var \SplFileInfo $file */
+        foreach ($finder as $file) {
+            if ($file->getRealPath() === false) {
+                throw new \Exception("Error fetching file");
+            }
+            $template = new Template();
+            $template->setName(strtolower($otelv1apmservicemapMonitoringSet->getName() . "-" . str_replace(".json", "", $file->getFilename())));
+            $template->setType(str_replace(".json", "", $file->getFilename()));
+            $template->setContent((string) file_get_contents($file->getRealPath()));
+            $template->setMonitoringSet($otelv1apmservicemapMonitoringSet);
+            $manager->persist($template);
+            $manager->persist($otelv1apmservicemapMonitoringSet);
+        }
+        $manager->flush();
+	    
+	    
+	$otelv1apmspanFolderPath = "./app/Resources/templates/v7.10.0/otel-v1-apm-span";
+        $finder = new Finder();
+        $finder->files()->in($otelv1apmspanFolderPath);
+        /** @var \SplFileInfo $file */
+        foreach ($finder as $file) {
+            if ($file->getRealPath() === false) {
+                throw new \Exception("Error fetching file");
+            }
+            $template = new Template();
+            $template->setName(strtolower($otelv1apmspanMonitoringSet->getName() . "-" . str_replace(".json", "", $file->getFilename())));
+            $template->setType(str_replace(".json", "", $file->getFilename()));
+            $template->setContent((string) file_get_contents($file->getRealPath()));
+            $template->setMonitoringSet($otelv1apmspanMonitoringSet);
+            $manager->persist($template);
+            $manager->persist($otelv1apmspanMonitoringSet);
         }
         $manager->flush();
 
