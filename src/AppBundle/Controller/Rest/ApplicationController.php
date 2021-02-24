@@ -247,6 +247,37 @@ class ApplicationController extends Controller
         }
     }
 
+      /**
+     * @Route("/{id}/updateRole", methods="GET")
+     *
+     * @param Request $request
+     * @param ApplicationService $applicationService
+     * @param ElasticSearchService $esService
+     * @param KibanaService $kibanaService
+     * @param CuratorService $curatorService
+     * @param string $id
+     *
+     * @return Response
+     */
+    public function updateRoleApplicationAction(
+        Request $request,
+        ApplicationService $applicationService,
+        ElasticSearchService $esService,
+        KibanaService $kibanaService,
+        CuratorService $curatorService,
+        ProcessService $processService,
+        string $id
+    ) {
+        $processService->emit($this->getUser(), "heavy-operations-in-progress", "Updating application role");
+        try {
+            $state = $applicationService->updateApplicationRole($id, $this->getUser());
+            $processService->emit($this->getUser(), "heavy-operations-done", "Succeeded");
+            return $this->renderResponse($state['successful']);
+        } catch (MongoDuplicateKeyException $e) {
+            $processService->emit($this->getUser(), "heavy-operations-done", "Failed");
+        }
+    }
+
     /**
      * @Route("/{id}/delete", methods="DELETE")
      *

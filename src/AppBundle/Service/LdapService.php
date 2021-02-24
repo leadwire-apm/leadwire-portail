@@ -131,9 +131,6 @@ class LdapService
                 throw new \Exception("Unable to find LDAP records for applications shared tenant");
             }
         }
-
-
-
         return true;
     }
 
@@ -245,6 +242,90 @@ class LdapService
 
         return $status;
     }
+
+    /**
+     * Create LDAP entries for new application
+     *
+     * @param Application $application
+     *
+     * @return boolean
+     */
+    public function createApplicationEntries(Application $application): bool
+    {
+        $status = true;
+
+        // Application entry
+        $entry = new Entry(
+            "cn={$application->getName()},ou=apm,ou=roles,dc=leadwire,dc=io",
+            [
+                "objectclass" => ['organizationalRole', 'top'],
+                "cn" => $application->getName(),
+                "ou" => $application->getName()
+            ]
+        );
+
+        $status = $this->saveEntry($entry);
+
+        return $status;
+    }
+
+    /**
+     * Create LDAP entries for new users
+     *
+     * @param Application $application
+     * @param User $user
+     *
+     * @return boolean
+     */
+    public function updateApplicationEntries(Application $application, User $user): bool
+    {
+        $status = true;
+
+        try {
+            // delete all user role
+            foreach($user->getApplications() as $app) {
+            
+                $result = $this->ldap->query('ou=apm,ou=roles,dc=leadwire,dc=io', "(cn={$app->getName()})")->execute();
+                $entry = $result[0];
+
+                if ($entry instanceof Entry) {
+                    $roleOccupant = $entry->getAttribute('roleOccupant') !== null ? $entry->getAttribute('roleOccupant') : [];
+                    if (in_array("cn={$user->getUsername()},ou=People,dc=leadwire,dc=io", $roleOccupant) === true) {
+                        $entry->setAttribute('roleOccupant', array_diff($roleOccupant, ["cn={$user->getUsername()},ou=People,dc=leadwire,dc=io"]));
+                        $this->entryManager->update($entry);
+                    }
+                } else {
+                    $this->logger->critical("Unable to find LDAP records for demo application {$app->getName()}");
+                    throw new \Exception("Unable to find LDAP records for demo application {$app->getName()}");
+                }
+        
+            }
+            
+            //set user role
+            $result = $this->ldap->query('ou=apm,ou=roles,dc=leadwire,dc=io', "(cn={$application->getName()})")->execute();
+            $entry = $result[0];
+
+            if ($entry instanceof Entry) {
+                $roleOccupant = $entry->getAttribute('roleOccupant') !== null ? $entry->getAttribute('roleOccupant') : [];
+                if (in_array("cn={$user->getUsername()},ou=People,dc=leadwire,dc=io", $roleOccupant) === false) {
+                    $entry->setAttribute('roleOccupant', array_merge($roleOccupant, ["cn={$user->getUsername()},ou=People,dc=leadwire,dc=io"]));
+                    $this->entryManager->update($entry);
+                }
+            } else {
+                $status = false;
+                $this->logger->critical("Unable to find LDAP records for demo application {$application->getName()}");
+                throw new \Exception("Unable to find LDAP records for demo application {$application->getName()}");
+            }
+  
+        } catch (\Exception $e) {
+            $status = false;
+            $this->logger->emergency('leadwire.ldap.__construct', ['error' => $e->getMessage()]);
+        }
+        finally{
+            return $status;
+        }
+    }
+
 
     public function registerApplication(User $user, Application $application): bool
     {
