@@ -27,49 +27,48 @@ use AppBundle\Manager\DashboardManager;
 class ElasticSearchService
 {
 	/**
-     * @var mixed
-     */
-					private $settings;
+	 * @var mixed
+	 */
+	private $settings;
 
 	/**
-     * @var LoggerInterface
-     */
-					private $logger;
+	 * @var LoggerInterface
+	 */
+	private $logger;
 
 	/**
-     * @var string
-     */
-					private $url;
+	 * @var string
+	 */
+	private $url;
 
 	/**
-     * @var Client
-     */
-					private $httpClient;
+	 * @var Client
+	 */
+	private $httpClient;
 
 	/**
-     * @var bool
-     */
-					private $hasAllUserTenant;
+	 * @var bool
+	 */
+	private $hasAllUserTenant;
 
 	/**
-     * @var DashboardManager
-     */
-					private $DashboardManager;
+	 * @var DashboardManager
+	 */
+	private $DashboardManager;
 
 	/**
-     * ElasticSearchService constructor.
-     * @param LoggerInterface $logger
-     * @param bool $hasAllUserTenant
-     * @param array $settings
-     * @param DashboardManager $dashboardManager
-     */
-					public function __construct(
+	 * ElasticSearchService constructor.
+	 * @param LoggerInterface $logger
+	 * @param bool $hasAllUserTenant
+	 * @param array $settings
+	 * @param DashboardManager $dashboardManager
+	 */
+	public function __construct(
 		LoggerInterface $logger,
 		bool $hasAllUserTenant,
 		array $settings = [],
 		DashboardManager $dashboardManager
-	)
-	{
+	) {
 		$this->settings = $settings;
 		$this->hasAllUserTenant = $hasAllUserTenant;
 		$this->logger = $logger;
@@ -91,9 +90,9 @@ class ElasticSearchService
 	}
 
 	/**
-     * @param Application $app
-     * @param User $user
-     */
+	 * @param Application $app
+	 * @param User $user
+	 */
 	public function getDashboads(Application $app, User $user, string $envName)
 	{
 		try {
@@ -106,19 +105,19 @@ class ElasticSearchService
 	}
 
 	/*********************************************
-     *          LOWER LEVEL ACTIONS              *
-     *********************************************/
+	 *          LOWER LEVEL ACTIONS              *
+	 *********************************************/
 
-					/**
-     * * curl --insecure -u $es_admin_user:$es_admin_password -XGET https://es.leadwire.io/.kibana_${tenant_name}
-     *
-     * Returns the content of the index if it is found, FALSE otherwise
-     *
-     * @param string $tenantName
-     *
-     * @return bool|string
-     */
-					protected function getIndex(string $tenantName)
+	/**
+	 * * curl --insecure -u $es_admin_user:$es_admin_password -XGET https://es.leadwire.io/.kibana_${tenant_name}
+	 *
+	 * Returns the content of the index if it is found, FALSE otherwise
+	 *
+	 * @param string $tenantName
+	 *
+	 * @return bool|string
+	 */
+	protected function getIndex(string $tenantName)
 	{
 		try {
 			$tenant = str_replace("-", "", $tenantName);
@@ -162,27 +161,27 @@ class ElasticSearchService
 	}
 
 	/**
-     * Wrapper function
-     *
-     * @param string $tenantName
-     *
-     * @return boolean
-     */
-					public function indexExists(string $tenantName) : bool
+	 * Wrapper function
+	 *
+	 * @param string $tenantName
+	 *
+	 * @return boolean
+	 */
+	public function indexExists(string $tenantName): bool
 	{
 		return true === $this->getIndex($tenantName);
 	}
 
 	/**
-     * * curl --insecure -u $es_admin_user:$es_admin_password -XDELETE https://es.leadwire.io/.kibana_${tenant_name}
-     *
-     * Deletes an index ($tenantName) and returns true if the request succeeded. Returns false if the index was not found
-     *
-     * @param string $tenantName
-     *
-     * @return bool
-     */
-					public function deleteIndex(string $tenantName) : bool
+	 * * curl --insecure -u $es_admin_user:$es_admin_password -XDELETE https://es.leadwire.io/.kibana_${tenant_name}
+	 *
+	 * Deletes an index ($tenantName) and returns true if the request succeeded. Returns false if the index was not found
+	 *
+	 * @param string $tenantName
+	 *
+	 * @return bool
+	 */
+	public function deleteIndex(string $tenantName): bool
 	{
 		try {
 			$tenant = str_replace("-", "", $tenantName);
@@ -217,17 +216,17 @@ class ElasticSearchService
 	}
 
 	/*********************************************
-     *          HIGHER LEVEL ACTIONS             *
-     *********************************************/
+	 *          HIGHER LEVEL ACTIONS             *
+	 *********************************************/
 
-					/**
-     * * curl --insecure -u $es_admin_user:$es_admin_password -XGET https://es.leadwire.io/_alias/${appname}
-     *
-     * @param string $applicationName
-     *
-     * @return boolean
-     */
-					public function getAlias(string $applicationName) : bool
+	/**
+	 * * curl --insecure -u $es_admin_user:$es_admin_password -XGET https://es.leadwire.io/_alias/${appname}
+	 *
+	 * @param string $applicationName
+	 *
+	 * @return boolean
+	 */
+	public function getAlias(string $applicationName): bool
 	{
 		$response = $this->httpClient->get($this->url . "_alias/$applicationName", ['auth' => $this->getAuth()]);
 
@@ -253,12 +252,12 @@ class ElasticSearchService
 	}
 
 	/**
-     *
-     * @param Application $application, string $environmentName, string $qualifier, string $version
-     *
-     * @return array
-     */
-	public function initIndexStateManagement(string $applicationName, string $environmentName, string $qualifier, string $version) : array
+	 *
+	 * @param Application $application, string $environmentName, string $qualifier, string $version
+	 *
+	 * @return array
+	 */
+	public function initIndexStateManagement(string $applicationName, string $environmentName, string $qualifier, string $version): array
 	{
 		$ilm_template = "000001";
 		$createdAliases = [];
@@ -291,7 +290,7 @@ class ElasticSearchService
 			]
 		);
 
-	// If index does not exist 
+		// If index does not exist 
 		if ($response->getStatusCode() == '404') {
 			$response = $this->httpClient->put(
 				$this->url . $indexName . "/",
@@ -345,13 +344,13 @@ class ElasticSearchService
 	}
 
 	/**
-     * * curl --insecure -u $es_admin_user:$es_admin_password -H 'Content-Type: application/json' -XPOST https://es.leadwire.io/_aliases -d"{\"actions\":[{\"add\":{\"index\":\"$index_pattern_name\",\"alias\":\"$appname\"}}]}"
-     *
-     * @param Application $application
-     *
-     * @return array
-     */
-					public function createAlias(Application $application, string $environmentName) : array
+	 * * curl --insecure -u $es_admin_user:$es_admin_password -H 'Content-Type: application/json' -XPOST https://es.leadwire.io/_aliases -d"{\"actions\":[{\"add\":{\"index\":\"$index_pattern_name\",\"alias\":\"$appname\"}}]}"
+	 *
+	 * @param Application $application
+	 *
+	 * @return array
+	 */
+	public function createAlias(Application $application, string $environmentName): array
 	{
 		$now = $application->getCreatedAt()->format('Y-m-d');
 		$createdAliases = [];
@@ -379,7 +378,7 @@ class ElasticSearchService
             );
 	   */
 
-															$response = $this->httpClient->put(
+			$response = $this->httpClient->put(
 				$this->url . $indexName . "/_doc/1",
 				[
 					'auth' => $this->getAuth(),
@@ -433,13 +432,13 @@ class ElasticSearchService
 	}
 
 	/**
-     * @deprecated 1.1
-     *
-     * @param Application $application
-     *
-     * @return void
-     */
-					public function deleteApplicationIndexes(Application $application)
+	 * @deprecated 1.1
+	 *
+	 * @param Application $application
+	 *
+	 * @return void
+	 */
+	public function deleteApplicationIndexes(Application $application)
 	{
 		$this->deleteIndex("app_{$application->getUuid()}");
 		$this->deleteIndex("shared_{$application->getUuid()}");
@@ -461,7 +460,7 @@ class ElasticSearchService
 				continue;
 			}
 			/** @var ?Template $template */
-															$template = $monitoringSet->getTemplateByType(Template::INDEX_TEMPLATE);
+			$template = $monitoringSet->getTemplateByType(Template::INDEX_TEMPLATE);
 
 			if (($template instanceof Template) === false) {
 				throw new \Exception(
@@ -504,12 +503,12 @@ class ElasticSearchService
 	}
 
 	/**
-     * * curl --insecure -u $es_user:$es_password -XDELETE "https://es.leadwire.io/_template/apm-$index_template_version"
-     *
-     * * curl --insecure -u $es_user:$es_password -XPUT "https://es.leadwire.io/_template/apm-$index_template_version" --header "Content-Type: application/json"  -d@/home/centos/pack_curl/index-template.json
-     *
-     * @return void
-     */
+	 * * curl --insecure -u $es_user:$es_password -XDELETE "https://es.leadwire.io/_template/apm-$index_template_version"
+	 *
+	 * * curl --insecure -u $es_user:$es_password -XPUT "https://es.leadwire.io/_template/apm-$index_template_version" --header "Content-Type: application/json"  -d@/home/centos/pack_curl/index-template.json
+	 *
+	 * @return void
+	 */
 	public function createIndexTemplate(Application $application, array $activeApplications, string $envName)
 	{
 		$monitoringSets = $application->getType()->getMonitoringSets();
@@ -584,14 +583,14 @@ class ElasticSearchService
 	}
 
 	/*********************************************
-     *          HELPER METHODS                   *
-     *********************************************/
+	 *          HELPER METHODS                   *
+	 *********************************************/
 
-					/**
-     * @param Application $app
-     * @param User $user
-     */
-					protected function getRawDashboards(Application $app, User $user, string $envName)
+	/**
+	 * @param Application $app
+	 * @param User $user
+	 */
+	protected function getRawDashboards(Application $app, User $user, string $envName)
 	{
 		$res = [
 			"Default" => [],
@@ -885,13 +884,13 @@ class ElasticSearchService
 	}
 
 	/*****************************opendistro*************************************/
-	function createODFEUser(string  $user) : bool
+	function createODFEUser(string  $user): bool
 	{
 		try {
 			$status = false;
 			$response = $this->httpClient->put(
 
-				$this->url . "_opendistro/_security/api/internalusers/" . $user,
+				$this->url . "_plugins/_security/api/internalusers/" . $user,
 				[
 					'auth' => $this->getAuth(),
 					'headers' => [
@@ -905,7 +904,7 @@ class ElasticSearchService
 			$this->logger->notice(
 				"leadwire.opendistro.createUser",
 				[
-					'url' => $this->url . "_opendistro/_security/api/internalusers/" . $user,
+					'url' => $this->url . "_plugins/_security/api/internalusers/" . $user,
 					'verb' => 'PUT',
 					'status_code' => $response->getStatusCode(),
 					'status_text' => $response->getReasonPhrase()
@@ -923,15 +922,15 @@ class ElasticSearchService
 			throw new HttpException("An error has occurred while executing your request.", 400);
 		}
 	}
-	
-	
-	function deleteODFEUser(string  $user) : bool
+
+
+	function deleteODFEUser(string  $user): bool
 	{
 		try {
 			$status = false;
 			$response = $this->httpClient->delete(
 
-				$this->url . "_opendistro/_security/api/internalusers/" . $user,
+				$this->url . "_plugins/_security/api/internalusers/" . $user,
 				[
 					'auth' => $this->getAuth(),
 					'headers' => [
@@ -945,7 +944,7 @@ class ElasticSearchService
 			$this->logger->notice(
 				"leadwire.opendistro.deleteODFEUser",
 				[
-					'url' => $this->url . "_opendistro/_security/api/internalusers/" . $user,
+					'url' => $this->url . "_plugins/_security/api/internalusers/" . $user,
 					'verb' => 'DELETE',
 					'status_code' => $response->getStatusCode(),
 					'status_text' => $response->getReasonPhrase()
@@ -963,16 +962,16 @@ class ElasticSearchService
 			throw new HttpException("An error has occurred while executing your request.", 400);
 		}
 	}
-	
-	
 
-	function createUser(User $user) : bool
+
+
+	function createUser(User $user): bool
 	{
 		try {
 			$status = false;
 			$response = $this->httpClient->put(
 
-				$this->url . "_opendistro/_security/api/internalusers/" . $user->getUsername(),
+				$this->url . "_plugins/_security/api/internalusers/" . $user->getUsername(),
 				[
 					'auth' => $this->getAuth(),
 					'headers' => [
@@ -986,7 +985,7 @@ class ElasticSearchService
 			$this->logger->notice(
 				"leadwire.opendistro.createUser",
 				[
-					'url' => $this->url . "_opendistro/_security/api/internalusers/" . $user->getUsername(),
+					'url' => $this->url . "_plugins/_security/api/internalusers/" . $user->getUsername(),
 					'verb' => 'PUT',
 					'status_code' => $response->getStatusCode(),
 					'status_text' => $response->getReasonPhrase()
@@ -1005,13 +1004,13 @@ class ElasticSearchService
 		}
 	}
 
-	function createTenant(string $tenantName) : bool
+	function createTenant(string $tenantName): bool
 	{
 		try {
 			$status = false;
 			$response = $this->httpClient->put(
 
-				$this->url . "_opendistro/_security/api/tenants/" . $tenantName,
+				$this->url . "_plugins/_security/api/tenants/" . $tenantName,
 				[
 					'auth' => $this->getAuth(),
 					'headers' => [
@@ -1025,7 +1024,7 @@ class ElasticSearchService
 			$this->logger->notice(
 				"leadwire.opendistro.createTenant",
 				[
-					'url' => $this->url . "_opendistro/_security/api/tenants/" . $tenantName,
+					'url' => $this->url . "_plugins/_security/api/tenants/" . $tenantName,
 					'verb' => 'PUT',
 					'status_code' => $response->getStatusCode(),
 					'status_text' => $response->getReasonPhrase()
@@ -1044,7 +1043,7 @@ class ElasticSearchService
 		}
 	}
 
-	function deleteTemplatesForApplication(Application $application) : bool
+	function deleteTemplatesForApplication(Application $application): bool
 	{
 		try {
 			$status = false;
@@ -1080,7 +1079,7 @@ class ElasticSearchService
 		}
 	}
 
-	function deleteTemplatesForEnvironment(Environment $environment) : bool
+	function deleteTemplatesForEnvironment(Environment $environment): bool
 	{
 		try {
 			$status = false;
@@ -1116,13 +1115,13 @@ class ElasticSearchService
 		}
 	}
 
-	function deleteTenant(string $tenantName) : bool
+	function deleteTenant(string $tenantName): bool
 	{
 		try {
 			$status = false;
 			$response = $this->httpClient->delete(
 
-				$this->url . "_opendistro/_security/api/tenants/" . $tenantName,
+				$this->url . "_plugins/_security/api/tenants/" . $tenantName,
 				[
 					'auth' => $this->getAuth(),
 					'headers' => [
@@ -1135,7 +1134,7 @@ class ElasticSearchService
 			$this->logger->notice(
 				"leadwire.opendistro.deleteTenant",
 				[
-					'url' => $this->url . "_opendistro/_security/api/tenants/" . $tenantName,
+					'url' => $this->url . "_plugins/_security/api/tenants/" . $tenantName,
 					'verb' => 'DELETE',
 					'status_code' => $response->getStatusCode(),
 					'status_text' => $response->getReasonPhrase()
@@ -1153,7 +1152,7 @@ class ElasticSearchService
 		}
 	}
 
-	function createLeadwireRolesMapping() : bool
+	function createLeadwireRolesMapping(): bool
 	{
 		$status = false;
 		try {
@@ -1165,7 +1164,7 @@ class ElasticSearchService
 
 			$response = $this->httpClient->put(
 
-				$this->url . "_opendistro/_security/api/rolesmapping/leadwire",
+				$this->url . "_plugins/_security/api/rolesmapping/leadwire",
 				[
 					'auth' => $this->getAuth(),
 					'headers' => [
@@ -1179,7 +1178,7 @@ class ElasticSearchService
 			$this->logger->notice(
 				"leadwire.opendistro.createLeadwireRolesMapping",
 				[
-					'url' => $this->url . "_opendistro/_security/api/rolesmapping/leadwire",
+					'url' => $this->url . "_plugins/_security/api/rolesmapping/leadwire",
 					'verb' => 'PUT',
 					'status_code' => $response->getStatusCode(),
 					'status_text' => $response->getReasonPhrase()
@@ -1197,14 +1196,14 @@ class ElasticSearchService
 		}
 	}
 
-	
-	
-	function createLeadwireRole() : bool
+
+
+	function createLeadwireRole(): bool
 	{
 		$status = false;
 		try {
 			$role = array(
-				"cluster_permissions" => array("cluster:monitor/health","cluster:monitor/state"),
+				"cluster_permissions" => array("cluster:monitor/health", "cluster:monitor/state"),
 				"index_permissions" => array(
 					0 => array(
 						"index_patterns" => array(
@@ -1221,7 +1220,7 @@ class ElasticSearchService
 
 			$response = $this->httpClient->put(
 
-				$this->url . "_opendistro/_security/api/roles/leadwire",
+				$this->url . "_plugins/_security/api/roles/leadwire",
 				[
 					'auth' => $this->getAuth(),
 					'headers' => [
@@ -1235,7 +1234,7 @@ class ElasticSearchService
 			$this->logger->notice(
 				"leadwire.opendistro.createLeadwireRole",
 				[
-					'url' => $this->url . "_opendistro/_security/api/roles/leadwire",
+					'url' => $this->url . "_plugins/_security/api/roles/leadwire",
 					'verb' => 'PUT',
 					'status_code' => $response->getStatusCode(),
 					'status_text' => $response->getReasonPhrase()
@@ -1252,8 +1251,8 @@ class ElasticSearchService
 			throw new HttpException("An error has occurred while executing your request.", 400);
 		}
 	}
-	
-		function createAnomaly_full_accessRolesMapping() : bool
+
+	function createAnomaly_full_accessRolesMapping(): bool
 	{
 		$status = false;
 		try {
@@ -1265,7 +1264,7 @@ class ElasticSearchService
 
 			$response = $this->httpClient->put(
 
-				$this->url . "_opendistro/_security/api/rolesmapping/anomaly_full_access",
+				$this->url . "_plugins/_security/api/rolesmapping/anomaly_full_access",
 				[
 					'auth' => $this->getAuth(),
 					'headers' => [
@@ -1279,7 +1278,7 @@ class ElasticSearchService
 			$this->logger->notice(
 				"leadwire.opendistro.createAnomaly_full_accessRolesMapping",
 				[
-					'url' => $this->url . "_opendistro/_security/api/rolesmapping/anomaly_full_access",
+					'url' => $this->url . "_plugins/_security/api/rolesmapping/anomaly_full_access",
 					'verb' => 'PUT',
 					'status_code' => $response->getStatusCode(),
 					'status_text' => $response->getReasonPhrase()
@@ -1296,8 +1295,8 @@ class ElasticSearchService
 			throw new HttpException("An error has occurred while executing your request.", 400);
 		}
 	}
-	
-	function createAnomaly_full_accessRole() : bool
+
+	function createAnomaly_full_accessRole(): bool
 	{
 		$status = false;
 		try {
@@ -1307,7 +1306,7 @@ class ElasticSearchService
 
 			$response = $this->httpClient->put(
 
-				$this->url . "_opendistro/_security/api/roles/anomaly_full_access",
+				$this->url . "_plugins/_security/api/roles/anomaly_full_access",
 				[
 					'auth' => $this->getAuth(),
 					'headers' => [
@@ -1321,7 +1320,7 @@ class ElasticSearchService
 			$this->logger->notice(
 				"leadwire.opendistro.createanomaly_full_access",
 				[
-					'url' => $this->url . "_opendistro/_security/api/roles/anomaly_full_access",
+					'url' => $this->url . "_plugins/_security/api/roles/anomaly_full_access",
 					'verb' => 'PUT',
 					'status_code' => $response->getStatusCode(),
 					'status_text' => $response->getReasonPhrase()
@@ -1338,8 +1337,8 @@ class ElasticSearchService
 			throw new HttpException("An error has occurred while executing your request.", 400);
 		}
 	}
-	
-		function createAlerting_full_accessRolesMapping() : bool
+
+	function createAlerting_full_accessRolesMapping(): bool
 	{
 		$status = false;
 		try {
@@ -1351,7 +1350,7 @@ class ElasticSearchService
 
 			$response = $this->httpClient->put(
 
-				$this->url . "_opendistro/_security/api/rolesmapping/alerting_full_access",
+				$this->url . "_plugins/_security/api/rolesmapping/alerting_full_access",
 				[
 					'auth' => $this->getAuth(),
 					'headers' => [
@@ -1365,7 +1364,7 @@ class ElasticSearchService
 			$this->logger->notice(
 				"leadwire.opendistro.createAlerting_full_accessRolesMapping",
 				[
-					'url' => $this->url . "_opendistro/_security/api/rolesmapping/alerting_full_access",
+					'url' => $this->url . "_plugins/_security/api/rolesmapping/alerting_full_access",
 					'verb' => 'PUT',
 					'status_code' => $response->getStatusCode(),
 					'status_text' => $response->getReasonPhrase()
@@ -1382,9 +1381,9 @@ class ElasticSearchService
 			throw new HttpException("An error has occurred while executing your request.", 400);
 		}
 	}
-	
 
-	function createConfig() : bool
+
+	function createConfig(): bool
 	{
 		$status = false;
 		try {
@@ -1407,7 +1406,7 @@ class ElasticSearchService
 							"remoteIpHeader" => "x-forwarded-for",
 						),
 					),
-					"authc" => array( 
+					"authc" => array(
 						"basic_internal_auth_domain" => array(
 							"http_enabled" => true,
 							"transport_enabled" => true,
@@ -1455,41 +1454,41 @@ class ElasticSearchService
 							"description" => "Authenticate via SSL client certificates",
 						),
 					),
-					
-					  "authz" =>
-                                                array (
-                                                  "roles_from_leadwireldap" =>
-                                                  array (
-                                                    "http_enabled" => true,
-                                                    "transport_enabled" => false,
-                                                    "authorization_backend" =>
-                                                    array (
-                                                      "type" => "ldap",
-                                                      "config" =>
-                                                      array (
-                                                        "enable_ssl" => false,
-                                                        "enable_start_tls" => false,
-                                                        "enable_ssl_client_auth" => false,
-                                                        "verify_hostnames" => false,
-                                                        "hosts" =>
-                                                        array (
-                                                          0 => "leadwire-ldap:389",
-                                                        ),
-                                                        "rolebase" => "ou=roles,dc=leadwire,dc=io",
-                                                        "rolesearch" => "(roleOccupant={0})",
-                                                        "userrolename" => "disabled",
-                                                        "rolename" => "cn",
-                                                        "resolve_nested_roles" => true,
-                                                        "userbase" => "ou=people,dc=leadwire,dc=io",
-                                                        "usersearch" => "(uid={0})",
-                                                        "bind_dn" => "cn=admin,dc=leadwire,dc=io",
-                                                        "password" => "admin"
-                                                      ),
-                                                    ),
-                                                    "description" => "Authorize via LDAP",
-                                                  ),
+
+					"authz" =>
+					array(
+						"roles_from_leadwireldap" =>
+						array(
+							"http_enabled" => true,
+							"transport_enabled" => false,
+							"authorization_backend" =>
+							array(
+								"type" => "ldap",
+								"config" =>
+								array(
+									"enable_ssl" => false,
+									"enable_start_tls" => false,
+									"enable_ssl_client_auth" => false,
+									"verify_hostnames" => false,
+									"hosts" =>
+									array(
+										0 => "leadwire-ldap:389",
+									),
+									"rolebase" => "ou=roles,dc=leadwire,dc=io",
+									"rolesearch" => "(roleOccupant={0})",
+									"userrolename" => "disabled",
+									"rolename" => "cn",
+									"resolve_nested_roles" => true,
+									"userbase" => "ou=people,dc=leadwire,dc=io",
+									"usersearch" => "(uid={0})",
+									"bind_dn" => "cn=admin,dc=leadwire,dc=io",
+									"password" => "admin"
+								),
+							),
+							"description" => "Authorize via LDAP",
 						),
-					
+					),
+
 					"do_not_fail_on_forbidden" => false,
 					"multi_rolespan_enabled" => true,
 					"hosts_resolver_mode" => "ip-only",
@@ -1499,7 +1498,7 @@ class ElasticSearchService
 
 			$response = $this->httpClient->put(
 
-				$this->url . "_opendistro/_security/api/securityconfig/config",
+				$this->url . "_plugins/_security/api/securityconfig/config",
 				[
 					'auth' => $this->getAuth(),
 					'headers' => [
@@ -1513,7 +1512,7 @@ class ElasticSearchService
 			$this->logger->notice(
 				"leadwire.opendistro.createConfig",
 				[
-					'url' => $this->url . "_opendistro/_security/api/securityconfig/config",
+					'url' => $this->url . "_plugins/_security/api/securityconfig/config",
 					'verb' => 'PUT',
 					'status_code' => $response->getStatusCode(),
 					'status_text' => $response->getReasonPhrase()
@@ -1535,8 +1534,7 @@ class ElasticSearchService
 		string $envName,
 		string $applicationName,
 		string $userName = ''
-	) : bool
-	{
+	): bool {
 		try {
 			$status = false;
 
@@ -1545,7 +1543,7 @@ class ElasticSearchService
 			];
 
 
-			$url = $this->url . "_opendistro/_security/api/rolesmapping/datawrite_role_" . $envName . "_" . $applicationName;
+			$url = $this->url . "_plugins/_security/api/rolesmapping/datawrite_role_" . $envName . "_" . $applicationName;
 
 
 			$response = $this->httpClient->put(
@@ -1580,16 +1578,15 @@ class ElasticSearchService
 			throw new HttpException("An error has occurred while executing your request.", 400);
 		}
 	}
-					
+
 	function createRoleDataWrite(
 		string $envName,
 		string $applicationName,
 		array $index_patterns
-		) : bool
-	{
+	): bool {
 		try {
 			$status = false;
-			
+
 			$role = [
 				"index_permissions" => array(
 					[
@@ -1601,9 +1598,9 @@ class ElasticSearchService
 					]
 				),
 			];
-			
 
-			$url = $this->url . "_opendistro/_security/api/roles/datawrite_role_" . $envName . "_" . $applicationName;
+
+			$url = $this->url . "_plugins/_security/api/roles/datawrite_role_" . $envName . "_" . $applicationName;
 
 
 			$response = $this->httpClient->put(
@@ -1639,7 +1636,7 @@ class ElasticSearchService
 			throw new HttpException("An error has occurred while executing your request.", 400);
 		}
 	}
-					
+
 	function createRole(
 		string $envName,
 		string $applicationName,
@@ -1647,8 +1644,7 @@ class ElasticSearchService
 		array $tenant_patterns,
 		array $allowed_actions,
 		bool $isWrite
-	) : bool
-	{
+	): bool {
 		try {
 			$status = false;
 
@@ -1660,8 +1656,10 @@ class ElasticSearchService
 						"dls" => "",
 						"fls" => array(),
 						"masked_fields" => array(),
-						"allowed_actions" => array("kibana_all_read", "indices:monitor/settings/get","indices:monitor/stats","indices:admin/aliases/get",
-									   "indices:admin/mappings/get","indices:admin/resolve/index")
+						"allowed_actions" => array(
+							"kibana_all_read", "indices:monitor/settings/get", "indices:monitor/stats", "indices:admin/aliases/get",
+							"indices:admin/mappings/get", "indices:admin/resolve/index"
+						)
 					]
 				),
 				"tenant_permissions" => array(
@@ -1672,7 +1670,7 @@ class ElasticSearchService
 				)
 			];
 
-			$url = $this->url . "_opendistro/_security/api/roles/role_" . $envName . "_" . $applicationName;
+			$url = $this->url . "_plugins/_security/api/roles/role_" . $envName . "_" . $applicationName;
 
 			if ($isWrite) {
 				$url = $url . "_write";
@@ -1714,7 +1712,7 @@ class ElasticSearchService
 		}
 	}
 
-	function patchRole(string $envName, string $applicationName, string $path, string $action, array $value) : bool
+	function patchRole(string $envName, string $applicationName, string $path, string $action, array $value): bool
 	{
 		try {
 			$status = false;
@@ -1729,7 +1727,7 @@ class ElasticSearchService
 
 			$response = $this->httpClient->patch(
 
-				$this->url . "_opendistro/_security/api/roles/role_" . $envName . "_" . $applicationName,
+				$this->url . "_plugins/_security/api/roles/role_" . $envName . "_" . $applicationName,
 				[
 					'auth' => $this->getAuth(),
 					'headers' => [
@@ -1743,7 +1741,7 @@ class ElasticSearchService
 			$this->logger->notice(
 				"leadwire.opendistro.patchRole",
 				[
-					'url' => url . "_opendistro/_security/api/roles/role_" . $envName . "_" . $applicationName,
+					'url' => $this->url . "_plugins/_security/api/roles/role_" . $envName . "_" . $applicationName,
 					'verb' => 'PATCH',
 					'status_code' => $response->getStatusCode(),
 					'status_text' => $response->getReasonPhrase()
@@ -1761,12 +1759,12 @@ class ElasticSearchService
 		}
 	}
 
-	function deleteRole(string $envName, string $applicationName, bool $isWrite) : bool
+	function deleteRole(string $envName, string $applicationName, bool $isWrite): bool
 	{
 		try {
 			$status = false;
 
-			$url = $this->url . "_opendistro/_security/api/roles/role_" . $envName . "_" . $applicationName;
+			$url = $this->url . "_plugins/_security/api/roles/role_" . $envName . "_" . $applicationName;
 
 			if ($isWrite) {
 				$url = $url . "_write";
@@ -1812,8 +1810,7 @@ class ElasticSearchService
 		string $applicationName,
 		string $userName = '',
 		bool $isWrite
-	) : bool
-	{
+	): bool {
 		try {
 			$status = false;
 
@@ -1822,7 +1819,7 @@ class ElasticSearchService
 			];
 
 
-			$url = $this->url . "_opendistro/_security/api/rolesmapping/role_" . $envName . "_" . $applicationName;
+			$url = $this->url . "_plugins/_security/api/rolesmapping/role_" . $envName . "_" . $applicationName;
 
 			if ($isWrite) {
 				$url = $url . "_write";
@@ -1863,7 +1860,7 @@ class ElasticSearchService
 		}
 	}
 
-	private function patchRoleMapping(string $action, string $envName, string $applicationName, array $users, bool $isWrite) : bool
+	private function patchRoleMapping(string $action, string $envName, string $applicationName, array $users, bool $isWrite): bool
 	{
 		try {
 			$status = false;
@@ -1887,7 +1884,7 @@ class ElasticSearchService
 
 			$response = $this->httpClient->patch(
 
-				$this->url . "_opendistro/_security/api/rolesmapping",
+				$this->url . "_plugins/_security/api/rolesmapping",
 				[
 					'auth' => $this->getAuth(),
 					'headers' => [
@@ -1901,7 +1898,7 @@ class ElasticSearchService
 			$this->logger->notice(
 				"leadwire.opendistro.patchRoleMapping",
 				[
-					'url' => $this->url . "_opendistro/_security/api/rolesmapping",
+					'url' => $this->url . "_plugins/_security/api/rolesmapping",
 					'verb' => 'PATCH',
 					'status_code' => $response->getStatusCode(),
 					'status_text' => $response->getReasonPhrase()
@@ -1919,13 +1916,13 @@ class ElasticSearchService
 		}
 	}
 
-	function deleteRoleMapping(string $envName, string $applicationName, bool $isWrite) : bool
+	function deleteRoleMapping(string $envName, string $applicationName, bool $isWrite): bool
 	{
 		try {
 			$status = false;
 
-			$url = $this->url . "_opendistro/_security/api/rolesmapping/role_" . $envName . "_" . $applicationName;
-			
+			$url = $this->url . "_plugins/_security/api/rolesmapping/role_" . $envName . "_" . $applicationName;
+
 
 			if ($isWrite === true) {
 				$url = $url . "_write";
@@ -1966,12 +1963,12 @@ class ElasticSearchService
 		}
 	}
 
-	private function getRoleMapping(String $envName, string $applicationName, bool $isWrite) : array
+	private function getRoleMapping(String $envName, string $applicationName, bool $isWrite): array
 	{
 		try {
 			$status = false;
 
-			$url = $this->url . "_opendistro/_security/api/rolesmapping/role_" . $envName . "_" . $applicationName;
+			$url = $this->url . "_plugins/_security/api/rolesmapping/role_" . $envName . "_" . $applicationName;
 
 			if ($isWrite === true) {
 				$url = $url . "_write";
@@ -2027,8 +2024,7 @@ class ElasticSearchService
 		User $user,
 		string $applicationName,
 		bool $isWrite
-	)
-	{
+	) {
 		$users = $this->getRoleMapping($envName, $applicationName, $isWrite);
 
 		switch ($action) {
@@ -2046,28 +2042,28 @@ class ElasticSearchService
 				break;
 		}
 		return $this->patchRoleMapping("replace", $envName, $applicationName, $users, $isWrite);
-    }
-    
-    function alertManager() : bool
+	}
+
+	function alertManager(): bool
 	{
 		try {
 
-            $status = false;
+			$status = false;
 
-            $body = [
-					"type" => "custom_webhook",
-					"name" => "alertmanager_custom_webhook",
-					"custom_webhook" => [
-                        "path" => "api/v1/alerts",
-                        "scheme" => "http",
-                        "port" => 9093,
-                        "host" => "leadwire_leadwire-alertmanager"
-                    ]
-                ];
-                
+			$body = [
+				"type" => "custom_webhook",
+				"name" => "alertmanager_custom_webhook",
+				"custom_webhook" => [
+					"path" => "api/v1/alerts",
+					"scheme" => "http",
+					"port" => 9093,
+					"host" => "leadwire_leadwire-alertmanager"
+				]
+			];
+
 			$response = $this->httpClient->post(
 
-				$this->url . "_opendistro/_alerting/destinations",
+				$this->url . "_plugins/_alerting/destinations",
 				[
 					'auth' => $this->getAuth(),
 					'headers' => [
@@ -2081,10 +2077,10 @@ class ElasticSearchService
 			$this->logger->notice(
 				"leadwire.opendistro.alerting",
 				[
-					'url' => $this->url . "_opendistro/_alerting/destinations",
+					'url' => $this->url . "_plugins/_alerting/destinations",
 					'verb' => 'POST',
 					'status_code' => $response->getStatusCode(),
-                    'status_text' => $response->getReasonPhrase()
+					'status_text' => $response->getReasonPhrase()
 				]
 			);
 
@@ -2099,7 +2095,7 @@ class ElasticSearchService
 		}
 	}
 
-	function createBackupLocation() : bool
+	function createBackupLocation(): bool
 	{
 		try {
 			$status = false;
@@ -2146,18 +2142,18 @@ class ElasticSearchService
 			throw new HttpException("An error has occurred while executing your request.", 400);
 		}
 	}
-					
-	function putClusterSettings() : bool
+
+	function putClusterSettings(): bool
 	{
 		try {
 			$status = false;
 
-			$cluster_setting = array (
-			  'persistent' => 
-			  array (
-				'opendistro.alerting.filter_by_backend_roles' => 'true',
-				'opendistro.anomaly_detection.filter_by_backend_roles' => 'true'
-			  ),
+			$cluster_setting = array(
+				'persistent' =>
+				array(
+					'opendistro.alerting.filter_by_backend_roles' => 'true',
+					'opendistro.anomaly_detection.filter_by_backend_roles' => 'true'
+				),
 			);
 
 			$url = $this->url . "_cluster/settings";
@@ -2194,11 +2190,11 @@ class ElasticSearchService
 			$this->logger->error($e->getMessage());
 			throw new HttpException("An error has occurred while executing your request.", 400);
 		}
-	}				
-					
-	
+	}
 
-	function createAlert(string $appName, string $envName, string $type) : bool
+
+
+	function createAlert(string $appName, string $envName, string $type): bool
 	{
 		try {
 			$status = false;
@@ -2217,7 +2213,7 @@ class ElasticSearchService
 				]
 			];
 
-			$url = $this->url . "_opendistro/_alerting/destinations";
+			$url = $this->url . "_plugins/_alerting/destinations";
 
 			$response = $this->httpClient->post(
 
@@ -2296,7 +2292,7 @@ class ElasticSearchService
 				]
 			];
 
-			$url = $this->url . "_opendistro/_ism/policies/hot-warm-delete-policy";
+			$url = $this->url . "_plugins/_ism/policies/hot-warm-delete-policy";
 
 			$response = $this->httpClient->put(
 
@@ -2385,7 +2381,7 @@ class ElasticSearchService
 				]
 			];
 
-			$url = $this->url . "_opendistro/_ism/policies/rollover-hot-warm-delete-policy";
+			$url = $this->url . "_plugins/_ism/policies/rollover-hot-warm-delete-policy";
 
 			$response = $this->httpClient->put(
 
@@ -2426,7 +2422,7 @@ class ElasticSearchService
 		try {
 			$status = false;
 
-			$url = $this->url . "_opendistro/_ism/policies/" . $policyName;
+			$url = $this->url . "_plugins/_ism/policies/" . $policyName;
 
 			$response = $this->httpClient->delete(
 
@@ -2459,12 +2455,12 @@ class ElasticSearchService
 	}
 
 	/****************************************************************************/
-    
-    
-    
-    ///Purges
 
-	function purgeIndices() : bool
+
+
+	///Purges
+
+	function purgeIndices(): bool
 	{
 		try {
 			$status = false;
@@ -2501,7 +2497,7 @@ class ElasticSearchService
 		}
 	}
 
-	function purgeAliases() : bool
+	function purgeAliases(): bool
 	{
 		try {
 			$status = false;
@@ -2538,7 +2534,7 @@ class ElasticSearchService
 		}
 	}
 
-	function purgeTemplates() : bool
+	function purgeTemplates(): bool
 	{
 		try {
 			$status = false;
@@ -2575,7 +2571,7 @@ class ElasticSearchService
 		}
 	}
 
-	function addPipline($name, $body) : bool
+	function addPipline($name, $body): bool
 	{
 		try {
 			$status = false;
@@ -2616,10 +2612,11 @@ class ElasticSearchService
 		}
 	}
 
-	public function getRcaOverview(){
+	public function getRcaOverview()
+	{
 		try {
 			$data = [];
-			$url = "https://es.leadwire.io/_opendistro/_performanceanalyzer/rca";
+			$url = "https://es.leadwire.io/_plugins/_performanceanalyzer/rca";
 
 			$response = $this->httpClient->get($url);
 
@@ -2635,7 +2632,7 @@ class ElasticSearchService
 
 			$res = json_decode($response->getBody());
 
-			foreach ($res as $k => $v){
+			foreach ($res as $k => $v) {
 				$items = (array)$v;
 				$data[$k] = array();
 
