@@ -14,6 +14,7 @@
             $rootScope.ASSETS_BASE_URL = CONFIG.ASSETS_BASE_URL;
             $rootScope.DOWNLOAD_URL = CONFIG.DOWNLOAD_URL;
             $rootScope.UPLOAD_URL = CONFIG.UPLOAD_URL;
+            $sessionStorage.listApp = [];
 
             $rootScope.$watch('applications', function (newVal) {
                 $sessionStorage.applications = newVal;
