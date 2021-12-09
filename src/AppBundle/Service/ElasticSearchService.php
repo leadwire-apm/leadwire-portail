@@ -2143,6 +2143,102 @@ class ElasticSearchService
 		}
 	}
 
+	
+	
+	function enablePa(): bool
+	{
+		try {
+			$status = false;
+
+			$rca_setting = array(
+				'enabled' => 'true'
+			);
+
+			$url = $this->url . "plugins/_performanceanalyzer/cluster/config";
+
+			$response = $this->httpClient->put(
+
+				$url,
+				[
+					'auth' => $this->getAuth(),
+					'headers' => [
+						"Content-Type" => "application/json",
+					],
+					'body' => \json_encode($rca_setting),
+				]
+
+			);
+
+			$this->logger->notice(
+				"leadwire.openseacrh.plugins.performanceanalyzer.cluster.config",
+				[
+					'url' => $url,
+					'verb' => 'PUT',
+					'status_code' => $response->getStatusCode(),
+					'status_text' => $response->getReasonPhrase()
+				]
+			);
+
+			if ($response->getStatusCode() == 201) {
+				$status = true;
+			}
+
+			return $status;
+		} catch (\Exception $e) {
+			$this->logger->error($e->getMessage());
+			throw new HttpException("An error has occurred while executing your request.", 400);
+		}
+	}
+
+
+	function enableRca(): bool
+	{
+		try {
+			$status = false;
+
+			$rca_setting = array(
+				'enabled' => 'true'
+			);
+
+			$url = $this->url . "plugins/_performanceanalyzer/rca/cluster/config";
+
+			$response = $this->httpClient->put(
+
+				$url,
+				[
+					'auth' => $this->getAuth(),
+					'headers' => [
+						"Content-Type" => "application/json",
+					],
+					'body' => \json_encode($rca_setting),
+				]
+
+			);
+
+			$this->logger->notice(
+				"leadwire.openseacrh.plugins.performanceanalyzer.rca.cluster.config",
+				[
+					'url' => $url,
+					'verb' => 'PUT',
+					'status_code' => $response->getStatusCode(),
+					'status_text' => $response->getReasonPhrase()
+				]
+			);
+
+			if ($response->getStatusCode() == 201) {
+				$status = true;
+			}
+
+			return $status;
+		} catch (\Exception $e) {
+			$this->logger->error($e->getMessage());
+			throw new HttpException("An error has occurred while executing your request.", 400);
+		}
+	}
+	
+	
+	
+	
 	function putClusterSettings(): bool
 	{
 		try {
