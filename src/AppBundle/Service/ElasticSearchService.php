@@ -2151,12 +2151,12 @@ class ElasticSearchService
 			$status = false;
 
 			$rca_setting = array(
-				'enabled' => 'true'
+				'enabled' => true
 			);
 
-			$url = $this->url . "plugins/_performanceanalyzer/cluster/config";
+			$url = $this->url . "_plugins/_performanceanalyzer/cluster/config";
 
-			$response = $this->httpClient->put(
+			$response = $this->httpClient->post(
 
 				$url,
 				[
@@ -2173,7 +2173,7 @@ class ElasticSearchService
 				"leadwire.openseacrh.plugins.performanceanalyzer.cluster.config",
 				[
 					'url' => $url,
-					'verb' => 'PUT',
+					'verb' => 'POST',
 					'status_code' => $response->getStatusCode(),
 					'status_text' => $response->getReasonPhrase()
 				]
@@ -2197,12 +2197,12 @@ class ElasticSearchService
 			$status = false;
 
 			$rca_setting = array(
-				'enabled' => 'true'
+				'enabled' => true
 			);
 
-			$url = $this->url . "plugins/_performanceanalyzer/rca/cluster/config";
+			$url = $this->url . "_plugins/_performanceanalyzer/rca/cluster/config";
 
-			$response = $this->httpClient->put(
+			$response = $this->httpClient->post(
 
 				$url,
 				[
@@ -2219,7 +2219,7 @@ class ElasticSearchService
 				"leadwire.openseacrh.plugins.performanceanalyzer.rca.cluster.config",
 				[
 					'url' => $url,
-					'verb' => 'PUT',
+					'verb' => 'POST',
 					'status_code' => $response->getStatusCode(),
 					'status_text' => $response->getReasonPhrase()
 				]
