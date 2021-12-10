@@ -2150,9 +2150,9 @@ class ElasticSearchService
 		try {
 			$status = false;
 
-			$rca_setting = array(
-				'enabled' => true
-			);
+			$rca_setting = [
+				'enabled' => 'true'
+			];
 
 			$url = $this->url . "_plugins/_performanceanalyzer/cluster/config";
 
@@ -2196,9 +2196,9 @@ class ElasticSearchService
 		try {
 			$status = false;
 
-			$rca_setting = array(
-				'enabled' => true
-			);
+			$rca_setting = [
+				'enabled' => 'true'
+			];
 
 			$url = $this->url . "_plugins/_performanceanalyzer/rca/cluster/config";
 
