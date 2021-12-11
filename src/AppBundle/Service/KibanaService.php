@@ -140,7 +140,7 @@ class KibanaService
             $content = str_replace("__replace_service__", $application->getName(), $content);
 
             $headers = [
-                'kbn-xsrf' => true,
+                'osd-xsrf' => true,
                 'Content-Type' => 'application/json',
                 'security_tenant' => $tenant,
                 'x-proxy-roles' => $this->kibanaAdminUsername,
@@ -150,7 +150,7 @@ class KibanaService
             ];
 
             $response = $this->httpClient->post(
-                $this->url . "api/kibana/dashboards/import?exclude=index-pattern&force=true",
+                $this->url . "api/opensearch-dashboards/dashboards/import?exclude=index-pattern&force=true",
                 [
                     'headers' => $headers,
                     'body' => $content,
@@ -158,9 +158,9 @@ class KibanaService
             );
 
             $this->logger->notice(
-                "leadwire.kibana.createApplicationDashboards",
+                "leadwire.opensearch-dashboards.createApplicationDashboards",
                 [
-                    'url' => $this->url . "api/kibana/dashboards/import?exclude=index-pattern&force=true",
+                    'url' => $this->url . "api/opensearch-dashboards/dashboards/import?exclude=index-pattern&force=true",
                     'verb' => 'POST',
                     'headers' => $headers,
                     'status_code' => $response->getStatusCode(),
@@ -174,7 +174,7 @@ class KibanaService
     }
 
     /**
-     * * curl --insecure -H "Authorization: Bearer ${authorization}" -X POST "$protocol://$host:$port/api/saved_objects/index-pattern/$appname" -H 'kbn-xsrf: true' -H 'Content-Type: application/json' -d @/home/centos/pack_curl/apmserver$$.json
+     * * curl --insecure -H "Authorization: Bearer ${authorization}" -X POST "$protocol://$host:$port/api/saved_objects/index-pattern/$appname" -H 'osd-xsrf: true' -H 'Content-Type: application/json' -d @/home/centos/pack_curl/apmserver$$.json
      *
      * @param Application $application
      * @param string $tenant
@@ -212,7 +212,7 @@ class KibanaService
             $content = str_replace("__replace_token__", $indexPattern, $template->getContent());
 
             $headers = [
-                'kbn-xsrf' => true,
+                'osd-xsrf' => true,
                 'Content-Type' => 'application/json',
                 'security_tenant' => $tenant,
                 'x-proxy-roles' => $this->kibanaAdminUsername,
@@ -250,7 +250,7 @@ class KibanaService
     
     
         /**
-     * * curl 'http://leadwire-kibana:5601/api/v1/configuration/audit/config' -H 'Content-Type: application/json' -H 'kbn-version: 7.10.2' --data-raw '{ ... }'
+     * * curl 'http://leadwire-kibana:5601/api/v1/configuration/audit/config' -H 'Content-Type: application/json' -H 'osd-version: 7.10.2' --data-raw '{ ... }'
      *
      * @return bool
      */
@@ -305,7 +305,7 @@ class KibanaService
 
         $headers = [
             'Content-Type' => 'application/json',
-	    'kbn-version' => '7.10.2',
+	    'osd-version' => '7.10.2',
             'x-proxy-roles' => $this->kibanaAdminUsername,
             'x-Proxy-User' => $this->kibanaAdminUsername,
             'x-forwarded-for' => '127.0.0.1',
@@ -340,7 +340,7 @@ class KibanaService
     
 
     /**
-     * * curl --insecure -H "Authorization: Bearer ${authorization}" -X POST "$protocol://$host:$port/api/saved_objects/index-pattern/default" -H 'kbn-xsrf: true' -H 'Content-Type: application/json' -d '{ "attributes": { "title": "*" }}'
+     * * curl --insecure -H "Authorization: Bearer ${authorization}" -X POST "$protocol://$host:$port/api/saved_objects/index-pattern/default" -H 'osd-xsrf: true' -H 'Content-Type: application/json' -d '{ "attributes": { "title": "*" }}'
      *
      * @param string $tenant
      * @param string $value
@@ -354,7 +354,7 @@ class KibanaService
         $content = '{ "attributes": { "title": "*" }}';
 
         $headers = [
-            'kbn-xsrf' => true,
+            'osd-xsrf' => true,
             'Content-Type' => 'application/json',
             'security_tenant' => $tenant,
             'x-proxy-roles' => $this->kibanaAdminUsername,
@@ -406,7 +406,7 @@ class KibanaService
         }
     }
     /**
-     * * curl --insecure  -H "Authorization: Bearer ${authorization}"  -XGET "https://kibana.leadwire.io/api/saved_objects/index-pattern/${appname}" -H 'kbn-xsrf: true' -H 'Content-Type: application/json'
+     * * curl --insecure  -H "Authorization: Bearer ${authorization}"  -XGET "https://kibana.leadwire.io/api/saved_objects/index-pattern/${appname}" -H 'osd-xsrf: true' -H 'Content-Type: application/json'
      *
      * @param string $applicationName
      *
@@ -416,7 +416,7 @@ class KibanaService
     {
         $authorization = $this->jwtHelper->encode($this->kibanaAdminUsername, $this->kibanaAdminUuid);
         $headers = [
-            'kbn-xsrf' => true,
+            'osd-xsrf' => true,
             'Content-Type' => 'application/json',
             'Authorization' => "Bearer $authorization",
         ];
@@ -443,7 +443,7 @@ class KibanaService
     }
 
     /**
-     * * curl --insecure -H "Authorization: Bearer ${authorization}" -X POST "$protocol://$host:$port/api/kibana/settings/defaultIndex"  -d"{\"value\":\"$appname\"}" -H 'kbn-xsrf: true' -H 'Content-Type: application/json'
+     * * curl --insecure -H "Authorization: Bearer ${authorization}" -X POST "$protocol://$host:$port/api/opensearch-dashboards/settings/defaultIndex"  -d"{\"value\":\"$appname\"}" -H 'osd-xsrf: true' -H 'Content-Type: application/json'
      *
      * @param string $tenant
      * @param string $value
@@ -455,7 +455,7 @@ class KibanaService
         $authorization = $this->jwtHelper->encode($this->kibanaAdminUsername, $this->kibanaAdminUuid);
 
         $headers = [
-            'kbn-xsrf' => true,
+            'osd-xsrf' => true,
             'Content-Type' => 'application/json',
             'Authorization' => "Bearer $authorization",
             'security_tenant' => $tenant,
@@ -467,7 +467,7 @@ class KibanaService
         $content = json_encode(['value' => $value]);
 
         $response = $this->httpClient->post(
-            $this->url . "api/kibana/settings/defaultIndex",
+            $this->url . "api/opensearch-dashboards/settings/defaultIndex",
             [
                 'headers' => $headers,
                 'body' => $content,
@@ -475,9 +475,9 @@ class KibanaService
         );
 
         $this->logger->notice(
-            "leadwire.kibana.makeDefaultIndex",
+            "leadwire.opensearch-dashboards.makeDefaultIndex",
             [
-                'url' => $this->url . "api/kibana/settings/defaultIndex",
+                'url' => $this->url . "api/opensearch-dashboards/settings/defaultIndex",
                 'verb' => 'POST',
                 'headers' => $headers,
                 'content' => $content,
