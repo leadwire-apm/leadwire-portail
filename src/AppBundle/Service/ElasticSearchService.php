@@ -1594,7 +1594,7 @@ class ElasticSearchService
 						"dls" => "",
 						"fls" => array(),
 						"masked_fields" => array(),
-						"allowed_actions" => array("indices:admin/create", "indices:data/write*", "indices:admin/mapping/put")
+						"allowed_actions" => array("indices:admin/create", "indices:data/write*", "indices:admin/mapping/put", "indices:admin/get")
 					]
 				),
 			];
