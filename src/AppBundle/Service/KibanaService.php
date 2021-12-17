@@ -494,6 +494,8 @@ class KibanaService
         $headers = [
             'kbn-xsrf' => true,
             'Content-Type' => 'application/json',
+            'x-proxy-roles' => $this->kibanaAdminUsername,
+            'X-Proxy-User' => $this->kibanaAdminUsername,
             'Authorization' => "Bearer $authorization",
             'x-forwarded-for' => '127.0.0.1',
             'osd-version' => '1.1.0'
