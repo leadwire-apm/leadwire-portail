@@ -270,6 +270,7 @@ class ApplicationController extends Controller
     ) {
         $processService->emit($this->getUser(), "heavy-operations-in-progress", "Updating application role");
         try {
+            $kibanaService->purgecache();
             $state = $applicationService->updateApplicationRole($id, $this->getUser());
             $processService->emit($this->getUser(), "heavy-operations-done", "Succeeded");
             return $this->renderResponse($state['successful']);

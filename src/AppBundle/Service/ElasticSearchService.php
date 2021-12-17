@@ -1805,6 +1805,111 @@ class ElasticSearchService
 		}
 	}
 
+	function createReadRoleMapping(
+		string $envName,
+		string $applicationName,
+		array $index_patterns
+	): bool {
+		try {
+			$status = false;
+
+			$role = [
+				"cluster_permissions" => array("cluster_composite_ops", "indices_monitor"),
+				"index_permissions" => array(
+					[
+						"index_patterns" => $index_patterns,
+						"dls" => "",
+						"fls" => array(),
+						"masked_fields" => array(),
+						"allowed_actions" => array("kibana_all_read")
+					]
+				),
+				"tenant_permissions" => array()
+			];
+
+			$url = $this->url . "_plugins/_security/api/rolesmapping/dataread_role_" . $envName . "_" . $applicationName;
+
+			$response = $this->httpClient->put(
+
+				$url,
+				[
+					'auth' => $this->getAuth(),
+					'headers' => [
+						"Content-Type" => "application/json",
+					],
+					'body' => \json_encode($role),
+				]
+
+			);
+
+			$this->logger->notice(
+				"leadwire.opendistro.createReadRoleMapping",
+				[
+					'url' => $url,
+					'verb' => 'PUT',
+					'status_code' => $response->getStatusCode(),
+					'status_text' => $response->getReasonPhrase()
+				]
+			);
+
+			if ($response->getStatusCode() == 201) {
+				$status = true;
+			}
+
+			return $status;
+		} catch (\Exception $e) {
+			$this->logger->error($e->getMessage());
+			throw new HttpException("An error has occurred while executing your request.", 400);
+		}
+	}
+
+	function createBackendRoleMapping(
+		string $envName,
+		string $applicationName
+	): bool {
+		try {
+			$status = false;
+
+			$role = [
+				"backend_roles" => array($envName . "-" . $applicationName)
+			];
+
+
+			$url = $this->url . "_plugins/_security/api/rolesmapping/dataread_role_" . $envName . "_" . $applicationName;
+
+			$response = $this->httpClient->put(
+				$url,
+				[
+					'auth' => $this->getAuth(),
+					'headers' => [
+						"Content-Type" => "application/json",
+					],
+					'body' => \json_encode($role),
+				]
+
+			);
+
+			$this->logger->notice(
+				"leadwire.opendistro.createBackendRoleMapping",
+				[
+					'url' => $url,
+					'verb' => 'PUT',
+					'status_code' => $response->getStatusCode(),
+					'status_text' => $response->getReasonPhrase()
+				]
+			);
+
+			if ($response->getStatusCode() == 201) {
+				$status = true;
+			}
+
+			return $status;
+		} catch (\Exception $e) {
+			$this->logger->error($e->getMessage());
+			throw new HttpException("An error has occurred while executing your request.", 400);
+		}
+	}
+
 	function createRoleMapping(
 		string $envName,
 		string $applicationName,

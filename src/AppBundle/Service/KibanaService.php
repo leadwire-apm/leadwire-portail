@@ -487,11 +487,37 @@ class KibanaService
         );
     }
 
+    public function purgecache()
+    {
+        $authorization = $this->jwtHelper->encode($this->kibanaAdminUsername, $this->kibanaAdminUuid);
+
+        $headers = [
+            'kbn-xsrf' => true,
+            'Content-Type' => 'application/json',
+            'Authorization' => "Bearer $authorization",
+            'x-forwarded-for' => '127.0.0.1',
+            'osd-version' => '1.1.0'
+        ];
 
 
+        $response = $this->httpClient->delete(
+            $this->url . "api/v1/configuration/cache",
+            [
+                'headers' => $headers
+            ]
+        );
 
-
-
+        $this->logger->notice(
+            "leadwire.kibana.purgeCache",
+            [
+                'url' => $this->url . "api/v1/configuration/cache",
+                'verb' => 'POST',
+                'headers' => $headers,
+                'status_code' => $response->getStatusCode(),
+                'status_text' => $response->getReasonPhrase(),
+            ]
+        );
+    }
 
 
 }
