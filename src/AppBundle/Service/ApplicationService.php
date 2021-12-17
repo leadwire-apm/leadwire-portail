@@ -487,11 +487,11 @@ class ApplicationService
 
                 $this->es->createRole($envName, $application->getName(), array($patternIndex), array($sharedIndex, $appIndex), array("kibana_all_read"), false);
                 $this->es->createRole($envName, $application->getName(), array($patternIndex), array($sharedIndex, $appIndex), array("kibana_all_write"), true);
-                $this->es->createReadRoleMapping($envName, $application->getName(), array($patternIndex));
+                $this->es->createDataReadRole($envName, $application->getName(), array($patternIndex));
 
                 $this->es->createRoleMapping($envName, $application->getName(), $user->getName(), false);
                 $this->es->createRoleMapping($envName, $application->getName(), $user->getName(), true);
-                $this->es->createBackendRoleMapping($envName, $application->getName());
+                $this->es->createDataReadRoleMapping($envName, $application->getName());
 
                 //datawrite user, role and role mapping    
 		        $this->es->createRoleDataWrite($envName, $application->getName(), array($patternIndex));
