@@ -1805,7 +1805,7 @@ class ElasticSearchService
 		}
 	}
 
-	function createReadRoleMapping(
+	function createDataReadRole(
 		string $envName,
 		string $applicationName,
 		array $index_patterns
@@ -1827,7 +1827,7 @@ class ElasticSearchService
 				"tenant_permissions" => array()
 			];
 
-			$url = $this->url . "_plugins/_security/api/rolesmapping/dataread_role_" . $envName . "_" . $applicationName;
+			$url = $this->url . "_plugins/_security/api/roles/dataread_role_" . $envName . "_" . $applicationName;
 
 			$response = $this->httpClient->put(
 
@@ -1843,7 +1843,7 @@ class ElasticSearchService
 			);
 
 			$this->logger->notice(
-				"leadwire.opendistro.createReadRoleMapping",
+				"leadwire.opendistro.createDataReadRole",
 				[
 					'url' => $url,
 					'verb' => 'PUT',
@@ -1863,7 +1863,7 @@ class ElasticSearchService
 		}
 	}
 
-	function createBackendRoleMapping(
+	function createDataReadRoleMapping(
 		string $envName,
 		string $applicationName
 	): bool {
@@ -1890,7 +1890,7 @@ class ElasticSearchService
 			);
 
 			$this->logger->notice(
-				"leadwire.opendistro.createBackendRoleMapping",
+				"leadwire.opendistro.createDataReadRoleMapping",
 				[
 					'url' => $url,
 					'verb' => 'PUT',
