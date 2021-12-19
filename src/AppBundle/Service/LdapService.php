@@ -256,7 +256,7 @@ class LdapService
 
         // Application entry
         $entry = new Entry(
-            "cn={$envName}."-".{$application->getName()},ou=apm,ou=roles,dc=leadwire,dc=io",
+            "cn={$envName}-{$application->getName()},ou=apm,ou=roles,dc=leadwire,dc=io",
             [
                 "objectclass" => ['organizationalRole', 'top'],
                 "cn" => $envName."-".$application->getName(),
