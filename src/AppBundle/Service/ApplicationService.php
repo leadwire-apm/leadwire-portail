@@ -442,7 +442,10 @@ class ApplicationService
         }
         $this->userManager->update($user);
         $this->createIndexApp($application, $user);
-        $this->ldapService->createApplicationEntries($application);
+	foreach ($this->environmentService->getAll() as $environment) {
+          $envName = $environment->getName();
+          $this->ldapService->createApplicationEntries($application, $envName);
+	}
         return $application;
     }
 
