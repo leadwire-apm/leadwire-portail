@@ -282,6 +282,11 @@ class LdapService
         $status = true;
 
         try {
+		
+           foreach($application->getEnvironments() as $environment){
+            $envName =  $environment->getName();
+			 
+			 
             // delete all user role
             foreach($user->getApplications() as $app) {
             
@@ -316,7 +321,7 @@ class LdapService
                 $this->logger->critical("Unable to find LDAP records for demo application {$envName.'-'.$application->getName()}");
                 throw new \Exception("Unable to find LDAP records for demo application {$envName.'-'.$application->getName()}");
             }
-  
+	  }
         } catch (\Exception $e) {
             $status = false;
             $this->logger->emergency('leadwire.ldap.__construct', ['error' => $e->getMessage()]);
