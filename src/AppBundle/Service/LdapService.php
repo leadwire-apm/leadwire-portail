@@ -250,17 +250,17 @@ class LdapService
      *
      * @return boolean
      */
-    public function createApplicationEntries(Application $application): bool
+    public function createApplicationEntries(Application $application, string $envName): bool
     {
         $status = true;
 
         // Application entry
         $entry = new Entry(
-            "cn={$application->getName()},ou=apm,ou=roles,dc=leadwire,dc=io",
+            "cn={$envName.'-'.$application->getName()},ou=apm,ou=roles,dc=leadwire,dc=io",
             [
                 "objectclass" => ['organizationalRole', 'top'],
-                "cn" => $application->getName(),
-                "ou" => $application->getName()
+                "cn" => $envName.'-'.$application->getName(),
+                "ou" => $envName.'-'.$application->getName()
             ]
         );
 
@@ -277,7 +277,7 @@ class LdapService
      *
      * @return boolean
      */
-    public function updateApplicationEntries(Application $application, User $user): bool
+    public function updateApplicationEntries(Application $application, User $user, string $envName): bool
     {
         $status = true;
 
@@ -285,7 +285,7 @@ class LdapService
             // delete all user role
             foreach($user->getApplications() as $app) {
             
-                $result = $this->ldap->query('ou=apm,ou=roles,dc=leadwire,dc=io', "(cn={$app->getName()})")->execute();
+                $result = $this->ldap->query('ou=apm,ou=roles,dc=leadwire,dc=io', "(cn={$envName.'-'.$app->getName()})")->execute();
                 $entry = $result[0];
 
                 if ($entry instanceof Entry) {
@@ -295,14 +295,14 @@ class LdapService
                         $this->entryManager->update($entry);
                     }
                 } else {
-                    $this->logger->critical("Unable to find LDAP records for demo application {$app->getName()}");
-                    throw new \Exception("Unable to find LDAP records for demo application {$app->getName()}");
+                    $this->logger->critical("Unable to find LDAP records for demo application {$envName.'-'.$app->getName()}");
+                    throw new \Exception("Unable to find LDAP records for demo application {$envName.'-'.$app->getName()}");
                 }
         
             }
             
             //set user role
-            $result = $this->ldap->query('ou=apm,ou=roles,dc=leadwire,dc=io', "(cn={$application->getName()})")->execute();
+            $result = $this->ldap->query('ou=apm,ou=roles,dc=leadwire,dc=io', "(cn={$envName.'-'.$application->getName()})")->execute();
             $entry = $result[0];
 
             if ($entry instanceof Entry) {
@@ -313,8 +313,8 @@ class LdapService
                 }
             } else {
                 $status = false;
-                $this->logger->critical("Unable to find LDAP records for demo application {$application->getName()}");
-                throw new \Exception("Unable to find LDAP records for demo application {$application->getName()}");
+                $this->logger->critical("Unable to find LDAP records for demo application {$envName.'-'.$application->getName()}");
+                throw new \Exception("Unable to find LDAP records for demo application {$envName.'-'.$application->getName()}");
             }
   
         } catch (\Exception $e) {
