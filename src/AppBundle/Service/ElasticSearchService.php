@@ -1650,18 +1650,7 @@ class ElasticSearchService
 
 			$role = [
 				"cluster_permissions" => array("cluster_composite_ops", "indices_monitor"),
-				"index_permissions" => array(
-					[
-						"index_patterns" => $index_patterns,
-						"dls" => "",
-						"fls" => array(),
-						"masked_fields" => array(),
-						"allowed_actions" => array(
-							"kibana_all_read", "indices:monitor/settings/get", "indices:monitor/stats", "indices:admin/aliases/get",
-							"indices:admin/mappings/get", "indices:admin/resolve/index"
-						)
-					]
-				),
+				"index_permissions" => array(),
 				"tenant_permissions" => array(
 					[
 						"tenant_patterns" => $tenant_patterns,
