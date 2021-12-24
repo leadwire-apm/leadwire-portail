@@ -290,7 +290,7 @@ class LdapService
             // delete all user role
             foreach($user->getApplications() as $app) {
             
-                $result = $this->ldap->query('ou=apm,ou=roles,dc=leadwire,dc=io', "(cn={$envName}-{$application->getName()})")->execute();
+                $result = $this->ldap->query('ou=apm,ou=roles,dc=leadwire,dc=io', "(cn={$envName}-{$app->getName()})")->execute();
                 $entry = $result[0];
 
                 if ($entry instanceof Entry) {
@@ -300,8 +300,8 @@ class LdapService
                         $this->entryManager->update($entry);
                     }
                 } else {
-                    $this->logger->critical("Unable to find LDAP records for demo application {$envName}-{$application->getName()}");
-                    throw new \Exception("Unable to find LDAP records for demo application {$envName}-{$application->getName()}");
+                    $this->logger->critical("Unable to find LDAP records for demo application {$envName}-{$app->getName()}");
+                    throw new \Exception("Unable to find LDAP records for demo application {$envName}-{$app->getName()}");
                 }
         
             }
