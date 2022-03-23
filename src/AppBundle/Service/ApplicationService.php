@@ -635,7 +635,7 @@ class ApplicationService
         if ($application === null) {
             throw new HttpException(Response::HTTP_NOT_FOUND, "Application not Found");
         } else {
-            return $this->ldapService->updateApplicationEntries($application, $user);     
+            return $this->ldapService->updateApplicationEntries($application, $user, $this->listUserAccessibleApplciations($user));     
         }
     }
 
